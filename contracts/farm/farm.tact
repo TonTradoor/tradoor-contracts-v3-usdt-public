@@ -1,7 +1,6 @@
 import "@stdlib/deploy";
-import "./messages";
 
-contract Pool with Deployable {
+contract Farm with Deployable {
     init() {
         
     }
