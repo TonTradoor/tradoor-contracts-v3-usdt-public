@@ -1,51 +1,126 @@
 // ============================ RBF ================================ //
-message CreateIncreaseRBFPosition {
+/// increase RBF
+message CreateIncreaseRBFPositionOrder {
     liquidityDelta: Int;
 }
 
-message CancelIncreaseRBFPosition {
+message CancelIncreaseRBFPositionOrder {
     index: Int;
 }
 
-message ExecuteIncreaseRBFPosition {
+message ExecuteIncreaseRBFPositionOrder {
     index: Int;
 }
 
-message CreateDecreaseRBFPosition {
+/// decrease RBF
+message CreateDecreaseRBFPositionOrder {
     liquidityDelta: Int;
 }
 
-message CancelDecreaseRBFPosition {
+message CancelDecreaseRBFPositionOrder {
     index: Int;
 }
 
-message ExecuteDecreaseRBFPosition {
+message ExecuteDecreaseRBFPositionOrder {
     index: Int;
 }
 
 // ============================ LP ================================ //
-message CreateIncreaseLPPosition {
+/// increase LP
+message CreateIncreaseLPPositionOrder {
     margin: Int;
     liquidityDelta: Int;
 }
 
-message CancelIncreaseLPPosition {
+message CancelIncreaseLPPositionOrder {
     index: Int;
 }
 
-message ExecuteIncreaseLPPosition {
+message ExecuteIncreaseLPPositionOrder {
     index: Int;
 }
 
-message CreateDecreaseLPPosition {
+/// decrease LP
+message CreateDecreaseLPPositionOrder {
     margin: Int;
     liquidityDelta: Int;
 }
 
-message CancelDecreaseLPPosition {
+message CancelDecreaseLPPositionOrder {
     index: Int;
 }
 
-message ExecuteDecreaseLPPosition {
+message ExecuteDecreaseLPPositionOrder {
+    index: Int;
+}
+
+// ============================ Perp ================================ //
+/// increase market Perp
+message CreateIncreasePerpPositionMarketOrder {
+    token: String;
+    isLong: Bool;
+    marginDelta: Int;
+    sizeDelta: Int;
+    acceptablePrice: Int;
+}
+
+message CancelIncreasePerpPositionMarketOrder {
+    index: Int;
+}
+
+message ExecuteIncreasePerpPositionMarketOrder {
+    index: Int;
+}
+
+/// decrease market Perp
+message CreateDecreasePerpPositionMarketOrder {
+    token: String;
+    isLong: Bool;
+    marginDelta: Int;
+    sizeDelta: Int;
+    acceptablePrice: Int;
+}
+
+message CancelDecreasePerpPositionMarketOrder {
+    index: Int;
+}
+
+message ExecuteDecreasePerpPositionMarketOrder {
+    index: Int;
+}
+
+/// increase limit Perp
+message CreateIncreasePerpPositionLimitOrder {
+    token: String;
+    isLong: Bool;
+    marginDelta: Int;
+    sizeDelta: Int;
+    triggerPrice: Int;
+    triggerAbove: Bool;
+}
+
+message CancelIncreasePerpPositionLimitOrder {
+    index: Int;
+}
+
+message ExecuteIncreasePerpPositionLimitOrder {
+    index: Int;
+}
+
+/// decrease limit Perp
+message CreateDecreasePerpPositionLimitOrder {
+    token: String;
+    isLong: Bool;
+    marginDelta: Int;
+    sizeDelta: Int;
+    triggerPrice: Int;
+    triggerAbove: Bool;
+}
+
+message CancelDecreasePerpPositionLimitOrder {
+    index: Int;
+}
+
+message ExecuteDecreasePerpPositionLimitOrder {
     index: Int;
 }
