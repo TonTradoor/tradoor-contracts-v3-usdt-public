@@ -12,6 +12,7 @@ message IncreaseRBFPositionCancelledEvent {
 }
 
 message RBFPositionIncreasedEvent {
+    index: Int;
     account: Address;
     liquidityDelta: Int;
     liquidityAfter: Int;

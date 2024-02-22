@@ -79,15 +79,66 @@ contract Pool with Deployable {
 
     // ============================ RBF ================================ //
     receive(msg: CreateIncreaseRBFPositionOrder) {
+        let ctx: Context = context();
+        /// add new order
+        let index: Int = self.increaseRBFPositionIndexNext + 1;
+        self.increaseRBFPositionOrders.set(index, IncreaseRBFPositionOrder{
+            account: ctx.sender,
+            liquidityDelta: msg.liquidityDelta,
+            executionFee: 0,
+            blockTime: now()
+        });
 
+        /// event
+        emit(IncreaseRBFPositionCreatedEvent{
+            account: ctx.sender,
+            liquidityDelta: msg.liquidityDelta,
+            executionFee: 0,
+            index: index
+        }.toCell());
     }
 
     receive(msg: CancelIncreaseRBFPositionOrder) {
-        
+        let orderOpt: IncreaseRBFPositionOrder? = self.increaseRBFPositionOrders.get(msg.index);
+        require(orderOpt != null, "order not exist");
+
+        /// delete order
+        self.increaseRBFPositionOrders.set(msg.index, null);
+        /// event
+        emit(IncreaseRBFPositionCancelledEvent{
+            index: msg.index
+        }.toCell());
     }
 
     receive(msg: ExecuteIncreaseRBFPositionOrder) {
-        
+        let orderOpt: IncreaseRBFPositionOrder? = self.increaseRBFPositionOrders.get(msg.index);
+        require(orderOpt != null, "order not exist");
+
+        let order: IncreaseRBFPositionOrder = orderOpt!!;
+
+        /// update position
+        let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
+        // init position if not exist
+        let fundPosition: RBFPosition = RBFPosition{
+                liquidity: 0,
+                unlockTime: 0
+            };
+        if (fundPositionOpt != null) {
+            fundPosition = fundPositionOpt!!;
+        }
+
+        fundPosition.liquidity = fundPosition.liquidity + order.liquidityDelta;
+
+        /// delete order
+        self.increaseRBFPositionOrders.set(msg.index, null);
+
+        emit(RBFPositionIncreasedEvent{
+                index: msg.index,
+                account: order.account,
+                liquidityDelta: order.liquidityDelta,
+                liquidityAfter: fundPosition.liquidity,
+                unlockTimeAfter: fundPosition.unlockTime
+        }.toCell());
     }
 
     receive(msg: CreateDecreaseRBFPositionOrder) {
