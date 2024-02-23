@@ -176,7 +176,7 @@ contract Pool with Deployable {
         return self.fundPositions.get(account);
     }
 
-    // ============================ RBF ================================ //
+    // ============================ LP ================================ //
     receive(msg: CreateIncreaseLPPositionOrder) {
         
     }
