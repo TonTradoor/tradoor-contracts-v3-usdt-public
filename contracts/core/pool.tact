@@ -29,7 +29,7 @@ contract Pool with Deployable {
     decreaseLPPositionIndex: Int as uint128;
     decreaseLPPositionIndexNext: Int as uint128;
 
-    globalLiquidity: Int as uint256;
+    globalLiquidity: Int;
     globalLPPosition: map<Int, GlobalLPPosition>; // tokenId => globalLP
     lpPositions: map<Address, LPPosition>; // user => LP
 
@@ -81,7 +81,8 @@ contract Pool with Deployable {
     receive(msg: CreateIncreaseRBFPositionOrder) {
         let ctx: Context = context();
         /// add new order
-        let index: Int = self.increaseRBFPositionIndexNext + 1;
+        self.increaseRBFPositionIndexNext = self.increaseRBFPositionIndexNext + 1;
+        let index: Int = self.increaseRBFPositionIndexNext;
         self.increaseRBFPositionOrders.set(index, IncreaseRBFPositionOrder{
             account: ctx.sender,
             liquidityDelta: msg.liquidityDelta,
@@ -129,15 +130,21 @@ contract Pool with Deployable {
 
         fundPosition.liquidity = fundPosition.liquidity + order.liquidityDelta;
 
+        // set position
+        self.fundPositions.set(order.account, fundPosition);
+
         /// delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
 
+        /// event
+        emit(IncreaseRBFPositionExecutedEvent{
+            index: msg.index
+        }.toCell());
         emit(RBFPositionIncreasedEvent{
-                index: msg.index,
-                account: order.account,
-                liquidityDelta: order.liquidityDelta,
-                liquidityAfter: fundPosition.liquidity,
-                unlockTimeAfter: fundPosition.unlockTime
+            account: order.account,
+            liquidityDelta: order.liquidityDelta,
+            liquidityAfter: fundPosition.liquidity,
+            unlockTimeAfter: fundPosition.unlockTime
         }.toCell());
     }
 
@@ -151,6 +158,22 @@ contract Pool with Deployable {
 
     receive(msg: ExecuteDecreaseRBFPositionOrder) {
         
+    }
+
+    get fun increaseRBFPositionIndex(): Int {
+        return self.increaseRBFPositionIndex;
+    }
+
+    get fun increaseRBFPositionIndexNext(): Int {
+        return self.increaseRBFPositionIndexNext;
+    }
+
+    get fun increaseRBFPositionOrder(index: Int): IncreaseRBFPositionOrder? {
+        return self.increaseRBFPositionOrders.get(index);
+    }
+
+    get fun fundPosition(account: Address): RBFPosition? {
+        return self.fundPositions.get(account);
     }
 
     // ============================ RBF ================================ //
