@@ -6,7 +6,7 @@ import { getConfig } from '../utils/util';
 export async function run(provider: NetworkProvider) {
     const poolAddress = Address.parse(getConfig(provider, "pool"));
     const pool = provider.open(await Pool.fromAddress(poolAddress));
-    let liquidity = BigInt(10**6);
+    let liquidity = 10n**6n;
 
     await pool.send(
         provider.sender(),

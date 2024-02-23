@@ -27,7 +27,7 @@ export function formatUnits(value: number, decimal: number) {
 }
 
 export function parseUnits(value: string, decimal: number) {
-    return new Decimal(value).mul(Math.pow(10, decimal));
+    return new Decimal(value).div(Math.pow(10, decimal));
 }
 
 export function randomInt(min: number, max: number) {

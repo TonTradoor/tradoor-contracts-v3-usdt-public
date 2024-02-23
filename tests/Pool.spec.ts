@@ -46,7 +46,7 @@ describe('Pool', () => {
     it('should increase RBF', async () => {
         /// create order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = BigInt(10**6);
+        let liquidity = 10n**6n;
         const trxResult = await pool.send(
             user0.getSender(),
             {
@@ -79,7 +79,7 @@ describe('Pool', () => {
     it('should cancel increase RBF', async () => {
         /// create order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = BigInt(10**6);
+        let liquidity = 10n**6n;
         let trxResult = await pool.send(
             user0.getSender(),
             {
@@ -99,7 +99,7 @@ describe('Pool', () => {
 
         // check index
         let index = await pool.getIncreaseRbfPositionIndexNext();
-        expect(index).toEqual(prevIndex + BigInt(1));
+        expect(index).toEqual(prevIndex + 1n);
 
         // check order
         let order = await pool.getIncreaseRbfPositionOrder(index);
@@ -133,7 +133,7 @@ describe('Pool', () => {
     it('should execute increase RBF', async () => {
         /// create order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = BigInt(10**6);
+        let liquidity = 10n**6n;
         let trxResult = await pool.send(
             user0.getSender(),
             {
@@ -153,7 +153,7 @@ describe('Pool', () => {
 
         // check index
         let index = await pool.getIncreaseRbfPositionIndexNext();
-        expect(index).toEqual(prevIndex + BigInt(1));
+        expect(index).toEqual(prevIndex + 1n);
 
         // check order
         let order = await pool.getIncreaseRbfPositionOrder(index);
