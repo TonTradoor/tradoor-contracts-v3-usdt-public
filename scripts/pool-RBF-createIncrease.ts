@@ -1,13 +1,13 @@
 import { Address, toNano } from '@ton/core';
-import { Pool } from '../wrappers/Pool';
+import { Pool, attachPool } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { getConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    const poolAddress = Address.parse(getConfig(provider, "pool"));
-    const pool = provider.open(await Pool.fromAddress(poolAddress));
-    let liquidity = 10n**6n;
+    const pool = attachPool(provider);
 
+    let liquidity = 10n**6n;
+    // create order
     await pool.send(
         provider.sender(),
         {
@@ -18,10 +18,8 @@ export async function run(provider: NetworkProvider) {
             liquidityDelta: liquidity,
         }
     );
-
-    await provider.waitForDeploy(pool.address);
-    
-    await sleep(3000);
+    // wait for trx
+    await sleep(10000);
 
     // get index
     let index = await pool.getIncreaseRbfPositionIndexNext();

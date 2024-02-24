@@ -10,11 +10,9 @@ contract Pool with Deployable {
 
     /// RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
-    increaseRBFPositionIndex: Int as uint128;
     increaseRBFPositionIndexNext: Int as uint128;
 
     decreaseRBFPositionOrders: map<Int, DecreaseRBFPositionOrder>; // index => order
-    decreaseRBFPositionIndex: Int as uint128;
     decreaseRBFPositionIndexNext: Int as uint128;
 
     globalRBFPosition: GlobalRBFPosition;
@@ -22,11 +20,9 @@ contract Pool with Deployable {
 
     /// LP
     increaseLPPositionOrders: map<Int, IncreaseLPPositionOrder>; // index => order
-    increaseLPPositionIndex: Int as uint128;
     increaseLPPositionIndexNext: Int as uint128;
 
     decreaseLPPositionOrders: map<Int, DecreaseLPPositionOrder>; // index => order
-    decreaseLPPositionIndex: Int as uint128;
     decreaseLPPositionIndexNext: Int as uint128;
 
     globalLiquidity: Int;
@@ -36,11 +32,9 @@ contract Pool with Deployable {
     /// Perp
     // market order
     increasePerpPositionMarketOrders: map<Int, IncreasePerpPositionMarketOrders>; // tokenId => index => order
-    increasePerpPositionMarketIndex: Int as uint128;
     increasePerpPositionMarketIndexNext: Int as uint128;
 
     decreasePerpPositionMarketOrders: map<Int, DecreasePerpPositionMarketOrders>; // tokenId => index => order
-    decreasePerpPositionMarketIndex: Int as uint128;
     decreasePerpPositionMarketIndexNext: Int as uint128;
 
     // limit order
@@ -158,10 +152,6 @@ contract Pool with Deployable {
 
     receive(msg: ExecuteDecreaseRBFPositionOrder) {
         
-    }
-
-    get fun increaseRBFPositionIndex(): Int {
-        return self.increaseRBFPositionIndex;
     }
 
     get fun increaseRBFPositionIndexNext(): Int {

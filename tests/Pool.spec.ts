@@ -179,7 +179,7 @@ describe('Pool', () => {
             success: true,
         });
 
-        // check order
+        // check position
         let position = await pool.getFundPosition(user0.address);
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(liquidity);
