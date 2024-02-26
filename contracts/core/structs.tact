@@ -54,7 +54,7 @@ struct GlobalLPPosition {
 }
 
 // ============================ Perp ================================ //
-/// increase market order
+// increase market order
 struct IncreasePerpPositionMarketOrders {
     increasePerpPositionMarketOrders: map<Int, IncreasePerpPositionMarketOrder>;
 }
@@ -69,7 +69,7 @@ struct IncreasePerpPositionMarketOrder {
     blockTime: Int;
 }
 
-/// decrease market order
+// decrease market order
 struct DecreasePerpPositionMarketOrders {
     decreasePerpPositionMarketOrders: map<Int, DecreasePerpPositionMarketOrder>;
 }
@@ -84,7 +84,7 @@ struct DecreasePerpPositionMarketOrder {
     blockTime: Int;
 }
 
-/// increase limit order
+// increase limit order
 struct IncreasePerpPositionLimitOrders {
     increasePerpPositionLimitOrders: map<Int, IncreasePerpPositionLimitOrder>;
 }
@@ -100,7 +100,7 @@ struct IncreasePerpPositionLimitOrder {
     blockTime: Int;
 }
 
-/// decrease limit order
+// decrease limit order
 struct DecreasePerpPositionLimitOrders {
     decreasePerpPositionLimitOrders: map<Int, DecreasePerpPositionLimitOrder>;
 }
@@ -116,7 +116,7 @@ struct DecreasePerpPositionLimitOrder {
     blockTime: Int;
 }
 
-/// perp position
+// perp position
 struct AccountPerpPosition {
     positions: map<Address, DirectionPerpPosition>;
 }

@@ -8,7 +8,7 @@ message(0x7362d09c) TokenNotification {
 }
 
 // ============================ RBF ================================ //
-/// increase RBF
+// increase RBF
 message CreateIncreaseRBFPositionOrder {
     executionFee: Int;
     liquidityDelta: Int;
@@ -22,7 +22,7 @@ message ExecuteIncreaseRBFPositionOrder {
     index: Int;
 }
 
-/// decrease RBF
+// decrease RBF
 message CreateDecreaseRBFPositionOrder {
     liquidityDelta: Int;
 }
@@ -36,7 +36,7 @@ message ExecuteDecreaseRBFPositionOrder {
 }
 
 // ============================ LP ================================ //
-/// increase LP
+// increase LP
 message CreateIncreaseLPPositionOrder {
     margin: Int;
     liquidityDelta: Int;
@@ -50,7 +50,7 @@ message ExecuteIncreaseLPPositionOrder {
     index: Int;
 }
 
-/// decrease LP
+// decrease LP
 message CreateDecreaseLPPositionOrder {
     margin: Int;
     liquidityDelta: Int;
@@ -65,7 +65,7 @@ message ExecuteDecreaseLPPositionOrder {
 }
 
 // ============================ Perp ================================ //
-/// increase market Perp
+// increase market Perp
 message CreateIncreasePerpPositionMarketOrder {
     token: String;
     isLong: Bool;
@@ -82,7 +82,7 @@ message ExecuteIncreasePerpPositionMarketOrder {
     index: Int;
 }
 
-/// decrease market Perp
+// decrease market Perp
 message CreateDecreasePerpPositionMarketOrder {
     token: String;
     isLong: Bool;
@@ -99,7 +99,7 @@ message ExecuteDecreasePerpPositionMarketOrder {
     index: Int;
 }
 
-/// increase limit Perp
+// increase limit Perp
 message CreateIncreasePerpPositionLimitOrder {
     token: String;
     isLong: Bool;
@@ -117,7 +117,7 @@ message ExecuteIncreasePerpPositionLimitOrder {
     index: Int;
 }
 
-/// decrease limit Perp
+// decrease limit Perp
 message CreateDecreasePerpPositionLimitOrder {
     token: String;
     isLong: Bool;

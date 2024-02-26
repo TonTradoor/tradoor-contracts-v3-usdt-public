@@ -1,5 +1,5 @@
 // ============================ RBF ================================ //
-/// increase RBF
+// increase RBF
 message IncreaseRBFPositionCreatedEvent {
     account: Address;
     liquidityDelta: Int;
@@ -22,7 +22,7 @@ message RBFPositionIncreasedEvent {
     unlockTimeAfter: Int;
 }
 
-/// decrease RBF
+// decrease RBF
 message DecreaseRBFPositionCreatedEvent {
     account: Address;
     liquidityDelta: Int;
@@ -41,13 +41,13 @@ message RBFPositionDecreasedEvent {
     unlockTimeAfter: Int;
 }
 
-/// global RBF
+// global RBF
 message GlobalRBFChangedEvent {
     liquidityAfter: Int;
 }
 
 // ============================ LP ================================ //
-/// increase LP
+// increase LP
 message IncreaseLPPositionCreatedEvent {
     account: Address;
     margin: Int;
@@ -70,7 +70,7 @@ message LPPositionIncreasedEvent {
     entryTradingFeeGrowth: Int;
 }
 
-/// decrease LP
+// decrease LP
 message DecreaseLPPositionCreatedEvent {
     account: Address;
     margin: Int;
@@ -92,7 +92,7 @@ message LPPositionDecreasedEvent {
     realizedProfit: Int;
 }
 
-/// global LP
+// global LP
 message GlobalLPChangedEvent {
     netSizeAfter: Int;
     isLong: Bool;
@@ -100,7 +100,7 @@ message GlobalLPChangedEvent {
 }
 
 // ============================ Perp ================================ //
-/// increase Perp
+// increase Perp
 message IncreasePerpPositionMarketCreatedEvent {
     account: Address;
     token: String;
@@ -147,7 +147,7 @@ message PerpPositionIncreasedEvent {
     tradingFee: Int;
 }
 
-/// decrease Perp
+// decrease Perp
 message DecreasePerpPositionMarketCreatedEvent {
     account: Address;
     token: String;

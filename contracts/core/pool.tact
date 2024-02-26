@@ -5,7 +5,7 @@ import "./structs";
 
 contract Pool with Deployable {
 
-    /// config
+    // config
     minExecutionFee: Int;
     gasConsumption: Int;
     minTimeDelayExecutor: Int = 6; // executor execute after 6s
@@ -15,7 +15,7 @@ contract Pool with Deployable {
     tokenIds: map<Int, Bool>; // tokenId => enabled
     executors: map<Address, Bool>; // account => enabled
 
-    /// RBF
+    // RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
     increaseRBFPositionIndexNext: Int as uint128;
 
@@ -25,7 +25,7 @@ contract Pool with Deployable {
     globalRBFPosition: GlobalRBFPosition;
     fundPositions: map<Address, RBFPosition>; // trader => RBF
 
-    /// LP
+    // LP
     increaseLPPositionOrders: map<Int, IncreaseLPPositionOrder>; // index => order
     increaseLPPositionIndexNext: Int as uint128;
 
@@ -36,15 +36,15 @@ contract Pool with Deployable {
     globalLPPosition: map<Int, GlobalLPPosition>; // tokenId => globalLP
     lpPositions: map<Address, LPPosition>; // trader => LP
 
-    /// Perp
-    // market order
+    // Perp
+    /// market order
     increasePerpPositionMarketOrders: map<Int, IncreasePerpPositionMarketOrders>; // tokenId => index => order
     increasePerpPositionMarketIndexNext: Int as uint128;
 
     decreasePerpPositionMarketOrders: map<Int, DecreasePerpPositionMarketOrders>; // tokenId => index => order
     decreasePerpPositionMarketIndexNext: Int as uint128;
 
-    // limit order
+    /// limit order
     increasePerpPositionLimitOrders: map<Int, IncreasePerpPositionLimitOrders>; // tokenId => index => order
     increasePerpPositionLimitIndexNext: Int as uint128;
 
@@ -91,6 +91,8 @@ contract Pool with Deployable {
             // for dev
             dump("receive create increase rbf position order op code");
             dump(liquidityDelta);
+            // TODO check amount == liquidityDelta?
+
             self.handleCreateIncreaseRBFPositionOrder(account, liquidityDelta);
         } 
     }
@@ -99,34 +101,12 @@ contract Pool with Deployable {
     fun handleCreateIncreaseRBFPositionOrder(account: Address, liquidityDelta: Int) {
         dump("handleCreateIncreaseRBFPositionOrder");
         let ctx: Context = context();
-        /// add new order
-        self.increaseRBFPositionIndexNext = self.increaseRBFPositionIndexNext + 1;
-        let index: Int = self.increaseRBFPositionIndexNext;
-        self.increaseRBFPositionOrders.set(index, IncreaseRBFPositionOrder{
-            account: ctx.sender,
-            liquidityDelta: liquidityDelta,
-            executionFee: 0,
-            blockTime: now()
-        });
-
-        /// event
-        emit(IncreaseRBFPositionCreatedEvent{
-            account: ctx.sender,
-            liquidityDelta: liquidityDelta,
-            executionFee: 0,
-            index: index
-        }.toCell());
-    }
-
-    receive(msg: CreateIncreaseRBFPositionOrder) {
-        let ctx: Context = context();
-        /// check value
         // check gas
         require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
         // check execution fee
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
-        /// add new order
+        // add new order
         self.increaseRBFPositionIndexNext = self.increaseRBFPositionIndexNext + 1;
         let index: Int = self.increaseRBFPositionIndexNext;
         self.increaseRBFPositionOrders.set(index, IncreaseRBFPositionOrder{
@@ -136,7 +116,7 @@ contract Pool with Deployable {
             blockTime: now()
         });
 
-        /// event
+        // event
         emit(IncreaseRBFPositionCreatedEvent{
             account: ctx.sender,
             liquidityDelta: msg.liquidityDelta,
@@ -148,23 +128,21 @@ contract Pool with Deployable {
     receive(msg: CancelIncreaseRBFPositionOrder) {
         let ctx: Context = context();
 
-        /// check value
         // check gas
         require(ctx.value >= self.gasConsumption, "gas not enough");
 
-        /// check order
+        // check order
         let orderOpt: IncreaseRBFPositionOrder? = self.increaseRBFPositionOrders.get(msg.index);
         if (orderOpt == null) {
             return;
         }
         let order: IncreaseRBFPositionOrder = orderOpt!!;
 
-        /// should cancel
         self.shouldCancel(order.blockTime, ctx.sender);
 
-        /// delete order
+        // delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
-        /// event
+        // event
         emit(IncreaseRBFPositionCancelledEvent{
             index: msg.index
         }.toCell());
@@ -176,7 +154,7 @@ contract Pool with Deployable {
 
         let order: IncreaseRBFPositionOrder = orderOpt!!;
 
-        /// update position
+        // update position
         let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
         // init position if not exist
         let fundPosition: RBFPosition = RBFPosition{
@@ -187,15 +165,17 @@ contract Pool with Deployable {
             fundPosition = fundPositionOpt!!;
         }
 
+        // TODO calculate bonus
+
         fundPosition.liquidity = fundPosition.liquidity + order.liquidityDelta;
 
         // set position
         self.fundPositions.set(order.account, fundPosition);
 
-        /// delete order
+        // delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
 
-        /// event
+        // event
         emit(IncreaseRBFPositionExecutedEvent{
             index: msg.index
         }.toCell());
