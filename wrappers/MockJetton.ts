@@ -1,0 +1,1 @@
+export * from '../build/MockJetton/tact_MockJetton';

@@ -74,8 +74,50 @@ contract Pool with Deployable {
         self.decreasePerpPositionLimitIndexNext = 0;
 
     }
+    // ============================ Entry ================================ //
+    /**
+    * @dev This function is called when the contract receives a TokenNotification message.
+    * It checks the token and handles the corresponding operation code.
+    * @param msg The TokenNotification message received.
+    */
+    receive(msg: TokenNotification) {
+        // TODO check token
+
+        // get op code
+        let opCode: Int = msg.forward_payload.loadInt(32);
+        if (opCode == 1) {
+            let account: Address = msg.from;
+            let liquidityDelta: Int = msg.forward_payload.loadInt(256);
+            // for dev
+            dump("receive create increase rbf position order op code");
+            dump(liquidityDelta);
+            self.handleCreateIncreaseRBFPositionOrder(account, liquidityDelta);
+        } 
+    }
 
     // ============================ RBF ================================ //
+    fun handleCreateIncreaseRBFPositionOrder(account: Address, liquidityDelta: Int) {
+        dump("handleCreateIncreaseRBFPositionOrder");
+        let ctx: Context = context();
+        /// add new order
+        self.increaseRBFPositionIndexNext = self.increaseRBFPositionIndexNext + 1;
+        let index: Int = self.increaseRBFPositionIndexNext;
+        self.increaseRBFPositionOrders.set(index, IncreaseRBFPositionOrder{
+            account: ctx.sender,
+            liquidityDelta: liquidityDelta,
+            executionFee: 0,
+            blockTime: now()
+        });
+
+        /// event
+        emit(IncreaseRBFPositionCreatedEvent{
+            account: ctx.sender,
+            liquidityDelta: liquidityDelta,
+            executionFee: 0,
+            index: index
+        }.toCell());
+    }
+
     receive(msg: CreateIncreaseRBFPositionOrder) {
         let ctx: Context = context();
         /// check value
