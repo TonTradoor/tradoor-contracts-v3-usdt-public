@@ -3,6 +3,7 @@ import "@stdlib/ownable";
 import "./messages";
 import "./events";
 import "./structs";
+import "./constants";
 
 contract Pool with Deployable, Ownable {
 
@@ -99,8 +100,16 @@ contract Pool with Deployable, Ownable {
         self.reply("usdc set".asComment());
     }
 
+    get fun operator(): Address {
+        return self.operator;
+    }
+
+    get fun usdc(): Address {
+        return self.usdc;
+    }
+
     fun onlyOperator() {
-        require(self.operator == sender(), "only operator");
+        require(sender() == self.operator, "only operator");
     }
 
     // ============================ Entry ================================ //
@@ -110,14 +119,19 @@ contract Pool with Deployable, Ownable {
     * @param msg The TokenNotification message received.
     */
     receive(msg: TokenNotification) {
-        // TODO check token
+        // TODO auto refund
+        if (sender() != self.usdc) {
+            return;
+        }
 
         // get op code
         let opCode: Int = msg.forward_payload.loadInt(32);
-        if (opCode == 1) {
+        if (opCode == OP_CREATE_INCREASE_RBF_POSITION) {
             let account: Address = msg.from;
-            let executionFee: Int = msg.forward_payload.loadInt(256);
+            // let executionFee: Int = msg.forward_payload.loadInt(256);
             let liquidityDelta: Int = msg.forward_payload.loadInt(256);
+            let ef_rs: Slice = msg.forward_payload.loadRef().asSlice();
+            let executionFee: Int = ef_rs.loadInt(256);
             // for dev
             dump("receive create increase rbf position order op code");
             dump(liquidityDelta);
@@ -137,8 +151,8 @@ contract Pool with Deployable, Ownable {
         require(executionFee >= self.minExecutionFee, "execution fee not enough");
 
         // add new order
-        self.increaseRBFPositionIndexNext = self.increaseRBFPositionIndexNext + 1;
         let index: Int = self.increaseRBFPositionIndexNext;
+        self.increaseRBFPositionIndexNext = self.increaseRBFPositionIndexNext + 1;
         self.increaseRBFPositionOrders.set(index, IncreaseRBFPositionOrder{
             account: ctx.sender,
             liquidityDelta: liquidityDelta,
@@ -156,6 +170,7 @@ contract Pool with Deployable, Ownable {
     }
 
     receive(msg: CancelIncreaseRBFPositionOrder) {
+        dump(1);
         let ctx: Context = context();
 
         // check gas
@@ -166,6 +181,7 @@ contract Pool with Deployable, Ownable {
         if (orderOpt == null) {
             return;
         }
+        dump(1);
         let order: IncreaseRBFPositionOrder = orderOpt!!;
 
         self.shouldCancel(order.blockTime, ctx.sender);
