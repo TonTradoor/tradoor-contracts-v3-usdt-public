@@ -1,9 +1,10 @@
 import "@stdlib/deploy";
+import "@stdlib/ownable";
 import "./messages";
 import "./events";
 import "./structs";
 
-contract Pool with Deployable {
+contract Pool with Deployable, Ownable {
 
     // config
     minExecutionFee: Int;
@@ -16,6 +17,11 @@ contract Pool with Deployable {
     executors: map<Address, Bool>; // account => enabled
 
     // RBF
+    usdc: Address;
+    owner: Address;
+    operator: Address;
+
+    /// RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
     increaseRBFPositionIndexNext: Int as uint128;
 
@@ -55,6 +61,10 @@ contract Pool with Deployable {
 
 
     init() {
+        self.owner = sender();
+        self.usdc = newAddress(0, 0);
+        self.operator = newAddress(0, 0);
+
         self.minExecutionFee = 0;
         self.gasConsumption = 0;
 
@@ -74,6 +84,25 @@ contract Pool with Deployable {
         self.decreasePerpPositionLimitIndexNext = 0;
 
     }
+
+    // ============================ Admin ================================ //
+
+    receive(msg: SetOperator) {
+        self.requireOwner();
+        self.operator = msg.operator;
+        self.reply("operator set".asComment());
+    }
+
+    receive(msg: SetUSDC) {
+        self.requireOwner();
+        self.usdc = msg.usdc;
+        self.reply("usdc set".asComment());
+    }
+
+    fun onlyOperator() {
+        require(self.operator == sender(), "only operator");
+    }
+
     // ============================ Entry ================================ //
     /**
     * @dev This function is called when the contract receives a TokenNotification message.
@@ -87,40 +116,41 @@ contract Pool with Deployable {
         let opCode: Int = msg.forward_payload.loadInt(32);
         if (opCode == 1) {
             let account: Address = msg.from;
+            let executionFee: Int = msg.forward_payload.loadInt(256);
             let liquidityDelta: Int = msg.forward_payload.loadInt(256);
             // for dev
             dump("receive create increase rbf position order op code");
             dump(liquidityDelta);
             // TODO check amount == liquidityDelta?
 
-            self.handleCreateIncreaseRBFPositionOrder(account, liquidityDelta);
+            self.handleCreateIncreaseRBFPositionOrder(account, executionFee, liquidityDelta);
         } 
     }
 
     // ============================ RBF ================================ //
-    fun handleCreateIncreaseRBFPositionOrder(account: Address, liquidityDelta: Int) {
+    fun handleCreateIncreaseRBFPositionOrder(account: Address, executionFee: Int, liquidityDelta: Int) {
         dump("handleCreateIncreaseRBFPositionOrder");
         let ctx: Context = context();
         // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
+        require(ctx.value - executionFee >= self.gasConsumption, "gas not enough");
         // check execution fee
-        require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
+        require(executionFee >= self.minExecutionFee, "execution fee not enough");
 
         // add new order
         self.increaseRBFPositionIndexNext = self.increaseRBFPositionIndexNext + 1;
         let index: Int = self.increaseRBFPositionIndexNext;
         self.increaseRBFPositionOrders.set(index, IncreaseRBFPositionOrder{
             account: ctx.sender,
-            liquidityDelta: msg.liquidityDelta,
-            executionFee: msg.executionFee,
+            liquidityDelta: liquidityDelta,
+            executionFee: executionFee,
             blockTime: now()
         });
 
         // event
         emit(IncreaseRBFPositionCreatedEvent{
             account: ctx.sender,
-            liquidityDelta: msg.liquidityDelta,
-            executionFee: msg.executionFee,
+            liquidityDelta: liquidityDelta,
+            executionFee: executionFee,
             index: index
         }.toCell());
     }
