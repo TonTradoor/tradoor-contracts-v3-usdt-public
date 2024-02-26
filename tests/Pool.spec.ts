@@ -54,6 +54,7 @@ describe('Pool', () => {
             },
             {
                 $$type: 'CreateIncreaseRBFPositionOrder',
+                executionFee: 0n,
                 liquidityDelta: liquidity
             }
         );
@@ -87,6 +88,7 @@ describe('Pool', () => {
             },
             {
                 $$type: 'CreateIncreaseRBFPositionOrder',
+                executionFee: 0n,
                 liquidityDelta: liquidity
             }
         );
@@ -141,6 +143,7 @@ describe('Pool', () => {
             },
             {
                 $$type: 'CreateIncreaseRBFPositionOrder',
+                executionFee: 0n,
                 liquidityDelta: liquidity
             }
         );

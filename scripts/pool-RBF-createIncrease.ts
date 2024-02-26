@@ -15,6 +15,7 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'CreateIncreaseRBFPositionOrder',
+            executionFee: 0n,
             liquidityDelta: liquidity,
         }
     );

@@ -1,6 +1,7 @@
 // ============================ RBF ================================ //
 /// increase RBF
 message CreateIncreaseRBFPositionOrder {
+    executionFee: Int;
     liquidityDelta: Int;
 }
 
