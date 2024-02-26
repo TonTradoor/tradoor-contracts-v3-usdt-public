@@ -134,3 +134,12 @@ message CancelDecreasePerpPositionLimitOrder {
 message ExecuteDecreasePerpPositionLimitOrder {
     index: Int;
 }
+
+// ============================ admin ================================ //
+message SetOperator {
+    operator: Address;
+}
+
+message SetUSDC {
+    usdc: Address;
+}

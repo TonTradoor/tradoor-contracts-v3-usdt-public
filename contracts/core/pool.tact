@@ -1,9 +1,10 @@
 import "@stdlib/deploy";
+import "@stdlib/ownable";
 import "./messages";
 import "./events";
 import "./structs";
 
-contract Pool with Deployable {
+contract Pool with Deployable, Ownable {
 
     /// config
     minExecutionFee: Int;
@@ -14,6 +15,10 @@ contract Pool with Deployable {
 
     tokenIds: map<Int, Bool>; // tokenId => enabled
     executors: map<Address, Bool>; // account => enabled
+
+    usdc: Address;
+    owner: Address;
+    operator: Address;
 
     /// RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
@@ -55,6 +60,10 @@ contract Pool with Deployable {
 
 
     init() {
+        self.owner = sender();
+        self.usdc = newAddress(0, 0);
+        self.operator = newAddress(0, 0);
+
         self.minExecutionFee = 0;
         self.gasConsumption = 0;
 
@@ -74,6 +83,25 @@ contract Pool with Deployable {
         self.decreasePerpPositionLimitIndexNext = 0;
 
     }
+
+    // ============================ Admin ================================ //
+
+    receive(msg: SetOperator) {
+        self.requireOwner();
+        self.operator = msg.operator;
+        self.reply("operator set".asComment());
+    }
+
+    receive(msg: SetUSDC) {
+        self.requireOwner();
+        self.usdc = msg.usdc;
+        self.reply("usdc set".asComment());
+    }
+
+    fun onlyOperator() {
+        require(self.operator == sender(), "only operator");
+    }
+
     // ============================ Entry ================================ //
     /**
     * @dev This function is called when the contract receives a TokenNotification message.
