@@ -22,6 +22,8 @@ contract Pool with Deployable, Ownable {
     owner: Address;
     operator: Address;
 
+    lockTime: Int = 10 * 24 * 60 * 60; // lock 15 days
+
     /// RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
     increaseRBFPositionIndexNext: Int as uint128;
@@ -196,9 +198,11 @@ contract Pool with Deployable, Ownable {
 
     receive(msg: ExecuteIncreaseRBFPositionOrder) {
         let orderOpt: IncreaseRBFPositionOrder? = self.increaseRBFPositionOrders.get(msg.index);
+        // check order
         require(orderOpt != null, "order not exist");
 
         let order: IncreaseRBFPositionOrder = orderOpt!!;
+        self.shouldExecute(order.blockTime);
 
         // update position
         let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
@@ -211,12 +215,21 @@ contract Pool with Deployable, Ownable {
             fundPosition = fundPositionOpt!!;
         }
 
+        // update RBF
+        // TODO update funding rate
+
         // TODO calculate bonus
 
+        // update position
         fundPosition.liquidity = fundPosition.liquidity + order.liquidityDelta;
+        fundPosition.unlockTime = now() + self.unlockTime;
 
         // set position
         self.fundPositions.set(order.account, fundPosition);
+
+        // update global position
+        self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund + order.liquidityDelta;
+        self.globalRBFPosition.liquidity = self.globalRBFPosition.liquidity + order.liquidityDelta;
 
         // delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
@@ -304,6 +317,24 @@ contract Pool with Deployable, Ownable {
         if (!isExecutor) {
             require(blockTime + self.minTimeDelayTrader <= now(), "too early");
         }
+    }
+
+    fun shouldExecute(blockTime: Int) {
+        let ctx: Context = context();
+        // executor or trader
+        let isExecutorOpt: Bool? = self.executors.get(ctx.sender);
+        let isExecutor: Bool = false;
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+        // check sender
+        require(isExecutor, "invalid sender");
+
+        // executor cancel must after minTimeDelayExecutor
+        require(blockTime + self.minTimeDelayExecutor <= now(), "too early");
+
+        // executor cancel must before 
+        require(blockTime + self.maxTimeDelayExecutor > now(), "order expired");
     }
 
 }
