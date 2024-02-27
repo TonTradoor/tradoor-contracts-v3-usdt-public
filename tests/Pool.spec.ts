@@ -270,6 +270,8 @@ describe('Pool', () => {
         let payloadCell = beginCell().storeInt(1,32).storeAddress(user0.address).storeCoins(liquidity).storeCoins(toNano('0.5')).endCell();
         let forwardPayload =beginCell().storeRef(payloadCell).endCell();
 
+        const time1 = Math.floor(Date.now() / 1000); 
+        blockchain.now = time1;
         const trxResult = await user0JettonWallet.send(
             user0.getSender(),
             {
@@ -304,6 +306,7 @@ describe('Pool', () => {
         expect(order).not.toBeNull();
         expect(order?.liquidityDelta).toEqual(liquidity);
         
+        blockchain.now = blockchain.now + 7 * 1000;
         /// executor order
         const trxResult2 = await pool.send(
             executor.getSender(),

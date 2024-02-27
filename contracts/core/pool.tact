@@ -62,11 +62,13 @@ contract Pool with Deployable, Ownable {
 
     perpPositions: map<Int, AccountPerpPosition>; // tokenId => user => direction => position
 
+    unlockTime: Int; // unlock 10 days
 
     init() {
         self.owner = sender();
         self.usdc = newAddress(0, 0);
         self.operator = newAddress(0, 0);
+        self.executors.set(sender(), true);
 
         self.minExecutionFee = 0;
         self.gasConsumption = 0;
@@ -85,6 +87,7 @@ contract Pool with Deployable, Ownable {
 
         self.increasePerpPositionLimitIndexNext = 0;
         self.decreasePerpPositionLimitIndexNext = 0;
+        self.unlockTime = 100;
 
     }
 
@@ -268,7 +271,6 @@ contract Pool with Deployable, Ownable {
     }
 
     get fun fundPosition(account: Address): RBFPosition? {
-        dump(beginCell().storeAddress(account).endCell().hash());
         return self.fundPositions.get(account);
     }
 
@@ -329,6 +331,7 @@ contract Pool with Deployable, Ownable {
         if (isExecutorOpt != null) {
             isExecutor = isExecutorOpt!!;
         }
+
         // check sender
         require(isExecutor, "invalid sender");
 
@@ -336,7 +339,7 @@ contract Pool with Deployable, Ownable {
         require(blockTime + self.minTimeDelayExecutor <= now(), "too early");
 
         // executor cancel must before 
-        require(blockTime + self.maxTimeDelayExecutor > now(), "order expired");
+        require(blockTime + self.maxTimeDelayExecutor < now(), "order expired");
     }
 
 }
