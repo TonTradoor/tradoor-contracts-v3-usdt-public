@@ -17,12 +17,12 @@ contract Pool with Deployable, Ownable {
     tokenIds: map<Int, Bool>; // tokenId => enabled
     executors: map<Address, Bool>; // account => enabled
 
-    // RBF
-    usdc: Address;
+    // admin
+    usdc: Address; // pool USDC jetton wallet address
     owner: Address;
     operator: Address;
 
-    lockTime: Int = 10 * 24 * 60 * 60; // lock 15 days
+    lockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
 
     /// RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
@@ -62,12 +62,11 @@ contract Pool with Deployable, Ownable {
 
     perpPositions: map<Int, AccountPerpPosition>; // tokenId => user => direction => position
 
-    unlockTime: Int; // unlock 10 days
-
     init() {
         self.owner = sender();
         self.usdc = newAddress(0, 0);
         self.operator = newAddress(0, 0);
+        // TODO need owner to set
         self.executors.set(sender(), true);
 
         self.minExecutionFee = 0;
@@ -87,8 +86,6 @@ contract Pool with Deployable, Ownable {
 
         self.increasePerpPositionLimitIndexNext = 0;
         self.decreasePerpPositionLimitIndexNext = 0;
-        self.unlockTime = 100;
-
     }
 
     // ============================ Admin ================================ //
@@ -223,7 +220,7 @@ contract Pool with Deployable, Ownable {
 
         // update position
         fundPosition.liquidity = fundPosition.liquidity + order.liquidityDelta;
-        fundPosition.unlockTime = now() + self.unlockTime;
+        fundPosition.unlockTime = now() + self.lockTime:;
 
         // set position
         dump("execute increase rbf position order");
