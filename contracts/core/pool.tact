@@ -127,16 +127,17 @@ contract Pool with Deployable, Ownable {
         }
 
         // get op code
-        let opCode: Int = msg.forward_payload.loadInt(32);
+        let operation: Slice = msg.forward_payload.loadRef().asSlice();
+        let opCode: Int = operation.loadInt(32);
         if (opCode == OP_CREATE_INCREASE_RBF_POSITION) {
-            let account: Address = msg.from;
-            // let executionFee: Int = msg.forward_payload.loadInt(256);
-            let liquidityDelta: Int = msg.forward_payload.loadInt(256);
-            let ef_rs: Slice = msg.forward_payload.loadRef().asSlice();
-            let executionFee: Int = ef_rs.loadInt(256);
+            let account: Address = operation.loadAddress();
+            let liquidityDelta: Int = operation.loadCoins();
+            let executionFee: Int = operation.loadCoins();
             // for dev
             dump("receive create increase rbf position order op code");
+            dump(beginCell().storeAddress(account).endCell().hash());
             dump(liquidityDelta);
+            dump(executionFee);
             // TODO check amount == liquidityDelta?
 
             self.handleCreateIncreaseRBFPositionOrder(account, executionFee, liquidityDelta);
@@ -156,7 +157,7 @@ contract Pool with Deployable, Ownable {
         let index: Int = self.increaseRBFPositionIndexNext;
         self.increaseRBFPositionIndexNext = self.increaseRBFPositionIndexNext + 1;
         self.increaseRBFPositionOrders.set(index, IncreaseRBFPositionOrder{
-            account: ctx.sender,
+            account: account,
             liquidityDelta: liquidityDelta,
             executionFee: executionFee,
             blockTime: now()
@@ -164,7 +165,7 @@ contract Pool with Deployable, Ownable {
 
         // event
         emit(IncreaseRBFPositionCreatedEvent{
-            account: ctx.sender,
+            account: account,
             liquidityDelta: liquidityDelta,
             executionFee: executionFee,
             index: index
@@ -172,7 +173,6 @@ contract Pool with Deployable, Ownable {
     }
 
     receive(msg: CancelIncreaseRBFPositionOrder) {
-        dump(1);
         let ctx: Context = context();
 
         // check gas
@@ -183,9 +183,7 @@ contract Pool with Deployable, Ownable {
         if (orderOpt == null) {
             return;
         }
-        dump(1);
         let order: IncreaseRBFPositionOrder = orderOpt!!;
-
         self.shouldCancel(order.blockTime, ctx.sender);
 
         // delete order
@@ -225,6 +223,9 @@ contract Pool with Deployable, Ownable {
         fundPosition.unlockTime = now() + self.unlockTime;
 
         // set position
+        dump("execute increase rbf position order");
+        dump(beginCell().storeAddress(order.account).endCell().hash());
+
         self.fundPositions.set(order.account, fundPosition);
 
         // update global position
@@ -267,6 +268,7 @@ contract Pool with Deployable, Ownable {
     }
 
     get fun fundPosition(account: Address): RBFPosition? {
+        dump(beginCell().storeAddress(account).endCell().hash());
         return self.fundPositions.get(account);
     }
 
