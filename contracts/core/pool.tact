@@ -10,9 +10,10 @@ contract Pool with Deployable, Ownable {
     // config
     minExecutionFee: Int;
     gasConsumption: Int;
-    minTimeDelayExecutor: Int = 6; // executor execute after 6s
-    maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
-    minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
+    const minTimeDelayExecutor: Int = 6; // executor execute after 6s
+    const maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
+    const minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
+    const basisPoint: Int = 100000000; // 100%
 
     tokenIds: map<Int, Bool>; // tokenId => enabled
     executors: map<Address, Bool>; // account => enabled
@@ -22,9 +23,7 @@ contract Pool with Deployable, Ownable {
     owner: Address;
     operator: Address;
 
-    lockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
-
-    /// RBF
+    // RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
     increaseRBFPositionIndexNext: Int as uint128;
 
@@ -33,6 +32,9 @@ contract Pool with Deployable, Ownable {
 
     globalRBFPosition: GlobalRBFPosition;
     fundPositions: map<Address, RBFPosition>; // trader => RBF
+
+    lockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
+    bonusFactor: Int = 1;
 
     // LP
     increaseLPPositionOrders: map<Int, IncreaseLPPositionOrder>; // index => order
@@ -207,6 +209,7 @@ contract Pool with Deployable, Ownable {
         // init position if not exist
         let fundPosition: RBFPosition = RBFPosition{
                 liquidity: 0,
+                bonus: 0,
                 unlockTime: 0
             };
         if (fundPositionOpt != null) {
@@ -216,11 +219,17 @@ contract Pool with Deployable, Ownable {
         // update RBF
         // TODO update funding rate
 
-        // TODO calculate bonus
+        // calculate bonus
+        if (self.globalRBFPosition.riskBufferFund < self.globalRBFPosition.liquidity) {
+            let bonus: Int = self.bonusFactor * (self.globalRBFPosition.liquidity - self.globalRBFPosition.riskBufferFund) * self.basisPoint * order.liquidityDelta / self.globalRBFPosition.liquidity;
+            dump("bonus:");
+            dump(bonus);
+            fundPosition.bonus = fundPosition.bonus + bonus;
+        }
 
         // update position
         fundPosition.liquidity = fundPosition.liquidity + order.liquidityDelta;
-        fundPosition.unlockTime = now() + self.lockTime:;
+        fundPosition.unlockTime = now() + self.lockTime;
 
         // set position
         dump("execute increase rbf position order");

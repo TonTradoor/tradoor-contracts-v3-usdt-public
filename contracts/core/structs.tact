@@ -15,6 +15,7 @@ struct DecreaseRBFPositionOrder {
 
 struct RBFPosition {
     liquidity: Int;
+    bonus: Int;
     unlockTime: Int;
 }
 
