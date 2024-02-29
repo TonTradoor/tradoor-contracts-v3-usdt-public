@@ -9,30 +9,30 @@ message(0x7362d09c) TokenNotification {
 
 // ============================ RBF ================================ //
 // increase RBF
-message CreateIncreaseRBFPositionOrder {
-    executionFee: Int;
-    liquidityDelta: Int;
-}
-
 message CancelIncreaseRBFPositionOrder {
     index: Int;
+    uuid: Int;
 }
 
 message ExecuteIncreaseRBFPositionOrder {
     index: Int;
+    uuid: Int;
 }
 
 // decrease RBF
 message CreateDecreaseRBFPositionOrder {
+    executionFee: Int;
     liquidityDelta: Int;
 }
 
 message CancelDecreaseRBFPositionOrder {
     index: Int;
+    uuid: Int;
 }
 
 message ExecuteDecreaseRBFPositionOrder {
     index: Int;
+    uuid: Int;
 }
 
 // ============================ LP ================================ //
@@ -44,10 +44,12 @@ message CreateIncreaseLPPositionOrder {
 
 message CancelIncreaseLPPositionOrder {
     index: Int;
+    uuid: Int;
 }
 
 message ExecuteIncreaseLPPositionOrder {
     index: Int;
+    uuid: Int;
 }
 
 // decrease LP
@@ -58,10 +60,12 @@ message CreateDecreaseLPPositionOrder {
 
 message CancelDecreaseLPPositionOrder {
     index: Int;
+    uuid: Int;
 }
 
 message ExecuteDecreaseLPPositionOrder {
     index: Int;
+    uuid: Int;
 }
 
 // ============================ Perp ================================ //
@@ -76,10 +80,12 @@ message CreateIncreasePerpPositionMarketOrder {
 
 message CancelIncreasePerpPositionMarketOrder {
     index: Int;
+    uuid: Int;
 }
 
 message ExecuteIncreasePerpPositionMarketOrder {
     index: Int;
+    uuid: Int;
 }
 
 // decrease market Perp
@@ -93,10 +99,12 @@ message CreateDecreasePerpPositionMarketOrder {
 
 message CancelDecreasePerpPositionMarketOrder {
     index: Int;
+    uuid: Int;
 }
 
 message ExecuteDecreasePerpPositionMarketOrder {
     index: Int;
+    uuid: Int;
 }
 
 // increase limit Perp
@@ -111,10 +119,12 @@ message CreateIncreasePerpPositionLimitOrder {
 
 message CancelIncreasePerpPositionLimitOrder {
     index: Int;
+    uuid: Int;
 }
 
 message ExecuteIncreasePerpPositionLimitOrder {
     index: Int;
+    uuid: Int;
 }
 
 // decrease limit Perp
@@ -129,10 +139,12 @@ message CreateDecreasePerpPositionLimitOrder {
 
 message CancelDecreasePerpPositionLimitOrder {
     index: Int;
+    uuid: Int;
 }
 
 message ExecuteDecreasePerpPositionLimitOrder {
     index: Int;
+    uuid: Int;
 }
 
 // ============================ admin ================================ //

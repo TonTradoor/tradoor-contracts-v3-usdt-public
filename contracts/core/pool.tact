@@ -13,15 +13,15 @@ contract Pool with Deployable, Ownable {
     const minTimeDelayExecutor: Int = 6; // executor execute after 6s
     const maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
     const minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
-    const basisPoint: Int = 100000000; // 100%
 
-    tokenIds: map<Int, Bool>; // tokenId => enabled
-    executors: map<Address, Bool>; // account => enabled
+    tokenInfos: map<Int, TokenInfo>; // tokenIndex => tokenInfo
+    tokenIndexNext: Int;
 
     // admin
     usdc: Address; // pool USDC jetton wallet address
     owner: Address;
     operator: Address;
+    executors: map<Address, Bool>; // account => enabled
 
     // RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
@@ -44,25 +44,25 @@ contract Pool with Deployable, Ownable {
     decreaseLPPositionIndexNext: Int as uint128;
 
     globalLiquidity: Int;
-    globalLPPosition: map<Int, GlobalLPPosition>; // tokenId => globalLP
+    globalLPPositions: map<Int, GlobalLPPosition>; // tokenIndex => globalLP
     lpPositions: map<Address, LPPosition>; // trader => LP
 
     // Perp
     /// market order
-    increasePerpPositionMarketOrders: map<Int, IncreasePerpPositionMarketOrders>; // tokenId => index => order
+    increasePerpPositionMarketOrders: map<Int, IncreasePerpPositionMarketOrders>; // tokenIndex => index => order
     increasePerpPositionMarketIndexNext: Int as uint128;
 
-    decreasePerpPositionMarketOrders: map<Int, DecreasePerpPositionMarketOrders>; // tokenId => index => order
+    decreasePerpPositionMarketOrders: map<Int, DecreasePerpPositionMarketOrders>; // tokenIndex => index => order
     decreasePerpPositionMarketIndexNext: Int as uint128;
 
     /// limit order
-    increasePerpPositionLimitOrders: map<Int, IncreasePerpPositionLimitOrders>; // tokenId => index => order
+    increasePerpPositionLimitOrders: map<Int, IncreasePerpPositionLimitOrders>; // tokenIndex => index => order
     increasePerpPositionLimitIndexNext: Int as uint128;
 
-    decreasePerpPositionLimitOrders: map<Int, DecreasePerpPositionLimitOrders>; // tokenId => index => order
+    decreasePerpPositionLimitOrders: map<Int, DecreasePerpPositionLimitOrders>; // tokenIndex => index => order
     decreasePerpPositionLimitIndexNext: Int as uint128;
 
-    perpPositions: map<Int, AccountPerpPosition>; // tokenId => user => direction => position
+    perpPositions: map<Int, AccountPerpPosition>; // tokenIndex => user => direction => position
 
     init() {
         self.owner = sender();
@@ -70,6 +70,8 @@ contract Pool with Deployable, Ownable {
         self.operator = newAddress(0, 0);
         // TODO need owner to set
         self.executors.set(sender(), true);
+
+        self.tokenIndexNext = 0;
 
         self.minExecutionFee = 0;
         self.gasConsumption = 0;
@@ -192,7 +194,8 @@ contract Pool with Deployable, Ownable {
         self.increaseRBFPositionOrders.set(msg.index, null);
         // event
         emit(IncreaseRBFPositionCancelledEvent{
-            index: msg.index
+            index: msg.index,
+            uuid: msg.uuid
         }.toCell());
     }
 
@@ -219,9 +222,14 @@ contract Pool with Deployable, Ownable {
         // update RBF
         // TODO update funding rate
 
-        // calculate bonus
-        if (self.globalRBFPosition.riskBufferFund < self.globalRBFPosition.liquidity) {
-            let bonus: Int = self.bonusFactor * (self.globalRBFPosition.liquidity - self.globalRBFPosition.riskBufferFund) * self.basisPoint * order.liquidityDelta / self.globalRBFPosition.liquidity;
+        // TODO calculate bonus
+        let globalNetRBF: Int = self.globalRBFPosition.riskBufferFund + self.calculateTotalGlobalUnrealizedPnl();
+        if (globalNetRBF < 0) {
+            globalNetRBF = 0;
+        }
+        if (globalNetRBF < self.globalRBFPosition.liquidity) {
+            let bonus: Int = self.bonusFactor * (self.globalRBFPosition.liquidity - globalNetRBF)
+             * BASIS_POINT * order.liquidityDelta / self.globalRBFPosition.liquidity;
             dump("bonus:");
             dump(bonus);
             fundPosition.bonus = fundPosition.bonus + bonus;
@@ -246,7 +254,8 @@ contract Pool with Deployable, Ownable {
 
         // event
         emit(IncreaseRBFPositionExecutedEvent{
-            index: msg.index
+            index: msg.index,
+            uuid: msg.uuid
         }.toCell());
         emit(RBFPositionIncreasedEvent{
             account: order.account,
@@ -257,15 +266,139 @@ contract Pool with Deployable, Ownable {
     }
 
     receive(msg: CreateDecreaseRBFPositionOrder) {
-        
+        let ctx: Context = context();
+        // check gas
+        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
+        // check execution fee
+        require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
+
+        // add new order
+        let index: Int = self.decreaseRBFPositionIndexNext;
+        self.decreaseRBFPositionIndexNext = self.decreaseRBFPositionIndexNext + 1;
+        self.decreaseRBFPositionOrders.set(index, DecreaseRBFPositionOrder{
+            account: sender(),
+            liquidityDelta: msg.liquidityDelta,
+            executionFee: msg.executionFee,
+            blockTime: now()
+        });
+
+        // event
+        emit(DecreaseRBFPositionCreatedEvent{
+            account: sender(),
+            liquidityDelta: msg.liquidityDelta,
+            executionFee: msg.executionFee,
+            index: index
+        }.toCell());
     }
 
     receive(msg: CancelDecreaseRBFPositionOrder) {
-        
+        let ctx: Context = context();
+
+        // check gas
+        require(ctx.value >= self.gasConsumption, "gas not enough");
+
+        // check order
+        let orderOpt: DecreaseRBFPositionOrder? = self.decreaseRBFPositionOrders.get(msg.index);
+        if (orderOpt == null) {
+            return;
+        }
+        let order: DecreaseRBFPositionOrder = orderOpt!!;
+        self.shouldCancel(order.blockTime, ctx.sender);
+
+        // delete order
+        self.decreaseRBFPositionOrders.set(msg.index, null);
+        // event
+        emit(DecreaseRBFPositionCancelledEvent{
+            index: msg.index,
+            uuid: msg.uuid
+        }.toCell());
     }
 
     receive(msg: ExecuteDecreaseRBFPositionOrder) {
+        let orderOpt: DecreaseRBFPositionOrder? = self.decreaseRBFPositionOrders.get(msg.index);
+        // check order
+        require(orderOpt != null, "order not exist");
+
+        let order: DecreaseRBFPositionOrder = orderOpt!!;
+        self.shouldExecute(order.blockTime);
+
+        // update position
+        let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
+        // init position if not exist
+        let fundPosition: RBFPosition = RBFPosition{
+                liquidity: 0,
+                bonus: 0,
+                unlockTime: 0
+            };
+        if (fundPositionOpt != null) {
+            fundPosition = fundPositionOpt!!;
+        }
+
+        // check unlock time
+        require(fundPosition.unlockTime >= now(), "not reach unlock time");
+        // check liquidity delta
+        require(fundPosition.liquidity >= order.liquidityDelta, "insufficient liquidity");
+
+        // update RBF
+        // TODO update funding rate
         
+
+
+        // calculate LP global unrealized pnl
+        let totalGlobalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
+        require(self.globalRBFPosition.riskBufferFund + totalGlobalUnrealizedPnl > 0, "insufficient global RBF");
+
+        // TODO calculate redeem amount
+
+
+        // update position
+        fundPosition.liquidity = fundPosition.liquidity - order.liquidityDelta;
+
+        // set position
+        dump("execute decrease rbf position order");
+        dump(beginCell().storeAddress(order.account).endCell().hash());
+
+        self.fundPositions.set(order.account, fundPosition);
+
+        // update global position
+        self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund - order.liquidityDelta;
+        self.globalRBFPosition.liquidity = self.globalRBFPosition.liquidity - order.liquidityDelta;
+
+        // delete order
+        self.decreaseRBFPositionOrders.set(msg.index, null);
+
+        // event
+        emit(DecreaseRBFPositionExecutedEvent{
+            index: msg.index,
+            uuid: msg.uuid
+        }.toCell());
+        emit(RBFPositionDecreasedEvent{
+            account: order.account,
+            liquidityDelta: order.liquidityDelta,
+            liquidityAfter: fundPosition.liquidity,
+            unlockTimeAfter: fundPosition.unlockTime
+        }.toCell());
+    }
+
+    fun calculateTotalGlobalUnrealizedPnl(): Int {
+        let totalGlobalUnrealizedPnl: Int = 0;
+        let i: Int = 0;
+        while(i < self.tokenIndexNext) {
+            let tokenEnabled: Bool = self.tokenEnabled(i);
+            if (tokenEnabled) {
+                let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(i);
+                if (globalLPPositionOpt != null) {
+                    let globalLPPosition: GlobalLPPosition = globalLPPositionOpt!!;
+                    // TODO get index price
+                    let indexPrice: Int = 1 * PRICE_FACTOR;
+                    // unrealized pnl
+                    let unrealizedPnl: Int = self.calculateUnrealizedPnL(globalLPPosition.isLong, globalLPPosition.netSize, 
+                        globalLPPosition.entryPrice, indexPrice);
+                    totalGlobalUnrealizedPnl = totalGlobalUnrealizedPnl + unrealizedPnl;
+                }
+            }
+        }
+        return totalGlobalUnrealizedPnl;
     }
 
     get fun increaseRBFPositionIndexNext(): Int {
@@ -346,6 +479,22 @@ contract Pool with Deployable, Ownable {
 
         // executor cancel must before 
         require(blockTime + self.maxTimeDelayExecutor < now(), "order expired");
+    }
+
+    fun tokenEnabled(tokenIndex: Int): Bool {
+        let tokenInfoOpt: TokenInfo? = self.tokenInfos.get(tokenIndex);
+        if (tokenInfoOpt == null) {
+            return false;
+        }
+        return (tokenInfoOpt!!).enable;
+    }
+
+    fun calculateUnrealizedPnL(isLong: Bool, size: Int, entryPrice: Int, price: Int): Int {
+        if (isLong) {
+            return size * (price - entryPrice) / PRICE_FACTOR;
+        } else {
+            return size * (entryPrice - price) / PRICE_FACTOR;
+        }
     }
 
 }

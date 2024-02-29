@@ -9,10 +9,12 @@ message IncreaseRBFPositionCreatedEvent {
 
 message IncreaseRBFPositionCancelledEvent {
     index: Int;
+    uuid: Int;
 }
 
 message IncreaseRBFPositionExecutedEvent {
     index: Int;
+    uuid: Int;
 }
 
 message RBFPositionIncreasedEvent {
@@ -32,6 +34,12 @@ message DecreaseRBFPositionCreatedEvent {
 
 message DecreaseRBFPositionCancelledEvent {
     index: Int;
+    uuid: Int;
+}
+
+message DecreaseRBFPositionExecutedEvent {
+    index: Int;
+    uuid: Int;
 }
 
 message RBFPositionDecreasedEvent {
@@ -58,6 +66,12 @@ message IncreaseLPPositionCreatedEvent {
 
 message IncreaseLPPositionCancelledEvent {
     index: Int;
+    uuid: Int;
+}
+
+message IncreaseLPPositionExecutedEvent {
+    index: Int;
+    uuid: Int;
 }
 
 message LPPositionIncreasedEvent {
@@ -81,6 +95,12 @@ message DecreaseLPPositionCreatedEvent {
 
 message DecreaseLPPositionCancelledEvent {
     index: Int;
+    uuid: Int;
+}
+
+message DecreaseLPPositionExecutedEvent {
+    index: Int;
+    uuid: Int;
 }
 
 message LPPositionDecreasedEvent {
@@ -115,6 +135,13 @@ message IncreasePerpPositionMarketCreatedEvent {
 message IncreasePerpPositionMarketCancelledEvent {
     token: String;
     index: Int;
+    uuid: Int;
+}
+
+message IncreasePerpPositionMarketExecutedEvent {
+    token: String;
+    index: Int;
+    uuid: Int;
 }
 
 message IncreasePerpPositionLimitCreatedEvent {
@@ -132,6 +159,13 @@ message IncreasePerpPositionLimitCreatedEvent {
 message IncreasePerpPositionLimitCancelledEvent {
     token: String;
     index: Int;
+    uuid: Int;
+}
+
+message IncreasePerpPositionLimitExecutedEvent {
+    token: String;
+    index: Int;
+    uuid: Int;
 }
 
 message PerpPositionIncreasedEvent {
@@ -162,6 +196,13 @@ message DecreasePerpPositionMarketCreatedEvent {
 message DecreasePerpPositionMarketCancelledEvent {
     token: String;
     index: Int;
+    uuid: Int;
+}
+
+message DecreasePerpPositionMarketExecutedEvent {
+    token: String;
+    index: Int;
+    uuid: Int;
 }
 
 message DecreasePerpPositionLimitCreatedEvent {
@@ -179,6 +220,13 @@ message DecreasePerpPositionLimitCreatedEvent {
 message DecreasePerpPositionLimitCancelledEvent {
     token: String;
     index: Int;
+    uuid: Int;
+}
+
+message DecreasePerpPositionLimitExecutedEvent {
+    token: String;
+    index: Int;
+    uuid: Int;
 }
 
 message PerpPositionDecreasedEvent {

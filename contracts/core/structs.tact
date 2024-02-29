@@ -1,4 +1,10 @@
 // ============================ RBF ================================ //
+struct TokenInfo {
+    name: String;
+    enable: Bool;
+}
+
+// ============================ RBF ================================ //
 struct IncreaseRBFPositionOrder {
     account: Address;
     liquidityDelta: Int;
