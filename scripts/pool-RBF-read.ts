@@ -1,10 +1,13 @@
-import { Address, toNano } from '@ton/core';
-import { Pool, attachPool } from '../wrappers/Pool';
+import { Address, beginCell, toNano } from '@ton/core';
+import { Pool, attachJettonWallet, attachMockJetton, attachPool } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { getConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
+    const jetton = attachMockJetton(provider);
+
+    // get next index
     let index = await pool.getIncreaseRbfPositionIndexNext();
     let prevIndex = index - 1n;
     console.log(`index:`, index);
@@ -18,24 +21,5 @@ export async function run(provider: NetworkProvider) {
     // get last order
     let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
     console.log(`order:`, order);
-
-    // execute order
-    await pool.send(
-        provider.sender(),
-        {
-            value: toNano('0.5'),
-        },
-        {
-            $$type: 'ExecuteIncreaseRBFPositionOrder',
-            index: prevIndex,
-            trxId: 0n
-        }
-    );
-    // wait for trx
-    await sleep(10000);
-
-    // get position
-    let position = await pool.getFundPosition(order!!.account);
-    console.log(`position:`, position);
 
 }

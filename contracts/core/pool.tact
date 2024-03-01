@@ -100,6 +100,12 @@ contract Pool with Deployable, Ownable {
         self.reply("operator set".asComment());
     }
 
+    receive(msg: SetExecutor) {
+        self.requireOwner();
+        self.executors.set(msg.executor, msg.enable);
+        self.reply("executor set".asComment());
+    }
+
     receive(msg: SetUSDC) {
         self.requireOwner();
         self.usdc = msg.usdc;
@@ -190,12 +196,14 @@ contract Pool with Deployable, Ownable {
         let order: IncreaseRBFPositionOrder = orderOpt!!;
         self.shouldCancel(order.blockTime, ctx.sender);
 
+        // TODO transfer execution fee
+
         // delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
         // event
         emit(IncreaseRBFPositionCancelledEvent{
             index: msg.index,
-            uuid: msg.uuid
+            trxId: msg.trxId
         }.toCell());
     }
 
@@ -252,10 +260,12 @@ contract Pool with Deployable, Ownable {
         // delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
 
+        // TODO transfer execution fee
+
         // event
         emit(IncreaseRBFPositionExecutedEvent{
             index: msg.index,
-            uuid: msg.uuid
+            trxId: msg.trxId
         }.toCell());
         emit(RBFPositionIncreasedEvent{
             account: order.account,
@@ -305,12 +315,15 @@ contract Pool with Deployable, Ownable {
         let order: DecreaseRBFPositionOrder = orderOpt!!;
         self.shouldCancel(order.blockTime, ctx.sender);
 
+        // TODO transfer execution fee
+
+
         // delete order
         self.decreaseRBFPositionOrders.set(msg.index, null);
         // event
         emit(DecreaseRBFPositionCancelledEvent{
             index: msg.index,
-            uuid: msg.uuid
+            trxId: msg.trxId
         }.toCell());
     }
 
@@ -367,10 +380,13 @@ contract Pool with Deployable, Ownable {
         // delete order
         self.decreaseRBFPositionOrders.set(msg.index, null);
 
+        // TODO transfer execution fee
+
+
         // event
         emit(DecreaseRBFPositionExecutedEvent{
             index: msg.index,
-            uuid: msg.uuid
+            trxId: msg.trxId
         }.toCell());
         emit(RBFPositionDecreasedEvent{
             account: order.account,
@@ -478,7 +494,7 @@ contract Pool with Deployable, Ownable {
         require(blockTime + self.minTimeDelayExecutor <= now(), "too early");
 
         // executor cancel must before 
-        require(blockTime + self.maxTimeDelayExecutor < now(), "order expired");
+        require(blockTime + self.maxTimeDelayExecutor > now(), "order expired");
     }
 
     fun tokenEnabled(tokenIndex: Int): Bool {

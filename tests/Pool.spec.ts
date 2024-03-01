@@ -238,7 +238,8 @@ describe('Pool', () => {
             },
             {
                 $$type: 'CancelIncreaseRBFPositionOrder',
-                index: prevIndex
+                index: prevIndex,
+                trxId: 1n
             }
         );
 
@@ -315,7 +316,8 @@ describe('Pool', () => {
             },
             {
                 $$type: 'ExecuteIncreaseRBFPositionOrder',
-                index: prevIndex
+                index: prevIndex,
+                trxId: 1n
             }
         );
 
