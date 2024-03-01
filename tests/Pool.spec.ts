@@ -13,6 +13,7 @@ describe('Pool', () => {
     let jetton: SandboxContract<MockJetton>;
     let executor: SandboxContract<TreasuryContract>;
     let user0: SandboxContract<TreasuryContract>;
+    let executionFeeReceiver: SandboxContract<TreasuryContract>;
 
     beforeEach(async () => {
         blockchain = await Blockchain.create();
@@ -22,6 +23,7 @@ describe('Pool', () => {
         deployer = await blockchain.treasury('deployer');
         executor = await blockchain.treasury('deployer');
         user0 = await blockchain.treasury('user0');
+        executionFeeReceiver = await blockchain.treasury('executionFeeReceiver');
 
         const deployResult = await pool.send(
             deployer.getSender(),
@@ -38,6 +40,32 @@ describe('Pool', () => {
             from: deployer.address,
             to: pool.address,
             deploy: true,
+            success: true,
+        });
+
+        // print pool ton balance
+        let poolTonBalance = (await blockchain.getContract(pool.address)).balance;
+        console.log("poolTonBalance", poolTonBalance.toLocaleString());
+
+        // set execution fee receiver
+        const setExecutionFeeReceiverResult = await pool.send(
+            deployer.getSender(),
+            {
+                value: toNano('0.1'),
+            },
+            {
+                $$type: 'SetExecutionFeeReceiver',
+                receiver: executionFeeReceiver.address,
+            }
+        );
+
+        // print pool ton balance
+        poolTonBalance = (await blockchain.getContract(pool.address)).balance;
+        console.log("poolTonBalance after SetExecutionFeeReceiver", poolTonBalance.toLocaleString());
+
+        expect(setExecutionFeeReceiverResult.transactions).toHaveTransaction({
+            from: deployer.address,
+            to: pool.address,
             success: true,
         });
 

@@ -114,6 +114,9 @@ contract Pool with Deployable, Ownable {
     receive(msg: SetOperator) {
         self.requireOwner();
         self.operator = msg.operator;
+        emit(OperatorUpdatedEvent{
+            newOperator: self.operator
+        }.toCell());
         self.reply("operator set".asComment());
     }
 
@@ -126,7 +129,16 @@ contract Pool with Deployable, Ownable {
     receive(msg: SetUSDC) {
         self.requireOwner();
         self.usdc = msg.usdc;
-        self.reply("usdc set".asComment());
+    }
+
+    receive(msg: SetExecutionFeeReceiver) {
+        self.requireOwner();
+        self.executionFeeReceiver = msg.receiver;
+        // emit(ExecutionFeeReceiverUpdatedEvent{
+        //     newExecutionFeeReceiver: self.executionFeeReceiver
+        // }.toCell());
+
+        self.reply("execution fee receiver set".asComment());
     }
 
     get fun operator(): Address {
@@ -148,7 +160,7 @@ contract Pool with Deployable, Ownable {
     * @param msg The TokenNotification message received.
     */
     receive(msg: TokenNotification) {
-        // TODO auto refund
+        // just ignore other token
         if (sender() != self.usdc) {
             return;
         }

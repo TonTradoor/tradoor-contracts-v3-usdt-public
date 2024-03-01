@@ -150,3 +150,7 @@ message SetExecutor {
 message SetUSDC {
     usdc: Address;
 }
+
+message SetExecutionFeeReceiver{
+    receiver: Address;
+}
