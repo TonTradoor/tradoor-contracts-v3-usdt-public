@@ -1,4 +1,6 @@
 const OP_CREATE_INCREASE_RBF_POSITION: Int = 1;
+const OP_CREATE_INCREASE_LP_POSITION: Int = 2;
+const OP_CREATE_INCREASE_POSITIOn: Int = 3;
 
 const BASIS_POINT: Int = pow(10, 8);
 const PRICE_FACTOR: Int = pow(10, 16);

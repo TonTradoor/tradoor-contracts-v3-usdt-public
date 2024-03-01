@@ -22,6 +22,7 @@ contract Pool with Deployable, Ownable {
     owner: Address;
     operator: Address;
     executors: map<Address, Bool>; // account => enabled
+    executionFeeReceiver: Address;
 
     // RBF
     increaseRBFPositionOrders: map<Int, IncreaseRBFPositionOrder>; // index => order
@@ -70,6 +71,7 @@ contract Pool with Deployable, Ownable {
         self.operator = newAddress(0, 0);
         // TODO need owner to set
         self.executors.set(sender(), true);
+        self.executionFeeReceiver = sender();
 
         self.tokenIndexNext = 0;
 
@@ -137,31 +139,48 @@ contract Pool with Deployable, Ownable {
         }
 
         // get op code
-        let operation: Slice = msg.forward_payload.loadRef().asSlice();
+        let operation: Slice = msg.forwardPayload.loadRef().asSlice();
         let opCode: Int = operation.loadInt(32);
         if (opCode == OP_CREATE_INCREASE_RBF_POSITION) {
-            let account: Address = operation.loadAddress();
             let liquidityDelta: Int = operation.loadCoins();
             let executionFee: Int = operation.loadCoins();
-            // for dev
             dump("receive create increase rbf position order op code");
-            dump(beginCell().storeAddress(account).endCell().hash());
+            dump(beginCell().storeAddress(msg.from).endCell().hash());
             dump(liquidityDelta);
             dump(executionFee);
-            // TODO check amount == liquidityDelta?
 
-            self.handleCreateIncreaseRBFPositionOrder(account, executionFee, liquidityDelta);
+            self.handleCreateIncreaseRBFPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, liquidityDelta);
         } 
     }
 
+    fun refundLiquidity(queryId: Int, amount: Int, to: Address) {
+        dump("refundLiquidity");
+        send(SendParameters{
+            to: self.usdc, 
+            value: 0,
+            mode: SendRemainingValue, 
+            bounce: false,
+            body: self.createJettonTransferBody(queryId, 0, amount, to)
+        });
+    }
+
     // ============================ RBF ================================ //
-    fun handleCreateIncreaseRBFPositionOrder(account: Address, executionFee: Int, liquidityDelta: Int) {
+      
+    fun handleCreateIncreaseRBFPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, liquidityDelta: Int) {
         dump("handleCreateIncreaseRBFPositionOrder");
         let ctx: Context = context();
-        // check gas
-        require(ctx.value - executionFee >= self.gasConsumption, "gas not enough");
-        // check execution fee
-        require(executionFee >= self.minExecutionFee, "execution fee not enough");
+
+        if (jettonFromAmount < liquidityDelta) {
+            self.refundLiquidity(queryId, jettonFromAmount, account);
+            dump("refund fro not enough liquidity");
+            return;
+        }
+        // check executionFee
+        if (ctx.value < executionFee) {
+            dump("execution fee not enough");
+            self.refundLiquidity(queryId, jettonFromAmount, account);
+            return;
+        }
 
         // add new order
         let index: Int = self.increaseRBFPositionIndexNext;
@@ -259,8 +278,14 @@ contract Pool with Deployable, Ownable {
 
         // delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
-
-        // TODO transfer execution fee
+        
+        // transfer execution fee
+        send(SendParameters{
+            to: self.executionFeeReceiver,
+            bounce: true,
+            value: order.executionFee,
+            mode: SendIgnoreErrors
+        });
 
         // event
         emit(IncreaseRBFPositionExecutedEvent{
@@ -511,6 +536,20 @@ contract Pool with Deployable, Ownable {
         } else {
             return size * (entryPrice - price) / PRICE_FACTOR;
         }
+    }
+
+    // create jetton transfer body
+    fun createJettonTransferBody(queryId: Int, fwdAmount: Int, jettonAmount: Int, to: Address): Cell {
+        return beginCell()
+            .storeInt(0xf8a7ea5, 32)
+            .storeInt(queryId, 64)
+            .storeCoins(jettonAmount)
+            .storeAddress(to) // to_owner_address
+            .storeAddress(to)
+            .storeInt(0, 1)
+            .storeCoins(fwdAmount) // forward_ton_amount
+            .storeInt(0, 1)
+            .endCell();
     }
 
 }
