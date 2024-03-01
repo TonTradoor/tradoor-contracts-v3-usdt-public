@@ -255,8 +255,9 @@ contract Pool with Deployable, Ownable {
             globalNetRBF = 0;
         }
         if (globalNetRBF < self.globalRBFPosition.liquidity) {
+            // bonus = b + s (1 - x) * liquidity
             let bonus: Int = self.bonusFactor * (self.globalRBFPosition.liquidity - globalNetRBF)
-             * BASIS_POINT * order.liquidityDelta / self.globalRBFPosition.liquidity;
+                 * order.liquidityDelta / self.globalRBFPosition.liquidity;
             dump("bonus:");
             dump(bonus);
             fundPosition.bonus = fundPosition.bonus + bonus;
@@ -387,10 +388,34 @@ contract Pool with Deployable, Ownable {
         require(self.globalRBFPosition.riskBufferFund + totalGlobalUnrealizedPnl > 0, "insufficient global RBF");
 
         // TODO calculate redeem amount
+        let globalNetRBF: Int = self.globalRBFPosition.riskBufferFund + self.calculateTotalGlobalUnrealizedPnl();
+        if (globalNetRBF < 0) {
+            globalNetRBF = 0;
+        }
+        require(globalNetRBF > 0, "insuficient global net RBF");
 
+        let redeem: Int = 0;
+        let bonus: Int = 0;
 
+        if (globalNetRBF >= self.globalRBFPosition.liquidity) {
+            let n: Int = ((now() - fundPosition.unlockTime)  + self.lockTime) / DAY;
+
+            if (fundPosition.bonus == 0) {
+                // bonus = liquidity * r（x-1）* min(n，100）* 0.1%
+                bonus = order.liquidityDelta * self.bonusFactor * (globalNetRBF - self.globalRBFPosition.liquidity) * min(n, 100) / (globalNetRBF * 1000);
+            } else {
+                let bonus1: Int = order.liquidityDelta * (globalNetRBF - self.globalRBFPosition.liquidity) / globalNetRBF;
+                let bonus2: Int = fundPosition.bonus;
+                let bonus3: Int = order.liquidityDelta * self.bonusFactor * (globalNetRBF - self.globalRBFPosition.liquidity) * min(n, 100) / (globalNetRBF * 1000);
+                bonus = max(min(bonus1, bonus2), bonus3);
+            }
+            redeem = self.globalRBFPosition.liquidity + bonus;
+        } else {
+            redeem = order.liquidityDelta * globalNetRBF / self.globalRBFPosition.liquidity;
+        }
         // update position
         fundPosition.liquidity = fundPosition.liquidity - order.liquidityDelta;
+        fundPosition.bonus = fundPosition.bonus - bonus;
 
         // set position
         dump("execute decrease rbf position order");
@@ -399,7 +424,7 @@ contract Pool with Deployable, Ownable {
         self.fundPositions.set(order.account, fundPosition);
 
         // update global position
-        self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund - order.liquidityDelta;
+        self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund - redeem;
         self.globalRBFPosition.liquidity = self.globalRBFPosition.liquidity - order.liquidityDelta;
 
         // delete order
@@ -518,7 +543,7 @@ contract Pool with Deployable, Ownable {
         // executor cancel must after minTimeDelayExecutor
         require(blockTime + self.minTimeDelayExecutor <= now(), "too early");
 
-        // executor cancel must before 
+        // executor cancel must before maxTimeDelayExecutor
         require(blockTime + self.maxTimeDelayExecutor > now(), "order expired");
     }
 

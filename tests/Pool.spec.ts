@@ -392,7 +392,7 @@ describe('Pool', () => {
         expect(order).not.toBeNull();
         expect(order?.liquidityDelta).toEqual(liquidity);
         
-        blockchain.now = blockchain.now + 7 * 1000;
+        blockchain.now = blockchain.now + 7;
         /// executor order
         const trxResult2 = await pool.send(
             executor.getSender(),
