@@ -6,9 +6,10 @@ import { attachJettonWallet, attachMockJetton } from '../wrappers/Pool';
 export async function run(provider: NetworkProvider) {
     const sampleJetton = attachMockJetton(provider);
 
-    let recevier = provider.sender().address!!;
+    const recevier = Address.parse(await provider.ui().input('recevier address:'));
+    const amount = await provider.ui().input('mint amount:');
 
-    console.log('mint to', recevier);
+    console.log(`mint to ${recevier} for ${amount}`);
 
     await sampleJetton.send(
         provider.sender(),
@@ -17,7 +18,7 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'Mint',
-            amount: toNano('100'),
+            amount: toNano(amount),
             receiver: recevier
         }
     );

@@ -17,6 +17,14 @@ contract Pool with Deployable, Ownable {
     tokenInfos: map<Int, TokenInfo>; // tokenIndex => tokenInfo
     tokenIndexNext: Int;
 
+    lockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
+    bonusFactor: Int = 1;
+
+    minLPMargin: Int;
+    maxLPLeverage: Int;
+    lpLiquidationFee: Int;
+    lpMaxRiskRate: Int;
+
     // admin
     usdc: Address; // pool USDC jetton wallet address
     owner: Address;
@@ -34,9 +42,6 @@ contract Pool with Deployable, Ownable {
     globalRBFPosition: GlobalRBFPosition;
     fundPositions: map<Address, RBFPosition>; // trader => RBF
 
-    lockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
-    bonusFactor: Int = 1;
-
     // LP
     increaseLPPositionOrders: map<Int, IncreaseLPPositionOrder>; // index => order
     increaseLPPositionIndexNext: Int as uint128;
@@ -47,6 +52,9 @@ contract Pool with Deployable, Ownable {
     globalLiquidity: Int;
     globalLPPositions: map<Int, GlobalLPPosition>; // tokenIndex => globalLP
     lpPositions: map<Address, LPPosition>; // trader => LP
+
+    lpTradingFeeGrowth: Int;
+    lpFundingFeeGrowth: Int;
 
     // Perp
     /// market order
@@ -75,8 +83,13 @@ contract Pool with Deployable, Ownable {
 
         self.tokenIndexNext = 0;
 
-        self.minExecutionFee = 0;
-        self.gasConsumption = 0;
+        self.minExecutionFee = ton("0.1");
+        self.gasConsumption = ton("0.1");
+
+        self.minLPMargin = 10;
+        self.maxLPLeverage = 100;
+        self.lpLiquidationFee = 0;
+        self.lpMaxRiskRate = pow(10, 6);
 
         self.increaseRBFPositionIndexNext = 0;
         self.decreaseRBFPositionIndexNext = 0;
@@ -86,6 +99,8 @@ contract Pool with Deployable, Ownable {
         self.decreaseLPPositionIndexNext = 0;
 
         self.globalLiquidity = 0;
+        self.lpTradingFeeGrowth = 0;
+        self.lpFundingFeeGrowth = 0;
 
         self.increasePerpPositionMarketIndexNext = 0;
         self.decreasePerpPositionMarketIndexNext = 0;
@@ -215,7 +230,13 @@ contract Pool with Deployable, Ownable {
         let order: IncreaseRBFPositionOrder = orderOpt!!;
         self.shouldCancel(order.blockTime, ctx.sender);
 
-        // TODO transfer execution fee
+        // transfer execution fee
+        send(SendParameters{
+            to: self.executionFeeReceiver,
+            bounce: true,
+            value: order.executionFee,
+            mode: SendIgnoreErrors
+        });
 
         // delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
@@ -234,7 +255,7 @@ contract Pool with Deployable, Ownable {
         let order: IncreaseRBFPositionOrder = orderOpt!!;
         self.shouldExecute(order.blockTime);
 
-        // update position
+        // get position
         let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
         // init position if not exist
         let fundPosition: RBFPosition = RBFPosition{
@@ -446,6 +467,184 @@ contract Pool with Deployable, Ownable {
         }.toCell());
     }
 
+    get fun increaseRBFPositionIndexNext(): Int {
+        return self.increaseRBFPositionIndexNext;
+    }
+
+    get fun increaseRBFPositionOrder(index: Int): IncreaseRBFPositionOrder? {
+        return self.increaseRBFPositionOrders.get(index);
+    }
+
+    get fun fundPosition(account: Address): RBFPosition? {
+        return self.fundPositions.get(account);
+    }
+
+    // ============================ LP ================================ //
+    fun handleCreateIncreaseLPPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, marginDelta: Int, liquidityDelta: Int) {
+        dump("handleCreateIncreaseLPPositionOrder");
+        let ctx: Context = context();
+
+        if (jettonFromAmount < liquidityDelta) {
+            self.refundLiquidity(queryId, jettonFromAmount, account);
+            dump("refund not enough liquidity");
+            return;
+        }
+        // check executionFee
+        if (ctx.value < executionFee) {
+            dump("execution fee not enough");
+            self.refundLiquidity(queryId, jettonFromAmount, account);
+            return;
+        }
+
+        // add new order
+        let index: Int = self.increaseLPPositionIndexNext;
+        self.increaseLPPositionIndexNext = self.increaseLPPositionIndexNext + 1;
+        self.increaseLPPositionOrders.set(index, IncreaseLPPositionOrder{
+            account: account,
+            marginDelta: marginDelta,
+            liquidityDelta: liquidityDelta,
+            executionFee: executionFee,
+            blockTime: now()
+        });
+
+        // event
+        emit(IncreaseLPPositionCreatedEvent{
+            account: account,
+            margin: marginDelta,
+            liquidityDelta: liquidityDelta,
+            executionFee: executionFee,
+            index: index
+        }.toCell());
+    }
+    
+    receive(msg: CancelIncreaseLPPositionOrder) {
+        let ctx: Context = context();
+
+        // check gas
+        require(ctx.value >= self.gasConsumption, "gas not enough");
+
+        // check order
+        let orderOpt: IncreaseLPPositionOrder? = self.increaseLPPositionOrders.get(msg.index);
+        if (orderOpt == null) {
+            return;
+        }
+        let order: IncreaseLPPositionOrder = orderOpt!!;
+        self.shouldCancel(order.blockTime, ctx.sender);
+
+        // transfer execution fee
+        send(SendParameters{
+            to: self.executionFeeReceiver,
+            bounce: true,
+            value: order.executionFee,
+            mode: SendIgnoreErrors
+        });
+
+        // delete order
+        self.increaseLPPositionOrders.set(msg.index, null);
+        // event
+        emit(IncreaseLPPositionCancelledEvent{
+            index: msg.index,
+            trxId: msg.trxId
+        }.toCell());
+    }
+    
+    receive(msg: ExecuteIncreaseLPPositionOrder) {
+        let orderOpt: IncreaseLPPositionOrder? = self.increaseLPPositionOrders.get(msg.index);
+        // check order
+        require(orderOpt != null, "order not exist");
+
+        let order: IncreaseLPPositionOrder = orderOpt!!;
+        self.shouldExecute(order.blockTime);
+
+        // get position
+        let lpPositionOpt: LPPosition? = self.lpPositions.get(order.account);
+        // init position if not exist
+        let lpPosition: LPPosition = LPPosition{
+            margin: 0,
+            liquidity: 0,
+            entryFundingFeeGrowth: 0,
+            entryTradingFeeGrowth: 0
+        };
+        let marginAfter: Int = 0;
+        if (lpPositionOpt == null) {
+            marginAfter = order.marginDelta;
+            // check margin and leverage
+            require(marginAfter >= self.minLPMargin, "insufficient margin");
+            require(marginAfter * self.maxLPLeverage >= order.liquidityDelta, "legerage too high");
+        } else {
+            lpPosition = lpPositionOpt!!;
+            // calculate funding fee
+            let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
+            // calculate trading fee
+            let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
+            marginAfter = lpPosition.margin + tradingFee + fundingFee + order.marginDelta;
+            // calculate pnl
+            let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
+            let unrealizedPnl: Int = globalUnrealizedPnl * self.globalLiquidity / lpPosition.liquidity;
+            let unrealizedLoss: Int = 0;
+            if (unrealizedPnl < 0) {
+                unrealizedLoss = -unrealizedPnl;
+            }
+            // check risk rate
+            require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT > unrealizedLoss, "risk rate too hig");
+            // check leverage
+            require(marginAfter * self.maxLPLeverage >= order.liquidityDelta, "legerage too high");
+        }
+        
+        // update position
+        lpPosition.margin = marginAfter;
+        lpPosition.liquidity = lpPosition.liquidity + order.liquidityDelta;
+        lpPosition.entryFundingFeeGrowth = self.lpFundingFeeGrowth;
+        lpPosition.entryTradingFeeGrowth = self.lpTradingFeeGrowth;
+
+        // set position
+        dump("execute increase lp position order");
+        dump(beginCell().storeAddress(order.account).endCell().hash());
+
+        self.lpPositions.set(order.account, lpPosition);
+
+        // update global position
+        self.globalLiquidity = self.globalLiquidity + order.liquidityDelta;
+
+        // delete order
+        self.increaseLPPositionOrders.set(msg.index, null);
+        
+        // transfer execution fee
+        send(SendParameters{
+            to: self.executionFeeReceiver,
+            bounce: true,
+            value: order.executionFee,
+            mode: SendIgnoreErrors
+        });
+
+        // event
+        emit(IncreaseLPPositionExecutedEvent{
+            index: msg.index,
+            trxId: msg.trxId
+        }.toCell());
+        emit(LPPositionIncreasedEvent{
+            account: order.account,
+            marginDelta: order.marginDelta,
+            marginAfter: lpPosition.margin,
+            liquidityDelta: order.liquidityDelta,
+            liquidityAfter: lpPosition.liquidity,
+            entryFundingFeeGrowth: lpPosition.entryFundingFeeGrowth,
+            entryTradingFeeGrowth: lpPosition.entryTradingFeeGrowth
+        }.toCell());
+    }
+    
+    receive(msg: CancelDecreaseLPPositionOrder) {
+        
+    }
+    
+    receive(msg: ExecuteDecreaseLPPositionOrder) {
+        
+    }
+
+    // ============================ Perp ================================ //
+
+
+    // ============================ private function ================================ //
     fun calculateTotalGlobalUnrealizedPnl(): Int {
         let totalGlobalUnrealizedPnl: Int = 0;
         let i: Int = 0;
@@ -467,47 +666,6 @@ contract Pool with Deployable, Ownable {
         return totalGlobalUnrealizedPnl;
     }
 
-    get fun increaseRBFPositionIndexNext(): Int {
-        return self.increaseRBFPositionIndexNext;
-    }
-
-    get fun increaseRBFPositionOrder(index: Int): IncreaseRBFPositionOrder? {
-        return self.increaseRBFPositionOrders.get(index);
-    }
-
-    get fun fundPosition(account: Address): RBFPosition? {
-        return self.fundPositions.get(account);
-    }
-
-    // ============================ LP ================================ //
-    receive(msg: CreateIncreaseLPPositionOrder) {
-        
-    }
-    
-    receive(msg: CancelIncreaseLPPositionOrder) {
-        
-    }
-    
-    receive(msg: ExecuteIncreaseLPPositionOrder) {
-        
-    }
-    
-    receive(msg: CreateDecreaseLPPositionOrder) {
-        
-    }
-    
-    receive(msg: CancelDecreaseLPPositionOrder) {
-        
-    }
-    
-    receive(msg: ExecuteDecreaseLPPositionOrder) {
-        
-    }
-
-    // ============================ Perp ================================ //
-
-
-    // ============================ private function ================================ //
     fun shouldCancel(blockTime: Int, account: Address) {
         let ctx: Context = context();
         // executor or trader

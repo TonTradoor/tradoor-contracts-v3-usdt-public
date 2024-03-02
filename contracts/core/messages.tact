@@ -37,11 +37,6 @@ message ExecuteDecreaseRBFPositionOrder {
 
 // ============================ LP ================================ //
 // increase LP
-message CreateIncreaseLPPositionOrder {
-    margin: Int;
-    liquidityDelta: Int;
-}
-
 message CancelIncreaseLPPositionOrder {
     index: Int;
     trxId: Int;
@@ -53,11 +48,6 @@ message ExecuteIncreaseLPPositionOrder {
 }
 
 // decrease LP
-message CreateDecreaseLPPositionOrder {
-    margin: Int;
-    liquidityDelta: Int;
-}
-
 message CancelDecreaseLPPositionOrder {
     index: Int;
     trxId: Int;
