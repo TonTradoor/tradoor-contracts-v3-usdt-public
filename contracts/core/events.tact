@@ -242,3 +242,12 @@ message PerpPositionDecreasedEvent {
     fundingFee: Int;
     tradingFee: Int;
 }
+
+// admin
+message OperatorUpdatedEvent {
+    newOperator: Address;
+}
+
+message ExecutionFeeReceiverUpdatedEvent {
+    newExecutionFeeReceiver: Address;
+}
