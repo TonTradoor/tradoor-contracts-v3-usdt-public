@@ -1,0 +1,1286 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: Context
+;; TLB: _ bounced:bool sender:address value:int257 raw:^slice = Context
+;;
+
+_ $Context$_get_value((int, slice, int, slice) v) inline {
+    var (v'bounced, v'sender, v'value, v'raw) = v;
+    return v'value;
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice to, int value, int mode, int bounce, cell body) inline {
+    return (bounce, to, value, mode, body, null(), null());
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value(slice to, int bounce, int value) inline {
+    return (bounce, to, value, 0, null(), null(), null());
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice to, int bounce, int value, int mode) inline {
+    return (bounce, to, value, mode, null(), null(), null());
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int queryId) inline {
+    return (queryId);
+}
+
+;;
+;; Type: TokenNotification
+;; Header: 0x7362d09c
+;; TLB: token_notification#7362d09c queryId:uint64 amount:coins from:address forwardPayload:remainder<slice> = TokenNotification
+;;
+
+(slice, ((int, int, slice, slice))) $TokenNotification$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1935855772);
+    var v'queryId = sc_0~load_uint(64);
+    var v'amount = sc_0~load_coins();
+    var v'from = sc_0~__tact_load_address();
+    var v'forwardPayload = sc_0;
+    return (sc_0, (v'queryId, v'amount, v'from, v'forwardPayload));
+}
+
+;;
+;; Type: CancelIncreaseRBFPositionOrder
+;; Header: 0x0c1d6024
+;; TLB: cancel_increase_rbf_position_order#0c1d6024 index:int257 trxId:int257 = CancelIncreaseRBFPositionOrder
+;;
+
+(slice, ((int, int))) $CancelIncreaseRBFPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 203251748);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: ExecuteIncreaseRBFPositionOrder
+;; Header: 0x6bc15d49
+;; TLB: execute_increase_rbf_position_order#6bc15d49 index:int257 trxId:int257 = ExecuteIncreaseRBFPositionOrder
+;;
+
+(slice, ((int, int))) $ExecuteIncreaseRBFPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1807834441);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: CreateDecreaseRBFPositionOrder
+;; Header: 0xa11162ed
+;; TLB: create_decrease_rbf_position_order#a11162ed executionFee:int257 liquidityDelta:int257 = CreateDecreaseRBFPositionOrder
+;;
+
+(slice, ((int, int))) $CreateDecreaseRBFPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2702271213);
+    var v'executionFee = sc_0~load_int(257);
+    var v'liquidityDelta = sc_0~load_int(257);
+    return (sc_0, (v'executionFee, v'liquidityDelta));
+}
+
+;;
+;; Type: CancelDecreaseRBFPositionOrder
+;; Header: 0x62266a9f
+;; TLB: cancel_decrease_rbf_position_order#62266a9f index:int257 trxId:int257 = CancelDecreaseRBFPositionOrder
+;;
+
+(slice, ((int, int))) $CancelDecreaseRBFPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1646684831);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: ExecuteDecreaseRBFPositionOrder
+;; Header: 0x27eb7733
+;; TLB: execute_decrease_rbf_position_order#27eb7733 index:int257 trxId:int257 = ExecuteDecreaseRBFPositionOrder
+;;
+
+(slice, ((int, int))) $ExecuteDecreaseRBFPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 669742899);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: CancelIncreaseLPPositionOrder
+;; Header: 0x7564ce0e
+;; TLB: cancel_increase_lp_position_order#7564ce0e index:int257 trxId:int257 = CancelIncreaseLPPositionOrder
+;;
+
+(slice, ((int, int))) $CancelIncreaseLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1969540622);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: ExecuteIncreaseLPPositionOrder
+;; Header: 0x63f5f996
+;; TLB: execute_increase_lp_position_order#63f5f996 index:int257 trxId:int257 = ExecuteIncreaseLPPositionOrder
+;;
+
+(slice, ((int, int))) $ExecuteIncreaseLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1677064598);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: CreateDecreaseLPPositionOrder
+;; Header: 0x7202bd7d
+;; TLB: create_decrease_lp_position_order#7202bd7d executionFee:int257 marginDelta:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder
+;;
+
+(slice, ((int, int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1912782205);
+    var v'executionFee = sc_0~load_int(257);
+    var v'marginDelta = sc_0~load_int(257);
+    var v'liquidityDelta = sc_0~load_int(257);
+    return (sc_0, (v'executionFee, v'marginDelta, v'liquidityDelta));
+}
+
+;;
+;; Type: CancelDecreaseLPPositionOrder
+;; Header: 0x455bcf7a
+;; TLB: cancel_decrease_lp_position_order#455bcf7a index:int257 trxId:int257 = CancelDecreaseLPPositionOrder
+;;
+
+(slice, ((int, int))) $CancelDecreaseLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1163644794);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: ExecuteDecreaseLPPositionOrder
+;; Header: 0x8db2f500
+;; TLB: execute_decrease_lp_position_order#8db2f500 index:int257 trxId:int257 = ExecuteDecreaseLPPositionOrder
+;;
+
+(slice, ((int, int))) $ExecuteDecreaseLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2377315584);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: SetOperator
+;; Header: 0x5d7a8d75
+;; TLB: set_operator#5d7a8d75 operator:address = SetOperator
+;;
+
+(slice, ((slice))) $SetOperator$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1568312693);
+    var v'operator = sc_0~__tact_load_address();
+    return (sc_0, (v'operator));
+}
+
+;;
+;; Type: SetExecutor
+;; Header: 0xecf070ec
+;; TLB: set_executor#ecf070ec executor:address enable:bool = SetExecutor
+;;
+
+(slice, ((slice, int))) $SetExecutor$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3975180524);
+    var v'executor = sc_0~__tact_load_address();
+    var v'enable = sc_0~load_int(1);
+    return (sc_0, (v'executor, v'enable));
+}
+
+;;
+;; Type: SetUSDC
+;; Header: 0x68154757
+;; TLB: set_usdc#68154757 usdc:address = SetUSDC
+;;
+
+(slice, ((slice))) $SetUSDC$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1746224983);
+    var v'usdc = sc_0~__tact_load_address();
+    return (sc_0, (v'usdc));
+}
+
+;;
+;; Type: SetExecutionFeeReceiver
+;; Header: 0xaf1c196a
+;; TLB: set_execution_fee_receiver#af1c196a receiver:address = SetExecutionFeeReceiver
+;;
+
+(slice, ((slice))) $SetExecutionFeeReceiver$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2937854314);
+    var v'receiver = sc_0~__tact_load_address();
+    return (sc_0, (v'receiver));
+}
+
+;;
+;; Type: IncreaseRBFPositionCreatedEvent
+;; Header: 0x9e68162d
+;; TLB: increase_rbf_position_created_event#9e68162d account:address liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseRBFPositionCreatedEvent
+;;
+
+builder $IncreaseRBFPositionCreatedEvent$_store(builder build_0, (slice, int, int, int) v) inline {
+    var (v'account, v'liquidityDelta, v'executionFee, v'index) = v;
+    build_0 = store_uint(build_0, 2657621549, 32);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    build_0 = build_0.store_int(v'executionFee, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'index, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $IncreaseRBFPositionCreatedEvent$_store_cell((slice, int, int, int) v) inline {
+    return $IncreaseRBFPositionCreatedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int)) $IncreaseRBFPositionCreatedEvent$_constructor_account_liquidityDelta_executionFee_index(slice account, int liquidityDelta, int executionFee, int index) inline {
+    return (account, liquidityDelta, executionFee, index);
+}
+
+;;
+;; Type: IncreaseRBFPositionCancelledEvent
+;; Header: 0x7eea6e53
+;; TLB: increase_rbf_position_cancelled_event#7eea6e53 index:int257 trxId:int257 = IncreaseRBFPositionCancelledEvent
+;;
+
+builder $IncreaseRBFPositionCancelledEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'index, v'trxId) = v;
+    build_0 = store_uint(build_0, 2129292883, 32);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = build_0.store_int(v'trxId, 257);
+    return build_0;
+}
+
+cell $IncreaseRBFPositionCancelledEvent$_store_cell((int, int) v) inline {
+    return $IncreaseRBFPositionCancelledEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $IncreaseRBFPositionCancelledEvent$_constructor_index_trxId(int index, int trxId) inline {
+    return (index, trxId);
+}
+
+;;
+;; Type: IncreaseRBFPositionExecutedEvent
+;; Header: 0x9f9fdf82
+;; TLB: increase_rbf_position_executed_event#9f9fdf82 index:int257 trxId:int257 = IncreaseRBFPositionExecutedEvent
+;;
+
+builder $IncreaseRBFPositionExecutedEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'index, v'trxId) = v;
+    build_0 = store_uint(build_0, 2678054786, 32);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = build_0.store_int(v'trxId, 257);
+    return build_0;
+}
+
+cell $IncreaseRBFPositionExecutedEvent$_store_cell((int, int) v) inline {
+    return $IncreaseRBFPositionExecutedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $IncreaseRBFPositionExecutedEvent$_constructor_index_trxId(int index, int trxId) inline {
+    return (index, trxId);
+}
+
+;;
+;; Type: RBFPositionIncreasedEvent
+;; Header: 0x3e87a2f1
+;; TLB: rbf_position_increased_event#3e87a2f1 account:address liquidityDelta:int257 liquidityAfter:int257 unlockTimeAfter:int257 = RBFPositionIncreasedEvent
+;;
+
+builder $RBFPositionIncreasedEvent$_store(builder build_0, (slice, int, int, int) v) inline {
+    var (v'account, v'liquidityDelta, v'liquidityAfter, v'unlockTimeAfter) = v;
+    build_0 = store_uint(build_0, 1049076465, 32);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    build_0 = build_0.store_int(v'liquidityAfter, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'unlockTimeAfter, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $RBFPositionIncreasedEvent$_store_cell((slice, int, int, int) v) inline {
+    return $RBFPositionIncreasedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int)) $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int unlockTimeAfter) inline {
+    return (account, liquidityDelta, liquidityAfter, unlockTimeAfter);
+}
+
+;;
+;; Type: DecreaseRBFPositionCreatedEvent
+;; Header: 0x99f1adce
+;; TLB: decrease_rbf_position_created_event#99f1adce account:address liquidityDelta:int257 executionFee:int257 index:int257 = DecreaseRBFPositionCreatedEvent
+;;
+
+builder $DecreaseRBFPositionCreatedEvent$_store(builder build_0, (slice, int, int, int) v) inline {
+    var (v'account, v'liquidityDelta, v'executionFee, v'index) = v;
+    build_0 = store_uint(build_0, 2582752718, 32);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    build_0 = build_0.store_int(v'executionFee, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'index, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $DecreaseRBFPositionCreatedEvent$_store_cell((slice, int, int, int) v) inline {
+    return $DecreaseRBFPositionCreatedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int)) $DecreaseRBFPositionCreatedEvent$_constructor_account_liquidityDelta_executionFee_index(slice account, int liquidityDelta, int executionFee, int index) inline {
+    return (account, liquidityDelta, executionFee, index);
+}
+
+;;
+;; Type: DecreaseRBFPositionCancelledEvent
+;; Header: 0x50ea209f
+;; TLB: decrease_rbf_position_cancelled_event#50ea209f index:int257 trxId:int257 = DecreaseRBFPositionCancelledEvent
+;;
+
+builder $DecreaseRBFPositionCancelledEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'index, v'trxId) = v;
+    build_0 = store_uint(build_0, 1357521055, 32);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = build_0.store_int(v'trxId, 257);
+    return build_0;
+}
+
+cell $DecreaseRBFPositionCancelledEvent$_store_cell((int, int) v) inline {
+    return $DecreaseRBFPositionCancelledEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $DecreaseRBFPositionCancelledEvent$_constructor_index_trxId(int index, int trxId) inline {
+    return (index, trxId);
+}
+
+;;
+;; Type: DecreaseRBFPositionExecutedEvent
+;; Header: 0xa71f6644
+;; TLB: decrease_rbf_position_executed_event#a71f6644 index:int257 trxId:int257 = DecreaseRBFPositionExecutedEvent
+;;
+
+builder $DecreaseRBFPositionExecutedEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'index, v'trxId) = v;
+    build_0 = store_uint(build_0, 2803852868, 32);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = build_0.store_int(v'trxId, 257);
+    return build_0;
+}
+
+cell $DecreaseRBFPositionExecutedEvent$_store_cell((int, int) v) inline {
+    return $DecreaseRBFPositionExecutedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $DecreaseRBFPositionExecutedEvent$_constructor_index_trxId(int index, int trxId) inline {
+    return (index, trxId);
+}
+
+;;
+;; Type: RBFPositionDecreasedEvent
+;; Header: 0x5bc7e914
+;; TLB: rbf_position_decreased_event#5bc7e914 account:address liquidityDelta:int257 liquidityAfter:int257 unlockTimeAfter:int257 = RBFPositionDecreasedEvent
+;;
+
+builder $RBFPositionDecreasedEvent$_store(builder build_0, (slice, int, int, int) v) inline {
+    var (v'account, v'liquidityDelta, v'liquidityAfter, v'unlockTimeAfter) = v;
+    build_0 = store_uint(build_0, 1539827988, 32);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    build_0 = build_0.store_int(v'liquidityAfter, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'unlockTimeAfter, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $RBFPositionDecreasedEvent$_store_cell((slice, int, int, int) v) inline {
+    return $RBFPositionDecreasedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int)) $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int unlockTimeAfter) inline {
+    return (account, liquidityDelta, liquidityAfter, unlockTimeAfter);
+}
+
+;;
+;; Type: IncreaseLPPositionCancelledEvent
+;; Header: 0x1cdd2599
+;; TLB: increase_lp_position_cancelled_event#1cdd2599 index:int257 trxId:int257 = IncreaseLPPositionCancelledEvent
+;;
+
+builder $IncreaseLPPositionCancelledEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'index, v'trxId) = v;
+    build_0 = store_uint(build_0, 484255129, 32);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = build_0.store_int(v'trxId, 257);
+    return build_0;
+}
+
+cell $IncreaseLPPositionCancelledEvent$_store_cell((int, int) v) inline {
+    return $IncreaseLPPositionCancelledEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $IncreaseLPPositionCancelledEvent$_constructor_index_trxId(int index, int trxId) inline {
+    return (index, trxId);
+}
+
+;;
+;; Type: IncreaseLPPositionExecutedEvent
+;; Header: 0x72176f5d
+;; TLB: increase_lp_position_executed_event#72176f5d index:int257 trxId:int257 = IncreaseLPPositionExecutedEvent
+;;
+
+builder $IncreaseLPPositionExecutedEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'index, v'trxId) = v;
+    build_0 = store_uint(build_0, 1914138461, 32);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = build_0.store_int(v'trxId, 257);
+    return build_0;
+}
+
+cell $IncreaseLPPositionExecutedEvent$_store_cell((int, int) v) inline {
+    return $IncreaseLPPositionExecutedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $IncreaseLPPositionExecutedEvent$_constructor_index_trxId(int index, int trxId) inline {
+    return (index, trxId);
+}
+
+;;
+;; Type: LPPositionIncreasedEvent
+;; Header: 0xb0bfdb5c
+;; TLB: lp_position_increased_event#b0bfdb5c account:address marginDelta:int257 marginAfter:int257 liquidityDelta:int257 liquidityAfter:int257 entryFundingFeeGrowth:int257 entryTradingFeeGrowth:int257 = LPPositionIncreasedEvent
+;;
+
+builder $LPPositionIncreasedEvent$_store(builder build_0, (slice, int, int, int, int, int, int) v) inline_ref {
+    var (v'account, v'marginDelta, v'marginAfter, v'liquidityDelta, v'liquidityAfter, v'entryFundingFeeGrowth, v'entryTradingFeeGrowth) = v;
+    build_0 = store_uint(build_0, 2965363548, 32);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'marginDelta, 257);
+    build_0 = build_0.store_int(v'marginAfter, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'liquidityDelta, 257);
+    build_1 = build_1.store_int(v'liquidityAfter, 257);
+    build_1 = build_1.store_int(v'entryFundingFeeGrowth, 257);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_int(v'entryTradingFeeGrowth, 257);
+    build_1 = store_ref(build_1, build_2.end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $LPPositionIncreasedEvent$_store_cell((slice, int, int, int, int, int, int) v) inline {
+    return $LPPositionIncreasedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int, int, int, int)) $LPPositionIncreasedEvent$_constructor_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_entryFundingFeeGrowth_entryTradingFeeGrowth(slice account, int marginDelta, int marginAfter, int liquidityDelta, int liquidityAfter, int entryFundingFeeGrowth, int entryTradingFeeGrowth) inline {
+    return (account, marginDelta, marginAfter, liquidityDelta, liquidityAfter, entryFundingFeeGrowth, entryTradingFeeGrowth);
+}
+
+;;
+;; Type: DecreaseLPPositionCreatedEvent
+;; Header: 0x36c6cc39
+;; TLB: decrease_lp_position_created_event#36c6cc39 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 index:int257 = DecreaseLPPositionCreatedEvent
+;;
+
+builder $DecreaseLPPositionCreatedEvent$_store(builder build_0, (slice, int, int, int, int) v) inline {
+    var (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'index) = v;
+    build_0 = store_uint(build_0, 918998073, 32);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'marginDelta, 257);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'executionFee, 257);
+    build_1 = build_1.store_int(v'index, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $DecreaseLPPositionCreatedEvent$_store_cell((slice, int, int, int, int) v) inline {
+    return $DecreaseLPPositionCreatedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int, int)) $DecreaseLPPositionCreatedEvent$_constructor_account_marginDelta_liquidityDelta_executionFee_index(slice account, int marginDelta, int liquidityDelta, int executionFee, int index) inline {
+    return (account, marginDelta, liquidityDelta, executionFee, index);
+}
+
+;;
+;; Type: DecreaseLPPositionCancelledEvent
+;; Header: 0x956f8d59
+;; TLB: decrease_lp_position_cancelled_event#956f8d59 index:int257 trxId:int257 = DecreaseLPPositionCancelledEvent
+;;
+
+builder $DecreaseLPPositionCancelledEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'index, v'trxId) = v;
+    build_0 = store_uint(build_0, 2507115865, 32);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = build_0.store_int(v'trxId, 257);
+    return build_0;
+}
+
+cell $DecreaseLPPositionCancelledEvent$_store_cell((int, int) v) inline {
+    return $DecreaseLPPositionCancelledEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $DecreaseLPPositionCancelledEvent$_constructor_index_trxId(int index, int trxId) inline {
+    return (index, trxId);
+}
+
+;;
+;; Type: DecreaseLPPositionExecutedEvent
+;; Header: 0x72ae9b9a
+;; TLB: decrease_lp_position_executed_event#72ae9b9a index:int257 trxId:int257 = DecreaseLPPositionExecutedEvent
+;;
+
+builder $DecreaseLPPositionExecutedEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'index, v'trxId) = v;
+    build_0 = store_uint(build_0, 1924045722, 32);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = build_0.store_int(v'trxId, 257);
+    return build_0;
+}
+
+cell $DecreaseLPPositionExecutedEvent$_store_cell((int, int) v) inline {
+    return $DecreaseLPPositionExecutedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $DecreaseLPPositionExecutedEvent$_constructor_index_trxId(int index, int trxId) inline {
+    return (index, trxId);
+}
+
+;;
+;; Type: LPPositionDecreasedEvent
+;; Header: 0xd443ce43
+;; TLB: lp_position_decreased_event#d443ce43 account:address marginDelta:int257 marginAfter:int257 liquidityDelta:int257 liquidityAfter:int257 realizedProfit:int257 realizedLoss:int257 = LPPositionDecreasedEvent
+;;
+
+builder $LPPositionDecreasedEvent$_store(builder build_0, (slice, int, int, int, int, int, int) v) inline_ref {
+    var (v'account, v'marginDelta, v'marginAfter, v'liquidityDelta, v'liquidityAfter, v'realizedProfit, v'realizedLoss) = v;
+    build_0 = store_uint(build_0, 3561213507, 32);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'marginDelta, 257);
+    build_0 = build_0.store_int(v'marginAfter, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'liquidityDelta, 257);
+    build_1 = build_1.store_int(v'liquidityAfter, 257);
+    build_1 = build_1.store_int(v'realizedProfit, 257);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_int(v'realizedLoss, 257);
+    build_1 = store_ref(build_1, build_2.end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $LPPositionDecreasedEvent$_store_cell((slice, int, int, int, int, int, int) v) inline {
+    return $LPPositionDecreasedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int, int, int, int)) $LPPositionDecreasedEvent$_constructor_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_realizedProfit_realizedLoss(slice account, int marginDelta, int marginAfter, int liquidityDelta, int liquidityAfter, int realizedProfit, int realizedLoss) inline {
+    return (account, marginDelta, marginAfter, liquidityDelta, liquidityAfter, realizedProfit, realizedLoss);
+}
+
+;;
+;; Type: OperatorUpdatedEvent
+;; Header: 0x8850b15e
+;; TLB: operator_updated_event#8850b15e newOperator:address = OperatorUpdatedEvent
+;;
+
+builder $OperatorUpdatedEvent$_store(builder build_0, (slice) v) inline {
+    var (v'newOperator) = v;
+    build_0 = store_uint(build_0, 2286989662, 32);
+    build_0 = __tact_store_address(build_0, v'newOperator);
+    return build_0;
+}
+
+cell $OperatorUpdatedEvent$_store_cell((slice) v) inline {
+    return $OperatorUpdatedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice)) $OperatorUpdatedEvent$_constructor_newOperator(slice newOperator) inline {
+    return (newOperator);
+}
+
+;;
+;; Type: ExecutionFeeReceiverUpdatedEvent
+;; Header: 0xbef4bfdc
+;; TLB: execution_fee_receiver_updated_event#bef4bfdc newExecutionFeeReceiver:address = ExecutionFeeReceiverUpdatedEvent
+;;
+
+builder $ExecutionFeeReceiverUpdatedEvent$_store(builder build_0, (slice) v) inline {
+    var (v'newExecutionFeeReceiver) = v;
+    build_0 = store_uint(build_0, 3203710940, 32);
+    build_0 = __tact_store_address(build_0, v'newExecutionFeeReceiver);
+    return build_0;
+}
+
+cell $ExecutionFeeReceiverUpdatedEvent$_store_cell((slice) v) inline {
+    return $ExecutionFeeReceiverUpdatedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice)) $ExecutionFeeReceiverUpdatedEvent$_constructor_newExecutionFeeReceiver(slice newExecutionFeeReceiver) inline {
+    return (newExecutionFeeReceiver);
+}
+
+;;
+;; Type: TokenInfo
+;; TLB: _ name:^string enable:bool = TokenInfo
+;;
+
+(slice, ((slice, int))) $TokenInfo$_load(slice sc_0) inline {
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'enable = sc_0~load_int(1);
+    return (sc_0, (v'name, v'enable));
+}
+
+tuple $TokenInfo$_as_optional((slice, int) v) inline {
+    var (v'name, v'enable) = v;
+    return __tact_tuple_create_2(v'name, v'enable);
+}
+
+tuple $TokenInfo$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $TokenInfo$_as_optional(sc~$TokenInfo$_load());
+}
+
+_ $TokenInfo$_get_enable((slice, int) v) inline {
+    var (v'name, v'enable) = v;
+    return v'enable;
+}
+
+((slice, int)) $TokenInfo$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'name, int vvv'enable) = __tact_tuple_destroy_2(v);
+    return (vvv'name, vvv'enable);
+}
+
+;;
+;; Type: IncreaseRBFPositionOrder
+;; TLB: _ account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 = IncreaseRBFPositionOrder
+;;
+
+builder $IncreaseRBFPositionOrder$_store(builder build_0, (slice, int, int, int) v) inline {
+    var (v'account, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    build_0 = build_0.store_int(v'executionFee, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'blockTime, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $IncreaseRBFPositionOrder$_store_cell((slice, int, int, int) v) inline {
+    return $IncreaseRBFPositionOrder$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int)) $IncreaseRBFPositionOrder$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'account, int vvv'liquidityDelta, int vvv'executionFee, int vvv'blockTime) = __tact_tuple_destroy_4(v);
+    return (vvv'account, vvv'liquidityDelta, vvv'executionFee, vvv'blockTime);
+}
+
+cell $IncreaseRBFPositionOrder$_store_opt(tuple v) inline {
+    if (null?(v)) {
+        return null();
+    }
+    return $IncreaseRBFPositionOrder$_store_cell($IncreaseRBFPositionOrder$_not_null(v));
+}
+
+(slice, ((slice, int, int, int))) $IncreaseRBFPositionOrder$_load(slice sc_0) inline {
+    var v'account = sc_0~__tact_load_address();
+    var v'liquidityDelta = sc_0~load_int(257);
+    var v'executionFee = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'blockTime = sc_1~load_int(257);
+    return (sc_0, (v'account, v'liquidityDelta, v'executionFee, v'blockTime));
+}
+
+tuple $IncreaseRBFPositionOrder$_as_optional((slice, int, int, int) v) inline {
+    var (v'account, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    return __tact_tuple_create_4(v'account, v'liquidityDelta, v'executionFee, v'blockTime);
+}
+
+tuple $IncreaseRBFPositionOrder$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $IncreaseRBFPositionOrder$_as_optional(sc~$IncreaseRBFPositionOrder$_load());
+}
+
+tuple $IncreaseRBFPositionOrder$_to_tuple(((slice, int, int, int)) v) inline {
+    var (v'account, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    return __tact_tuple_create_4(v'account, v'liquidityDelta, v'executionFee, v'blockTime);
+}
+
+tuple $IncreaseRBFPositionOrder$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $IncreaseRBFPositionOrder$_to_tuple($IncreaseRBFPositionOrder$_not_null(v)); 
+}
+
+tuple $IncreaseRBFPositionOrder$_to_opt_external(tuple v) inline {
+    var loaded = $IncreaseRBFPositionOrder$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
+((slice, int, int, int)) $IncreaseRBFPositionOrder$_constructor_account_liquidityDelta_executionFee_blockTime(slice account, int liquidityDelta, int executionFee, int blockTime) inline {
+    return (account, liquidityDelta, executionFee, blockTime);
+}
+
+;;
+;; Type: DecreaseRBFPositionOrder
+;; TLB: _ account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 = DecreaseRBFPositionOrder
+;;
+
+builder $DecreaseRBFPositionOrder$_store(builder build_0, (slice, int, int, int) v) inline {
+    var (v'account, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    build_0 = build_0.store_int(v'executionFee, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'blockTime, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $DecreaseRBFPositionOrder$_store_cell((slice, int, int, int) v) inline {
+    return $DecreaseRBFPositionOrder$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int)) $DecreaseRBFPositionOrder$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'account, int vvv'liquidityDelta, int vvv'executionFee, int vvv'blockTime) = __tact_tuple_destroy_4(v);
+    return (vvv'account, vvv'liquidityDelta, vvv'executionFee, vvv'blockTime);
+}
+
+cell $DecreaseRBFPositionOrder$_store_opt(tuple v) inline {
+    if (null?(v)) {
+        return null();
+    }
+    return $DecreaseRBFPositionOrder$_store_cell($DecreaseRBFPositionOrder$_not_null(v));
+}
+
+(slice, ((slice, int, int, int))) $DecreaseRBFPositionOrder$_load(slice sc_0) inline {
+    var v'account = sc_0~__tact_load_address();
+    var v'liquidityDelta = sc_0~load_int(257);
+    var v'executionFee = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'blockTime = sc_1~load_int(257);
+    return (sc_0, (v'account, v'liquidityDelta, v'executionFee, v'blockTime));
+}
+
+tuple $DecreaseRBFPositionOrder$_as_optional((slice, int, int, int) v) inline {
+    var (v'account, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    return __tact_tuple_create_4(v'account, v'liquidityDelta, v'executionFee, v'blockTime);
+}
+
+tuple $DecreaseRBFPositionOrder$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $DecreaseRBFPositionOrder$_as_optional(sc~$DecreaseRBFPositionOrder$_load());
+}
+
+((slice, int, int, int)) $DecreaseRBFPositionOrder$_constructor_account_liquidityDelta_executionFee_blockTime(slice account, int liquidityDelta, int executionFee, int blockTime) inline {
+    return (account, liquidityDelta, executionFee, blockTime);
+}
+
+;;
+;; Type: RBFPosition
+;; TLB: _ liquidity:int257 bonus:int257 unlockTime:int257 = RBFPosition
+;;
+
+builder $RBFPosition$_store(builder build_0, (int, int, int) v) inline {
+    var (v'liquidity, v'bonus, v'unlockTime) = v;
+    build_0 = build_0.store_int(v'liquidity, 257);
+    build_0 = build_0.store_int(v'bonus, 257);
+    build_0 = build_0.store_int(v'unlockTime, 257);
+    return build_0;
+}
+
+cell $RBFPosition$_store_cell((int, int, int) v) inline {
+    return $RBFPosition$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((int, int, int))) $RBFPosition$_load(slice sc_0) inline {
+    var v'liquidity = sc_0~load_int(257);
+    var v'bonus = sc_0~load_int(257);
+    var v'unlockTime = sc_0~load_int(257);
+    return (sc_0, (v'liquidity, v'bonus, v'unlockTime));
+}
+
+tuple $RBFPosition$_as_optional((int, int, int) v) inline {
+    var (v'liquidity, v'bonus, v'unlockTime) = v;
+    return __tact_tuple_create_3(v'liquidity, v'bonus, v'unlockTime);
+}
+
+tuple $RBFPosition$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $RBFPosition$_as_optional(sc~$RBFPosition$_load());
+}
+
+((int, int, int)) $RBFPosition$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'liquidity, int vvv'bonus, int vvv'unlockTime) = __tact_tuple_destroy_3(v);
+    return (vvv'liquidity, vvv'bonus, vvv'unlockTime);
+}
+
+tuple $RBFPosition$_to_tuple(((int, int, int)) v) inline {
+    var (v'liquidity, v'bonus, v'unlockTime) = v;
+    return __tact_tuple_create_3(v'liquidity, v'bonus, v'unlockTime);
+}
+
+tuple $RBFPosition$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $RBFPosition$_to_tuple($RBFPosition$_not_null(v)); 
+}
+
+tuple $RBFPosition$_to_opt_external(tuple v) inline {
+    var loaded = $RBFPosition$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
+((int, int, int)) $RBFPosition$_constructor_liquidity_bonus_unlockTime(int liquidity, int bonus, int unlockTime) inline {
+    return (liquidity, bonus, unlockTime);
+}
+
+;;
+;; Type: GlobalRBFPosition
+;; TLB: _ riskBufferFund:int257 liquidity:int257 = GlobalRBFPosition
+;;
+
+builder $GlobalRBFPosition$_store(builder build_0, (int, int) v) inline {
+    var (v'riskBufferFund, v'liquidity) = v;
+    build_0 = build_0.store_int(v'riskBufferFund, 257);
+    build_0 = build_0.store_int(v'liquidity, 257);
+    return build_0;
+}
+
+(slice, ((int, int))) $GlobalRBFPosition$_load(slice sc_0) inline {
+    var v'riskBufferFund = sc_0~load_int(257);
+    var v'liquidity = sc_0~load_int(257);
+    return (sc_0, (v'riskBufferFund, v'liquidity));
+}
+
+((int, int)) $GlobalRBFPosition$_constructor_riskBufferFund_liquidity(int riskBufferFund, int liquidity) inline {
+    return (riskBufferFund, liquidity);
+}
+
+;;
+;; Type: IncreaseLPPositionOrder
+;; TLB: _ account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 = IncreaseLPPositionOrder
+;;
+
+builder $IncreaseLPPositionOrder$_store(builder build_0, (slice, int, int, int, int) v) inline {
+    var (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'marginDelta, 257);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'executionFee, 257);
+    build_1 = build_1.store_int(v'blockTime, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $IncreaseLPPositionOrder$_store_cell((slice, int, int, int, int) v) inline {
+    return $IncreaseLPPositionOrder$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int, int)) $IncreaseLPPositionOrder$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'account, int vvv'marginDelta, int vvv'liquidityDelta, int vvv'executionFee, int vvv'blockTime) = __tact_tuple_destroy_5(v);
+    return (vvv'account, vvv'marginDelta, vvv'liquidityDelta, vvv'executionFee, vvv'blockTime);
+}
+
+cell $IncreaseLPPositionOrder$_store_opt(tuple v) inline {
+    if (null?(v)) {
+        return null();
+    }
+    return $IncreaseLPPositionOrder$_store_cell($IncreaseLPPositionOrder$_not_null(v));
+}
+
+(slice, ((slice, int, int, int, int))) $IncreaseLPPositionOrder$_load(slice sc_0) inline {
+    var v'account = sc_0~__tact_load_address();
+    var v'marginDelta = sc_0~load_int(257);
+    var v'liquidityDelta = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'executionFee = sc_1~load_int(257);
+    var v'blockTime = sc_1~load_int(257);
+    return (sc_0, (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime));
+}
+
+tuple $IncreaseLPPositionOrder$_as_optional((slice, int, int, int, int) v) inline {
+    var (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    return __tact_tuple_create_5(v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime);
+}
+
+tuple $IncreaseLPPositionOrder$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $IncreaseLPPositionOrder$_as_optional(sc~$IncreaseLPPositionOrder$_load());
+}
+
+;;
+;; Type: DecreaseLPPositionOrder
+;; TLB: _ account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 = DecreaseLPPositionOrder
+;;
+
+builder $DecreaseLPPositionOrder$_store(builder build_0, (slice, int, int, int, int) v) inline {
+    var (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'marginDelta, 257);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'executionFee, 257);
+    build_1 = build_1.store_int(v'blockTime, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $DecreaseLPPositionOrder$_store_cell((slice, int, int, int, int) v) inline {
+    return $DecreaseLPPositionOrder$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int, int)) $DecreaseLPPositionOrder$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'account, int vvv'marginDelta, int vvv'liquidityDelta, int vvv'executionFee, int vvv'blockTime) = __tact_tuple_destroy_5(v);
+    return (vvv'account, vvv'marginDelta, vvv'liquidityDelta, vvv'executionFee, vvv'blockTime);
+}
+
+cell $DecreaseLPPositionOrder$_store_opt(tuple v) inline {
+    if (null?(v)) {
+        return null();
+    }
+    return $DecreaseLPPositionOrder$_store_cell($DecreaseLPPositionOrder$_not_null(v));
+}
+
+(slice, ((slice, int, int, int, int))) $DecreaseLPPositionOrder$_load(slice sc_0) inline {
+    var v'account = sc_0~__tact_load_address();
+    var v'marginDelta = sc_0~load_int(257);
+    var v'liquidityDelta = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'executionFee = sc_1~load_int(257);
+    var v'blockTime = sc_1~load_int(257);
+    return (sc_0, (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime));
+}
+
+tuple $DecreaseLPPositionOrder$_as_optional((slice, int, int, int, int) v) inline {
+    var (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    return __tact_tuple_create_5(v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime);
+}
+
+tuple $DecreaseLPPositionOrder$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $DecreaseLPPositionOrder$_as_optional(sc~$DecreaseLPPositionOrder$_load());
+}
+
+((slice, int, int, int, int)) $DecreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime(slice account, int marginDelta, int liquidityDelta, int executionFee, int blockTime) inline {
+    return (account, marginDelta, liquidityDelta, executionFee, blockTime);
+}
+
+;;
+;; Type: LPPosition
+;; TLB: _ margin:int257 liquidity:int257 entryFundingFeeGrowth:int257 entryTradingFeeGrowth:int257 = LPPosition
+;;
+
+builder $LPPosition$_store(builder build_0, (int, int, int, int) v) inline {
+    var (v'margin, v'liquidity, v'entryFundingFeeGrowth, v'entryTradingFeeGrowth) = v;
+    build_0 = build_0.store_int(v'margin, 257);
+    build_0 = build_0.store_int(v'liquidity, 257);
+    build_0 = build_0.store_int(v'entryFundingFeeGrowth, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'entryTradingFeeGrowth, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $LPPosition$_store_cell((int, int, int, int) v) inline {
+    return $LPPosition$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, int, int)) $LPPosition$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'margin, int vvv'liquidity, int vvv'entryFundingFeeGrowth, int vvv'entryTradingFeeGrowth) = __tact_tuple_destroy_4(v);
+    return (vvv'margin, vvv'liquidity, vvv'entryFundingFeeGrowth, vvv'entryTradingFeeGrowth);
+}
+
+cell $LPPosition$_store_opt(tuple v) inline {
+    if (null?(v)) {
+        return null();
+    }
+    return $LPPosition$_store_cell($LPPosition$_not_null(v));
+}
+
+(slice, ((int, int, int, int))) $LPPosition$_load(slice sc_0) inline {
+    var v'margin = sc_0~load_int(257);
+    var v'liquidity = sc_0~load_int(257);
+    var v'entryFundingFeeGrowth = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'entryTradingFeeGrowth = sc_1~load_int(257);
+    return (sc_0, (v'margin, v'liquidity, v'entryFundingFeeGrowth, v'entryTradingFeeGrowth));
+}
+
+tuple $LPPosition$_as_optional((int, int, int, int) v) inline {
+    var (v'margin, v'liquidity, v'entryFundingFeeGrowth, v'entryTradingFeeGrowth) = v;
+    return __tact_tuple_create_4(v'margin, v'liquidity, v'entryFundingFeeGrowth, v'entryTradingFeeGrowth);
+}
+
+tuple $LPPosition$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $LPPosition$_as_optional(sc~$LPPosition$_load());
+}
+
+((int, int, int, int)) $LPPosition$_constructor_margin_liquidity_entryFundingFeeGrowth_entryTradingFeeGrowth(int margin, int liquidity, int entryFundingFeeGrowth, int entryTradingFeeGrowth) inline {
+    return (margin, liquidity, entryFundingFeeGrowth, entryTradingFeeGrowth);
+}
+
+;;
+;; Type: GlobalLPPosition
+;; TLB: _ netSize:int257 isLong:bool entryPrice:int257 = GlobalLPPosition
+;;
+
+(slice, ((int, int, int))) $GlobalLPPosition$_load(slice sc_0) inline {
+    var v'netSize = sc_0~load_int(257);
+    var v'isLong = sc_0~load_int(1);
+    var v'entryPrice = sc_0~load_int(257);
+    return (sc_0, (v'netSize, v'isLong, v'entryPrice));
+}
+
+tuple $GlobalLPPosition$_as_optional((int, int, int) v) inline {
+    var (v'netSize, v'isLong, v'entryPrice) = v;
+    return __tact_tuple_create_3(v'netSize, v'isLong, v'entryPrice);
+}
+
+tuple $GlobalLPPosition$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $GlobalLPPosition$_as_optional(sc~$GlobalLPPosition$_load());
+}
+
+((int, int, int)) $GlobalLPPosition$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'netSize, int vvv'isLong, int vvv'entryPrice) = __tact_tuple_destroy_3(v);
+    return (vvv'netSize, vvv'isLong, vvv'entryPrice);
+}
+
+;;
+;; Type: Pool
+;;
+
+builder $Pool$_store(builder build_0, (int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell) v) inline {
+    var (v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'tokenInfos, v'tokenIndexNext, v'lockTime, v'bonusFactor, v'minLPMargin, v'maxLPLeverage, v'lpLiquidationFee, v'lpMaxRiskRate, v'usdc, v'owner, v'operator, v'executors, v'executionFeeReceiver, v'increaseRBFPositionOrders, v'increaseRBFPositionIndexNext, v'decreaseRBFPositionOrders, v'decreaseRBFPositionIndexNext, (v'globalRBFPosition'riskBufferFund, v'globalRBFPosition'liquidity), v'fundPositions, v'increaseLPPositionOrders, v'increaseLPPositionIndexNext, v'decreaseLPPositionOrders, v'decreaseLPPositionIndexNext, v'globalLiquidity, v'globalLPPositions, v'lpPositions, v'lpTradingFeeGrowth, v'lpFundingFeeGrowth, v'increasePerpPositionMarketOrders, v'increasePerpPositionMarketIndexNext, v'decreasePerpPositionMarketOrders, v'decreasePerpPositionMarketIndexNext, v'increasePerpPositionLimitOrders, v'increasePerpPositionLimitIndexNext, v'decreasePerpPositionLimitOrders, v'decreasePerpPositionLimitIndexNext, v'perpPositions) = v;
+    build_0 = build_0.store_int(v'minExecutionFee, 257);
+    build_0 = build_0.store_int(v'gasConsumption, 257);
+    build_0 = build_0.store_int(v'minTonsForStorage, 257);
+    build_0 = build_0.store_dict(v'tokenInfos);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'tokenIndexNext, 257);
+    build_1 = build_1.store_int(v'lockTime, 257);
+    build_1 = build_1.store_int(v'bonusFactor, 257);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_int(v'minLPMargin, 257);
+    build_2 = build_2.store_int(v'maxLPLeverage, 257);
+    build_2 = build_2.store_int(v'lpLiquidationFee, 257);
+    var build_3 = begin_cell();
+    build_3 = build_3.store_int(v'lpMaxRiskRate, 257);
+    build_3 = __tact_store_address(build_3, v'usdc);
+    build_3 = __tact_store_address(build_3, v'owner);
+    var build_4 = begin_cell();
+    build_4 = __tact_store_address(build_4, v'operator);
+    build_4 = build_4.store_dict(v'executors);
+    build_4 = __tact_store_address(build_4, v'executionFeeReceiver);
+    build_4 = build_4.store_dict(v'increaseRBFPositionOrders);
+    build_4 = build_4.store_uint(v'increaseRBFPositionIndexNext, 128);
+    build_4 = build_4.store_dict(v'decreaseRBFPositionOrders);
+    build_4 = build_4.store_uint(v'decreaseRBFPositionIndexNext, 128);
+    var build_5 = begin_cell();
+    build_5 = $GlobalRBFPosition$_store(build_5, (v'globalRBFPosition'riskBufferFund, v'globalRBFPosition'liquidity));
+    build_5 = build_5.store_dict(v'fundPositions);
+    build_5 = build_5.store_dict(v'increaseLPPositionOrders);
+    build_5 = build_5.store_uint(v'increaseLPPositionIndexNext, 128);
+    build_5 = build_5.store_dict(v'decreaseLPPositionOrders);
+    build_5 = build_5.store_uint(v'decreaseLPPositionIndexNext, 128);
+    var build_6 = begin_cell();
+    build_6 = build_6.store_int(v'globalLiquidity, 257);
+    build_6 = build_6.store_dict(v'globalLPPositions);
+    build_6 = build_6.store_dict(v'lpPositions);
+    build_6 = build_6.store_int(v'lpTradingFeeGrowth, 257);
+    build_6 = build_6.store_int(v'lpFundingFeeGrowth, 257);
+    build_6 = build_6.store_dict(v'increasePerpPositionMarketOrders);
+    build_6 = build_6.store_uint(v'increasePerpPositionMarketIndexNext, 128);
+    var build_7 = begin_cell();
+    build_7 = build_7.store_dict(v'decreasePerpPositionMarketOrders);
+    build_7 = build_7.store_uint(v'decreasePerpPositionMarketIndexNext, 128);
+    build_7 = build_7.store_dict(v'increasePerpPositionLimitOrders);
+    build_7 = build_7.store_uint(v'increasePerpPositionLimitIndexNext, 128);
+    build_7 = build_7.store_dict(v'decreasePerpPositionLimitOrders);
+    build_7 = build_7.store_uint(v'decreasePerpPositionLimitIndexNext, 128);
+    var build_8 = begin_cell();
+    build_8 = build_8.store_dict(v'perpPositions);
+    build_7 = store_ref(build_7, build_8.end_cell());
+    build_6 = store_ref(build_6, build_7.end_cell());
+    build_5 = store_ref(build_5, build_6.end_cell());
+    build_4 = store_ref(build_4, build_5.end_cell());
+    build_3 = store_ref(build_3, build_4.end_cell());
+    build_2 = store_ref(build_2, build_3.end_cell());
+    build_1 = store_ref(build_1, build_2.end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell))) $Pool$_load(slice sc_0) inline {
+    var v'minExecutionFee = sc_0~load_int(257);
+    var v'gasConsumption = sc_0~load_int(257);
+    var v'minTonsForStorage = sc_0~load_int(257);
+    var v'tokenInfos = sc_0~load_dict();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'tokenIndexNext = sc_1~load_int(257);
+    var v'lockTime = sc_1~load_int(257);
+    var v'bonusFactor = sc_1~load_int(257);
+    slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'minLPMargin = sc_2~load_int(257);
+    var v'maxLPLeverage = sc_2~load_int(257);
+    var v'lpLiquidationFee = sc_2~load_int(257);
+    slice sc_3 = sc_2~load_ref().begin_parse();
+    var v'lpMaxRiskRate = sc_3~load_int(257);
+    var v'usdc = sc_3~__tact_load_address();
+    var v'owner = sc_3~__tact_load_address();
+    slice sc_4 = sc_3~load_ref().begin_parse();
+    var v'operator = sc_4~__tact_load_address();
+    var v'executors = sc_4~load_dict();
+    var v'executionFeeReceiver = sc_4~__tact_load_address();
+    var v'increaseRBFPositionOrders = sc_4~load_dict();
+    var v'increaseRBFPositionIndexNext = sc_4~load_uint(128);
+    var v'decreaseRBFPositionOrders = sc_4~load_dict();
+    var v'decreaseRBFPositionIndexNext = sc_4~load_uint(128);
+    slice sc_5 = sc_4~load_ref().begin_parse();
+    var v'globalRBFPosition = sc_5~$GlobalRBFPosition$_load();
+    var v'fundPositions = sc_5~load_dict();
+    var v'increaseLPPositionOrders = sc_5~load_dict();
+    var v'increaseLPPositionIndexNext = sc_5~load_uint(128);
+    var v'decreaseLPPositionOrders = sc_5~load_dict();
+    var v'decreaseLPPositionIndexNext = sc_5~load_uint(128);
+    slice sc_6 = sc_5~load_ref().begin_parse();
+    var v'globalLiquidity = sc_6~load_int(257);
+    var v'globalLPPositions = sc_6~load_dict();
+    var v'lpPositions = sc_6~load_dict();
+    var v'lpTradingFeeGrowth = sc_6~load_int(257);
+    var v'lpFundingFeeGrowth = sc_6~load_int(257);
+    var v'increasePerpPositionMarketOrders = sc_6~load_dict();
+    var v'increasePerpPositionMarketIndexNext = sc_6~load_uint(128);
+    slice sc_7 = sc_6~load_ref().begin_parse();
+    var v'decreasePerpPositionMarketOrders = sc_7~load_dict();
+    var v'decreasePerpPositionMarketIndexNext = sc_7~load_uint(128);
+    var v'increasePerpPositionLimitOrders = sc_7~load_dict();
+    var v'increasePerpPositionLimitIndexNext = sc_7~load_uint(128);
+    var v'decreasePerpPositionLimitOrders = sc_7~load_dict();
+    var v'decreasePerpPositionLimitIndexNext = sc_7~load_uint(128);
+    slice sc_8 = sc_7~load_ref().begin_parse();
+    var v'perpPositions = sc_8~load_dict();
+    return (sc_0, (v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'tokenInfos, v'tokenIndexNext, v'lockTime, v'bonusFactor, v'minLPMargin, v'maxLPLeverage, v'lpLiquidationFee, v'lpMaxRiskRate, v'usdc, v'owner, v'operator, v'executors, v'executionFeeReceiver, v'increaseRBFPositionOrders, v'increaseRBFPositionIndexNext, v'decreaseRBFPositionOrders, v'decreaseRBFPositionIndexNext, v'globalRBFPosition, v'fundPositions, v'increaseLPPositionOrders, v'increaseLPPositionIndexNext, v'decreaseLPPositionOrders, v'decreaseLPPositionIndexNext, v'globalLiquidity, v'globalLPPositions, v'lpPositions, v'lpTradingFeeGrowth, v'lpFundingFeeGrowth, v'increasePerpPositionMarketOrders, v'increasePerpPositionMarketIndexNext, v'decreasePerpPositionMarketOrders, v'decreasePerpPositionMarketIndexNext, v'increasePerpPositionLimitOrders, v'increasePerpPositionLimitIndexNext, v'decreasePerpPositionLimitOrders, v'decreasePerpPositionLimitIndexNext, v'perpPositions));
+}
+
+(int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell) $Pool$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$Pool$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        return $Pool$_contract_init();
+    }
+}
+
+() $Pool$_contract_store((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $Pool$_store(b, v);
+    set_data(b.end_cell());
+}

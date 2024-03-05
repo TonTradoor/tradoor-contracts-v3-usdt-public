@@ -404,7 +404,13 @@ contract Pool with Deployable, Ownable {
         self.shouldCancel(order.blockTime, ctx.sender);
 
         // TODO transfer execution fee
-
+        send(SendParameters{
+            to: self.executionFeeReceiver,
+            bounce: true,
+            value: order.executionFee,
+            mode: SendIgnoreErrors
+        });
+        
         // TODO transfer jetton
 
         // delete order
