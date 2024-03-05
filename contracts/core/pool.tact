@@ -10,6 +10,7 @@ contract Pool with Deployable, Ownable {
     // config
     minExecutionFee: Int;
     gasConsumption: Int;
+    minTonsForStorage: Int;
     const minTimeDelayExecutor: Int = 6; // executor execute after 6s
     const maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
     const minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
@@ -83,8 +84,9 @@ contract Pool with Deployable, Ownable {
 
         self.tokenIndexNext = 0;
 
-        self.minExecutionFee = ton("0.1");
-        self.gasConsumption = ton("0.1");
+        self.minExecutionFee = ton("0.5"); // for every operation
+        self.gasConsumption = ton("0.05");
+        self.minTonsForStorage = ton("0.03");
 
         self.minLPMargin = 10;
         self.maxLPLeverage = 100;
@@ -129,16 +131,27 @@ contract Pool with Deployable, Ownable {
     receive(msg: SetUSDC) {
         self.requireOwner();
         self.usdc = msg.usdc;
+        send(SendParameters{
+            to: sender(),
+            bounce: false,
+            value: 0,
+            mode: SendRemainingValue
+        });
     }
 
     receive(msg: SetExecutionFeeReceiver) {
         self.requireOwner();
         self.executionFeeReceiver = msg.receiver;
-        // emit(ExecutionFeeReceiverUpdatedEvent{
-        //     newExecutionFeeReceiver: self.executionFeeReceiver
-        // }.toCell());
+        emit(ExecutionFeeReceiverUpdatedEvent{
+            newExecutionFeeReceiver: self.executionFeeReceiver
+        }.toCell());
 
-        self.reply("execution fee receiver set".asComment());
+        let refundValue: Int = context().value - ton("0.04");
+        send(SendParameters{
+            to: sender(),
+            bounce: false,
+            value: refundValue
+        });
     }
 
     get fun operator(): Address {
@@ -147,6 +160,10 @@ contract Pool with Deployable, Ownable {
 
     get fun usdc(): Address {
         return self.usdc;
+    }
+
+    get fun executionFeeReceiver(): Address {
+        return self.executionFeeReceiver;
     }
 
     fun onlyOperator() {
@@ -177,7 +194,7 @@ contract Pool with Deployable, Ownable {
             dump(executionFee);
 
             self.handleCreateIncreaseRBFPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, liquidityDelta);
-        } 
+        }
     }
 
     fun refundLiquidity(queryId: Int, amount: Int, to: Address) {
@@ -197,15 +214,15 @@ contract Pool with Deployable, Ownable {
         dump("handleCreateIncreaseRBFPositionOrder");
         let ctx: Context = context();
 
-        if (jettonFromAmount < liquidityDelta) {
+        if (ctx.value < executionFee + ton("0.2")) {
+            dump("gas not enough");
             self.refundLiquidity(queryId, jettonFromAmount, account);
-            dump("refund fro not enough liquidity");
             return;
         }
-        // check executionFee
-        if (ctx.value < executionFee) {
-            dump("execution fee not enough");
+
+        if (jettonFromAmount < liquidityDelta) {
             self.refundLiquidity(queryId, jettonFromAmount, account);
+            dump("refund from not enough liquidity");
             return;
         }
 
@@ -226,6 +243,16 @@ contract Pool with Deployable, Ownable {
             executionFee: executionFee,
             index: index
         }.toCell());
+
+        let refundValue: Int = context().value - executionFee - ton("0.2");
+        if (refundValue > 0) {
+            dump("handleCreateIncreaseRBFPositionOrder refund toncoin");
+            send(SendParameters{
+                to: account,
+                bounce: false,
+                value: refundValue
+            });
+        }
     }
 
     receive(msg: CancelIncreaseRBFPositionOrder) {

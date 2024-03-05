@@ -43,15 +43,11 @@ describe('Pool', () => {
             success: true,
         });
 
-        // print pool ton balance
-        let poolTonBalance = (await blockchain.getContract(pool.address)).balance;
-        console.log("poolTonBalance", poolTonBalance.toLocaleString());
-
         // set execution fee receiver
         const setExecutionFeeReceiverResult = await pool.send(
             deployer.getSender(),
             {
-                value: toNano('0.1'),
+                value: toNano('1'),
             },
             {
                 $$type: 'SetExecutionFeeReceiver',
@@ -60,8 +56,11 @@ describe('Pool', () => {
         );
 
         // print pool ton balance
-        poolTonBalance = (await blockchain.getContract(pool.address)).balance;
-        console.log("poolTonBalance after SetExecutionFeeReceiver", poolTonBalance.toLocaleString());
+        let poolTonBalance = (await blockchain.getContract(pool.address)).balance;
+        console.log("poolTonBalance after setExecutionFeeReceiverResult", poolTonBalance.toLocaleString());
+        // expect(poolTonBalance).toEqual(toNano('0'));
+        printTransactionFees(setExecutionFeeReceiverResult.transactions);
+
 
         expect(setExecutionFeeReceiverResult.transactions).toHaveTransaction({
             from: deployer.address,
@@ -69,6 +68,8 @@ describe('Pool', () => {
             success: true,
         });
 
+        let executionFeeReceiverAddress = await pool.getExecutionFeeReceiver();
+        expect(executionFeeReceiverAddress).toEqualAddress(executionFeeReceiver.address);
         // deploy mock jetton
         const jettonParams = {
             name: "Mock USDC",
@@ -173,7 +174,7 @@ describe('Pool', () => {
         const trxResult = await user0JettonWallet.send(
             user0.getSender(),
             {
-                value: toNano('2'),
+                value: toNano('1'),
             },
             {
                 $$type: 'TokenTransfer',
@@ -182,7 +183,7 @@ describe('Pool', () => {
                 destination: pool.address,
                 response_destination: user0.address,
                 custom_payload: null,
-                forward_ton_amount: toNano('1'),
+                forward_ton_amount: toNano('0.9'),
                 forward_payload: forwardPayload
             }
         );
@@ -192,6 +193,8 @@ describe('Pool', () => {
             to: pool.address,
             success: true,
         });
+        console.log("TokenTransfer");
+        printTransactionFees(trxResult.transactions);
 
         // check index
         let index = await pool.getIncreaseRbfPositionIndexNext();
@@ -420,7 +423,7 @@ describe('Pool', () => {
         expect(order).not.toBeNull();
         expect(order?.liquidityDelta).toEqual(liquidity);
         
-        blockchain.now = blockchain.now + 7;
+        blockchain.now = blockchain.now + 10;
         /// executor order
         const trxResult2 = await pool.send(
             executor.getSender(),
