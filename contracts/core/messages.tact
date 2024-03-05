@@ -48,6 +48,12 @@ message ExecuteIncreaseLPPositionOrder {
 }
 
 // decrease LP
+message CreateDecreaseLPPositionOrder {
+    executionFee: Int;
+    marginDelta: Int;
+    liquidityDelta: Int;
+}
+
 message CancelDecreaseLPPositionOrder {
     index: Int;
     trxId: Int;

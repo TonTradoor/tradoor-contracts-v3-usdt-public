@@ -81,7 +81,7 @@ contract Pool with Deployable, Ownable {
         self.executors.set(sender(), true);
         self.executionFeeReceiver = sender();
 
-        self.tokenIndexNext = 0;
+        self.tokenIndexNext = 1;
 
         self.minExecutionFee = ton("0.1");
         self.gasConsumption = ton("0.1");
@@ -91,22 +91,22 @@ contract Pool with Deployable, Ownable {
         self.lpLiquidationFee = 0;
         self.lpMaxRiskRate = pow(10, 6);
 
-        self.increaseRBFPositionIndexNext = 0;
-        self.decreaseRBFPositionIndexNext = 0;
+        self.increaseRBFPositionIndexNext = 1;
+        self.decreaseRBFPositionIndexNext = 1;
         self.globalRBFPosition = GlobalRBFPosition{riskBufferFund: 0, liquidity: 0};
 
-        self.increaseLPPositionIndexNext = 0;
-        self.decreaseLPPositionIndexNext = 0;
+        self.increaseLPPositionIndexNext = 1;
+        self.decreaseLPPositionIndexNext = 1;
 
         self.globalLiquidity = 0;
         self.lpTradingFeeGrowth = 0;
         self.lpFundingFeeGrowth = 0;
 
-        self.increasePerpPositionMarketIndexNext = 0;
-        self.decreasePerpPositionMarketIndexNext = 0;
+        self.increasePerpPositionMarketIndexNext = 1;
+        self.decreasePerpPositionMarketIndexNext = 1;
 
-        self.increasePerpPositionLimitIndexNext = 0;
-        self.decreasePerpPositionLimitIndexNext = 0;
+        self.increasePerpPositionLimitIndexNext = 1;
+        self.decreasePerpPositionLimitIndexNext = 1;
     }
 
     // ============================ Admin ================================ //
@@ -238,6 +238,8 @@ contract Pool with Deployable, Ownable {
             mode: SendIgnoreErrors
         });
 
+        // TODO transfer jetton
+
         // delete order
         self.increaseRBFPositionOrders.set(msg.index, null);
         // event
@@ -256,15 +258,15 @@ contract Pool with Deployable, Ownable {
         self.shouldExecute(order.blockTime);
 
         // get position
-        let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
+        let lpPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
         // init position if not exist
         let fundPosition: RBFPosition = RBFPosition{
                 liquidity: 0,
                 bonus: 0,
                 unlockTime: 0
             };
-        if (fundPositionOpt != null) {
-            fundPosition = fundPositionOpt!!;
+        if (lpPositionOpt != null) {
+            fundPosition = lpPositionOpt!!;
         }
 
         // update RBF
@@ -364,6 +366,7 @@ contract Pool with Deployable, Ownable {
 
         // TODO transfer execution fee
 
+        // TODO transfer jetton
 
         // delete order
         self.decreaseRBFPositionOrders.set(msg.index, null);
@@ -383,15 +386,15 @@ contract Pool with Deployable, Ownable {
         self.shouldExecute(order.blockTime);
 
         // update position
-        let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
+        let lpPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
         // init position if not exist
         let fundPosition: RBFPosition = RBFPosition{
-                liquidity: 0,
-                bonus: 0,
-                unlockTime: 0
-            };
-        if (fundPositionOpt != null) {
-            fundPosition = fundPositionOpt!!;
+            liquidity: 0,
+            bonus: 0,
+            unlockTime: 0
+        };
+        if (lpPositionOpt != null) {
+            fundPosition = lpPositionOpt!!;
         }
 
         // check unlock time
@@ -539,6 +542,8 @@ contract Pool with Deployable, Ownable {
             mode: SendIgnoreErrors
         });
 
+        // TODO transfer jetton
+
         // delete order
         self.increaseLPPositionOrders.set(msg.index, null);
         // event
@@ -565,14 +570,17 @@ contract Pool with Deployable, Ownable {
             entryFundingFeeGrowth: 0,
             entryTradingFeeGrowth: 0
         };
+        if (lpPositionOpt != null) {
+            lpPosition = lpPositionOpt!!;
+        }
+
         let marginAfter: Int = 0;
-        if (lpPositionOpt == null) {
+        if (lpPosition.liquidity == 0) {
             marginAfter = order.marginDelta;
             // check margin and leverage
             require(marginAfter >= self.minLPMargin, "insufficient margin");
             require(marginAfter * self.maxLPLeverage >= order.liquidityDelta, "legerage too high");
         } else {
-            lpPosition = lpPositionOpt!!;
             // calculate funding fee
             let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
             // calculate trading fee
@@ -580,7 +588,7 @@ contract Pool with Deployable, Ownable {
             marginAfter = lpPosition.margin + tradingFee + fundingFee + order.marginDelta;
             // calculate pnl
             let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
-            let unrealizedPnl: Int = globalUnrealizedPnl * self.globalLiquidity / lpPosition.liquidity;
+            let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
             let unrealizedLoss: Int = 0;
             if (unrealizedPnl < 0) {
                 unrealizedLoss = -unrealizedPnl;
@@ -632,13 +640,179 @@ contract Pool with Deployable, Ownable {
             entryTradingFeeGrowth: lpPosition.entryTradingFeeGrowth
         }.toCell());
     }
+
+    receive(msg: CreateDecreaseLPPositionOrder) {
+        let ctx: Context = context();
+        // check gas
+        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
+        // check execution fee
+        require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
+
+        // add new order
+        let index: Int = self.decreaseLPPositionIndexNext;
+        self.decreaseLPPositionIndexNext = self.decreaseLPPositionIndexNext + 1;
+        self.decreaseLPPositionOrders.set(index, DecreaseLPPositionOrder{
+            account: sender(),
+            marginDelta: msg.marginDelta,
+            liquidityDelta: msg.liquidityDelta,
+            executionFee: msg.executionFee,
+            blockTime: now()
+        });
+
+        // event
+        emit(DecreaseLPPositionCreatedEvent{
+            account: sender(),
+            marginDelta: msg.marginDelta,
+            liquidityDelta: msg.liquidityDelta,
+            executionFee: msg.executionFee,
+            index: index
+        }.toCell());
+    }
     
     receive(msg: CancelDecreaseLPPositionOrder) {
-        
+        let ctx: Context = context();
+
+        // check gas
+        require(ctx.value >= self.gasConsumption, "gas not enough");
+
+        // check order
+        let orderOpt: DecreaseLPPositionOrder? = self.decreaseLPPositionOrders.get(msg.index);
+        if (orderOpt == null) {
+            return;
+        }
+        let order: DecreaseLPPositionOrder = orderOpt!!;
+        self.shouldCancel(order.blockTime, ctx.sender);
+
+        // TODO transfer execution fee
+
+        // TODO transfer jetton
+
+        // delete order
+        self.decreaseLPPositionOrders.set(msg.index, null);
+        // event
+        emit(DecreaseLPPositionCancelledEvent{
+            index: msg.index,
+            trxId: msg.trxId
+        }.toCell());
     }
     
     receive(msg: ExecuteDecreaseLPPositionOrder) {
+        let orderOpt: DecreaseLPPositionOrder? = self.decreaseLPPositionOrders.get(msg.index);
+        // check order
+        require(orderOpt != null, "order not exist");
+
+        let order: DecreaseLPPositionOrder = orderOpt!!;
+        self.shouldExecute(order.blockTime);
+
+        // update position
+        let lpPositionOpt: LPPosition? = self.lpPositions.get(order.account);
+        // init position if not exist
+        let lpPosition: LPPosition = LPPosition{
+            margin: 0,
+            liquidity: 0,
+            entryFundingFeeGrowth: 0,
+            entryTradingFeeGrowth: 0
+        };
+        if (lpPositionOpt != null) {
+            lpPosition = lpPositionOpt!!;
+        }
+
+        // TODO update funding rate        
+
+        // calculate funding fee
+        let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
+        // calculate trading fee
+        let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
+        let realizedProfit: Int = tradingFee + fundingFee;
+        let marginAfter: Int = lpPosition.margin + realizedProfit;
+        // check margin
+        require(marginAfter >= order.marginDelta, "insufficient margin");
+        marginAfter = marginAfter - order.marginDelta;
+
+        // check liquidity
+        require(lpPosition.liquidity >= order.liquidityDelta, "insufficient liquidity");
+        let liquidityAfter: Int = lpPosition.liquidity - order.liquidityDelta;
+
+        // calculate pnl
+        let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
+        let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
+        let unrealizedLoss: Int = 0;
+        if (unrealizedPnl < 0) {
+            unrealizedLoss = -unrealizedPnl;
+        }
         
+        // check global liquidity
+        require(self.globalRBFPosition.riskBufferFund + self.globalLiquidity + unrealizedPnl >= order.liquidityDelta, "insufficient global liquidity");
+
+        let receivedMargin: Int = 0;
+        let realizedLoss: Int = 0;
+        if (liquidityAfter > 0) {
+            realizedLoss = unrealizedLoss * order.liquidityDelta / lpPosition.liquidity;
+            if (realizedLoss <= order.marginDelta) {
+                receivedMargin = order.marginDelta - realizedLoss;
+            } else {
+                receivedMargin = 0;
+                marginAfter = marginAfter + order.marginDelta - realizedLoss;
+            }
+            // check risk rate
+            require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT > unrealizedLoss, "risk rate too hig");
+            // check leverage
+            require(marginAfter * self.maxLPLeverage >= order.liquidityDelta, "legerage too high");
+        } else {
+            realizedLoss = unrealizedLoss;
+            marginAfter = marginAfter - realizedLoss;
+            receivedMargin = marginAfter;
+        }
+        
+        // TODO transfer margin
+        if (receivedMargin > 0) {
+
+        }
+        
+        if (liquidityAfter > 0) {
+            // update position
+            lpPosition.margin = marginAfter;
+            lpPosition.liquidity = liquidityAfter;
+            lpPosition.entryFundingFeeGrowth = self.lpFundingFeeGrowth;
+            lpPosition.entryTradingFeeGrowth = self.lpTradingFeeGrowth;
+            self.lpPositions.set(order.account, lpPosition);
+        } else {
+            // delete position
+            self.lpPositions.set(order.account, null);
+        }
+
+        dump("execute decrease lp position order");
+        dump(beginCell().storeAddress(order.account).endCell().hash());
+
+        // update global position
+        self.globalLiquidity = self.globalLiquidity - order.liquidityDelta;
+
+        // delete order
+        self.increaseLPPositionOrders.set(msg.index, null);
+        
+        // transfer execution fee
+        send(SendParameters{
+            to: self.executionFeeReceiver,
+            bounce: true,
+            value: order.executionFee,
+            mode: SendIgnoreErrors
+        });
+
+        // event
+        emit(DecreaseLPPositionExecutedEvent{
+            index: msg.index,
+            trxId: msg.trxId
+        }.toCell());
+        emit(LPPositionDecreasedEvent{
+            account: order.account,
+            marginDelta: order.marginDelta,
+            marginAfter: lpPosition.margin,
+            liquidityDelta: order.liquidityDelta,
+            liquidityAfter: lpPosition.liquidity,
+            realizedProfit: realizedProfit,
+            realizedLoss: realizedLoss
+        }.toCell());
+
     }
 
     // ============================ Perp ================================ //

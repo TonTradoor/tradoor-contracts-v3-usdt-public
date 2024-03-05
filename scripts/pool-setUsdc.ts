@@ -7,8 +7,6 @@ export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
     const jetton = attachMockJetton(provider);
 
-    const executor = Address.parse(await provider.ui().input('executor address:'));
-
     // set usdc jetton address to pool
     let poolJettonWalletAddress = await jetton.getGetWalletAddress(pool.address);
     await pool.send(

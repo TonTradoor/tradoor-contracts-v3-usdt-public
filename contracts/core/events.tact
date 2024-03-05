@@ -87,7 +87,7 @@ message LPPositionIncreasedEvent {
 // decrease LP
 message DecreaseLPPositionCreatedEvent {
     account: Address;
-    margin: Int;
+    marginDelta: Int;
     liquidityDelta: Int;
     executionFee: Int;
     index: Int;
@@ -110,6 +110,7 @@ message LPPositionDecreasedEvent {
     liquidityDelta: Int;
     liquidityAfter: Int;
     realizedProfit: Int;
+    realizedLoss: Int;
 }
 
 // global LP
