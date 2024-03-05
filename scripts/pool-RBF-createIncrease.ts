@@ -18,7 +18,7 @@ export async function run(provider: NetworkProvider) {
     let user0JettonData = await user0JettonWallet.getGetWalletData();
     console.log('user jetton balance:', user0JettonData.balance);
 
-    let payloadCell = beginCell().storeInt(1,32).storeAddress(provider.sender().address).storeCoins(liquidity).storeCoins(toNano('0.1')).endCell();
+    let payloadCell = beginCell().storeInt(1,32).storeCoins(liquidity).storeCoins(toNano('0.1')).endCell();
     let forwardPayload = beginCell().storeRef(payloadCell).endCell();
 
     await user0JettonWallet.send(
