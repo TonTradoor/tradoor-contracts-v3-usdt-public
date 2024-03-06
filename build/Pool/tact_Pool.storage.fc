@@ -461,6 +461,28 @@ cell $RBFPositionDecreasedEvent$_store_cell((slice, int, int, int) v) inline {
 }
 
 ;;
+;; Type: GlobalRBFChangedEvent
+;; Header: 0xfd5108e7
+;; TLB: global_rbf_changed_event#fd5108e7 riskBufferFundAfter:int257 liquidityAfter:int257 = GlobalRBFChangedEvent
+;;
+
+builder $GlobalRBFChangedEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'riskBufferFundAfter, v'liquidityAfter) = v;
+    build_0 = store_uint(build_0, 4249946343, 32);
+    build_0 = build_0.store_int(v'riskBufferFundAfter, 257);
+    build_0 = build_0.store_int(v'liquidityAfter, 257);
+    return build_0;
+}
+
+cell $GlobalRBFChangedEvent$_store_cell((int, int) v) inline {
+    return $GlobalRBFChangedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter(int riskBufferFundAfter, int liquidityAfter) inline {
+    return (riskBufferFundAfter, liquidityAfter);
+}
+
+;;
 ;; Type: IncreaseLPPositionCancelledEvent
 ;; Header: 0x1cdd2599
 ;; TLB: increase_lp_position_cancelled_event#1cdd2599 index:int257 trxId:int257 = IncreaseLPPositionCancelledEvent
@@ -847,6 +869,25 @@ tuple $DecreaseRBFPositionOrder$_load_opt(cell cl) inline {
     return $DecreaseRBFPositionOrder$_as_optional(sc~$DecreaseRBFPositionOrder$_load());
 }
 
+tuple $DecreaseRBFPositionOrder$_to_tuple(((slice, int, int, int)) v) inline {
+    var (v'account, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    return __tact_tuple_create_4(v'account, v'liquidityDelta, v'executionFee, v'blockTime);
+}
+
+tuple $DecreaseRBFPositionOrder$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $DecreaseRBFPositionOrder$_to_tuple($DecreaseRBFPositionOrder$_not_null(v)); 
+}
+
+tuple $DecreaseRBFPositionOrder$_to_opt_external(tuple v) inline {
+    var loaded = $DecreaseRBFPositionOrder$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
 ((slice, int, int, int)) $DecreaseRBFPositionOrder$_constructor_account_liquidityDelta_executionFee_blockTime(slice account, int liquidityDelta, int executionFee, int blockTime) inline {
     return (account, liquidityDelta, executionFee, blockTime);
 }
@@ -868,6 +909,19 @@ cell $RBFPosition$_store_cell((int, int, int) v) inline {
     return $RBFPosition$_store(begin_cell(), v).end_cell();
 }
 
+((int, int, int)) $RBFPosition$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'liquidity, int vvv'bonus, int vvv'unlockTime) = __tact_tuple_destroy_3(v);
+    return (vvv'liquidity, vvv'bonus, vvv'unlockTime);
+}
+
+cell $RBFPosition$_store_opt(tuple v) inline {
+    if (null?(v)) {
+        return null();
+    }
+    return $RBFPosition$_store_cell($RBFPosition$_not_null(v));
+}
+
 (slice, ((int, int, int))) $RBFPosition$_load(slice sc_0) inline {
     var v'liquidity = sc_0~load_int(257);
     var v'bonus = sc_0~load_int(257);
@@ -886,12 +940,6 @@ tuple $RBFPosition$_load_opt(cell cl) inline {
     }
     var sc = cl.begin_parse();
     return $RBFPosition$_as_optional(sc~$RBFPosition$_load());
-}
-
-((int, int, int)) $RBFPosition$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (int vvv'liquidity, int vvv'bonus, int vvv'unlockTime) = __tact_tuple_destroy_3(v);
-    return (vvv'liquidity, vvv'bonus, vvv'unlockTime);
 }
 
 tuple $RBFPosition$_to_tuple(((int, int, int)) v) inline {

@@ -361,6 +361,10 @@ contract Pool with Deployable, Ownable {
             liquidityAfter: fundPosition.liquidity,
             unlockTimeAfter: fundPosition.unlockTime
         }.toCell());
+        emit(GlobalRBFChangedEvent{
+            riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
+            liquidityAfter: self.globalRBFPosition.liquidity
+        }.toCell());
     }
 
     receive(msg: CreateDecreaseRBFPositionOrder) {
@@ -431,19 +435,15 @@ contract Pool with Deployable, Ownable {
         self.shouldExecute(order.blockTime);
 
         // update position
-        let lpPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
+        let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
         // init position if not exist
-        let fundPosition: RBFPosition = RBFPosition{
-            liquidity: 0,
-            bonus: 0,
-            unlockTime: 0
-        };
-        if (lpPositionOpt != null) {
-            fundPosition = lpPositionOpt!!;
-        }
+        require(fundPositionOpt != null, "position not exist");
+        let fundPosition: RBFPosition = fundPositionOpt!!;
 
         // check unlock time
-        require(fundPosition.unlockTime >= now(), "not reach unlock time");
+        dump(fundPosition.unlockTime);
+        dump(now());
+        require(fundPosition.unlockTime <= now(), "not reach unlock time");
         // check liquidity delta
         require(fundPosition.liquidity >= order.liquidityDelta, "insufficient liquidity");
 
@@ -490,7 +490,11 @@ contract Pool with Deployable, Ownable {
         dump("execute decrease rbf position order");
         dump(beginCell().storeAddress(order.account).endCell().hash());
 
-        self.fundPositions.set(order.account, fundPosition);
+        if (fundPosition.liquidity > 0) {
+            self.fundPositions.set(order.account, fundPosition);
+        } else {
+            self.fundPositions.set(order.account, null);
+        }
 
         // update global position
         self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund - redeem;
@@ -513,6 +517,10 @@ contract Pool with Deployable, Ownable {
             liquidityAfter: fundPosition.liquidity,
             unlockTimeAfter: fundPosition.unlockTime
         }.toCell());
+        emit(GlobalRBFChangedEvent{
+            riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
+            liquidityAfter: self.globalRBFPosition.liquidity
+        }.toCell());
     }
 
     get fun increaseRBFPositionIndexNext(): Int {
@@ -521,6 +529,14 @@ contract Pool with Deployable, Ownable {
 
     get fun increaseRBFPositionOrder(index: Int): IncreaseRBFPositionOrder? {
         return self.increaseRBFPositionOrders.get(index);
+    }
+
+    get fun decreaseRBFPositionIndexNext(): Int {
+        return self.decreaseRBFPositionIndexNext;
+    }
+
+    get fun decreaseRBFPositionOrder(index: Int): DecreaseRBFPositionOrder? {
+        return self.decreaseRBFPositionOrders.get(index);
     }
 
     get fun fundPosition(account: Address): RBFPosition? {

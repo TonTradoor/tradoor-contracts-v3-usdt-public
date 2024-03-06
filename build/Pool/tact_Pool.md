@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 16300 bytes
+BOC Size: 16792 bytes
 
 # Types
 Total Types: 89
@@ -178,8 +178,8 @@ TLB: `rbf_position_decreased_event#5bc7e914 account:address liquidityDelta:int25
 Signature: `RBFPositionDecreasedEvent{account:address,liquidityDelta:int257,liquidityAfter:int257,unlockTimeAfter:int257}`
 
 ## GlobalRBFChangedEvent
-TLB: `global_rbf_changed_event#753d8341 liquidityAfter:int257 = GlobalRBFChangedEvent`
-Signature: `GlobalRBFChangedEvent{liquidityAfter:int257}`
+TLB: `global_rbf_changed_event#fd5108e7 riskBufferFundAfter:int257 liquidityAfter:int257 = GlobalRBFChangedEvent`
+Signature: `GlobalRBFChangedEvent{riskBufferFundAfter:int257,liquidityAfter:int257}`
 
 ## IncreaseLPPositionCreatedEvent
 TLB: `increase_lp_position_created_event#5b6375f9 account:address margin:int257 liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseLPPositionCreatedEvent`
@@ -362,7 +362,7 @@ TLB: `_ margin:int257 size:int257 entryPrice:int257 entryFundingFeeGrowth:int257
 Signature: `PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}`
 
 # Get Methods
-Total Get Methods: 7
+Total Get Methods: 9
 
 ## operator
 
@@ -373,6 +373,11 @@ Total Get Methods: 7
 ## increaseRBFPositionIndexNext
 
 ## increaseRBFPositionOrder
+Argument: index
+
+## decreaseRBFPositionIndexNext
+
+## decreaseRBFPositionOrder
 Argument: index
 
 ## fundPosition
@@ -405,6 +410,7 @@ Argument: account
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
+5238: position not exist
 16780: order expired
 19305: gas not enough
 22749: risk rate too hig

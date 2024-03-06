@@ -156,6 +156,12 @@ builder $RBFPositionDecreasedEvent$_store(builder build_0, (slice, int, int, int
 ;; $RBFPositionDecreasedEvent$_store_cell
 cell $RBFPositionDecreasedEvent$_store_cell((slice, int, int, int) v) inline;
 
+;; $GlobalRBFChangedEvent$_store
+builder $GlobalRBFChangedEvent$_store(builder build_0, (int, int) v) inline;
+
+;; $GlobalRBFChangedEvent$_store_cell
+cell $GlobalRBFChangedEvent$_store_cell((int, int) v) inline;
+
 ;; $IncreaseLPPositionCancelledEvent$_store
 builder $IncreaseLPPositionCancelledEvent$_store(builder build_0, (int, int) v) inline;
 
@@ -266,6 +272,12 @@ builder $RBFPosition$_store(builder build_0, (int, int, int) v) inline;
 
 ;; $RBFPosition$_store_cell
 cell $RBFPosition$_store_cell((int, int, int) v) inline;
+
+;; $RBFPosition$_not_null
+((int, int, int)) $RBFPosition$_not_null(tuple v) inline;
+
+;; $RBFPosition$_store_opt
+cell $RBFPosition$_store_opt(tuple v) inline;
 
 ;; $RBFPosition$_load
 (slice, ((int, int, int))) $RBFPosition$_load(slice sc_0) inline;
@@ -381,8 +393,14 @@ tuple $IncreaseRBFPositionOrder$_to_opt_tuple(tuple v) inline;
 ;; $IncreaseRBFPositionOrder$_to_opt_external
 tuple $IncreaseRBFPositionOrder$_to_opt_external(tuple v) inline;
 
-;; $RBFPosition$_not_null
-((int, int, int)) $RBFPosition$_not_null(tuple v) inline;
+;; $DecreaseRBFPositionOrder$_to_tuple
+tuple $DecreaseRBFPositionOrder$_to_tuple(((slice, int, int, int)) v) inline;
+
+;; $DecreaseRBFPositionOrder$_to_opt_tuple
+tuple $DecreaseRBFPositionOrder$_to_opt_tuple(tuple v) inline;
+
+;; $DecreaseRBFPositionOrder$_to_opt_external
+tuple $DecreaseRBFPositionOrder$_to_opt_external(tuple v) inline;
 
 ;; $RBFPosition$_to_tuple
 tuple $RBFPosition$_to_tuple(((int, int, int)) v) inline;
@@ -453,6 +471,12 @@ slice $Cell$_fun_asSlice(cell $self) impure inline;
 ;; $Pool$_fun_increaseRBFPositionOrder
 ((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell), tuple) $Pool$_fun_increaseRBFPositionOrder((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell) $self, int $index) impure inline_ref;
 
+;; $Pool$_fun_decreaseRBFPositionIndexNext
+((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell), int) $Pool$_fun_decreaseRBFPositionIndexNext((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell) $self) impure inline_ref;
+
+;; $Pool$_fun_decreaseRBFPositionOrder
+((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell), tuple) $Pool$_fun_decreaseRBFPositionOrder((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell) $self, int $index) impure inline_ref;
+
 ;; $Pool$_fun_fundPosition
 ((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell), tuple) $Pool$_fun_fundPosition((int, int, int, cell, int, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell) $self, slice $account) impure inline_ref;
 
@@ -509,6 +533,9 @@ slice $Cell$_fun_asSlice(cell $self) impure inline;
 
 ;; $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter
 ((slice, int, int, int)) $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int unlockTimeAfter) inline;
+
+;; $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter
+((int, int)) $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter(int riskBufferFundAfter, int liquidityAfter) inline;
 
 ;; $DecreaseRBFPositionOrder$_constructor_account_liquidityDelta_executionFee_blockTime
 ((slice, int, int, int)) $DecreaseRBFPositionOrder$_constructor_account_liquidityDelta_executionFee_blockTime(slice account, int liquidityDelta, int executionFee, int blockTime) inline;

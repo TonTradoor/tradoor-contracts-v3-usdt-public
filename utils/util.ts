@@ -23,7 +23,7 @@ export function getConfig(provider: NetworkProvider, key: string) {
 }
 
 export function formatUnits(value: number, decimal: number) {
-    return value * Math.pow(10, decimal);
+    return BigInt(value) * BigInt(Math.pow(10, decimal));
 }
 
 export function parseUnits(value: string, decimal: number) {
