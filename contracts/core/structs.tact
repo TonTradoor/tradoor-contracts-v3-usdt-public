@@ -189,3 +189,8 @@ struct FundingRateGrowthX96 {
     longFundingRateGrowthAfterX96: Int;
     shortFundingRateGrowthAfterX96: Int;
 }
+
+struct SamplePremiumRateResult {
+    shouldAdjustFundingRate: Bool;
+    fundingRateDeltaX96: Int;
+}
