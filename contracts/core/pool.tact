@@ -410,7 +410,7 @@ contract Pool with Deployable, Ownable {
             value: order.executionFee,
             mode: SendIgnoreErrors
         });
-        
+
         // TODO transfer jetton
 
         // delete order
@@ -865,8 +865,9 @@ contract Pool with Deployable, Ownable {
 
     // ============================ private function ================================ //
     fun calculateTotalGlobalUnrealizedPnl(): Int {
+        dump("calculate total pnl");
         let totalGlobalUnrealizedPnl: Int = 0;
-        let i: Int = 0;
+        let i: Int = 1;
         while(i < self.tokenIndexNext) {
             let tokenEnabled: Bool = self.tokenEnabled(i);
             if (tokenEnabled) {
@@ -881,7 +882,9 @@ contract Pool with Deployable, Ownable {
                     totalGlobalUnrealizedPnl = totalGlobalUnrealizedPnl + unrealizedPnl;
                 }
             }
+            i = i + 1;
         }
+        dump(totalGlobalUnrealizedPnl);
         return totalGlobalUnrealizedPnl;
     }
 
