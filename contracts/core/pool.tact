@@ -4,8 +4,9 @@ import "./messages";
 import "./events";
 import "./structs";
 import "./constants";
+import "./fundingRate";
 
-contract Pool with Deployable, Ownable {
+contract Pool with Deployable, Ownable, fundingRate {
 
     // config
     minExecutionFee: Int;
@@ -73,6 +74,11 @@ contract Pool with Deployable, Ownable {
     decreasePerpPositionLimitIndexNext: Int as uint128;
 
     perpPositions: map<Int, AccountPerpPosition>; // tokenIndex => user => direction => position
+
+    // funding rate
+    GlobalFundingRateSamples: map<Int, GlobalFundingRateSample>;
+    PreviousGlobalFundingRates: map<Int, PreviousGlobalFundingRate>;
+
 
     init() {
         self.owner = sender();

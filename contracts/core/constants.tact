@@ -6,3 +6,11 @@ const BASIS_POINT: Int = pow(10, 6); // 1 for 0.0001%
 const PRICE_FACTOR: Int = pow(10, 16);
 
 const DAY: Int = 24 * 60 * 60;
+
+
+const ADJUST_FUNDING_RATE_INTERVAL: Int = 3600; // 1 hour
+const SAMPLE_PREMIUM_RATE_INTERVAL: Int = 5; // 5 seconds
+const REQUIRED_SAMPLE_COUNT: Int = 720;
+// @dev 8 * (1+2+3+...+720) = 8 * ((1+720) * 720 / 2) = 8 * 259560
+const PREMIUM_RATE_AVG_DENOMINATOR: Int = 8 * 259560;
+const PREMIUM_RATE_CLAMP_BOUNDARY_X96: Int = 4951760157141521099596497;

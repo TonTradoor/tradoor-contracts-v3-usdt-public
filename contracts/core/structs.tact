@@ -140,3 +140,52 @@ struct PerpPosition {
     entryFundingFeeGrowth: Int;
 }
 
+// funding rate //
+
+struct PriceVertex {
+    size: Int;
+    premiumRateX96: Int;
+}
+
+struct PriceState {
+    // uint128 maxPriceImpactLiquidity;
+    maxPriceImpactLiquidity: Int;
+    // uint128 premiumRateX96;
+    premiumRateX96: Int;
+    // PriceVertex[7] priceVertices;
+    priceVertices: map<Int, PriceVertex>;
+    // uint8 pendingVertexIndex;
+    pendingVertexIndex: Int;
+    // uint8 liquidationVertexIndex;
+    liquidationVertexIndex: Int;
+    // uint8 currentVertexIndex;
+    currentVertexIndex: Int;
+    // uint128[7] liquidationBufferNetSizes;
+    liquidationBufferNetSizes: map<Int, Int>;
+}
+
+struct GlobalLiquidityPosition {
+    netSize: Int;
+    liquidationBufferNetSize: Int;
+    entryPriceX96: Int;
+    side: Bool;
+    liquidity: Int;
+    realizedProfitGrowthX64: Int;
+}
+
+struct GlobalFundingRateSample {
+    lastAdjustFundingRateTime: Int;
+    sampleCount: Int;
+    cumulativePremiumRateX96: Int;
+}
+
+struct PreviousGlobalFundingRate {
+    longFundingRateGrowthX96: Int;
+    shortFundingRateGrowthX96: Int;
+}
+
+struct FundingRateGrowthX96 {
+    clampedFundingRateDeltaX96: Int;
+    longFundingRateGrowthAfterX96: Int;
+    shortFundingRateGrowthAfterX96: Int;
+}
