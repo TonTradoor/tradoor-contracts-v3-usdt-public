@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 16792 bytes
+BOC Size: 17330 bytes
 
 # Types
-Total Types: 89
+Total Types: 95
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -360,6 +360,30 @@ Signature: `DirectionPerpPosition{longPosition:PerpPosition{margin:int257,size:i
 ## PerpPosition
 TLB: `_ margin:int257 size:int257 entryPrice:int257 entryFundingFeeGrowth:int257 = PerpPosition`
 Signature: `PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}`
+
+## PriceVertex
+TLB: `_ size:int257 premiumRateX96:int257 = PriceVertex`
+Signature: `PriceVertex{size:int257,premiumRateX96:int257}`
+
+## PriceState
+TLB: `_ maxPriceImpactLiquidity:int257 premiumRateX96:int257 priceVertices:dict<int, ^PriceVertex{size:int257,premiumRateX96:int257}> pendingVertexIndex:int257 liquidationVertexIndex:int257 currentVertexIndex:int257 liquidationBufferNetSizes:dict<int, int> = PriceState`
+Signature: `PriceState{maxPriceImpactLiquidity:int257,premiumRateX96:int257,priceVertices:dict<int, ^PriceVertex{size:int257,premiumRateX96:int257}>,pendingVertexIndex:int257,liquidationVertexIndex:int257,currentVertexIndex:int257,liquidationBufferNetSizes:dict<int, int>}`
+
+## GlobalLiquidityPosition
+TLB: `_ netSize:int257 liquidationBufferNetSize:int257 entryPriceX96:int257 side:bool liquidity:int257 realizedProfitGrowthX64:int257 = GlobalLiquidityPosition`
+Signature: `GlobalLiquidityPosition{netSize:int257,liquidationBufferNetSize:int257,entryPriceX96:int257,side:bool,liquidity:int257,realizedProfitGrowthX64:int257}`
+
+## GlobalFundingRateSample
+TLB: `_ lastAdjustFundingRateTime:int257 sampleCount:int257 cumulativePremiumRateX96:int257 = GlobalFundingRateSample`
+Signature: `GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRateX96:int257}`
+
+## PreviousGlobalFundingRate
+TLB: `_ longFundingRateGrowthX96:int257 shortFundingRateGrowthX96:int257 = PreviousGlobalFundingRate`
+Signature: `PreviousGlobalFundingRate{longFundingRateGrowthX96:int257,shortFundingRateGrowthX96:int257}`
+
+## FundingRateGrowthX96
+TLB: `_ clampedFundingRateDeltaX96:int257 longFundingRateGrowthAfterX96:int257 shortFundingRateGrowthAfterX96:int257 = FundingRateGrowthX96`
+Signature: `FundingRateGrowthX96{clampedFundingRateDeltaX96:int257,longFundingRateGrowthAfterX96:int257,shortFundingRateGrowthAfterX96:int257}`
 
 # Get Methods
 Total Get Methods: 9
