@@ -8,16 +8,17 @@ trait fundingRate {
     GlobalFundingRateSamples: map<Int, GlobalFundingRateSample>;
     PreviousGlobalFundingRates: map<Int, PreviousGlobalFundingRate>;
 
-    fun sampleAndAdjustFundingRate(globalFundingRateSample: GlobalFundingRateSample, position: GlobalLiquidityPosition, priceState: PriceState, interestRate: Int, timestamp: Int) {
+    fun sampleAndAdjustFundingRate(globalFundingRateSample: GlobalFundingRateSample, position: GlobalLiquidityPosition, priceState: PriceState, interestRate: Int, timestamp: Int, globalPosition: GlobalPosition) {
 
         // calculate if should adjust funding rate and funding rate deltax96
         let res: SamplePremiumRateResult = self.samplePremiumRate(globalFundingRateSample, position, priceState, interestRate, timestamp);
         // if should adjust funding rate
 
         if (res.shouldAdjustFundingRate) {
-            self.calculateFundingRateGrowthX96();
 
-            self.snapshotAndAdjustGlobalFundingRate();
+            // self.calculateFundingRateGrowthX96();
+
+            // self.snapshotAndAdjustGlobalFundingRate();
         }
 
 
@@ -35,6 +36,7 @@ trait fundingRate {
         let timeDelta: Int = timestamp - lastSamplingTime;
         if (timeDelta < SAMPLE_PREMIUM_RATE_INTERVAL) {
             return SamplePremiumRateResult {
+                sample: sample,
                 shouldAdjustFundingRate: false,
                 fundingRateDeltaX96: 0
             };
@@ -64,6 +66,7 @@ trait fundingRate {
             sample.cumulativePremiumRateX96 = cumulativePremiumRateX96;
             sample.sampleCount = sampleCountAfter;
             return SamplePremiumRateResult {
+                sample: sample,
                 shouldAdjustFundingRate: false,
                 fundingRateDeltaX96: 0
             };
@@ -82,6 +85,7 @@ trait fundingRate {
         sample.sampleCount = 0;
 
         return SamplePremiumRateResult {
+                sample: sample,
                 shouldAdjustFundingRate: true,
                 fundingRateDeltaX96: fundingRateDeltaX96
             };
@@ -99,10 +103,64 @@ trait fundingRate {
 
     }
 
-    fun calculateFundingRateGrowthX96(): FundingRateGrowthX96 {
+    fun calculateFundingRateGrowthX96(globalRiskBufferFund: GlobalRiskBufferFund, globalPosition: GlobalPosition, fundingRateDeltaX96: Int, maxFundingRate: Int, indexPrice: Int): FundingRateGrowthX96 {
+        let res: FundingRateGrowthX96 = FundingRateGrowthX96 {
+            clampedFundingRateDeltaX96: 0,
+            longFundingRateGrowthAfterX96: 0,
+            shortFundingRateGrowthAfterX96: 0
+        };
+        let maxFundingRateX96: Int = self.calculateMaxFundingRateX96(maxFundingRate);
+        if (fundingRateDeltaX96 > maxFundingRateX96) {
+            res.clampedFundingRateDeltaX96 = maxFundingRateX96;
+        } else if (fundingRateDeltaX96 < -maxFundingRateX96) {
+            res.clampedFundingRateDeltaX96 = -maxFundingRateX96;
+        } else {
+            res.clampedFundingRateDeltaX96 = fundingRateDeltaX96;
+        }
+        let paidSize: Int = 0;
+        let receivedSize: Int = 0;
+        let clampedFundingRateDeltaAbsX96: Int = 0;
+        if res.clampedFundingRateDeltaX96 >= 0 {
+            paidSize = globalPosition.longSize;
+            receivedSize = globalPosition.shortSize;
+            clampedFundingRateDeltaAbsX96 = res.clampedFundingRateDeltaX96;
+        } else {
+            paidSize = globalPosition.shortSize;
+            receivedSize = globalPosition.longSize;
+            clampedFundingRateDeltaAbsX96 = -res.clampedFundingRateDeltaX96;
+        }
 
+        let paidFundingRateGrowthDeltaX96: Int = indexPrice * clampedFundingRateDeltaAbsX96 / Q96;
+
+        let receivedFundingRateGrowthDeltaX96: Int = 0;
+        if (paidFundingRateGrowthDeltaX96 > 0) {
+            if (receivedSize > 0) {
+                receivedFundingRateGrowthDeltaX96 = paidSize * paidFundingRateGrowthDeltaX96 / receivedSize;
+            } else {
+                let riskBufferFundDelta: Int = paidSize * paidFundingRateGrowthDeltaX96 / Q96;
+                let riskBufferFundAfter: Int = globalRiskBufferFund.riskBufferFund + riskBufferFundDelta;
+                globalRiskBufferFund.riskBufferFund = riskBufferFundAfter;
+                // TODO return globalRiskBufferFund or riskBufferFundAfter
+            }
+        }
+        res.longFundingRateGrowthAfterX96 = globalPosition.longFundingRateGrowthX96;
+        res.shortFundingRateGrowthAfterX96 = globalPosition.shortFundingRateGrowthX96;
+
+        if (res.clampedFundingRateDeltaX96 >= 0) {
+            res.longFundingRateGrowthAfterX96 = res.longFundingRateGrowthAfterX96 - paidFundingRateGrowthDeltaX96;
+            res.shortFundingRateGrowthAfterX96 = res.shortFundingRateGrowthAfterX96 + receivedFundingRateGrowthDeltaX96;
+        } else {
+            res.longFundingRateGrowthAfterX96 = res.longFundingRateGrowthAfterX96 + receivedFundingRateGrowthDeltaX96;
+            res.shortFundingRateGrowthAfterX96 = res.shortFundingRateGrowthAfterX96 - paidFundingRateGrowthDeltaX96;
+        }
+        return res;
     }
 
+    fun calculateMaxFundingRateX96(maxFundingRate: Int): Int {
+        return maxFundingRate / Q96 * BASIS_POINTS_DIVISOR;
+    }
+
+    // TODO imp in main contract
     fun snapshotAndAdjustGlobalFundingRate() {
 
     }

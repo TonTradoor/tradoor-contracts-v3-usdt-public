@@ -164,6 +164,18 @@ struct PriceState {
     liquidationBufferNetSizes: map<Int, Int>;
 }
 
+struct GlobalRiskBufferFund {
+    riskBufferFund: Int;
+    liquidity: Int;
+}
+
+struct GlobalPosition {
+    longSize: Int;
+    shortSize: Int;
+    longFundingRateGrowthX96: Int;
+    shortFundingRateGrowthX96: Int;
+}
+
 struct GlobalLiquidityPosition {
     netSize: Int;
     liquidationBufferNetSize: Int;
@@ -191,6 +203,7 @@ struct FundingRateGrowthX96 {
 }
 
 struct SamplePremiumRateResult {
+    sample: GlobalFundingRateSample;
     shouldAdjustFundingRate: Bool;
     fundingRateDeltaX96: Int;
 }
