@@ -18,6 +18,7 @@ contract Pool with Deployable, Ownable, fundingRate {
 
     tokenInfos: map<Int, TokenInfo>; // tokenIndex => tokenInfo
     tokenIndexNext: Int;
+    tokenConfigs: map<Int, TokenConfig>; // tokenIndex => tokenConfig
 
     // lockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
     lockTime: Int = 5 * 60; // TODO lock 5 min for test
@@ -77,8 +78,13 @@ contract Pool with Deployable, Ownable, fundingRate {
     perpPositions: map<Int, AccountPerpPosition>; // tokenIndex => user => direction => position
 
     // funding rate
-    GlobalFundingRateSamples: map<Int, GlobalFundingRateSample>;
-    PreviousGlobalFundingRates: map<Int, PreviousGlobalFundingRate>;
+    priceStates: map<Int, PriceState>; // tokenIndex => priceState
+
+    globalRiskBufferFunds: map<Int, GlobalRiskBufferFund>; // tokenIndex => RBF
+    globalPositions : map<Int, GlobalPosition>; // tokenIndex => globalPosition
+    globalFundingRateSamples: map<Int, GlobalFundingRateSample>; // tokenIndex => sample
+    globalLiquidityPositions: map<Int, GlobalLiquidityPosition>; // tokenIndex => globalLiquidityPosition
+    previousGlobalFundingRates: map<Int, PreviousGlobalFundingRate>; // tokenIndex => rate
 
 
     init() {
@@ -978,6 +984,15 @@ contract Pool with Deployable, Ownable, fundingRate {
             .storeCoins(fwdAmount) // forward_ton_amount
             .storeInt(0, 1)
             .endCell();
+    }
+
+    fun sampleAndAdjustFundingRate(tokenIndex: Int) {
+        let globalFundingRateSample: GlobalFundingRateSample = self.globalFundingRateSamples.get(tokenIndex)!!;
+        let globalLiquidityPosition: GlobalLiquidityPosition = self.globalLiquidityPositions.get(tokenIndex)!!;
+        let priceState: PriceState = self.priceStates.get(tokenIndex)!!;
+        let tokenConfig: TokenConfig = self.tokenConfigs.get(tokenIndex)!!;
+
+        let res: SamplePremiumRateResult = self.samplePremiumRate(globalFundingRateSample, globalLiquidityPosition, priceState, tokenConfig.interestRate, now());
     }
 
 }

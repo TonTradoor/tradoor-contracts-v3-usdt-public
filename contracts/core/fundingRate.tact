@@ -5,24 +5,21 @@ import "./constants";
 
 trait fundingRate {
 
-    GlobalFundingRateSamples: map<Int, GlobalFundingRateSample>;
-    PreviousGlobalFundingRates: map<Int, PreviousGlobalFundingRate>;
+    // fun sampleAndAdjustFundingRate(globalFundingRateSample: GlobalFundingRateSample, position: GlobalLiquidityPosition, priceState: PriceState, interestRate: Int, timestamp: Int, globalPosition: GlobalPosition) {
 
-    fun sampleAndAdjustFundingRate(globalFundingRateSample: GlobalFundingRateSample, position: GlobalLiquidityPosition, priceState: PriceState, interestRate: Int, timestamp: Int, globalPosition: GlobalPosition) {
+    //     // calculate if should adjust funding rate and funding rate deltax96
+    //     let res: SamplePremiumRateResult = self.samplePremiumRate(globalFundingRateSample, position, priceState, interestRate, timestamp);
+    //     // if should adjust funding rate
 
-        // calculate if should adjust funding rate and funding rate deltax96
-        let res: SamplePremiumRateResult = self.samplePremiumRate(globalFundingRateSample, position, priceState, interestRate, timestamp);
-        // if should adjust funding rate
+    //     if (res.shouldAdjustFundingRate) {
 
-        if (res.shouldAdjustFundingRate) {
+    //         // self.calculateFundingRateGrowthX96();
 
-            // self.calculateFundingRateGrowthX96();
-
-            // self.snapshotAndAdjustGlobalFundingRate();
-        }
+    //         // self.snapshotAndAdjustGlobalFundingRate();
+    //     }
 
 
-    }
+    // }
 
     fun samplePremiumRate(sample: GlobalFundingRateSample, position: GlobalLiquidityPosition, priceState: PriceState, interestRateX96: Int, timestamp: Int): SamplePremiumRateResult {
         let lastAdjustFundingRateTime: Int = sample.lastAdjustFundingRateTime;

@@ -4,6 +4,21 @@ struct TokenInfo {
     enable: Bool;
 }
 
+struct TokenConfig {
+    // ==================== LP Position Configuration ====================
+    minMarginPerLiquidityPosition: Int;
+    maxRiskRatePerLiquidityPosition: Int;
+    maxLeveragePerLiquidityPosition: Int;
+    // ==================== Trader Position Configuration ==================
+    minMarginPerPosition: Int;
+    maxLeveragePerPosition: Int;
+    liquidationFeeRatePerPosition: Int;
+    // ==================== Other Configuration ==========================
+    liquidationExecutionFee: Int;
+    interestRate: Int;
+    maxFundingRate: Int;
+}
+
 // ============================ RBF ================================ //
 struct IncreaseRBFPositionOrder {
     account: Address;
