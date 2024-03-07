@@ -19,7 +19,8 @@ contract Pool with Deployable, Ownable, fundingRate {
     tokenInfos: map<Int, TokenInfo>; // tokenIndex => tokenInfo
     tokenIndexNext: Int;
 
-    lockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
+    // lockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
+    lockTime: Int = 5 * 60; // TODO lock 5 min for test
     bonusFactor: Int = 1;
 
     minLPMargin: Int;

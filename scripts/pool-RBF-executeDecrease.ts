@@ -5,7 +5,7 @@ import { getConfig, getLastTransaction, waitForTransaction } from '../utils/util
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
-    let index = await pool.getIncreaseRbfPositionIndexNext();
+    let index = await pool.getDecreaseRbfPositionIndexNext();
     let prevIndex = index - 1n;
     console.log(`index:`, index);
     console.log(`prevIndex:`, prevIndex);
@@ -16,7 +16,7 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get last order
-    let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
+    let order = await pool.getDecreaseRbfPositionOrder(prevIndex);
     console.log(`order:`, order);
 
     // execute order
@@ -27,7 +27,7 @@ export async function run(provider: NetworkProvider) {
             value: toNano('0.5'),
         },
         {
-            $$type: 'ExecuteIncreaseRBFPositionOrder',
+            $$type: 'ExecuteDecreaseRBFPositionOrder',
             index: prevIndex,
             trxId: 0n
         }
@@ -35,7 +35,7 @@ export async function run(provider: NetworkProvider) {
     // wait for trx
     const transDone = await waitForTransaction(provider, pool.address, lastTrx, 10);
     if (transDone) {
-        console.log(`execute increase RBF success`);
+        console.log(`execute decrease RBF success`);
     }
 
     // get position

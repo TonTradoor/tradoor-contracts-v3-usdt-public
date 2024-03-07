@@ -479,7 +479,7 @@ describe('Pool', () => {
             {
                 $$type: 'TokenTransfer',
                 query_id: 0n,
-                amount: formatUnits(10, 6),
+                amount: liquidity,
                 destination: pool.address,
                 response_destination: user0.address,
                 custom_payload: null,

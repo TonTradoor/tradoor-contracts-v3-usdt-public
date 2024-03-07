@@ -8,43 +8,27 @@ export async function run(provider: NetworkProvider) {
     const jetton = attachMockJetton(provider);
 
     /// create order
-    let liquidity = formatUnits(10, 6);
-
-    // transfer jetton with create increase RBF position order payload
-    // get user jetton wallet address
-    let user0JettonWallet = await attachJettonWallet(provider, provider.sender().address!!);
-
-    // get user jetton balance
-    let user0JettonData = await user0JettonWallet.getGetWalletData();
-    console.log('user jetton balance:', user0JettonData.balance);
-
-    let payloadCell = beginCell().storeInt(1,32).storeCoins(liquidity).storeCoins(toNano('0.5')).endCell();
-    let forwardPayload = beginCell().storeRef(payloadCell).endCell();
-
     let prevIndex = await pool.getDecreaseRbfPositionIndexNext();
+    let decreaseLiquidity = formatUnits(5, 6);
+    let executionFee = toNano('0.5');
 
     const lastTrx = await getLastTransaction(provider, pool.address);
-    await user0JettonWallet.send(
+    await pool.send(
         provider.sender(),
         {
-            value: toNano('1.5'),
+            value: toNano('1'),
         },
         {
-            $$type: 'TokenTransfer',
-            query_id: 0n,
-            amount: liquidity,
-            destination: pool.address,
-            response_destination: provider.sender().address!!,
-            custom_payload: null,
-            forward_ton_amount: toNano('1'),
-            forward_payload: forwardPayload
+            $$type: 'CreateDecreaseRBFPositionOrder',
+            executionFee: executionFee,
+            liquidityDelta: decreaseLiquidity
         }
     );
 
     // wait for trx
     const transDone = await waitForTransaction(provider, pool.address, lastTrx, 10);
     if (transDone) {
-        console.log(`create increase success`);
+        console.log(`create decrease RBF success`);
     }
 
     // get pool jetton wallet address 
