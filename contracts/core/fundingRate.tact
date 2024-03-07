@@ -11,13 +11,19 @@ trait fundingRate {
     fun sampleAndAdjustFundingRate(globalFundingRateSample: GlobalFundingRateSample, position: GlobalLiquidityPosition, priceState: PriceState, interestRate: Int, timestamp: Int) {
 
         // calculate if should adjust funding rate and funding rate deltax96
-
+        let res: SamplePremiumRateResult = self.samplePremiumRate(globalFundingRateSample, position, priceState, interestRate, timestamp);
         // if should adjust funding rate
+
+        if (res.shouldAdjustFundingRate) {
+            self.calculateFundingRateGrowthX96();
+
+            self.snapshotAndAdjustGlobalFundingRate();
+        }
 
 
     }
 
-    fun samplePremiumRate(sample: GlobalFundingRateSample, position: GlobalLiquidityPosition, priceState: PriceState, interestRateX96: Int, timestamp: Int) {
+    fun samplePremiumRate(sample: GlobalFundingRateSample, position: GlobalLiquidityPosition, priceState: PriceState, interestRateX96: Int, timestamp: Int): SamplePremiumRateResult {
         let lastAdjustFundingRateTime: Int = sample.lastAdjustFundingRateTime;
         let maxSamplingTime: Int = lastAdjustFundingRateTime + ADJUST_FUNDING_RATE_INTERVAL;
 
@@ -28,7 +34,10 @@ trait fundingRate {
         let lastSamplingTime: Int = lastAdjustFundingRateTime + sample.sampleCount + SAMPLE_PREMIUM_RATE_INTERVAL;
         let timeDelta: Int = timestamp - lastSamplingTime;
         if (timeDelta < SAMPLE_PREMIUM_RATE_INTERVAL) {
-            return;
+            return SamplePremiumRateResult {
+                shouldAdjustFundingRate: false,
+                fundingRateDeltaX96: 0
+            };
         }
 
         let premiumRateX96: Int = 0;
@@ -54,7 +63,10 @@ trait fundingRate {
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
             sample.cumulativePremiumRateX96 = cumulativePremiumRateX96;
             sample.sampleCount = sampleCountAfter;
-            return;
+            return SamplePremiumRateResult {
+                shouldAdjustFundingRate: false,
+                fundingRateDeltaX96: 0
+            };
         }
 
         let premiumRateAvgX96: Int = 0;
@@ -69,7 +81,10 @@ trait fundingRate {
         sample.cumulativePremiumRateX96 = 0;
         sample.sampleCount = 0;
 
-        return;
+        return SamplePremiumRateResult {
+                shouldAdjustFundingRate: true,
+                fundingRateDeltaX96: fundingRateDeltaX96
+            };
     }
 
     fun clump(premiumRateAvgX96: Int, interestRateX96: Int): Int {
