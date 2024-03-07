@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 17328 bytes
+BOC Size: 19676 bytes
 
 # Types
-Total Types: 96
+Total Types: 101
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -80,6 +80,10 @@ Signature: `CancelDecreaseLPPositionOrder{index:int257,trxId:int257}`
 ## ExecuteDecreaseLPPositionOrder
 TLB: `execute_decrease_lp_position_order#8db2f500 index:int257 trxId:int257 = ExecuteDecreaseLPPositionOrder`
 Signature: `ExecuteDecreaseLPPositionOrder{index:int257,trxId:int257}`
+
+## LiquidateLPPosition
+TLB: `liquidate_lp_position#f3f83120 account:address trxId:int257 = LiquidateLPPosition`
+Signature: `LiquidateLPPosition{account:address,trxId:int257}`
 
 ## CreateIncreasePerpPositionMarketOrder
 TLB: `create_increase_perp_position_market_order#f3c953fe token:^string isLong:bool marginDelta:int257 sizeDelta:int257 acceptablePrice:int257 = CreateIncreasePerpPositionMarketOrder`
@@ -210,8 +214,12 @@ TLB: `decrease_lp_position_executed_event#72ae9b9a index:int257 trxId:int257 = D
 Signature: `DecreaseLPPositionExecutedEvent{index:int257,trxId:int257}`
 
 ## LPPositionDecreasedEvent
-TLB: `lp_position_decreased_event#d443ce43 account:address marginDelta:int257 marginAfter:int257 liquidityDelta:int257 liquidityAfter:int257 realizedProfit:int257 realizedLoss:int257 = LPPositionDecreasedEvent`
-Signature: `LPPositionDecreasedEvent{account:address,marginDelta:int257,marginAfter:int257,liquidityDelta:int257,liquidityAfter:int257,realizedProfit:int257,realizedLoss:int257}`
+TLB: `lp_position_decreased_event#dd5521b0 account:address marginDelta:int257 marginAfter:int257 liquidityDelta:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 realizedLoss:int257 = LPPositionDecreasedEvent`
+Signature: `LPPositionDecreasedEvent{account:address,marginDelta:int257,marginAfter:int257,liquidityDelta:int257,liquidityAfter:int257,tradingFee:int257,fundingFee:int257,realizedLoss:int257}`
+
+## LPPositionLiquidatedEvent
+TLB: `lp_position_liquidated_event#01658f71 account:address trxId:int257 margin:int257 liquidity:int257 tradingFee:int257 fundingFee:int257 liquidationFee:int257 = LPPositionLiquidatedEvent`
+Signature: `LPPositionLiquidatedEvent{account:address,trxId:int257,margin:int257,liquidity:int257,tradingFee:int257,fundingFee:int257,liquidationFee:int257}`
 
 ## GlobalLPChangedEvent
 TLB: `global_lp_changed_event#42445a0e netSizeAfter:int257 isLong:bool entryPriceAfter:int257 = GlobalLPChangedEvent`
@@ -284,6 +292,10 @@ Signature: `ExecutionFeeReceiverUpdatedEvent{newExecutionFeeReceiver:address}`
 ## TokenInfo
 TLB: `_ name:^string enable:bool = TokenInfo`
 Signature: `TokenInfo{name:^string,enable:bool}`
+
+## TokenConfig
+TLB: `_ minMarginPerLiquidityPosition:int257 maxRiskRatePerLiquidityPosition:int257 maxLeveragePerLiquidityPosition:int257 minMarginPerPosition:int257 maxLeveragePerPosition:int257 liquidationFeeRatePerPosition:int257 liquidationExecutionFee:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
+Signature: `TokenConfig{minMarginPerLiquidityPosition:int257,maxRiskRatePerLiquidityPosition:int257,maxLeveragePerLiquidityPosition:int257,minMarginPerPosition:int257,maxLeveragePerPosition:int257,liquidationFeeRatePerPosition:int257,liquidationExecutionFee:int257,interestRate:int257,maxFundingRate:int257}`
 
 ## IncreaseRBFPositionOrder
 TLB: `_ account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 = IncreaseRBFPositionOrder`
@@ -369,6 +381,14 @@ Signature: `PriceVertex{size:int257,premiumRateX96:int257}`
 TLB: `_ maxPriceImpactLiquidity:int257 premiumRateX96:int257 priceVertices:dict<int, ^PriceVertex{size:int257,premiumRateX96:int257}> pendingVertexIndex:int257 liquidationVertexIndex:int257 currentVertexIndex:int257 liquidationBufferNetSizes:dict<int, int> = PriceState`
 Signature: `PriceState{maxPriceImpactLiquidity:int257,premiumRateX96:int257,priceVertices:dict<int, ^PriceVertex{size:int257,premiumRateX96:int257}>,pendingVertexIndex:int257,liquidationVertexIndex:int257,currentVertexIndex:int257,liquidationBufferNetSizes:dict<int, int>}`
 
+## GlobalRiskBufferFund
+TLB: `_ riskBufferFund:int257 liquidity:int257 = GlobalRiskBufferFund`
+Signature: `GlobalRiskBufferFund{riskBufferFund:int257,liquidity:int257}`
+
+## GlobalPosition
+TLB: `_ longSize:int257 shortSize:int257 longFundingRateGrowthX96:int257 shortFundingRateGrowthX96:int257 = GlobalPosition`
+Signature: `GlobalPosition{longSize:int257,shortSize:int257,longFundingRateGrowthX96:int257,shortFundingRateGrowthX96:int257}`
+
 ## GlobalLiquidityPosition
 TLB: `_ netSize:int257 liquidationBufferNetSize:int257 entryPriceX96:int257 side:bool liquidity:int257 realizedProfitGrowthX64:int257 = GlobalLiquidityPosition`
 Signature: `GlobalLiquidityPosition{netSize:int257,liquidationBufferNetSize:int257,entryPriceX96:int257,side:bool,liquidity:int257,realizedProfitGrowthX64:int257}`
@@ -386,8 +406,8 @@ TLB: `_ clampedFundingRateDeltaX96:int257 longFundingRateGrowthAfterX96:int257 s
 Signature: `FundingRateGrowthX96{clampedFundingRateDeltaX96:int257,longFundingRateGrowthAfterX96:int257,shortFundingRateGrowthAfterX96:int257}`
 
 ## SamplePremiumRateResult
-TLB: `_ shouldAdjustFundingRate:bool fundingRateDeltaX96:int257 = SamplePremiumRateResult`
-Signature: `SamplePremiumRateResult{shouldAdjustFundingRate:bool,fundingRateDeltaX96:int257}`
+TLB: `_ sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRateX96:int257} shouldAdjustFundingRate:bool fundingRateDeltaX96:int257 = SamplePremiumRateResult`
+Signature: `SamplePremiumRateResult{sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRateX96:int257},shouldAdjustFundingRate:bool,fundingRateDeltaX96:int257}`
 
 # Get Methods
 Total Get Methods: 9
@@ -451,6 +471,7 @@ Argument: account
 42634: legerage too high
 55585: only operator
 58161: insufficient liquidity
+60602: risk rate too high
 61867: insuficient global net RBF
 62259: insufficient global liquidity
 62409: insufficient margin

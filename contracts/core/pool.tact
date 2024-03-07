@@ -447,9 +447,9 @@ contract Pool with Deployable, Ownable, fundingRate {
         let order: DecreaseRBFPositionOrder = orderOpt!!;
         self.shouldExecute(order.blockTime);
 
-        // update position
+        // get position
         let fundPositionOpt: RBFPosition? = self.fundPositions.get(order.account);
-        // init position if not exist
+        // check position
         require(fundPositionOpt != null, "position not exist");
         let fundPosition: RBFPosition = fundPositionOpt!!;
 
@@ -668,7 +668,7 @@ contract Pool with Deployable, Ownable, fundingRate {
                 unrealizedLoss = -unrealizedPnl;
             }
             // check risk rate
-            require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT > unrealizedLoss, "risk rate too hig");
+            require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT > unrealizedLoss, "risk rate too high");
             // check leverage
             require(marginAfter * self.maxLPLeverage >= order.liquidityDelta, "legerage too high");
         }
@@ -797,8 +797,7 @@ contract Pool with Deployable, Ownable, fundingRate {
         let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
         // calculate trading fee
         let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
-        let realizedProfit: Int = tradingFee + fundingFee;
-        let marginAfter: Int = lpPosition.margin + realizedProfit;
+        let marginAfter: Int = lpPosition.margin + tradingFee + fundingFee;
         // check margin
         require(marginAfter >= order.marginDelta, "insufficient margin");
         marginAfter = marginAfter - order.marginDelta;
@@ -883,10 +882,77 @@ contract Pool with Deployable, Ownable, fundingRate {
             marginAfter: lpPosition.margin,
             liquidityDelta: order.liquidityDelta,
             liquidityAfter: lpPosition.liquidity,
-            realizedProfit: realizedProfit,
+            tradingFee: tradingFee,
+            fundingFee: fundingFee,
             realizedLoss: realizedLoss
         }.toCell());
 
+    }
+
+    receive(msg: LiquidateLPPosition) {
+        // get position
+        let lpPositionOpt: LPPosition? = self.lpPositions.get(msg.account);
+        // check position
+        require(lpPositionOpt != null, "position not exist");
+        let lpPosition: LPPosition = lpPositionOpt!!;
+
+        // TODO update funding rate        
+
+        // calculate funding fee
+        let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
+        // calculate trading fee
+        let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
+        let realizedProfit: Int = tradingFee + fundingFee;
+        let marginAfter: Int = lpPosition.margin + realizedProfit;
+
+        // calculate pnl
+        let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
+        let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
+        let unrealizedLoss: Int = 0;
+        if (unrealizedPnl < 0) {
+            unrealizedLoss = -unrealizedPnl;
+        }
+
+        // check risk rate
+        require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT <= unrealizedLoss, "risk rate too high");
+        
+        // margin substract fee
+        let liquidationFee: Int = self.lpLiquidationFee;
+        if (marginAfter < self.lpLiquidationFee) {
+            liquidationFee = marginAfter;
+            marginAfter = 0;
+        } else {
+            marginAfter = marginAfter - self.lpLiquidationFee;
+        }
+        
+        // remained margin add to RBF
+        self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund + marginAfter;
+                
+        // delete position
+        self.lpPositions.set(msg.account, null);
+
+        dump("liquidate lp position order");
+        dump(beginCell().storeAddress(msg.account).endCell().hash());
+
+        // update global position
+        self.globalLiquidity = self.globalLiquidity - lpPosition.liquidity;
+        
+        // TODO send liquidation fee to executor
+
+        // event
+        emit(LPPositionLiquidatedEvent{
+            account: msg.account,
+            trxId: msg.trxId,
+            margin: lpPosition.margin,
+            liquidity: lpPosition.liquidity,
+            tradingFee: tradingFee,
+            fundingFee: fundingFee,
+            liquidationFee: liquidationFee
+        }.toCell());
+        emit(GlobalRBFChangedEvent{
+            riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
+            liquidityAfter: self.globalRBFPosition.liquidity
+        }.toCell());
     }
 
     // ============================ Perp ================================ //

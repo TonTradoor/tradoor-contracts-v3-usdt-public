@@ -110,8 +110,20 @@ message LPPositionDecreasedEvent {
     marginAfter: Int;
     liquidityDelta: Int;
     liquidityAfter: Int;
-    realizedProfit: Int;
+    tradingFee: Int;
+    fundingFee: Int;
     realizedLoss: Int;
+}
+
+// liquidate LP
+message LPPositionLiquidatedEvent {
+    account: Address;
+    trxId: Int;
+    margin: Int;
+    liquidity: Int;
+    tradingFee: Int;
+    fundingFee: Int;
+    liquidationFee: Int;
 }
 
 // global LP

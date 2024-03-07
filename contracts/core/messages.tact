@@ -64,6 +64,11 @@ message ExecuteDecreaseLPPositionOrder {
     trxId: Int;
 }
 
+message LiquidateLPPosition {
+    account: Address;
+    trxId: Int;
+}
+
 // ============================ Perp ================================ //
 // increase market Perp
 message CreateIncreasePerpPositionMarketOrder {
