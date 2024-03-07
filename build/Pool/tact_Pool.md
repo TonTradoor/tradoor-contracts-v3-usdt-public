@@ -3,7 +3,7 @@ Contract: Pool
 BOC Size: 17328 bytes
 
 # Types
-Total Types: 95
+Total Types: 96
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -384,6 +384,10 @@ Signature: `PreviousGlobalFundingRate{longFundingRateGrowthX96:int257,shortFundi
 ## FundingRateGrowthX96
 TLB: `_ clampedFundingRateDeltaX96:int257 longFundingRateGrowthAfterX96:int257 shortFundingRateGrowthAfterX96:int257 = FundingRateGrowthX96`
 Signature: `FundingRateGrowthX96{clampedFundingRateDeltaX96:int257,longFundingRateGrowthAfterX96:int257,shortFundingRateGrowthAfterX96:int257}`
+
+## SamplePremiumRateResult
+TLB: `_ shouldAdjustFundingRate:bool fundingRateDeltaX96:int257 = SamplePremiumRateResult`
+Signature: `SamplePremiumRateResult{shouldAdjustFundingRate:bool,fundingRateDeltaX96:int257}`
 
 # Get Methods
 Total Get Methods: 9
