@@ -118,7 +118,6 @@ Total Get Methods: 1
 3688: Not mintable
 4159: Invalid value!!
 4429: Invalid sender
-12241: Max supply exceeded
 14534: Not owner
 18668: Can't Mint Anymore
 23951: Insufficient gas

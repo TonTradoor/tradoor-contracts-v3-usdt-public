@@ -199,7 +199,7 @@ contract Pool with Deployable, Ownable, fundingRate {
         let operation: Slice = msg.forwardPayload.loadRef().asSlice();
         let opCode: Int = operation.loadInt(32);
         if (opCode == OP_CREATE_INCREASE_RBF_POSITION) {
-            let liquidityDelta: Int = operation.loadCoins();
+            let liquidityDelta: Int = operation.loadInt(128);
             let executionFee: Int = operation.loadCoins();
             dump("receive create increase rbf position order op code");
             dump(beginCell().storeAddress(msg.from).endCell().hash());
@@ -207,6 +207,17 @@ contract Pool with Deployable, Ownable, fundingRate {
             dump(executionFee);
 
             self.handleCreateIncreaseRBFPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, liquidityDelta);
+        } else if (opCode == OP_CREATE_INCREASE_LP_POSITION) {
+            let marginDelta: Int = operation.loadInt(128);
+            let liquidityDelta: Int = operation.loadInt(128);
+            let executionFee: Int = operation.loadCoins();
+            dump("receive create increase rbf position order op code");
+            dump(beginCell().storeAddress(msg.from).endCell().hash());
+            dump(marginDelta);
+            dump(liquidityDelta);
+            dump(executionFee);
+
+            self.handleCreateIncreaseLPPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, marginDelta, liquidityDelta);
         }
     }
 
@@ -955,8 +966,38 @@ contract Pool with Deployable, Ownable, fundingRate {
         }.toCell());
     }
 
-    // ============================ Perp ================================ //
+    // get fun increaseLPPositionIndexNext(): Int {
+    //     return self.increaseLPPositionIndexNext;
+    // }
 
+    // get fun increaseLPPositionOrder(index: Int): IncreaseLPPositionOrder? {
+    //     return self.increaseLPPositionOrders.get(index);
+    // }
+
+    // get fun decreaseLPPositionIndexNext(): Int {
+    //     return self.decreaseLPPositionIndexNext;
+    // }
+
+    // get fun decreaseLPPositionOrder(index: Int): DecreaseLPPositionOrder? {
+    //     return self.decreaseLPPositionOrders.get(index);
+    // }
+
+    // get fun lpPosition(account: Address): LPPosition? {
+    //     return self.lpPositions.get(account);
+    // }
+
+    // ============================ Perp ================================ //
+    // fun handleCreateIncreasePerpPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, marginDelta: Int, liquidityDelta: Int) {
+
+    // }
+
+    // receive(msg: CancelIncreasePerpPositionMarketOrder) {
+
+    // }
+
+    // receive(msg: ExecuteIncreasePerpPositionMarketOrder) {
+
+    // }
 
     // ============================ private function ================================ //
     fun calculateTotalGlobalUnrealizedPnl(): Int {

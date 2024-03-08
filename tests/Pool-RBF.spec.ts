@@ -5,7 +5,7 @@ import { MockJetton } from '../wrappers/MockJetton';
 import { JettonDefaultWallet } from '../wrappers/JettonDefaultWallet';
 import { buildOnchainMetadata } from '../contracts/mock/utils/jetton-helpers';
 import '@ton/test-utils';
-import { formatUnits } from '../utils/util';
+import { toUnits } from '../utils/util';
 
 describe('Pool', () => {
     let blockchain: Blockchain;
@@ -15,6 +15,7 @@ describe('Pool', () => {
     let executor: SandboxContract<TreasuryContract>;
     let user0: SandboxContract<TreasuryContract>;
     let executionFeeReceiver: SandboxContract<TreasuryContract>;
+    const usdtDecimal = 6;
 
     beforeEach(async () => {
         blockchain = await Blockchain.create();
@@ -77,12 +78,12 @@ describe('Pool', () => {
             description: "Mock USDC Token in Tact-lang",
             symbol: "mUSDC",
             image: "https://avatars.githubusercontent.com/u/104382459?s=200&v=4",
+            decimals: "6"
         };
-        let max_supply = toNano(1000000000); // 🔴 Set the specific total supply in nano
 
         // Create content Cell
         let content = buildOnchainMetadata(jettonParams);
-        jetton = blockchain.openContract(await MockJetton.fromInit(deployer.address, content, max_supply));
+        jetton = blockchain.openContract(await MockJetton.fromInit(deployer.address, content));
         const jettonDeployResult = await jetton.send(
             deployer.getSender(),
             {
@@ -111,7 +112,7 @@ describe('Pool', () => {
             },
             {
                 $$type: 'Mint',
-                amount: toNano('100'),
+                amount: toUnits('100', usdtDecimal),
                 receiver: user0.address,
             }
         );
@@ -149,7 +150,8 @@ describe('Pool', () => {
     it('should increase RBF', async () => {
         /// create order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = 10n**6n;
+        let liquidity = toUnits(10, usdtDecimal);
+        console.log('liquidity:', liquidity);
 
         // transfer jetton with create increase RBF position order payload
         // get user jetton wallet address
@@ -158,7 +160,7 @@ describe('Pool', () => {
         // get user jetton balance
         let user0JettonData = await user0JettonWallet.getGetWalletData();
         let user0JettonBalance = user0JettonData.balance;
-        expect(user0JettonBalance).toEqual(toNano('100'));
+        expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
 
         // get pool jetton wallet address 
         let poolJettonWalletAddress = await jetton.getGetWalletAddress(pool.address);
@@ -166,36 +168,35 @@ describe('Pool', () => {
         let poolTonBalance = (await blockchain.getContract(pool.address)).balance;
         console.log("poolTonBalance", poolTonBalance.toLocaleString());
 
-
-        let payloadCell = beginCell().storeInt(1,32).storeCoins(liquidity).storeCoins(toNano('0.5')).endCell();
-        let forwardPayload =beginCell().storeRef(payloadCell).endCell();
+        let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
+        let forwardPayload = beginCell().storeRef(payloadCell).endCell();
 
         let poolJettonBalanceBefore = 0n;
 
         const trxResult = await user0JettonWallet.send(
             user0.getSender(),
             {
-                value: toNano('1'),
+                value: toNano('2'),
             },
             {
                 $$type: 'TokenTransfer',
                 query_id: 0n,
-                amount: toNano('10'),
+                amount: liquidity,
                 destination: pool.address,
                 response_destination: user0.address,
                 custom_payload: null,
-                forward_ton_amount: toNano('0.9'),
+                forward_ton_amount: toNano('1'),
                 forward_payload: forwardPayload
             }
         );
 
+        printTransactionFees(trxResult.transactions);
         expect(trxResult.transactions).toHaveTransaction({
             from: poolJettonWalletAddress,
             to: pool.address,
             success: true,
         });
         console.log("TokenTransfer");
-        printTransactionFees(trxResult.transactions);
 
         // check index
         let index = await pool.getIncreaseRbfPositionIndexNext();
@@ -207,12 +208,12 @@ describe('Pool', () => {
         expect(order?.liquidityDelta.toLocaleString).toEqual(liquidity.toLocaleString);
 
         // check pool jetton balance
-        let poolJettonWallet = await blockchain.openContract(JettonDefaultWallet.fromAddress(poolJettonWalletAddress));
+        let poolJettonWallet = blockchain.openContract(JettonDefaultWallet.fromAddress(poolJettonWalletAddress));
         let poolJettonDataAfter = await poolJettonWallet.getGetWalletData();
         let poolJettonBalanceAfter = poolJettonDataAfter.balance;
         console.log("poolJettonBalanceAfter", poolJettonBalanceAfter.toLocaleString());
-        console.log("poolJettonBalanceAfter + nano", (poolJettonBalanceBefore + toNano('10')).toLocaleString());
-        expect(poolJettonBalanceAfter.toLocaleString()).toEqual((poolJettonBalanceBefore + toNano('10')).toLocaleString());
+        console.log("poolJettonBalanceAfter + nano", (poolJettonBalanceBefore + liquidity).toLocaleString());
+        expect(poolJettonBalanceAfter.toLocaleString()).toEqual((poolJettonBalanceBefore + liquidity).toLocaleString());
 
         // check pool TON balance
         let poolTonBalanceAfter = (await blockchain.getContract(pool.address)).balance;
@@ -223,7 +224,7 @@ describe('Pool', () => {
     it('auto refund -- not enough execution fee', async () => {
         /// create order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = 10n**6n;
+        let liquidity = toUnits(10, usdtDecimal);
 
         // transfer jetton with create increase RBF position order payload
         // get user jetton wallet address
@@ -232,7 +233,7 @@ describe('Pool', () => {
         // get user jetton balance
         let user0JettonData = await user0JettonWallet.getGetWalletData();
         let user0JettonBalance = user0JettonData.balance;
-        expect(user0JettonBalance).toEqual(toNano('100'));
+        expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
 
         // get pool jetton wallet address 
         let poolJettonWalletAddress = await jetton.getGetWalletAddress(pool.address);
@@ -241,7 +242,7 @@ describe('Pool', () => {
         console.log("poolTonBalance", poolTonBalance.toLocaleString());
 
 
-        let payloadCell = beginCell().storeInt(1,32).storeCoins(liquidity).storeCoins(toNano('0.5')).endCell();
+        let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
         let forwardPayload =beginCell().storeRef(payloadCell).endCell();
 
         let poolJettonBalanceBefore = 0n;
@@ -254,7 +255,7 @@ describe('Pool', () => {
             {
                 $$type: 'TokenTransfer',
                 query_id: 0n,
-                amount: toNano('10'),
+                amount: liquidity,
                 destination: pool.address,
                 response_destination: user0.address,
                 custom_payload: null,
@@ -281,7 +282,7 @@ describe('Pool', () => {
         let poolJettonWallet = await blockchain.openContract(JettonDefaultWallet.fromAddress(poolJettonWalletAddress));
         let poolJettonDataAfter = await poolJettonWallet.getGetWalletData();
         let poolJettonBalanceAfter = poolJettonDataAfter.balance;
-        expect(poolJettonBalanceAfter.toLocaleString()).toEqual(toNano('0').toLocaleString());
+        expect(poolJettonBalanceAfter).toEqual(0n);
 
         // check pool TON balance
         let poolTonBalanceAfter = (await blockchain.getContract(pool.address)).balance;
@@ -291,7 +292,7 @@ describe('Pool', () => {
     it('should cancel increase RBF', async () => {
         // create order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = 10n**6n;
+        let liquidity = toUnits(10, usdtDecimal);
         // transfer jetton with create increase RBF position order payload
         // get user jetton wallet address
         let user0WalletAddress = await jetton.getGetWalletAddress(user0.address);
@@ -299,9 +300,9 @@ describe('Pool', () => {
         // get user jetton balance
         let user0JettonData = await user0JettonWallet.getGetWalletData();
         let user0JettonBalance = user0JettonData.balance;
-        expect(user0JettonBalance).toEqual(toNano('100'));
+        expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
 
-        let payloadCell = beginCell().storeInt(1,32).storeCoins(liquidity).storeCoins(toNano('0.5')).endCell();
+        let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
         let forwardPayload =beginCell().storeRef(payloadCell).endCell();
 
         const time1 = Math.floor(Date.now() / 1000); 
@@ -314,7 +315,7 @@ describe('Pool', () => {
             {
                 $$type: 'TokenTransfer',
                 query_id: 0n,
-                amount: toNano('10'),
+                amount: liquidity,
                 destination: pool.address,
                 response_destination: user0.address,
                 custom_payload: null,
@@ -375,7 +376,7 @@ describe('Pool', () => {
     it('should execute increase RBF', async () => {
         // create order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = 10n**6n;
+        let liquidity = toUnits(10, usdtDecimal);
         // transfer jetton with create increase RBF position order payload
         // get user jetton wallet address
         let user0WalletAddress = await jetton.getGetWalletAddress(user0.address);
@@ -383,9 +384,9 @@ describe('Pool', () => {
         // get user jetton balance
         let user0JettonData = await user0JettonWallet.getGetWalletData();
         let user0JettonBalance = user0JettonData.balance;
-        expect(user0JettonBalance).toEqual(toNano('100'));
+        expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
 
-        let payloadCell = beginCell().storeInt(1,32).storeCoins(liquidity).storeCoins(toNano('0.5')).endCell();
+        let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
         let forwardPayload =beginCell().storeRef(payloadCell).endCell();
 
         const time1 = Math.floor(Date.now() / 1000); 
@@ -398,7 +399,7 @@ describe('Pool', () => {
             {
                 $$type: 'TokenTransfer',
                 query_id: 0n,
-                amount: toNano('10'),
+                amount: liquidity,
                 destination: pool.address,
                 response_destination: user0.address,
                 custom_payload: null,
@@ -455,7 +456,7 @@ describe('Pool', () => {
         /* =========================== increase RBF ================================ */
         // create increase order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = formatUnits(10, 6);
+        let liquidity = toUnits(10, 6);
         // transfer jetton with create increase RBF position order payload
         // get user jetton wallet address
         let user0WalletAddress = await jetton.getGetWalletAddress(user0.address);
@@ -463,10 +464,10 @@ describe('Pool', () => {
         // get user jetton balance
         let user0JettonData = await user0JettonWallet.getGetWalletData();
         let user0JettonBalance = user0JettonData.balance;
-        expect(user0JettonBalance).toEqual(toNano('100'));
+        expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
 
         let executionFee = toNano('0.5');
-        let payloadCell = beginCell().storeInt(1,32).storeCoins(liquidity).storeCoins(executionFee).endCell();
+        let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(executionFee).endCell();
         let forwardPayload = beginCell().storeRef(payloadCell).endCell();
 
         const time1 = Math.floor(Date.now() / 1000); 
@@ -536,7 +537,7 @@ describe('Pool', () => {
         blockchain.now = blockchain.now + 11 * 24 * 60 * 60;
 
         let prevDecreaseIndex = await pool.getDecreaseRbfPositionIndexNext();
-        let decreaseLiquidity = formatUnits(5, 6);
+        let decreaseLiquidity = toUnits(5, 6);
 
         // create decrease order
         const trxResult3 = await pool.send(

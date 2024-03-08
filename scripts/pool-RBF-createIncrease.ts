@@ -1,14 +1,14 @@
 import { Address, beginCell, toNano } from '@ton/core';
 import { Pool, attachJettonWallet, attachMockJetton, attachPool } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { formatUnits, getConfig, getLastTransaction, waitForTransaction } from '../utils/util';
+import { toUnits, getConfig, getLastTransaction, waitForTransaction } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
     const jetton = attachMockJetton(provider);
 
     /// create order
-    let liquidity = formatUnits(10, 6);
+    let liquidity = toUnits(10, 6);
 
     // transfer jetton with create increase RBF position order payload
     // get user jetton wallet address
@@ -18,7 +18,7 @@ export async function run(provider: NetworkProvider) {
     let user0JettonData = await user0JettonWallet.getGetWalletData();
     console.log('user jetton balance:', user0JettonData.balance);
 
-    let payloadCell = beginCell().storeInt(1,32).storeCoins(liquidity).storeCoins(toNano('0.5')).endCell();
+    let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
     let forwardPayload = beginCell().storeRef(payloadCell).endCell();
 
     let prevIndex = await pool.getDecreaseRbfPositionIndexNext();

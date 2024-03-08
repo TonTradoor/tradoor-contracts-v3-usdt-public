@@ -8,19 +8,19 @@ import { setConfig } from '../utils/util';
 export async function run(provider: NetworkProvider) {
     
     const jettonParams = {
-        name: "Mock USDC",
-        description: "Mock USDC Token in Tact-lang",
-        symbol: "mUSDC",
+        name: "Mock USDT",
+        description: "Mock USDT Token in Tact-lang",
+        symbol: "mUSDT",
         image: "https://avatars.githubusercontent.com/u/104382459?s=200&v=4",
+        decimals: "6"
     };
-    let max_supply = toNano(1000000000); // 🔴 Set the specific total supply in nano
 
     // Create content Cell
     let content = buildOnchainMetadata(jettonParams);
 
     let address = provider.sender().address!!;
     // create jetton contract
-    const sampleJetton = provider.open(await MockJetton.fromInit(address, content, max_supply));
+    const sampleJetton = provider.open(await MockJetton.fromInit(address, content));
 
     // deploy
     await sampleJetton.send(

@@ -85,10 +85,10 @@ cell $TakeWalletAddress$_store_cell((int, slice, slice) v) inline;
 (slice, ((int, slice))) $Mint$_load(slice sc_0) inline;
 
 ;; $MockJetton$_store
-builder $MockJetton$_store(builder build_0, (int, slice, cell, int, int) v) inline;
+builder $MockJetton$_store(builder build_0, (int, slice, cell, int) v) inline;
 
 ;; $MockJetton$_load
-(slice, ((int, slice, cell, int, int))) $MockJetton$_load(slice sc_0) inline;
+(slice, ((int, slice, cell, int))) $MockJetton$_load(slice sc_0) inline;
 
 ;; $StateInit$_get_code
 _ $StateInit$_get_code((cell, cell) v) inline;
@@ -106,16 +106,16 @@ _ $Context$_get_value((int, slice, int, slice) v) inline;
 builder $JettonDefaultWallet$init$_store(builder build_0, (slice, slice) v) inline;
 
 ;; $MockJetton$init$_load
-(slice, ((slice, cell, int))) $MockJetton$init$_load(slice sc_0) inline;
+(slice, ((slice, cell))) $MockJetton$init$_load(slice sc_0) inline;
 
 ;; $MockJetton$_contract_init
-(int, slice, cell, int, int) $MockJetton$_contract_init(slice $owner, cell $content, int $max_supply) impure inline_ref;
+(int, slice, cell, int) $MockJetton$_contract_init(slice $owner, cell $content) impure inline_ref;
 
 ;; $MockJetton$_contract_load
-(int, slice, cell, int, int) $MockJetton$_contract_load() impure inline_ref;
+(int, slice, cell, int) $MockJetton$_contract_load() impure inline_ref;
 
 ;; $MockJetton$_contract_store
-() $MockJetton$_contract_store((int, slice, cell, int, int) v) impure inline;
+() $MockJetton$_contract_store((int, slice, cell, int) v) impure inline;
 
 ;; $global_emptyCell
 cell $global_emptyCell() impure inline;
@@ -139,10 +139,10 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;
 
 ;; $MockJetton$_fun_forward
-((int, slice, cell, int, int), ()) $MockJetton$_fun_forward((int, slice, cell, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
+((int, slice, cell, int), ()) $MockJetton$_fun_forward((int, slice, cell, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
 
 ;; $MockJetton$_fun_notify
-((int, slice, cell, int, int), ()) $MockJetton$_fun_notify((int, slice, cell, int, int) $self, cell $body) impure inline;
+((int, slice, cell, int), ()) $MockJetton$_fun_notify((int, slice, cell, int) $self, cell $body) impure inline;
 
 ;; $SendParameters$_constructor_to_value_bounce_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body_code_data(slice to, int value, int bounce, int mode, cell body, cell code, cell data) inline;
@@ -151,28 +151,28 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 ((int, int, slice, slice, int, slice)) $TokenTransferInternal$_constructor_query_id_amount_from_response_destination_forward_ton_amount_forward_payload(int query_id, int amount, slice from, slice response_destination, int forward_ton_amount, slice forward_payload) inline;
 
 ;; $MockJetton$_fun_getJettonWalletInit
-((int, slice, cell, int, int), (cell, cell)) $MockJetton$_fun_getJettonWalletInit((int, slice, cell, int, int) $self, slice $address) impure inline_ref;
+((int, slice, cell, int), (cell, cell)) $MockJetton$_fun_getJettonWalletInit((int, slice, cell, int) $self, slice $address) impure inline_ref;
 
 ;; $MockJetton$_fun_mint
-((int, slice, cell, int, int), ()) $MockJetton$_fun_mint((int, slice, cell, int, int) $self, slice $to, int $amount, slice $response_destination) impure inline_ref;
+((int, slice, cell, int), ()) $MockJetton$_fun_mint((int, slice, cell, int) $self, slice $to, int $amount, slice $response_destination) impure inline_ref;
 
 ;; $MockJetton$_fun_requireSenderAsWalletOwner
-((int, slice, cell, int, int), ()) $MockJetton$_fun_requireSenderAsWalletOwner((int, slice, cell, int, int) $self, slice $owner) impure inline_ref;
+((int, slice, cell, int), ()) $MockJetton$_fun_requireSenderAsWalletOwner((int, slice, cell, int) $self, slice $owner) impure inline_ref;
 
 ;; $JettonData$_constructor_total_supply_mintable_owner_content_wallet_code
 ((int, int, slice, cell, cell)) $JettonData$_constructor_total_supply_mintable_owner_content_wallet_code(int total_supply, int mintable, slice owner, cell content, cell wallet_code) inline;
 
 ;; $MockJetton$_fun_get_jetton_data
-((int, slice, cell, int, int), (int, int, slice, cell, cell)) $MockJetton$_fun_get_jetton_data((int, slice, cell, int, int) $self) impure inline_ref;
+((int, slice, cell, int), (int, int, slice, cell, cell)) $MockJetton$_fun_get_jetton_data((int, slice, cell, int) $self) impure inline_ref;
 
 ;; $MockJetton$_fun_get_wallet_address
-((int, slice, cell, int, int), slice) $MockJetton$_fun_get_wallet_address((int, slice, cell, int, int) $self, slice $owner) impure inline_ref;
+((int, slice, cell, int), slice) $MockJetton$_fun_get_wallet_address((int, slice, cell, int) $self, slice $owner) impure inline_ref;
 
 ;; $MockJetton$_fun_requireOwner
-((int, slice, cell, int, int), ()) $MockJetton$_fun_requireOwner((int, slice, cell, int, int) $self) impure inline_ref;
+((int, slice, cell, int), ()) $MockJetton$_fun_requireOwner((int, slice, cell, int) $self) impure inline_ref;
 
 ;; $MockJetton$_fun_owner
-((int, slice, cell, int, int), slice) $MockJetton$_fun_owner((int, slice, cell, int, int) $self) impure inline_ref;
+((int, slice, cell, int), slice) $MockJetton$_fun_owner((int, slice, cell, int) $self) impure inline_ref;
 
 ;; $SendParameters$_constructor_to_value_bounce_mode_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body(slice to, int value, int bounce, int mode, cell body) inline;

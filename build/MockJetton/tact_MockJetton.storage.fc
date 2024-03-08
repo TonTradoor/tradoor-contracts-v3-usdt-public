@@ -248,33 +248,30 @@ builder $JettonDefaultWallet$init$_store(builder build_0, (slice, slice) v) inli
 ;; Type: MockJetton
 ;;
 
-builder $MockJetton$_store(builder build_0, (int, slice, cell, int, int) v) inline {
-    var (v'total_supply, v'owner, v'content, v'mintable, v'max_supply) = v;
+builder $MockJetton$_store(builder build_0, (int, slice, cell, int) v) inline {
+    var (v'total_supply, v'owner, v'content, v'mintable) = v;
     build_0 = build_0.store_coins(v'total_supply);
     build_0 = __tact_store_address(build_0, v'owner);
     build_0 = build_0.store_ref(v'content);
     build_0 = build_0.store_int(v'mintable, 1);
-    build_0 = build_0.store_coins(v'max_supply);
     return build_0;
 }
 
-(slice, ((int, slice, cell, int, int))) $MockJetton$_load(slice sc_0) inline {
+(slice, ((int, slice, cell, int))) $MockJetton$_load(slice sc_0) inline {
     var v'total_supply = sc_0~load_coins();
     var v'owner = sc_0~__tact_load_address();
     var v'content = sc_0~load_ref();
     var v'mintable = sc_0~load_int(1);
-    var v'max_supply = sc_0~load_coins();
-    return (sc_0, (v'total_supply, v'owner, v'content, v'mintable, v'max_supply));
+    return (sc_0, (v'total_supply, v'owner, v'content, v'mintable));
 }
 
-(slice, ((slice, cell, int))) $MockJetton$init$_load(slice sc_0) inline {
+(slice, ((slice, cell))) $MockJetton$init$_load(slice sc_0) inline {
     var v'owner = sc_0~__tact_load_address();
     var v'content = sc_0~load_ref();
-    var v'max_supply = sc_0~load_int(257);
-    return (sc_0, (v'owner, v'content, v'max_supply));
+    return (sc_0, (v'owner, v'content));
 }
 
-(int, slice, cell, int, int) $MockJetton$_contract_load() impure inline_ref {
+(int, slice, cell, int) $MockJetton$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -283,13 +280,13 @@ builder $MockJetton$_store(builder build_0, (int, slice, cell, int, int) v) inli
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        (slice owner, cell content, int max_supply) = $sc~$MockJetton$init$_load();
+        (slice owner, cell content) = $sc~$MockJetton$init$_load();
         $sc.end_parse();
-        return $MockJetton$_contract_init(owner, content, max_supply);
+        return $MockJetton$_contract_init(owner, content);
     }
 }
 
-() $MockJetton$_contract_store((int, slice, cell, int, int) v) impure inline {
+() $MockJetton$_contract_store((int, slice, cell, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

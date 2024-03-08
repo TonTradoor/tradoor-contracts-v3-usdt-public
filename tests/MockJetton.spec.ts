@@ -15,13 +15,13 @@ describe('Jetton', () => {
         const jettonParams = {
             name: "Mock USDT",
             description: "This is description of Test Jetton Token in Tact-lang",
-            symbol: "MUSDT",
+            symbol: "mUSDT",
             image: "https://avatars.githubusercontent.com/u/104382459?s=200&v=4",
+            decimals: "6"
         };
-        let max_supply = toNano(1000000000); // 🔴 Set the specific total supply in nano
 
         let content = buildOnchainMetadata(jettonParams);
-        jetton = blockchain.openContract(await MockJetton.fromInit(deployer.address, content, max_supply));
+        jetton = blockchain.openContract(await MockJetton.fromInit(deployer.address, content));
 
         deployer = await blockchain.treasury('deployer');
 

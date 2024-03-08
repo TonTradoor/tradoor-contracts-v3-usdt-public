@@ -1,7 +1,7 @@
 import { Address, beginCell, toNano } from '@ton/core';
 import { Pool, attachJettonWallet, attachMockJetton, attachPool } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { formatUnits, getConfig, getLastTransaction, waitForTransaction } from '../utils/util';
+import { toUnits, getConfig, getLastTransaction, waitForTransaction } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
@@ -9,7 +9,7 @@ export async function run(provider: NetworkProvider) {
 
     /// create order
     let prevIndex = await pool.getDecreaseRbfPositionIndexNext();
-    let decreaseLiquidity = formatUnits(5, 6);
+    let decreaseLiquidity = toUnits(5n, 6);
     let executionFee = toNano('0.5');
 
     const lastTrx = await getLastTransaction(provider, pool.address);

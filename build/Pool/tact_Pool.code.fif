@@ -53,6 +53,8 @@ PROGRAM{
   DECLPROC $RBFPositionDecreasedEvent$_store_cell
   DECLPROC $GlobalRBFChangedEvent$_store
   DECLPROC $GlobalRBFChangedEvent$_store_cell
+  DECLPROC $IncreaseLPPositionCreatedEvent$_store
+  DECLPROC $IncreaseLPPositionCreatedEvent$_store_cell
   DECLPROC $IncreaseLPPositionCancelledEvent$_store
   DECLPROC $IncreaseLPPositionCancelledEvent$_store_cell
   DECLPROC $IncreaseLPPositionExecutedEvent$_store
@@ -161,6 +163,9 @@ PROGRAM{
   DECLPROC $Pool$_fun_decreaseRBFPositionIndexNext
   DECLPROC $Pool$_fun_decreaseRBFPositionOrder
   DECLPROC $Pool$_fun_fundPosition
+  DECLPROC $IncreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime
+  DECLPROC $IncreaseLPPositionCreatedEvent$_constructor_account_margin_liquidityDelta_executionFee_index
+  DECLPROC $Pool$_fun_handleCreateIncreaseLPPositionOrder
   DECLPROC $Pool$_fun_tokenEnabled
   DECLPROC $Pool$_fun_calculateUnrealizedPnL
   DECLPROC $Pool$_fun_calculateTotalGlobalUnrealizedPnl
@@ -818,6 +823,34 @@ PROGRAM{
     NEWC
     -ROT
     $GlobalRBFChangedEvent$_store INLINECALLDICT
+    ENDC
+  }>
+  $IncreaseLPPositionCreatedEvent$_store PROCINLINE:<{
+    1533244921 PUSHINT
+    s0 s6 XCHG2
+    32 STU
+    s0 s4 XCHG2
+    __tact_store_address INLINECALLDICT
+    s1 s2 XCHG
+    257 PUSHINT
+    STIX
+    257 PUSHINT
+    STIX
+    SWAP
+    NEWC
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
+    257 PUSHINT
+    STIX
+    ENDC
+    SWAP
+    STREF
+  }>
+  $IncreaseLPPositionCreatedEvent$_store_cell PROCINLINE:<{
+    NEWC
+    5 -ROLL
+    $IncreaseLPPositionCreatedEvent$_store INLINECALLDICT
     ENDC
   }>
   $IncreaseLPPositionCancelledEvent$_store PROCINLINE:<{
@@ -2455,6 +2488,57 @@ PROGRAM{
     __tact_dict_get_slice_cell INLINECALLDICT
     $RBFPosition$_load_opt INLINECALLDICT
   }>
+  $IncreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime PROCINLINE:<{
+  }>
+  $IncreaseLPPositionCreatedEvent$_constructor_account_margin_liquidityDelta_executionFee_index PROCINLINE:<{
+  }>
+  $Pool$_fun_handleCreateIncreaseLPPositionOrder PROCREF:<{
+    B{b5ee9c7241010101002500004668616e646c65437265617465496e6372656173654c50506f736974696f6e4f72646572c3b15bdd} B>boc <s PUSHSLICE
+    STRDUMP
+    DROP
+    __tact_context_get INLINECALLDICT
+    s1 s3 XCHG
+    3 BLKDROP
+    s5 s1 PUSH2
+    LESS
+    IFJMP:<{
+      4 BLKDROP
+      $Pool$_fun_refundLiquidity INLINECALLDICT
+      B{b5ee9c7241010101001d000036726566756e64206e6f7420656e6f756768206c6971756964697479a43d6d8c} B>boc <s PUSHSLICE
+      STRDUMP
+      DROP
+    }>
+    s3 PUSH
+    LESS
+    IFJMP:<{
+      3 BLKDROP
+      B{b5ee9c7241010101001a000030657865637574696f6e20666565206e6f7420656e6f75676878fa051c} B>boc <s PUSHSLICE
+      STRDUMP
+      DROP
+      $Pool$_fun_refundLiquidity INLINECALLDICT
+    }>
+    s4 POP
+    s4 POP
+    26 s() PUSH
+    INC
+    257 PUSHINT
+    s3 s5 s4 PUSH3
+    s5 PUSH
+    NOW
+    $IncreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime INLINECALLDICT
+    $IncreaseLPPositionOrder$_store_cell INLINECALLDICT
+    s2 30 s() XCHG
+    29 s() PUSH
+    SWAP
+    __tact_dict_set_int_cell INLINECALLDICT
+    s2 s4 XCHG
+    s2 s3 XCHG
+    s0 27 s() XCHG
+    $IncreaseLPPositionCreatedEvent$_constructor_account_margin_liquidityDelta_executionFee_index INLINECALLDICT
+    $IncreaseLPPositionCreatedEvent$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    22 s() 23 s() XCHG
+  }>
   $Pool$_fun_tokenEnabled PROCREF:<{
     257 PUSHINT
     46 s() PUSH
@@ -3205,10 +3289,11 @@ PROGRAM{
       DROP
       $Cell$_fun_asSlice INLINECALLDICT
       32 LDI
-      SWAP
+      OVER
       1 EQINT
       IF:<{
-        LDGRAMS
+        NIP
+        128 LDI
         LDGRAMS
         DROP
         B{b5ee9c72410101010034000064726563656976652063726561746520696e6372656173652072626620706f736974696f6e206f72646572206f7020636f6465caa14a79} B>boc <s PUSHSLICE
@@ -3233,7 +3318,41 @@ PROGRAM{
         SWAP
         $Pool$_fun_handleCreateIncreaseRBFPositionOrder INLINECALLDICT
       }>ELSE<{
-        4 BLKDROP
+        SWAP
+        2 EQINT
+        IF:<{
+          128 LDI
+          128 LDI
+          LDGRAMS
+          DROP
+          B{b5ee9c72410101010034000064726563656976652063726561746520696e6372656173652072626620706f736974696f6e206f72646572206f7020636f6465caa14a79} B>boc <s PUSHSLICE
+          STRDUMP
+          DROP
+          NEWC
+          s4 PUSH
+          __tact_store_address INLINECALLDICT
+          ENDC
+          HASHCU
+          __tact_int_to_string INLINECALLDICT
+          STRDUMP
+          DROP
+          s2 PUSH
+          __tact_int_to_string INLINECALLDICT
+          STRDUMP
+          DROP
+          OVER
+          __tact_int_to_string INLINECALLDICT
+          STRDUMP
+          DROP
+          DUP
+          __tact_int_to_string INLINECALLDICT
+          STRDUMP
+          DROP
+          -ROT
+          $Pool$_fun_handleCreateIncreaseLPPositionOrder INLINECALLDICT
+        }>ELSE<{
+          4 BLKDROP
+        }>
       }>
     }>
   }>

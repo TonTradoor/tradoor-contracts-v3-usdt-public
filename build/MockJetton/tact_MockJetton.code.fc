@@ -10,103 +10,101 @@
 ;; Contract MockJetton functions
 ;;
 
-(int, slice, cell, int, int) $MockJetton$_contract_init(slice $owner, cell $content, int $max_supply) impure inline_ref {
-    var (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)) = (null(), null(), null(), null(), null());
+(int, slice, cell, int) $MockJetton$_contract_init(slice $owner, cell $content) impure inline_ref {
+    var (($self'total_supply, $self'owner, $self'content, $self'mintable)) = (null(), null(), null(), null());
     $self'total_supply = 0;
     $self'owner = $owner;
     $self'mintable = true;
     $self'content = $content;
-    $self'max_supply = $max_supply;
-    return ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply);
+    return ($self'total_supply, $self'owner, $self'content, $self'mintable);
 }
 
-((int, slice, cell, int, int), (cell, cell)) $MockJetton$_fun_getJettonWalletInit((int, slice, cell, int, int) $self, slice $address) impure inline_ref {
-    var (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)) = $self;
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), $JettonDefaultWallet$_init_child(__tact_context_sys, $address, my_address()));
+((int, slice, cell, int), (cell, cell)) $MockJetton$_fun_getJettonWalletInit((int, slice, cell, int) $self, slice $address) impure inline_ref {
+    var (($self'total_supply, $self'owner, $self'content, $self'mintable)) = $self;
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), $JettonDefaultWallet$_init_child(__tact_context_sys, $address, my_address()));
 }
 
-((int, slice, cell, int, int), ()) $MockJetton$_fun_mint((int, slice, cell, int, int) $self, slice $to, int $amount, slice $response_destination) impure inline_ref {
-    var (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)) = $self;
+((int, slice, cell, int), ()) $MockJetton$_fun_mint((int, slice, cell, int) $self, slice $to, int $amount, slice $response_destination) impure inline_ref {
+    var (($self'total_supply, $self'owner, $self'content, $self'mintable)) = $self;
     throw_unless(18668, $self'mintable);
     $self'total_supply = ($self'total_supply + $amount);
-    var ($winit'code, $winit'data) = ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)~$MockJetton$_fun_getJettonWalletInit($to);
+    var ($winit'code, $winit'data) = ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_getJettonWalletInit($to);
     $global_send($SendParameters$_constructor_to_value_bounce_mode_body_code_data($global_contractAddress(($winit'code, $winit'data)), 0, true, 64, $TokenTransferInternal$_store_cell($TokenTransferInternal$_constructor_query_id_amount_from_response_destination_forward_ton_amount_forward_payload(0, $amount, my_address(), $response_destination, 0, $global_emptySlice())), $winit'code, $winit'data));
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
-((int, slice, cell, int, int), ()) $MockJetton$_fun_requireSenderAsWalletOwner((int, slice, cell, int, int) $self, slice $owner) impure inline_ref {
-    var (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)) = $self;
+((int, slice, cell, int), ()) $MockJetton$_fun_requireSenderAsWalletOwner((int, slice, cell, int) $self, slice $owner) impure inline_ref {
+    var (($self'total_supply, $self'owner, $self'content, $self'mintable)) = $self;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
-    var ($winit'code, $winit'data) = ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)~$MockJetton$_fun_getJettonWalletInit($owner);
+    var ($winit'code, $winit'data) = ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_getJettonWalletInit($owner);
     throw_unless(4429, ( __tact_slice_eq_bits($ctx'sender, $global_contractAddress(($winit'code, $winit'data))) ));
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
-((int, slice, cell, int, int), (int, int, slice, cell, cell)) $MockJetton$_fun_get_jetton_data((int, slice, cell, int, int) $self) impure inline_ref {
-    var (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)) = $self;
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), $JettonData$_constructor_total_supply_mintable_owner_content_wallet_code($self'total_supply, $self'mintable, $self'owner, $self'content, $StateInit$_get_code($JettonDefaultWallet$_init_child(__tact_context_sys, $self'owner, my_address()))));
+((int, slice, cell, int), (int, int, slice, cell, cell)) $MockJetton$_fun_get_jetton_data((int, slice, cell, int) $self) impure inline_ref {
+    var (($self'total_supply, $self'owner, $self'content, $self'mintable)) = $self;
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), $JettonData$_constructor_total_supply_mintable_owner_content_wallet_code($self'total_supply, $self'mintable, $self'owner, $self'content, $StateInit$_get_code($JettonDefaultWallet$_init_child(__tact_context_sys, $self'owner, my_address()))));
 }
 
-((int, slice, cell, int, int), slice) $MockJetton$_fun_get_wallet_address((int, slice, cell, int, int) $self, slice $owner) impure inline_ref {
-    var (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)) = $self;
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), $global_contractAddress($JettonDefaultWallet$_init_child(__tact_context_sys, $owner, my_address())));
+((int, slice, cell, int), slice) $MockJetton$_fun_get_wallet_address((int, slice, cell, int) $self, slice $owner) impure inline_ref {
+    var (($self'total_supply, $self'owner, $self'content, $self'mintable)) = $self;
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), $global_contractAddress($JettonDefaultWallet$_init_child(__tact_context_sys, $owner, my_address())));
 }
 
-((int, slice, cell, int, int), ()) $MockJetton$_fun_requireOwner((int, slice, cell, int, int) $self) impure inline_ref {
-    var (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)) = $self;
+((int, slice, cell, int), ()) $MockJetton$_fun_requireOwner((int, slice, cell, int) $self) impure inline_ref {
+    var (($self'total_supply, $self'owner, $self'content, $self'mintable)) = $self;
     throw_unless(132, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
-((int, slice, cell, int, int), slice) $MockJetton$_fun_owner((int, slice, cell, int, int) $self) impure inline_ref {
-    var (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)) = $self;
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), $self'owner);
+((int, slice, cell, int), slice) $MockJetton$_fun_owner((int, slice, cell, int) $self) impure inline_ref {
+    var (($self'total_supply, $self'owner, $self'content, $self'mintable)) = $self;
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), $self'owner);
 }
 
 ;;
 ;; Receivers of a Contract MockJetton
 ;;
 
-(((int, slice, cell, int, int)), ()) $MockJetton$_internal_binary_Mint((int, slice, cell, int, int) $self, (int, slice) $msg) impure inline {
-    var ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply) = $self;
+(((int, slice, cell, int)), ()) $MockJetton$_internal_binary_Mint((int, slice, cell, int) $self, (int, slice) $msg) impure inline {
+    var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($msg'amount, $msg'receiver) = $msg;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(14534, ( __tact_slice_eq_bits($self'owner, $ctx'sender) ));
     throw_unless(3688, $self'mintable);
-    throw_unless(12241, (($self'total_supply + $msg'amount) <= $self'max_supply));
-    ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)~$MockJetton$_fun_mint($msg'receiver, $msg'amount, $self'owner);
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_mint($msg'receiver, $msg'amount, $self'owner);
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
-((int, slice, cell, int, int), ()) $MockJetton$_internal_text_dc004c5b75be74376bd79df8713f2390620cc8a3095068b0583eb28ca3ac8ba0((int, slice, cell, int, int) $self) impure inline {
-    var ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply) = $self;
+((int, slice, cell, int), ()) $MockJetton$_internal_text_dc004c5b75be74376bd79df8713f2390620cc8a3095068b0583eb28ca3ac8ba0((int, slice, cell, int) $self) impure inline {
+    var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(14534, ( __tact_slice_eq_bits($self'owner, $ctx'sender) ));
     $self'mintable = false;
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
-(((int, slice, cell, int, int)), ()) $MockJetton$_internal_binary_TokenUpdateContent((int, slice, cell, int, int) $self, (cell) $msg) impure inline {
-    var ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply) = $self;
+(((int, slice, cell, int)), ()) $MockJetton$_internal_binary_TokenUpdateContent((int, slice, cell, int) $self, (cell) $msg) impure inline {
+    var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($msg'content) = $msg;
-    ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)~$MockJetton$_fun_requireOwner();
+    ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_requireOwner();
     $self'content = $msg'content;
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
-(((int, slice, cell, int, int)), ()) $MockJetton$_internal_binary_TokenBurnNotification((int, slice, cell, int, int) $self, (int, int, slice, slice) $msg) impure inline {
-    var ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply) = $self;
+(((int, slice, cell, int)), ()) $MockJetton$_internal_binary_TokenBurnNotification((int, slice, cell, int) $self, (int, int, slice, slice) $msg) impure inline {
+    var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($msg'query_id, $msg'amount, $msg'sender, $msg'response_destination) = $msg;
-    ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)~$MockJetton$_fun_requireSenderAsWalletOwner($msg'response_destination);
+    ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_requireSenderAsWalletOwner($msg'response_destination);
     $self'total_supply = ($self'total_supply - $msg'amount);
     if ((~ null?($msg'response_destination))) {
         $global_send($SendParameters$_constructor_to_value_bounce_mode_body($msg'response_destination, 0, false, (64 + 2), $TokenExcesses$_store_cell($TokenExcesses$_constructor_query_id($msg'query_id))));
     }
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
-(((int, slice, cell, int, int)), ()) $MockJetton$_internal_binary_ProvideWalletAddress((int, slice, cell, int, int) $self, (int, slice, int) $msg) impure inline {
-    var ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply) = $self;
+(((int, slice, cell, int)), ()) $MockJetton$_internal_binary_ProvideWalletAddress((int, slice, cell, int) $self, (int, slice, int) $msg) impure inline {
+    var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($msg'query_id, $msg'owner_address, $msg'include_address) = $msg;
     throw_unless(23951, ($Context$_get_value(__tact_context_get()) >= 6100000));
     var ($init'code, $init'data) = $JettonDefaultWallet$_init_child(__tact_context_sys, $msg'owner_address, $self'owner);
@@ -116,14 +114,14 @@
         $response_body'owner_address = $msg'owner_address;
     }
     $global_send($SendParameters$_constructor_to_value_mode_bounce_body(__tact_context_get_sender(), 0, 64, true, $TakeWalletAddress$_store_cell(($response_body'query_id, $response_body'wallet_address, $response_body'owner_address))));
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
-(((int, slice, cell, int, int)), ()) $MockJetton$_internal_binary_Deploy((int, slice, cell, int, int) $self, (int) $deploy) impure inline {
-    var ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply) = $self;
+(((int, slice, cell, int)), ()) $MockJetton$_internal_binary_Deploy((int, slice, cell, int) $self, (int) $deploy) impure inline {
+    var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($deploy'queryId) = $deploy;
-    ($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply)~$MockJetton$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
-    return (($self'total_supply, $self'owner, $self'content, $self'mintable, $self'max_supply), ());
+    ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
 ;;
@@ -162,7 +160,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmcnZgiGhcC75NeCiJpiAr2c8BJGRi52oNDq9tU92XAaEx";
+    return "ipfs://QmSJHjJbfB9cJUzTGwTzvpgLqV9eyUT1hGzT4sRHFF9Xy2";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -173,7 +171,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract MockJetton
 ;;
 
-((int, slice, cell, int, int), int) $MockJetton$_contract_router_internal((int, slice, cell, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+((int, slice, cell, int), int) $MockJetton$_contract_router_internal((int, slice, cell, int) self, int msg_bounced, slice in_msg) impure inline_ref {
     ;; Handle bounced messages
     if (msg_bounced) {
         return (self, true);

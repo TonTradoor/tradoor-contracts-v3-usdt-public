@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: MockJetton
-BOC Size: 2061 bytes
+BOC Size: 2030 bytes
 
 # Types
 Total Types: 20
@@ -123,7 +123,6 @@ Argument: owner
 3688: Not mintable
 4159: Invalid value!!
 4429: Invalid sender
-12241: Max supply exceeded
 14534: Not owner
 18668: Can't Mint Anymore
 23951: Insufficient gas

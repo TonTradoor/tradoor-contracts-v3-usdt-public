@@ -165,6 +165,12 @@ builder $GlobalRBFChangedEvent$_store(builder build_0, (int, int) v) inline;
 ;; $GlobalRBFChangedEvent$_store_cell
 cell $GlobalRBFChangedEvent$_store_cell((int, int) v) inline;
 
+;; $IncreaseLPPositionCreatedEvent$_store
+builder $IncreaseLPPositionCreatedEvent$_store(builder build_0, (slice, int, int, int, int) v) inline;
+
+;; $IncreaseLPPositionCreatedEvent$_store_cell
+cell $IncreaseLPPositionCreatedEvent$_store_cell((slice, int, int, int, int) v) inline;
+
 ;; $IncreaseLPPositionCancelledEvent$_store
 builder $IncreaseLPPositionCancelledEvent$_store(builder build_0, (int, int) v) inline;
 
@@ -488,6 +494,15 @@ slice $Cell$_fun_asSlice(cell $self) impure inline;
 
 ;; $Pool$_fun_fundPosition
 ((int, int, int, cell, int, cell, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell), tuple) $Pool$_fun_fundPosition((int, int, int, cell, int, cell, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell) $self, slice $account) impure inline_ref;
+
+;; $IncreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime
+((slice, int, int, int, int)) $IncreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime(slice account, int marginDelta, int liquidityDelta, int executionFee, int blockTime) inline;
+
+;; $IncreaseLPPositionCreatedEvent$_constructor_account_margin_liquidityDelta_executionFee_index
+((slice, int, int, int, int)) $IncreaseLPPositionCreatedEvent$_constructor_account_margin_liquidityDelta_executionFee_index(slice account, int margin, int liquidityDelta, int executionFee, int index) inline;
+
+;; $Pool$_fun_handleCreateIncreaseLPPositionOrder
+((int, int, int, cell, int, cell, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell), ()) $Pool$_fun_handleCreateIncreaseLPPositionOrder((int, int, int, cell, int, cell, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $marginDelta, int $liquidityDelta) impure inline_ref;
 
 ;; $Pool$_fun_tokenEnabled
 ((int, int, int, cell, int, cell, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell), int) $Pool$_fun_tokenEnabled((int, int, int, cell, int, cell, int, int, int, int, int, int, slice, slice, slice, cell, slice, cell, int, cell, int, (int, int), cell, cell, int, cell, int, int, cell, cell, int, int, cell, int, cell, int, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell) $self, int $tokenIndex) impure inline_ref;

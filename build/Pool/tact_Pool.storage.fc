@@ -496,6 +496,33 @@ cell $GlobalRBFChangedEvent$_store_cell((int, int) v) inline {
 }
 
 ;;
+;; Type: IncreaseLPPositionCreatedEvent
+;; Header: 0x5b6375f9
+;; TLB: increase_lp_position_created_event#5b6375f9 account:address margin:int257 liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseLPPositionCreatedEvent
+;;
+
+builder $IncreaseLPPositionCreatedEvent$_store(builder build_0, (slice, int, int, int, int) v) inline {
+    var (v'account, v'margin, v'liquidityDelta, v'executionFee, v'index) = v;
+    build_0 = store_uint(build_0, 1533244921, 32);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'margin, 257);
+    build_0 = build_0.store_int(v'liquidityDelta, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'executionFee, 257);
+    build_1 = build_1.store_int(v'index, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $IncreaseLPPositionCreatedEvent$_store_cell((slice, int, int, int, int) v) inline {
+    return $IncreaseLPPositionCreatedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int, int)) $IncreaseLPPositionCreatedEvent$_constructor_account_margin_liquidityDelta_executionFee_index(slice account, int margin, int liquidityDelta, int executionFee, int index) inline {
+    return (account, margin, liquidityDelta, executionFee, index);
+}
+
+;;
 ;; Type: IncreaseLPPositionCancelledEvent
 ;; Header: 0x1cdd2599
 ;; TLB: increase_lp_position_cancelled_event#1cdd2599 index:int257 trxId:int257 = IncreaseLPPositionCancelledEvent
@@ -1087,6 +1114,10 @@ tuple $IncreaseLPPositionOrder$_load_opt(cell cl) inline {
     }
     var sc = cl.begin_parse();
     return $IncreaseLPPositionOrder$_as_optional(sc~$IncreaseLPPositionOrder$_load());
+}
+
+((slice, int, int, int, int)) $IncreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime(slice account, int marginDelta, int liquidityDelta, int executionFee, int blockTime) inline {
+    return (account, marginDelta, liquidityDelta, executionFee, blockTime);
 }
 
 ;;

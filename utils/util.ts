@@ -24,14 +24,6 @@ export function getConfig(provider: NetworkProvider, key: string) {
     return json[key];
 }
 
-export function formatUnits(value: number, decimal: number) {
-    return BigInt(value) * BigInt(Math.pow(10, decimal));
-}
-
-export function parseUnits(value: string, decimal: number) {
-    return new Decimal(value).div(Math.pow(10, decimal));
-}
-
 export function randomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min))  + min;
 }
@@ -69,4 +61,90 @@ export const waitForTransaction = async (provider:NetworkProvider, address:Addre
         }
     } while(!done && count < maxRetry);
     return done;
+}
+
+export function toUnits(src: number | string | bigint, decimal: number) {
+    let factor = BigInt(Math.pow(10, decimal));
+    if (typeof src === 'bigint') {
+        return src * factor;
+    }
+    else {
+        if (typeof src === 'number') {
+            if (!Number.isFinite(src)) {
+                throw Error('Invalid number');
+            }
+            if (Math.log10(src) <= 6) {
+                src = src.toLocaleString('en', { minimumFractionDigits: decimal, useGrouping: false });
+            }
+            else if (src - Math.trunc(src) === 0) {
+                src = src.toLocaleString('en', { maximumFractionDigits: 0, useGrouping: false });
+            }
+            else {
+                throw Error('Not enough precision for a number value. Use string value instead');
+            }
+        }
+        // Check sign
+        let neg = false;
+        while (src.startsWith('-')) {
+            neg = !neg;
+            src = src.slice(1);
+        }
+        // Split string
+        if (src === '.') {
+            throw Error('Invalid number');
+        }
+        let parts = src.split('.');
+        if (parts.length > 2) {
+            throw Error('Invalid number');
+        }
+        // Prepare parts
+        let whole = parts[0];
+        let frac = parts[1];
+        if (!whole) {
+            whole = '0';
+        }
+        if (!frac) {
+            frac = '0';
+        }
+        if (frac.length > decimal) {
+            throw Error('Invalid number');
+        }
+        while (frac.length < decimal) {
+            frac += '0';
+        }
+        // Convert
+        let r = BigInt(whole) * factor + BigInt(frac);
+        if (neg) {
+            r = -r;
+        }
+        return r;
+    }
+}
+
+function fromUnits(src: number | string | bigint, decimal: number) {
+    let factor = BigInt(Math.pow(10, decimal));
+
+    let v = BigInt(src);
+    let neg = false;
+    if (v < 0) {
+        neg = true;
+        v = -v;
+    }
+    // Convert fraction
+    let frac = v % factor;
+    let facStr = frac.toString();
+    while (facStr.length < decimal) {
+        facStr = '0' + facStr;
+    }
+    let pattern = '/^([0-9]*[1-9]|0)(0*)/';
+    facStr = facStr.match(pattern)!![1];
+    // Convert whole
+    let whole = v / factor;
+    let wholeStr = whole.toString();
+    // Value
+    let value = `${wholeStr}${facStr === '0' ? '' : `.${facStr}`}`;
+    if (neg) {
+        value = '-' + value;
+    }
+    return value;
 }
