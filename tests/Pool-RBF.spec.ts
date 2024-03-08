@@ -461,8 +461,8 @@ describe('Pool', () => {
         expect(position?.liquidity).toEqual(liquidity);
 
         /* =========================== decrease RBF ================================ */
-        // after 11days
-        blockchain.now = blockchain.now + 11 * 24 * 60 * 60;
+        // after 10days
+        blockchain.now = blockchain.now + 10 * 24 * 60 * 60;
 
         let prevDecreaseIndex = await pool.getDecreaseRbfPositionIndexNext();
         let decreaseLiquidity = toUnits(5, 6);
