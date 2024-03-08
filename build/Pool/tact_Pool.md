@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 20167 bytes
+BOC Size: 19584 bytes
 
 # Types
 Total Types: 101
@@ -186,8 +186,8 @@ TLB: `global_rbf_changed_event#fd5108e7 riskBufferFundAfter:int257 liquidityAfte
 Signature: `GlobalRBFChangedEvent{riskBufferFundAfter:int257,liquidityAfter:int257}`
 
 ## IncreaseLPPositionCreatedEvent
-TLB: `increase_lp_position_created_event#5b6375f9 account:address margin:int257 liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseLPPositionCreatedEvent`
-Signature: `IncreaseLPPositionCreatedEvent{account:address,margin:int257,liquidityDelta:int257,executionFee:int257,index:int257}`
+TLB: `increase_lp_position_created_event#eb182e8c account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseLPPositionCreatedEvent`
+Signature: `IncreaseLPPositionCreatedEvent{account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,index:int257}`
 
 ## IncreaseLPPositionCancelledEvent
 TLB: `increase_lp_position_cancelled_event#1cdd2599 index:int257 trxId:int257 = IncreaseLPPositionCancelledEvent`
@@ -410,7 +410,7 @@ TLB: `_ sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCo
 Signature: `SamplePremiumRateResult{sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRateX96:int257},shouldAdjustFundingRate:bool,fundingRateDeltaX96:int257}`
 
 # Get Methods
-Total Get Methods: 9
+Total Get Methods: 14
 
 ## operator
 
@@ -429,6 +429,19 @@ Argument: index
 Argument: index
 
 ## fundPosition
+Argument: account
+
+## increaseLPPositionIndexNext
+
+## increaseLPPositionOrder
+Argument: index
+
+## decreaseLPPositionIndexNext
+
+## decreaseLPPositionOrder
+Argument: index
+
+## lpPosition
 Argument: account
 
 ## owner
@@ -469,7 +482,6 @@ Argument: account
 39703: too early
 41207: invalid sender
 42634: legerage too high
-55585: only operator
 58161: insufficient liquidity
 60602: risk rate too high
 61867: insuficient global net RBF

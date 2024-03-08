@@ -46,8 +46,6 @@ forall X -> X __tact_not_null(X x) inline {
 
 (cell, int) __tact_dict_get_ref(cell dict, int key_len, slice index) asm(index dict key_len) "DICTGETREF" "NULLSWAPIFNOT";
 
-() __tact_debug_str(slice value) impure asm "STRDUMP" "DROP";
-
 (int, slice, int, slice) __tact_context_get() inline {
     return __tact_context;
 }
@@ -133,45 +131,6 @@ forall X0, X1, X2, X3 -> (X0, X1, X2, X3) __tact_tuple_destroy_4(tuple v) asm "4
 forall X0, X1, X2, X3, X4 -> tuple __tact_tuple_create_5((X0, X1, X2, X3, X4) v) asm "5 TUPLE";
 
 forall X0, X1, X2, X3, X4 -> (X0, X1, X2, X3, X4) __tact_tuple_destroy_5(tuple v) asm "5 UNTUPLE";
-
-slice __tact_int_to_string(int src) inline_ref {
-    var b = begin_cell();
-    if (src < 0) {
-        b = b.store_uint(45, 8);
-        src = - src;
-    }
-    
-    if (src < 1000000000000000000000000000000) {
-        int len = 0;
-        int value = 0;
-        int mult = 1;
-        do {
-            (src, int res) = src.divmod(10);
-            value = value + (res + 48) * mult;
-            mult = mult * 256;
-            len = len + 1;
-        } until (src == 0);
-    
-        b = b.store_uint(value, len * 8);
-    } else {
-        tuple t = empty_tuple();
-        int len = 0;
-        do {
-            int digit = src % 10;
-            t~tpush(digit);
-            len = len + 1;
-            src = src / 10;
-        } until (src == 0);
-    
-        int c = len - 1;
-        repeat(len) {
-            int v = t.at(c);
-            b = b.store_uint(v + 48, 8);
-            c = c - 1;
-        }
-    }
-    return b.end_cell().begin_parse();
-}
 
 () $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref {
     var (($params'bounce, $params'to, $params'value, $params'mode, $params'body, $params'code, $params'data)) = $params;

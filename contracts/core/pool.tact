@@ -126,14 +126,14 @@ contract Pool with Deployable, Ownable, fundingRate {
 
     // ============================ Admin ================================ //
 
-    receive(msg: SetOperator) {
-        self.requireOwner();
-        self.operator = msg.operator;
-        emit(OperatorUpdatedEvent{
-            newOperator: self.operator
-        }.toCell());
-        self.reply("operator set".asComment());
-    }
+    // receive(msg: SetOperator) {
+    //     self.requireOwner();
+    //     self.operator = msg.operator;
+    //     emit(OperatorUpdatedEvent{
+    //         newOperator: self.operator
+    //     }.toCell());
+    //     self.reply("operator set".asComment());
+    // }
 
     receive(msg: SetExecutor) {
         self.requireOwner();
@@ -179,9 +179,9 @@ contract Pool with Deployable, Ownable, fundingRate {
         return self.executionFeeReceiver;
     }
 
-    fun onlyOperator() {
-        require(sender() == self.operator, "only operator");
-    }
+    // fun onlyOperator() {
+    //     require(sender() == self.operator, "only operator");
+    // }
 
     // ============================ Entry ================================ //
     /**
@@ -572,7 +572,7 @@ contract Pool with Deployable, Ownable, fundingRate {
         dump("handleCreateIncreaseLPPositionOrder");
         let ctx: Context = context();
 
-        if (jettonFromAmount < liquidityDelta) {
+        if (jettonFromAmount < marginDelta) {
             self.refundLiquidity(queryId, jettonFromAmount, account);
             dump("refund not enough liquidity");
             return;
@@ -598,7 +598,7 @@ contract Pool with Deployable, Ownable, fundingRate {
         // event
         emit(IncreaseLPPositionCreatedEvent{
             account: account,
-            margin: marginDelta,
+            marginDelta: marginDelta,
             liquidityDelta: liquidityDelta,
             executionFee: executionFee,
             index: index
@@ -966,38 +966,38 @@ contract Pool with Deployable, Ownable, fundingRate {
         }.toCell());
     }
 
-    // get fun increaseLPPositionIndexNext(): Int {
-    //     return self.increaseLPPositionIndexNext;
-    // }
+    get fun increaseLPPositionIndexNext(): Int {
+        return self.increaseLPPositionIndexNext;
+    }
 
-    // get fun increaseLPPositionOrder(index: Int): IncreaseLPPositionOrder? {
-    //     return self.increaseLPPositionOrders.get(index);
-    // }
+    get fun increaseLPPositionOrder(index: Int): IncreaseLPPositionOrder? {
+        return self.increaseLPPositionOrders.get(index);
+    }
 
-    // get fun decreaseLPPositionIndexNext(): Int {
-    //     return self.decreaseLPPositionIndexNext;
-    // }
+    get fun decreaseLPPositionIndexNext(): Int {
+        return self.decreaseLPPositionIndexNext;
+    }
 
-    // get fun decreaseLPPositionOrder(index: Int): DecreaseLPPositionOrder? {
-    //     return self.decreaseLPPositionOrders.get(index);
-    // }
+    get fun decreaseLPPositionOrder(index: Int): DecreaseLPPositionOrder? {
+        return self.decreaseLPPositionOrders.get(index);
+    }
 
-    // get fun lpPosition(account: Address): LPPosition? {
-    //     return self.lpPositions.get(account);
-    // }
+    get fun lpPosition(account: Address): LPPosition? {
+        return self.lpPositions.get(account);
+    }
 
     // ============================ Perp ================================ //
-    // fun handleCreateIncreasePerpPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, marginDelta: Int, liquidityDelta: Int) {
+    fun handleCreateIncreasePerpPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, marginDelta: Int, liquidityDelta: Int) {
 
-    // }
+    }
 
-    // receive(msg: CancelIncreasePerpPositionMarketOrder) {
+    receive(msg: CancelIncreasePerpPositionMarketOrder) {
 
-    // }
+    }
 
-    // receive(msg: ExecuteIncreasePerpPositionMarketOrder) {
+    receive(msg: ExecuteIncreasePerpPositionMarketOrder) {
 
-    // }
+    }
 
     // ============================ private function ================================ //
     fun calculateTotalGlobalUnrealizedPnl(): Int {

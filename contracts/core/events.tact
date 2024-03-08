@@ -59,7 +59,7 @@ message GlobalRBFChangedEvent {
 // increase LP
 message IncreaseLPPositionCreatedEvent {
     account: Address;
-    margin: Int;
+    marginDelta: Int;
     liquidityDelta: Int;
     executionFee: Int;
     index: Int;

@@ -147,80 +147,6 @@ describe('Pool', () => {
         // blockchain and pool are ready to use
     });
 
-    it('should increase RBF', async () => {
-        /// create order
-        let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-        let liquidity = toUnits(10, usdtDecimal);
-        console.log('liquidity:', liquidity);
-
-        // transfer jetton with create increase RBF position order payload
-        // get user jetton wallet address
-        let user0WalletAddress = await jetton.getGetWalletAddress(user0.address);
-        let user0JettonWallet = await blockchain.openContract(JettonDefaultWallet.fromAddress(user0WalletAddress));
-        // get user jetton balance
-        let user0JettonData = await user0JettonWallet.getGetWalletData();
-        let user0JettonBalance = user0JettonData.balance;
-        expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
-
-        // get pool jetton wallet address 
-        let poolJettonWalletAddress = await jetton.getGetWalletAddress(pool.address);
-        // get poll TON balance
-        let poolTonBalance = (await blockchain.getContract(pool.address)).balance;
-        console.log("poolTonBalance", poolTonBalance.toLocaleString());
-
-        let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
-        let forwardPayload = beginCell().storeRef(payloadCell).endCell();
-
-        let poolJettonBalanceBefore = 0n;
-
-        const trxResult = await user0JettonWallet.send(
-            user0.getSender(),
-            {
-                value: toNano('2'),
-            },
-            {
-                $$type: 'TokenTransfer',
-                query_id: 0n,
-                amount: liquidity,
-                destination: pool.address,
-                response_destination: user0.address,
-                custom_payload: null,
-                forward_ton_amount: toNano('1'),
-                forward_payload: forwardPayload
-            }
-        );
-
-        printTransactionFees(trxResult.transactions);
-        expect(trxResult.transactions).toHaveTransaction({
-            from: poolJettonWalletAddress,
-            to: pool.address,
-            success: true,
-        });
-        console.log("TokenTransfer");
-
-        // check index
-        let index = await pool.getIncreaseRbfPositionIndexNext();
-        expect(index.toLocaleString).toEqual((prevIndex + BigInt(1)).toLocaleString);
-
-        // check order
-        let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
-        expect(order).not.toBeNull();
-        expect(order?.liquidityDelta.toLocaleString).toEqual(liquidity.toLocaleString);
-
-        // check pool jetton balance
-        let poolJettonWallet = blockchain.openContract(JettonDefaultWallet.fromAddress(poolJettonWalletAddress));
-        let poolJettonDataAfter = await poolJettonWallet.getGetWalletData();
-        let poolJettonBalanceAfter = poolJettonDataAfter.balance;
-        console.log("poolJettonBalanceAfter", poolJettonBalanceAfter.toLocaleString());
-        console.log("poolJettonBalanceAfter + nano", (poolJettonBalanceBefore + liquidity).toLocaleString());
-        expect(poolJettonBalanceAfter.toLocaleString()).toEqual((poolJettonBalanceBefore + liquidity).toLocaleString());
-
-        // check pool TON balance
-        let poolTonBalanceAfter = (await blockchain.getContract(pool.address)).balance;
-        console.log("poolTonBalanceAfter", poolTonBalanceAfter.toLocaleString());
-    });
-
-
     it('auto refund -- not enough execution fee', async () => {
         /// create order
         let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
@@ -272,7 +198,7 @@ describe('Pool', () => {
 
         // check index
         let index = await pool.getIncreaseRbfPositionIndexNext();
-        expect(index.toLocaleString).toEqual((prevIndex + BigInt(1)).toLocaleString);
+        expect(index).toEqual(prevIndex);
 
         // check order
         let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
@@ -303,7 +229,7 @@ describe('Pool', () => {
         expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
 
         let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
-        let forwardPayload =beginCell().storeRef(payloadCell).endCell();
+        let forwardPayload = beginCell().storeRef(payloadCell).endCell();
 
         const time1 = Math.floor(Date.now() / 1000); 
         blockchain.now = time1;
@@ -345,9 +271,9 @@ describe('Pool', () => {
         expect(order).not.toBeNull();
         expect(order?.liquidityDelta).toEqual(liquidity);
         
-        // wait for 7s (cancel )
+        // wait for 3min (cancel )
+        blockchain.now = blockchain.now + 3 * 60;
 
-        blockchain.now = blockchain.now + 7 * 1000;
         /// cancel order
         const trxResult2 = await pool.send(
             user0.getSender(),
@@ -425,7 +351,8 @@ describe('Pool', () => {
         expect(order).not.toBeNull();
         expect(order?.liquidityDelta).toEqual(liquidity);
         
-        blockchain.now = blockchain.now + 10;
+        // wait for 6s
+        blockchain.now = blockchain.now + 6;
         /// executor order
         const trxResult2 = await pool.send(
             executor.getSender(),
@@ -506,7 +433,8 @@ describe('Pool', () => {
         expect(order).not.toBeNull();
         expect(order?.liquidityDelta).toEqual(liquidity);
         
-        blockchain.now = blockchain.now + 10;
+        // wait for 6s
+        blockchain.now = blockchain.now + 6;
         // executor order
         const trxResult2 = await pool.send(
             executor.getSender(),

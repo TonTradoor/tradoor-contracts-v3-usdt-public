@@ -233,15 +233,29 @@ cell $DeployOk$_store_cell((int) v) inline {
 }
 
 ;;
-;; Type: SetOperator
-;; Header: 0x5d7a8d75
-;; TLB: set_operator#5d7a8d75 operator:address = SetOperator
+;; Type: CancelIncreasePerpPositionMarketOrder
+;; Header: 0xfc741917
+;; TLB: cancel_increase_perp_position_market_order#fc741917 index:int257 trxId:int257 = CancelIncreasePerpPositionMarketOrder
 ;;
 
-(slice, ((slice))) $SetOperator$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 1568312693);
-    var v'operator = sc_0~__tact_load_address();
-    return (sc_0, (v'operator));
+(slice, ((int, int))) $CancelIncreasePerpPositionMarketOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 4235467031);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
+}
+
+;;
+;; Type: ExecuteIncreasePerpPositionMarketOrder
+;; Header: 0xbe94fb37
+;; TLB: execute_increase_perp_position_market_order#be94fb37 index:int257 trxId:int257 = ExecuteIncreasePerpPositionMarketOrder
+;;
+
+(slice, ((int, int))) $ExecuteIncreasePerpPositionMarketOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3197434679);
+    var v'index = sc_0~load_int(257);
+    var v'trxId = sc_0~load_int(257);
+    return (sc_0, (v'index, v'trxId));
 }
 
 ;;
@@ -497,15 +511,15 @@ cell $GlobalRBFChangedEvent$_store_cell((int, int) v) inline {
 
 ;;
 ;; Type: IncreaseLPPositionCreatedEvent
-;; Header: 0x5b6375f9
-;; TLB: increase_lp_position_created_event#5b6375f9 account:address margin:int257 liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseLPPositionCreatedEvent
+;; Header: 0xeb182e8c
+;; TLB: increase_lp_position_created_event#eb182e8c account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseLPPositionCreatedEvent
 ;;
 
 builder $IncreaseLPPositionCreatedEvent$_store(builder build_0, (slice, int, int, int, int) v) inline {
-    var (v'account, v'margin, v'liquidityDelta, v'executionFee, v'index) = v;
-    build_0 = store_uint(build_0, 1533244921, 32);
+    var (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'index) = v;
+    build_0 = store_uint(build_0, 3944230540, 32);
     build_0 = __tact_store_address(build_0, v'account);
-    build_0 = build_0.store_int(v'margin, 257);
+    build_0 = build_0.store_int(v'marginDelta, 257);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
     var build_1 = begin_cell();
     build_1 = build_1.store_int(v'executionFee, 257);
@@ -518,8 +532,8 @@ cell $IncreaseLPPositionCreatedEvent$_store_cell((slice, int, int, int, int) v) 
     return $IncreaseLPPositionCreatedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((slice, int, int, int, int)) $IncreaseLPPositionCreatedEvent$_constructor_account_margin_liquidityDelta_executionFee_index(slice account, int margin, int liquidityDelta, int executionFee, int index) inline {
-    return (account, margin, liquidityDelta, executionFee, index);
+((slice, int, int, int, int)) $IncreaseLPPositionCreatedEvent$_constructor_account_marginDelta_liquidityDelta_executionFee_index(slice account, int marginDelta, int liquidityDelta, int executionFee, int index) inline {
+    return (account, marginDelta, liquidityDelta, executionFee, index);
 }
 
 ;;
@@ -729,27 +743,6 @@ cell $LPPositionLiquidatedEvent$_store_cell((slice, int, int, int, int, int, int
 
 ((slice, int, int, int, int, int, int)) $LPPositionLiquidatedEvent$_constructor_account_trxId_margin_liquidity_tradingFee_fundingFee_liquidationFee(slice account, int trxId, int margin, int liquidity, int tradingFee, int fundingFee, int liquidationFee) inline {
     return (account, trxId, margin, liquidity, tradingFee, fundingFee, liquidationFee);
-}
-
-;;
-;; Type: OperatorUpdatedEvent
-;; Header: 0x8850b15e
-;; TLB: operator_updated_event#8850b15e newOperator:address = OperatorUpdatedEvent
-;;
-
-builder $OperatorUpdatedEvent$_store(builder build_0, (slice) v) inline {
-    var (v'newOperator) = v;
-    build_0 = store_uint(build_0, 2286989662, 32);
-    build_0 = __tact_store_address(build_0, v'newOperator);
-    return build_0;
-}
-
-cell $OperatorUpdatedEvent$_store_cell((slice) v) inline {
-    return $OperatorUpdatedEvent$_store(begin_cell(), v).end_cell();
-}
-
-((slice)) $OperatorUpdatedEvent$_constructor_newOperator(slice newOperator) inline {
-    return (newOperator);
 }
 
 ;;
@@ -1116,6 +1109,25 @@ tuple $IncreaseLPPositionOrder$_load_opt(cell cl) inline {
     return $IncreaseLPPositionOrder$_as_optional(sc~$IncreaseLPPositionOrder$_load());
 }
 
+tuple $IncreaseLPPositionOrder$_to_tuple(((slice, int, int, int, int)) v) inline {
+    var (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    return __tact_tuple_create_5(v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime);
+}
+
+tuple $IncreaseLPPositionOrder$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $IncreaseLPPositionOrder$_to_tuple($IncreaseLPPositionOrder$_not_null(v)); 
+}
+
+tuple $IncreaseLPPositionOrder$_to_opt_external(tuple v) inline {
+    var loaded = $IncreaseLPPositionOrder$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
 ((slice, int, int, int, int)) $IncreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime(slice account, int marginDelta, int liquidityDelta, int executionFee, int blockTime) inline {
     return (account, marginDelta, liquidityDelta, executionFee, blockTime);
 }
@@ -1177,6 +1189,25 @@ tuple $DecreaseLPPositionOrder$_load_opt(cell cl) inline {
     return $DecreaseLPPositionOrder$_as_optional(sc~$DecreaseLPPositionOrder$_load());
 }
 
+tuple $DecreaseLPPositionOrder$_to_tuple(((slice, int, int, int, int)) v) inline {
+    var (v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime) = v;
+    return __tact_tuple_create_5(v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime);
+}
+
+tuple $DecreaseLPPositionOrder$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $DecreaseLPPositionOrder$_to_tuple($DecreaseLPPositionOrder$_not_null(v)); 
+}
+
+tuple $DecreaseLPPositionOrder$_to_opt_external(tuple v) inline {
+    var loaded = $DecreaseLPPositionOrder$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
 ((slice, int, int, int, int)) $DecreaseLPPositionOrder$_constructor_account_marginDelta_liquidityDelta_executionFee_blockTime(slice account, int marginDelta, int liquidityDelta, int executionFee, int blockTime) inline {
     return (account, marginDelta, liquidityDelta, executionFee, blockTime);
 }
@@ -1234,6 +1265,25 @@ tuple $LPPosition$_load_opt(cell cl) inline {
     }
     var sc = cl.begin_parse();
     return $LPPosition$_as_optional(sc~$LPPosition$_load());
+}
+
+tuple $LPPosition$_to_tuple(((int, int, int, int)) v) inline {
+    var (v'margin, v'liquidity, v'entryFundingFeeGrowth, v'entryTradingFeeGrowth) = v;
+    return __tact_tuple_create_4(v'margin, v'liquidity, v'entryFundingFeeGrowth, v'entryTradingFeeGrowth);
+}
+
+tuple $LPPosition$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $LPPosition$_to_tuple($LPPosition$_not_null(v)); 
+}
+
+tuple $LPPosition$_to_opt_external(tuple v) inline {
+    var loaded = $LPPosition$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
 }
 
 ((int, int, int, int)) $LPPosition$_constructor_margin_liquidity_entryFundingFeeGrowth_entryTradingFeeGrowth(int margin, int liquidity, int entryFundingFeeGrowth, int entryTradingFeeGrowth) inline {

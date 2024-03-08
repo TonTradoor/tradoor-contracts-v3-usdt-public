@@ -149,15 +149,14 @@ describe('Pool', () => {
 
     it('should increase LP', async () => {
         /// create order
-        let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
+        let prevIndex = await pool.getIncreaseLpPositionIndexNext();
         let margin = toUnits(10, usdtDecimal);
         let liquidity = toUnits(100, usdtDecimal);
-        console.log('liquidity:', margin);
 
         // transfer jetton with create increase LP position order payload
         // get user jetton wallet address
         let user0WalletAddress = await jetton.getGetWalletAddress(user0.address);
-        let user0JettonWallet = await blockchain.openContract(JettonDefaultWallet.fromAddress(user0WalletAddress));
+        let user0JettonWallet = blockchain.openContract(JettonDefaultWallet.fromAddress(user0WalletAddress));
         // get user jetton balance
         let user0JettonData = await user0JettonWallet.getGetWalletData();
         let user0JettonBalance = user0JettonData.balance;
@@ -169,11 +168,15 @@ describe('Pool', () => {
         let poolTonBalance = (await blockchain.getContract(pool.address)).balance;
         console.log("poolTonBalance", poolTonBalance.toLocaleString());
 
-        let payloadCell = beginCell().storeInt(1,32).storeInt(margin, 128).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
+        let payloadCell = beginCell().storeInt(2,32).storeInt(margin, 128).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
         let forwardPayload = beginCell().storeRef(payloadCell).endCell();
 
         let poolJettonBalanceBefore = 0n;
+        
+        // set block time
+        blockchain.now = Math.floor(Date.now() / 1000);
 
+        // send trx
         const trxResult = await user0JettonWallet.send(
             user0.getSender(),
             {
@@ -200,25 +203,58 @@ describe('Pool', () => {
         console.log("TokenTransfer");
 
         // check index
-        // let index = await pool.getIncreaseLpPositionIndexNext();
-        // expect(index.toLocaleString).toEqual((prevIndex + BigInt(1)).toLocaleString);
+        let index = await pool.getIncreaseLpPositionIndexNext();
+        console.log('prevIndex:', prevIndex);
+        console.log('index:', index);
+        expect(index).toEqual(prevIndex + 1n);
 
-        // // check order
-        // let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
-        // expect(order).not.toBeNull();
-        // expect(order?.liquidityDelta.toLocaleString).toEqual(margin.toLocaleString);
+        // check order
+        let order = await pool.getIncreaseLpPositionOrder(prevIndex);
+        expect(order).not.toBeNull();
+        expect(order?.marginDelta).toEqual(margin);
+        expect(order?.liquidityDelta).toEqual(liquidity);
 
         // check pool jetton balance
         let poolJettonWallet = blockchain.openContract(JettonDefaultWallet.fromAddress(poolJettonWalletAddress));
         let poolJettonDataAfter = await poolJettonWallet.getGetWalletData();
         let poolJettonBalanceAfter = poolJettonDataAfter.balance;
         console.log("poolJettonBalanceAfter", poolJettonBalanceAfter.toLocaleString());
-        console.log("poolJettonBalanceAfter + nano", (poolJettonBalanceBefore + margin).toLocaleString());
-        expect(poolJettonBalanceAfter.toLocaleString()).toEqual((poolJettonBalanceBefore + margin).toLocaleString());
+        console.log("poolJettonBalanceAfter + margin", (poolJettonBalanceBefore + margin).toLocaleString());
+        expect(poolJettonBalanceAfter).toEqual(poolJettonBalanceBefore + margin);
 
         // check pool TON balance
         let poolTonBalanceAfter = (await blockchain.getContract(pool.address)).balance;
         console.log("poolTonBalanceAfter", poolTonBalanceAfter.toLocaleString());
+
+        /// executor order
+        // wait for 6s
+        blockchain.now = blockchain.now + 6;
+
+        const trxResult2 = await pool.send(
+            executor.getSender(),
+            {
+                value: toNano('0.5'),
+            },
+            {
+                $$type: 'ExecuteIncreaseLPPositionOrder',
+                index: prevIndex,
+                trxId: 1n
+            }
+        );
+
+        printTransactionFees(trxResult2.transactions);
+        expect(trxResult2.transactions).toHaveTransaction({
+            from: executor.address,
+            to: pool.address,
+            success: true,
+        });
+
+        // check position
+        let position = await pool.getLpPosition(user0.address);
+        expect(position).not.toBeNull();
+        expect(position?.margin).toEqual(margin);
+        expect(position?.liquidity).toEqual(liquidity);
+
     });
 
 });
