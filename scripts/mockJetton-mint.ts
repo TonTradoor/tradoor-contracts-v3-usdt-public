@@ -2,6 +2,7 @@ import { Address, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { MockJetton } from '../wrappers/MockJetton';
 import { attachJettonWallet, attachMockJetton } from '../wrappers/Pool';
+import { getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
     const sampleJetton = attachMockJetton(provider);
@@ -11,6 +12,8 @@ export async function run(provider: NetworkProvider) {
 
     console.log(`mint to ${recevier} for ${amount}`);
 
+    const lastTrx = await getLastTransaction(provider, sampleJetton.address);
+
     await sampleJetton.send(
         provider.sender(),
         {
@@ -18,10 +21,16 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'Mint',
-            amount: toNano(amount),
+            amount: toUnits(amount, 6),
             receiver: recevier
         }
     );
+
+    // wait for trx
+    const transDone = await waitForTransaction(provider, sampleJetton.address, lastTrx, 10);
+    if (transDone) {
+        console.log(`create decrease LP success`);
+    }
 
     // get user jetton balance
     let user0JettonWallet = await attachJettonWallet(provider, recevier);

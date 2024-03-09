@@ -340,9 +340,10 @@ contract Pool with Deployable, Ownable, fundingRate {
         if (globalNetRBF < 0) {
             globalNetRBF = 0;
         }
+        let bonus: Int = 0;
         if (globalNetRBF < self.globalRBFPosition.liquidity) {
             // bonus = b + s (1 - x) * liquidity
-            let bonus: Int = self.bonusFactor * (self.globalRBFPosition.liquidity - globalNetRBF)
+            bonus = self.bonusFactor * (self.globalRBFPosition.liquidity - globalNetRBF)
                  * order.liquidityDelta / self.globalRBFPosition.liquidity;
             dump("bonus:");
             dump(bonus);
@@ -383,6 +384,8 @@ contract Pool with Deployable, Ownable, fundingRate {
             account: order.account,
             liquidityDelta: order.liquidityDelta,
             liquidityAfter: fundPosition.liquidity,
+            bonusDelta: bonus,
+            bonusAfter: fundPosition.bonus,
             unlockTimeAfter: fundPosition.unlockTime
         }.toCell());
         emit(GlobalRBFChangedEvent{
@@ -480,14 +483,14 @@ contract Pool with Deployable, Ownable, fundingRate {
         let totalGlobalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
         require(self.globalRBFPosition.riskBufferFund + totalGlobalUnrealizedPnl > 0, "insufficient global RBF");
 
-        // TODO calculate redeem amount
+        // calculate received amount
         let globalNetRBF: Int = self.globalRBFPosition.riskBufferFund + self.calculateTotalGlobalUnrealizedPnl();
         if (globalNetRBF < 0) {
             globalNetRBF = 0;
         }
         require(globalNetRBF > 0, "insuficient global net RBF");
 
-        let redeem: Int = 0;
+        let received: Int = 0;
         let bonus: Int = 0;
 
         if (globalNetRBF >= self.globalRBFPosition.liquidity) {
@@ -502,9 +505,9 @@ contract Pool with Deployable, Ownable, fundingRate {
                 let bonus3: Int = order.liquidityDelta * self.bonusFactor * (globalNetRBF - self.globalRBFPosition.liquidity) * min(n, 100) / (globalNetRBF * 1000);
                 bonus = max(min(bonus1, bonus2), bonus3);
             }
-            redeem = self.globalRBFPosition.liquidity + bonus;
+            received = order.liquidityDelta + bonus;
         } else {
-            redeem = order.liquidityDelta * globalNetRBF / self.globalRBFPosition.liquidity;
+            received = order.liquidityDelta * globalNetRBF / self.globalRBFPosition.liquidity;
         }
         // update position
         fundPosition.liquidity = fundPosition.liquidity - order.liquidityDelta;
@@ -514,14 +517,14 @@ contract Pool with Deployable, Ownable, fundingRate {
         dump("execute decrease rbf position order");
         dump(beginCell().storeAddress(order.account).endCell().hash());
 
-        if (fundPosition.liquidity > 0) {
+        if (fundPosition.liquidity > 0 || fundPosition.bonus > 0) {
             self.fundPositions.set(order.account, fundPosition);
         } else {
             self.fundPositions.set(order.account, null);
         }
 
         // update global position
-        self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund - redeem;
+        self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund - received;
         self.globalRBFPosition.liquidity = self.globalRBFPosition.liquidity - order.liquidityDelta;
 
         // delete order
@@ -529,6 +532,7 @@ contract Pool with Deployable, Ownable, fundingRate {
 
         // TODO transfer execution fee
 
+        // TODO transfer received
 
         // event
         emit(DecreaseRBFPositionExecutedEvent{
@@ -539,7 +543,9 @@ contract Pool with Deployable, Ownable, fundingRate {
             account: order.account,
             liquidityDelta: order.liquidityDelta,
             liquidityAfter: fundPosition.liquidity,
-            unlockTimeAfter: fundPosition.unlockTime
+            bonusDelta: bonus,
+            bonusAfter: fundPosition.bonus,
+            received: received
         }.toCell());
         emit(GlobalRBFChangedEvent{
             riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,

@@ -8,7 +8,7 @@ export async function run(provider: NetworkProvider) {
     const jetton = attachMockJetton(provider);
 
     // get next index
-    let index = await pool.getIncreaseRbfPositionIndexNext();
+    let index = await pool.getIncreaseLpPositionIndexNext();
     let prevIndex = index - 1n;
     console.log(`index:`, index);
     console.log(`prevIndex:`, prevIndex);
@@ -19,11 +19,11 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get last order
-    let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
+    let order = await pool.getIncreaseLpPositionOrder(prevIndex);
     console.log(`order:`, order);
 
     // get position
-    let position = await pool.getFundPosition(provider.sender().address!!);
+    let position = await pool.getLpPosition(provider.sender().address!!);
     console.log(`position:`, position);
 
 }

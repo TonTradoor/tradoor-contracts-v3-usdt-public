@@ -194,13 +194,13 @@ PROGRAM{
   DECLPROC $IncreaseRBFPositionCancelledEvent$_constructor_index_trxId
   DECLPROC $RBFPosition$_constructor_liquidity_bonus_unlockTime
   DECLPROC $IncreaseRBFPositionExecutedEvent$_constructor_index_trxId
-  DECLPROC $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter
+  DECLPROC $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter
   DECLPROC $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter
   DECLPROC $DecreaseRBFPositionOrder$_constructor_account_liquidityDelta_executionFee_blockTime
   DECLPROC $DecreaseRBFPositionCreatedEvent$_constructor_account_liquidityDelta_executionFee_index
   DECLPROC $DecreaseRBFPositionCancelledEvent$_constructor_index_trxId
   DECLPROC $DecreaseRBFPositionExecutedEvent$_constructor_index_trxId
-  DECLPROC $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter
+  DECLPROC $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_received
   DECLPROC $IncreaseLPPositionCancelledEvent$_constructor_index_trxId
   DECLPROC $LPPosition$_constructor_margin_liquidity_entryFundingFeeGrowth_entryTradingFeeGrowth
   DECLPROC $IncreaseLPPositionExecutedEvent$_constructor_index_trxId
@@ -663,18 +663,25 @@ PROGRAM{
     $IncreaseRBFPositionExecutedEvent$_store INLINECALLDICT
     ENDC
   }>
-  $RBFPositionIncreasedEvent$_store PROCINLINE:<{
-    1049076465 PUSHINT
-    s0 s5 XCHG2
+  $RBFPositionIncreasedEvent$_store PROCREF:<{
+    825204753 PUSHINT
+    s0 s7 XCHG2
     32 STU
-    s0 s3 XCHG2
+    s0 s5 XCHG2
     __tact_store_address INLINECALLDICT
+    s1 s3 XCHG
     257 PUSHINT
     STIX
     257 PUSHINT
     STIX
     SWAP
     NEWC
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
     257 PUSHINT
     STIX
     ENDC
@@ -683,7 +690,7 @@ PROGRAM{
   }>
   $RBFPositionIncreasedEvent$_store_cell PROCINLINE:<{
     NEWC
-    4 -ROLL
+    6 -ROLL
     $RBFPositionIncreasedEvent$_store INLINECALLDICT
     ENDC
   }>
@@ -741,18 +748,25 @@ PROGRAM{
     $DecreaseRBFPositionExecutedEvent$_store INLINECALLDICT
     ENDC
   }>
-  $RBFPositionDecreasedEvent$_store PROCINLINE:<{
-    1539827988 PUSHINT
-    s0 s5 XCHG2
+  $RBFPositionDecreasedEvent$_store PROCREF:<{
+    1712851887 PUSHINT
+    s0 s7 XCHG2
     32 STU
-    s0 s3 XCHG2
+    s0 s5 XCHG2
     __tact_store_address INLINECALLDICT
+    s1 s3 XCHG
     257 PUSHINT
     STIX
     257 PUSHINT
     STIX
     SWAP
     NEWC
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
     257 PUSHINT
     STIX
     ENDC
@@ -761,7 +775,7 @@ PROGRAM{
   }>
   $RBFPositionDecreasedEvent$_store_cell PROCINLINE:<{
     NEWC
-    4 -ROLL
+    6 -ROLL
     $RBFPositionDecreasedEvent$_store INLINECALLDICT
     ENDC
   }>
@@ -2865,7 +2879,7 @@ PROGRAM{
   }>
   $IncreaseRBFPositionExecutedEvent$_constructor_index_trxId PROCINLINE:<{
   }>
-  $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter PROCINLINE:<{
+  $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter PROCINLINE:<{
   }>
   $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter PROCINLINE:<{
   }>
@@ -2877,7 +2891,7 @@ PROGRAM{
   }>
   $DecreaseRBFPositionExecutedEvent$_constructor_index_trxId PROCINLINE:<{
   }>
-  $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter PROCINLINE:<{
+  $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_received PROCINLINE:<{
   }>
   $IncreaseLPPositionCancelledEvent$_constructor_index_trxId PROCINLINE:<{
   }>
@@ -3499,10 +3513,12 @@ PROGRAM{
       DROP
       0 PUSHINT
     }>
-    DUP
-    26 s() PUSH
+    0 PUSHINT
+    OVER
+    27 s() PUSH
     LESS
     IF:<{
+      DROP
       25 s() PUSH
       SWAP
       SUB
@@ -3513,58 +3529,60 @@ PROGRAM{
       MUL
       25 s() PUSH
       DIV
-      s1 50 s() XCHG
+      s0 50 s() XCHG
+      50 s() PUSH
       ADD
-      s0 49 s() XCHG
+      s0 50 s() XCHG
     }>ELSE<{
-      DROP
+      NIP
     }>
-    s0 48 s() XCHG
-    53 s() PUSH
+    s0 49 s() XCHG
+    54 s() PUSH
     ADD
     NOW
-    41 s() PUSH
+    42 s() PUSH
     ADD
-    OVER
     267 PUSHINT
-    s0 52 s() XCHG
     s2 PUSH
+    53 s() PUSH
+    s3 PUSH
     $RBFPosition$_store_cell INLINECALLDICT
-    s2 25 s() XCHG
-    s1 51 s() XCHG
-    56 s() PUSH
+    s2 27 s() XCHG
+    58 s() PUSH
     SWAP
     __tact_dict_set_slice_cell INLINECALLDICT
-    s0 25 s() XCHG
-    53 s() PUSH
+    s0 27 s() XCHG
+    55 s() PUSH
     ADD
-    s0 24 s() XCHG
-    53 s() PUSH
+    s0 26 s() XCHG
+    55 s() PUSH
     ADD
     257 PUSHINT
     PUSHNULL
     $IncreaseRBFPositionOrder$_store_opt INLINECALLDICT
-    s2 31 s() XCHG
-    53 s() PUSH
+    s2 33 s() XCHG
+    55 s() PUSH
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
     TRUE
-    31 s() PUSH
+    33 s() PUSH
     s0 s2 XCHG
-    s0 54 s() XCHG
+    s0 56 s() XCHG
     2 PUSHINT
     $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
     $global_send INLINECALLDICT
-    s1 50 s() XCHG
-    s0 49 s() XCHG
+    s1 52 s() XCHG
+    s0 51 s() XCHG
     $IncreaseRBFPositionExecutedEvent$_constructor_index_trxId INLINECALLDICT
     $IncreaseRBFPositionExecutedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    s3 51 s() XCHG
-    s2 50 s() XCHG
-    s1 20 s() XCHG
-    s0 46 s() XCHG
-    $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter INLINECALLDICT
+    s5 53 s() XCHG
+    s4 52 s() XCHG
+    s3 49 s() XCHG
+    s2 47 s() XCHG
+    s1 48 s() XCHG
+    s0 22 s() XCHG
+    $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter INLINECALLDICT
     $RBFPositionIncreasedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     17 s() PUSH
@@ -3604,17 +3622,11 @@ PROGRAM{
     s10 18 s() XCHG
     s9 17 s() XCHG
     s8 16 s() XCHG
-    s7 s15 XCHG
-    s6 s14 XCHG
-    s5 s13 XCHG
-    s4 s12 XCHG
-    s3 s11 XCHG
-    s10 s1 s8 XCHG3
-    s0 s5 XCHG
-    s6 s6 XCHG2
-    s0 s9 XCHG
-    s0 s4 XCHG
-    s3 s1 s3 XCHG3
+    8 8 BLKSWAP
+    s5 s6 XCHG
+    2SWAP
+    s1 s5 XCHG
+    s1 s4 XCHG
   }>
   $Pool$_internal_binary_CreateDecreaseRBFPositionOrder PROCINLINE:<{
     __tact_context_get INLINECALLDICT
@@ -4037,7 +4049,7 @@ PROGRAM{
         SWAP
         MAX
       }>
-      25 s() PUSH
+      52 s() PUSH
       OVER
       ADD
     }>ELSE<{
@@ -4051,53 +4063,62 @@ PROGRAM{
     53 s() PUSH
     SUB
     s0 51 s() XCHG
-    SWAP
+    OVER
     SUB
-    50 s() PUSH
+    51 s() PUSH
     0 GTINT
     IF:<{
-      50 s() PUSH
-      267 PUSHINT
-      s0 s2 XCHG
+      TRUE
+    }>ELSE<{
+      DUP
+      0 GTINT
+    }>
+    IF:<{
       51 s() PUSH
+      OVER
+      267 PUSHINT
+      s0 53 s() XCHG
       $RBFPosition$_store_cell INLINECALLDICT
-      s2 25 s() XCHG
-      54 s() PUSH
+      s2 26 s() XCHG
+      s1 51 s() XCHG
+      55 s() PUSH
       SWAP
       __tact_dict_set_slice_cell INLINECALLDICT
     }>ELSE<{
-      DROP
+      50 s() POP
       267 PUSHINT
       PUSHNULL
       $RBFPosition$_store_opt INLINECALLDICT
-      s2 25 s() XCHG
-      54 s() PUSH
+      s2 26 s() XCHG
+      55 s() PUSH
       SWAP
       __tact_dict_set_slice_cell INLINECALLDICT
     }>
-    s1 25 s() XCHG
-    s0 50 s() XCHG
+    s0 26 s() XCHG
+    51 s() PUSH
     SUB
-    s0 23 s() XCHG
-    50 s() PUSH
+    s0 25 s() XCHG
+    52 s() PUSH
     SUB
     257 PUSHINT
     PUSHNULL
     $DecreaseRBFPositionOrder$_store_opt INLINECALLDICT
-    s2 28 s() XCHG
-    55 s() PUSH
+    s2 30 s() XCHG
+    57 s() PUSH
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
-    s1 53 s() XCHG
-    s0 52 s() XCHG
+    s1 55 s() XCHG
+    s0 54 s() XCHG
     $DecreaseRBFPositionExecutedEvent$_constructor_index_trxId INLINECALLDICT
     $DecreaseRBFPositionExecutedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    s3 49 s() XCHG
-    s2 48 s() XCHG
-    s1 46 s() XCHG
-    s0 45 s() XCHG
-    $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter INLINECALLDICT
+    s5 51 s() XCHG
+    s4 50 s() XCHG
+    s3 48 s() XCHG
+    s2 22 s() XCHG
+    s1 47 s() XCHG
+    s0 49 s() XCHG
+    $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_received INLINECALLDICT
     $RBFPositionDecreasedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     17 s() PUSH
@@ -4128,7 +4149,7 @@ PROGRAM{
     19 s() 27 s() XCHG
     17 s() 26 s() XCHG
     20 s() 25 s() XCHG
-    19 s() 24 s() XCHG
+    18 s() 24 s() XCHG
     s15 23 s() XCHG
     s14 22 s() XCHG
     s13 21 s() XCHG
@@ -4142,11 +4163,11 @@ PROGRAM{
     s5 s13 XCHG
     s4 s12 XCHG
     s3 s11 XCHG
-    s10 s8 s8 XCHG3
-    s0 s9 XCHG
-    s0 s5 XCHG
-    s0 s7 XCHG
-    s0 s3 XCHG
+    s10 s1 s8 XCHG3
+    s0 s4 XCHG
+    s3 s9 s3 XCHG3
+    s1 s5 XCHG
+    s1 s7 XCHG
   }>
   $Pool$_internal_binary_CancelIncreaseLPPositionOrder PROCINLINE:<{
     __tact_context_get INLINECALLDICT
@@ -5633,7 +5654,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d537152585032766e6f55587762416635624c4b53317365524a71375a414d66565071724a6735364b56723170} PUSHSLICE
+    x{697066733a2f2f516d535062554265654b57795843485a72764a665773734b3258575a42364744756e68757666775a755a714d624b} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

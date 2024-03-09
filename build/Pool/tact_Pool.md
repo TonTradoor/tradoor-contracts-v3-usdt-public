@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 19584 bytes
+BOC Size: 19627 bytes
 
 # Types
 Total Types: 101
@@ -162,8 +162,8 @@ TLB: `increase_rbf_position_executed_event#9f9fdf82 index:int257 trxId:int257 = 
 Signature: `IncreaseRBFPositionExecutedEvent{index:int257,trxId:int257}`
 
 ## RBFPositionIncreasedEvent
-TLB: `rbf_position_increased_event#3e87a2f1 account:address liquidityDelta:int257 liquidityAfter:int257 unlockTimeAfter:int257 = RBFPositionIncreasedEvent`
-Signature: `RBFPositionIncreasedEvent{account:address,liquidityDelta:int257,liquidityAfter:int257,unlockTimeAfter:int257}`
+TLB: `rbf_position_increased_event#312fa011 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 = RBFPositionIncreasedEvent`
+Signature: `RBFPositionIncreasedEvent{account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,unlockTimeAfter:int257}`
 
 ## DecreaseRBFPositionCreatedEvent
 TLB: `decrease_rbf_position_created_event#99f1adce account:address liquidityDelta:int257 executionFee:int257 index:int257 = DecreaseRBFPositionCreatedEvent`
@@ -178,8 +178,8 @@ TLB: `decrease_rbf_position_executed_event#a71f6644 index:int257 trxId:int257 = 
 Signature: `DecreaseRBFPositionExecutedEvent{index:int257,trxId:int257}`
 
 ## RBFPositionDecreasedEvent
-TLB: `rbf_position_decreased_event#5bc7e914 account:address liquidityDelta:int257 liquidityAfter:int257 unlockTimeAfter:int257 = RBFPositionDecreasedEvent`
-Signature: `RBFPositionDecreasedEvent{account:address,liquidityDelta:int257,liquidityAfter:int257,unlockTimeAfter:int257}`
+TLB: `rbf_position_decreased_event#66180baf account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 received:int257 = RBFPositionDecreasedEvent`
+Signature: `RBFPositionDecreasedEvent{account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,received:int257}`
 
 ## GlobalRBFChangedEvent
 TLB: `global_rbf_changed_event#fd5108e7 riskBufferFundAfter:int257 liquidityAfter:int257 = GlobalRBFChangedEvent`

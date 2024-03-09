@@ -367,28 +367,30 @@ cell $IncreaseRBFPositionExecutedEvent$_store_cell((int, int) v) inline {
 
 ;;
 ;; Type: RBFPositionIncreasedEvent
-;; Header: 0x3e87a2f1
-;; TLB: rbf_position_increased_event#3e87a2f1 account:address liquidityDelta:int257 liquidityAfter:int257 unlockTimeAfter:int257 = RBFPositionIncreasedEvent
+;; Header: 0x312fa011
+;; TLB: rbf_position_increased_event#312fa011 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 = RBFPositionIncreasedEvent
 ;;
 
-builder $RBFPositionIncreasedEvent$_store(builder build_0, (slice, int, int, int) v) inline {
-    var (v'account, v'liquidityDelta, v'liquidityAfter, v'unlockTimeAfter) = v;
-    build_0 = store_uint(build_0, 1049076465, 32);
+builder $RBFPositionIncreasedEvent$_store(builder build_0, (slice, int, int, int, int, int) v) inline_ref {
+    var (v'account, v'liquidityDelta, v'liquidityAfter, v'bonusDelta, v'bonusAfter, v'unlockTimeAfter) = v;
+    build_0 = store_uint(build_0, 825204753, 32);
     build_0 = __tact_store_address(build_0, v'account);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
     build_0 = build_0.store_int(v'liquidityAfter, 257);
     var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'bonusDelta, 257);
+    build_1 = build_1.store_int(v'bonusAfter, 257);
     build_1 = build_1.store_int(v'unlockTimeAfter, 257);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $RBFPositionIncreasedEvent$_store_cell((slice, int, int, int) v) inline {
+cell $RBFPositionIncreasedEvent$_store_cell((slice, int, int, int, int, int) v) inline {
     return $RBFPositionIncreasedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((slice, int, int, int)) $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int unlockTimeAfter) inline {
-    return (account, liquidityDelta, liquidityAfter, unlockTimeAfter);
+((slice, int, int, int, int, int)) $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int unlockTimeAfter) inline {
+    return (account, liquidityDelta, liquidityAfter, bonusDelta, bonusAfter, unlockTimeAfter);
 }
 
 ;;
@@ -463,28 +465,30 @@ cell $DecreaseRBFPositionExecutedEvent$_store_cell((int, int) v) inline {
 
 ;;
 ;; Type: RBFPositionDecreasedEvent
-;; Header: 0x5bc7e914
-;; TLB: rbf_position_decreased_event#5bc7e914 account:address liquidityDelta:int257 liquidityAfter:int257 unlockTimeAfter:int257 = RBFPositionDecreasedEvent
+;; Header: 0x66180baf
+;; TLB: rbf_position_decreased_event#66180baf account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 received:int257 = RBFPositionDecreasedEvent
 ;;
 
-builder $RBFPositionDecreasedEvent$_store(builder build_0, (slice, int, int, int) v) inline {
-    var (v'account, v'liquidityDelta, v'liquidityAfter, v'unlockTimeAfter) = v;
-    build_0 = store_uint(build_0, 1539827988, 32);
+builder $RBFPositionDecreasedEvent$_store(builder build_0, (slice, int, int, int, int, int) v) inline_ref {
+    var (v'account, v'liquidityDelta, v'liquidityAfter, v'bonusDelta, v'bonusAfter, v'received) = v;
+    build_0 = store_uint(build_0, 1712851887, 32);
     build_0 = __tact_store_address(build_0, v'account);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
     build_0 = build_0.store_int(v'liquidityAfter, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'unlockTimeAfter, 257);
+    build_1 = build_1.store_int(v'bonusDelta, 257);
+    build_1 = build_1.store_int(v'bonusAfter, 257);
+    build_1 = build_1.store_int(v'received, 257);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $RBFPositionDecreasedEvent$_store_cell((slice, int, int, int) v) inline {
+cell $RBFPositionDecreasedEvent$_store_cell((slice, int, int, int, int, int) v) inline {
     return $RBFPositionDecreasedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((slice, int, int, int)) $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int unlockTimeAfter) inline {
-    return (account, liquidityDelta, liquidityAfter, unlockTimeAfter);
+((slice, int, int, int, int, int)) $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_received(slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int received) inline {
+    return (account, liquidityDelta, liquidityAfter, bonusDelta, bonusAfter, received);
 }
 
 ;;

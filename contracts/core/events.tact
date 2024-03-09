@@ -21,6 +21,8 @@ message RBFPositionIncreasedEvent {
     account: Address;
     liquidityDelta: Int;
     liquidityAfter: Int;
+    bonusDelta: Int;
+    bonusAfter: Int;
     unlockTimeAfter: Int;
 }
 
@@ -46,7 +48,9 @@ message RBFPositionDecreasedEvent {
     account: Address;
     liquidityDelta: Int;
     liquidityAfter: Int;
-    unlockTimeAfter: Int;
+    bonusDelta: Int;
+    bonusAfter: Int;
+    received: Int;
 }
 
 // global RBF

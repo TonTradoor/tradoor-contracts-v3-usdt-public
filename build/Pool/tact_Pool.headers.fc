@@ -130,10 +130,10 @@ builder $IncreaseRBFPositionExecutedEvent$_store(builder build_0, (int, int) v) 
 cell $IncreaseRBFPositionExecutedEvent$_store_cell((int, int) v) inline;
 
 ;; $RBFPositionIncreasedEvent$_store
-builder $RBFPositionIncreasedEvent$_store(builder build_0, (slice, int, int, int) v) inline;
+builder $RBFPositionIncreasedEvent$_store(builder build_0, (slice, int, int, int, int, int) v) inline_ref;
 
 ;; $RBFPositionIncreasedEvent$_store_cell
-cell $RBFPositionIncreasedEvent$_store_cell((slice, int, int, int) v) inline;
+cell $RBFPositionIncreasedEvent$_store_cell((slice, int, int, int, int, int) v) inline;
 
 ;; $DecreaseRBFPositionCreatedEvent$_store
 builder $DecreaseRBFPositionCreatedEvent$_store(builder build_0, (slice, int, int, int) v) inline;
@@ -154,10 +154,10 @@ builder $DecreaseRBFPositionExecutedEvent$_store(builder build_0, (int, int) v) 
 cell $DecreaseRBFPositionExecutedEvent$_store_cell((int, int) v) inline;
 
 ;; $RBFPositionDecreasedEvent$_store
-builder $RBFPositionDecreasedEvent$_store(builder build_0, (slice, int, int, int) v) inline;
+builder $RBFPositionDecreasedEvent$_store(builder build_0, (slice, int, int, int, int, int) v) inline_ref;
 
 ;; $RBFPositionDecreasedEvent$_store_cell
-cell $RBFPositionDecreasedEvent$_store_cell((slice, int, int, int) v) inline;
+cell $RBFPositionDecreasedEvent$_store_cell((slice, int, int, int, int, int) v) inline;
 
 ;; $GlobalRBFChangedEvent$_store
 builder $GlobalRBFChangedEvent$_store(builder build_0, (int, int) v) inline;
@@ -588,8 +588,8 @@ slice $Cell$_fun_asSlice(cell $self) impure inline;
 ;; $IncreaseRBFPositionExecutedEvent$_constructor_index_trxId
 ((int, int)) $IncreaseRBFPositionExecutedEvent$_constructor_index_trxId(int index, int trxId) inline;
 
-;; $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter
-((slice, int, int, int)) $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int unlockTimeAfter) inline;
+;; $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter
+((slice, int, int, int, int, int)) $RBFPositionIncreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int unlockTimeAfter) inline;
 
 ;; $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter
 ((int, int)) $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter(int riskBufferFundAfter, int liquidityAfter) inline;
@@ -606,8 +606,8 @@ slice $Cell$_fun_asSlice(cell $self) impure inline;
 ;; $DecreaseRBFPositionExecutedEvent$_constructor_index_trxId
 ((int, int)) $DecreaseRBFPositionExecutedEvent$_constructor_index_trxId(int index, int trxId) inline;
 
-;; $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter
-((slice, int, int, int)) $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_unlockTimeAfter(slice account, int liquidityDelta, int liquidityAfter, int unlockTimeAfter) inline;
+;; $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_received
+((slice, int, int, int, int, int)) $RBFPositionDecreasedEvent$_constructor_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_received(slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int received) inline;
 
 ;; $IncreaseLPPositionCancelledEvent$_constructor_index_trxId
 ((int, int)) $IncreaseLPPositionCancelledEvent$_constructor_index_trxId(int index, int trxId) inline;
