@@ -71,14 +71,6 @@ message LiquidateLPPosition {
 
 // ============================ Perp ================================ //
 // increase market Perp
-message CreateIncreasePerpPositionMarketOrder {
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    acceptablePrice: Int;
-}
-
 message CancelIncreasePerpPositionMarketOrder {
     index: Int;
     trxId: Int;

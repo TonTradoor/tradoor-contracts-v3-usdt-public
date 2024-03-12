@@ -993,9 +993,59 @@ contract Pool with Deployable, Ownable, fundingRate {
     }
 
     // ============================ Perp ================================ //
-    fun handleCreateIncreasePerpPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, marginDelta: Int, liquidityDelta: Int) {
+    // fun handleCreateIncreasePerpPositionMarketOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, 
+    //     tokenId: Int, isLong: Bool, marginDelta: Int, liquidityDelta: Int, acceptablePrice: Int) {
+    //     dump("handleCreateIncreasePerpPositionMarketOrder");
+    //     let ctx: Context = context();
 
-    }
+    //     if (jettonFromAmount < marginDelta) {
+    //         self.refundLiquidity(queryId, jettonFromAmount, account);
+    //         dump("refund not enough liquidity");
+    //         return;
+    //     }
+    //     // check executionFee
+    //     if (ctx.value < executionFee) {
+    //         dump("execution fee not enough");
+    //         self.refundLiquidity(queryId, jettonFromAmount, account);
+    //         return;
+    //     }
+
+    //     // get index next
+    //     let indexOpt: Int = self.increasePerpPositionMarketIndexsNext.get(tokenId);
+    //     let index: Int = 1;
+    //     if (indexOpt != null) {
+    //         index = indexOpt!!;
+    //     }
+
+    //     self.increasePerpPositionMarketIndexNext = self.increasePerpPositionMarketIndexNext + 1;
+
+    //     // get order list by tokenId
+    //     let increasePerpPositionMarketOrdersOpt: IncreasePerpPositionMarketOrders? = self.increasePerpPositionMarketOrders.get(tokenId);
+    //     let increasePerpPositionMarketOrders: IncreasePerpPositionMarketOrders = IncreasePerpPositionMarketOrders{};
+    //     if (increasePerpPositionMarketOrdersOpt != null) {
+    //         increasePerpPositionMarketOrders = increasePerpPositionMarketOrdersOpt!!;
+    //     }
+
+    //     // get order
+    //     increasePerpPositionMarketOrders.get();
+
+    //     self.increasePerpPositionMarketOrders.set(index, IncreaseLPPositionOrder{
+    //         account: account,
+    //         marginDelta: marginDelta,
+    //         liquidityDelta: liquidityDelta,
+    //         executionFee: executionFee,
+    //         blockTime: now()
+    //     });
+
+    //     // event
+    //     emit(IncreaseLPPositionCreatedEvent{
+    //         account: account,
+    //         marginDelta: marginDelta,
+    //         liquidityDelta: liquidityDelta,
+    //         executionFee: executionFee,
+    //         index: index
+    //     }.toCell());
+    // }
 
     receive(msg: CancelIncreasePerpPositionMarketOrder) {
 

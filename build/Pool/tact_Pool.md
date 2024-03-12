@@ -3,7 +3,7 @@ Contract: Pool
 BOC Size: 19627 bytes
 
 # Types
-Total Types: 101
+Total Types: 100
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -84,10 +84,6 @@ Signature: `ExecuteDecreaseLPPositionOrder{index:int257,trxId:int257}`
 ## LiquidateLPPosition
 TLB: `liquidate_lp_position#f3f83120 account:address trxId:int257 = LiquidateLPPosition`
 Signature: `LiquidateLPPosition{account:address,trxId:int257}`
-
-## CreateIncreasePerpPositionMarketOrder
-TLB: `create_increase_perp_position_market_order#f3c953fe token:^string isLong:bool marginDelta:int257 sizeDelta:int257 acceptablePrice:int257 = CreateIncreasePerpPositionMarketOrder`
-Signature: `CreateIncreasePerpPositionMarketOrder{token:^string,isLong:bool,marginDelta:int257,sizeDelta:int257,acceptablePrice:int257}`
 
 ## CancelIncreasePerpPositionMarketOrder
 TLB: `cancel_increase_perp_position_market_order#fc741917 index:int257 trxId:int257 = CancelIncreasePerpPositionMarketOrder`
