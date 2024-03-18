@@ -169,7 +169,7 @@ describe('Pool', () => {
 
 
         let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
-        let forwardPayload =beginCell().storeRef(payloadCell).endCell();
+        let forwardPayload = beginCell().storeRef(payloadCell).endCell();
 
         let poolJettonBalanceBefore = 0n;
 

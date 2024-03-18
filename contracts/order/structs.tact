@@ -1,4 +1,4 @@
-// ============================ RBF ================================ //
+// ============================ Config ================================ //
 struct TokenConfig {
     name: String;
     enable: Bool;
@@ -12,12 +12,38 @@ struct TokenConfig {
     maxFundingRate: Int;
 }
 
+struct ConfigData {
+    minTimeDelayExecutor: Int;
+    maxTimeDelayExecutor: Int;
+    minTimeDelayTrader: Int;
+    minPendingTimeDelayCompensator: Int;
+    rbfLockTime: Int;
+    minExecutionFee: Int;
+    gasConsumption: Int;
+    minTonsForStorage: Int;
+    usdtWallet: Address;
+    pool: Address;
+}
+
+// ============================ Jetton ================================ //
+struct JettonCallback {
+    orderType: Int;
+    orderId: Int;
+    tokenId: Int?;
+    amount: Int;
+    trxId: Int;
+}
+
 // ============================ RBF ================================ //
 struct IncreaseRBFPositionOrder {
     account: Address;
     liquidityDelta: Int;
     executionFee: Int;
     blockTime: Int;
+    isPending: Bool;
+    pendingTime: Int;
+    callbackId: Int?;
+    executionFeeReceiver: Address?;
 }
 
 struct DecreaseRBFPositionOrder {
@@ -25,17 +51,10 @@ struct DecreaseRBFPositionOrder {
     liquidityDelta: Int;
     executionFee: Int;
     blockTime: Int;
-}
-
-struct RBFPosition {
-    liquidity: Int;
-    bonus: Int;
-    unlockTime: Int;
-}
-
-struct GlobalRBFPosition {
-    riskBufferFund: Int;
-    liquidity: Int;
+    isPending: Bool;
+    pendingTime: Int;
+    callbackId: Int?;
+    executionFeeReceiver: Address?;
 }
 
 // ============================ LP ================================ //
@@ -45,6 +64,8 @@ struct IncreaseLPPositionOrder {
     liquidityDelta: Int;
     executionFee: Int;
     blockTime: Int;
+    isPending: Bool;
+    pendingTime: Int;
 }
 
 struct DecreaseLPPositionOrder {
@@ -53,19 +74,8 @@ struct DecreaseLPPositionOrder {
     liquidityDelta: Int;
     executionFee: Int;
     blockTime: Int;
-}
-
-struct LPPosition {
-    margin: Int;
-    liquidity: Int;
-    entryFundingFeeGrowth: Int;
-    entryTradingFeeGrowth: Int;
-}
-
-struct GlobalLPPosition {
-    netSize: Int;
-    isLong: Bool;
-    entryPrice: Int;
+    isPending: Bool;
+    pendingTime: Int;
 }
 
 // ============================ Perp ================================ //
@@ -146,72 +156,4 @@ struct PerpPosition {
     size: Int;
     entryPrice: Int;
     entryFundingFeeGrowth: Int;
-}
-
-// funding rate //
-
-struct PriceVertex {
-    size: Int;
-    premiumRateX96: Int;
-}
-
-struct PriceState {
-    // uint128 maxPriceImpactLiquidity;
-    maxPriceImpactLiquidity: Int;
-    // uint128 premiumRateX96;
-    premiumRateX96: Int;
-    // PriceVertex[7] priceVertices;
-    priceVertices: map<Int, PriceVertex>;
-    // uint8 pendingVertexIndex;
-    pendingVertexIndex: Int;
-    // uint8 liquidationVertexIndex;
-    liquidationVertexIndex: Int;
-    // uint8 currentVertexIndex;
-    currentVertexIndex: Int;
-    // uint128[7] liquidationBufferNetSizes;
-    liquidationBufferNetSizes: map<Int, Int>;
-}
-
-struct GlobalRiskBufferFund {
-    riskBufferFund: Int;
-    liquidity: Int;
-}
-
-struct GlobalPosition {
-    longSize: Int;
-    shortSize: Int;
-    longFundingRateGrowthX96: Int;
-    shortFundingRateGrowthX96: Int;
-}
-
-struct GlobalLiquidityPosition {
-    netSize: Int;
-    liquidationBufferNetSize: Int;
-    entryPriceX96: Int;
-    side: Bool;
-    liquidity: Int;
-    realizedProfitGrowthX64: Int;
-}
-
-struct GlobalFundingRateSample {
-    lastAdjustFundingRateTime: Int;
-    sampleCount: Int;
-    cumulativePremiumRateX96: Int;
-}
-
-struct PreviousGlobalFundingRate {
-    longFundingRateGrowthX96: Int;
-    shortFundingRateGrowthX96: Int;
-}
-
-struct FundingRateGrowthX96 {
-    clampedFundingRateDeltaX96: Int;
-    longFundingRateGrowthAfterX96: Int;
-    shortFundingRateGrowthAfterX96: Int;
-}
-
-struct SamplePremiumRateResult {
-    sample: GlobalFundingRateSample;
-    shouldAdjustFundingRate: Bool;
-    fundingRateDeltaX96: Int;
 }
