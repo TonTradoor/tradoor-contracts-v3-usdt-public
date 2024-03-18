@@ -23,6 +23,8 @@ struct ConfigData {
     minTonsForStorage: Int;
     usdtWallet: Address;
     pool: Address;
+    isExecutor: Bool?;
+    isCompensator: Bool?;
 }
 
 // ============================ Jetton ================================ //
@@ -35,7 +37,8 @@ struct JettonCallback {
 }
 
 // ============================ RBF ================================ //
-struct IncreaseRBFPositionOrder {
+struct RBFPositionOrder {
+    isIncrease: Bool;
     account: Address;
     liquidityDelta: Int;
     executionFee: Int;
@@ -46,15 +49,9 @@ struct IncreaseRBFPositionOrder {
     executionFeeReceiver: Address?;
 }
 
-struct DecreaseRBFPositionOrder {
-    account: Address;
-    liquidityDelta: Int;
-    executionFee: Int;
-    blockTime: Int;
-    isPending: Bool;
-    pendingTime: Int;
-    callbackId: Int?;
-    executionFeeReceiver: Address?;
+struct RBFPositionOrderData {
+    rbfPositionOrderIndexNext: Int;
+    rbfPositionOrder: RBFPositionOrder?;
 }
 
 // ============================ LP ================================ //

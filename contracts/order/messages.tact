@@ -11,29 +11,53 @@ message(0xd53276db) TokenExcesses {
     queryId: Int as uint64;
 }
 
+// ============================ admin ================================ //
+message UpdateConfig {
+    executor: Address?;
+    enableExecutor: Bool?;
+    compensator: Address?;
+    enableCompensator: Bool?;
+    minTimeDelayExecutor: Int?;
+    maxTimeDelayExecutor: Int?;
+    minTimeDelayTrader: Int?;
+    minPendingTimeDelayCompensator: Int?;
+    rbfLockTime: Int?;
+    minExecutionFee: Int?;
+    gasConsumption: Int?;
+    minTonsForStorage: Int?;
+    usdtWallet: Address?;
+    pool: Address?;
+}
+
 // ============================ RBF ================================ //
-// increase RBF
-message CancelIncreaseRBFPositionOrder {
+message CreateDecreaseRBFPositionOrder {
+    executionFee: Int;
+    liquidityDelta: Int;
+}
+
+message CancelRBFPositionOrder {
     orderId: Int;
     trxId: Int;
     executionFeeReceiver: Address?;
 }
 
-message ExecuteIncreaseRBFPositionOrder {
+message ExecuteRBFPositionOrder {
     orderId: Int;
     trxId: Int;
     executionFeeReceiver: Address?;
 }
 
-message IncreaseRBFPosition {
+message UpdateRBFPosition {
+    isIncrease: Bool;
     orderId: Int as uint64;
     account: Address;
     liquidityDelta: Int;
     trxId: Int as uint64;
 }
 
-message IncreaseRBFPositionSuccess {
-    orderId: Int as uint64;
+message UpdateRBFPositionSuccess {
+    orderId: Int;
+    receive: Int;
     trxId: Int as uint64;
 }
 
@@ -43,37 +67,6 @@ message CompensateIncreaseRBFPositionOrder {
     positionSuccess: Bool;
     refundSuccess: Bool;
     executionFeeReceiver: Address?;
-}
-
-// decrease RBF
-message CreateDecreaseRBFPositionOrder {
-    executionFee: Int;
-    liquidityDelta: Int;
-}
-
-message CancelDecreaseRBFPositionOrder {
-    orderId: Int;
-    trxId: Int;
-    executionFeeReceiver: Address?;
-}
-
-message ExecuteDecreaseRBFPositionOrder {
-    orderId: Int;
-    trxId: Int;
-    executionFeeReceiver: Address?;
-}
-
-message DecreaseRBFPosition {
-    orderId: Int;
-    account: Address;
-    liquidityDelta: Int;
-    trxId: Int as uint64;
-}
-
-message DecreaseRBFPositionSuccess {
-    orderId: Int;
-    received: Int;
-    trxId: Int as uint64;
 }
 
 message CompensateDecreaseRBFPositionOrder {
@@ -193,28 +186,4 @@ message ExecuteDecreasePerpPositionLimitOrder {
     executionFeeReceiver: Address;
     orderId: Int;
     trxId: Int;
-}
-
-// ============================ admin ================================ //
-message SetExecutor {
-    executor: Address;
-    enable: Bool;
-}
-
-message SetCompensator {
-    compensator: Address;
-    enable: Bool;
-}
-
-message UpdateConfig {
-    minTimeDelayExecutor: Int?;
-    maxTimeDelayExecutor: Int?;
-    minTimeDelayTrader: Int?;
-    minPendingTimeDelayCompensator: Int?;
-    rbfLockTime: Int?;
-    minExecutionFee: Int?;
-    gasConsumption: Int?;
-    minTonsForStorage: Int?;
-    usdtWallet: Address?;
-    pool: Address?;
 }

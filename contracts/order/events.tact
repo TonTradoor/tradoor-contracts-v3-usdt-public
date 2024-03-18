@@ -1,36 +1,21 @@
 // ============================ RBF ================================ //
 // increase RBF
-message IncreaseRBFPositionOrderCreatedEvent {
+message RBFPositionOrderCreatedEvent {
+    isIncrease: Bool;
     account: Address;
     liquidityDelta: Int;
     executionFee: Int;
     orderId: Int;
 }
 
-message IncreaseRBFPositionOrderCancelledEvent {
+message RBFPositionOrderCancelledEvent {
+    isIncrease: Bool;
     orderId: Int;
     trxId: Int;
 }
 
-message IncreaseRBFPositionOrderExecutedEvent {
-    orderId: Int;
-    trxId: Int;
-}
-
-// decrease RBF
-message DecreaseRBFPositionOrderCreatedEvent {
-    account: Address;
-    liquidityDelta: Int;
-    executionFee: Int;
-    orderId: Int;
-}
-
-message DecreaseRBFPositionOrderCancelledEvent {
-    orderId: Int;
-    trxId: Int;
-}
-
-message DecreaseRBFPositionOrderExecutedEvent {
+message RBFPositionOrderExecutedEvent {
+    isIncrease: Bool;
     orderId: Int;
     trxId: Int;
 }
