@@ -38,7 +38,7 @@
     return (($self'minTimeDelayExecutor, $self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minPendingTimeDelayCompensator, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'tokenConfigs, $self'tokenIndexNext, $self'owner, $self'executors, $self'compensators, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'increaseLPPositionOrders, $self'increaseLPPositionOrderIndexNext, $self'increasePerpPositionMarketOrders, $self'increasePerpPositionMarketOrderIndexNext), __tact_not_null($isCompensatorOpt));
 }
 
-((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), (int, int, int, int, int, int, int, slice, slice, int, int)) $OrderBook$_fun_configData((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, slice $executor, slice $compensator) impure inline_ref {
+((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), (int, int, int, int, int, int, int, int, int, slice, slice)) $OrderBook$_fun_configData((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, slice $executor, slice $compensator) impure inline_ref {
     var (($self'minTimeDelayExecutor, $self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minPendingTimeDelayCompensator, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'tokenConfigs, $self'tokenIndexNext, $self'owner, $self'executors, $self'compensators, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'increaseLPPositionOrders, $self'increaseLPPositionOrderIndexNext, $self'increasePerpPositionMarketOrders, $self'increasePerpPositionMarketOrderIndexNext)) = $self;
     int $isExecutor = null();
     if ((~ null?($executor))) {
@@ -48,7 +48,7 @@
     if ((~ null?($compensator))) {
         $isCompensator = __tact_dict_get_slice_int($self'compensators, 267, __tact_not_null($compensator), 1);
     }
-    return (($self'minTimeDelayExecutor, $self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minPendingTimeDelayCompensator, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'tokenConfigs, $self'tokenIndexNext, $self'owner, $self'executors, $self'compensators, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'increaseLPPositionOrders, $self'increaseLPPositionOrderIndexNext, $self'increasePerpPositionMarketOrders, $self'increasePerpPositionMarketOrderIndexNext), $ConfigData$_constructor_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool_isExecutor_isCompensator($self'minTimeDelayExecutor, $self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minPendingTimeDelayCompensator, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $isExecutor, $isCompensator));
+    return (($self'minTimeDelayExecutor, $self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minPendingTimeDelayCompensator, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'tokenConfigs, $self'tokenIndexNext, $self'owner, $self'executors, $self'compensators, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'increaseLPPositionOrders, $self'increaseLPPositionOrderIndexNext, $self'increasePerpPositionMarketOrders, $self'increasePerpPositionMarketOrderIndexNext), $ConfigData$_constructor_isExecutor_isCompensator_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool($isExecutor, $isCompensator, $self'minTimeDelayExecutor, $self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minPendingTimeDelayCompensator, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool));
 }
 
 ((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), cell) $OrderBook$_fun_createJettonTransferBody((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, int $queryId, int $jettonAmount, slice $to, slice $responseDestination) impure inline_ref {
@@ -498,7 +498,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://Qmez57Ugy3H7w2dJN927dEHJo2bWNvfTekCr8eVDJM7zBN";
+    return "ipfs://QmViybVdz3UkHxPc5tt8nnBkawQeeCwugFTTqfsjvSHhVK";
 }
 
 _ lazy_deployment_completed() method_id {

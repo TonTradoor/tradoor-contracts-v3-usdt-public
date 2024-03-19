@@ -25,6 +25,8 @@ message RBFPositionDecreasedEvent {
 message GlobalRBFChangedEvent {
     riskBufferFundAfter: Int;
     liquidityAfter: Int;
+    tradingFee: Int;
+    liquidation: Int;
 }
 
 // ============================ LP ================================ //

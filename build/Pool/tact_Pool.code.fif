@@ -27,6 +27,8 @@ PROGRAM{
   DECLPROC $RBFPositionIncreasedEvent$_store_cell
   DECLPROC $RBFPositionDecreasedEvent$_store
   DECLPROC $RBFPositionDecreasedEvent$_store_cell
+  DECLPROC $GlobalRBFChangedEvent$_store
+  DECLPROC $GlobalRBFChangedEvent$_store_cell
   DECLPROC $TokenConfig$_load
   DECLPROC $TokenConfig$_as_optional
   DECLPROC $TokenConfig$_load_opt
@@ -66,6 +68,7 @@ PROGRAM{
   DECLPROC $Pool$_fun_tokenConfig
   DECLPROC $RBFPosition$_constructor_positionId_liquidity_bonus_unlockTime
   DECLPROC $RBFPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter
+  DECLPROC $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation
   DECLPROC $Pool$_fun_tokenEnabled
   DECLPROC $Pool$_fun_calculateUnrealizedPnL
   DECLPROC $Pool$_fun_calculateTotalGlobalUnrealizedPnl
@@ -547,6 +550,31 @@ PROGRAM{
     NEWC
     7 -ROLL
     $RBFPositionDecreasedEvent$_store INLINECALLDICT
+    ENDC
+  }>
+  $GlobalRBFChangedEvent$_store PROCINLINE:<{
+    1512070263 PUSHINT
+    s0 s5 XCHG2
+    32 STU
+    s1 s3 XCHG
+    257 PUSHINT
+    STIX
+    257 PUSHINT
+    STIX
+    257 PUSHINT
+    STIX
+    SWAP
+    NEWC
+    257 PUSHINT
+    STIX
+    ENDC
+    SWAP
+    STREF
+  }>
+  $GlobalRBFChangedEvent$_store_cell PROCINLINE:<{
+    NEWC
+    4 -ROLL
+    $GlobalRBFChangedEvent$_store INLINECALLDICT
     ENDC
   }>
   $TokenConfig$_load PROCREF:<{
@@ -1180,6 +1208,8 @@ PROGRAM{
   }>
   $RBFPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter PROCINLINE:<{
   }>
+  $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation PROCINLINE:<{
+  }>
   $Pool$_fun_tokenEnabled PROCREF:<{
     257 PUSHINT
     29 s() PUSH
@@ -1423,6 +1453,13 @@ PROGRAM{
     s0 16 s() XCHG
     $RBFPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter INLINECALLDICT
     $RBFPositionIncreasedEvent$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    0 PUSHINT
+    s11 s(-1) s(-1) PUXCPU
+    s12 PUSH
+    s0 s2 XCHG
+    $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation INLINECALLDICT
+    $GlobalRBFChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     23 s() 29 s() XCHG
     22 s() 28 s() XCHG
@@ -1669,6 +1706,13 @@ PROGRAM{
     33 s() PUSH
     $RBFPositionDecreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_receive INLINECALLDICT
     $RBFPositionDecreasedEvent$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    0 PUSHINT
+    s11 s(-1) s(-1) PUXCPU
+    28 s() PUSH
+    s0 s2 XCHG
+    $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation INLINECALLDICT
+    $GlobalRBFChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     23 s() 30 s() XCHG
     22 s() 29 s() XCHG
@@ -2278,7 +2322,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5443375243416250484354705359635a533355575074736b6d71637a43593662344e58433266527443416a4e} PUSHSLICE
+    x{697066733a2f2f516d54446a4c4562394561706534514832716b7663316d617a79444c3136556d4375526150716141577448357479} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

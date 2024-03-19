@@ -140,6 +140,8 @@ contract OrderBook with Deployable, Ownable {
         }
 
         return ConfigData{
+            isExecutor: isExecutor,
+            isCompensator: isCompensator,
             minTimeDelayExecutor: self.minTimeDelayExecutor,
             maxTimeDelayExecutor: self.maxTimeDelayExecutor,
             minTimeDelayTrader: self.minTimeDelayTrader,
@@ -148,9 +150,7 @@ contract OrderBook with Deployable, Ownable {
             gasConsumption: self.gasConsumption,
             minTonsForStorage: self.minTonsForStorage,
             usdtWallet: self.usdtWallet,
-            pool: self.pool,
-            isExecutor: isExecutor,
-            isCompensator: isCompensator
+            pool: self.pool
         };
     }
 

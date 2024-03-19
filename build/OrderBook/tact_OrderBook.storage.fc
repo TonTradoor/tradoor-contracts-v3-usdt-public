@@ -349,16 +349,16 @@ cell $RBFPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: ConfigData
-;; TLB: _ minTimeDelayExecutor:int257 maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minPendingTimeDelayCompensator:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address isExecutor:Maybe bool isCompensator:Maybe bool = ConfigData
+;; TLB: _ isExecutor:Maybe bool isCompensator:Maybe bool minTimeDelayExecutor:int257 maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minPendingTimeDelayCompensator:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData
 ;;
 
-(int, int, int, int, int, int, int, slice, slice, int, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, slice, slice, int, int)) v) inline {
-    var (v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minPendingTimeDelayCompensator, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'isExecutor, v'isCompensator) = v; 
-    return (v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minPendingTimeDelayCompensator, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'isExecutor, v'isCompensator);
+(int, int, int, int, int, int, int, int, int, slice, slice) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, int, slice, slice)) v) inline {
+    var (v'isExecutor, v'isCompensator, v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minPendingTimeDelayCompensator, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool) = v; 
+    return (v'isExecutor, v'isCompensator, v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minPendingTimeDelayCompensator, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool);
 }
 
-((int, int, int, int, int, int, int, slice, slice, int, int)) $ConfigData$_constructor_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool_isExecutor_isCompensator(int minTimeDelayExecutor, int maxTimeDelayExecutor, int minTimeDelayTrader, int minPendingTimeDelayCompensator, int minExecutionFee, int gasConsumption, int minTonsForStorage, slice usdtWallet, slice pool, int isExecutor, int isCompensator) inline {
-    return (minTimeDelayExecutor, maxTimeDelayExecutor, minTimeDelayTrader, minPendingTimeDelayCompensator, minExecutionFee, gasConsumption, minTonsForStorage, usdtWallet, pool, isExecutor, isCompensator);
+((int, int, int, int, int, int, int, int, int, slice, slice)) $ConfigData$_constructor_isExecutor_isCompensator_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool(int isExecutor, int isCompensator, int minTimeDelayExecutor, int maxTimeDelayExecutor, int minTimeDelayTrader, int minPendingTimeDelayCompensator, int minExecutionFee, int gasConsumption, int minTonsForStorage, slice usdtWallet, slice pool) inline {
+    return (isExecutor, isCompensator, minTimeDelayExecutor, maxTimeDelayExecutor, minTimeDelayTrader, minPendingTimeDelayCompensator, minExecutionFee, gasConsumption, minTonsForStorage, usdtWallet, pool);
 }
 
 ;;

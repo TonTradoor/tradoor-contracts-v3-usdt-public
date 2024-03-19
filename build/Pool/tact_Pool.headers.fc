@@ -87,6 +87,12 @@ builder $RBFPositionDecreasedEvent$_store(builder build_0, (int, slice, int, int
 ;; $RBFPositionDecreasedEvent$_store_cell
 cell $RBFPositionDecreasedEvent$_store_cell((int, slice, int, int, int, int, int) v) inline;
 
+;; $GlobalRBFChangedEvent$_store
+builder $GlobalRBFChangedEvent$_store(builder build_0, (int, int, int, int) v) inline;
+
+;; $GlobalRBFChangedEvent$_store_cell
+cell $GlobalRBFChangedEvent$_store_cell((int, int, int, int) v) inline;
+
 ;; $TokenConfig$_load
 (slice, ((slice, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref;
 
@@ -203,6 +209,9 @@ tuple $RBFPosition$_to_opt_external(tuple v) inline;
 
 ;; $RBFPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter
 ((int, slice, int, int, int, int, int)) $RBFPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter(int positionId, slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int unlockTimeAfter) inline;
+
+;; $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation
+((int, int, int, int)) $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation(int riskBufferFundAfter, int liquidityAfter, int tradingFee, int liquidation) inline;
 
 ;; $Pool$_fun_tokenEnabled
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell, cell, cell, cell, cell, cell), int) $Pool$_fun_tokenEnabled((int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell, cell, cell, cell, cell, cell) $self, int $tokenIndex) impure inline_ref;

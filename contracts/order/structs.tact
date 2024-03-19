@@ -5,6 +5,8 @@ struct TokenConfig {
 }
 
 struct ConfigData {
+    isExecutor: Bool?;
+    isCompensator: Bool?;
     minTimeDelayExecutor: Int;
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
@@ -14,8 +16,6 @@ struct ConfigData {
     minTonsForStorage: Int;
     usdtWallet: Address;
     pool: Address;
-    isExecutor: Bool?;
-    isCompensator: Bool?;
 }
 
 // ============================ Jetton ================================ //

@@ -98,6 +98,7 @@
     $self'globalRBFPosition'riskBufferFund = ($self'globalRBFPosition'riskBufferFund + $liquidityDelta);
     $self'globalRBFPosition'liquidity = ($self'globalRBFPosition'liquidity + $liquidityDelta);
     $global_emit($RBFPositionIncreasedEvent$_store_cell($RBFPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter($rbfPosition'positionId, $account, $liquidityDelta, $rbfPosition'liquidity, $bonus, $rbfPosition'bonus, $rbfPosition'unlockTime)));
+    $global_emit($GlobalRBFChangedEvent$_store_cell($GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity, 0, 0)));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates), ());
 }
 
@@ -145,6 +146,7 @@
     $self'globalRBFPosition'riskBufferFund = ($self'globalRBFPosition'riskBufferFund - $receive);
     $self'globalRBFPosition'liquidity = ($self'globalRBFPosition'liquidity - $liquidityDelta);
     $global_emit($RBFPositionDecreasedEvent$_store_cell($RBFPositionDecreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_receive($rbfPosition'positionId, $account, $liquidityDelta, $rbfPosition'liquidity, $bonus, $rbfPosition'bonus, $receive)));
+    $global_emit($GlobalRBFChangedEvent$_store_cell($GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity, 0, 0)));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates), $receive);
 }
 
@@ -314,7 +316,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmTC7RCAbPHCTpSYcZS3UWPtskmqczCY6b4NXC2fRtCAjN";
+    return "ipfs://QmTDjLEb9Eape4QH2qkvc1mazyDL16UmCuRaPqaAWtH5ty";
 }
 
 _ lazy_deployment_completed() method_id {

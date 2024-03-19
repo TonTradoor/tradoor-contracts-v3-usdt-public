@@ -175,7 +175,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, s
 _ $Context$_get_value((int, slice, int, slice) v) inline;
 
 ;; $ConfigData$_to_external
-(int, int, int, int, int, int, int, slice, slice, int, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, slice, slice, int, int)) v) inline;
+(int, int, int, int, int, int, int, int, int, slice, slice) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, int, slice, slice)) v) inline;
 
 ;; $RBFPositionOrder$_to_tuple
 tuple $RBFPositionOrder$_to_tuple(((int, slice, int, int, int, int, int, int, slice)) v) inline;
@@ -210,11 +210,11 @@ slice $Cell$_fun_asSlice(cell $self) impure inline;
 ;; $OrderBook$_fun_isCompensator
 ((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), int) $OrderBook$_fun_isCompensator((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, slice $account) impure inline_ref;
 
-;; $ConfigData$_constructor_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool_isExecutor_isCompensator
-((int, int, int, int, int, int, int, slice, slice, int, int)) $ConfigData$_constructor_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool_isExecutor_isCompensator(int minTimeDelayExecutor, int maxTimeDelayExecutor, int minTimeDelayTrader, int minPendingTimeDelayCompensator, int minExecutionFee, int gasConsumption, int minTonsForStorage, slice usdtWallet, slice pool, int isExecutor, int isCompensator) inline;
+;; $ConfigData$_constructor_isExecutor_isCompensator_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool
+((int, int, int, int, int, int, int, int, int, slice, slice)) $ConfigData$_constructor_isExecutor_isCompensator_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool(int isExecutor, int isCompensator, int minTimeDelayExecutor, int maxTimeDelayExecutor, int minTimeDelayTrader, int minPendingTimeDelayCompensator, int minExecutionFee, int gasConsumption, int minTonsForStorage, slice usdtWallet, slice pool) inline;
 
 ;; $OrderBook$_fun_configData
-((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), (int, int, int, int, int, int, int, slice, slice, int, int)) $OrderBook$_fun_configData((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, slice $executor, slice $compensator) impure inline_ref;
+((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), (int, int, int, int, int, int, int, int, int, slice, slice)) $OrderBook$_fun_configData((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, slice $executor, slice $compensator) impure inline_ref;
 
 ;; $SendParameters$_constructor_to_value_mode_bounce_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice to, int value, int mode, int bounce, cell body) inline;

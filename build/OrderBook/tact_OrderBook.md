@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 8749 bytes
+BOC Size: 8740 bytes
 
 # Types
 Total Types: 70
@@ -230,8 +230,8 @@ TLB: `_ name:^string enable:bool = TokenConfig`
 Signature: `TokenConfig{name:^string,enable:bool}`
 
 ## ConfigData
-TLB: `_ minTimeDelayExecutor:int257 maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minPendingTimeDelayCompensator:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address isExecutor:Maybe bool isCompensator:Maybe bool = ConfigData`
-Signature: `ConfigData{minTimeDelayExecutor:int257,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minPendingTimeDelayCompensator:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address,isExecutor:Maybe bool,isCompensator:Maybe bool}`
+TLB: `_ isExecutor:Maybe bool isCompensator:Maybe bool minTimeDelayExecutor:int257 maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minPendingTimeDelayCompensator:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,isCompensator:Maybe bool,minTimeDelayExecutor:int257,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minPendingTimeDelayCompensator:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address}`
 
 ## JettonCallback
 TLB: `_ orderType:int257 orderId:int257 tokenId:Maybe int257 amount:int257 trxId:int257 = JettonCallback`

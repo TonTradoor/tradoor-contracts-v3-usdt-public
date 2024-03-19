@@ -250,6 +250,12 @@ contract Pool with Deployable, Ownable, fundingRate {
             bonusAfter: rbfPosition.bonus,
             unlockTimeAfter: rbfPosition.unlockTime
         }.toCell());
+        emit(GlobalRBFChangedEvent{
+            riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
+            liquidityAfter: self.globalRBFPosition.liquidity,
+            tradingFee: 0,
+            liquidation: 0
+        }.toCell());
     }
 
     fun decreasePosition(account: Address, liquidityDelta: Int): Int {
@@ -329,7 +335,12 @@ contract Pool with Deployable, Ownable, fundingRate {
             bonusAfter: rbfPosition.bonus,
             receive: receive
         }.toCell());
-
+        emit(GlobalRBFChangedEvent{
+            riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
+            liquidityAfter: self.globalRBFPosition.liquidity,
+            tradingFee: 0,
+            liquidation: 0
+        }.toCell());
         return receive;
     }
 

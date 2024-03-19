@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 5781 bytes
+BOC Size: 5925 bytes
 
 # Types
 Total Types: 89
@@ -150,8 +150,8 @@ TLB: `rbf_position_decreased_event#61a74737 positionId:int257 account:address li
 Signature: `RBFPositionDecreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,receive:int257}`
 
 ## GlobalRBFChangedEvent
-TLB: `global_rbf_changed_event#fd5108e7 riskBufferFundAfter:int257 liquidityAfter:int257 = GlobalRBFChangedEvent`
-Signature: `GlobalRBFChangedEvent{riskBufferFundAfter:int257,liquidityAfter:int257}`
+TLB: `global_rbf_changed_event#5a205c77 riskBufferFundAfter:int257 liquidityAfter:int257 tradingFee:int257 liquidation:int257 = GlobalRBFChangedEvent`
+Signature: `GlobalRBFChangedEvent{riskBufferFundAfter:int257,liquidityAfter:int257,tradingFee:int257,liquidation:int257}`
 
 ## IncreaseLPPositionCreatedEvent
 TLB: `increase_lp_position_created_event#eb182e8c account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseLPPositionCreatedEvent`

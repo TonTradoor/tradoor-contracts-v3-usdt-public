@@ -68,7 +68,7 @@ PROGRAM{
   DECLPROC $Cell$_fun_asSlice
   DECLPROC $OrderBook$_fun_isExecutor
   DECLPROC $OrderBook$_fun_isCompensator
-  DECLPROC $ConfigData$_constructor_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool_isExecutor_isCompensator
+  DECLPROC $ConfigData$_constructor_isExecutor_isCompensator_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool
   DECLPROC $OrderBook$_fun_configData
   DECLPROC $SendParameters$_constructor_to_value_mode_bounce_body
   DECLPROC $OrderBook$_fun_createJettonTransferBody
@@ -1214,7 +1214,7 @@ PROGRAM{
     }>
     __tact_not_null INLINECALLDICT
   }>
-  $ConfigData$_constructor_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool_isExecutor_isCompensator PROCINLINE:<{
+  $ConfigData$_constructor_isExecutor_isCompensator_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool PROCINLINE:<{
   }>
   $OrderBook$_fun_configData PROCREF:<{
     PUSHNULL
@@ -1250,24 +1250,15 @@ PROGRAM{
       NIP
     }>
     23 s() PUSH
-    s0 s2 XCHG
     23 s() PUSH
-    s0 s2 XCHG
     23 s() PUSH
-    s0 s2 XCHG
     23 s() PUSH
-    s0 s2 XCHG
     23 s() PUSH
-    s0 s2 XCHG
     23 s() PUSH
-    s0 s2 XCHG
     23 s() PUSH
-    s0 s2 XCHG
     23 s() PUSH
-    s0 s2 XCHG
     23 s() PUSH
-    -ROT
-    $ConfigData$_constructor_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool_isExecutor_isCompensator INLINECALLDICT
+    $ConfigData$_constructor_isExecutor_isCompensator_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minPendingTimeDelayCompensator_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool INLINECALLDICT
   }>
   $SendParameters$_constructor_to_value_mode_bounce_body PROCINLINE:<{
     s1 s4 XCHG
@@ -3134,7 +3125,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d657a35375567793348377732644a4e3932376445484a6f3262574e766654656b4372386556444a4d377a424e} PUSHSLICE
+    x{697066733a2f2f516d5669796256647a33556b48785063357474386e6e426b6177516565437775674654547166736a76534868564b} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

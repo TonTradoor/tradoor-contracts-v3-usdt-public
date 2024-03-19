@@ -231,6 +231,32 @@ cell $RBFPositionDecreasedEvent$_store_cell((int, slice, int, int, int, int, int
 }
 
 ;;
+;; Type: GlobalRBFChangedEvent
+;; Header: 0x5a205c77
+;; TLB: global_rbf_changed_event#5a205c77 riskBufferFundAfter:int257 liquidityAfter:int257 tradingFee:int257 liquidation:int257 = GlobalRBFChangedEvent
+;;
+
+builder $GlobalRBFChangedEvent$_store(builder build_0, (int, int, int, int) v) inline {
+    var (v'riskBufferFundAfter, v'liquidityAfter, v'tradingFee, v'liquidation) = v;
+    build_0 = store_uint(build_0, 1512070263, 32);
+    build_0 = build_0.store_int(v'riskBufferFundAfter, 257);
+    build_0 = build_0.store_int(v'liquidityAfter, 257);
+    build_0 = build_0.store_int(v'tradingFee, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'liquidation, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $GlobalRBFChangedEvent$_store_cell((int, int, int, int) v) inline {
+    return $GlobalRBFChangedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, int, int)) $GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation(int riskBufferFundAfter, int liquidityAfter, int tradingFee, int liquidation) inline {
+    return (riskBufferFundAfter, liquidityAfter, tradingFee, liquidation);
+}
+
+;;
 ;; Type: ConfigData
 ;; TLB: _ rbfLockTime:int257 bonusFactor:int257 minLPMargin:int257 maxLPLeverage:int257 lpLiquidationFee:int257 lpMaxRiskRate:int257 orderBook:address = ConfigData
 ;;
