@@ -12,8 +12,6 @@ contract OrderBook with Deployable, Ownable {
     maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
     minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
     minPendingTimeDelayCompensator: Int = 15 * 60; // compendator execute after 15min
-    // rbfLockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
-    rbfLockTime: Int = 5 * 60; // TODO lock 5 min for test
 
     minExecutionFee: Int = ton("0.1"); // fee for every operation
     gasConsumption: Int = ton("0.05"); // min consumption gas
@@ -92,9 +90,6 @@ contract OrderBook with Deployable, Ownable {
         if (msg.minPendingTimeDelayCompensator != null){
             self.minPendingTimeDelayCompensator = msg.minPendingTimeDelayCompensator!!;
         }
-        if (msg.rbfLockTime != null){
-            self.rbfLockTime = msg.rbfLockTime!!;
-        }
         if (msg.minExecutionFee != null){
             self.minExecutionFee = msg.minExecutionFee!!;
         }
@@ -149,7 +144,6 @@ contract OrderBook with Deployable, Ownable {
             maxTimeDelayExecutor: self.maxTimeDelayExecutor,
             minTimeDelayTrader: self.minTimeDelayTrader,
             minPendingTimeDelayCompensator: self.minPendingTimeDelayCompensator,
-            rbfLockTime: self.rbfLockTime,
             minExecutionFee: self.minExecutionFee,
             gasConsumption: self.gasConsumption,
             minTonsForStorage: self.minTonsForStorage,
@@ -413,6 +407,7 @@ contract OrderBook with Deployable, Ownable {
         order.pendingTime = now();
         self.rbfPositionOrders.set(msg.orderId, order);
 
+        // send update position msg
         send(SendParameters{
             to: self.pool,
             value: 0,

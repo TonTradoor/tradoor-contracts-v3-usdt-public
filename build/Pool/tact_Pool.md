@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 19627 bytes
+BOC Size: 5781 bytes
 
 # Types
-Total Types: 100
+Total Types: 89
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -37,9 +37,13 @@ Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
 TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
-## TokenNotification
-TLB: `token_notification#7362d09c queryId:uint64 amount:coins from:address forwardPayload:remainder<slice> = TokenNotification`
-Signature: `TokenNotification{queryId:uint64,amount:coins,from:address,forwardPayload:remainder<slice>}`
+## UpdateConfig
+TLB: `update_config#4d35a99c gasConsumption:Maybe int257 minTonsForStorage:Maybe int257 rbfLockTime:Maybe int257 bonusFactor:Maybe int257 minLPMargin:Maybe int257 maxLPLeverage:Maybe int257 lpLiquidationFee:Maybe int257 lpMaxRiskRate:Maybe int257 orderBook:Maybe address = UpdateConfig`
+Signature: `UpdateConfig{gasConsumption:Maybe int257,minTonsForStorage:Maybe int257,rbfLockTime:Maybe int257,bonusFactor:Maybe int257,minLPMargin:Maybe int257,maxLPLeverage:Maybe int257,lpLiquidationFee:Maybe int257,lpMaxRiskRate:Maybe int257,orderBook:Maybe address}`
+
+## UpdateTokenConfig
+TLB: `update_token_config#8ed4d7aa tokenId:int257 name:Maybe ^string enable:Maybe bool minMarginPerPosition:Maybe int257 maxLeveragePerPosition:Maybe int257 liquidationFeeRatePerPosition:Maybe int257 liquidationExecutionFee:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 = UpdateTokenConfig`
+Signature: `UpdateTokenConfig{tokenId:int257,name:Maybe ^string,enable:Maybe bool,minMarginPerPosition:Maybe int257,maxLeveragePerPosition:Maybe int257,liquidationFeeRatePerPosition:Maybe int257,liquidationExecutionFee:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257}`
 
 ## CancelIncreaseRBFPositionOrder
 TLB: `cancel_increase_rbf_position_order#0c1d6024 index:int257 trxId:int257 = CancelIncreaseRBFPositionOrder`
@@ -60,6 +64,14 @@ Signature: `CancelDecreaseRBFPositionOrder{index:int257,trxId:int257}`
 ## ExecuteDecreaseRBFPositionOrder
 TLB: `execute_decrease_rbf_position_order#27eb7733 index:int257 trxId:int257 = ExecuteDecreaseRBFPositionOrder`
 Signature: `ExecuteDecreaseRBFPositionOrder{index:int257,trxId:int257}`
+
+## UpdateRBFPosition
+TLB: `update_rbf_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 = UpdateRBFPosition`
+Signature: `UpdateRBFPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64}`
+
+## UpdateRBFPositionSuccess
+TLB: `update_rbf_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateRBFPositionSuccess`
+Signature: `UpdateRBFPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
 ## CancelIncreaseLPPositionOrder
 TLB: `cancel_increase_lp_position_order#7564ce0e index:int257 trxId:int257 = CancelIncreaseLPPositionOrder`
@@ -129,53 +141,13 @@ Signature: `CancelDecreasePerpPositionLimitOrder{index:int257,trxId:int257}`
 TLB: `execute_decrease_perp_position_limit_order#626f92d6 index:int257 trxId:int257 = ExecuteDecreasePerpPositionLimitOrder`
 Signature: `ExecuteDecreasePerpPositionLimitOrder{index:int257,trxId:int257}`
 
-## SetOperator
-TLB: `set_operator#5d7a8d75 operator:address = SetOperator`
-Signature: `SetOperator{operator:address}`
-
-## SetExecutor
-TLB: `set_executor#ecf070ec executor:address enable:bool = SetExecutor`
-Signature: `SetExecutor{executor:address,enable:bool}`
-
-## SetUSDC
-TLB: `set_usdc#68154757 usdc:address = SetUSDC`
-Signature: `SetUSDC{usdc:address}`
-
-## SetExecutionFeeReceiver
-TLB: `set_execution_fee_receiver#af1c196a receiver:address = SetExecutionFeeReceiver`
-Signature: `SetExecutionFeeReceiver{receiver:address}`
-
-## IncreaseRBFPositionCreatedEvent
-TLB: `increase_rbf_position_created_event#9e68162d account:address liquidityDelta:int257 executionFee:int257 index:int257 = IncreaseRBFPositionCreatedEvent`
-Signature: `IncreaseRBFPositionCreatedEvent{account:address,liquidityDelta:int257,executionFee:int257,index:int257}`
-
-## IncreaseRBFPositionCancelledEvent
-TLB: `increase_rbf_position_cancelled_event#7eea6e53 index:int257 trxId:int257 = IncreaseRBFPositionCancelledEvent`
-Signature: `IncreaseRBFPositionCancelledEvent{index:int257,trxId:int257}`
-
-## IncreaseRBFPositionExecutedEvent
-TLB: `increase_rbf_position_executed_event#9f9fdf82 index:int257 trxId:int257 = IncreaseRBFPositionExecutedEvent`
-Signature: `IncreaseRBFPositionExecutedEvent{index:int257,trxId:int257}`
-
 ## RBFPositionIncreasedEvent
-TLB: `rbf_position_increased_event#312fa011 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 = RBFPositionIncreasedEvent`
-Signature: `RBFPositionIncreasedEvent{account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,unlockTimeAfter:int257}`
-
-## DecreaseRBFPositionCreatedEvent
-TLB: `decrease_rbf_position_created_event#99f1adce account:address liquidityDelta:int257 executionFee:int257 index:int257 = DecreaseRBFPositionCreatedEvent`
-Signature: `DecreaseRBFPositionCreatedEvent{account:address,liquidityDelta:int257,executionFee:int257,index:int257}`
-
-## DecreaseRBFPositionCancelledEvent
-TLB: `decrease_rbf_position_cancelled_event#50ea209f index:int257 trxId:int257 = DecreaseRBFPositionCancelledEvent`
-Signature: `DecreaseRBFPositionCancelledEvent{index:int257,trxId:int257}`
-
-## DecreaseRBFPositionExecutedEvent
-TLB: `decrease_rbf_position_executed_event#a71f6644 index:int257 trxId:int257 = DecreaseRBFPositionExecutedEvent`
-Signature: `DecreaseRBFPositionExecutedEvent{index:int257,trxId:int257}`
+TLB: `rbf_position_increased_event#8e9fd47d positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 = RBFPositionIncreasedEvent`
+Signature: `RBFPositionIncreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,unlockTimeAfter:int257}`
 
 ## RBFPositionDecreasedEvent
-TLB: `rbf_position_decreased_event#66180baf account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 received:int257 = RBFPositionDecreasedEvent`
-Signature: `RBFPositionDecreasedEvent{account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,received:int257}`
+TLB: `rbf_position_decreased_event#61a74737 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 receive:int257 = RBFPositionDecreasedEvent`
+Signature: `RBFPositionDecreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,receive:int257}`
 
 ## GlobalRBFChangedEvent
 TLB: `global_rbf_changed_event#fd5108e7 riskBufferFundAfter:int257 liquidityAfter:int257 = GlobalRBFChangedEvent`
@@ -277,33 +249,17 @@ Signature: `DecreasePerpPositionLimitExecutedEvent{token:^string,index:int257,tr
 TLB: `perp_position_decreased_event#6aa56cf7 account:address token:^string marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 = PerpPositionDecreasedEvent`
 Signature: `PerpPositionDecreasedEvent{account:address,token:^string,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257}`
 
-## OperatorUpdatedEvent
-TLB: `operator_updated_event#8850b15e newOperator:address = OperatorUpdatedEvent`
-Signature: `OperatorUpdatedEvent{newOperator:address}`
-
-## ExecutionFeeReceiverUpdatedEvent
-TLB: `execution_fee_receiver_updated_event#bef4bfdc newExecutionFeeReceiver:address = ExecutionFeeReceiverUpdatedEvent`
-Signature: `ExecutionFeeReceiverUpdatedEvent{newExecutionFeeReceiver:address}`
-
-## TokenInfo
-TLB: `_ name:^string enable:bool = TokenInfo`
-Signature: `TokenInfo{name:^string,enable:bool}`
+## ConfigData
+TLB: `_ rbfLockTime:int257 bonusFactor:int257 minLPMargin:int257 maxLPLeverage:int257 lpLiquidationFee:int257 lpMaxRiskRate:int257 orderBook:address = ConfigData`
+Signature: `ConfigData{rbfLockTime:int257,bonusFactor:int257,minLPMargin:int257,maxLPLeverage:int257,lpLiquidationFee:int257,lpMaxRiskRate:int257,orderBook:address}`
 
 ## TokenConfig
-TLB: `_ minMarginPerLiquidityPosition:int257 maxRiskRatePerLiquidityPosition:int257 maxLeveragePerLiquidityPosition:int257 minMarginPerPosition:int257 maxLeveragePerPosition:int257 liquidationFeeRatePerPosition:int257 liquidationExecutionFee:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
-Signature: `TokenConfig{minMarginPerLiquidityPosition:int257,maxRiskRatePerLiquidityPosition:int257,maxLeveragePerLiquidityPosition:int257,minMarginPerPosition:int257,maxLeveragePerPosition:int257,liquidationFeeRatePerPosition:int257,liquidationExecutionFee:int257,interestRate:int257,maxFundingRate:int257}`
-
-## IncreaseRBFPositionOrder
-TLB: `_ account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 = IncreaseRBFPositionOrder`
-Signature: `IncreaseRBFPositionOrder{account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257}`
-
-## DecreaseRBFPositionOrder
-TLB: `_ account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 = DecreaseRBFPositionOrder`
-Signature: `DecreaseRBFPositionOrder{account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257}`
+TLB: `_ name:^string enable:bool minMarginPerPosition:int257 maxLeveragePerPosition:int257 liquidationFeeRatePerPosition:int257 liquidationExecutionFee:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
+Signature: `TokenConfig{name:^string,enable:bool,minMarginPerPosition:int257,maxLeveragePerPosition:int257,liquidationFeeRatePerPosition:int257,liquidationExecutionFee:int257,interestRate:int257,maxFundingRate:int257}`
 
 ## RBFPosition
-TLB: `_ liquidity:int257 bonus:int257 unlockTime:int257 = RBFPosition`
-Signature: `RBFPosition{liquidity:int257,bonus:int257,unlockTime:int257}`
+TLB: `_ positionId:int257 liquidity:int257 bonus:int257 unlockTime:int257 = RBFPosition`
+Signature: `RBFPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTime:int257}`
 
 ## GlobalRBFPosition
 TLB: `_ riskBufferFund:int257 liquidity:int257 = GlobalRBFPosition`
@@ -406,38 +362,14 @@ TLB: `_ sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCo
 Signature: `SamplePremiumRateResult{sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRateX96:int257},shouldAdjustFundingRate:bool,fundingRateDeltaX96:int257}`
 
 # Get Methods
-Total Get Methods: 14
+Total Get Methods: 4
 
-## operator
+## configData
 
-## usdc
+## tokenConfig
+Argument: tokenId
 
-## executionFeeReceiver
-
-## increaseRBFPositionIndexNext
-
-## increaseRBFPositionOrder
-Argument: index
-
-## decreaseRBFPositionIndexNext
-
-## decreaseRBFPositionOrder
-Argument: index
-
-## fundPosition
-Argument: account
-
-## increaseLPPositionIndexNext
-
-## increaseLPPositionOrder
-Argument: index
-
-## decreaseLPPositionIndexNext
-
-## decreaseLPPositionOrder
-Argument: index
-
-## lpPosition
+## rbfPosition
 Argument: account
 
 ## owner
@@ -468,18 +400,8 @@ Argument: account
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 5238: position not exist
-16780: order expired
-19305: gas not enough
-22749: risk rate too hig
 23236: insufficient global RBF
-24562: execution fee not enough
 31425: not reach unlock time
-32637: order not exist
-39703: too early
 41207: invalid sender
-42634: legerage too high
 58161: insufficient liquidity
-60602: risk rate too high
 61867: insuficient global net RBF
-62259: insufficient global liquidity
-62409: insufficient margin

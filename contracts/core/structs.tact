@@ -1,4 +1,14 @@
-// ============================ RBF ================================ //
+// ============================ Config ================================ //
+struct ConfigData {
+    rbfLockTime: Int;
+    bonusFactor: Int;
+    minLPMargin: Int;
+    maxLPLeverage: Int;
+    lpLiquidationFee: Int;
+    lpMaxRiskRate: Int;
+    orderBook: Address;
+}
+
 struct TokenConfig {
     name: String;
     enable: Bool;
@@ -13,21 +23,8 @@ struct TokenConfig {
 }
 
 // ============================ RBF ================================ //
-struct IncreaseRBFPositionOrder {
-    account: Address;
-    liquidityDelta: Int;
-    executionFee: Int;
-    blockTime: Int;
-}
-
-struct DecreaseRBFPositionOrder {
-    account: Address;
-    liquidityDelta: Int;
-    executionFee: Int;
-    blockTime: Int;
-}
-
 struct RBFPosition {
+    positionId: Int;
     liquidity: Int;
     bonus: Int;
     unlockTime: Int;

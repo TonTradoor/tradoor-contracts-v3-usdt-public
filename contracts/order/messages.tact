@@ -21,7 +21,6 @@ message UpdateConfig {
     maxTimeDelayExecutor: Int?;
     minTimeDelayTrader: Int?;
     minPendingTimeDelayCompensator: Int?;
-    rbfLockTime: Int?;
     minExecutionFee: Int?;
     gasConsumption: Int?;
     minTonsForStorage: Int?;
@@ -47,7 +46,7 @@ message ExecuteRBFPositionOrder {
     executionFeeReceiver: Address?;
 }
 
-message UpdateRBFPosition {
+message(0xe89cd45f) UpdateRBFPosition {
     isIncrease: Bool;
     orderId: Int as uint64;
     account: Address;
@@ -55,7 +54,7 @@ message UpdateRBFPosition {
     trxId: Int as uint64;
 }
 
-message UpdateRBFPositionSuccess {
+message(0x1cf0cf81) UpdateRBFPositionSuccess {
     orderId: Int;
     receive: Int;
     trxId: Int as uint64;

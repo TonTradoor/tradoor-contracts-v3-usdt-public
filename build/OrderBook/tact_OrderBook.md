@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 8932 bytes
+BOC Size: 8749 bytes
 
 # Types
-Total Types: 73
+Total Types: 70
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -46,8 +46,8 @@ TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
 Signature: `TokenExcesses{queryId:uint64}`
 
 ## UpdateConfig
-TLB: `update_config#88769d89 executor:Maybe address enableExecutor:Maybe bool compensator:Maybe address enableCompensator:Maybe bool minTimeDelayExecutor:Maybe int257 maxTimeDelayExecutor:Maybe int257 minTimeDelayTrader:Maybe int257 minPendingTimeDelayCompensator:Maybe int257 rbfLockTime:Maybe int257 minExecutionFee:Maybe int257 gasConsumption:Maybe int257 minTonsForStorage:Maybe int257 usdtWallet:Maybe address pool:Maybe address = UpdateConfig`
-Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,compensator:Maybe address,enableCompensator:Maybe bool,minTimeDelayExecutor:Maybe int257,maxTimeDelayExecutor:Maybe int257,minTimeDelayTrader:Maybe int257,minPendingTimeDelayCompensator:Maybe int257,rbfLockTime:Maybe int257,minExecutionFee:Maybe int257,gasConsumption:Maybe int257,minTonsForStorage:Maybe int257,usdtWallet:Maybe address,pool:Maybe address}`
+TLB: `update_config#8861cc73 executor:Maybe address enableExecutor:Maybe bool compensator:Maybe address enableCompensator:Maybe bool minTimeDelayExecutor:Maybe int257 maxTimeDelayExecutor:Maybe int257 minTimeDelayTrader:Maybe int257 minPendingTimeDelayCompensator:Maybe int257 minExecutionFee:Maybe int257 gasConsumption:Maybe int257 minTonsForStorage:Maybe int257 usdtWallet:Maybe address pool:Maybe address = UpdateConfig`
+Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,compensator:Maybe address,enableCompensator:Maybe bool,minTimeDelayExecutor:Maybe int257,maxTimeDelayExecutor:Maybe int257,minTimeDelayTrader:Maybe int257,minPendingTimeDelayCompensator:Maybe int257,minExecutionFee:Maybe int257,gasConsumption:Maybe int257,minTonsForStorage:Maybe int257,usdtWallet:Maybe address,pool:Maybe address}`
 
 ## CreateDecreaseRBFPositionOrder
 TLB: `create_decrease_rbf_position_order#a11162ed executionFee:int257 liquidityDelta:int257 = CreateDecreaseRBFPositionOrder`
@@ -226,12 +226,12 @@ TLB: `decrease_perp_position_limit_order_executed_event#7b0dc0a3 token:^string o
 Signature: `DecreasePerpPositionLimitOrderExecutedEvent{token:^string,orderId:int257,trxId:int257}`
 
 ## TokenConfig
-TLB: `_ name:^string enable:bool minMarginPerPosition:int257 maxLeveragePerPosition:int257 liquidationFeeRatePerPosition:int257 liquidationExecutionFee:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
-Signature: `TokenConfig{name:^string,enable:bool,minMarginPerPosition:int257,maxLeveragePerPosition:int257,liquidationFeeRatePerPosition:int257,liquidationExecutionFee:int257,interestRate:int257,maxFundingRate:int257}`
+TLB: `_ name:^string enable:bool = TokenConfig`
+Signature: `TokenConfig{name:^string,enable:bool}`
 
 ## ConfigData
-TLB: `_ minTimeDelayExecutor:int257 maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minPendingTimeDelayCompensator:int257 rbfLockTime:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address isExecutor:Maybe bool isCompensator:Maybe bool = ConfigData`
-Signature: `ConfigData{minTimeDelayExecutor:int257,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minPendingTimeDelayCompensator:int257,rbfLockTime:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address,isExecutor:Maybe bool,isCompensator:Maybe bool}`
+TLB: `_ minTimeDelayExecutor:int257 maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minPendingTimeDelayCompensator:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address isExecutor:Maybe bool isCompensator:Maybe bool = ConfigData`
+Signature: `ConfigData{minTimeDelayExecutor:int257,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minPendingTimeDelayCompensator:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address,isExecutor:Maybe bool,isCompensator:Maybe bool}`
 
 ## JettonCallback
 TLB: `_ orderType:int257 orderId:int257 tokenId:Maybe int257 amount:int257 trxId:int257 = JettonCallback`
@@ -284,18 +284,6 @@ Signature: `DecreasePerpPositionLimitOrders{decreasePerpPositionLimitOrders:dict
 ## DecreasePerpPositionLimitOrder
 TLB: `_ account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:int257 blockTime:int257 = DecreasePerpPositionLimitOrder`
 Signature: `DecreasePerpPositionLimitOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257}`
-
-## AccountPerpPosition
-TLB: `_ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}> = AccountPerpPosition`
-Signature: `AccountPerpPosition{positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}>}`
-
-## DirectionPerpPosition
-TLB: `_ longPosition:PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257} shortPosition:PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257} = DirectionPerpPosition`
-Signature: `DirectionPerpPosition{longPosition:PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}`
-
-## PerpPosition
-TLB: `_ margin:int257 size:int257 entryPrice:int257 entryFundingFeeGrowth:int257 = PerpPosition`
-Signature: `PerpPosition{margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}`
 
 # Get Methods
 Total Get Methods: 3

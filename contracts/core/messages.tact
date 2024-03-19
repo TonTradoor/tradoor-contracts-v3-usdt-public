@@ -1,10 +1,26 @@
-// ============================ JETTON ============================= //
+// ============================ admin ================================ //
+message UpdateConfig {
+    gasConsumption: Int?;
+    minTonsForStorage: Int?;
+    rbfLockTime: Int?;
+    bonusFactor: Int?;
+    minLPMargin: Int?;
+    maxLPLeverage: Int?;
+    lpLiquidationFee: Int?;
+    lpMaxRiskRate: Int?;
+    orderBook: Address?;
+}
 
-message(0x7362d09c) TokenNotification {
-    queryId: Int as uint64;
-    amount: Int as coins;
-    from: Address;
-    forwardPayload: Slice as remaining; // Comment Text message when Transfer the jetton 
+message UpdateTokenConfig {
+    tokenId: Int;
+    name: String?;
+    enable: Bool?;
+    minMarginPerPosition: Int?;
+    maxLeveragePerPosition: Int?;
+    liquidationFeeRatePerPosition: Int?;
+    liquidationExecutionFee: Int?;
+    interestRate: Int?;
+    maxFundingRate: Int?;
 }
 
 // ============================ RBF ================================ //
@@ -33,6 +49,20 @@ message CancelDecreaseRBFPositionOrder {
 message ExecuteDecreaseRBFPositionOrder {
     index: Int;
     trxId: Int;
+}
+
+message(0xe89cd45f) UpdateRBFPosition {
+    isIncrease: Bool;
+    orderId: Int as uint64;
+    account: Address;
+    liquidityDelta: Int;
+    trxId: Int as uint64;
+}
+
+message(0x1cf0cf81) UpdateRBFPositionSuccess {
+    orderId: Int;
+    receive: Int;
+    trxId: Int as uint64;
 }
 
 // ============================ LP ================================ //
@@ -138,22 +168,4 @@ message CancelDecreasePerpPositionLimitOrder {
 message ExecuteDecreasePerpPositionLimitOrder {
     index: Int;
     trxId: Int;
-}
-
-// ============================ admin ================================ //
-message SetOperator {
-    operator: Address;
-}
-
-message SetExecutor {
-    executor: Address;
-    enable: Bool;
-}
-
-message SetUSDC {
-    usdc: Address;
-}
-
-message SetExecutionFeeReceiver{
-    receiver: Address;
 }

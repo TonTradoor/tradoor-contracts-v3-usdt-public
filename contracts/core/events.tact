@@ -1,23 +1,7 @@
 // ============================ RBF ================================ //
 // increase RBF
-message IncreaseRBFPositionCreatedEvent {
-    account: Address;
-    liquidityDelta: Int;
-    executionFee: Int;
-    index: Int;
-}
-
-message IncreaseRBFPositionCancelledEvent {
-    index: Int;
-    trxId: Int;
-}
-
-message IncreaseRBFPositionExecutedEvent {
-    index: Int;
-    trxId: Int;
-}
-
 message RBFPositionIncreasedEvent {
+    positionId: Int;
     account: Address;
     liquidityDelta: Int;
     liquidityAfter: Int;
@@ -27,30 +11,14 @@ message RBFPositionIncreasedEvent {
 }
 
 // decrease RBF
-message DecreaseRBFPositionCreatedEvent {
-    account: Address;
-    liquidityDelta: Int;
-    executionFee: Int;
-    index: Int;
-}
-
-message DecreaseRBFPositionCancelledEvent {
-    index: Int;
-    trxId: Int;
-}
-
-message DecreaseRBFPositionExecutedEvent {
-    index: Int;
-    trxId: Int;
-}
-
 message RBFPositionDecreasedEvent {
+    positionId: Int;
     account: Address;
     liquidityDelta: Int;
     liquidityAfter: Int;
     bonusDelta: Int;
     bonusAfter: Int;
-    received: Int;
+    receive: Int;
 }
 
 // global RBF
@@ -258,13 +226,4 @@ message PerpPositionDecreasedEvent {
     realizedPnLDelta: Int;
     fundingFee: Int;
     tradingFee: Int;
-}
-
-// admin
-message OperatorUpdatedEvent {
-    newOperator: Address;
-}
-
-message ExecutionFeeReceiverUpdatedEvent {
-    newExecutionFeeReceiver: Address;
 }

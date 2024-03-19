@@ -2,14 +2,6 @@
 struct TokenConfig {
     name: String;
     enable: Bool;
-    // ==================== Trader Position Configuration ==================
-    minMarginPerPosition: Int;
-    maxLeveragePerPosition: Int;
-    liquidationFeeRatePerPosition: Int;
-    // ==================== Other Configuration ==========================
-    liquidationExecutionFee: Int;
-    interestRate: Int;
-    maxFundingRate: Int;
 }
 
 struct ConfigData {
@@ -17,7 +9,6 @@ struct ConfigData {
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
     minPendingTimeDelayCompensator: Int;
-    rbfLockTime: Int;
     minExecutionFee: Int;
     gasConsumption: Int;
     minTonsForStorage: Int;
@@ -136,21 +127,4 @@ struct DecreasePerpPositionLimitOrder {
     triggerAbove: Bool;
     executionFee: Int;
     blockTime: Int;
-}
-
-// perp position
-struct AccountPerpPosition {
-    positions: map<Address, DirectionPerpPosition>;
-}
-
-struct DirectionPerpPosition {
-    longPosition: PerpPosition;
-    shortPosition: PerpPosition;
-}
-
-struct PerpPosition {
-    margin: Int;
-    size: Int;
-    entryPrice: Int;
-    entryFundingFeeGrowth: Int;
 }
