@@ -28,10 +28,6 @@ _ $Context$_get_value((int, slice, int, slice) v) inline {
     return (bounce, to, value, mode, body, null(), null());
 }
 
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value(slice to, int bounce, int value) inline {
-    return (bounce, to, value, 0, null(), null(), null());
-}
-
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice to, int bounce, int value, int mode) inline {
     return (bounce, to, value, mode, null(), null(), null());
 }
@@ -424,11 +420,11 @@ tuple $JettonCallback$_load_opt(cell cl) inline {
 
 ;;
 ;; Type: RBFPositionOrder
-;; TLB: _ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 callbackId:Maybe int257 executionFeeReceiver:Maybe address = RBFPositionOrder
+;; TLB: _ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 callbackId:Maybe int257 executionFeeReceiver:Maybe address lastOperator:Maybe address = RBFPositionOrder
 ;;
 
-builder $RBFPositionOrder$_store(builder build_0, (int, slice, int, int, int, int, int, int, slice) v) inline_ref {
-    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver) = v;
+builder $RBFPositionOrder$_store(builder build_0, (int, slice, int, int, int, int, int, int, slice, slice) v) inline_ref {
+    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver, v'lastOperator) = v;
     build_0 = build_0.store_int(v'isIncrease, 1);
     build_0 = __tact_store_address(build_0, v'account);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
@@ -440,19 +436,20 @@ builder $RBFPositionOrder$_store(builder build_0, (int, slice, int, int, int, in
     build_1 = ~ null?(v'callbackId) ? build_1.store_int(true, 1).store_int(v'callbackId, 257) : build_1.store_int(false, 1);
     var build_2 = begin_cell();
     build_2 = __tact_store_address_opt(build_2, v'executionFeeReceiver);
+    build_2 = __tact_store_address_opt(build_2, v'lastOperator);
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $RBFPositionOrder$_store_cell((int, slice, int, int, int, int, int, int, slice) v) inline {
+cell $RBFPositionOrder$_store_cell((int, slice, int, int, int, int, int, int, slice, slice) v) inline {
     return $RBFPositionOrder$_store(begin_cell(), v).end_cell();
 }
 
-((int, slice, int, int, int, int, int, int, slice)) $RBFPositionOrder$_not_null(tuple v) inline {
+((int, slice, int, int, int, int, int, int, slice, slice)) $RBFPositionOrder$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'isIncrease, slice vvv'account, int vvv'liquidityDelta, int vvv'executionFee, int vvv'blockTime, int vvv'isPending, int vvv'pendingTime, int vvv'callbackId, slice vvv'executionFeeReceiver) = __tact_tuple_destroy_9(v);
-    return (vvv'isIncrease, vvv'account, vvv'liquidityDelta, vvv'executionFee, vvv'blockTime, vvv'isPending, vvv'pendingTime, vvv'callbackId, vvv'executionFeeReceiver);
+    var (int vvv'isIncrease, slice vvv'account, int vvv'liquidityDelta, int vvv'executionFee, int vvv'blockTime, int vvv'isPending, int vvv'pendingTime, int vvv'callbackId, slice vvv'executionFeeReceiver, slice vvv'lastOperator) = __tact_tuple_destroy_10(v);
+    return (vvv'isIncrease, vvv'account, vvv'liquidityDelta, vvv'executionFee, vvv'blockTime, vvv'isPending, vvv'pendingTime, vvv'callbackId, vvv'executionFeeReceiver, vvv'lastOperator);
 }
 
 cell $RBFPositionOrder$_store_opt(tuple v) inline {
@@ -462,7 +459,7 @@ cell $RBFPositionOrder$_store_opt(tuple v) inline {
     return $RBFPositionOrder$_store_cell($RBFPositionOrder$_not_null(v));
 }
 
-(slice, ((int, slice, int, int, int, int, int, int, slice))) $RBFPositionOrder$_load(slice sc_0) inline_ref {
+(slice, ((int, slice, int, int, int, int, int, int, slice, slice))) $RBFPositionOrder$_load(slice sc_0) inline_ref {
     var v'isIncrease = sc_0~load_int(1);
     var v'account = sc_0~__tact_load_address();
     var v'liquidityDelta = sc_0~load_int(257);
@@ -474,12 +471,13 @@ cell $RBFPositionOrder$_store_opt(tuple v) inline {
     var v'callbackId = sc_1~load_int(1) ? sc_1~load_int(257) : null();
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'executionFeeReceiver = sc_2~__tact_load_address_opt();
-    return (sc_0, (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver));
+    var v'lastOperator = sc_2~__tact_load_address_opt();
+    return (sc_0, (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver, v'lastOperator));
 }
 
-tuple $RBFPositionOrder$_as_optional((int, slice, int, int, int, int, int, int, slice) v) inline {
-    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver) = v;
-    return __tact_tuple_create_9(v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver);
+tuple $RBFPositionOrder$_as_optional((int, slice, int, int, int, int, int, int, slice, slice) v) inline {
+    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver, v'lastOperator) = v;
+    return __tact_tuple_create_10(v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver, v'lastOperator);
 }
 
 tuple $RBFPositionOrder$_load_opt(cell cl) inline {
@@ -490,9 +488,9 @@ tuple $RBFPositionOrder$_load_opt(cell cl) inline {
     return $RBFPositionOrder$_as_optional(sc~$RBFPositionOrder$_load());
 }
 
-tuple $RBFPositionOrder$_to_tuple(((int, slice, int, int, int, int, int, int, slice)) v) inline {
-    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver) = v;
-    return __tact_tuple_create_9(v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver);
+tuple $RBFPositionOrder$_to_tuple(((int, slice, int, int, int, int, int, int, slice, slice)) v) inline {
+    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver, v'lastOperator) = v;
+    return __tact_tuple_create_10(v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'pendingTime, v'callbackId, v'executionFeeReceiver, v'lastOperator);
 }
 
 tuple $RBFPositionOrder$_to_opt_tuple(tuple v) inline {
@@ -500,22 +498,17 @@ tuple $RBFPositionOrder$_to_opt_tuple(tuple v) inline {
     return $RBFPositionOrder$_to_tuple($RBFPositionOrder$_not_null(v)); 
 }
 
-((int, slice, int, int, int, int, int, int, slice)) $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_pendingTime_callbackId_executionFeeReceiver(int isIncrease, slice account, int liquidityDelta, int executionFee, int blockTime, int isPending, int pendingTime, int callbackId, slice executionFeeReceiver) inline {
-    return (isIncrease, account, liquidityDelta, executionFee, blockTime, isPending, pendingTime, callbackId, executionFeeReceiver);
+tuple $RBFPositionOrder$_to_opt_external(tuple v) inline {
+    var loaded = $RBFPositionOrder$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
 }
 
-;;
-;; Type: RBFPositionOrderData
-;; TLB: _ rbfPositionOrderIndexNext:int257 rbfPositionOrder:Maybe RBFPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257,callbackId:Maybe int257,executionFeeReceiver:Maybe address} = RBFPositionOrderData
-;;
-
-(int, tuple) $RBFPositionOrderData$_to_external(((int, tuple)) v) inline {
-    var (v'rbfPositionOrderIndexNext, v'rbfPositionOrder) = v; 
-    return (v'rbfPositionOrderIndexNext, $RBFPositionOrder$_to_opt_tuple(v'rbfPositionOrder));
-}
-
-((int, tuple)) $RBFPositionOrderData$_constructor_rbfPositionOrderIndexNext_rbfPositionOrder(int rbfPositionOrderIndexNext, tuple rbfPositionOrder) inline {
-    return (rbfPositionOrderIndexNext, rbfPositionOrder);
+((int, slice, int, int, int, int, int, int, slice, slice)) $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_pendingTime_callbackId_executionFeeReceiver_lastOperator(int isIncrease, slice account, int liquidityDelta, int executionFee, int blockTime, int isPending, int pendingTime, int callbackId, slice executionFeeReceiver, slice lastOperator) inline {
+    return (isIncrease, account, liquidityDelta, executionFee, blockTime, isPending, pendingTime, callbackId, executionFeeReceiver, lastOperator);
 }
 
 ;;

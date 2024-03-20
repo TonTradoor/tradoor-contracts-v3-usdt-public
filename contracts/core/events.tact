@@ -14,11 +14,11 @@ message RBFPositionIncreasedEvent {
 message RBFPositionDecreasedEvent {
     positionId: Int;
     account: Address;
-    liquidityDelta: Int;
+    liquidityDelta: Int; // decrease liquidty
     liquidityAfter: Int;
     bonusDelta: Int;
     bonusAfter: Int;
-    receive: Int;
+    receive: Int; // realizedPnl = receive - liquidityDelta
 }
 
 // global RBF

@@ -13,6 +13,7 @@ contract OrderBook with Deployable, Ownable {
     minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
     minPendingTimeDelayCompensator: Int = 15 * 60; // compendator execute after 15min
 
+    // TODO gas
     minExecutionFee: Int = ton("0.1"); // fee for every operation
     gasConsumption: Int = ton("0.05"); // min consumption gas
     minTonsForStorage: Int = ton("0.03"); // min storage gas
@@ -222,6 +223,19 @@ contract OrderBook with Deployable, Ownable {
         });
     }
 
+    // transfer execess ton
+    fun refundExecessTon(to: Address, executionFee: Int) {
+        let refundValue: Int = context().value - executionFee - self.gasConsumption - self.minTonsForStorage;
+        if (refundValue > 0) {
+            send(SendParameters{
+                to: to,
+                bounce: false,
+                value: refundValue,
+                mode: SendPayGasSeparately
+            });
+        }
+    }
+
     // ======================================================== RBF ================================================================ //
 
     // ============================ Create Increase ================================ //
@@ -241,6 +255,12 @@ contract OrderBook with Deployable, Ownable {
             return;
         }
 
+        if (executionFee < self.minExecutionFee) {
+            self.refundLiquidity(queryId, jettonFromAmount, account);
+            dump("execution fee not enough");
+            return;
+        }
+
         // add new order
         let orderId: Int = self.rbfPositionOrderIndexNext;
         self.rbfPositionOrderIndexNext = orderId + 1;
@@ -253,7 +273,8 @@ contract OrderBook with Deployable, Ownable {
             isPending: false,
             pendingTime: now(),
             callbackId: null,
-            executionFeeReceiver: null
+            executionFeeReceiver: null,
+            lastOperator: null
         });
 
         // event
@@ -265,15 +286,7 @@ contract OrderBook with Deployable, Ownable {
             orderId: orderId
         }.toCell());
 
-        let refundValue: Int = context().value - executionFee - self.gasConsumption;
-        if (refundValue > 0) {
-            dump("handleCreateIncreaseRBFPositionOrder refund toncoin");
-            send(SendParameters{
-                to: account,
-                bounce: false,
-                value: refundValue
-            });
-        }
+        self.refundExecessTon(account, executionFee);
     }
 
     // ============================ Create Decrease ================================ //
@@ -296,7 +309,8 @@ contract OrderBook with Deployable, Ownable {
             isPending: false,
             pendingTime: now(),
             callbackId: null,
-            executionFeeReceiver: null
+            executionFeeReceiver: null,
+            lastOperator: null
         });
 
         // event
@@ -307,6 +321,9 @@ contract OrderBook with Deployable, Ownable {
             executionFee: msg.executionFee,
             orderId: orderId
         }.toCell());
+
+        // transfer execess gas
+        self.refundExecessTon(sender(), msg.executionFee);
     }
 
     // ============================ Cancel Increase / Decrease ================================ //
@@ -343,6 +360,7 @@ contract OrderBook with Deployable, Ownable {
             } else {
                 order.executionFeeReceiver = sender();
             }
+            order.lastOperator = sender();
             order.isPending = true;
             order.pendingTime = now();
             order.callbackId = callbackId;
@@ -377,8 +395,11 @@ contract OrderBook with Deployable, Ownable {
                 to: executionFeeReceiver,
                 bounce: true,
                 value: order.executionFee,
-                mode: SendIgnoreErrors
+                mode: SendPayGasSeparately
             });
+
+            // transfer execess gas
+            self.refundExecessTon(sender(), order.executionFee);
         }
     }
 
@@ -450,8 +471,13 @@ contract OrderBook with Deployable, Ownable {
                     to: order.executionFeeReceiver!!,
                     bounce: true,
                     value: order.executionFee,
-                    mode: SendIgnoreErrors
+                    mode: SendPayGasSeparately
                 });
+            }
+
+            // transfer execess gas
+            if (order.lastOperator != null) {
+                self.refundExecessTon(order.lastOperator!!, order.executionFee);
             }
         } else {
             // add callback
@@ -519,7 +545,7 @@ contract OrderBook with Deployable, Ownable {
                     to: order.executionFeeReceiver!!,
                     bounce: true,
                     value: order.executionFee,
-                    mode: SendIgnoreErrors
+                    mode: SendPayGasSeparately
                 });
             }
         } else {
@@ -536,9 +562,14 @@ contract OrderBook with Deployable, Ownable {
                     to: order.executionFeeReceiver!!,
                     bounce: true,
                     value: order.executionFee,
-                    mode: SendIgnoreErrors
+                    mode: SendPayGasSeparately
                 });
             }
+        }
+
+        // transfer execess gas
+        if (order.lastOperator != null) {
+            self.refundExecessTon(order.lastOperator!!, order.executionFee);
         }
     }
 
@@ -578,9 +609,12 @@ contract OrderBook with Deployable, Ownable {
                     to: order.executionFeeReceiver!!,
                     bounce: true,
                     value: order.executionFee,
-                    mode: SendIgnoreErrors
+                    mode: SendPayGasSeparately
                 });
             }
+
+            // transfer execess gas
+            self.refundExecessTon(sender(), order.executionFee);
             return;
         }
 
@@ -606,9 +640,12 @@ contract OrderBook with Deployable, Ownable {
                     to: order.executionFeeReceiver!!,
                     bounce: true,
                     value: order.executionFee,
-                    mode: SendIgnoreErrors
+                    mode: SendPayGasSeparately
                 });
             }
+
+            // transfer execess gas
+            self.refundExecessTon(sender(), order.executionFee);
             return;
         }
 
@@ -630,9 +667,8 @@ contract OrderBook with Deployable, Ownable {
         // update execution fee receiver
         if (msg.executionFeeReceiver != null) {
             order.executionFeeReceiver = msg.executionFeeReceiver!!;
-        } else {
-            order.executionFeeReceiver = sender();
         }
+        order.lastOperator = sender();
         self.rbfPositionOrders.set(msg.orderId, order);
 
         // transfer jetton
@@ -645,7 +681,7 @@ contract OrderBook with Deployable, Ownable {
         });
     }
 
-    // compensate for increase RBF
+    // compensate for decrease RBF
     receive(msg: CompensateDecreaseRBFPositionOrder) {
         let ctx: Context = context();
 
@@ -680,9 +716,12 @@ contract OrderBook with Deployable, Ownable {
                     to: order.executionFeeReceiver!!,
                     bounce: true,
                     value: order.executionFee,
-                    mode: SendIgnoreErrors
+                    mode: SendPayGasSeparately
                 });
             }
+
+            // transfer execess gas
+            self.refundExecessTon(sender(), order.executionFee);
             return;
         }
 
@@ -709,9 +748,12 @@ contract OrderBook with Deployable, Ownable {
                     to: order.executionFeeReceiver!!,
                     bounce: true,
                     value: order.executionFee,
-                    mode: SendIgnoreErrors
+                    mode: SendPayGasSeparately
                 });
             }
+
+            // transfer execess gas
+            self.refundExecessTon(sender(), order.executionFee);
             return;
         }
 
@@ -733,9 +775,8 @@ contract OrderBook with Deployable, Ownable {
         // update execution fee receiver
         if (msg.executionFeeReceiver != null) {
             order.executionFeeReceiver = msg.executionFeeReceiver!!;
-        } else {
-            order.executionFeeReceiver = sender();
         }
+        order.lastOperator = sender();
         self.rbfPositionOrders.set(msg.orderId, order);
 
         // transfer jetton
@@ -749,15 +790,23 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ============================ Getter ================================ //
-    get fun rbfPositionOrderData(orderId: Int?): RBFPositionOrderData {
-        let rbfPositionOrder: RBFPositionOrder? = null;
-        if (orderId != null) {
-            rbfPositionOrder = self.rbfPositionOrders.get(orderId!!);
-        }
-        return RBFPositionOrderData{
-            rbfPositionOrderIndexNext: self.rbfPositionOrderIndexNext,
-            rbfPositionOrder: rbfPositionOrder
-        };
+    // get fun rbfPositionOrderData(orderId: Int?): RBFPositionOrderData {
+    //     let rbfPositionOrder: RBFPositionOrder? = null;
+    //     if (orderId != null) {
+    //         rbfPositionOrder = self.rbfPositionOrders.get(orderId!!);
+    //     }
+    //     return RBFPositionOrderData{
+    //         rbfPositionOrderIndexNext: self.rbfPositionOrderIndexNext,
+    //         rbfPositionOrder: rbfPositionOrder
+    //     };
+    // }
+
+    get fun rbfPositionOrder(orderId: Int): RBFPositionOrder? {
+        return self.rbfPositionOrders.get(orderId);
+    }
+
+    get fun rbfPositionOrderIndexNext(): Int {
+        return self.rbfPositionOrderIndexNext;
     }
 
     // ======================================================== LP ================================================================ //

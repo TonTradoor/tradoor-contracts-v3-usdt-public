@@ -121,7 +121,7 @@ export function toUnits(src: number | string | bigint, decimal: number) {
     }
 }
 
-function fromUnits(src: number | string | bigint, decimal: number) {
+export function fromUnits(src: number | string | bigint, decimal: number) {
     let factor = BigInt(Math.pow(10, decimal));
 
     let v = BigInt(src);
@@ -136,8 +136,9 @@ function fromUnits(src: number | string | bigint, decimal: number) {
     while (facStr.length < decimal) {
         facStr = '0' + facStr;
     }
-    let pattern = '/^([0-9]*[1-9]|0)(0*)/';
-    facStr = facStr.match(pattern)!![1];
+    let pattern = /^([0-9]*[1-9]|0)(0*)/;
+    let match = facStr.match(pattern);
+    facStr = match!![1];
     // Convert whole
     let whole = v / factor;
     let wholeStr = whole.toString();

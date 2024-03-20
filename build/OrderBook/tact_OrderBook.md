@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 8740 bytes
+BOC Size: 9525 bytes
 
 # Types
-Total Types: 70
+Total Types: 69
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -238,12 +238,8 @@ TLB: `_ orderType:int257 orderId:int257 tokenId:Maybe int257 amount:int257 trxId
 Signature: `JettonCallback{orderType:int257,orderId:int257,tokenId:Maybe int257,amount:int257,trxId:int257}`
 
 ## RBFPositionOrder
-TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 callbackId:Maybe int257 executionFeeReceiver:Maybe address = RBFPositionOrder`
-Signature: `RBFPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257,callbackId:Maybe int257,executionFeeReceiver:Maybe address}`
-
-## RBFPositionOrderData
-TLB: `_ rbfPositionOrderIndexNext:int257 rbfPositionOrder:Maybe RBFPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257,callbackId:Maybe int257,executionFeeReceiver:Maybe address} = RBFPositionOrderData`
-Signature: `RBFPositionOrderData{rbfPositionOrderIndexNext:int257,rbfPositionOrder:Maybe RBFPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257,callbackId:Maybe int257,executionFeeReceiver:Maybe address}}`
+TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 callbackId:Maybe int257 executionFeeReceiver:Maybe address lastOperator:Maybe address = RBFPositionOrder`
+Signature: `RBFPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257,callbackId:Maybe int257,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
 
 ## IncreaseLPPositionOrder
 TLB: `_ account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 = IncreaseLPPositionOrder`
@@ -286,14 +282,16 @@ TLB: `_ account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerP
 Signature: `DecreasePerpPositionLimitOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257}`
 
 # Get Methods
-Total Get Methods: 3
+Total Get Methods: 4
 
 ## configData
 Argument: executor
 Argument: compensator
 
-## rbfPositionOrderData
+## rbfPositionOrder
 Argument: orderId
+
+## rbfPositionOrderIndexNext
 
 ## owner
 

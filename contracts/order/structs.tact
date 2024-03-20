@@ -38,11 +38,7 @@ struct RBFPositionOrder {
     pendingTime: Int;
     callbackId: Int?;
     executionFeeReceiver: Address?;
-}
-
-struct RBFPositionOrderData {
-    rbfPositionOrderIndexNext: Int;
-    rbfPositionOrder: RBFPositionOrder?;
+    lastOperator: Address?;
 }
 
 // ============================ LP ================================ //
