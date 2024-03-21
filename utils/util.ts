@@ -2,6 +2,10 @@ import { NetworkProvider, sleep } from "@ton/blueprint";
 import { Address } from "@ton/core";
 import { TonClient } from "@ton/ton";
 import {Decimal} from "decimal.js";
+import { Pool } from "../wrappers/Pool";
+import { MockJetton } from "../wrappers/MockJetton";
+import { JettonDefaultWallet } from "../wrappers/JettonDefaultWallet";
+import { OrderBook } from "../wrappers/OrderBook";
 let fs = require('fs');
 
 function getPath(network: string) {
@@ -149,3 +153,26 @@ export function fromUnits(src: number | string | bigint, decimal: number) {
     }
     return value;
 }
+
+export function attachOrderBook(provider: NetworkProvider) {
+    const orderBookAddress = Address.parse(getConfig(provider, "orderBook"));
+    return provider.open(OrderBook.fromAddress(orderBookAddress));
+}
+
+export function attachPool(provider: NetworkProvider) {
+    const poolAddress = Address.parse(getConfig(provider, "pool"));
+    return provider.open(Pool.fromAddress(poolAddress));
+}
+
+export function attachMockJetton(provider: NetworkProvider) {
+    const jettonAddress = Address.parse(getConfig(provider, "sampleJetton"));
+    return provider.open(MockJetton.fromAddress(jettonAddress));
+}
+
+export async function attachJettonWallet(provider: NetworkProvider, userAddress: Address) {
+    const jetton = attachMockJetton(provider);
+    let walletAddress = await jetton.getGetWalletAddress(userAddress);
+    return provider.open(JettonDefaultWallet.fromAddress(walletAddress));
+}
+
+

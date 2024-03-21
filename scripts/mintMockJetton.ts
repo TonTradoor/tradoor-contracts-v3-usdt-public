@@ -1,14 +1,13 @@
 import { Address, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { MockJetton } from '../wrappers/MockJetton';
-import { attachJettonWallet, attachMockJetton } from '../wrappers/Pool';
-import { getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
+import { attachJettonWallet, attachMockJetton, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
     const sampleJetton = attachMockJetton(provider);
 
     const recevier = Address.parse(await provider.ui().input('recevier address:'));
     const amount = await provider.ui().input('mint amount:');
+    const jettonDecimal = getConfig(provider, "jettonDecimal");
 
     console.log(`mint to ${recevier} for ${amount}`);
 
@@ -21,7 +20,7 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'Mint',
-            amount: toUnits(amount, 6),
+            amount: toUnits(amount, jettonDecimal),
             receiver: recevier
         }
     );

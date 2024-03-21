@@ -2360,13 +2360,6 @@ PROGRAM{
     OVER
     0 GTINT
     THROWANYIFNOT
-    B{b5ee9c7241010101000a0000106d736756616c7565bea6b253} B>boc <s PUSHSLICE
-    STRDUMP
-    DROP
-    DUP
-    __tact_int_to_string INLINECALLDICT
-    STRDUMP
-    DROP
     s0 32 s() XCHG
     FALSE
     s0 34 s() XCHG

@@ -26,14 +26,34 @@
 `npx blueprint create ContractName` or `yarn blueprint create ContractName`
 
 ## 步骤
-创建.env文件
+- 创建.env文件
 ```
 WALLET_MNEMONIC="助记词"
 WALLET_VERSION=v4
 ```
 
-编译：
+- 编译：
+
 yarn build
 
-部署token：
-yarn run-testnet deploy
+- 重新部署：
+
+sh scripts/deploy.sh
+
+- mint token:
+
+yarn rundev mintMockJetton
+
+- 创建加仓订单：
+
+yarn rundev rbfCreateIncreaseOrder
+
+- 创建减仓订单：
+
+yarn rundev rbfCreateDecreaseOrder
+
+- 添加executor:
+
+修改 config/testnet.json 中 executor
+
+yarn rundev orderBookSetConfig

@@ -1,29 +1,22 @@
-import { Address, beginCell, toNano } from '@ton/core';
-import { Pool, attachJettonWallet, attachMockJetton, attachPool } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { getConfig } from '../utils/util';
+import { attachOrderBook, getConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    const pool = attachPool(provider);
-    const jetton = attachMockJetton(provider);
+    const orderBook = attachOrderBook(provider);
 
-    // get next index
-    let index = await pool.getIncreaseRbfPositionIndexNext();
-    let prevIndex = index - 1n;
-    console.log(`index:`, index);
-    console.log(`prevIndex:`, prevIndex);
+    // get index
+    let orderIdNext = await orderBook.getRbfPositionOrderIndexNext();
+    let orderId = orderIdNext - 1n;
+    console.log(`orderId:`, orderId);
+    console.log(`orderIdNext:`, orderIdNext);
 
-    if (prevIndex < 0) {
+    if (orderId < 0) {
         console.log('order not exist');
         return;
     }
 
-    // get last order
-    let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
+    // get order
+    let order = await orderBook.getRbfPositionOrder(orderId);
     console.log(`order:`, order);
-
-    // get position
-    let position = await pool.getFundPosition(provider.sender().address!!);
-    console.log(`position:`, position);
 
 }

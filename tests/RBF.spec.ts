@@ -1,14 +1,13 @@
 import { Blockchain, SandboxContract, TreasuryContract, prettyLogTransactions, printTransactionFees } from '@ton/sandbox';
-import { toNano, beginCell, Cell, fromNano } from '@ton/core';
-import { toUnits } from '../utils/util';
+import { toNano, fromNano } from '@ton/core';
 import { JettonDefaultWallet } from '../wrappers/JettonDefaultWallet';
 import { MockJetton } from '../wrappers/MockJetton';
 import { Pool } from '../wrappers/Pool';
 import { OrderBook } from '../wrappers/OrderBook';
 import { TestEnv } from './lib/TestEnv';
-import { fromJettonUnits, getFriendlyJettonBalance, getFriendlyTonBalance, getJettonBalance, getTonBalance, mint, toJettonUnits } from './lib/TokenHelper';
-import '@ton/test-utils';
+import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits } from './lib/TokenHelper';
 import { cancelOrder, createDecreaseOrder, createIncreaseOrder, executeOrder } from './lib/RBFHelper';
+import '@ton/test-utils';
 
 describe('Pool', () => {
     let blockchain: Blockchain;
@@ -88,7 +87,7 @@ describe('Pool', () => {
     });
 
     it('should create increase RBF order', async () => {
-        let liquidity = 10n;
+        let liquidity = 10;
         let executionFee = 0.2;
 
         // set block time
@@ -118,7 +117,7 @@ describe('Pool', () => {
 
     it('should cancel increase RBF order', async () => {
         /// create order
-        let liquidity = 10n;
+        let liquidity = 10;
         let executionFee = 0.2;
 
         // set block time
@@ -153,7 +152,7 @@ describe('Pool', () => {
 
     it('should execute increase RBF', async () => {
         /// create order
-        let liquidity = 10n;
+        let liquidity = 10;
         let executionFee = 0.2;
 
         // set block time
@@ -247,7 +246,7 @@ describe('Pool', () => {
     it('should decrease RBF', async () => {
         /* =========================== increase RBF ================================ */
         /// create order
-        let liquidity = 10n;
+        let liquidity = 10;
         let executionFee = 0.2;
 
         // set block time
@@ -281,7 +280,7 @@ describe('Pool', () => {
         /* =========================== decrease RBF ================================ */
         // after 10days
         blockchain.now = blockchain.now + 10 * 24 * 60 * 60;
-        let decreaseLiquidity = 4n;
+        let decreaseLiquidity = 4;
 
         // create order
         const createDecreaseResult = await createDecreaseOrder(user0, decreaseLiquidity, executionFee);

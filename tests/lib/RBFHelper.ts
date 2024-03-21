@@ -4,7 +4,7 @@ import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits } from "./TokenHelper";
 
-export async function createIncreaseOrder(user: SandboxContract<TreasuryContract>, liquidity: number | string | bigint, executionFee: number | string | bigint) {
+export async function createIncreaseOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
     let orderIdBefore = await TestEnv.orderBook.getRbfPositionOrderIndexNext();
     // create order
@@ -12,7 +12,7 @@ export async function createIncreaseOrder(user: SandboxContract<TreasuryContract
     const trxResult = await jettonWallet.send(
         user.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano(executionFee + 0.3),
         },
         {
             $$type: 'TokenTransfer',
@@ -21,7 +21,7 @@ export async function createIncreaseOrder(user: SandboxContract<TreasuryContract
             destination: TestEnv.orderBook.address,
             response_destination: user.address,
             custom_payload: null,
-            forward_ton_amount: toNano('0.3'),
+            forward_ton_amount: toNano(executionFee + 0.2),
             forward_payload: 
                 beginCell()
                 .storeRef(

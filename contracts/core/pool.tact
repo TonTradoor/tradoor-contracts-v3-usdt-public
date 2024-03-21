@@ -181,8 +181,6 @@ contract Pool with Deployable, Ownable, fundingRate {
 
         let msgValue: Int = context().value - self.gasConsumption * 2 - self.minTonsForStorage - context().readForwardFee();
         require(msgValue > 0, "send gas not enough");
-        dump("msgValue");
-        dump(msgValue);
         // send update success msg
         send(SendParameters{
             to: self.orderBook,
