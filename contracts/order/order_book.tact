@@ -6,6 +6,8 @@ import "./structs";
 import "./constants";
 
 contract OrderBook with Deployable, Ownable {
+    const jettonMinTonsForStorage: Int = ton("0.019");
+    const jettonGasConsumption: Int = ton("0.013");
 
     // config
     minTimeDelayExecutor: Int = 6; // executor execute after 6s
@@ -14,7 +16,7 @@ contract OrderBook with Deployable, Ownable {
     minPendingTimeDelayCompensator: Int = 15 * 60; // compendator execute after 15min
 
     // TODO gas
-    minExecutionFee: Int = ton("0.1"); // fee for every operation
+    minExecutionFee: Int = ton("0.2"); // fee for every operation
     gasConsumption: Int = ton("0.05"); // min consumption gas
     minTonsForStorage: Int = ton("0.03"); // min storage gas
 
@@ -155,7 +157,7 @@ contract OrderBook with Deployable, Ownable {
         };
     }
 
-    // ======================================================== Entry ================================================================ //
+    // ======================================================== Token ================================================================ //
     /**
     * @dev This function is called when the contract receives a TokenNotification message.
     * It checks the token and handles the corresponding operation code.
@@ -231,9 +233,17 @@ contract OrderBook with Deployable, Ownable {
                 to: to,
                 bounce: false,
                 value: refundValue,
-                mode: SendPayGasSeparately
+                mode: SendIgnoreErrors
             });
         }
+    }
+
+    fun getTransferJettonGas(): Int {
+        return context().readForwardFee() * 2 + self.jettonGasConsumption * 2 + self.jettonMinTonsForStorage;
+    }
+
+    fun getPoolGas(): Int {
+        return context().readForwardFee() + self.gasConsumption * 2 + self.minTonsForStorage;
     }
 
     // ======================================================== RBF ================================================================ //
@@ -243,7 +253,7 @@ contract OrderBook with Deployable, Ownable {
         dump("handleCreateIncreaseRBFPositionOrder");
         let ctx: Context = context();
 
-        if (ctx.value < executionFee + self.gasConsumption) {
+        if (ctx.value < executionFee + ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage) {
             dump("gas not enough");
             self.refundLiquidity(queryId, jettonFromAmount, account);
             return;
@@ -293,7 +303,7 @@ contract OrderBook with Deployable, Ownable {
     receive(msg: CreateDecreaseRBFPositionOrder) {
         let ctx: Context = context();
         // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
+        require(ctx.value - msg.executionFee >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
         // check execution fee
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
@@ -331,15 +341,18 @@ contract OrderBook with Deployable, Ownable {
     // cancel decrease
     receive(msg: CancelRBFPositionOrder) {
         let ctx: Context = context();
-
-        // check gas
-        require(ctx.value >= self.gasConsumption, "gas not enough");
-
         // check order
         let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(msg.orderId);
         require(orderOpt != null, "order not exist");
-
         let order: RBFPositionOrder = orderOpt!!;
+
+        // check gas
+        if (order.isIncrease) {
+            require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption * 2 + self.minTonsForStorage + self.getTransferJettonGas(), "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() + self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        }
+
         self.shouldCancel(order.blockTime, sender(), order.isPending);
 
         if (order.isIncrease) {
@@ -399,7 +412,7 @@ contract OrderBook with Deployable, Ownable {
             });
 
             // transfer execess gas
-            self.refundExecessTon(sender(), order.executionFee);
+            self.refundExecessTon(sender(), 0);
         }
     }
 
@@ -408,14 +421,20 @@ contract OrderBook with Deployable, Ownable {
     // execute decrease => decrease position for pool => decrease success => transfer jetton => token excesses handel cancel
     receive(msg: ExecuteRBFPositionOrder) {
         let ctx: Context = context();
-        // check gas
-        require(ctx.value >= self.gasConsumption, "gas not enough");
 
-        let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(msg.orderId);
         // check order
+        let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(msg.orderId);
         require(orderOpt != null, "order not exist");
 
         let order: RBFPositionOrder = orderOpt!!;
+
+        // check gas
+        if (order.isIncrease) {
+            require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + self.getTransferJettonGas(), "gas not enough");
+        }
+
         self.shouldExecute(order.blockTime, order.isPending);
 
         // update order
@@ -433,7 +452,7 @@ contract OrderBook with Deployable, Ownable {
             to: self.pool,
             value: 0,
             mode: SendRemainingValue,
-            bounce: false,
+            bounce: true,
             body: UpdateRBFPosition {
                 isIncrease: order.isIncrease,
                 orderId: msg.orderId,
@@ -442,9 +461,14 @@ contract OrderBook with Deployable, Ownable {
                 liquidityDelta: order.liquidityDelta
             }.toCell()
         });
+        dump("execute RBF increase order send msg to pool");
     }
 
+    // increase success / bounced
+    // decrease success => transfer jetton => token excesses handel cancel
     receive(msg: UpdateRBFPositionSuccess) {
+        dump("receive update RBF position success");
+        let ctx: Context = context();
         require(sender() == self.pool, "invalid sender");
 
         // get order
@@ -454,7 +478,14 @@ contract OrderBook with Deployable, Ownable {
             return;
         }
         let order: RBFPositionOrder = orderOpt!!;
-        
+
+        // check gas
+        if (order.isIncrease) {
+            require(ctx.value >= ctx.readForwardFee() + self.gasConsumption, "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption * 2 + self.getTransferJettonGas(), "gas not enough");
+        }
+
         if (order.isIncrease) {
             // delete order
             self.rbfPositionOrders.set(msg.orderId, null);
@@ -477,7 +508,7 @@ contract OrderBook with Deployable, Ownable {
 
             // transfer execess gas
             if (order.lastOperator != null) {
-                self.refundExecessTon(order.lastOperator!!, order.executionFee);
+                self.refundExecessTon(order.lastOperator!!, 0);
             }
         } else {
             // add callback
@@ -507,6 +538,8 @@ contract OrderBook with Deployable, Ownable {
 
     // reset order pending
     bounced(src: bounced<UpdateRBFPosition>) {
+        dump("increase rbf position failed");
+
         // get order
         let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(src.orderId);
         if (orderOpt == null) {
@@ -522,12 +555,22 @@ contract OrderBook with Deployable, Ownable {
 
     // ============================ Callback Cancel Increase / Execute Decrease ================================ //
     fun handelRBFPositionOrderCallback(orderId: Int, trxId: Int) {
+        let ctx: Context = context();
+
         // get order
         let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(orderId);
         if (orderOpt == null) {
             return;
         }
         let order: RBFPositionOrder = orderOpt!!;
+
+        // check gas
+        if (order.isIncrease) {
+            require(ctx.value >= ctx.readForwardFee() + self.gasConsumption, "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() + self.gasConsumption, "gas not enough");
+        }
+
         // delete order
         self.rbfPositionOrders.set(orderId, null);
 
@@ -548,6 +591,7 @@ contract OrderBook with Deployable, Ownable {
                     mode: SendPayGasSeparately
                 });
             }
+            dump("cancel RBF increase order success");
         } else {
             // event
             emit(RBFPositionOrderExecutedEvent{
@@ -569,7 +613,7 @@ contract OrderBook with Deployable, Ownable {
 
         // transfer execess gas
         if (order.lastOperator != null) {
-            self.refundExecessTon(order.lastOperator!!, order.executionFee);
+            self.refundExecessTon(order.lastOperator!!, 0);
         }
     }
 
@@ -651,7 +695,6 @@ contract OrderBook with Deployable, Ownable {
 
         // increase position failed, cancel order
         // refund jetton failed
-
         // get callback
         require(order.callbackId != null, "jetton callback not exist");
         let callbackId: Int = order.callbackId!!;
@@ -790,17 +833,6 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ============================ Getter ================================ //
-    // get fun rbfPositionOrderData(orderId: Int?): RBFPositionOrderData {
-    //     let rbfPositionOrder: RBFPositionOrder? = null;
-    //     if (orderId != null) {
-    //         rbfPositionOrder = self.rbfPositionOrders.get(orderId!!);
-    //     }
-    //     return RBFPositionOrderData{
-    //         rbfPositionOrderIndexNext: self.rbfPositionOrderIndexNext,
-    //         rbfPositionOrder: rbfPositionOrder
-    //     };
-    // }
-
     get fun rbfPositionOrder(orderId: Int): RBFPositionOrder? {
         return self.rbfPositionOrders.get(orderId);
     }

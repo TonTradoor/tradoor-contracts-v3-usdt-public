@@ -169,6 +169,7 @@ contract Pool with Deployable, Ownable, fundingRate {
     // ======================================================== RBF ================================================================ //
     
     receive(msg: UpdateRBFPosition) {
+        dump("receive update position msg");
         require(sender() == self.orderBook, "invalid sender");
 
         let receive: Int = 0;
@@ -178,18 +179,23 @@ contract Pool with Deployable, Ownable, fundingRate {
             receive = self.decreasePosition(msg.account, msg.liquidityDelta);
         }
 
+        let msgValue: Int = context().value - self.gasConsumption * 2 - self.minTonsForStorage - context().readForwardFee();
+        require(msgValue > 0, "send gas not enough");
+        dump("msgValue");
+        dump(msgValue);
         // send update success msg
         send(SendParameters{
             to: self.orderBook,
-            value: 0,
-            mode: SendRemainingValue,
+            value: msgValue,
             bounce: false,
+            mode: SendPayGasSeparately,
             body: UpdateRBFPositionSuccess {
                 orderId: msg.orderId,
                 receive: receive,
                 trxId: msg.trxId
             }.toCell()
         });
+        dump("send update RBF position msg");
     }
 
     fun increasePosition(account: Address, liquidityDelta: Int) {
@@ -256,14 +262,15 @@ contract Pool with Deployable, Ownable, fundingRate {
             tradingFee: 0,
             liquidation: 0
         }.toCell());
+        dump("increase rbf position success");
     }
 
     fun decreasePosition(account: Address, liquidityDelta: Int): Int {
         // get position
-        let fundPositionOpt: RBFPosition? = self.rbfPositions.get(account);
+        let rbfPositionOpt: RBFPosition? = self.rbfPositions.get(account);
         // check position
-        require(fundPositionOpt != null, "position not exist");
-        let rbfPosition: RBFPosition = fundPositionOpt!!;
+        require(rbfPositionOpt != null, "position not exist");
+        let rbfPosition: RBFPosition = rbfPositionOpt!!;
 
         // check unlock time
         dump(rbfPosition.unlockTime);

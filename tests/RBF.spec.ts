@@ -8,7 +8,7 @@ import { OrderBook } from '../wrappers/OrderBook';
 import { TestEnv } from './lib/TestEnv';
 import { fromJettonUnits, getFriendlyJettonBalance, getFriendlyTonBalance, getJettonBalance, getTonBalance, mint, toJettonUnits } from './lib/TokenHelper';
 import '@ton/test-utils';
-import { cancelOrderByExecutor, createIncreaseOrder } from './lib/RBFHelper';
+import { cancelOrder, createDecreaseOrder, createIncreaseOrder, executeOrder } from './lib/RBFHelper';
 
 describe('Pool', () => {
     let blockchain: Blockchain;
@@ -45,6 +45,7 @@ describe('Pool', () => {
 
         // check config
         let orderBookConfigData = await orderBook.getConfigData(executor.address, compensator.address);
+        expect(orderBookConfigData.pool).toEqualAddress(pool.address);
         expect(orderBookConfigData.usdtWallet).toEqualAddress(orderBookJettonWallet.address);
         expect(orderBookConfigData.isExecutor).toBeTruthy();
         expect(orderBookConfigData.isCompensator).toBeTruthy();
@@ -60,7 +61,7 @@ describe('Pool', () => {
 
     it('auto refund -- not enough execution fee', async () => {
         let liquidity = 10;
-        let executionFee = 0.05;
+        let executionFee = 0.1;
         
         // get orderBook TON balance
         console.log("orderBookTonBalance", await getFriendlyTonBalance(orderBook.address));
@@ -86,10 +87,9 @@ describe('Pool', () => {
         console.log("orderBookTonBalanceAfter", await getFriendlyTonBalance(orderBook.address));
     });
 
-    it('should cancel increase RBF', async () => {
-        /// create order
+    it('should create increase RBF order', async () => {
         let liquidity = 10n;
-        let executionFee = 0.1;
+        let executionFee = 0.2;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -105,21 +105,34 @@ describe('Pool', () => {
         printTransactionFees(createResult.trxResult.transactions);
         prettyLogTransactions(createResult.trxResult.transactions);
 
-        console.log('create order gas used:', fromNano(createResult.tonBefore - createResult.tonAfter - toNano(executionFee)));
+        console.log('create order gas used:', fromNano(createResult.balanceBefore.user0TonBalance - createResult.balanceAfter.user0TonBalance - toNano(executionFee)));
 
         // check order
         expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore + 1n);
         expect(createResult.order).not.toBeNull();
         expect(createResult.order?.liquidityDelta).toEqual(toJettonUnits(liquidity));
-
         // check jetton
-        expect(createResult.jettonBalanceAfter).toEqual(createResult.jettonBalanceBefore - toJettonUnits(liquidity));
+        expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance - toJettonUnits(liquidity));
+        expect(createResult.balanceAfter.orderBookJettonBalance).toEqual(createResult.balanceBefore.orderBookJettonBalance + toJettonUnits(liquidity));
+    });
+
+    it('should cancel increase RBF order', async () => {
+        /// create order
+        let liquidity = 10n;
+        let executionFee = 0.2;
+
+        // set block time
+        const time1 = Math.floor(Date.now() / 1000); 
+        blockchain.now = time1;
+
+        // create order
+        const createResult = await createIncreaseOrder(user0, liquidity, executionFee);
         
-        // wait for 3min (cancel )
+        // wait for 6s (cancel )
         blockchain.now = blockchain.now + 6;
 
         /// cancel order
-        const cancelResult = await cancelOrderByExecutor(user0, createResult.orderIdBefore);
+        const cancelResult = await cancelOrder(executor, createResult.orderIdBefore);
         printTransactionFees(cancelResult.trxResult.transactions);
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
@@ -133,233 +146,177 @@ describe('Pool', () => {
         expect(cancelResult.order).toBeNull();
 
         // check jetton
-        expect(cancelResult.userJettonBalanceAfter).toEqual(createResult.jettonBalanceBefore);
+        expect(cancelResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance);
 
-        console.log('create order gas used:', fromNano(cancelResult.executorTonBefore - cancelResult.executorTonAfter + toNano(executionFee)));
+        console.log('cancel order gas used:', fromNano(cancelResult.balanceBefore.executorTonBalance - cancelResult.balanceAfter.executorTonBalance + toNano(executionFee)));
     });
 
-    // it('should execute increase RBF', async () => {
-    //     // create order
-    //     let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-    //     let liquidity = toUnits(10, usdtDecimal);
-    //     // transfer jetton with create increase RBF position order payload
-    //     // get user jetton wallet address
-    //     let user0WalletAddress = await jetton.getGetWalletAddress(user0.address);
-    //     let user0JettonWallet = await blockchain.openContract(JettonDefaultWallet.fromAddress(user0WalletAddress));
-    //     // get user jetton balance
-    //     let user0JettonData = await user0JettonWallet.getGetWalletData();
-    //     let user0JettonBalance = user0JettonData.balance;
-    //     expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
+    it('should execute increase RBF', async () => {
+        /// create order
+        let liquidity = 10n;
+        let executionFee = 0.2;
 
-    //     let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(toNano('0.5')).endCell();
-    //     let forwardPayload =beginCell().storeRef(payloadCell).endCell();
+        // set block time
+        const time1 = Math.floor(Date.now() / 1000); 
+        blockchain.now = time1;
 
-    //     const time1 = Math.floor(Date.now() / 1000); 
-    //     blockchain.now = time1;
-    //     const trxResult = await user0JettonWallet.send(
-    //         user0.getSender(),
-    //         {
-    //             value: toNano('2'),
-    //         },
-    //         {
-    //             $$type: 'TokenTransfer',
-    //             query_id: 0n,
-    //             amount: liquidity,
-    //             destination: pool.address,
-    //             response_destination: user0.address,
-    //             custom_payload: null,
-    //             forward_ton_amount: toNano('1'),
-    //             forward_payload: forwardPayload
-    //         }
-    //     );
-
-    //     // get pool jetton wallet address
-    //     let poolWalletAddress = await jetton.getGetWalletAddress(pool.address);
-    //     expect(trxResult.transactions).toHaveTransaction({
-    //         from: poolWalletAddress,
-    //         to: pool.address,
-    //         success: true,
-    //     });
-
-    //     // check index
-    //     let index = await pool.getIncreaseRbfPositionIndexNext();
-    //     expect(index).toEqual(prevIndex + 1n);
-
-    //     // check order
-    //     let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
-    //     expect(order).not.toBeNull();
-    //     expect(order?.liquidityDelta).toEqual(liquidity);
+        // create order
+        const createResult = await createIncreaseOrder(user0, liquidity, executionFee);
         
-    //     // wait for 6s
-    //     blockchain.now = blockchain.now + 6;
-    //     /// executor order
-    //     const trxResult2 = await pool.send(
-    //         executor.getSender(),
-    //         {
-    //             value: toNano('0.5'),
-    //         },
-    //         {
-    //             $$type: 'ExecuteIncreaseRBFPositionOrder',
-    //             index: prevIndex,
-    //             trxId: 1n
-    //         }
-    //     );
+        // wait for 6s (cancel )
+        blockchain.now = blockchain.now + 6;
 
-    //     printTransactionFees(trxResult2.transactions);
-    //     expect(trxResult2.transactions).toHaveTransaction({
-    //         from: executor.address,
-    //         to: pool.address,
-    //         success: true,
-    //     });
+        /// executor order
+        const executeResult = await executeOrder(executor, createResult.orderIdBefore);
+        printTransactionFees(executeResult.trxResult.transactions);
+        prettyLogTransactions(executeResult.trxResult.transactions);
+        expect(executeResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
 
-    //     // check position
-    //     let position = await pool.getFundPosition(user0.address);
-    //     expect(position).not.toBeNull();
-    //     expect(position?.liquidity).toEqual(liquidity);
-    // });
+        // check order
+        expect(executeResult.order).toBeNull();
 
-    // it('should decrease RBF', async () => {
-    //     /* =========================== increase RBF ================================ */
-    //     // create increase order
-    //     let prevIndex = await pool.getIncreaseRbfPositionIndexNext();
-    //     let liquidity = toUnits(10, 6);
-    //     // transfer jetton with create increase RBF position order payload
-    //     // get user jetton wallet address
-    //     let user0WalletAddress = await jetton.getGetWalletAddress(user0.address);
-    //     let user0JettonWallet = await blockchain.openContract(JettonDefaultWallet.fromAddress(user0WalletAddress));
-    //     // get user jetton balance
-    //     let user0JettonData = await user0JettonWallet.getGetWalletData();
-    //     let user0JettonBalance = user0JettonData.balance;
-    //     expect(user0JettonBalance).toEqual(toUnits('100', usdtDecimal));
+        // check position
+        let position = executeResult.positionAfter;
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(liquidity));
+    });
 
-    //     let executionFee = toNano('0.5');
-    //     let payloadCell = beginCell().storeInt(1,32).storeInt(liquidity, 128).storeCoins(executionFee).endCell();
-    //     let forwardPayload = beginCell().storeRef(payloadCell).endCell();
+    it('should create decrease RBF order', async () => {
+        let liquidity = 10n;
+        let executionFee = 0.2;
 
-    //     const time1 = Math.floor(Date.now() / 1000); 
-    //     blockchain.now = time1;
-    //     const trxResult = await user0JettonWallet.send(
-    //         user0.getSender(),
-    //         {
-    //             value: toNano('1.5'),
-    //         },
-    //         {
-    //             $$type: 'TokenTransfer',
-    //             query_id: 0n,
-    //             amount: liquidity,
-    //             destination: pool.address,
-    //             response_destination: user0.address,
-    //             custom_payload: null,
-    //             forward_ton_amount: toNano('1'),
-    //             forward_payload: forwardPayload
-    //         }
-    //     );
+        // set block time
+        const time1 = Math.floor(Date.now() / 1000); 
+        blockchain.now = time1;
 
-    //     // get pool jetton wallet address
-    //     let poolWalletAddress = await jetton.getGetWalletAddress(pool.address);
-    //     expect(trxResult.transactions).toHaveTransaction({
-    //         from: poolWalletAddress,
-    //         to: pool.address,
-    //         success: true,
-    //     });
+        // create order
+        const createResult = await createDecreaseOrder(user0, liquidity, executionFee);
+        console.log('order:', createResult.order);
 
-    //     // check index
-    //     let index = await pool.getIncreaseRbfPositionIndexNext();
-    //     expect(index).toEqual(prevIndex + 1n);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: user0.address,
+            to: orderBook.address,
+            success: true,
+        });
 
-    //     // check order
-    //     let order = await pool.getIncreaseRbfPositionOrder(prevIndex);
-    //     expect(order).not.toBeNull();
-    //     expect(order?.liquidityDelta).toEqual(liquidity);
+        console.log('create order gas used:', fromNano(createResult.balanceBefore.user0TonBalance - createResult.balanceAfter.user0TonBalance - toNano(executionFee)));
+
+        // check order
+        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore + 1n);
+        expect(createResult.order).not.toBeNull();
+        expect(createResult.order?.liquidityDelta).toEqual(toJettonUnits(liquidity));
+    });
+
+    it('should cancel decrease RBF order', async () => {
+        /// create order
+        let liquidity = 10n;
+        let executionFee = 0.2;
+
+        // set block time
+        const time1 = Math.floor(Date.now() / 1000); 
+        blockchain.now = time1;
+
+        // create order
+        const createResult = await createDecreaseOrder(user0, liquidity, executionFee);
+        console.log('orderId', createResult.orderIdBefore);
+
+        // wait for 6s (cancel )
+        blockchain.now = blockchain.now + 6;
+
+        /// cancel order
+        const cancelResult = await cancelOrder(executor, createResult.orderIdBefore);
+        printTransactionFees(cancelResult.trxResult.transactions);
+        prettyLogTransactions(cancelResult.trxResult.transactions);
+
+        expect(cancelResult.trxResult.transactions).toHaveTransaction({
+            from: executor.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check order
+        expect(cancelResult.order).toBeNull();
+
+        console.log('create order gas used:', fromNano(cancelResult.balanceBefore.executorTonBalance - cancelResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+    });
+
+    it('should decrease RBF', async () => {
+        /* =========================== increase RBF ================================ */
+        /// create order
+        let liquidity = 10n;
+        let executionFee = 0.2;
+
+        // set block time
+        const time1 = Math.floor(Date.now() / 1000); 
+        blockchain.now = time1;
+
+        // create order
+        const createIncreaseResult = await createIncreaseOrder(user0, liquidity, executionFee);
         
-    //     // wait for 6s
-    //     blockchain.now = blockchain.now + 6;
-    //     // executor order
-    //     const trxResult2 = await pool.send(
-    //         executor.getSender(),
-    //         {
-    //             value: toNano('0.5'),
-    //         },
-    //         {
-    //             $$type: 'ExecuteIncreaseRBFPositionOrder',
-    //             index: prevIndex,
-    //             trxId: 1n
-    //         }
-    //     );
+        // wait for 6s (cancel )
+        blockchain.now = blockchain.now + 6;
 
-    //     printTransactionFees(trxResult2.transactions);
-    //     expect(trxResult2.transactions).toHaveTransaction({
-    //         from: executor.address,
-    //         to: pool.address,
-    //         success: true,
-    //     });
+        /// executor order
+        const executeIncreaseResult = await executeOrder(executor, createIncreaseResult.orderIdBefore);
+        printTransactionFees(executeIncreaseResult.trxResult.transactions);
+        prettyLogTransactions(executeIncreaseResult.trxResult.transactions);
+        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
 
-    //     // check position
-    //     let position = await pool.getFundPosition(user0.address);
-    //     expect(position).not.toBeNull();
-    //     expect(position?.liquidity).toEqual(liquidity);
+        // check order
+        expect(executeIncreaseResult.order).toBeNull();
 
-    //     /* =========================== decrease RBF ================================ */
-    //     // after 10days
-    //     blockchain.now = blockchain.now + 10 * 24 * 60 * 60;
+        // check position
+        let position = executeIncreaseResult.positionAfter;
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(liquidity));
 
-    //     let prevDecreaseIndex = await pool.getDecreaseRbfPositionIndexNext();
-    //     let decreaseLiquidity = toUnits(5, 6);
+        /* =========================== decrease RBF ================================ */
+        // after 10days
+        blockchain.now = blockchain.now + 10 * 24 * 60 * 60;
+        let decreaseLiquidity = 4n;
 
-    //     // create decrease order
-    //     const trxResult3 = await pool.send(
-    //         user0.getSender(),
-    //         {
-    //             value: toNano('1'),
-    //         },
-    //         {
-    //             $$type: 'CreateDecreaseRBFPositionOrder',
-    //             executionFee: executionFee,
-    //             liquidityDelta: decreaseLiquidity
-    //         }
-    //     );
-    //     printTransactionFees(trxResult3.transactions);
-    //     expect(trxResult3.transactions).toHaveTransaction({
-    //         from: user0.address,
-    //         to: pool.address,
-    //         success: true,
-    //     });
+        // create order
+        const createDecreaseResult = await createDecreaseOrder(user0, decreaseLiquidity, executionFee);
+        console.log('order:', createDecreaseResult.order);
 
-    //     // check index
-    //     let decreaseIndex = await pool.getDecreaseRbfPositionIndexNext();
-    //     expect(decreaseIndex).toEqual(prevDecreaseIndex + 1n);
+        expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
+            from: user0.address,
+            to: orderBook.address,
+            success: true,
+        });
 
-    //     // check order
-    //     let decreaseOrder = await pool.getDecreaseRbfPositionOrder(prevDecreaseIndex);
-    //     console.log('decreaseOrder:', decreaseOrder);
-    //     expect(decreaseOrder).not.toBeNull();
-    //     expect(decreaseOrder?.liquidityDelta).toEqual(decreaseLiquidity);
+        console.log('create order gas used:', fromNano(createDecreaseResult.balanceBefore.user0TonBalance - createDecreaseResult.balanceAfter.user0TonBalance - toNano(executionFee)));
 
-    //     blockchain.now = blockchain.now + 10;
-    //     /// executor order
-    //     const trxResult4 = await pool.send(
-    //         executor.getSender(),
-    //         {
-    //             value: toNano('0.5'),
-    //         },
-    //         {
-    //             $$type: 'ExecuteDecreaseRBFPositionOrder',
-    //             index: prevIndex,
-    //             trxId: 1n
-    //         }
-    //     );
+        // check order
+        expect(createDecreaseResult.orderIdAfter).toEqual(createDecreaseResult.orderIdBefore + 1n);
+        expect(createDecreaseResult.order).not.toBeNull();
+        expect(createDecreaseResult.order?.liquidityDelta).toEqual(toJettonUnits(decreaseLiquidity));
 
-    //     printTransactionFees(trxResult4.transactions);
-    //     expect(trxResult4.transactions).toHaveTransaction({
-    //         from: executor.address,
-    //         to: pool.address,
-    //         success: true,
-    //     });
+        blockchain.now = blockchain.now + 10;
+        /// executor order
+        const executeDecreaseResult = await executeOrder(executor, createDecreaseResult.orderIdBefore);
+        printTransactionFees(executeDecreaseResult.trxResult.transactions);
+        prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
+        expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
 
-    //     // check position
-    //     position = await pool.getFundPosition(user0.address);
-    //     console.log('position:', position);
-    //     expect(position).not.toBeNull();
-    //     expect(position?.liquidity).toEqual(liquidity - decreaseLiquidity);
-    // });
+        // check order
+        expect(executeDecreaseResult.order).toBeNull();
+
+        // check position
+        position = executeDecreaseResult.positionAfter;
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(liquidity - decreaseLiquidity));
+    });
 });

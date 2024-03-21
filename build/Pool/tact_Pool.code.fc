@@ -49,7 +49,7 @@
 
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell, cell, cell, cell, cell, cell), int) $Pool$_fun_calculateTotalGlobalUnrealizedPnl((int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell, cell, cell, cell, cell, cell) $self) impure inline_ref {
     var (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates)) = $self;
-    __tact_nop();
+    __tact_debug_str(__gen_slice_string_c6ecc467b09f06d441f92e923a836f96b69fc82924d5d1ce223db1f08fed7c5f());
     int $totalGlobalUnrealizedPnl = 0;
     int $i = 1;
     while (($i < $self'tokenIndexNext)) {
@@ -65,7 +65,7 @@
         }
         $i = ($i + 1);
     }
-    __tact_nop();
+    __tact_debug_str(__tact_int_to_string($totalGlobalUnrealizedPnl));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates), $totalGlobalUnrealizedPnl);
 }
 
@@ -86,29 +86,30 @@
     int $bonus = 0;
     if (($globalNetRBF < $self'globalRBFPosition'liquidity)) {
         $bonus = ((($self'bonusFactor * ($self'globalRBFPosition'liquidity - $globalNetRBF)) * $liquidityDelta) / $self'globalRBFPosition'liquidity);
-        __tact_nop();
-        __tact_nop();
+        __tact_debug_str(__gen_slice_string_4d1d72adb7b7e894e19166bb81a5119b20f05e2583267c2acabe9e71469ebb7a());
+        __tact_debug_str(__tact_int_to_string($bonus));
         $rbfPosition'bonus = ($rbfPosition'bonus + $bonus);
     }
     $rbfPosition'liquidity = ($rbfPosition'liquidity + $liquidityDelta);
     $rbfPosition'unlockTime = (now() + $self'rbfLockTime);
-    __tact_nop();
-    __tact_nop();
+    __tact_debug_str(__gen_slice_string_2bb4c1bdab9517f17315b5b9e241afacaa471bf982a23c000edab53e3caa50d9());
+    __tact_debug_str(__tact_int_to_string(cell_hash(end_cell(__tact_store_address(begin_cell(), $account)))));
     $self'rbfPositions~__tact_dict_set_slice_cell(267, $account, $RBFPosition$_store_cell(($rbfPosition'positionId, $rbfPosition'liquidity, $rbfPosition'bonus, $rbfPosition'unlockTime)));
     $self'globalRBFPosition'riskBufferFund = ($self'globalRBFPosition'riskBufferFund + $liquidityDelta);
     $self'globalRBFPosition'liquidity = ($self'globalRBFPosition'liquidity + $liquidityDelta);
     $global_emit($RBFPositionIncreasedEvent$_store_cell($RBFPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter($rbfPosition'positionId, $account, $liquidityDelta, $rbfPosition'liquidity, $bonus, $rbfPosition'bonus, $rbfPosition'unlockTime)));
     $global_emit($GlobalRBFChangedEvent$_store_cell($GlobalRBFChangedEvent$_constructor_riskBufferFundAfter_liquidityAfter_tradingFee_liquidation($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity, 0, 0)));
+    __tact_debug_str(__gen_slice_string_a4163e921dfe0673b3dd589bc6a070ca123d8b32e165dd120649f4f14103ae70());
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates), ());
 }
 
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell, cell, cell, cell, cell, cell), int) $Pool$_fun_decreasePosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell, cell, cell, cell, cell, cell) $self, slice $account, int $liquidityDelta) impure inline_ref {
     var (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates)) = $self;
-    tuple $fundPositionOpt = $RBFPosition$_load_opt(__tact_dict_get_slice_cell($self'rbfPositions, 267, $account));
-    throw_unless(5238, (~ null?($fundPositionOpt)));
-    var ($rbfPosition'positionId, $rbfPosition'liquidity, $rbfPosition'bonus, $rbfPosition'unlockTime) = $RBFPosition$_not_null($fundPositionOpt);
-    __tact_nop();
-    __tact_nop();
+    tuple $rbfPositionOpt = $RBFPosition$_load_opt(__tact_dict_get_slice_cell($self'rbfPositions, 267, $account));
+    throw_unless(5238, (~ null?($rbfPositionOpt)));
+    var ($rbfPosition'positionId, $rbfPosition'liquidity, $rbfPosition'bonus, $rbfPosition'unlockTime) = $RBFPosition$_not_null($rbfPositionOpt);
+    __tact_debug_str(__tact_int_to_string($rbfPosition'unlockTime));
+    __tact_debug_str(__tact_int_to_string(now()));
     throw_unless(31425, ($rbfPosition'unlockTime <= now()));
     throw_unless(58161, ($rbfPosition'liquidity >= $liquidityDelta));
     int $totalGlobalUnrealizedPnl = ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates)~$Pool$_fun_calculateTotalGlobalUnrealizedPnl();
@@ -136,8 +137,8 @@
     }
     $rbfPosition'liquidity = ($rbfPosition'liquidity - $liquidityDelta);
     $rbfPosition'bonus = ($rbfPosition'bonus - $bonus);
-    __tact_nop();
-    __tact_nop();
+    __tact_debug_str(__gen_slice_string_535e70d6b597da5ad67d92b6b36af7e0992cdca76b86675375f2eac7688563c0());
+    __tact_debug_str(__tact_int_to_string(cell_hash(end_cell(__tact_store_address(begin_cell(), $account)))));
     if (( (($rbfPosition'liquidity > 0)) ? (true) : (($rbfPosition'bonus > 0)) )) {
         $self'rbfPositions~__tact_dict_set_slice_cell(267, $account, $RBFPosition$_store_cell(($rbfPosition'positionId, $rbfPosition'liquidity, $rbfPosition'bonus, $rbfPosition'unlockTime)));
     } else {
@@ -245,6 +246,7 @@
 (((int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell, cell, cell, cell, cell, cell)), ()) $Pool$_internal_binary_UpdateRBFPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell, cell, cell, cell, cell, cell) $self, (int, int, slice, int, int) $msg) impure inline {
     var ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates) = $self;
     var ($msg'isIncrease, $msg'orderId, $msg'account, $msg'liquidityDelta, $msg'trxId) = $msg;
+    __tact_debug_str(__gen_slice_string_3a9bf519c1f2bcd1dad1ca80bfb320028ba4ddbce4c231f81ce58b8b61daf1d0());
     throw_unless(41207, ( __tact_slice_eq_bits($self'orderBook, __tact_context_get_sender()) ));
     int $receive = 0;
     if ($msg'isIncrease) {
@@ -252,7 +254,12 @@
     } else {
         $receive = ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates)~$Pool$_fun_decreasePosition($msg'account, $msg'liquidityDelta);
     }
-    $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'orderBook, 0, 64, false, $UpdateRBFPositionSuccess$_store_cell($UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId($msg'orderId, $receive, $msg'trxId))));
+    int $msgValue = ((($Context$_get_value(__tact_context_get()) - ($self'gasConsumption * 2)) - $self'minTonsForStorage) - $Context$_fun_readForwardFee(__tact_context_get()));
+    throw_unless(9429, ($msgValue > 0));
+    __tact_debug_str(__gen_slice_string_a963ebab065d5a16f59b7c8b63b80ecf8b7cbb68110f61911e11a88f500ad7a7());
+    __tact_debug_str(__tact_int_to_string($msgValue));
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'orderBook, $msgValue, false, 1, $UpdateRBFPositionSuccess$_store_cell($UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId($msg'orderId, $receive, $msg'trxId))));
+    __tact_debug_str(__gen_slice_string_d24569f45d9144ec127e16d8d415deb682cf4352347fe235e4115a97e1ed3535());
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates), ());
 }
 
@@ -310,13 +317,14 @@ _ supported_interfaces() method_id {
         "org.ton.introspection.v0"H >> 128,
         "org.ton.abi.ipfs.v0"H >> 128,
         "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.debug.v0"H >> 128,
         "org.ton.chain.workchain.v0"H >> 128,
         "org.ton.ownable"H >> 128
     );
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmTDjLEb9Eape4QH2qkvc1mazyDL16UmCuRaPqaAWtH5ty";
+    return "ipfs://QmVp69EKvKmnrSyZTrYAyehnWvGCqjAduhuqzeUm5c4827";
 }
 
 _ lazy_deployment_completed() method_id {

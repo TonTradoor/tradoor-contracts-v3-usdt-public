@@ -45,6 +45,9 @@ cell __tact_dict_get_slice_cell(cell d, int kl, slice k) inline;
 ;; __tact_slice_eq_bits
 int __tact_slice_eq_bits(slice a, slice b) inline;
 
+;; __tact_int_to_string
+slice __tact_int_to_string(int src) inline_ref;
+
 ;; $Deploy$_load
 (slice, ((int))) $Deploy$_load(slice sc_0) inline;
 
@@ -147,6 +150,9 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, int, 
 ;; $StateInit$_not_null
 ((cell, cell)) $StateInit$_not_null(tuple v) inline;
 
+;; $Context$_get_value
+_ $Context$_get_value((int, slice, int, slice) v) inline;
+
 ;; $ConfigData$_to_external
 (int, int, int, int, int, int, slice) $ConfigData$_to_external(((int, int, int, int, int, int, slice)) v) inline;
 
@@ -194,6 +200,9 @@ tuple $RBFPosition$_to_opt_external(tuple v) inline;
 
 ;; $global_emit
 () $global_emit(cell $body) impure inline;
+
+;; $Context$_fun_readForwardFee
+int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_ref;
 
 ;; $ConfigData$_constructor_rbfLockTime_bonusFactor_minLPMargin_maxLPLeverage_lpLiquidationFee_lpMaxRiskRate_orderBook
 ((int, int, int, int, int, int, slice)) $ConfigData$_constructor_rbfLockTime_bonusFactor_minLPMargin_maxLPLeverage_lpLiquidationFee_lpMaxRiskRate_orderBook(int rbfLockTime, int bonusFactor, int minLPMargin, int maxLPLeverage, int lpLiquidationFee, int lpMaxRiskRate, slice orderBook) inline;
@@ -255,8 +264,8 @@ tuple $RBFPosition$_to_opt_external(tuple v) inline;
 ;; $TokenConfig$_constructor_name_enable_minMarginPerPosition_maxLeveragePerPosition_liquidationFeeRatePerPosition_liquidationExecutionFee_interestRate_maxFundingRate
 ((slice, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minMarginPerPosition_maxLeveragePerPosition_liquidationFeeRatePerPosition_liquidationExecutionFee_interestRate_maxFundingRate(slice name, int enable, int minMarginPerPosition, int maxLeveragePerPosition, int liquidationFeeRatePerPosition, int liquidationExecutionFee, int interestRate, int maxFundingRate) inline;
 
-;; $SendParameters$_constructor_to_value_mode_bounce_body
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice to, int value, int mode, int bounce, cell body) inline;
+;; $SendParameters$_constructor_to_value_bounce_mode_body
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body(slice to, int value, int bounce, int mode, cell body) inline;
 
 ;; $UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId
 ((int, int, int)) $UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId(int orderId, int receive, int trxId) inline;

@@ -216,6 +216,17 @@ slice $Cell$_fun_asSlice(cell $self) impure inline {
     return begin_parse($self);
 }
 
+int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_ref {
+    var (($self'bounced, $self'sender, $self'value, $self'raw)) = $self;
+    var (($self'bounced, $self'sender, $self'value, $self'raw)) = $self;
+    slice $sc = $self'raw;
+    $sc~__tact_load_address();
+    $sc~load_coins();
+    $sc~skip_bits(1);
+    $sc~load_coins();
+    return (($sc~load_coins() * 3) / 2);
+}
+
 ((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), ()) $OrderBook$_fun_forward((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
     var (($self'minTimeDelayExecutor, $self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minPendingTimeDelayCompensator, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'tokenConfigs, $self'tokenIndexNext, $self'owner, $self'executors, $self'compensators, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'increaseLPPositionOrders, $self'increaseLPPositionOrderIndexNext, $self'increasePerpPositionMarketOrders, $self'increasePerpPositionMarketOrderIndexNext)) = $self;
     var ($init) = $init;

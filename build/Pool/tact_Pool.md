@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 5925 bytes
+BOC Size: 6488 bytes
 
 # Types
 Total Types: 89
@@ -400,6 +400,7 @@ Argument: account
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 5238: position not exist
+9429: send gas not enough
 23236: insufficient global RBF
 31425: not reach unlock time
 41207: invalid sender

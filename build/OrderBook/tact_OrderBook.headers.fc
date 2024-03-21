@@ -207,6 +207,9 @@ tuple $RBFPositionOrder$_to_opt_external(tuple v) inline;
 ;; $Cell$_fun_asSlice
 slice $Cell$_fun_asSlice(cell $self) impure inline;
 
+;; $Context$_fun_readForwardFee
+int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_ref;
+
 ;; $OrderBook$_fun_isExecutor
 ((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), int) $OrderBook$_fun_isExecutor((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, slice $account) impure inline_ref;
 
@@ -233,6 +236,12 @@ slice $Cell$_fun_asSlice(cell $self) impure inline;
 
 ;; $OrderBook$_fun_refundExecessTon
 ((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), ()) $OrderBook$_fun_refundExecessTon((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self, slice $to, int $executionFee) impure inline_ref;
+
+;; $OrderBook$_fun_getTransferJettonGas
+((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), int) $OrderBook$_fun_getTransferJettonGas((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self) impure inline_ref;
+
+;; $OrderBook$_fun_getPoolGas
+((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int), int) $OrderBook$_fun_getPoolGas((int, int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, int) $self) impure inline_ref;
 
 ;; $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_pendingTime_callbackId_executionFeeReceiver_lastOperator
 ((int, slice, int, int, int, int, int, int, slice, slice)) $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_pendingTime_callbackId_executionFeeReceiver_lastOperator(int isIncrease, slice account, int liquidityDelta, int executionFee, int blockTime, int isPending, int pendingTime, int callbackId, slice executionFeeReceiver, slice lastOperator) inline;
