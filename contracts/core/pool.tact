@@ -378,7 +378,7 @@ contract Pool with Deployable, Ownable, fundingRate {
             value: msgValue,
             bounce: false,
             mode: SendPayGasSeparately,
-            body: UpdateRBFPositionSuccess {
+            body: UpdateLPPositionSuccess {
                 orderId: msg.orderId,
                 receive: receive,
                 trxId: msg.trxId

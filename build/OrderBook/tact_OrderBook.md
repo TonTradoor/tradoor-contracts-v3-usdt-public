@@ -3,7 +3,7 @@ Contract: OrderBook
 BOC Size: 13032 bytes
 
 # Types
-Total Types: 58
+Total Types: 55
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -148,18 +148,6 @@ Signature: `LPPositionOrderCancelledEvent{opType:uint8,orderId:int257,trxId:int2
 ## LPPositionOrderExecutedEvent
 TLB: `lp_position_order_executed_event#d72f36d8 opType:uint8 orderId:int257 trxId:int257 = LPPositionOrderExecutedEvent`
 Signature: `LPPositionOrderExecutedEvent{opType:uint8,orderId:int257,trxId:int257}`
-
-## DecreaseLPPositionOrderCreatedEvent
-TLB: `decrease_lp_position_order_created_event#04df076d account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 orderId:int257 = DecreaseLPPositionOrderCreatedEvent`
-Signature: `DecreaseLPPositionOrderCreatedEvent{account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,orderId:int257}`
-
-## DecreaseLPPositionOrderCancelledEvent
-TLB: `decrease_lp_position_order_cancelled_event#185d15c3 orderId:int257 trxId:int257 = DecreaseLPPositionOrderCancelledEvent`
-Signature: `DecreaseLPPositionOrderCancelledEvent{orderId:int257,trxId:int257}`
-
-## DecreaseLPPositionOrderExecutedEvent
-TLB: `decrease_lp_position_order_executed_event#9903b72a orderId:int257 trxId:int257 = DecreaseLPPositionOrderExecutedEvent`
-Signature: `DecreaseLPPositionOrderExecutedEvent{orderId:int257,trxId:int257}`
 
 ## IncreasePerpPositionMarketOrderCreatedEvent
 TLB: `increase_perp_position_market_order_created_event#562e4a74 account:address token:^string isLong:bool marginDelta:int257 sizeDelta:int257 acceptablePrice:int257 executionFee:int257 orderId:int257 = IncreasePerpPositionMarketOrderCreatedEvent`

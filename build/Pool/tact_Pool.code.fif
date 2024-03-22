@@ -23,6 +23,8 @@ PROGRAM{
   DECLPROC $UpdateRBFPositionSuccess$_store
   DECLPROC $UpdateRBFPositionSuccess$_store_cell
   DECLPROC $UpdateLPPosition$_load
+  DECLPROC $UpdateLPPositionSuccess$_store
+  DECLPROC $UpdateLPPositionSuccess$_store_cell
   DECLPROC $CancelIncreasePerpPositionMarketOrder$_load
   DECLPROC $ExecuteIncreasePerpPositionMarketOrder$_load
   DECLPROC $RBFPositionIncreasedEvent$_store
@@ -116,6 +118,7 @@ PROGRAM{
   DECLPROC $TokenConfig$_constructor_name_enable_minMarginPerPosition_maxLeveragePerPosition_liquidationFeeRatePerPosition_liquidationExecutionFee_interestRate_maxFundingRate
   DECLPROC $SendParameters$_constructor_to_value_bounce_mode_body
   DECLPROC $UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId
+  DECLPROC $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $Pool$_internal_binary_UpdateConfig
   DECLPROC $Pool$_internal_binary_UpdateTokenConfig
@@ -577,6 +580,23 @@ PROGRAM{
     LDIX
     64 LDU
     6 -ROLL
+  }>
+  $UpdateLPPositionSuccess$_store PROCINLINE:<{
+    1233766337 PUSHINT
+    s0 s4 XCHG2
+    32 STU
+    s1 s2 XCHG
+    257 PUSHINT
+    STIX
+    257 PUSHINT
+    STIX
+    64 STU
+  }>
+  $UpdateLPPositionSuccess$_store_cell PROCINLINE:<{
+    NEWC
+    3 -ROLL
+    $UpdateLPPositionSuccess$_store INLINECALLDICT
+    ENDC
   }>
   $CancelIncreasePerpPositionMarketOrder$_load PROCINLINE:<{
     32 LDU
@@ -2870,6 +2890,8 @@ PROGRAM{
   }>
   $UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId PROCINLINE:<{
   }>
+  $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId PROCINLINE:<{
+  }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
   $Pool$_internal_binary_UpdateConfig PROCINLINE:<{
@@ -3482,8 +3504,8 @@ PROGRAM{
     s0 33 s() XCHG
     1 PUSHINT
     s0 33 s() XCHG
-    $UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId INLINECALLDICT
-    $UpdateRBFPositionSuccess$_store_cell INLINECALLDICT
+    $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId INLINECALLDICT
+    $UpdateLPPositionSuccess$_store_cell INLINECALLDICT
     19 s() PUSH
     s0 s4 XCHG
     s3 34 s() XCHG

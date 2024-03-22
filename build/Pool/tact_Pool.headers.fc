@@ -75,6 +75,12 @@ cell $UpdateRBFPositionSuccess$_store_cell((int, int, int) v) inline;
 ;; $UpdateLPPosition$_load
 (slice, ((int, int, slice, int, int, int))) $UpdateLPPosition$_load(slice sc_0) inline_ref;
 
+;; $UpdateLPPositionSuccess$_store
+builder $UpdateLPPositionSuccess$_store(builder build_0, (int, int, int) v) inline;
+
+;; $UpdateLPPositionSuccess$_store_cell
+cell $UpdateLPPositionSuccess$_store_cell((int, int, int) v) inline;
+
 ;; $CancelIncreasePerpPositionMarketOrder$_load
 (slice, ((int, int))) $CancelIncreasePerpPositionMarketOrder$_load(slice sc_0) inline;
 
@@ -353,6 +359,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId
 ((int, int, int)) $UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId(int orderId, int receive, int trxId) inline;
+
+;; $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId
+((int, int, int)) $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId(int orderId, int receive, int trxId) inline;
 
 ;; $DeployOk$_constructor_queryId
 ((int)) $DeployOk$_constructor_queryId(int queryId) inline;

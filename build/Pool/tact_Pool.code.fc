@@ -408,7 +408,7 @@
     }
     int $msgValue = ((($Context$_get_value(__tact_context_get()) - ($self'gasConsumption * 2)) - $self'minTonsForStorage) - $Context$_fun_readForwardFee(__tact_context_get()));
     throw_unless(9429, ($msgValue > 0));
-    $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'orderBook, $msgValue, false, 1, $UpdateRBFPositionSuccess$_store_cell($UpdateRBFPositionSuccess$_constructor_orderId_receive_trxId($msg'orderId, $receive, $msg'trxId))));
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'orderBook, $msgValue, false, 1, $UpdateLPPositionSuccess$_store_cell($UpdateLPPositionSuccess$_constructor_orderId_receive_trxId($msg'orderId, $receive, $msg'trxId))));
     __tact_debug_str(__gen_slice_string_dad7f839f24ebd4c09d8fa4970c3670f607e06fef5dfdf893e7aa31c25940441());
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'priceStates, $self'globalRiskBufferFunds, $self'globalPositions, $self'globalFundingRateSamples, $self'globalLiquidityPositions, $self'previousGlobalFundingRates), ());
 }

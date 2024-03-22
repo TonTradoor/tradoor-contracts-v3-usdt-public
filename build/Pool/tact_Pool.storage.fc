@@ -170,6 +170,29 @@ cell $UpdateRBFPositionSuccess$_store_cell((int, int, int) v) inline {
 }
 
 ;;
+;; Type: UpdateLPPositionSuccess
+;; Header: 0x4989c7c1
+;; TLB: update_lp_position_success#4989c7c1 orderId:int257 receive:int257 trxId:uint64 = UpdateLPPositionSuccess
+;;
+
+builder $UpdateLPPositionSuccess$_store(builder build_0, (int, int, int) v) inline {
+    var (v'orderId, v'receive, v'trxId) = v;
+    build_0 = store_uint(build_0, 1233766337, 32);
+    build_0 = build_0.store_int(v'orderId, 257);
+    build_0 = build_0.store_int(v'receive, 257);
+    build_0 = build_0.store_uint(v'trxId, 64);
+    return build_0;
+}
+
+cell $UpdateLPPositionSuccess$_store_cell((int, int, int) v) inline {
+    return $UpdateLPPositionSuccess$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, int)) $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId(int orderId, int receive, int trxId) inline {
+    return (orderId, receive, trxId);
+}
+
+;;
 ;; Type: CancelIncreasePerpPositionMarketOrder
 ;; Header: 0xfc741917
 ;; TLB: cancel_increase_perp_position_market_order#fc741917 index:int257 trxId:int257 = CancelIncreasePerpPositionMarketOrder

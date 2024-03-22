@@ -4,9 +4,9 @@ import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits } from "./TokenHelper";
 
-export async function createIncreaseRBFOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
+export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContract>, margin: number, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = await TestEnv.orderBook.getRbfPositionOrderIndexNext();
+    let orderIdBefore = await TestEnv.orderBook.getLpPositionOrderIndexNext();
     // create order
     const jettonWallet = await getJettonWallet(user.address);
     const trxResult = await jettonWallet.send(
@@ -17,7 +17,7 @@ export async function createIncreaseRBFOrder(user: SandboxContract<TreasuryContr
         {
             $$type: 'TokenTransfer',
             query_id: 0n,
-            amount: toUnits(liquidity, TestEnv.jettonDecimal),
+            amount: toUnits(margin, TestEnv.jettonDecimal),
             destination: TestEnv.orderBook.address,
             response_destination: user.address,
             custom_payload: null,
@@ -26,7 +26,8 @@ export async function createIncreaseRBFOrder(user: SandboxContract<TreasuryContr
                 beginCell()
                 .storeRef(
                     beginCell()
-                    .storeInt(1,32) // op
+                    .storeInt(2,32) // op
+                    .storeInt(toUnits(margin, TestEnv.jettonDecimal), 128) // margin
                     .storeInt(toUnits(liquidity, TestEnv.jettonDecimal), 128) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()
@@ -35,8 +36,8 @@ export async function createIncreaseRBFOrder(user: SandboxContract<TreasuryContr
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = await TestEnv.orderBook.getRbfPositionOrderIndexNext();
-    let order = await TestEnv.orderBook.getRbfPositionOrder(orderIdBefore);
+    let orderIdAfter = await TestEnv.orderBook.getLpPositionOrderIndexNext();
+    let order = await TestEnv.orderBook.getLpPositionOrder(orderIdBefore);
 
     return {
         trxResult,
@@ -48,7 +49,7 @@ export async function createIncreaseRBFOrder(user: SandboxContract<TreasuryContr
     };
 }
 
-export async function cancelRBFOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
+export async function cancelLPOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
     let balanceBefore = await getAllBalance();
     
     const trxResult = await TestEnv.orderBook.send(
@@ -57,7 +58,7 @@ export async function cancelRBFOrder(executor: SandboxContract<TreasuryContract>
             value: toNano('0.5'),
         },
         {
-            $$type: 'CancelRBFPositionOrder',
+            $$type: 'CancelLPPositionOrder',
             orderId: orderId,
             trxId: 1n,
             executionFeeReceiver: executor.address
@@ -66,7 +67,7 @@ export async function cancelRBFOrder(executor: SandboxContract<TreasuryContract>
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let order = await TestEnv.orderBook.getRbfPositionOrder(orderId);
+    let order = await TestEnv.orderBook.getLpPositionOrder(orderId);
 
     return {
         trxResult,
@@ -77,10 +78,10 @@ export async function cancelRBFOrder(executor: SandboxContract<TreasuryContract>
 }
 
 
-export async function executeRBFOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
+export async function executeLPOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
     let balanceBefore = await getAllBalance();
-    let orderBefore = await TestEnv.orderBook.getRbfPositionOrder(orderId);
-    let positionBefore = await TestEnv.pool.getRbfPosition(orderBefore?.account!!);
+    let orderBefore = await TestEnv.orderBook.getLpPositionOrder(orderId);
+    let positionBefore = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
     
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
@@ -88,7 +89,7 @@ export async function executeRBFOrder(executor: SandboxContract<TreasuryContract
             value: toNano('0.5'),
         },
         {
-            $$type: 'ExecuteRBFPositionOrder',
+            $$type: 'ExecuteLPPositionOrder',
             orderId: orderId,
             trxId: 2n,
             executionFeeReceiver: executor.address
@@ -97,8 +98,8 @@ export async function executeRBFOrder(executor: SandboxContract<TreasuryContract
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let order = await TestEnv.orderBook.getRbfPositionOrder(orderId);
-    let positionAfter = await TestEnv.pool.getRbfPosition(orderBefore?.account!!);
+    let order = await TestEnv.orderBook.getLpPositionOrder(orderId);
+    let positionAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
 
     return {
         trxResult,
@@ -111,9 +112,9 @@ export async function executeRBFOrder(executor: SandboxContract<TreasuryContract
 }
 
 
-export async function createDecreaseRBFOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
+export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContract>, margin: number, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = await TestEnv.orderBook.getRbfPositionOrderIndexNext();
+    let orderIdBefore = await TestEnv.orderBook.getLpPositionOrderIndexNext();
     // create order
     const trxResult = await TestEnv.orderBook.send(
         user.getSender(),
@@ -121,15 +122,16 @@ export async function createDecreaseRBFOrder(user: SandboxContract<TreasuryContr
             value: toNano('0.5'),
         },
         {
-            $$type: 'CreateDecreaseRBFPositionOrder',
+            $$type: 'CreateDecreaseLPPositionOrder',
             executionFee: toNano(executionFee),
+            marginDelta: toJettonUnits(margin),
             liquidityDelta: toJettonUnits(liquidity)
         }
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = await TestEnv.orderBook.getRbfPositionOrderIndexNext();
-    let order = await TestEnv.orderBook.getRbfPositionOrder(orderIdBefore);
+    let orderIdAfter = await TestEnv.orderBook.getLpPositionOrderIndexNext();
+    let order = await TestEnv.orderBook.getLpPositionOrder(orderIdBefore);
 
     return {
         trxResult,
