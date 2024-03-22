@@ -18,12 +18,13 @@ struct ConfigData {
     pool: Address;
 }
 
-// ============================ Jetton ================================ //
+// ============================ Callback ================================ //
 struct JettonCallback {
     orderType: Int;
     orderId: Int;
     tokenId: Int?;
     amount: Int;
+    receiver: Address;
     trxId: Int;
 }
 
@@ -42,7 +43,8 @@ struct RBFPositionOrder {
 }
 
 // ============================ LP ================================ //
-struct IncreaseLPPositionOrder {
+struct LPPositionOrder {
+    opType: Int as uint8;
     account: Address;
     marginDelta: Int;
     liquidityDelta: Int;
@@ -50,16 +52,9 @@ struct IncreaseLPPositionOrder {
     blockTime: Int;
     isPending: Bool;
     pendingTime: Int;
-}
-
-struct DecreaseLPPositionOrder {
-    account: Address;
-    marginDelta: Int;
-    liquidityDelta: Int;
-    executionFee: Int;
-    blockTime: Int;
-    isPending: Bool;
-    pendingTime: Int;
+    callbackId: Int?;
+    executionFeeReceiver: Address?;
+    lastOperator: Address?;
 }
 
 // ============================ Perp ================================ //
@@ -79,48 +74,48 @@ struct IncreasePerpPositionMarketOrder {
 }
 
 // decrease market order
-struct DecreasePerpPositionMarketOrders {
-    decreasePerpPositionMarketOrders: map<Int, DecreasePerpPositionMarketOrder>;
-}
+// struct DecreasePerpPositionMarketOrders {
+//     decreasePerpPositionMarketOrders: map<Int, DecreasePerpPositionMarketOrder>;
+// }
 
-struct DecreasePerpPositionMarketOrder {
-    account: Address;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    acceptablePrice: Int;
-    executionFee: Int;
-    blockTime: Int;
-}
+// struct DecreasePerpPositionMarketOrder {
+//     account: Address;
+//     isLong: Bool;
+//     marginDelta: Int;
+//     sizeDelta: Int;
+//     acceptablePrice: Int;
+//     executionFee: Int;
+//     blockTime: Int;
+// }
 
-// increase limit order
-struct IncreasePerpPositionLimitOrders {
-    increasePerpPositionLimitOrders: map<Int, IncreasePerpPositionLimitOrder>;
-}
+// // increase limit order
+// struct IncreasePerpPositionLimitOrders {
+//     increasePerpPositionLimitOrders: map<Int, IncreasePerpPositionLimitOrder>;
+// }
 
-struct IncreasePerpPositionLimitOrder {
-    account: Address;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
-    triggerAbove: Bool;
-    executionFee: Int;
-    blockTime: Int;
-}
+// struct IncreasePerpPositionLimitOrder {
+//     account: Address;
+//     isLong: Bool;
+//     marginDelta: Int;
+//     sizeDelta: Int;
+//     triggerPrice: Int;
+//     triggerAbove: Bool;
+//     executionFee: Int;
+//     blockTime: Int;
+// }
 
-// decrease limit order
-struct DecreasePerpPositionLimitOrders {
-    decreasePerpPositionLimitOrders: map<Int, DecreasePerpPositionLimitOrder>;
-}
+// // decrease limit order
+// struct DecreasePerpPositionLimitOrders {
+//     decreasePerpPositionLimitOrders: map<Int, DecreasePerpPositionLimitOrder>;
+// }
 
-struct DecreasePerpPositionLimitOrder {
-    account: Address;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
-    triggerAbove: Bool;
-    executionFee: Int;
-    blockTime: Int;
-}
+// struct DecreasePerpPositionLimitOrder {
+//     account: Address;
+//     isLong: Bool;
+//     marginDelta: Int;
+//     sizeDelta: Int;
+//     triggerPrice: Int;
+//     triggerAbove: Bool;
+//     executionFee: Int;
+//     blockTime: Int;
+// }

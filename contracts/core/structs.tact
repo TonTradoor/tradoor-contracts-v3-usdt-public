@@ -53,6 +53,7 @@ struct DecreaseLPPositionOrder {
 }
 
 struct LPPosition {
+    positionId: Int;
     margin: Int;
     liquidity: Int;
     entryFundingFeeGrowth: Int;

@@ -9,7 +9,7 @@ export async function run(provider: NetworkProvider) {
     /// create order
     let orderId = await orderBook.getRbfPositionOrderIndexNext();
     let decreaseLiquidity = 4;
-    let executionFee = toNano('0.5');
+    let executionFee = 0.2;
 
     const lastTrx = await getLastTransaction(provider, orderBook.address);
     await orderBook.send(

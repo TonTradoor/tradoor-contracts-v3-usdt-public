@@ -11,3 +11,8 @@ const ORDER_TYPE_RBF: Int = 1;
 const ORDER_TYPE_LP: Int = 2;
 const ORDER_TYPE_PERP_MARKET: Int = 3;
 const ORDER_TYPE_PERP_LIMIT: Int = 4;
+
+const ORDER_OP_TYPE_INCREASE: Int = 1;
+const ORDER_OP_TYPE_DECREASE: Int = 2;
+const ORDER_OP_TYPE_LIQUIDATION: Int = 3;
+const ORDER_OP_TYPE_ADL: Int = 4;

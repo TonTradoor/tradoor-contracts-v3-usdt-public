@@ -60,129 +60,176 @@ message(0x1cf0cf81) UpdateRBFPositionSuccess {
     trxId: Int as uint64;
 }
 
-message CompensateIncreaseRBFPositionOrder {
+message CompensateRBFPositionOrder {
     orderId: Int;
     trxId: Int;
-    positionSuccess: Bool;
-    refundSuccess: Bool;
-    executionFeeReceiver: Address?;
-}
-
-message CompensateDecreaseRBFPositionOrder {
-    orderId: Int;
-    trxId: Int;
-    positionSuccess: Bool;
-    refundSuccess: Bool;
+    needRefund: Bool;
+    isExecute: Bool;
     executionFeeReceiver: Address?;
 }
 // ============================ LP ================================ //
-// increase LP
-message CancelIncreaseLPPositionOrder {
-    executionFeeReceiver: Address;
-    orderId: Int;
-    trxId: Int;
-}
-
-message ExecuteIncreaseLPPositionOrder {
-    executionFeeReceiver: Address;
-    orderId: Int;
-    trxId: Int;
-}
-
-// decrease LP
 message CreateDecreaseLPPositionOrder {
     executionFee: Int;
     marginDelta: Int;
     liquidityDelta: Int;
 }
 
-message CancelDecreaseLPPositionOrder {
-    executionFeeReceiver: Address;
+message CancelLPPositionOrder {
+    executionFeeReceiver: Address?;
     orderId: Int;
     trxId: Int;
 }
 
-message ExecuteDecreaseLPPositionOrder {
-    executionFeeReceiver: Address;
+message ExecuteLPPositionOrder {
+    executionFeeReceiver: Address?;
     orderId: Int;
     trxId: Int;
+}
+
+message LiquidateLPPositionOrder {
+    executionFeeReceiver: Address?;
+    account: Address;
+    trxId: Int;
+}
+
+message(0xfea36b71) UpdateLPPosition {
+    orderId: Int as uint64;
+    opType: Int as uint8;
+    account: Address;
+    marginDelta: Int;
+    liquidityDelta: Int;
+    trxId: Int as uint64;
+}
+
+message(0x4989c7c1) UpdateLPPositionSuccess {
+    orderId: Int;
+    receive: Int;
+    trxId: Int as uint64;
+}
+
+message CompensateLPPositionOrder {
+    orderId: Int;
+    trxId: Int;
+    needRefund: Bool;
+    isExecute: Bool;
+    executionFeeReceiver: Address?;
 }
 
 // ============================ Perp ================================ //
-// increase market Perp
-message CancelIncreasePerpPositionMarketOrder {
-    executionFeeReceiver: Address;
+message CancelPerpPositionOrder {
+    executionFeeReceiver: Address?;
     orderId: Int;
     trxId: Int;
 }
 
-message ExecuteIncreasePerpPositionMarketOrder {
-    executionFeeReceiver: Address;
+message ExecutePerpPositionOrder {
+    executionFeeReceiver: Address?;
     orderId: Int;
     trxId: Int;
 }
 
-// decrease market Perp
-message CreateDecreasePerpPositionMarketOrder {
-    token: String;
-    isLong: Bool;
+message CreateDecreasePerpPositionOrder {
+    executionFee: Int;
     marginDelta: Int;
-    sizeDelta: Int;
-    acceptablePrice: Int;
+    liquidityDelta: Int;
 }
 
-message CancelDecreasePerpPositionMarketOrder {
-    executionFeeReceiver: Address;
+message(0xe89cd45f) UpdatePerpPosition {
+    isIncrease: Bool;
+    orderId: Int as uint64;
+    account: Address;
+    liquidityDelta: Int;
+    trxId: Int as uint64;
+}
+
+message(0x1cf0cf81) UpdatePerpPositionSuccess {
+    orderId: Int;
+    receive: Int;
+    trxId: Int as uint64;
+}
+
+message CompensatePerpPositionOrder {
     orderId: Int;
     trxId: Int;
+    needRefund: Bool;
+    isExecute: Bool;
+    executionFeeReceiver: Address?;
 }
 
-message ExecuteDecreasePerpPositionMarketOrder {
-    executionFeeReceiver: Address;
-    orderId: Int;
-    trxId: Int;
-}
+// // increase market Perp
+// message CancelIncreasePerpPositionMarketOrder {
+//     executionFeeReceiver: Address;
+//     orderId: Int;
+//     trxId: Int;
+// }
 
-// increase limit Perp
-message CreateIncreasePerpPositionLimitOrder {
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
-    triggerAbove: Bool;
-}
+// message ExecuteIncreasePerpPositionMarketOrder {
+//     executionFeeReceiver: Address;
+//     orderId: Int;
+//     trxId: Int;
+// }
 
-message CancelIncreasePerpPositionLimitOrder {
-    executionFeeReceiver: Address;
-    orderId: Int;
-    trxId: Int;
-}
+// // decrease market Perp
+// message CreateDecreasePerpPositionMarketOrder {
+//     token: String;
+//     isLong: Bool;
+//     marginDelta: Int;
+//     sizeDelta: Int;
+//     acceptablePrice: Int;
+// }
 
-message ExecuteIncreasePerpPositionLimitOrder {
-    executionFeeReceiver: Address;
-    orderId: Int;
-    trxId: Int;
-}
+// message CancelDecreasePerpPositionMarketOrder {
+//     executionFeeReceiver: Address;
+//     orderId: Int;
+//     trxId: Int;
+// }
 
-// decrease limit Perp
-message CreateDecreasePerpPositionLimitOrder {
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
-    triggerAbove: Bool;
-}
+// message ExecuteDecreasePerpPositionMarketOrder {
+//     executionFeeReceiver: Address;
+//     orderId: Int;
+//     trxId: Int;
+// }
 
-message CancelDecreasePerpPositionLimitOrder {
-    executionFeeReceiver: Address;
-    orderId: Int;
-    trxId: Int;
-}
+// // increase limit Perp
+// message CreateIncreasePerpPositionLimitOrder {
+//     token: String;
+//     isLong: Bool;
+//     marginDelta: Int;
+//     sizeDelta: Int;
+//     triggerPrice: Int;
+//     triggerAbove: Bool;
+// }
 
-message ExecuteDecreasePerpPositionLimitOrder {
-    executionFeeReceiver: Address;
-    orderId: Int;
-    trxId: Int;
-}
+// message CancelIncreasePerpPositionLimitOrder {
+//     executionFeeReceiver: Address;
+//     orderId: Int;
+//     trxId: Int;
+// }
+
+// message ExecuteIncreasePerpPositionLimitOrder {
+//     executionFeeReceiver: Address;
+//     orderId: Int;
+//     trxId: Int;
+// }
+
+// // decrease limit Perp
+// message CreateDecreasePerpPositionLimitOrder {
+//     token: String;
+//     isLong: Bool;
+//     marginDelta: Int;
+//     sizeDelta: Int;
+//     triggerPrice: Int;
+//     triggerAbove: Bool;
+// }
+
+// message CancelDecreasePerpPositionLimitOrder {
+//     executionFeeReceiver: Address;
+//     orderId: Int;
+//     trxId: Int;
+// }
+
+// message ExecuteDecreasePerpPositionLimitOrder {
+//     executionFeeReceiver: Address;
+//     orderId: Int;
+//     trxId: Int;
+// }

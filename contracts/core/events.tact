@@ -8,6 +8,7 @@ message RBFPositionIncreasedEvent {
     bonusDelta: Int;
     bonusAfter: Int;
     unlockTimeAfter: Int;
+    trxId: Int;
 }
 
 // decrease RBF
@@ -19,6 +20,7 @@ message RBFPositionDecreasedEvent {
     bonusDelta: Int;
     bonusAfter: Int;
     receive: Int; // realizedPnl = receive - liquidityDelta
+    trxId: Int;
 }
 
 // global RBF
@@ -27,29 +29,13 @@ message GlobalRBFChangedEvent {
     liquidityAfter: Int;
     tradingFee: Int;
     liquidation: Int;
+    trxId: Int;
 }
 
 // ============================ LP ================================ //
 // increase LP
-message IncreaseLPPositionCreatedEvent {
-    account: Address;
-    marginDelta: Int;
-    liquidityDelta: Int;
-    executionFee: Int;
-    index: Int;
-}
-
-message IncreaseLPPositionCancelledEvent {
-    index: Int;
-    trxId: Int;
-}
-
-message IncreaseLPPositionExecutedEvent {
-    index: Int;
-    trxId: Int;
-}
-
 message LPPositionIncreasedEvent {
+    positionId: Int;
     account: Address;
     marginDelta: Int;
     marginAfter: Int;
@@ -57,28 +43,12 @@ message LPPositionIncreasedEvent {
     liquidityAfter: Int;
     entryFundingFeeGrowth: Int;
     entryTradingFeeGrowth: Int;
+    trxId: Int;
 }
 
 // decrease LP
-message DecreaseLPPositionCreatedEvent {
-    account: Address;
-    marginDelta: Int;
-    liquidityDelta: Int;
-    executionFee: Int;
-    index: Int;
-}
-
-message DecreaseLPPositionCancelledEvent {
-    index: Int;
-    trxId: Int;
-}
-
-message DecreaseLPPositionExecutedEvent {
-    index: Int;
-    trxId: Int;
-}
-
 message LPPositionDecreasedEvent {
+    positionId: Int;
     account: Address;
     marginDelta: Int;
     marginAfter: Int;
@@ -87,24 +57,32 @@ message LPPositionDecreasedEvent {
     tradingFee: Int;
     fundingFee: Int;
     realizedLoss: Int;
+    receive: Int;
+    trxId: Int;
 }
 
 // liquidate LP
 message LPPositionLiquidatedEvent {
+    positionId: Int;
     account: Address;
-    trxId: Int;
     margin: Int;
     liquidity: Int;
     tradingFee: Int;
     fundingFee: Int;
     liquidationFee: Int;
+    trxId: Int;
 }
 
 // global LP
-message GlobalLPChangedEvent {
+message GlobalLPLiquidityChangedEvent {
+    liquidityAfter: Int;
+    trxId: Int;
+}
+message GlobalLPPositionChangedEvent {
     netSizeAfter: Int;
     isLong: Bool;
     entryPriceAfter: Int;
+    trxId: Int;
 }
 
 // ============================ Perp ================================ //

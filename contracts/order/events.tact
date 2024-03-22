@@ -21,8 +21,8 @@ message RBFPositionOrderExecutedEvent {
 }
 
 // ============================ LP ================================ //
-// increase LP
-message IncreaseLPPositionOrderCreatedEvent {
+message LPPositionOrderCreatedEvent {
+    opType: Int as uint8;
     account: Address;
     marginDelta: Int;
     liquidityDelta: Int;
@@ -30,31 +30,14 @@ message IncreaseLPPositionOrderCreatedEvent {
     orderId: Int;
 }
 
-message IncreaseLPPositionOrderCancelledEvent {
+message LPPositionOrderCancelledEvent {
+    opType: Int as uint8;
     orderId: Int;
     trxId: Int;
 }
 
-message IncreaseLPPositionOrderExecutedEvent {
-    orderId: Int;
-    trxId: Int;
-}
-
-// decrease LP
-message DecreaseLPPositionOrderCreatedEvent {
-    account: Address;
-    marginDelta: Int;
-    liquidityDelta: Int;
-    executionFee: Int;
-    orderId: Int;
-}
-
-message DecreaseLPPositionOrderCancelledEvent {
-    orderId: Int;
-    trxId: Int;
-}
-
-message DecreaseLPPositionOrderExecutedEvent {
+message LPPositionOrderExecutedEvent {
+    opType: Int as uint8;
     orderId: Int;
     trxId: Int;
 }

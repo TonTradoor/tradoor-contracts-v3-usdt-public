@@ -167,16 +167,15 @@ contract Pool with Deployable, Ownable, fundingRate {
     }
 
     // ======================================================== RBF ================================================================ //
-    
     receive(msg: UpdateRBFPosition) {
         dump("receive update position msg");
         require(sender() == self.orderBook, "invalid sender");
 
         let receive: Int = 0;
         if (msg.isIncrease) {
-            self.increasePosition(msg.account, msg.liquidityDelta);
+            self.increaseRBFPosition(msg.account, msg.liquidityDelta, msg.trxId);
         } else {
-            receive = self.decreasePosition(msg.account, msg.liquidityDelta);
+            receive = self.decreaseRBFPosition(msg.account, msg.liquidityDelta, msg.trxId);
         }
 
         let msgValue: Int = context().value - self.gasConsumption * 2 - self.minTonsForStorage - context().readForwardFee();
@@ -196,7 +195,7 @@ contract Pool with Deployable, Ownable, fundingRate {
         dump("send update RBF position msg");
     }
 
-    fun increasePosition(account: Address, liquidityDelta: Int) {
+    fun increaseRBFPosition(account: Address, liquidityDelta: Int, trxId: Int) {
         // get position
         let lpPositionOpt: RBFPosition? = self.rbfPositions.get(account);
         // init position if not exist
@@ -252,18 +251,20 @@ contract Pool with Deployable, Ownable, fundingRate {
             liquidityAfter: rbfPosition.liquidity,
             bonusDelta: bonus,
             bonusAfter: rbfPosition.bonus,
-            unlockTimeAfter: rbfPosition.unlockTime
+            unlockTimeAfter: rbfPosition.unlockTime,
+            trxId: trxId
         }.toCell());
         emit(GlobalRBFChangedEvent{
             riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
             liquidityAfter: self.globalRBFPosition.liquidity,
             tradingFee: 0,
-            liquidation: 0
+            liquidation: 0,
+            trxId: trxId
         }.toCell());
         dump("increase rbf position success");
     }
 
-    fun decreasePosition(account: Address, liquidityDelta: Int): Int {
+    fun decreaseRBFPosition(account: Address, liquidityDelta: Int, trxId: Int): Int {
         // get position
         let rbfPositionOpt: RBFPosition? = self.rbfPositions.get(account);
         // check position
@@ -338,13 +339,15 @@ contract Pool with Deployable, Ownable, fundingRate {
             liquidityAfter: rbfPosition.liquidity,
             bonusDelta: bonus,
             bonusAfter: rbfPosition.bonus,
-            receive: receive
+            receive: receive,
+            trxId: trxId
         }.toCell());
         emit(GlobalRBFChangedEvent{
             riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
             liquidityAfter: self.globalRBFPosition.liquidity,
             tradingFee: 0,
-            liquidation: 0
+            liquidation: 0,
+            trxId: trxId
         }.toCell());
         return receive;
     }
@@ -354,423 +357,276 @@ contract Pool with Deployable, Ownable, fundingRate {
     }
 
     // ============================ LP ================================ //
-    // fun handleCreateIncreaseLPPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, marginDelta: Int, liquidityDelta: Int) {
-    //     dump("handleCreateIncreaseLPPositionOrder");
-    //     let ctx: Context = context();
+    receive(msg: UpdateLPPosition) {
+        dump("receive update LP position msg");
+        require(sender() == self.orderBook, "invalid sender");
 
-    //     if (jettonFromAmount < marginDelta) {
-    //         self.refundLiquidity(queryId, jettonFromAmount, account);
-    //         dump("refund not enough liquidity");
-    //         return;
-    //     }
-    //     // check executionFee
-    //     if (ctx.value < executionFee) {
-    //         dump("execution fee not enough");
-    //         self.refundLiquidity(queryId, jettonFromAmount, account);
-    //         return;
-    //     }
+        let receive: Int = 0;
+        if (msg.opType == ORDER_OP_TYPE_INCREASE) {
+            self.increaseLPPosition(msg.account, msg.marginDelta, msg.liquidityDelta, msg.trxId);
+        } else if (msg.opType == ORDER_OP_TYPE_DECREASE) {
+            receive = self.decreaseLPPosition(msg.account, msg.marginDelta, msg.liquidityDelta, msg.trxId);
+        } else {
+            receive = self.liquidateLPPosition(msg.account, msg.trxId);
+        }
 
-    //     // add new order
-    //     let index: Int = self.increaseLPPositionIndexNext;
-    //     self.increaseLPPositionIndexNext = self.increaseLPPositionIndexNext + 1;
-    //     self.increaseLPPositionOrders.set(index, IncreaseLPPositionOrder{
-    //         account: account,
-    //         marginDelta: marginDelta,
-    //         liquidityDelta: liquidityDelta,
-    //         executionFee: executionFee,
-    //         blockTime: now()
-    //     });
+        let msgValue: Int = context().value - self.gasConsumption * 2 - self.minTonsForStorage - context().readForwardFee();
+        require(msgValue > 0, "send gas not enough");
+        // send update success msg
+        send(SendParameters{
+            to: self.orderBook,
+            value: msgValue,
+            bounce: false,
+            mode: SendPayGasSeparately,
+            body: UpdateRBFPositionSuccess {
+                orderId: msg.orderId,
+                receive: receive,
+                trxId: msg.trxId
+            }.toCell()
+        });
+        dump("send update LP position msg");
+    }
 
-    //     // event
-    //     emit(IncreaseLPPositionCreatedEvent{
-    //         account: account,
-    //         marginDelta: marginDelta,
-    //         liquidityDelta: liquidityDelta,
-    //         executionFee: executionFee,
-    //         index: index
-    //     }.toCell());
-    // }
-    
-    // receive(msg: CancelIncreaseLPPositionOrder) {
-    //     let ctx: Context = context();
+    fun increaseLPPosition(account: Address, marginDelta: Int, liquidityDelta: Int, trxId: Int) {
+        // get position
+        let lpPositionOpt: LPPosition? = self.lpPositions.get(account);
+        // init position if not exist
+        let lpPosition: LPPosition = LPPosition{
+            positionId: 0,
+            margin: 0,
+            liquidity: 0,
+            entryFundingFeeGrowth: 0,
+            entryTradingFeeGrowth: 0
+        };
+        if (lpPositionOpt != null) {
+            lpPosition = lpPositionOpt!!;
+        } else {
+            lpPosition.positionId = self.lpPositionIndexNext;
+            self.lpPositionIndexNext = self.lpPositionIndexNext + 1;
+        }
 
-    //     // check gas
-    //     require(ctx.value >= self.gasConsumption, "gas not enough");
-
-    //     // check order
-    //     let orderOpt: IncreaseLPPositionOrder? = self.increaseLPPositionOrders.get(msg.index);
-    //     if (orderOpt == null) {
-    //         return;
-    //     }
-    //     let order: IncreaseLPPositionOrder = orderOpt!!;
-    //     self.shouldCancel(order.blockTime, ctx.sender);
-
-    //     // transfer execution fee
-    //     send(SendParameters{
-    //         to: self.executionFeeReceiver,
-    //         bounce: true,
-    //         value: order.executionFee,
-    //         mode: SendIgnoreErrors
-    //     });
-
-    //     // TODO transfer jetton
-
-    //     // delete order
-    //     self.increaseLPPositionOrders.set(msg.index, null);
-    //     // event
-    //     emit(IncreaseLPPositionCancelledEvent{
-    //         index: msg.index,
-    //         trxId: msg.trxId
-    //     }.toCell());
-    // }
-    
-    // receive(msg: ExecuteIncreaseLPPositionOrder) {
-    //     let orderOpt: IncreaseLPPositionOrder? = self.increaseLPPositionOrders.get(msg.index);
-    //     // check order
-    //     require(orderOpt != null, "order not exist");
-
-    //     let order: IncreaseLPPositionOrder = orderOpt!!;
-    //     self.shouldExecute(order.blockTime);
-
-    //     // get position
-    //     let lpPositionOpt: LPPosition? = self.lpPositions.get(order.account);
-    //     // init position if not exist
-    //     let lpPosition: LPPosition = LPPosition{
-    //         margin: 0,
-    //         liquidity: 0,
-    //         entryFundingFeeGrowth: 0,
-    //         entryTradingFeeGrowth: 0
-    //     };
-    //     if (lpPositionOpt != null) {
-    //         lpPosition = lpPositionOpt!!;
-    //     }
-
-    //     let marginAfter: Int = 0;
-    //     if (lpPosition.liquidity == 0) {
-    //         marginAfter = order.marginDelta;
-    //         // check margin and leverage
-    //         require(marginAfter >= self.minLPMargin, "insufficient margin");
-    //         require(marginAfter * self.maxLPLeverage >= order.liquidityDelta, "legerage too high");
-    //     } else {
-    //         // calculate funding fee
-    //         let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
-    //         // calculate trading fee
-    //         let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
-    //         marginAfter = lpPosition.margin + tradingFee + fundingFee + order.marginDelta;
-    //         // calculate pnl
-    //         let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
-    //         let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
-    //         let unrealizedLoss: Int = 0;
-    //         if (unrealizedPnl < 0) {
-    //             unrealizedLoss = -unrealizedPnl;
-    //         }
-    //         // check risk rate
-    //         require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT > unrealizedLoss, "risk rate too high");
-    //         // check leverage
-    //         require(marginAfter * self.maxLPLeverage >= order.liquidityDelta, "legerage too high");
-    //     }
+        let marginAfter: Int = 0;
+        if (lpPosition.liquidity == 0) {
+            marginAfter = marginDelta;
+            // check margin and leverage
+            require(marginAfter >= self.minLPMargin, "insufficient margin");
+            require(marginAfter * self.maxLPLeverage >= liquidityDelta, "legerage too high");
+        } else {
+            // calculate funding fee
+            let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
+            // calculate trading fee
+            let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
+            marginAfter = lpPosition.margin + tradingFee + fundingFee + marginDelta;
+            // calculate pnl
+            let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
+            let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
+            let unrealizedLoss: Int = 0;
+            if (unrealizedPnl < 0) {
+                unrealizedLoss = -unrealizedPnl;
+            }
+            // check risk rate
+            require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT > unrealizedLoss, "risk rate too high");
+            // check leverage
+            require(marginAfter * self.maxLPLeverage >= liquidityDelta, "legerage too high");
+        }
         
-    //     // update position
-    //     lpPosition.margin = marginAfter;
-    //     lpPosition.liquidity = lpPosition.liquidity + order.liquidityDelta;
-    //     lpPosition.entryFundingFeeGrowth = self.lpFundingFeeGrowth;
-    //     lpPosition.entryTradingFeeGrowth = self.lpTradingFeeGrowth;
+        // update position
+        lpPosition.margin = marginAfter;
+        lpPosition.liquidity = lpPosition.liquidity + liquidityDelta;
+        lpPosition.entryFundingFeeGrowth = self.lpFundingFeeGrowth;
+        lpPosition.entryTradingFeeGrowth = self.lpTradingFeeGrowth;
 
-    //     // set position
-    //     dump("execute increase lp position order");
-    //     dump(beginCell().storeAddress(order.account).endCell().hash());
+        // set position
+        dump("execute increase lp position order");
+        dump(beginCell().storeAddress(account).endCell().hash());
 
-    //     self.lpPositions.set(order.account, lpPosition);
+        self.lpPositions.set(account, lpPosition);
 
-    //     // update global position
-    //     self.globalLiquidity = self.globalLiquidity + order.liquidityDelta;
+        // update global position
+        self.globalLiquidity = self.globalLiquidity + liquidityDelta;
 
-    //     // delete order
-    //     self.increaseLPPositionOrders.set(msg.index, null);
+        // event
+        emit(LPPositionIncreasedEvent{
+            positionId: lpPosition.positionId,
+            account: account,
+            marginDelta: marginDelta,
+            marginAfter: lpPosition.margin,
+            liquidityDelta: liquidityDelta,
+            liquidityAfter: lpPosition.liquidity,
+            entryFundingFeeGrowth: lpPosition.entryFundingFeeGrowth,
+            entryTradingFeeGrowth: lpPosition.entryTradingFeeGrowth,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalLPLiquidityChangedEvent{
+            liquidityAfter: self.globalLiquidity,
+            trxId: trxId
+        }.toCell());
+    }
+
+    fun decreaseLPPosition(account: Address, marginDelta: Int, liquidityDelta: Int, trxId: Int): Int {
+        // get position
+        let lpPositionOpt: LPPosition? = self.lpPositions.get(account);
+        require(lpPositionOpt != null, "position not exist");
+
+        let lpPosition: LPPosition = lpPositionOpt!!;
+
+        // TODO update funding rate        
+
+        // calculate funding fee
+        let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
+        // calculate trading fee
+        let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
+        let marginAfter: Int = lpPosition.margin + tradingFee + fundingFee;
+        // check margin
+        require(marginAfter >= marginDelta, "insufficient margin");
+        marginAfter = marginAfter - marginDelta;
+
+        // check liquidity
+        require(lpPosition.liquidity >= liquidityDelta, "insufficient liquidity");
+        let liquidityAfter: Int = lpPosition.liquidity - liquidityDelta;
+
+        // calculate pnl
+        let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
+        let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
+        let unrealizedLoss: Int = 0;
+        if (unrealizedPnl < 0) {
+            unrealizedLoss = -unrealizedPnl;
+        }
         
-    //     // transfer execution fee
-    //     send(SendParameters{
-    //         to: self.executionFeeReceiver,
-    //         bounce: true,
-    //         value: order.executionFee,
-    //         mode: SendIgnoreErrors
-    //     });
+        // check global liquidity
+        require(self.globalRBFPosition.riskBufferFund + self.globalLiquidity + unrealizedPnl >= liquidityDelta, "insufficient global liquidity");
 
-    //     // event
-    //     emit(IncreaseLPPositionExecutedEvent{
-    //         index: msg.index,
-    //         trxId: msg.trxId
-    //     }.toCell());
-    //     emit(LPPositionIncreasedEvent{
-    //         account: order.account,
-    //         marginDelta: order.marginDelta,
-    //         marginAfter: lpPosition.margin,
-    //         liquidityDelta: order.liquidityDelta,
-    //         liquidityAfter: lpPosition.liquidity,
-    //         entryFundingFeeGrowth: lpPosition.entryFundingFeeGrowth,
-    //         entryTradingFeeGrowth: lpPosition.entryTradingFeeGrowth
-    //     }.toCell());
-    // }
-
-    // receive(msg: CreateDecreaseLPPositionOrder) {
-    //     let ctx: Context = context();
-    //     // check gas
-    //     require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
-    //     // check execution fee
-    //     require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
-
-    //     // add new order
-    //     let index: Int = self.decreaseLPPositionIndexNext;
-    //     self.decreaseLPPositionIndexNext = self.decreaseLPPositionIndexNext + 1;
-    //     self.decreaseLPPositionOrders.set(index, DecreaseLPPositionOrder{
-    //         account: sender(),
-    //         marginDelta: msg.marginDelta,
-    //         liquidityDelta: msg.liquidityDelta,
-    //         executionFee: msg.executionFee,
-    //         blockTime: now()
-    //     });
-
-    //     // event
-    //     emit(DecreaseLPPositionCreatedEvent{
-    //         account: sender(),
-    //         marginDelta: msg.marginDelta,
-    //         liquidityDelta: msg.liquidityDelta,
-    //         executionFee: msg.executionFee,
-    //         index: index
-    //     }.toCell());
-    // }
-    
-    // receive(msg: CancelDecreaseLPPositionOrder) {
-    //     let ctx: Context = context();
-
-    //     // check gas
-    //     require(ctx.value >= self.gasConsumption, "gas not enough");
-
-    //     // check order
-    //     let orderOpt: DecreaseLPPositionOrder? = self.decreaseLPPositionOrders.get(msg.index);
-    //     if (orderOpt == null) {
-    //         return;
-    //     }
-    //     let order: DecreaseLPPositionOrder = orderOpt!!;
-    //     self.shouldCancel(order.blockTime, ctx.sender);
-
-    //     // TODO transfer execution fee
-
-    //     // TODO transfer jetton
-
-    //     // delete order
-    //     self.decreaseLPPositionOrders.set(msg.index, null);
-    //     // event
-    //     emit(DecreaseLPPositionCancelledEvent{
-    //         index: msg.index,
-    //         trxId: msg.trxId
-    //     }.toCell());
-    // }
-    
-    // receive(msg: ExecuteDecreaseLPPositionOrder) {
-    //     let orderOpt: DecreaseLPPositionOrder? = self.decreaseLPPositionOrders.get(msg.index);
-    //     // check order
-    //     require(orderOpt != null, "order not exist");
-
-    //     let order: DecreaseLPPositionOrder = orderOpt!!;
-    //     self.shouldExecute(order.blockTime);
-
-    //     // update position
-    //     let lpPositionOpt: LPPosition? = self.lpPositions.get(order.account);
-    //     // init position if not exist
-    //     let lpPosition: LPPosition = LPPosition{
-    //         margin: 0,
-    //         liquidity: 0,
-    //         entryFundingFeeGrowth: 0,
-    //         entryTradingFeeGrowth: 0
-    //     };
-    //     if (lpPositionOpt != null) {
-    //         lpPosition = lpPositionOpt!!;
-    //     }
-
-    //     // TODO update funding rate        
-
-    //     // calculate funding fee
-    //     let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
-    //     // calculate trading fee
-    //     let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
-    //     let marginAfter: Int = lpPosition.margin + tradingFee + fundingFee;
-    //     // check margin
-    //     require(marginAfter >= order.marginDelta, "insufficient margin");
-    //     marginAfter = marginAfter - order.marginDelta;
-
-    //     // check liquidity
-    //     require(lpPosition.liquidity >= order.liquidityDelta, "insufficient liquidity");
-    //     let liquidityAfter: Int = lpPosition.liquidity - order.liquidityDelta;
-
-    //     // calculate pnl
-    //     let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
-    //     let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
-    //     let unrealizedLoss: Int = 0;
-    //     if (unrealizedPnl < 0) {
-    //         unrealizedLoss = -unrealizedPnl;
-    //     }
+        let receiveMargin: Int = 0;
+        let realizedLoss: Int = 0;
+        if (liquidityAfter > 0) {
+            realizedLoss = unrealizedLoss * liquidityDelta / lpPosition.liquidity;
+            if (realizedLoss <= marginDelta) {
+                receiveMargin = marginDelta - realizedLoss;
+            } else {
+                receiveMargin = 0;
+                marginAfter = marginAfter + marginDelta - realizedLoss;
+            }
+            // check risk rate
+            require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT > unrealizedLoss, "risk rate too hig");
+            // check leverage
+            require(marginAfter * self.maxLPLeverage >= liquidityDelta, "legerage too high");
+        } else {
+            realizedLoss = unrealizedLoss;
+            marginAfter = marginAfter - realizedLoss;
+            receiveMargin = marginAfter;
+        }
         
-    //     // check global liquidity
-    //     require(self.globalRBFPosition.riskBufferFund + self.globalLiquidity + unrealizedPnl >= order.liquidityDelta, "insufficient global liquidity");
+        if (liquidityAfter > 0) {
+            // update position
+            lpPosition.margin = marginAfter;
+            lpPosition.liquidity = liquidityAfter;
+            lpPosition.entryFundingFeeGrowth = self.lpFundingFeeGrowth;
+            lpPosition.entryTradingFeeGrowth = self.lpTradingFeeGrowth;
+            self.lpPositions.set(account, lpPosition);
+        } else {
+            // delete position
+            self.lpPositions.set(account, null);
+        }
 
-    //     let receivedMargin: Int = 0;
-    //     let realizedLoss: Int = 0;
-    //     if (liquidityAfter > 0) {
-    //         realizedLoss = unrealizedLoss * order.liquidityDelta / lpPosition.liquidity;
-    //         if (realizedLoss <= order.marginDelta) {
-    //             receivedMargin = order.marginDelta - realizedLoss;
-    //         } else {
-    //             receivedMargin = 0;
-    //             marginAfter = marginAfter + order.marginDelta - realizedLoss;
-    //         }
-    //         // check risk rate
-    //         require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT > unrealizedLoss, "risk rate too hig");
-    //         // check leverage
-    //         require(marginAfter * self.maxLPLeverage >= order.liquidityDelta, "legerage too high");
-    //     } else {
-    //         realizedLoss = unrealizedLoss;
-    //         marginAfter = marginAfter - realizedLoss;
-    //         receivedMargin = marginAfter;
-    //     }
+        dump("execute decrease lp position order");
+        dump(beginCell().storeAddress(account).endCell().hash());
+
+        // update global position
+        self.globalLiquidity = self.globalLiquidity - liquidityDelta;
+
+        // event
+        emit(LPPositionDecreasedEvent{
+            positionId: lpPosition.positionId,
+            account: account,
+            marginDelta: marginDelta,
+            marginAfter: lpPosition.margin,
+            liquidityDelta: liquidityDelta,
+            liquidityAfter: lpPosition.liquidity,
+            tradingFee: tradingFee,
+            fundingFee: fundingFee,
+            realizedLoss: realizedLoss,
+            receive: receiveMargin,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalLPLiquidityChangedEvent{
+            liquidityAfter: self.globalLiquidity,
+            trxId: trxId
+        }.toCell());
+        return receiveMargin;
+    }
+
+    fun liquidateLPPosition(account: Address, trxId: Int): Int {
+        // get position
+        let lpPositionOpt: LPPosition? = self.lpPositions.get(account);
+        // check position
+        require(lpPositionOpt != null, "position not exist");
+        let lpPosition: LPPosition = lpPositionOpt!!;
+
+        // TODO update funding rate        
+
+        // calculate funding fee
+        let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
+        // calculate trading fee
+        let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
+        let realizedProfit: Int = tradingFee + fundingFee;
+        let marginAfter: Int = lpPosition.margin + realizedProfit;
+
+        // calculate pnl
+        let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
+        let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
+        let unrealizedLoss: Int = 0;
+        if (unrealizedPnl < 0) {
+            unrealizedLoss = -unrealizedPnl;
+        }
+
+        // check risk rate
+        require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT <= unrealizedLoss, "risk rate too high");
         
-    //     // TODO transfer margin
-    //     if (receivedMargin > 0) {
-
-    //     }
+        // margin substract fee
+        let liquidationFee: Int = self.lpLiquidationFee;
+        if (marginAfter < self.lpLiquidationFee) {
+            liquidationFee = marginAfter;
+            marginAfter = 0;
+        } else {
+            marginAfter = marginAfter - self.lpLiquidationFee;
+        }
         
-    //     if (liquidityAfter > 0) {
-    //         // update position
-    //         lpPosition.margin = marginAfter;
-    //         lpPosition.liquidity = liquidityAfter;
-    //         lpPosition.entryFundingFeeGrowth = self.lpFundingFeeGrowth;
-    //         lpPosition.entryTradingFeeGrowth = self.lpTradingFeeGrowth;
-    //         self.lpPositions.set(order.account, lpPosition);
-    //     } else {
-    //         // delete position
-    //         self.lpPositions.set(order.account, null);
-    //     }
+        // remained margin add to RBF
+        self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund + marginAfter;
 
-    //     dump("execute decrease lp position order");
-    //     dump(beginCell().storeAddress(order.account).endCell().hash());
+        // delete position
+        self.lpPositions.set(account, null);
 
-    //     // update global position
-    //     self.globalLiquidity = self.globalLiquidity - order.liquidityDelta;
+        dump("liquidate lp position order");
+        dump(beginCell().storeAddress(account).endCell().hash());
 
-    //     // delete order
-    //     self.increaseLPPositionOrders.set(msg.index, null);
+        // update global position
+        self.globalLiquidity = self.globalLiquidity - lpPosition.liquidity;
         
-    //     // transfer execution fee
-    //     send(SendParameters{
-    //         to: self.executionFeeReceiver,
-    //         bounce: true,
-    //         value: order.executionFee,
-    //         mode: SendIgnoreErrors
-    //     });
+        // event
+        emit(LPPositionLiquidatedEvent{
+            positionId: lpPosition.positionId,
+            account: account,
+            margin: lpPosition.margin,
+            liquidity: lpPosition.liquidity,
+            tradingFee: tradingFee,
+            fundingFee: fundingFee,
+            liquidationFee: liquidationFee,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalRBFChangedEvent{
+            riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
+            liquidityAfter: self.globalRBFPosition.liquidity,
+            tradingFee: 0,
+            liquidation: 0,
+            trxId: trxId
+        }.toCell());
+        return liquidationFee;
+    }
 
-    //     // event
-    //     emit(DecreaseLPPositionExecutedEvent{
-    //         index: msg.index,
-    //         trxId: msg.trxId
-    //     }.toCell());
-    //     emit(LPPositionDecreasedEvent{
-    //         account: order.account,
-    //         marginDelta: order.marginDelta,
-    //         marginAfter: lpPosition.margin,
-    //         liquidityDelta: order.liquidityDelta,
-    //         liquidityAfter: lpPosition.liquidity,
-    //         tradingFee: tradingFee,
-    //         fundingFee: fundingFee,
-    //         realizedLoss: realizedLoss
-    //     }.toCell());
-
-    // }
-
-    // receive(msg: LiquidateLPPosition) {
-    //     // get position
-    //     let lpPositionOpt: LPPosition? = self.lpPositions.get(msg.account);
-    //     // check position
-    //     require(lpPositionOpt != null, "position not exist");
-    //     let lpPosition: LPPosition = lpPositionOpt!!;
-
-    //     // TODO update funding rate        
-
-    //     // calculate funding fee
-    //     let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
-    //     // calculate trading fee
-    //     let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
-    //     let realizedProfit: Int = tradingFee + fundingFee;
-    //     let marginAfter: Int = lpPosition.margin + realizedProfit;
-
-    //     // calculate pnl
-    //     let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
-    //     let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
-    //     let unrealizedLoss: Int = 0;
-    //     if (unrealizedPnl < 0) {
-    //         unrealizedLoss = -unrealizedPnl;
-    //     }
-
-    //     // check risk rate
-    //     require((marginAfter - self.lpLiquidationFee) * self.lpMaxRiskRate / BASIS_POINT <= unrealizedLoss, "risk rate too high");
-        
-    //     // margin substract fee
-    //     let liquidationFee: Int = self.lpLiquidationFee;
-    //     if (marginAfter < self.lpLiquidationFee) {
-    //         liquidationFee = marginAfter;
-    //         marginAfter = 0;
-    //     } else {
-    //         marginAfter = marginAfter - self.lpLiquidationFee;
-    //     }
-        
-    //     // remained margin add to RBF
-    //     self.globalRBFPosition.riskBufferFund = self.globalRBFPosition.riskBufferFund + marginAfter;
-                
-    //     // delete position
-    //     self.lpPositions.set(msg.account, null);
-
-    //     dump("liquidate lp position order");
-    //     dump(beginCell().storeAddress(msg.account).endCell().hash());
-
-    //     // update global position
-    //     self.globalLiquidity = self.globalLiquidity - lpPosition.liquidity;
-        
-    //     // TODO send liquidation fee to executor
-
-    //     // event
-    //     emit(LPPositionLiquidatedEvent{
-    //         account: msg.account,
-    //         trxId: msg.trxId,
-    //         margin: lpPosition.margin,
-    //         liquidity: lpPosition.liquidity,
-    //         tradingFee: tradingFee,
-    //         fundingFee: fundingFee,
-    //         liquidationFee: liquidationFee
-    //     }.toCell());
-    //     emit(GlobalRBFChangedEvent{
-    //         riskBufferFundAfter: self.globalRBFPosition.riskBufferFund,
-    //         liquidityAfter: self.globalRBFPosition.liquidity
-    //     }.toCell());
-    // }
-
-    // get fun increaseLPPositionIndexNext(): Int {
-    //     return self.increaseLPPositionIndexNext;
-    // }
-
-    // get fun increaseLPPositionOrder(index: Int): IncreaseLPPositionOrder? {
-    //     return self.increaseLPPositionOrders.get(index);
-    // }
-
-    // get fun decreaseLPPositionIndexNext(): Int {
-    //     return self.decreaseLPPositionIndexNext;
-    // }
-
-    // get fun decreaseLPPositionOrder(index: Int): DecreaseLPPositionOrder? {
-    //     return self.decreaseLPPositionOrders.get(index);
-    // }
-
-    // get fun lpPosition(account: Address): LPPosition? {
-    //     return self.lpPositions.get(account);
-    // }
+    get fun lpPosition(account: Address): LPPosition? {
+        return self.lpPositions.get(account);
+    }
 
     // ============================ Perp ================================ //
     // fun handleCreateIncreasePerpPositionMarketOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, 

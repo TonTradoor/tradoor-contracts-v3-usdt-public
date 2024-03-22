@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 10477 bytes
+BOC Size: 13032 bytes
 
 # Types
-Total Types: 69
+Total Types: 58
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -69,77 +69,61 @@ Signature: `UpdateRBFPosition{isIncrease:bool,orderId:uint64,account:address,liq
 TLB: `update_rbf_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateRBFPositionSuccess`
 Signature: `UpdateRBFPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
-## CompensateIncreaseRBFPositionOrder
-TLB: `compensate_increase_rbf_position_order#c8541fd9 orderId:int257 trxId:int257 positionSuccess:bool refundSuccess:bool executionFeeReceiver:Maybe address = CompensateIncreaseRBFPositionOrder`
-Signature: `CompensateIncreaseRBFPositionOrder{orderId:int257,trxId:int257,positionSuccess:bool,refundSuccess:bool,executionFeeReceiver:Maybe address}`
-
-## CompensateDecreaseRBFPositionOrder
-TLB: `compensate_decrease_rbf_position_order#c1618eb3 orderId:int257 trxId:int257 positionSuccess:bool refundSuccess:bool executionFeeReceiver:Maybe address = CompensateDecreaseRBFPositionOrder`
-Signature: `CompensateDecreaseRBFPositionOrder{orderId:int257,trxId:int257,positionSuccess:bool,refundSuccess:bool,executionFeeReceiver:Maybe address}`
-
-## CancelIncreaseLPPositionOrder
-TLB: `cancel_increase_lp_position_order#0da19d6e executionFeeReceiver:address orderId:int257 trxId:int257 = CancelIncreaseLPPositionOrder`
-Signature: `CancelIncreaseLPPositionOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
-
-## ExecuteIncreaseLPPositionOrder
-TLB: `execute_increase_lp_position_order#e06785fe executionFeeReceiver:address orderId:int257 trxId:int257 = ExecuteIncreaseLPPositionOrder`
-Signature: `ExecuteIncreaseLPPositionOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## CompensateRBFPositionOrder
+TLB: `compensate_rbf_position_order#260ad933 orderId:int257 trxId:int257 needRefund:bool isExecute:bool executionFeeReceiver:Maybe address = CompensateRBFPositionOrder`
+Signature: `CompensateRBFPositionOrder{orderId:int257,trxId:int257,needRefund:bool,isExecute:bool,executionFeeReceiver:Maybe address}`
 
 ## CreateDecreaseLPPositionOrder
 TLB: `create_decrease_lp_position_order#7202bd7d executionFee:int257 marginDelta:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder`
 Signature: `CreateDecreaseLPPositionOrder{executionFee:int257,marginDelta:int257,liquidityDelta:int257}`
 
-## CancelDecreaseLPPositionOrder
-TLB: `cancel_decrease_lp_position_order#a3d5b983 executionFeeReceiver:address orderId:int257 trxId:int257 = CancelDecreaseLPPositionOrder`
-Signature: `CancelDecreaseLPPositionOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## CancelLPPositionOrder
+TLB: `cancel_lp_position_order#58157fbb executionFeeReceiver:Maybe address orderId:int257 trxId:int257 = CancelLPPositionOrder`
+Signature: `CancelLPPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257}`
 
-## ExecuteDecreaseLPPositionOrder
-TLB: `execute_decrease_lp_position_order#65646b81 executionFeeReceiver:address orderId:int257 trxId:int257 = ExecuteDecreaseLPPositionOrder`
-Signature: `ExecuteDecreaseLPPositionOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## ExecuteLPPositionOrder
+TLB: `execute_lp_position_order#03ca863c executionFeeReceiver:Maybe address orderId:int257 trxId:int257 = ExecuteLPPositionOrder`
+Signature: `ExecuteLPPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257}`
 
-## CancelIncreasePerpPositionMarketOrder
-TLB: `cancel_increase_perp_position_market_order#58b94082 executionFeeReceiver:address orderId:int257 trxId:int257 = CancelIncreasePerpPositionMarketOrder`
-Signature: `CancelIncreasePerpPositionMarketOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## LiquidateLPPositionOrder
+TLB: `liquidate_lp_position_order#5241dc81 executionFeeReceiver:Maybe address account:address trxId:int257 = LiquidateLPPositionOrder`
+Signature: `LiquidateLPPositionOrder{executionFeeReceiver:Maybe address,account:address,trxId:int257}`
 
-## ExecuteIncreasePerpPositionMarketOrder
-TLB: `execute_increase_perp_position_market_order#e025c33b executionFeeReceiver:address orderId:int257 trxId:int257 = ExecuteIncreasePerpPositionMarketOrder`
-Signature: `ExecuteIncreasePerpPositionMarketOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## UpdateLPPosition
+TLB: `update_lp_position#fea36b71 orderId:uint64 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 trxId:uint64 = UpdateLPPosition`
+Signature: `UpdateLPPosition{orderId:uint64,opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,trxId:uint64}`
 
-## CreateDecreasePerpPositionMarketOrder
-TLB: `create_decrease_perp_position_market_order#e3a4bafb token:^string isLong:bool marginDelta:int257 sizeDelta:int257 acceptablePrice:int257 = CreateDecreasePerpPositionMarketOrder`
-Signature: `CreateDecreasePerpPositionMarketOrder{token:^string,isLong:bool,marginDelta:int257,sizeDelta:int257,acceptablePrice:int257}`
+## UpdateLPPositionSuccess
+TLB: `update_lp_position_success#4989c7c1 orderId:int257 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
+Signature: `UpdateLPPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
-## CancelDecreasePerpPositionMarketOrder
-TLB: `cancel_decrease_perp_position_market_order#b402e2ab executionFeeReceiver:address orderId:int257 trxId:int257 = CancelDecreasePerpPositionMarketOrder`
-Signature: `CancelDecreasePerpPositionMarketOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## CompensateLPPositionOrder
+TLB: `compensate_lp_position_order#b7f34c24 orderId:int257 trxId:int257 needRefund:bool isExecute:bool executionFeeReceiver:Maybe address = CompensateLPPositionOrder`
+Signature: `CompensateLPPositionOrder{orderId:int257,trxId:int257,needRefund:bool,isExecute:bool,executionFeeReceiver:Maybe address}`
 
-## ExecuteDecreasePerpPositionMarketOrder
-TLB: `execute_decrease_perp_position_market_order#934e1515 executionFeeReceiver:address orderId:int257 trxId:int257 = ExecuteDecreasePerpPositionMarketOrder`
-Signature: `ExecuteDecreasePerpPositionMarketOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## CancelPerpPositionOrder
+TLB: `cancel_perp_position_order#f99514f3 executionFeeReceiver:Maybe address orderId:int257 trxId:int257 = CancelPerpPositionOrder`
+Signature: `CancelPerpPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257}`
 
-## CreateIncreasePerpPositionLimitOrder
-TLB: `create_increase_perp_position_limit_order#c8482978 token:^string isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool = CreateIncreasePerpPositionLimitOrder`
-Signature: `CreateIncreasePerpPositionLimitOrder{token:^string,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool}`
+## ExecutePerpPositionOrder
+TLB: `execute_perp_position_order#f6e18f60 executionFeeReceiver:Maybe address orderId:int257 trxId:int257 = ExecutePerpPositionOrder`
+Signature: `ExecutePerpPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257}`
 
-## CancelIncreasePerpPositionLimitOrder
-TLB: `cancel_increase_perp_position_limit_order#e789101a executionFeeReceiver:address orderId:int257 trxId:int257 = CancelIncreasePerpPositionLimitOrder`
-Signature: `CancelIncreasePerpPositionLimitOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## CreateDecreasePerpPositionOrder
+TLB: `create_decrease_perp_position_order#c9e7c454 executionFee:int257 marginDelta:int257 liquidityDelta:int257 = CreateDecreasePerpPositionOrder`
+Signature: `CreateDecreasePerpPositionOrder{executionFee:int257,marginDelta:int257,liquidityDelta:int257}`
 
-## ExecuteIncreasePerpPositionLimitOrder
-TLB: `execute_increase_perp_position_limit_order#507e4926 executionFeeReceiver:address orderId:int257 trxId:int257 = ExecuteIncreasePerpPositionLimitOrder`
-Signature: `ExecuteIncreasePerpPositionLimitOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## UpdatePerpPosition
+TLB: `update_perp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64}`
 
-## CreateDecreasePerpPositionLimitOrder
-TLB: `create_decrease_perp_position_limit_order#8c1c25c8 token:^string isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool = CreateDecreasePerpPositionLimitOrder`
-Signature: `CreateDecreasePerpPositionLimitOrder{token:^string,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool}`
+## UpdatePerpPositionSuccess
+TLB: `update_perp_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
+Signature: `UpdatePerpPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
-## CancelDecreasePerpPositionLimitOrder
-TLB: `cancel_decrease_perp_position_limit_order#59d50e93 executionFeeReceiver:address orderId:int257 trxId:int257 = CancelDecreasePerpPositionLimitOrder`
-Signature: `CancelDecreasePerpPositionLimitOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
-
-## ExecuteDecreasePerpPositionLimitOrder
-TLB: `execute_decrease_perp_position_limit_order#05929c16 executionFeeReceiver:address orderId:int257 trxId:int257 = ExecuteDecreasePerpPositionLimitOrder`
-Signature: `ExecuteDecreasePerpPositionLimitOrder{executionFeeReceiver:address,orderId:int257,trxId:int257}`
+## CompensatePerpPositionOrder
+TLB: `compensate_perp_position_order#48618973 orderId:int257 trxId:int257 needRefund:bool isExecute:bool executionFeeReceiver:Maybe address = CompensatePerpPositionOrder`
+Signature: `CompensatePerpPositionOrder{orderId:int257,trxId:int257,needRefund:bool,isExecute:bool,executionFeeReceiver:Maybe address}`
 
 ## RBFPositionOrderCreatedEvent
 TLB: `rbf_position_order_created_event#cf635798 isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 orderId:int257 = RBFPositionOrderCreatedEvent`
@@ -153,17 +137,17 @@ Signature: `RBFPositionOrderCancelledEvent{isIncrease:bool,orderId:int257,trxId:
 TLB: `rbf_position_order_executed_event#912bb14f isIncrease:bool orderId:int257 trxId:int257 = RBFPositionOrderExecutedEvent`
 Signature: `RBFPositionOrderExecutedEvent{isIncrease:bool,orderId:int257,trxId:int257}`
 
-## IncreaseLPPositionOrderCreatedEvent
-TLB: `increase_lp_position_order_created_event#4cecab36 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 orderId:int257 = IncreaseLPPositionOrderCreatedEvent`
-Signature: `IncreaseLPPositionOrderCreatedEvent{account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,orderId:int257}`
+## LPPositionOrderCreatedEvent
+TLB: `lp_position_order_created_event#e9304df3 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 orderId:int257 = LPPositionOrderCreatedEvent`
+Signature: `LPPositionOrderCreatedEvent{opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,orderId:int257}`
 
-## IncreaseLPPositionOrderCancelledEvent
-TLB: `increase_lp_position_order_cancelled_event#9985369a orderId:int257 trxId:int257 = IncreaseLPPositionOrderCancelledEvent`
-Signature: `IncreaseLPPositionOrderCancelledEvent{orderId:int257,trxId:int257}`
+## LPPositionOrderCancelledEvent
+TLB: `lp_position_order_cancelled_event#1069ead0 opType:uint8 orderId:int257 trxId:int257 = LPPositionOrderCancelledEvent`
+Signature: `LPPositionOrderCancelledEvent{opType:uint8,orderId:int257,trxId:int257}`
 
-## IncreaseLPPositionOrderExecutedEvent
-TLB: `increase_lp_position_order_executed_event#36d9a70c orderId:int257 trxId:int257 = IncreaseLPPositionOrderExecutedEvent`
-Signature: `IncreaseLPPositionOrderExecutedEvent{orderId:int257,trxId:int257}`
+## LPPositionOrderExecutedEvent
+TLB: `lp_position_order_executed_event#d72f36d8 opType:uint8 orderId:int257 trxId:int257 = LPPositionOrderExecutedEvent`
+Signature: `LPPositionOrderExecutedEvent{opType:uint8,orderId:int257,trxId:int257}`
 
 ## DecreaseLPPositionOrderCreatedEvent
 TLB: `decrease_lp_position_order_created_event#04df076d account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 orderId:int257 = DecreaseLPPositionOrderCreatedEvent`
@@ -234,20 +218,16 @@ TLB: `_ isExecutor:Maybe bool isCompensator:Maybe bool minTimeDelayExecutor:int2
 Signature: `ConfigData{isExecutor:Maybe bool,isCompensator:Maybe bool,minTimeDelayExecutor:int257,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minPendingTimeDelayCompensator:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address}`
 
 ## JettonCallback
-TLB: `_ orderType:int257 orderId:int257 tokenId:Maybe int257 amount:int257 trxId:int257 = JettonCallback`
-Signature: `JettonCallback{orderType:int257,orderId:int257,tokenId:Maybe int257,amount:int257,trxId:int257}`
+TLB: `_ orderType:int257 orderId:int257 tokenId:Maybe int257 amount:int257 receiver:address trxId:int257 = JettonCallback`
+Signature: `JettonCallback{orderType:int257,orderId:int257,tokenId:Maybe int257,amount:int257,receiver:address,trxId:int257}`
 
 ## RBFPositionOrder
 TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 callbackId:Maybe int257 executionFeeReceiver:Maybe address lastOperator:Maybe address = RBFPositionOrder`
 Signature: `RBFPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257,callbackId:Maybe int257,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
 
-## IncreaseLPPositionOrder
-TLB: `_ account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 = IncreaseLPPositionOrder`
-Signature: `IncreaseLPPositionOrder{account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257}`
-
-## DecreaseLPPositionOrder
-TLB: `_ account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 = DecreaseLPPositionOrder`
-Signature: `DecreaseLPPositionOrder{account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257}`
+## LPPositionOrder
+TLB: `_ opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool pendingTime:int257 callbackId:Maybe int257 executionFeeReceiver:Maybe address lastOperator:Maybe address = LPPositionOrder`
+Signature: `LPPositionOrder{opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,pendingTime:int257,callbackId:Maybe int257,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
 
 ## IncreasePerpPositionMarketOrders
 TLB: `_ increasePerpPositionMarketOrders:dict<int, ^IncreasePerpPositionMarketOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,acceptablePrice:int257,executionFee:int257,blockTime:int257}> = IncreasePerpPositionMarketOrders`
@@ -257,32 +237,8 @@ Signature: `IncreasePerpPositionMarketOrders{increasePerpPositionMarketOrders:di
 TLB: `_ account:address isLong:bool marginDelta:int257 sizeDelta:int257 acceptablePrice:int257 executionFee:int257 blockTime:int257 = IncreasePerpPositionMarketOrder`
 Signature: `IncreasePerpPositionMarketOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,acceptablePrice:int257,executionFee:int257,blockTime:int257}`
 
-## DecreasePerpPositionMarketOrders
-TLB: `_ decreasePerpPositionMarketOrders:dict<int, ^DecreasePerpPositionMarketOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,acceptablePrice:int257,executionFee:int257,blockTime:int257}> = DecreasePerpPositionMarketOrders`
-Signature: `DecreasePerpPositionMarketOrders{decreasePerpPositionMarketOrders:dict<int, ^DecreasePerpPositionMarketOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,acceptablePrice:int257,executionFee:int257,blockTime:int257}>}`
-
-## DecreasePerpPositionMarketOrder
-TLB: `_ account:address isLong:bool marginDelta:int257 sizeDelta:int257 acceptablePrice:int257 executionFee:int257 blockTime:int257 = DecreasePerpPositionMarketOrder`
-Signature: `DecreasePerpPositionMarketOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,acceptablePrice:int257,executionFee:int257,blockTime:int257}`
-
-## IncreasePerpPositionLimitOrders
-TLB: `_ increasePerpPositionLimitOrders:dict<int, ^IncreasePerpPositionLimitOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257}> = IncreasePerpPositionLimitOrders`
-Signature: `IncreasePerpPositionLimitOrders{increasePerpPositionLimitOrders:dict<int, ^IncreasePerpPositionLimitOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257}>}`
-
-## IncreasePerpPositionLimitOrder
-TLB: `_ account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:int257 blockTime:int257 = IncreasePerpPositionLimitOrder`
-Signature: `IncreasePerpPositionLimitOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257}`
-
-## DecreasePerpPositionLimitOrders
-TLB: `_ decreasePerpPositionLimitOrders:dict<int, ^DecreasePerpPositionLimitOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257}> = DecreasePerpPositionLimitOrders`
-Signature: `DecreasePerpPositionLimitOrders{decreasePerpPositionLimitOrders:dict<int, ^DecreasePerpPositionLimitOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257}>}`
-
-## DecreasePerpPositionLimitOrder
-TLB: `_ account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:int257 blockTime:int257 = DecreasePerpPositionLimitOrder`
-Signature: `DecreasePerpPositionLimitOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257}`
-
 # Get Methods
-Total Get Methods: 4
+Total Get Methods: 6
 
 ## configData
 Argument: executor
@@ -292,6 +248,11 @@ Argument: compensator
 Argument: orderId
 
 ## rbfPositionOrderIndexNext
+
+## lpPositionOrder
+Argument: orderId
+
+## lpPositionOrderIndexNext
 
 ## owner
 

@@ -6,9 +6,7 @@ import "./structs";
 import "./constants";
 
 contract OrderBook with Deployable, Ownable {
-    const jettonMinTonsForStorage: Int = ton("0.019");
-    const jettonGasConsumption: Int = ton("0.013");
-
+    
     // config
     minTimeDelayExecutor: Int = 6; // executor execute after 6s
     maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
@@ -39,8 +37,8 @@ contract OrderBook with Deployable, Ownable {
     rbfPositionOrderIndexNext: Int as uint64 = 1;
 
     // LP
-    increaseLPPositionOrders: map<Int, IncreaseLPPositionOrder>; // orderId => order
-    increaseLPPositionOrderIndexNext: Int as uint64 = 1;
+    lpPositionOrders: map<Int, LPPositionOrder>; // orderId => order
+    lpPositionOrderIndexNext: Int as uint64 = 1;
 
     // decreaseLPPositionOrders: map<Int, DecreaseLPPositionOrder>; // orderId => order
     // decreaseLPPositionOrderIndexNext: Int as uint64 = 1;
@@ -116,22 +114,6 @@ contract OrderBook with Deployable, Ownable {
         });
     }
 
-    fun isExecutor(account: Address): Bool {
-        let isExecutorOpt: Bool? = self.executors.get(account);
-        if (isExecutorOpt == null) {
-            return false;
-        }
-        return isExecutorOpt!!;
-    }
-
-    fun isCompensator(account: Address): Bool {
-        let isCompensatorOpt: Bool? = self.compensators.get(account);
-        if (isCompensatorOpt == null) {
-            return false;
-        }
-        return isCompensatorOpt!!;
-    }
-
     get fun configData(executor: Address?, compensator: Address?): ConfigData {
         let isExecutor: Bool? = null;
         if (executor != null) {
@@ -175,25 +157,16 @@ contract OrderBook with Deployable, Ownable {
         if (opCode == OP_CREATE_INCREASE_RBF_POSITION_ORDER) {
             let liquidityDelta: Int = operation.loadInt(128);
             let executionFee: Int = operation.loadCoins();
-            dump("receive create increase rbf position order op code");
-            dump(beginCell().storeAddress(msg.from).endCell().hash());
-            dump(liquidityDelta);
-            dump(executionFee);
 
             self.handleCreateIncreaseRBFPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, liquidityDelta);
         } 
-        // else if (opCode == OP_CREATE_INCREASE_LP_POSITION_ORDER) {
-        //     let marginDelta: Int = operation.loadInt(128);
-        //     let liquidityDelta: Int = operation.loadInt(128);
-        //     let executionFee: Int = operation.loadCoins();
-        //     dump("receive create increase rbf position order op code");
-        //     dump(beginCell().storeAddress(msg.from).endCell().hash());
-        //     dump(marginDelta);
-        //     dump(liquidityDelta);
-        //     dump(executionFee);
+        else if (opCode == OP_CREATE_INCREASE_LP_POSITION_ORDER) {
+            let marginDelta: Int = operation.loadInt(128);
+            let liquidityDelta: Int = operation.loadInt(128);
+            let executionFee: Int = operation.loadCoins();
 
-        //     self.handleCreateIncreaseLPPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, marginDelta, liquidityDelta);
-        // }
+            self.handleCreateIncreaseLPPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, marginDelta, liquidityDelta);
+        }
     }
     
     // transfer jetton success callback
@@ -212,16 +185,18 @@ contract OrderBook with Deployable, Ownable {
         if (jettonCallback.orderType == ORDER_TYPE_RBF) {
             self.handelRBFPositionOrderCallback(jettonCallback.orderId, jettonCallback.trxId);
         }
+        else if (jettonCallback.orderType == ORDER_TYPE_LP) {
+            self.handelLPPositionOrderCallback(jettonCallback.orderId, jettonCallback.trxId);
+        }
     }
 
-    fun refundLiquidity(queryId: Int, amount: Int, to: Address) {
-        dump("refundLiquidity");
+    fun refundJetton(queryId: Int, amount: Int, to: Address, response: Address) {
         send(SendParameters{
             to: self.usdtWallet, 
             value: 0,
             mode: SendRemainingValue, 
             bounce: false,
-            body: self.createJettonTransferBody(queryId, amount, to, to)
+            body: self.createJettonTransferBody(queryId, amount, to, response)
         });
     }
 
@@ -238,36 +213,27 @@ contract OrderBook with Deployable, Ownable {
         }
     }
 
-    fun getTransferJettonGas(): Int {
-        return context().readForwardFee() * 2 + self.jettonGasConsumption * 2 + self.jettonMinTonsForStorage;
-    }
-
     fun getPoolGas(): Int {
         return context().readForwardFee() + self.gasConsumption * 2 + self.minTonsForStorage;
     }
 
     // ======================================================== RBF ================================================================ //
-
     // ============================ Create Increase ================================ //
     fun handleCreateIncreaseRBFPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, liquidityDelta: Int) {
-        dump("handleCreateIncreaseRBFPositionOrder");
         let ctx: Context = context();
 
         if (ctx.value < executionFee + ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage) {
-            dump("gas not enough");
-            self.refundLiquidity(queryId, jettonFromAmount, account);
+            self.refundJetton(queryId, jettonFromAmount, account, account);
             return;
         }
 
         if (jettonFromAmount < liquidityDelta) {
-            self.refundLiquidity(queryId, jettonFromAmount, account);
-            dump("refund from not enough liquidity");
+            self.refundJetton(queryId, jettonFromAmount, account, account);
             return;
         }
 
         if (executionFee < self.minExecutionFee) {
-            self.refundLiquidity(queryId, jettonFromAmount, account);
-            dump("execution fee not enough");
+            self.refundJetton(queryId, jettonFromAmount, account, account);
             return;
         }
 
@@ -337,8 +303,8 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ============================ Cancel Increase / Decrease ================================ //
-    // cancel increase => transfer jetton => token excesses handel cancel
-    // cancel decrease
+    // cancel increase => orderBook wallet => user wallet => token excess handel cancel => excess gas
+    // cancel decrease => excess gas
     receive(msg: CancelRBFPositionOrder) {
         let ctx: Context = context();
         // check order
@@ -348,9 +314,9 @@ contract OrderBook with Deployable, Ownable {
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption * 2 + self.minTonsForStorage + self.getTransferJettonGas(), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + ton("0.032"), "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() + self.gasConsumption + self.minTonsForStorage, "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
         }
 
         self.shouldCancel(order.blockTime, sender(), order.isPending);
@@ -364,6 +330,7 @@ contract OrderBook with Deployable, Ownable {
                 orderId: msg.orderId,
                 tokenId: null,
                 amount: order.liquidityDelta,
+                receiver: order.account,
                 trxId: msg.trxId
             });
 
@@ -380,13 +347,7 @@ contract OrderBook with Deployable, Ownable {
             self.rbfPositionOrders.set(msg.orderId, order);
 
             // transfer jetton
-            send(SendParameters{
-                to: self.usdtWallet, 
-                value: 0,
-                mode: SendRemainingValue, 
-                bounce: false,
-                body: self.createJettonTransferBody(callbackId, order.liquidityDelta, order.account, myAddress())
-            });
+            self.refundJetton(callbackId, order.liquidityDelta, order.account, myAddress());
         } else {
             // get fee receiver
             let executionFeeReceiver: Address = sender();
@@ -417,8 +378,8 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ============================ Execute Increase / Decrease ================================ //
-    // execute increase => increase position for pool => increase success / bounced
-    // execute decrease => decrease position for pool => decrease success => transfer jetton => token excesses handel cancel
+    // execute increase => increase position for pool => increase success / bounced => excess gas
+    // execute decrease => decrease position for pool => decrease success => orderBook wallet => user wallet => token excesses handel cancel => excess gas
     receive(msg: ExecuteRBFPositionOrder) {
         let ctx: Context = context();
 
@@ -432,7 +393,7 @@ contract OrderBook with Deployable, Ownable {
         if (order.isIncrease) {
             require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + self.getTransferJettonGas(), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
         }
 
         self.shouldExecute(order.blockTime, order.isPending);
@@ -461,29 +422,26 @@ contract OrderBook with Deployable, Ownable {
                 liquidityDelta: order.liquidityDelta
             }.toCell()
         });
-        dump("execute RBF increase order send msg to pool");
     }
 
-    // increase success / bounced
-    // decrease success => transfer jetton => token excesses handel cancel
+    // increase success / bounced => excess gas
+    // decrease success => orderBook wallet => user wallet => token excesses handel cancel => excess gas
     receive(msg: UpdateRBFPositionSuccess) {
-        dump("receive update RBF position success");
         let ctx: Context = context();
         require(sender() == self.pool, "invalid sender");
 
         // get order
         let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(msg.orderId);
         if (orderOpt == null) {
-            dump("order not exist");
             return;
         }
         let order: RBFPositionOrder = orderOpt!!;
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= ctx.readForwardFee() + self.gasConsumption, "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption, "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption * 2 + self.getTransferJettonGas(), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + ton("0.032"), "gas not enough");
         }
 
         if (order.isIncrease) {
@@ -519,6 +477,7 @@ contract OrderBook with Deployable, Ownable {
                 orderId: msg.orderId,
                 tokenId: null,
                 amount: msg.receive,
+                receiver: order.account,
                 trxId: msg.trxId
             });
 
@@ -526,24 +485,16 @@ contract OrderBook with Deployable, Ownable {
             self.rbfPositionOrders.set(msg.orderId, order);
 
             // transfer jetton
-            send(SendParameters{
-                to: self.usdtWallet, 
-                value: 0,
-                mode: SendRemainingValue, 
-                bounce: false,
-                body: self.createJettonTransferBody(callbackId, msg.receive, order.account, myAddress())
-            });
+            self.refundJetton(callbackId, msg.receive, order.account, myAddress());
         }
     }
 
     // reset order pending
     bounced(src: bounced<UpdateRBFPosition>) {
-        dump("increase rbf position failed");
 
         // get order
         let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(src.orderId);
         if (orderOpt == null) {
-            dump("order not exist");
             return;
         }
         let order: RBFPositionOrder = orderOpt!!;
@@ -557,19 +508,15 @@ contract OrderBook with Deployable, Ownable {
     fun handelRBFPositionOrderCallback(orderId: Int, trxId: Int) {
         let ctx: Context = context();
 
+        // check gas
+        require(ctx.value >= ctx.readForwardFee() + self.gasConsumption, "gas not enough");
+
         // get order
         let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(orderId);
         if (orderOpt == null) {
             return;
         }
         let order: RBFPositionOrder = orderOpt!!;
-
-        // check gas
-        if (order.isIncrease) {
-            require(ctx.value >= ctx.readForwardFee() + self.gasConsumption, "gas not enough");
-        } else {
-            require(ctx.value >= ctx.readForwardFee() + self.gasConsumption, "gas not enough");
-        }
 
         // delete order
         self.rbfPositionOrders.set(orderId, null);
@@ -591,7 +538,6 @@ contract OrderBook with Deployable, Ownable {
                     mode: SendPayGasSeparately
                 });
             }
-            dump("cancel RBF increase order success");
         } else {
             // event
             emit(RBFPositionOrderExecutedEvent{
@@ -618,160 +564,71 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ============================ Compensate ================================ //
-    // compensate for increase RBF
-    receive(msg: CompensateIncreaseRBFPositionOrder) {
+    // compensate RBF
+    receive(msg: CompensateRBFPositionOrder) {
         let ctx: Context = context();
 
-        // check gas
-        require(ctx.value >= self.gasConsumption, "gas not enough");
-
         // check compensator
-        require(self.isCompensator(sender()), "not compensator");
+        let isCompensator: Bool = false;
+        let isCompensatorOpt: Bool? = self.compensators.get(sender());
+        if (isCompensatorOpt != null) {
+            isCompensator = isCompensatorOpt!!;
+        }
+        require(isCompensator, "not compensator");
         
         // check order pending
         let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(msg.orderId);
         require(orderOpt != null, "order not exist");
-
         let order: RBFPositionOrder = orderOpt!!;
-        require(order.isPending, "order not pending");
-        require(order.pendingTime + self.minPendingTimeDelayCompensator <= now(), "too early for compensator");
-
-        // increase position success
-        if (msg.positionSuccess) {
-            // delete order
-            self.rbfPositionOrders.set(msg.orderId, null);
-            // event
-            emit(RBFPositionOrderExecutedEvent{
-                isIncrease: true,
-                orderId: msg.orderId,
-                trxId: msg.trxId
-            }.toCell());
-
-            // transfer execution fee
-            if (order.executionFeeReceiver != null) {
-                send(SendParameters{
-                    to: order.executionFeeReceiver!!,
-                    bounce: true,
-                    value: order.executionFee,
-                    mode: SendPayGasSeparately
-                });
-            }
-
-            // transfer execess gas
-            self.refundExecessTon(sender(), order.executionFee);
-            return;
-        }
-
-        // increase position failed, cancel order
-        // refund jetton already success
-        if (msg.refundSuccess) {
-            if (order.callbackId != null) {
-                // delete callback
-                self.jettonCallbacks.set(order.callbackId!!, null);
-            }
-            // delete order
-            self.rbfPositionOrders.set(msg.orderId, null);
-            // event
-            emit(RBFPositionOrderCancelledEvent{
-                isIncrease: true,
-                orderId: msg.orderId,
-                trxId: msg.trxId
-            }.toCell());
-
-            // transfer execution fee
-            if (order.executionFeeReceiver != null) {
-                send(SendParameters{
-                    to: order.executionFeeReceiver!!,
-                    bounce: true,
-                    value: order.executionFee,
-                    mode: SendPayGasSeparately
-                });
-            }
-
-            // transfer execess gas
-            self.refundExecessTon(sender(), order.executionFee);
-            return;
-        }
-
-        // increase position failed, cancel order
-        // refund jetton failed
-        // get callback
-        require(order.callbackId != null, "jetton callback not exist");
-        let callbackId: Int = order.callbackId!!;
-        let jettonCallbackOpt: JettonCallback? = self.jettonCallbacks.get(callbackId);
-        if (jettonCallbackOpt == null) {
-            return;
-        }
-        let jettonCallback: JettonCallback = jettonCallbackOpt!!;
-        // update trxId
-        jettonCallback.trxId = msg.trxId;
-        self.jettonCallbacks.set(callbackId, jettonCallback);
-
-        // update execution fee receiver
-        if (msg.executionFeeReceiver != null) {
-            order.executionFeeReceiver = msg.executionFeeReceiver!!;
-        }
-        order.lastOperator = sender();
-        self.rbfPositionOrders.set(msg.orderId, order);
-
-        // transfer jetton
-        send(SendParameters{
-            to: self.usdtWallet, 
-            value: 0,
-            mode: SendRemainingValue, 
-            bounce: false,
-            body: self.createJettonTransferBody(callbackId, jettonCallback.amount, order.account, myAddress())
-        });
-    }
-
-    // compensate for decrease RBF
-    receive(msg: CompensateDecreaseRBFPositionOrder) {
-        let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= self.gasConsumption, "gas not enough");
+        if (order.isIncrease) {
+            require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+        }
 
-        // check compensator
-        require(self.isCompensator(sender()), "not compensator");
-        
-        // check order
-        let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(msg.orderId);
-        require(orderOpt != null, "order not exist");
-
-        let order: RBFPositionOrder = orderOpt!!;
         require(order.isPending, "order not pending");
         require(order.pendingTime + self.minPendingTimeDelayCompensator <= now(), "too early for compensator");
 
-        // decrease position failed
-        if (!msg.positionSuccess) {
-            // delete order
-            self.rbfPositionOrders.set(msg.orderId, null);
-            // event
-            emit(RBFPositionOrderCancelledEvent{
-                isIncrease: false,
-                orderId: msg.orderId,
-                trxId: msg.trxId
-            }.toCell());
-
-            // transfer execution fee
-            if (order.executionFeeReceiver != null) {
-                send(SendParameters{
-                    to: order.executionFeeReceiver!!,
-                    bounce: true,
-                    value: order.executionFee,
-                    mode: SendPayGasSeparately
-                });
+        // refund
+        if (msg.needRefund) {
+            // increase position failed, cancel order
+            // refund jetton failed
+            // get callback
+            require(order.callbackId != null, "jetton callback not exist");
+            let callbackId: Int = order.callbackId!!;
+            let jettonCallbackOpt: JettonCallback? = self.jettonCallbacks.get(callbackId);
+            if (jettonCallbackOpt == null) {
+                return;
             }
+            let jettonCallback: JettonCallback = jettonCallbackOpt!!;
+            // update trxId
+            jettonCallback.trxId = msg.trxId;
+            self.jettonCallbacks.set(callbackId, jettonCallback);
 
-            // transfer execess gas
-            self.refundExecessTon(sender(), order.executionFee);
+            // update execution fee receiver
+            if (msg.executionFeeReceiver != null) {
+                order.executionFeeReceiver = msg.executionFeeReceiver!!;
+            }
+            order.lastOperator = sender();
+            self.rbfPositionOrders.set(msg.orderId, order);
+
+            // transfer jetton
+            self.refundJetton(callbackId, jettonCallback.amount, jettonCallback.receiver, myAddress());
             return;
         }
 
-        // increase position success, cancel order
-        // refund jetton already success
-        if (msg.refundSuccess) {
-            // refund jetton success
+        if (msg.isExecute) {
+            // delete order
+            self.rbfPositionOrders.set(msg.orderId, null);
+            // event
+            emit(RBFPositionOrderExecutedEvent{
+                isIncrease: true,
+                orderId: msg.orderId,
+                trxId: msg.trxId
+            }.toCell());
+        } else {
             if (order.callbackId != null) {
                 // delete callback
                 self.jettonCallbacks.set(order.callbackId!!, null);
@@ -779,57 +636,26 @@ contract OrderBook with Deployable, Ownable {
             // delete order
             self.rbfPositionOrders.set(msg.orderId, null);
             // event
-            emit(RBFPositionOrderExecutedEvent{
-                isIncrease: false,
+            emit(RBFPositionOrderCancelledEvent{
+                isIncrease: true,
                 orderId: msg.orderId,
                 trxId: msg.trxId
             }.toCell());
-
-            // transfer execution fee
-            if (order.executionFeeReceiver != null) {
-                send(SendParameters{
-                    to: order.executionFeeReceiver!!,
-                    bounce: true,
-                    value: order.executionFee,
-                    mode: SendPayGasSeparately
-                });
-            }
-
-            // transfer execess gas
-            self.refundExecessTon(sender(), order.executionFee);
-            return;
         }
 
-        // increase position failed, cancel order
-        // refund jetton already success
-
-        // get callback
-        require(order.callbackId != null, "jetton callback not exist");
-        let callbackId: Int = order.callbackId!!;
-        let jettonCallbackOpt: JettonCallback? = self.jettonCallbacks.get(callbackId);
-        if (jettonCallbackOpt == null) {
-            return;
+        // transfer execution fee
+        if (order.executionFeeReceiver != null) {
+            send(SendParameters{
+                to: order.executionFeeReceiver!!,
+                bounce: true,
+                value: order.executionFee,
+                mode: SendPayGasSeparately
+            });
         }
-        let jettonCallback: JettonCallback = jettonCallbackOpt!!;
-        // update trxId
-        jettonCallback.trxId = msg.trxId;
-        self.jettonCallbacks.set(callbackId, jettonCallback);
 
-        // update execution fee receiver
-        if (msg.executionFeeReceiver != null) {
-            order.executionFeeReceiver = msg.executionFeeReceiver!!;
-        }
-        order.lastOperator = sender();
-        self.rbfPositionOrders.set(msg.orderId, order);
-
-        // transfer jetton
-        send(SendParameters{
-            to: self.usdtWallet, 
-            value: 0,
-            mode: SendRemainingValue, 
-            bounce: false,
-            body: self.createJettonTransferBody(callbackId, jettonCallback.amount, order.account, myAddress())
-        });
+        // transfer execess gas
+        self.refundExecessTon(sender(), order.executionFee);
+        return;
     }
 
     // ============================ Getter ================================ //
@@ -842,285 +668,547 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ======================================================== LP ================================================================ //
+    // ============================ Create Increase ================================ //
+    fun handleCreateIncreaseLPPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, marginDelta: Int, liquidityDelta: Int) {
+        dump("handleCreateIncreaseLPPositionOrder");
+        let ctx: Context = context();
 
-    // // ============================ Increase ================================ //
-    // fun handleCreateIncreaseLPPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, marginDelta: Int, liquidityDelta: Int) {
-    //     dump("handleCreateIncreaseLPPositionOrder");
-    //     let ctx: Context = context();
+        if (ctx.value < executionFee + ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage) {
+            dump("gas not enough");
+            self.refundJetton(queryId, jettonFromAmount, account, account);
+            return;
+        }
 
-    //     if (jettonFromAmount < marginDelta) {
-    //         self.refundLiquidity(queryId, jettonFromAmount, account);
-    //         dump("refund not enough liquidity");
-    //         return;
-    //     }
-    //     // check executionFee
-    //     if (ctx.value < executionFee) {
-    //         dump("execution fee not enough");
-    //         self.refundLiquidity(queryId, jettonFromAmount, account);
-    //         return;
-    //     }
+        if (jettonFromAmount < marginDelta) {
+            self.refundJetton(queryId, jettonFromAmount, account, account);
+            dump("refund from not enough margin");
+            return;
+        }
 
-    //     // add new order
-    //     let orderId: Int = self.increaseLPPositionOrderIndexNext;
-    //     self.increaseLPPositionOrderIndexNext = self.increaseLPPositionOrderIndexNext + 1;
-    //     self.increaseLPPositionOrders.set(orderId, IncreaseLPPositionOrder{
-    //         account: account,
-    //         marginDelta: marginDelta,
-    //         liquidityDelta: liquidityDelta,
-    //         executionFee: executionFee,
-    //         blockTime: now()
-    //     });
+        if (executionFee < self.minExecutionFee) {
+            self.refundJetton(queryId, jettonFromAmount, account, account);
+            dump("execution fee not enough");
+            return;
+        }
 
-    //     // event
-    //     emit(IncreaseLPPositionCreatedEvent{
-    //         account: account,
-    //         marginDelta: marginDelta,
-    //         liquidityDelta: liquidityDelta,
-    //         executionFee: executionFee,
-    //         orderId: orderId
-    //     }.toCell());
-    // }
-    
-    // receive(msg: CancelIncreaseLPPositionOrder) {
-    //     let ctx: Context = context();
+        // add new order
+        let orderId: Int = self.lpPositionOrderIndexNext;
+        self.lpPositionOrderIndexNext = orderId + 1;
+        self.lpPositionOrders.set(orderId, LPPositionOrder{
+            opType: ORDER_OP_TYPE_INCREASE,
+            account: account,
+            marginDelta: marginDelta,
+            liquidityDelta: liquidityDelta,
+            executionFee: executionFee,
+            blockTime: now(),
+            isPending: false,
+            pendingTime: now(),
+            callbackId: null,
+            executionFeeReceiver: null,
+            lastOperator: null
+        });
 
-    //     // check gas
-    //     require(ctx.value >= self.gasConsumption, "gas not enough");
+        // event
+        emit(LPPositionOrderCreatedEvent{
+            opType: ORDER_OP_TYPE_INCREASE,
+            account: account,
+            marginDelta: marginDelta,
+            liquidityDelta: liquidityDelta,
+            executionFee: executionFee,
+            orderId: orderId
+        }.toCell());
 
-    //     // check order
-    //     let orderOpt: IncreaseLPPositionOrder? = self.increaseLPPositionOrders.get(msg.orderId);
-    //     if (orderOpt == null) {
-    //         return;
-    //     }
-    //     let order: IncreaseLPPositionOrder = orderOpt!!;
-    //     self.shouldCancel(order.blockTime, sender(), order.isPending);
-
-    //     // transfer execution fee
-    //     send(SendParameters{
-    //         to: msg.executionFeeReceiver,
-    //         bounce: true,
-    //         value: order.executionFee,
-    //         mode: SendIgnoreErrors
-    //     });
-
-    //     // TODO transfer jetton
-
-    //     // delete order
-    //     self.increaseLPPositionOrders.set(msg.orderId, null);
-    //     // event
-    //     emit(IncreaseLPPositionCancelledEvent{
-    //         orderId: msg.orderId,
-    //         trxId: msg.trxId
-    //     }.toCell());
-    // }
-    
-    // receive(msg: ExecuteIncreaseLPPositionOrder) {
-    //     let orderOpt: IncreaseLPPositionOrder? = self.increaseLPPositionOrders.get(msg.orderId);
-    //     // check order
-    //     require(orderOpt != null, "order not exist");
-
-    //     let order: IncreaseLPPositionOrder = orderOpt!!;
-    //     self.shouldExecute(order.blockTime, order.isPending);
-
-    //     // TODO
-
-    //     // delete order
-    //     self.increaseLPPositionOrders.set(msg.orderId, null);
-        
-    //     // transfer execution fee
-    //     send(SendParameters{
-    //         to: msg.executionFeeReceiver,
-    //         bounce: true,
-    //         value: order.executionFee,
-    //         mode: SendIgnoreErrors
-    //     });
-
-    //     // event
-    //     emit(IncreaseLPPositionExecutedEvent{
-    //         orderId: msg.orderId,
-    //         trxId: msg.trxId
-    //     }.toCell());
-    //     emit(LPPositionIncreasedEvent{
-    //         account: order.account,
-    //         marginDelta: order.marginDelta,
-    //         marginAfter: lpPosition.margin,
-    //         liquidityDelta: order.liquidityDelta,
-    //         liquidityAfter: lpPosition.liquidity,
-    //         entryFundingFeeGrowth: lpPosition.entryFundingFeeGrowth,
-    //         entryTradingFeeGrowth: lpPosition.entryTradingFeeGrowth
-    //     }.toCell());
-    // }
-
-    // // ============================ Decrease ================================ //
-    // receive(msg: CreateDecreaseLPPositionOrder) {
-    //     let ctx: Context = context();
-    //     // check gas
-    //     require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
-    //     // check execution fee
-    //     require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
-
-    //     // add new order
-    //     let orderId: Int = self.decreaseLPPositionOrderIndexNext;
-    //     self.decreaseLPPositionOrderIndexNext = self.decreaseLPPositionOrderIndexNext + 1;
-    //     self.decreaseLPPositionOrders.set(orderId, DecreaseLPPositionOrder{
-    //         account: sender(),
-    //         marginDelta: msg.marginDelta,
-    //         liquidityDelta: msg.liquidityDelta,
-    //         executionFee: msg.executionFee,
-    //         blockTime: now()
-    //     });
-
-    //     // event
-    //     emit(DecreaseLPPositionCreatedEvent{
-    //         account: sender(),
-    //         marginDelta: msg.marginDelta,
-    //         liquidityDelta: msg.liquidityDelta,
-    //         executionFee: msg.executionFee,
-    //         orderId: orderId
-    //     }.toCell());
-    // }
-    
-    // receive(msg: CancelDecreaseLPPositionOrder) {
-    //     let ctx: Context = context();
-
-    //     // check gas
-    //     require(ctx.value >= self.gasConsumption, "gas not enough");
-
-    //     // check order
-    //     let orderOpt: DecreaseLPPositionOrder? = self.decreaseLPPositionOrders.get(msg.orderId);
-    //     if (orderOpt == null) {
-    //         return;
-    //     }
-    //     let order: DecreaseLPPositionOrder = orderOpt!!;
-    //     self.shouldCancel(order.blockTime, ctx.sender, order.isPending);
-
-    //     // TODO transfer execution fee
-
-    //     // TODO transfer jetton
-
-    //     // delete order
-    //     self.decreaseLPPositionOrders.set(msg.orderId, null);
-    //     // event
-    //     emit(DecreaseLPPositionCancelledEvent{
-    //         orderId: msg.orderId,
-    //         trxId: msg.trxId
-    //     }.toCell());
-    // }
-    
-    // receive(msg: ExecuteDecreaseLPPositionOrder) {
-    //     let orderOpt: DecreaseLPPositionOrder? = self.decreaseLPPositionOrders.get(msg.orderId);
-    //     // check order
-    //     require(orderOpt != null, "order not exist");
-
-    //     let order: DecreaseLPPositionOrder = orderOpt!!;
-    //     self.shouldExecute(order.blockTime, order.isPending);
-
-    //     // TODO
-
-    //     // delete order
-    //     self.increaseLPPositionOrders.set(msg.orderId, null);
-        
-    //     // transfer execution fee
-    //     send(SendParameters{
-    //         to: msg.executionFeeReceiver,
-    //         bounce: true,
-    //         value: order.executionFee,
-    //         mode: SendIgnoreErrors
-    //     });
-
-    //     // event
-    //     emit(DecreaseLPPositionExecutedEvent{
-    //         orderId: msg.orderId,
-    //         trxId: msg.trxId
-    //     }.toCell());
-    // }
-
-    // // ============================ Getter ================================ //
-    // get fun increaseLPPositionOrderIndexNext(): Int {
-    //     return self.increaseLPPositionOrderIndexNext;
-    // }
-
-    // get fun increaseLPPositionOrder(orderId: Int): IncreaseLPPositionOrder? {
-    //     return self.increaseLPPositionOrders.get(orderId);
-    // }
-
-    // get fun decreaseLPPositionOrderIndexNext(): Int {
-    //     return self.decreaseLPPositionOrderIndexNext;
-    // }
-
-    // get fun decreaseLPPositionOrder(orderId: Int): DecreaseLPPositionOrder? {
-    //     return self.decreaseLPPositionOrders.get(orderId);
-    // }
-
-    // ============================ Perp ================================ //
-    // fun handleCreateIncreasePerpPositionMarketOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, 
-    //     tokenId: Int, isLong: Bool, marginDelta: Int, liquidityDelta: Int, acceptablePrice: Int) {
-    //     dump("handleCreateIncreasePerpPositionMarketOrder");
-    //     let ctx: Context = context();
-
-    //     if (jettonFromAmount < marginDelta) {
-    //         self.refundLiquidity(queryId, jettonFromAmount, account);
-    //         dump("refund not enough liquidity");
-    //         return;
-    //     }
-    //     // check executionFee
-    //     if (ctx.value < executionFee) {
-    //         dump("execution fee not enough");
-    //         self.refundLiquidity(queryId, jettonFromAmount, account);
-    //         return;
-    //     }
-
-    //     // get orderId next
-    //     let orderIdOpt: Int = self.increasePerpPositionMarketIndexsNext.get(tokenId);
-    //     let orderId: Int = 1;
-    //     if (orderIdOpt != null) {
-    //         orderId = orderIdOpt!!;
-    //     }
-
-    //     self.increasePerpPositionMarketOrderIndexNext = self.increasePerpPositionMarketOrderIndexNext + 1;
-
-    //     // get order list by tokenId
-    //     let increasePerpPositionMarketOrdersOpt: IncreasePerpPositionMarketOrders? = self.increasePerpPositionMarketOrders.get(tokenId);
-    //     let increasePerpPositionMarketOrders: IncreasePerpPositionMarketOrders = IncreasePerpPositionMarketOrders{};
-    //     if (increasePerpPositionMarketOrdersOpt != null) {
-    //         increasePerpPositionMarketOrders = increasePerpPositionMarketOrdersOpt!!;
-    //     }
-
-    //     // get order
-    //     increasePerpPositionMarketOrders.get();
-
-    //     self.increasePerpPositionMarketOrders.set(orderId, IncreaseLPPositionOrder{
-    //         account: account,
-    //         marginDelta: marginDelta,
-    //         liquidityDelta: liquidityDelta,
-    //         executionFee: executionFee,
-    //         blockTime: now()
-    //     });
-
-    //     // event
-    //     emit(IncreaseLPPositionCreatedEvent{
-    //         account: account,
-    //         marginDelta: marginDelta,
-    //         liquidityDelta: liquidityDelta,
-    //         executionFee: executionFee,
-    //         orderId: orderId
-    //     }.toCell());
-    // }
-
-    receive(msg: CancelIncreasePerpPositionMarketOrder) {
-
+        self.refundExecessTon(account, executionFee);
     }
 
-    receive(msg: ExecuteIncreasePerpPositionMarketOrder) {
+    // ============================ Create Decrease ================================ //
+    receive(msg: CreateDecreaseLPPositionOrder) {
+        let ctx: Context = context();
+        // check gas
+        require(ctx.value - msg.executionFee >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        // check execution fee
+        require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
+        // add new order
+        let orderId: Int = self.lpPositionOrderIndexNext;
+        self.lpPositionOrderIndexNext = self.lpPositionOrderIndexNext + 1;
+        self.lpPositionOrders.set(orderId, LPPositionOrder{
+            opType: ORDER_OP_TYPE_DECREASE,
+            account: sender(),
+            marginDelta: msg.marginDelta,
+            liquidityDelta: msg.liquidityDelta,
+            executionFee: msg.executionFee,
+            blockTime: now(),
+            isPending: false,
+            pendingTime: now(),
+            callbackId: null,
+            executionFeeReceiver: null,
+            lastOperator: null
+        });
+
+        // event
+        emit(LPPositionOrderCreatedEvent{
+            opType: ORDER_OP_TYPE_DECREASE,
+            account: sender(),
+            marginDelta: msg.marginDelta,
+            liquidityDelta: msg.liquidityDelta,
+            executionFee: msg.executionFee,
+            orderId: orderId
+        }.toCell());
+
+        // transfer execess gas
+        self.refundExecessTon(sender(), msg.executionFee);
     }
+
+    // ============================ Cancel Increase / Decrease ================================ //
+    // cancel increase => orderBook wallet => user wallet => token excess handel cancel => excess gas
+    // cancel decrease => excess gas
+    receive(msg: CancelLPPositionOrder) {
+        let ctx: Context = context();
+        // check order
+        let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(msg.orderId);
+        require(orderOpt != null, "order not exist");
+        let order: LPPositionOrder = orderOpt!!;
+
+        // check gas
+        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + ton("0.032"), "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        }
+
+        self.shouldCancel(order.blockTime, sender(), order.isPending);
+
+        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+            // add callback
+            let callbackId: Int = self.jettonCallbackQueryIdNext;
+            self.jettonCallbackQueryIdNext = callbackId + 1;
+            self.jettonCallbacks.set(callbackId, JettonCallback{
+                orderType: ORDER_TYPE_LP,
+                orderId: msg.orderId,
+                tokenId: null,
+                amount: order.marginDelta,
+                receiver: order.account,
+                trxId: msg.trxId
+            });
+
+            // update order
+            if (msg.executionFeeReceiver != null) {
+                order.executionFeeReceiver = msg.executionFeeReceiver!!;
+            } else {
+                order.executionFeeReceiver = sender();
+            }
+            order.lastOperator = sender();
+            order.isPending = true;
+            order.pendingTime = now();
+            order.callbackId = callbackId;
+            self.lpPositionOrders.set(msg.orderId, order);
+
+            // transfer jetton
+            self.refundJetton(callbackId, order.marginDelta, order.account, myAddress());
+        } else {
+            // get fee receiver
+            let executionFeeReceiver: Address = sender();
+            if (msg.executionFeeReceiver != null) {
+                executionFeeReceiver = msg.executionFeeReceiver!!;
+            }
+
+            // delete order
+            self.lpPositionOrders.set(msg.orderId, null);
+            // event
+            emit(LPPositionOrderCancelledEvent{
+                opType: order.opType,
+                orderId: msg.orderId,
+                trxId: msg.trxId
+            }.toCell());
+
+            // transfer execution fee
+            send(SendParameters{
+                to: executionFeeReceiver,
+                bounce: true,
+                value: order.executionFee,
+                mode: SendPayGasSeparately
+            });
+
+            // transfer execess gas
+            self.refundExecessTon(sender(), 0);
+        }
+    }
+
+    // ============================ Execute Increase / Decrease ================================ //
+    // execute increase => increase position for pool => increase success / bounced => excess gas
+    // execute decrease => decrease position for pool => decrease success => orderBook wallet => user wallet => token excesses handel cancel => excess gas
+    receive(msg: ExecuteLPPositionOrder) {
+        let ctx: Context = context();
+
+        // check order
+        let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(msg.orderId);
+        require(orderOpt != null, "order not exist");
+
+        let order: LPPositionOrder = orderOpt!!;
+
+        // check gas
+        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+            require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+        }
+
+        self.shouldExecute(order.blockTime, order.isPending);
+
+        // update order
+        if (msg.executionFeeReceiver != null) {
+            order.executionFeeReceiver = msg.executionFeeReceiver!!;
+        } else {
+            order.executionFeeReceiver = sender();
+        }
+        order.isPending = true;
+        order.pendingTime = now();
+        self.lpPositionOrders.set(msg.orderId, order);
+
+        // send update position msg
+        send(SendParameters{
+            to: self.pool,
+            value: 0,
+            mode: SendRemainingValue,
+            bounce: true,
+            body: UpdateLPPosition {
+                orderId: msg.orderId,
+                opType: order.opType,
+                trxId: msg.trxId,
+                account: order.account,
+                marginDelta: order.marginDelta,
+                liquidityDelta: order.liquidityDelta
+            }.toCell()
+        });
+        dump("execute LP increase order send msg to pool");
+    }
+
+    // increase success / bounced => excess gas
+    // decrease success => orderBook wallet => user wallet => token excesses handel cancel => excess gas
+    receive(msg: UpdateLPPositionSuccess) {
+        dump("receive update LP position success");
+        let ctx: Context = context();
+        require(sender() == self.pool, "invalid sender");
+
+        // get order
+        let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(msg.orderId);
+        if (orderOpt == null) {
+            dump("order not exist");
+            return;
+        }
+        let order: LPPositionOrder = orderOpt!!;
+
+        // check gas
+        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+            require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption, "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + ton("0.032"), "gas not enough");
+        }
+
+        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+            // delete order
+            self.lpPositionOrders.set(msg.orderId, null);
+            // event
+            emit(LPPositionOrderExecutedEvent{
+                opType: order.opType,
+                orderId: msg.orderId,
+                trxId: msg.trxId
+            }.toCell());
+
+            // transfer execution fee
+            if (order.executionFeeReceiver != null) {
+                send(SendParameters{
+                    to: order.executionFeeReceiver!!,
+                    bounce: true,
+                    value: order.executionFee,
+                    mode: SendPayGasSeparately
+                });
+            }
+
+            // transfer execess gas
+            if (order.lastOperator != null) {
+                self.refundExecessTon(order.lastOperator!!, 0);
+            }
+        } else {
+            let receiver: Address = order.account;
+            if (order.opType == ORDER_OP_TYPE_LIQUIDATION) {
+                receiver = order.executionFeeReceiver!!;
+            }
+            // add callback
+            let callbackId: Int = self.jettonCallbackQueryIdNext;
+            self.jettonCallbackQueryIdNext = callbackId + 1;
+            self.jettonCallbacks.set(callbackId, JettonCallback{
+                orderType: ORDER_TYPE_LP,
+                orderId: msg.orderId,
+                tokenId: null,
+                amount: msg.receive,
+                receiver: receiver,
+                trxId: msg.trxId
+            });
+
+            order.callbackId = callbackId;
+            self.lpPositionOrders.set(msg.orderId, order);
+
+            // transfer jetton
+            self.refundJetton(callbackId, msg.receive, receiver, myAddress());
+        }
+    }
+
+    // reset order pending
+    bounced(src: bounced<UpdateLPPosition>) {
+        dump("increase lp position failed");
+
+        // get order
+        let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(src.orderId);
+        if (orderOpt == null) {
+            dump("order not exist");
+            return;
+        }
+        let order: LPPositionOrder = orderOpt!!;
+        if (order.opType == ORDER_OP_TYPE_LIQUIDATION) {
+            // delete
+            self.lpPositionOrders.set(src.orderId, null);
+        } else {
+            // update pending
+            order.isPending = false;
+            self.lpPositionOrders.set(src.orderId, order);
+        }
+    }
+
+    // ============================ Liquidation ================================ //
+    receive(msg: LiquidateLPPositionOrder) {
+        let ctx: Context = context();
+
+        // check gas
+        require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+
+        // check sender
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+        require(isExecutor, "invalid sender");
+
+        // fee receiver
+        let executionFeeReceiver: Address = sender();
+        if (msg.executionFeeReceiver != null) {
+            executionFeeReceiver = msg.executionFeeReceiver!!;
+        }
+
+        // add new order
+        let orderId: Int = self.lpPositionOrderIndexNext;
+        self.lpPositionOrderIndexNext = self.lpPositionOrderIndexNext + 1;
+        self.lpPositionOrders.set(orderId, LPPositionOrder{
+            opType: ORDER_OP_TYPE_LIQUIDATION,
+            account: msg.account,
+            marginDelta: 0,
+            liquidityDelta: 0,
+            executionFee: 0,
+            blockTime: now(),
+            isPending: true,
+            pendingTime: now(),
+            callbackId: null,
+            executionFeeReceiver: executionFeeReceiver,
+            lastOperator: sender()
+        });
+
+        // send update position msg
+        send(SendParameters{
+            to: self.pool,
+            value: 0,
+            mode: SendRemainingValue,
+            bounce: true,
+            body: UpdateLPPosition {
+                opType: ORDER_OP_TYPE_LIQUIDATION,
+                orderId: orderId,
+                trxId: msg.trxId,
+                account: msg.account,
+                marginDelta: 0,
+                liquidityDelta: 0
+            }.toCell()
+        });
+        dump("liquidate LP send msg to pool");
+    }
+
+    // ============================ Callback Cancel Increase / Execute Decrease / Execute Liquidation ================================ //
+    fun handelLPPositionOrderCallback(orderId: Int, trxId: Int) {
+        let ctx: Context = context();
+
+        // check gas
+        require(ctx.value >= ctx.readForwardFee() + self.gasConsumption, "gas not enough");
+
+        // get order
+        let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(orderId);
+        if (orderOpt == null) {
+            return;
+        }
+        let order: LPPositionOrder = orderOpt!!;
+
+        // delete order
+        self.lpPositionOrders.set(orderId, null);
+
+        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+            // event
+            emit(LPPositionOrderCancelledEvent{
+                opType: order.opType,
+                orderId: orderId,
+                trxId: trxId
+            }.toCell());
+
+            // transfer execution fee
+            if (order.executionFeeReceiver != null) {
+                send(SendParameters{
+                    to: order.executionFeeReceiver!!,
+                    bounce: true,
+                    value: order.executionFee,
+                    mode: SendPayGasSeparately
+                });
+            }
+            dump("cancel LP increase order success");
+        } else {
+            // event
+            emit(LPPositionOrderExecutedEvent{
+                opType: order.opType,
+                orderId: orderId,
+                trxId: trxId
+            }.toCell());
+            
+            // transfer execution fee
+            if (order.executionFeeReceiver != null && order.executionFee != 0) {
+                send(SendParameters{
+                    to: order.executionFeeReceiver!!,
+                    bounce: true,
+                    value: order.executionFee,
+                    mode: SendPayGasSeparately
+                });
+            }
+        }
+
+        // transfer execess gas
+        if (order.lastOperator != null) {
+            self.refundExecessTon(order.lastOperator!!, 0);
+        }
+    }
+
+    // ============================ Compensate ================================ //
+    receive(msg: CompensateLPPositionOrder) {
+        let ctx: Context = context();
+
+        // check compensator
+        let isCompensator: Bool = false;
+        let isCompensatorOpt: Bool? = self.compensators.get(sender());
+        if (isCompensatorOpt != null) {
+            isCompensator = isCompensatorOpt!!;
+        }
+        require(isCompensator, "not compensator");
+        
+        // check order pending
+        let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(msg.orderId);
+        require(orderOpt != null, "order not exist");
+        let order: LPPositionOrder = orderOpt!!;
+
+        // check gas
+        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+            require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
+        } else {
+            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+        }
+
+        require(order.isPending, "order not pending");
+        require(order.pendingTime + self.minPendingTimeDelayCompensator <= now(), "too early for compensator");
+
+        // refund
+        if (msg.needRefund) {
+            // increase position failed, cancel order
+            // refund jetton failed
+            // get callback
+            require(order.callbackId != null, "jetton callback not exist");
+            let callbackId: Int = order.callbackId!!;
+            let jettonCallbackOpt: JettonCallback? = self.jettonCallbacks.get(callbackId);
+            if (jettonCallbackOpt == null) {
+                return;
+            }
+            let jettonCallback: JettonCallback = jettonCallbackOpt!!;
+            // update trxId
+            jettonCallback.trxId = msg.trxId;
+            self.jettonCallbacks.set(callbackId, jettonCallback);
+
+            // update execution fee receiver
+            if (msg.executionFeeReceiver != null) {
+                order.executionFeeReceiver = msg.executionFeeReceiver!!;
+            }
+            order.lastOperator = sender();
+            self.lpPositionOrders.set(msg.orderId, order);
+
+            // transfer jetton
+            self.refundJetton(callbackId, jettonCallback.amount, jettonCallback.receiver, myAddress());
+            return;
+        }
+
+        if (msg.isExecute) {
+            // delete order
+            self.lpPositionOrders.set(msg.orderId, null);
+            // event
+            emit(LPPositionOrderExecutedEvent{
+                opType: order.opType,
+                orderId: msg.orderId,
+                trxId: msg.trxId
+            }.toCell());
+        } else {
+            if (order.callbackId != null) {
+                // delete callback
+                self.jettonCallbacks.set(order.callbackId!!, null);
+            }
+            // delete order
+            self.lpPositionOrders.set(msg.orderId, null);
+            // event
+            emit(LPPositionOrderCancelledEvent{
+                opType: order.opType,
+                orderId: msg.orderId,
+                trxId: msg.trxId
+            }.toCell());
+        }
+
+        // transfer execution fee
+        if (order.executionFeeReceiver != null && order.executionFee != 0) {
+            send(SendParameters{
+                to: order.executionFeeReceiver!!,
+                bounce: true,
+                value: order.executionFee,
+                mode: SendPayGasSeparately
+            });
+        }
+
+        // transfer execess gas
+        self.refundExecessTon(sender(), order.executionFee);
+        return;
+    }
+
+    // ============================ Getter ================================ //
+    get fun lpPositionOrder(orderId: Int): LPPositionOrder? {
+        return self.lpPositionOrders.get(orderId);
+    }
+
+    get fun lpPositionOrderIndexNext(): Int {
+        return self.lpPositionOrderIndexNext;
+    }
+
+    // // ============================ Perp ================================ //
+
+
 
     // ======================================================== private function ================================================================ //
     fun shouldCancel(blockTime: Int, account: Address, isPending: Bool) {
         require(!isPending, "order is pending");
 
         // executor or trader
-        let isExecutor: Bool = self.isExecutor(sender());
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
 
         // executor cancel must after minTimeDelayExecutor
         if (isExecutor) {
@@ -1138,7 +1226,11 @@ contract OrderBook with Deployable, Ownable {
         require(!isPending, "order is pending");
 
         // executor or trader
-        let isExecutor: Bool = self.isExecutor(sender());
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
 
         // check sender
         require(isExecutor, "invalid sender");
@@ -1150,13 +1242,13 @@ contract OrderBook with Deployable, Ownable {
         require(blockTime + self.maxTimeDelayExecutor > now(), "order expired");
     }
 
-    fun tokenEnabled(tokenIndex: Int): Bool {
-        let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenIndex);
-        if (tokenConfigOpt == null) {
-            return false;
-        }
-        return (tokenConfigOpt!!).enable;
-    }
+    // fun tokenEnabled(tokenIndex: Int): Bool {
+    //     let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenIndex);
+    //     if (tokenConfigOpt == null) {
+    //         return false;
+    //     }
+    //     return (tokenConfigOpt!!).enable;
+    // }
 
     // create jetton transfer body
     fun createJettonTransferBody(queryId: Int, jettonAmount: Int, to: Address, responseDestination: Address): Cell {

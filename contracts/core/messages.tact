@@ -24,33 +24,6 @@ message UpdateTokenConfig {
 }
 
 // ============================ RBF ================================ //
-// increase RBF
-message CancelIncreaseRBFPositionOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message ExecuteIncreaseRBFPositionOrder {
-    index: Int;
-    trxId: Int;
-}
-
-// decrease RBF
-message CreateDecreaseRBFPositionOrder {
-    executionFee: Int;
-    liquidityDelta: Int;
-}
-
-message CancelDecreaseRBFPositionOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message ExecuteDecreaseRBFPositionOrder {
-    index: Int;
-    trxId: Int;
-}
-
 message(0xe89cd45f) UpdateRBFPosition {
     isIncrease: Bool;
     orderId: Int as uint64;
@@ -66,37 +39,19 @@ message(0x1cf0cf81) UpdateRBFPositionSuccess {
 }
 
 // ============================ LP ================================ //
-// increase LP
-message CancelIncreaseLPPositionOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message ExecuteIncreaseLPPositionOrder {
-    index: Int;
-    trxId: Int;
-}
-
-// decrease LP
-message CreateDecreaseLPPositionOrder {
-    executionFee: Int;
+message(0xfea36b71) UpdateLPPosition {
+    orderId: Int as uint64;
+    opType: Int as uint8;
+    account: Address;
     marginDelta: Int;
     liquidityDelta: Int;
+    trxId: Int as uint64;
 }
 
-message CancelDecreaseLPPositionOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message ExecuteDecreaseLPPositionOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message LiquidateLPPosition {
-    account: Address;
-    trxId: Int;
+message(0x4989c7c1) UpdateLPPositionSuccess {
+    orderId: Int;
+    receive: Int;
+    trxId: Int as uint64;
 }
 
 // ============================ Perp ================================ //
