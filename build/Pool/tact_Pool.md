@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 10242 bytes
+BOC Size: 9839 bytes
 
 # Types
-Total Types: 75
+Total Types: 78
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -46,16 +46,16 @@ TLB: `update_token_config#8ed4d7aa tokenId:int257 name:Maybe ^string enable:Mayb
 Signature: `UpdateTokenConfig{tokenId:int257,name:Maybe ^string,enable:Maybe bool,minMarginPerPosition:Maybe int257,maxLeveragePerPosition:Maybe int257,liquidationFeeRatePerPosition:Maybe int257,liquidationExecutionFee:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257}`
 
 ## UpdateRBFPosition
-TLB: `update_rbf_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 = UpdateRBFPosition`
-Signature: `UpdateRBFPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64}`
+TLB: `update_rbf_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateRBFPosition`
+Signature: `UpdateRBFPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdateRBFPositionSuccess
 TLB: `update_rbf_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateRBFPositionSuccess`
 Signature: `UpdateRBFPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
 ## UpdateLPPosition
-TLB: `update_lp_position#fea36b71 orderId:uint64 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 trxId:uint64 = UpdateLPPosition`
-Signature: `UpdateLPPosition{orderId:uint64,opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,trxId:uint64}`
+TLB: `update_lp_position#fea36b71 orderId:uint64 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateLPPosition`
+Signature: `UpdateLPPosition{orderId:uint64,opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdateLPPositionSuccess
 TLB: `update_lp_position_success#4989c7c1 orderId:int257 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
@@ -193,6 +193,10 @@ Signature: `DecreasePerpPositionLimitExecutedEvent{token:^string,index:int257,tr
 TLB: `perp_position_decreased_event#6aa56cf7 account:address token:^string marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 = PerpPositionDecreasedEvent`
 Signature: `PerpPositionDecreasedEvent{account:address,token:^string,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257}`
 
+## UpdatePriceEvent
+TLB: `update_price_event#6793c3e9 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePriceEvent`
+Signature: `UpdatePriceEvent{pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+
 ## ConfigData
 TLB: `_ rbfLockTime:int257 bonusFactor:int257 minLPMargin:int257 maxLPLeverage:int257 lpLiquidationFee:int257 lpMaxRiskRate:int257 orderBook:address = ConfigData`
 Signature: `ConfigData{rbfLockTime:int257,bonusFactor:int257,minLPMargin:int257,maxLPLeverage:int257,lpLiquidationFee:int257,lpMaxRiskRate:int257,orderBook:address}`
@@ -305,12 +309,23 @@ Signature: `FundingRateGrowthX96{clampedFundingRateDeltaX96:int257,longFundingRa
 TLB: `_ sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRateX96:int257} shouldAdjustFundingRate:bool fundingRateDeltaX96:int257 = SamplePremiumRateResult`
 Signature: `SamplePremiumRateResult{sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRateX96:int257},shouldAdjustFundingRate:bool,fundingRateDeltaX96:int257}`
 
+## PriceData
+TLB: `_ price:int257 = PriceData`
+Signature: `PriceData{price:int257}`
+
+## UpdatePrice
+TLB: `_ tokenId:int257 price:int257 = UpdatePrice`
+Signature: `UpdatePrice{tokenId:int257,price:int257}`
+
 # Get Methods
-Total Get Methods: 5
+Total Get Methods: 6
 
 ## configData
 
 ## tokenConfig
+Argument: tokenId
+
+## priceData
 Argument: tokenId
 
 ## rbfPosition

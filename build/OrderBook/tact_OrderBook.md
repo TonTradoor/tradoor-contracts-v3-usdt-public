@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 13032 bytes
+BOC Size: 12861 bytes
 
 # Types
-Total Types: 55
+Total Types: 56
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -58,20 +58,20 @@ TLB: `cancel_rbf_position_order#bc6f0603 orderId:int257 trxId:int257 executionFe
 Signature: `CancelRBFPositionOrder{orderId:int257,trxId:int257,executionFeeReceiver:Maybe address}`
 
 ## ExecuteRBFPositionOrder
-TLB: `execute_rbf_position_order#a436705a orderId:int257 trxId:int257 executionFeeReceiver:Maybe address = ExecuteRBFPositionOrder`
-Signature: `ExecuteRBFPositionOrder{orderId:int257,trxId:int257,executionFeeReceiver:Maybe address}`
+TLB: `execute_rbf_position_order#25ec63c1 orderId:int257 trxId:int257 executionFeeReceiver:Maybe address pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecuteRBFPositionOrder`
+Signature: `ExecuteRBFPositionOrder{orderId:int257,trxId:int257,executionFeeReceiver:Maybe address,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdateRBFPosition
-TLB: `update_rbf_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 = UpdateRBFPosition`
-Signature: `UpdateRBFPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64}`
+TLB: `update_rbf_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateRBFPosition`
+Signature: `UpdateRBFPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdateRBFPositionSuccess
 TLB: `update_rbf_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateRBFPositionSuccess`
 Signature: `UpdateRBFPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
 ## CompensateRBFPositionOrder
-TLB: `compensate_rbf_position_order#260ad933 orderId:int257 trxId:int257 needRefund:bool isExecute:bool executionFeeReceiver:Maybe address = CompensateRBFPositionOrder`
-Signature: `CompensateRBFPositionOrder{orderId:int257,trxId:int257,needRefund:bool,isExecute:bool,executionFeeReceiver:Maybe address}`
+TLB: `compensate_rbf_position_order#09f91fd2 orderId:int257 trxId:int257 needRefund:bool isExecute:bool executionFeeReceiver:Maybe address pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = CompensateRBFPositionOrder`
+Signature: `CompensateRBFPositionOrder{orderId:int257,trxId:int257,needRefund:bool,isExecute:bool,executionFeeReceiver:Maybe address,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## CreateDecreaseLPPositionOrder
 TLB: `create_decrease_lp_position_order#7202bd7d executionFee:int257 marginDelta:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder`
@@ -82,16 +82,16 @@ TLB: `cancel_lp_position_order#58157fbb executionFeeReceiver:Maybe address order
 Signature: `CancelLPPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257}`
 
 ## ExecuteLPPositionOrder
-TLB: `execute_lp_position_order#03ca863c executionFeeReceiver:Maybe address orderId:int257 trxId:int257 = ExecuteLPPositionOrder`
-Signature: `ExecuteLPPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257}`
+TLB: `execute_lp_position_order#d0a15205 executionFeeReceiver:Maybe address orderId:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecuteLPPositionOrder`
+Signature: `ExecuteLPPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## LiquidateLPPositionOrder
-TLB: `liquidate_lp_position_order#5241dc81 executionFeeReceiver:Maybe address account:address trxId:int257 = LiquidateLPPositionOrder`
-Signature: `LiquidateLPPositionOrder{executionFeeReceiver:Maybe address,account:address,trxId:int257}`
+TLB: `liquidate_lp_position_order#63dd28a7 executionFeeReceiver:Maybe address account:address trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = LiquidateLPPositionOrder`
+Signature: `LiquidateLPPositionOrder{executionFeeReceiver:Maybe address,account:address,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdateLPPosition
-TLB: `update_lp_position#fea36b71 orderId:uint64 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 trxId:uint64 = UpdateLPPosition`
-Signature: `UpdateLPPosition{orderId:uint64,opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,trxId:uint64}`
+TLB: `update_lp_position#fea36b71 orderId:uint64 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateLPPosition`
+Signature: `UpdateLPPosition{orderId:uint64,opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdateLPPositionSuccess
 TLB: `update_lp_position_success#4989c7c1 orderId:int257 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
@@ -224,6 +224,10 @@ Signature: `IncreasePerpPositionMarketOrders{increasePerpPositionMarketOrders:di
 ## IncreasePerpPositionMarketOrder
 TLB: `_ account:address isLong:bool marginDelta:int257 sizeDelta:int257 acceptablePrice:int257 executionFee:int257 blockTime:int257 = IncreasePerpPositionMarketOrder`
 Signature: `IncreasePerpPositionMarketOrder{account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,acceptablePrice:int257,executionFee:int257,blockTime:int257}`
+
+## UpdatePrice
+TLB: `_ tokenId:int257 price:int257 = UpdatePrice`
+Signature: `UpdatePrice{tokenId:int257,price:int257}`
 
 # Get Methods
 Total Get Methods: 6

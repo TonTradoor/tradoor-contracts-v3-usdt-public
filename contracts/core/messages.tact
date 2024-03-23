@@ -1,3 +1,5 @@
+import "./structs";
+
 // ============================ admin ================================ //
 message UpdateConfig {
     gasConsumption: Int?;
@@ -30,6 +32,8 @@ message(0xe89cd45f) UpdateRBFPosition {
     account: Address;
     liquidityDelta: Int;
     trxId: Int as uint64;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
 message(0x1cf0cf81) UpdateRBFPositionSuccess {
@@ -46,6 +50,8 @@ message(0xfea36b71) UpdateLPPosition {
     marginDelta: Int;
     liquidityDelta: Int;
     trxId: Int as uint64;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
 message(0x4989c7c1) UpdateLPPositionSuccess {

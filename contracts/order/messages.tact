@@ -1,3 +1,5 @@
+import "./structs";
+
 // ============================ JETTON ============================= //
 
 message(0x7362d09c) TokenNotification {
@@ -44,6 +46,8 @@ message ExecuteRBFPositionOrder {
     orderId: Int;
     trxId: Int;
     executionFeeReceiver: Address?;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
 message(0xe89cd45f) UpdateRBFPosition {
@@ -52,6 +56,8 @@ message(0xe89cd45f) UpdateRBFPosition {
     account: Address;
     liquidityDelta: Int;
     trxId: Int as uint64;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
 message(0x1cf0cf81) UpdateRBFPositionSuccess {
@@ -66,6 +72,8 @@ message CompensateRBFPositionOrder {
     needRefund: Bool;
     isExecute: Bool;
     executionFeeReceiver: Address?;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 // ============================ LP ================================ //
 message CreateDecreaseLPPositionOrder {
@@ -84,12 +92,16 @@ message ExecuteLPPositionOrder {
     executionFeeReceiver: Address?;
     orderId: Int;
     trxId: Int;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
 message LiquidateLPPositionOrder {
     executionFeeReceiver: Address?;
     account: Address;
     trxId: Int;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
 message(0xfea36b71) UpdateLPPosition {
@@ -99,6 +111,8 @@ message(0xfea36b71) UpdateLPPosition {
     marginDelta: Int;
     liquidityDelta: Int;
     trxId: Int as uint64;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
 message(0x4989c7c1) UpdateLPPositionSuccess {
@@ -155,81 +169,3 @@ message CompensatePerpPositionOrder {
     isExecute: Bool;
     executionFeeReceiver: Address?;
 }
-
-// // increase market Perp
-// message CancelIncreasePerpPositionMarketOrder {
-//     executionFeeReceiver: Address;
-//     orderId: Int;
-//     trxId: Int;
-// }
-
-// message ExecuteIncreasePerpPositionMarketOrder {
-//     executionFeeReceiver: Address;
-//     orderId: Int;
-//     trxId: Int;
-// }
-
-// // decrease market Perp
-// message CreateDecreasePerpPositionMarketOrder {
-//     token: String;
-//     isLong: Bool;
-//     marginDelta: Int;
-//     sizeDelta: Int;
-//     acceptablePrice: Int;
-// }
-
-// message CancelDecreasePerpPositionMarketOrder {
-//     executionFeeReceiver: Address;
-//     orderId: Int;
-//     trxId: Int;
-// }
-
-// message ExecuteDecreasePerpPositionMarketOrder {
-//     executionFeeReceiver: Address;
-//     orderId: Int;
-//     trxId: Int;
-// }
-
-// // increase limit Perp
-// message CreateIncreasePerpPositionLimitOrder {
-//     token: String;
-//     isLong: Bool;
-//     marginDelta: Int;
-//     sizeDelta: Int;
-//     triggerPrice: Int;
-//     triggerAbove: Bool;
-// }
-
-// message CancelIncreasePerpPositionLimitOrder {
-//     executionFeeReceiver: Address;
-//     orderId: Int;
-//     trxId: Int;
-// }
-
-// message ExecuteIncreasePerpPositionLimitOrder {
-//     executionFeeReceiver: Address;
-//     orderId: Int;
-//     trxId: Int;
-// }
-
-// // decrease limit Perp
-// message CreateDecreasePerpPositionLimitOrder {
-//     token: String;
-//     isLong: Bool;
-//     marginDelta: Int;
-//     sizeDelta: Int;
-//     triggerPrice: Int;
-//     triggerAbove: Bool;
-// }
-
-// message CancelDecreasePerpPositionLimitOrder {
-//     executionFeeReceiver: Address;
-//     orderId: Int;
-//     trxId: Int;
-// }
-
-// message ExecuteDecreasePerpPositionLimitOrder {
-//     executionFeeReceiver: Address;
-//     orderId: Int;
-//     trxId: Int;
-// }

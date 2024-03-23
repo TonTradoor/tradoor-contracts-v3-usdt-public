@@ -1,3 +1,5 @@
+import "./structs";
+
 // ============================ RBF ================================ //
 // increase RBF
 message RBFPositionIncreasedEvent {
@@ -206,4 +208,10 @@ message PerpPositionDecreasedEvent {
     realizedPnLDelta: Int;
     fundingFee: Int;
     tradingFee: Int;
+}
+
+// ============================ Price ================================ //
+message UpdatePriceEvent {
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }

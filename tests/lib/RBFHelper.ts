@@ -1,5 +1,5 @@
 import { SandboxContract, TreasuryContract } from "@ton/sandbox";
-import { beginCell, toNano } from "@ton/core";
+import { beginCell, Dictionary, toNano } from "@ton/core";
 import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits } from "./TokenHelper";
@@ -91,7 +91,9 @@ export async function executeRBFOrder(executor: SandboxContract<TreasuryContract
             $$type: 'ExecuteRBFPositionOrder',
             orderId: orderId,
             trxId: 2n,
-            executionFeeReceiver: executor.address
+            executionFeeReceiver: executor.address,
+            pricesLength: 0n,
+            prices: Dictionary.empty()
         }
     );
 

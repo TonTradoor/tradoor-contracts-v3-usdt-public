@@ -4,9 +4,8 @@ import "./messages";
 import "./events";
 import "./structs";
 import "./constants";
-import "./fundingRate";
 
-contract Pool with Deployable, Ownable, fundingRate {
+contract Pool with Deployable, Ownable {
 
     // config
     gasConsumption: Int = ton("0.05");
@@ -46,14 +45,8 @@ contract Pool with Deployable, Ownable, fundingRate {
     perpPositions: map<Int, AccountPerpPosition>; // tokenIndex => user => direction => position
     perpPositionIndexNext: Int as uint64 = 1;
 
-    // funding rate
-    priceStates: map<Int, PriceState>; // tokenIndex => priceState
-
-    globalRiskBufferFunds: map<Int, GlobalRiskBufferFund>; // tokenIndex => RBF
-    globalPositions : map<Int, GlobalPosition>; // tokenIndex => globalPosition
-    globalFundingRateSamples: map<Int, GlobalFundingRateSample>; // tokenIndex => sample
-    globalLiquidityPositions: map<Int, GlobalLiquidityPosition>; // tokenIndex => globalLiquidityPosition
-    previousGlobalFundingRates: map<Int, PreviousGlobalFundingRate>; // tokenIndex => rate
+    // price
+    prices: map<Int, PriceData>; // tokenId => priceData
 
     init() {
         self.owner = sender();
@@ -166,11 +159,19 @@ contract Pool with Deployable, Ownable, fundingRate {
         return self.tokenConfigs.get(tokenId);
     }
 
+    get fun priceData(tokenId: Int): PriceData? {
+        return self.prices.get(tokenId);
+    }
+
     // ======================================================== RBF ================================================================ //
     receive(msg: UpdateRBFPosition) {
         dump("receive update position msg");
         require(sender() == self.orderBook, "invalid sender");
 
+        // update price
+        self.setPrice(msg.pricesLength, msg.prices);
+
+        // update position
         let receive: Int = 0;
         if (msg.isIncrease) {
             self.increaseRBFPosition(msg.account, msg.liquidityDelta, msg.trxId);
@@ -361,6 +362,10 @@ contract Pool with Deployable, Ownable, fundingRate {
         dump("receive update LP position msg");
         require(sender() == self.orderBook, "invalid sender");
 
+        // update price
+        self.setPrice(msg.pricesLength, msg.prices);
+
+        // update position
         let receive: Int = 0;
         if (msg.opType == ORDER_OP_TYPE_INCREASE) {
             self.increaseLPPosition(msg.account, msg.marginDelta, msg.liquidityDelta, msg.trxId);
@@ -692,6 +697,7 @@ contract Pool with Deployable, Ownable, fundingRate {
     }
 
     // ============================ private function ================================ //
+    // TODO 改为即时更新某token的pnl，再循环加到一起，节约gas
     fun calculateTotalGlobalUnrealizedPnl(): Int {
         dump("calculate total pnl");
         let totalGlobalUnrealizedPnl: Int = 0;
@@ -703,7 +709,7 @@ contract Pool with Deployable, Ownable, fundingRate {
                 if (globalLPPositionOpt != null) {
                     let globalLPPosition: GlobalLPPosition = globalLPPositionOpt!!;
                     // TODO get index price
-                    let indexPrice: Int = 1 * PRICE_FACTOR;
+                    let indexPrice: Int = self.getPrice(i);
                     // unrealized pnl
                     let unrealizedPnl: Int = self.calculateUnrealizedPnL(globalLPPosition.isLong, globalLPPosition.netSize, 
                         globalLPPosition.entryPrice, indexPrice);
@@ -732,13 +738,45 @@ contract Pool with Deployable, Ownable, fundingRate {
         }
     }
 
-    fun sampleAndAdjustFundingRate(tokenIndex: Int) {
-        let globalFundingRateSample: GlobalFundingRateSample = self.globalFundingRateSamples.get(tokenIndex)!!;
-        let globalLiquidityPosition: GlobalLiquidityPosition = self.globalLiquidityPositions.get(tokenIndex)!!;
-        let priceState: PriceState = self.priceStates.get(tokenIndex)!!;
-        let tokenConfig: TokenConfig = self.tokenConfigs.get(tokenIndex)!!;
+    fun setPrice(pricesLength: Int, prices: map<Int, UpdatePrice>) {
+        if (pricesLength <= 0) {
+            return;
+        }
+        let i: Int = 1;
+        while(i < pricesLength) {
+            let updatePrice: UpdatePrice? = prices.get(i);
+            if (updatePrice != null) {
+                // TODO 检查price较上次偏移?
+                let price: Int = (updatePrice!!).price;
+                let tokenId: Int = (updatePrice!!).tokenId;
 
-        let res: SamplePremiumRateResult = self.samplePremiumRate(globalFundingRateSample, globalLiquidityPosition, priceState, tokenConfig.interestRate, now());
+                let priceDataOpt: PriceData? = self.prices.get(tokenId);
+                if (priceDataOpt != null) {
+                    let priceData: PriceData = priceDataOpt!!;
+                    priceData.price = price;
+                    self.prices.set(tokenId, priceData);
+                } else {
+                    self.prices.set(tokenId, PriceData{
+                        price: price
+                    });
+                }
+            }
+            i = i + 1;
+        }
+        emit(UpdatePriceEvent{
+            pricesLength: pricesLength,
+            prices: prices
+        }.toCell());
+    }
+
+    // TODO
+    fun getPrice(tokenId: Int): Int {
+        let priceData: PriceData? = self.prices.get(tokenId);
+        let price: Int = 0;
+        if (priceData != null) {
+            price = (priceData!!).price;
+        }
+        return price;
     }
 
 }

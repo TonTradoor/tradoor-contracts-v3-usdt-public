@@ -73,49 +73,8 @@ struct IncreasePerpPositionMarketOrder {
     blockTime: Int;
 }
 
-// decrease market order
-// struct DecreasePerpPositionMarketOrders {
-//     decreasePerpPositionMarketOrders: map<Int, DecreasePerpPositionMarketOrder>;
-// }
-
-// struct DecreasePerpPositionMarketOrder {
-//     account: Address;
-//     isLong: Bool;
-//     marginDelta: Int;
-//     sizeDelta: Int;
-//     acceptablePrice: Int;
-//     executionFee: Int;
-//     blockTime: Int;
-// }
-
-// // increase limit order
-// struct IncreasePerpPositionLimitOrders {
-//     increasePerpPositionLimitOrders: map<Int, IncreasePerpPositionLimitOrder>;
-// }
-
-// struct IncreasePerpPositionLimitOrder {
-//     account: Address;
-//     isLong: Bool;
-//     marginDelta: Int;
-//     sizeDelta: Int;
-//     triggerPrice: Int;
-//     triggerAbove: Bool;
-//     executionFee: Int;
-//     blockTime: Int;
-// }
-
-// // decrease limit order
-// struct DecreasePerpPositionLimitOrders {
-//     decreasePerpPositionLimitOrders: map<Int, DecreasePerpPositionLimitOrder>;
-// }
-
-// struct DecreasePerpPositionLimitOrder {
-//     account: Address;
-//     isLong: Bool;
-//     marginDelta: Int;
-//     sizeDelta: Int;
-//     triggerPrice: Int;
-//     triggerAbove: Bool;
-//     executionFee: Int;
-//     blockTime: Int;
-// }
+// ============================ Price ================================ //
+struct UpdatePrice {
+    tokenId: Int;
+    price: Int;
+}

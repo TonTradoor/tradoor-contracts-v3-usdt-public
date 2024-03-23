@@ -419,7 +419,9 @@ contract OrderBook with Deployable, Ownable {
                 orderId: msg.orderId,
                 trxId: msg.trxId,
                 account: order.account,
-                liquidityDelta: order.liquidityDelta
+                liquidityDelta: order.liquidityDelta,
+                pricesLength: msg.pricesLength,
+                prices: msg.prices
             }.toCell()
         });
     }
@@ -878,7 +880,9 @@ contract OrderBook with Deployable, Ownable {
                 trxId: msg.trxId,
                 account: order.account,
                 marginDelta: order.marginDelta,
-                liquidityDelta: order.liquidityDelta
+                liquidityDelta: order.liquidityDelta,
+                pricesLength: msg.pricesLength,
+                prices: msg.prices
             }.toCell()
         });
         dump("execute LP increase order send msg to pool");
@@ -1026,7 +1030,9 @@ contract OrderBook with Deployable, Ownable {
                 trxId: msg.trxId,
                 account: msg.account,
                 marginDelta: 0,
-                liquidityDelta: 0
+                liquidityDelta: 0,
+                pricesLength: msg.pricesLength,
+                prices: msg.prices
             }.toCell()
         });
         dump("liquidate LP send msg to pool");

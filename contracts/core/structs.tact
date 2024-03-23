@@ -213,3 +213,13 @@ struct SamplePremiumRateResult {
     shouldAdjustFundingRate: Bool;
     fundingRateDeltaX96: Int;
 }
+
+// ============================ Price ================================ //
+struct PriceData {
+    price: Int;
+}
+
+struct UpdatePrice {
+    tokenId: Int;
+    price: Int;
+}

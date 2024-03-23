@@ -44,16 +44,24 @@ sh scripts/deploy.sh
 
 yarn rundev mintMockJetton
 
-- 创建加仓订单：
-
-yarn rundev rbfCreateIncreaseOrder
-
-- 创建减仓订单：
-
-yarn rundev rbfCreateDecreaseOrder
-
 - 添加executor:
 
 修改 config/testnet.json 中 executor
 
 yarn rundev orderBookSetConfig
+
+- 创建RBF加仓订单：
+
+yarn rundev rbfCreateIncreaseOrder
+
+- 创建RBF减仓订单：
+
+yarn rundev rbfCreateDecreaseOrder
+
+- 创建LP加仓订单：
+
+yarn rundev lpCreateIncreaseOrder
+
+- 创建LP减仓订单：
+
+yarn rundev lpCreateDecreaseOrder
