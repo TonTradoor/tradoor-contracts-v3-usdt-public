@@ -58,6 +58,10 @@ yarn rundev rbfCreateIncreaseOrder
 
 yarn rundev rbfCreateDecreaseOrder
 
+- 执行RBF订单：
+
+yarn rundev rbfExecuteDecreaseOrder
+
 - 创建LP加仓订单：
 
 yarn rundev lpCreateIncreaseOrder
@@ -65,3 +69,7 @@ yarn rundev lpCreateIncreaseOrder
 - 创建LP减仓订单：
 
 yarn rundev lpCreateDecreaseOrder
+
+- 执行LP订单：
+
+yarn rundev lpExecuteDecreaseOrder
