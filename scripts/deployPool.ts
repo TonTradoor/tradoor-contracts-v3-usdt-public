@@ -1,10 +1,11 @@
 import { toNano } from '@ton/core';
 import { Pool } from '../wrappers/Pool';
 import { NetworkProvider } from '@ton/blueprint';
-import { setConfig } from '../utils/util';
+import { getConfig, setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    const pool = provider.open(await Pool.fromInit());
+    let deployId = getConfig(provider, "deployId");
+    const pool = provider.open(await Pool.fromInit(deployId));
 
     await pool.send(
         provider.sender(),

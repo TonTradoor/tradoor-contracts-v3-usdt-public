@@ -11,7 +11,7 @@ describe('OrderBook', () => {
     beforeEach(async () => {
         blockchain = await Blockchain.create();
 
-        orderBook = blockchain.openContract(await OrderBook.fromInit());
+        orderBook = blockchain.openContract(await OrderBook.fromInit(0n));
 
         deployer = await blockchain.treasury('deployer');
 

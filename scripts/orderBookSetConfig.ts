@@ -29,7 +29,6 @@ export async function run(provider: NetworkProvider) {
             minTimeDelayExecutor: null,
             maxTimeDelayExecutor: null,
             minTimeDelayTrader: null,
-            minPendingTimeDelayCompensator: null,
             minExecutionFee: null,
             gasConsumption: null,
             minTonsForStorage: null,

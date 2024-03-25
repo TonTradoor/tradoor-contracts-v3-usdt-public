@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: MockJetton
-BOC Size: 2030 bytes
+BOC Size: 2014 bytes
 
 # Types
 Total Types: 20

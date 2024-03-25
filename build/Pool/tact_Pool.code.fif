@@ -99,6 +99,7 @@ PROGRAM{
   DECLPROC $UpdatePrice$_get_tokenId
   DECLPROC $UpdatePrice$_get_price
   DECLPROC $UpdatePrice$_not_null
+  DECLPROC $Pool$init$_load
   DECLPROC $GlobalRBFPosition$_constructor_riskBufferFund_liquidity
   DECLPROC $Pool$_contract_init
   DECLPROC $Pool$_contract_load
@@ -1531,9 +1532,15 @@ PROGRAM{
     128 THROWIF
     2 UNTUPLE
   }>
+  $Pool$init$_load PROCINLINE:<{
+    257 PUSHINT
+    LDIX
+    SWAP
+  }>
   $GlobalRBFPosition$_constructor_riskBufferFund_liquidity PROCINLINE:<{
   }>
   $Pool$_contract_init PROCREF:<{
+    DROP
     50000000 PUSHINT
     30000000 PUSHINT
     PUSHNULL
@@ -1582,12 +1589,14 @@ PROGRAM{
       s15 16 s() XCHG
       15 ROLL
     }>
-    DROP
     MYADDR
     11 PLDU
     10 PUSHPOW2
     EQUAL
     137 THROWIFNOT
+    $Pool$init$_load INLINECALLDICT
+    SWAP
+    ENDS
     $Pool$_contract_init INLINECALLDICT
   }>
   $Pool$_contract_store PROCINLINE:<{

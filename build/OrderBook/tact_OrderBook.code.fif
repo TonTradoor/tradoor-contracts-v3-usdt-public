@@ -107,6 +107,7 @@ PROGRAM{
   DECLPROC $LPPositionOrder$_to_opt_tuple
   DECLPROC $LPPositionOrder$_to_opt_external
   DECLPROC $PerpPositionOrderEx$_not_null
+  DECLPROC $OrderBook$init$_load
   DECLPROC $OrderBook$_contract_init
   DECLPROC $OrderBook$_contract_load
   DECLPROC $OrderBook$_contract_store
@@ -383,7 +384,7 @@ PROGRAM{
   $UpdateConfig$_load PROCREF:<{
     32 LDU
     SWAP
-    2288110707 PUSHINT
+    2706555649 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
@@ -466,27 +467,18 @@ PROGRAM{
       PUSHNULL
       SWAP
     }>
-    1 LDI
+    __tact_load_address_opt INLINECALLDICT
     SWAP
-    IF:<{
-      257 PUSHINT
-      LDIX
-    }>ELSE<{
-      PUSHNULL
-      SWAP
-    }>
     LDREF
     DROP
     CTOS
     __tact_load_address_opt INLINECALLDICT
-    SWAP
-    __tact_load_address_opt INLINECALLDICT
     NIP
-    s8 s13 XCHG
-    s8 s12 XCHG
-    s8 s11 XCHG
-    s8 s10 XCHG
-    s8 s9 XCHG
+    s7 s12 XCHG
+    s7 s11 XCHG
+    s7 s10 XCHG
+    s7 s9 XCHG
+    s7 s8 XCHG
   }>
   $CreateDecreaseRBFPositionOrder$_load PROCINLINE:<{
     32 LDU
@@ -752,10 +744,10 @@ PROGRAM{
     LDIX
     3 -ROLL
   }>
-  $ExecutePerpPositionOrder$_load PROCREF:<{
+  $ExecutePerpPositionOrder$_load PROCINLINE:<{
     32 LDU
     SWAP
-    4127026030 PUSHINT
+    3809189531 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
@@ -770,13 +762,10 @@ PROGRAM{
     257 PUSHINT
     LDIX
     LDDICT
-    257 PUSHINT
-    LDIX
-    LDDICT
     DROP
-    s4 s7 XCHG
-    s4 s6 XCHG
-    s4 s5 XCHG
+    s2 s5 XCHG
+    s2 s4 XCHG
+    s2 s3 XCHG
   }>
   $LiquidatePerpPositionOrder$_load PROCREF:<{
     32 LDU
@@ -1790,7 +1779,13 @@ PROGRAM{
     128 THROWIF
     4 UNTUPLE
   }>
+  $OrderBook$init$_load PROCINLINE:<{
+    257 PUSHINT
+    LDIX
+    SWAP
+  }>
   $OrderBook$_contract_init PROCREF:<{
+    DROP
     6 PUSHINT
     1800 PUSHINT
     180 PUSHINT
@@ -1857,12 +1852,14 @@ PROGRAM{
       s15 16 s() XCHG
       15 ROLL
     }>
-    DROP
     MYADDR
     11 PLDU
     10 PUSHPOW2
     EQUAL
     137 THROWIFNOT
+    $OrderBook$init$_load INLINECALLDICT
+    SWAP
+    ENDS
     $OrderBook$_contract_init INLINECALLDICT
   }>
   $OrderBook$_contract_store PROCINLINE:<{
@@ -2802,7 +2799,6 @@ PROGRAM{
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
   $OrderBook$_internal_binary_UpdateConfig PROCINLINE:<{
-    s5 POP
     21 s() 33 s() XCHG
     20 s() 32 s() XCHG
     19 s() 31 s() XCHG
@@ -2914,65 +2910,64 @@ PROGRAM{
     }>ELSE<{
       23 s() POP
     }>
-    20 s() PUSH
+    21 s() PUSH
     ISNULL
     NOT
     IF:<{
       s11 POP
-      s0 19 s() XCHG
+      s0 20 s() XCHG
       __tact_not_null INLINECALLDICT
       s0 s10 XCHG
-      s0 19 s() XCHG
+      s0 20 s() XCHG
     }>ELSE<{
-      20 s() POP
+      21 s() POP
     }>
-    18 s() PUSH
+    19 s() PUSH
     ISNULL
     NOT
     IF:<{
       s9 POP
-      s0 17 s() XCHG
+      s0 18 s() XCHG
       __tact_not_null INLINECALLDICT
       s0 s8 XCHG
-      s0 17 s() XCHG
+      s0 18 s() XCHG
     }>ELSE<{
-      18 s() POP
-    }>
-    16 s() PUSH
-    ISNULL
-    NOT
-    IF:<{
-      s7 POP
-      s0 s15 XCHG
-      __tact_not_null INLINECALLDICT
-      s0 s6 XCHG
-      s0 s15 XCHG
-    }>ELSE<{
-      16 s() POP
-    }>
-    s14 PUSH
-    ISNULL
-    NOT
-    IF:<{
-      s5 POP
-      s0 s13 XCHG
-      __tact_not_null INLINECALLDICT
-      s0 s4 XCHG
-      s0 s13 XCHG
-    }>ELSE<{
-      s14 POP
+      19 s() POP
     }>
     17 s() PUSH
     ISNULL
     NOT
     IF:<{
-      s3 POP
+      s7 POP
       s0 16 s() XCHG
       __tact_not_null INLINECALLDICT
-      s0 s2 XCHG
+      s0 s6 XCHG
       s0 16 s() XCHG
     }>ELSE<{
       17 s() POP
+    }>
+    s15 PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s5 POP
+      s0 s14 XCHG
+      __tact_not_null INLINECALLDICT
+      s0 s4 XCHG
+      s0 s14 XCHG
+    }>ELSE<{
+      s15 POP
+    }>
+    s13 PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s3 POP
+      s0 s12 XCHG
+      __tact_not_null INLINECALLDICT
+      s0 s1 s12 XCHG3
+    }>ELSE<{
+      s13 POP
     }>
     __tact_context_get_sender INLINECALLDICT
     FALSE
@@ -2987,13 +2982,10 @@ PROGRAM{
     s5 17 s() XCHG
     s4 16 s() XCHG
     s3 s15 XCHG
-    s14 s13 s12 XCHG3
-    s4 s11 XCHG
-    s8 s9 s10 XCHG3
-    s3 s7 XCHG
-    s5 s6 XCHG
-    s1 s3 XCHG
-    s1 s4 XCHG
+    s14 s1 s12 XCHG3
+    s13 s11 XCHG2
+    10 1 REVERSE
+    s3 s0 s0 XCHG3
   }>
   $OrderBook$_internal_binary_TokenNotification PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
@@ -3002,7 +2994,54 @@ PROGRAM{
     __tact_slice_eq_bits INLINECALLDICT
     NOT
     IF:<{
-      4 BLKDROP
+      DROP
+      __tact_context_get_sender INLINECALLDICT
+      21 s() 25 s() XCHG
+      20 s() 24 s() XCHG
+      19 s() 23 s() XCHG
+      18 s() 22 s() XCHG
+      17 s() 25 s() XCHG
+      16 s() 24 s() XCHG
+      s15 23 s() XCHG
+      s14 22 s() XCHG
+      s13 25 s() XCHG
+      s12 24 s() XCHG
+      s11 23 s() XCHG
+      s10 22 s() XCHG
+      s9 25 s() XCHG
+      s8 24 s() XCHG
+      s7 23 s() XCHG
+      s6 22 s() XCHG
+      s5 25 s() XCHG
+      s4 24 s() XCHG
+      s3 23 s() XCHG
+      s2 22 s() XCHG
+      s1 25 s() XCHG
+      s0 24 s() XCHG
+      0 PUSHINT
+      s0 24 s() XCHG
+      64 PUSHINT
+      s0 24 s() XCHG
+      27 s() PUSH
+      FALSE
+      s0 29 s() XCHG
+      $OrderBook$_fun_createJettonTransferBody INLINECALLDICT
+      s4 25 s() XCHG
+      s3 24 s() XCHG
+      s2 23 s() XCHG
+      s1 26 s() XCHG
+      $SendParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
+      $global_send INLINECALLDICT
+      17 s() 21 s() XCHG
+      16 s() 20 s() XCHG
+      s15 19 s() XCHG
+      s14 18 s() XCHG
+      s13 17 s() XCHG
+      s12 16 s() XCHG
+      s11 s15 XCHG
+      s10 s14 XCHG
+      s9 s13 XCHG
+      4 9 BLKSWAP
     }>ELSE<{
       LDREF
       DROP
@@ -4717,7 +4756,6 @@ PROGRAM{
     }>
   }>
   $OrderBook$_internal_binary_ExecutePerpPositionOrder PROCINLINE:<{
-    2DROP
     __tact_context_get INLINECALLDICT
     s11 PUSH
     257 PUSHINT
@@ -5535,7 +5573,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d4e784d4b54773879746d4b416658563157426d6647386e6570614252725272697a634b6256684b4868554d65} PUSHSLICE
+    x{697066733a2f2f516d6248664d564b7168447361484c3659365876474d4631746f6e57465654387241766b72393265516f6f785935} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -5598,12 +5636,12 @@ PROGRAM{
       32 PLDU
     }>
     DUP
-    2288110707 PUSHINT
+    2706555649 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
       $UpdateConfig$_load INLINECALLDICT
-      1 13 BLKDROP2
+      1 12 BLKDROP2
       $OrderBook$_internal_binary_UpdateConfig INLINECALLDICT
       TRUE
     }>
@@ -5738,12 +5776,12 @@ PROGRAM{
       TRUE
     }>
     DUP
-    4127026030 PUSHINT
+    3809189531 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
       $ExecutePerpPositionOrder$_load INLINECALLDICT
-      1 7 BLKDROP2
+      1 5 BLKDROP2
       $OrderBook$_internal_binary_ExecutePerpPositionOrder INLINECALLDICT
       TRUE
     }>

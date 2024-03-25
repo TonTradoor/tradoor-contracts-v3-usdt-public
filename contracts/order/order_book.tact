@@ -44,7 +44,7 @@ contract OrderBook with Deployable, Ownable {
     perpPositionOrderExs: map<Int, PerpPositionOrderEx>; // orderId => orderEx
     perpPositionOrderIndexNext: Int as uint64 = 1;
 
-    init() {
+    init(deployId: Int) {
         self.owner = sender();
 
         self.executors.set(sender(), true);
@@ -128,8 +128,15 @@ contract OrderBook with Deployable, Ownable {
     * @param msg The TokenNotification message received.
     */
     receive(msg: TokenNotification) {
-        // just ignore other token
+        // just refund other token
         if (sender() != self.usdtWallet) {
+            send(SendParameters{
+                to: sender(), 
+                value: 0,
+                mode: SendRemainingValue, 
+                bounce: false,
+                body: self.createJettonTransferBody(msg.queryId, msg.amount, msg.from, msg.from)
+            });
             return;
         }
 

@@ -67,7 +67,7 @@ cell $DeployOk$_store_cell((int) v) inline;
 (slice, ((int))) $TokenExcesses$_load(slice sc_0) inline;
 
 ;; $UpdateConfig$_load
-(slice, ((slice, int, slice, int, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref;
+(slice, ((slice, int, slice, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref;
 
 ;; $CreateDecreaseRBFPositionOrder$_load
 (slice, ((int, int))) $CreateDecreaseRBFPositionOrder$_load(slice sc_0) inline;
@@ -121,7 +121,7 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, int, cell) v
 (slice, ((slice, int, int))) $CancelPerpPositionOrder$_load(slice sc_0) inline;
 
 ;; $ExecutePerpPositionOrder$_load
-(slice, ((slice, int, int, int, cell, int, cell))) $ExecutePerpPositionOrder$_load(slice sc_0) inline_ref;
+(slice, ((slice, int, int, int, cell))) $ExecutePerpPositionOrder$_load(slice sc_0) inline;
 
 ;; $LiquidatePerpPositionOrder$_load
 (slice, ((slice, int, slice, int, int, int, cell))) $LiquidatePerpPositionOrder$_load(slice sc_0) inline_ref;
@@ -327,8 +327,11 @@ tuple $LPPositionOrder$_to_opt_external(tuple v) inline;
 ;; $PerpPositionOrderEx$_not_null
 ((int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline;
 
+;; $OrderBook$init$_load
+(slice, ((int))) $OrderBook$init$_load(slice sc_0) inline;
+
 ;; $OrderBook$_contract_init
-(int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $OrderBook$_contract_init() impure inline_ref;
+(int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $OrderBook$_contract_init(int $deployId) impure inline_ref;
 
 ;; $OrderBook$_contract_load
 (int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $OrderBook$_contract_load() impure inline_ref;

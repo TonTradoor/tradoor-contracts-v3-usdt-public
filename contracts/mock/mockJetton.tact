@@ -24,7 +24,7 @@ contract MockJetton with Jetton, Deployable {
 
     receive(msg: Mint) {
         let ctx: Context = context();
-        require(ctx.sender == self.owner, "Not owner");
+        // require(ctx.sender == self.owner, "Not owner");
         require(self.mintable, "Not mintable");
         // require(self.total_supply + msg.amount <= self.max_supply, "Max supply exceeded");
         self.mint(msg.receiver, msg.amount, self.owner); // (to, amount, response_destination)

@@ -48,7 +48,7 @@ contract Pool with Deployable, Ownable {
     // price
     prices: map<Int, PriceData>; // tokenId => priceData
 
-    init() {
+    init(deployId: Int) {
         self.owner = sender();
         self.orderBook = newAddress(0, 0);
         self.globalRBFPosition = GlobalRBFPosition{riskBufferFund: 0, liquidity: 0};

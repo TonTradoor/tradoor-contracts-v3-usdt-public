@@ -1,10 +1,11 @@
 import { toNano } from '@ton/core';
 import { OrderBook } from '../wrappers/OrderBook';
 import { NetworkProvider } from '@ton/blueprint';
-import { setConfig } from '../utils/util';
+import { getConfig, setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    const orderBook = provider.open(await OrderBook.fromInit());
+    let deployId = getConfig(provider, "deployId");
+    const orderBook = provider.open(await OrderBook.fromInit(deployId));
 
     await orderBook.send(
         provider.sender(),

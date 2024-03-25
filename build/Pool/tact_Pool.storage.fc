@@ -933,6 +933,11 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, int, 
     return (sc_0, (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIndexNext, v'rbfLockTime, v'bonusFactor, v'minLPMargin, v'maxLPLeverage, v'lpLiquidationFee, v'lpMaxRiskRate, v'owner, v'orderBook, v'globalRBFPosition, v'rbfPositions, v'rbfPositionIndexNext, v'globalLiquidity, v'globalLPPositions, v'lpPositions, v'lpPositionIndexNext, v'lpTradingFeeGrowth, v'lpFundingFeeGrowth, v'perpPositions, v'perpPositionIndexNext, v'prices));
 }
 
+(slice, ((int))) $Pool$init$_load(slice sc_0) inline {
+    var v'deployId = sc_0~load_int(257);
+    return (sc_0, (v'deployId));
+}
+
 (int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell) $Pool$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
@@ -942,7 +947,9 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, int, 
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        return $Pool$_contract_init();
+        (int deployId) = $sc~$Pool$init$_load();
+        $sc.end_parse();
+        return $Pool$_contract_init(deployId);
     }
 }
 

@@ -22,7 +22,6 @@ message UpdateConfig {
     minTimeDelayExecutor: Int?;
     maxTimeDelayExecutor: Int?;
     minTimeDelayTrader: Int?;
-    minPendingTimeDelayCompensator: Int?;
     minExecutionFee: Int?;
     gasConsumption: Int?;
     minTonsForStorage: Int?;

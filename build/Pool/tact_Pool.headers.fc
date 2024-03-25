@@ -303,11 +303,14 @@ _ $UpdatePrice$_get_price((int, int) v) inline;
 ;; $UpdatePrice$_not_null
 ((int, int)) $UpdatePrice$_not_null(tuple v) inline;
 
+;; $Pool$init$_load
+(slice, ((int))) $Pool$init$_load(slice sc_0) inline;
+
 ;; $GlobalRBFPosition$_constructor_riskBufferFund_liquidity
 ((int, int)) $GlobalRBFPosition$_constructor_riskBufferFund_liquidity(int riskBufferFund, int liquidity) inline;
 
 ;; $Pool$_contract_init
-(int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell) $Pool$_contract_init() impure inline_ref;
+(int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell) $Pool$_contract_init(int $deployId) impure inline_ref;
 
 ;; $Pool$_contract_load
 (int, int, cell, int, int, int, int, int, int, int, slice, slice, (int, int), cell, int, int, cell, cell, int, int, int, cell, int, cell) $Pool$_contract_load() impure inline_ref;

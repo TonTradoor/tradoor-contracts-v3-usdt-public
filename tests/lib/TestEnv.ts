@@ -25,8 +25,8 @@ export class TestEnv {
 
     static async resetEnv() {
         TestEnv.blockchain = await Blockchain.create();
-        TestEnv.orderBook = TestEnv.blockchain.openContract(await OrderBook.fromInit());
-        TestEnv.pool = TestEnv.blockchain.openContract(await Pool.fromInit());
+        TestEnv.orderBook = TestEnv.blockchain.openContract(await OrderBook.fromInit(0n));
+        TestEnv.pool = TestEnv.blockchain.openContract(await Pool.fromInit(0n));
 
         TestEnv.deployer = await TestEnv.blockchain.treasury('deployer');
         TestEnv.executor = await TestEnv.blockchain.treasury('executor');
@@ -122,7 +122,6 @@ export class TestEnv {
                 minTimeDelayExecutor: null,
                 maxTimeDelayExecutor: null,
                 minTimeDelayTrader: null,
-                minPendingTimeDelayCompensator: null,
                 minExecutionFee: null,
                 gasConsumption: null,
                 minTonsForStorage: null,

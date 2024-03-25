@@ -70,7 +70,6 @@
     var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($msg'amount, $msg'receiver) = $msg;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
-    throw_unless(14534, ( __tact_slice_eq_bits($self'owner, $ctx'sender) ));
     throw_unless(3688, $self'mintable);
     ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_mint($msg'receiver, $msg'amount, $self'owner);
     return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());

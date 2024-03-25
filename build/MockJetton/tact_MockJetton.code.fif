@@ -670,14 +670,6 @@ PROGRAM{
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
   $MockJetton$_internal_binary_Mint PROCINLINE:<{
-    __tact_context_get INLINECALLDICT
-    s2 s3 XCHG
-    3 BLKDROP
-    s5 PUSH
-    14534 PUSHINT
-    s0 s2 XCHG
-    __tact_slice_eq_bits INLINECALLDICT
-    THROWANYIFNOT
     3688 PUSHINT
     s3 PUSH
     THROWANYIFNOT

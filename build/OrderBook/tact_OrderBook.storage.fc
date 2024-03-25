@@ -98,12 +98,12 @@ cell $DeployOk$_store_cell((int) v) inline {
 
 ;;
 ;; Type: UpdateConfig
-;; Header: 0x8861cc73
-;; TLB: update_config#8861cc73 executor:Maybe address enableExecutor:Maybe bool compensator:Maybe address enableCompensator:Maybe bool minTimeDelayExecutor:Maybe int257 maxTimeDelayExecutor:Maybe int257 minTimeDelayTrader:Maybe int257 minPendingTimeDelayCompensator:Maybe int257 minExecutionFee:Maybe int257 gasConsumption:Maybe int257 minTonsForStorage:Maybe int257 usdtWallet:Maybe address pool:Maybe address = UpdateConfig
+;; Header: 0xa152c301
+;; TLB: update_config#a152c301 executor:Maybe address enableExecutor:Maybe bool compensator:Maybe address enableCompensator:Maybe bool minTimeDelayExecutor:Maybe int257 maxTimeDelayExecutor:Maybe int257 minTimeDelayTrader:Maybe int257 minExecutionFee:Maybe int257 gasConsumption:Maybe int257 minTonsForStorage:Maybe int257 usdtWallet:Maybe address pool:Maybe address = UpdateConfig
 ;;
 
-(slice, ((slice, int, slice, int, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 2288110707);
+(slice, ((slice, int, slice, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 2706555649);
     var v'executor = sc_0~__tact_load_address_opt();
     var v'enableExecutor = sc_0~load_int(1) ? sc_0~load_int(1) : null();
     var v'compensator = sc_0~__tact_load_address_opt();
@@ -112,15 +112,14 @@ cell $DeployOk$_store_cell((int) v) inline {
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'maxTimeDelayExecutor = sc_1~load_int(1) ? sc_1~load_int(257) : null();
     var v'minTimeDelayTrader = sc_1~load_int(1) ? sc_1~load_int(257) : null();
-    var v'minPendingTimeDelayCompensator = sc_1~load_int(1) ? sc_1~load_int(257) : null();
+    var v'minExecutionFee = sc_1~load_int(1) ? sc_1~load_int(257) : null();
     slice sc_2 = sc_1~load_ref().begin_parse();
-    var v'minExecutionFee = sc_2~load_int(1) ? sc_2~load_int(257) : null();
     var v'gasConsumption = sc_2~load_int(1) ? sc_2~load_int(257) : null();
     var v'minTonsForStorage = sc_2~load_int(1) ? sc_2~load_int(257) : null();
+    var v'usdtWallet = sc_2~__tact_load_address_opt();
     slice sc_3 = sc_2~load_ref().begin_parse();
-    var v'usdtWallet = sc_3~__tact_load_address_opt();
     var v'pool = sc_3~__tact_load_address_opt();
-    return (sc_0, (v'executor, v'enableExecutor, v'compensator, v'enableCompensator, v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minPendingTimeDelayCompensator, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool));
+    return (sc_0, (v'executor, v'enableExecutor, v'compensator, v'enableCompensator, v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool));
 }
 
 ;;
@@ -367,21 +366,19 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, int, cell) v
 
 ;;
 ;; Type: ExecutePerpPositionOrder
-;; Header: 0xf5fd6b6e
-;; TLB: execute_perp_position_order#f5fd6b6e executionFeeReceiver:Maybe address orderId:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> tpSlLength:int257 tpSlOrders:dict<int, int> = ExecutePerpPositionOrder
+;; Header: 0xe30b9e9b
+;; TLB: execute_perp_position_order#e30b9e9b executionFeeReceiver:Maybe address orderId:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecutePerpPositionOrder
 ;;
 
-(slice, ((slice, int, int, int, cell, int, cell))) $ExecutePerpPositionOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 4127026030);
+(slice, ((slice, int, int, int, cell))) $ExecutePerpPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3809189531);
     var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
     var v'orderId = sc_0~load_int(257);
     var v'trxId = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'pricesLength = sc_1~load_int(257);
     var v'prices = sc_1~load_dict();
-    var v'tpSlLength = sc_1~load_int(257);
-    var v'tpSlOrders = sc_1~load_dict();
-    return (sc_0, (v'executionFeeReceiver, v'orderId, v'trxId, v'pricesLength, v'prices, v'tpSlLength, v'tpSlOrders));
+    return (sc_0, (v'executionFeeReceiver, v'orderId, v'trxId, v'pricesLength, v'prices));
 }
 
 ;;
@@ -1161,6 +1158,11 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, slice,
     return (sc_0, (v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'tokenConfigs, v'tokenIndexNext, v'owner, v'executors, v'compensators, v'jettonCallbacks, v'jettonCallbackQueryIdNext, v'rbfPositionOrders, v'rbfPositionOrderIndexNext, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext));
 }
 
+(slice, ((int))) $OrderBook$init$_load(slice sc_0) inline {
+    var v'deployId = sc_0~load_int(257);
+    return (sc_0, (v'deployId));
+}
+
 (int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $OrderBook$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
@@ -1170,7 +1172,9 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, slice,
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        return $OrderBook$_contract_init();
+        (int deployId) = $sc~$OrderBook$init$_load();
+        $sc.end_parse();
+        return $OrderBook$_contract_init(deployId);
     }
 }
 
