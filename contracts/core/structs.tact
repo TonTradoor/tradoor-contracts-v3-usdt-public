@@ -60,6 +60,11 @@ struct LPPosition {
     entryTradingFeeGrowth: Int;
 }
 
+struct GlobalLPLiquidity {
+    margin: Int;
+    liquidity: Int;
+}
+
 struct GlobalLPPosition {
     netSize: Int;
     isLong: Bool;

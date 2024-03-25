@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 9866 bytes
+BOC Size: 10209 bytes
 
 # Types
-Total Types: 78
+Total Types: 79
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -130,12 +130,12 @@ TLB: `lp_position_liquidated_event#bff875f9 positionId:int257 account:address ma
 Signature: `LPPositionLiquidatedEvent{positionId:int257,account:address,margin:int257,liquidity:int257,tradingFee:int257,fundingFee:int257,liquidationFee:int257,trxId:int257}`
 
 ## GlobalLPLiquidityChangedEvent
-TLB: `global_lp_liquidity_changed_event#a13ff0b9 liquidityAfter:int257 trxId:int257 = GlobalLPLiquidityChangedEvent`
-Signature: `GlobalLPLiquidityChangedEvent{liquidityAfter:int257,trxId:int257}`
+TLB: `global_lp_liquidity_changed_event#5a3cbfcc marginAfter:int257 liquidityAfter:int257 trxId:int257 = GlobalLPLiquidityChangedEvent`
+Signature: `GlobalLPLiquidityChangedEvent{marginAfter:int257,liquidityAfter:int257,trxId:int257}`
 
 ## GlobalLPPositionChangedEvent
-TLB: `global_lp_position_changed_event#e18de828 netSizeAfter:int257 isLong:bool entryPriceAfter:int257 trxId:int257 = GlobalLPPositionChangedEvent`
-Signature: `GlobalLPPositionChangedEvent{netSizeAfter:int257,isLong:bool,entryPriceAfter:int257,trxId:int257}`
+TLB: `global_lp_position_changed_event#7eb7fb96 tokenId:int257 netSizeAfter:int257 isLong:bool entryPriceAfter:int257 trxId:int257 = GlobalLPPositionChangedEvent`
+Signature: `GlobalLPPositionChangedEvent{tokenId:int257,netSizeAfter:int257,isLong:bool,entryPriceAfter:int257,trxId:int257}`
 
 ## IncreasePerpPositionMarketCreatedEvent
 TLB: `increase_perp_position_market_created_event#d960015d account:address token:^string isLong:bool marginDelta:int257 sizeDelta:int257 acceptablePrice:int257 executionFee:int257 index:int257 = IncreasePerpPositionMarketCreatedEvent`
@@ -224,6 +224,10 @@ Signature: `DecreaseLPPositionOrder{account:address,marginDelta:int257,liquidity
 ## LPPosition
 TLB: `_ positionId:int257 margin:int257 liquidity:int257 entryFundingFeeGrowth:int257 entryTradingFeeGrowth:int257 = LPPosition`
 Signature: `LPPosition{positionId:int257,margin:int257,liquidity:int257,entryFundingFeeGrowth:int257,entryTradingFeeGrowth:int257}`
+
+## GlobalLPLiquidity
+TLB: `_ margin:int257 liquidity:int257 = GlobalLPLiquidity`
+Signature: `GlobalLPLiquidity{margin:int257,liquidity:int257}`
 
 ## GlobalLPPosition
 TLB: `_ netSize:int257 isLong:bool entryPrice:int257 = GlobalLPPosition`

@@ -77,10 +77,12 @@ message LPPositionLiquidatedEvent {
 
 // global LP
 message GlobalLPLiquidityChangedEvent {
+    marginAfter: Int;
     liquidityAfter: Int;
     trxId: Int;
 }
 message GlobalLPPositionChangedEvent {
+    tokenId: Int;
     netSizeAfter: Int;
     isLong: Bool;
     entryPriceAfter: Int;

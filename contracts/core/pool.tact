@@ -11,7 +11,7 @@ contract Pool with Deployable, Ownable {
     gasConsumption: Int = ton("0.05");
     minTonsForStorage: Int = ton("0.03");
 
-    tokenConfigs: map<Int, TokenConfig>; // tokenIndex => tokenConfig
+    tokenConfigs: map<Int, TokenConfig>; // tokenId => tokenConfig
     tokenIndexNext: Int = 1;
 
     // rbfLockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
@@ -28,21 +28,21 @@ contract Pool with Deployable, Ownable {
     orderBook: Address;
 
     // RBF
-    globalRBFPosition: GlobalRBFPosition;
     rbfPositions: map<Address, RBFPosition>; // trader => RBF
     rbfPositionIndexNext: Int as uint64 = 1;
+    globalRBFPosition: GlobalRBFPosition;
 
     // LP
-    globalLiquidity: Int = 0;
-    globalLPPositions: map<Int, GlobalLPPosition>; // tokenIndex => globalLP
     lpPositions: map<Address, LPPosition>; // trader => LP
     lpPositionIndexNext: Int as uint64 = 1;
+    globalLPLiquidity: GlobalLPLiquidity;
+    globalLPPositions: map<Int, GlobalLPPosition>; // tokenId => globalLP
 
     lpTradingFeeGrowth: Int = 0;
     lpFundingFeeGrowth: Int = 0;
 
     // Perp
-    perpPositions: map<Int, AccountPerpPosition>; // tokenIndex => user => direction => position
+    perpPositions: map<Int, AccountPerpPosition>; // tokenId => user => direction => position
     perpPositionIndexNext: Int as uint64 = 1;
 
     // price
@@ -52,6 +52,7 @@ contract Pool with Deployable, Ownable {
         self.owner = sender();
         self.orderBook = newAddress(0, 0);
         self.globalRBFPosition = GlobalRBFPosition{riskBufferFund: 0, liquidity: 0};
+        self.globalLPLiquidity = GlobalLPLiquidity{margin: 0, liquidity: 0};
     }
 
     // ======================================================== Admin ================================================================ //
@@ -426,7 +427,7 @@ contract Pool with Deployable, Ownable {
             marginAfter = lpPosition.margin + tradingFee + fundingFee + marginDelta;
             // calculate pnl
             let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
-            let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
+            let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLPLiquidity.liquidity / lpPosition.liquidity;
             let unrealizedLoss: Int = 0;
             if (unrealizedPnl < 0) {
                 unrealizedLoss = -unrealizedPnl;
@@ -450,7 +451,8 @@ contract Pool with Deployable, Ownable {
         self.lpPositions.set(account, lpPosition);
 
         // update global position
-        self.globalLiquidity = self.globalLiquidity + liquidityDelta;
+        self.globalLPLiquidity.margin = self.globalLPLiquidity.margin + marginDelta;
+        self.globalLPLiquidity.liquidity = self.globalLPLiquidity.liquidity + liquidityDelta;
 
         // event
         emit(LPPositionIncreasedEvent{
@@ -465,7 +467,8 @@ contract Pool with Deployable, Ownable {
             trxId: trxId
         }.toCell());
         emit(GlobalLPLiquidityChangedEvent{
-            liquidityAfter: self.globalLiquidity,
+            marginAfter: self.globalLPLiquidity.margin,
+            liquidityAfter: self.globalLPLiquidity.liquidity,
             trxId: trxId
         }.toCell());
     }
@@ -494,14 +497,14 @@ contract Pool with Deployable, Ownable {
 
         // calculate pnl
         let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
-        let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
+        let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLPLiquidity.margin / lpPosition.liquidity;
         let unrealizedLoss: Int = 0;
         if (unrealizedPnl < 0) {
             unrealizedLoss = -unrealizedPnl;
         }
         
         // check global liquidity
-        require(self.globalRBFPosition.riskBufferFund + self.globalLiquidity + unrealizedPnl >= liquidityDelta, "insufficient global liquidity");
+        require(self.globalRBFPosition.riskBufferFund + self.globalLPLiquidity.liquidity + unrealizedPnl >= liquidityDelta, "insufficient global liquidity");
 
         let receiveMargin: Int = 0;
         let realizedLoss: Int = 0;
@@ -539,7 +542,8 @@ contract Pool with Deployable, Ownable {
         dump(beginCell().storeAddress(account).endCell().hash());
 
         // update global position
-        self.globalLiquidity = self.globalLiquidity - liquidityDelta;
+        self.globalLPLiquidity.margin = self.globalLPLiquidity.margin - marginDelta;
+        self.globalLPLiquidity.liquidity = self.globalLPLiquidity.liquidity - liquidityDelta;
 
         // event
         emit(LPPositionDecreasedEvent{
@@ -556,7 +560,8 @@ contract Pool with Deployable, Ownable {
             trxId: trxId
         }.toCell());
         emit(GlobalLPLiquidityChangedEvent{
-            liquidityAfter: self.globalLiquidity,
+            marginAfter: self.globalLPLiquidity.margin,
+            liquidityAfter: self.globalLPLiquidity.liquidity,
             trxId: trxId
         }.toCell());
         return receiveMargin;
@@ -580,7 +585,7 @@ contract Pool with Deployable, Ownable {
 
         // calculate pnl
         let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
-        let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLiquidity / lpPosition.liquidity;
+        let unrealizedPnl: Int = (globalUnrealizedPnl + self.globalRBFPosition.riskBufferFund) * self.globalLPLiquidity.liquidity / lpPosition.liquidity;
         let unrealizedLoss: Int = 0;
         if (unrealizedPnl < 0) {
             unrealizedLoss = -unrealizedPnl;
@@ -608,8 +613,9 @@ contract Pool with Deployable, Ownable {
         dump(beginCell().storeAddress(account).endCell().hash());
 
         // update global position
-        self.globalLiquidity = self.globalLiquidity - lpPosition.liquidity;
-        
+        self.globalLPLiquidity.margin = self.globalLPLiquidity.margin - lpPosition.margin;
+        self.globalLPLiquidity.liquidity = self.globalLPLiquidity.liquidity - lpPosition.liquidity;
+
         // event
         emit(LPPositionLiquidatedEvent{
             positionId: lpPosition.positionId,
