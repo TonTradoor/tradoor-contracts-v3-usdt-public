@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 9847 bytes
+BOC Size: 9866 bytes
 
 # Types
 Total Types: 78
@@ -118,8 +118,8 @@ TLB: `global_rbf_changed_event#cdaca23b riskBufferFundAfter:int257 liquidityAfte
 Signature: `GlobalRBFChangedEvent{riskBufferFundAfter:int257,liquidityAfter:int257,tradingFee:int257,liquidation:int257,trxId:int257}`
 
 ## LPPositionIncreasedEvent
-TLB: `lp_position_increased_event#0046a7ea positionId:int257 account:address marginDelta:int257 marginAfter:int257 liquidityDelta:int257 liquidityAfter:int257 entryFundingFeeGrowth:int257 entryTradingFeeGrowth:int257 trxId:int257 = LPPositionIncreasedEvent`
-Signature: `LPPositionIncreasedEvent{positionId:int257,account:address,marginDelta:int257,marginAfter:int257,liquidityDelta:int257,liquidityAfter:int257,entryFundingFeeGrowth:int257,entryTradingFeeGrowth:int257,trxId:int257}`
+TLB: `lp_position_increased_event#cfdae459 positionId:int257 account:address marginDelta:int257 marginAfter:int257 liquidityDelta:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 trxId:int257 = LPPositionIncreasedEvent`
+Signature: `LPPositionIncreasedEvent{positionId:int257,account:address,marginDelta:int257,marginAfter:int257,liquidityDelta:int257,liquidityAfter:int257,tradingFee:int257,fundingFee:int257,trxId:int257}`
 
 ## LPPositionDecreasedEvent
 TLB: `lp_position_decreased_event#a97fd949 positionId:int257 account:address marginDelta:int257 marginAfter:int257 liquidityDelta:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 realizedLoss:int257 receive:int257 trxId:int257 = LPPositionDecreasedEvent`

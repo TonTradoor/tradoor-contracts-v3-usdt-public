@@ -375,8 +375,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $LPPosition$_constructor_positionId_margin_liquidity_entryFundingFeeGrowth_entryTradingFeeGrowth
 ((int, int, int, int, int)) $LPPosition$_constructor_positionId_margin_liquidity_entryFundingFeeGrowth_entryTradingFeeGrowth(int positionId, int margin, int liquidity, int entryFundingFeeGrowth, int entryTradingFeeGrowth) inline;
 
-;; $LPPositionIncreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_entryFundingFeeGrowth_entryTradingFeeGrowth_trxId
-((int, slice, int, int, int, int, int, int, int)) $LPPositionIncreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_entryFundingFeeGrowth_entryTradingFeeGrowth_trxId(int positionId, slice account, int marginDelta, int marginAfter, int liquidityDelta, int liquidityAfter, int entryFundingFeeGrowth, int entryTradingFeeGrowth, int trxId) inline;
+;; $LPPositionIncreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_tradingFee_fundingFee_trxId
+((int, slice, int, int, int, int, int, int, int)) $LPPositionIncreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_tradingFee_fundingFee_trxId(int positionId, slice account, int marginDelta, int marginAfter, int liquidityDelta, int liquidityAfter, int tradingFee, int fundingFee, int trxId) inline;
 
 ;; $GlobalLPLiquidityChangedEvent$_constructor_liquidityAfter_trxId
 ((int, int)) $GlobalLPLiquidityChangedEvent$_constructor_liquidityAfter_trxId(int liquidityAfter, int trxId) inline;

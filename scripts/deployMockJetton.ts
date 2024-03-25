@@ -6,13 +6,13 @@ import { buildOnchainMetadata } from '../contracts/mock/utils/jetton-helpers';
 import { setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    
+
     const jettonParams = {
-        name: "Mock USDT",
-        description: "Mock USDT Token in Tact-lang",
-        symbol: "mUSDT",
-        image: "https://avatars.githubusercontent.com/u/104382459?s=200&v=4",
-        decimals: "6"
+        name: 'Mock USDT New',
+        description: 'Mock USDT Token in Tact-lang',
+        symbol: 'mUSDT',
+        image: 'https://avatars.githubusercontent.com/u/104382459?s=200&v=4',
+        decimals: '6'
     };
 
     // Create content Cell
@@ -26,7 +26,7 @@ export async function run(provider: NetworkProvider) {
     await sampleJetton.send(
         provider.sender(),
         {
-            value: toNano('0.1'),
+            value: toNano('0.1')
         },
         {
             $$type: 'Deploy',
@@ -35,6 +35,6 @@ export async function run(provider: NetworkProvider) {
     );
 
     await provider.waitForDeploy(sampleJetton.address);
-    setConfig(provider, "sampleJetton", sampleJetton.address.toString());
+    setConfig(provider, 'sampleJetton', sampleJetton.address.toString());
 
 }

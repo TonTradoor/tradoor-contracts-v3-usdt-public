@@ -182,13 +182,15 @@
         $self'lpPositionIndexNext = ($self'lpPositionIndexNext + 1);
     }
     int $marginAfter = 0;
+    int $fundingFee = 0;
+    int $tradingFee = 0;
     if (($lpPosition'liquidity == 0)) {
         $marginAfter = $marginDelta;
         throw_unless(62409, ($marginAfter >= $self'minLPMargin));
         throw_unless(42634, (($marginAfter * $self'maxLPLeverage) >= $liquidityDelta));
     } else {
-        int $fundingFee = (($self'lpFundingFeeGrowth - $lpPosition'entryFundingFeeGrowth) * $lpPosition'liquidity);
-        int $tradingFee = (($self'lpTradingFeeGrowth - $lpPosition'entryTradingFeeGrowth) * $lpPosition'liquidity);
+        $fundingFee = (($self'lpFundingFeeGrowth - $lpPosition'entryFundingFeeGrowth) * $lpPosition'liquidity);
+        $tradingFee = (($self'lpTradingFeeGrowth - $lpPosition'entryTradingFeeGrowth) * $lpPosition'liquidity);
         $marginAfter = ((($lpPosition'margin + $tradingFee) + $fundingFee) + $marginDelta);
         int $globalUnrealizedPnl = ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'prices)~$Pool$_fun_calculateTotalGlobalUnrealizedPnl();
         int $unrealizedPnl = ((($globalUnrealizedPnl + $self'globalRBFPosition'riskBufferFund) * $self'globalLiquidity) / $lpPosition'liquidity);
@@ -207,7 +209,7 @@
     __tact_debug_str(__tact_int_to_string(cell_hash(end_cell(__tact_store_address(begin_cell(), $account)))));
     $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_cell(($lpPosition'positionId, $lpPosition'margin, $lpPosition'liquidity, $lpPosition'entryFundingFeeGrowth, $lpPosition'entryTradingFeeGrowth)));
     $self'globalLiquidity = ($self'globalLiquidity + $liquidityDelta);
-    $global_emit($LPPositionIncreasedEvent$_store_cell($LPPositionIncreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_entryFundingFeeGrowth_entryTradingFeeGrowth_trxId($lpPosition'positionId, $account, $marginDelta, $lpPosition'margin, $liquidityDelta, $lpPosition'liquidity, $lpPosition'entryFundingFeeGrowth, $lpPosition'entryTradingFeeGrowth, $trxId)));
+    $global_emit($LPPositionIncreasedEvent$_store_cell($LPPositionIncreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_tradingFee_fundingFee_trxId($lpPosition'positionId, $account, $marginDelta, $lpPosition'margin, $liquidityDelta, $lpPosition'liquidity, $tradingFee, $fundingFee, $trxId)));
     $global_emit($GlobalLPLiquidityChangedEvent$_store_cell($GlobalLPLiquidityChangedEvent$_constructor_liquidityAfter_trxId($self'globalLiquidity, $trxId)));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'prices), ());
 }
@@ -531,7 +533,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmenQriU7FExd9bundsBoYsDzyp8nab9QohdrfpinvYXve";
+    return "ipfs://QmUEzRwmpvWQJuC2tJbuEPo55yt5PkWoPxkYXeRRyToCMx";
 }
 
 _ lazy_deployment_completed() method_id {

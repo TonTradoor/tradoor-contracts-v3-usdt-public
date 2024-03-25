@@ -411,6 +411,8 @@ contract Pool with Deployable, Ownable {
         }
 
         let marginAfter: Int = 0;
+        let fundingFee: Int = 0;
+        let tradingFee: Int = 0;
         if (lpPosition.liquidity == 0) {
             marginAfter = marginDelta;
             // check margin and leverage
@@ -418,9 +420,9 @@ contract Pool with Deployable, Ownable {
             require(marginAfter * self.maxLPLeverage >= liquidityDelta, "legerage too high");
         } else {
             // calculate funding fee
-            let fundingFee: Int = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
+            fundingFee = (self.lpFundingFeeGrowth - lpPosition.entryFundingFeeGrowth) * lpPosition.liquidity;
             // calculate trading fee
-            let tradingFee: Int = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
+            tradingFee = (self.lpTradingFeeGrowth - lpPosition.entryTradingFeeGrowth) * lpPosition.liquidity;
             marginAfter = lpPosition.margin + tradingFee + fundingFee + marginDelta;
             // calculate pnl
             let globalUnrealizedPnl: Int = self.calculateTotalGlobalUnrealizedPnl();
@@ -458,8 +460,8 @@ contract Pool with Deployable, Ownable {
             marginAfter: lpPosition.margin,
             liquidityDelta: liquidityDelta,
             liquidityAfter: lpPosition.liquidity,
-            entryFundingFeeGrowth: lpPosition.entryFundingFeeGrowth,
-            entryTradingFeeGrowth: lpPosition.entryTradingFeeGrowth,
+            tradingFee: tradingFee,
+            fundingFee: fundingFee,
             trxId: trxId
         }.toCell());
         emit(GlobalLPLiquidityChangedEvent{
