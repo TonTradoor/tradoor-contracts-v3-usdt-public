@@ -130,6 +130,16 @@ message CompensateLPPositionOrder {
 }
 
 // ============================ Perp ================================ //
+message CreateDecreasePerpPositionOrder {
+    executionFee: Int;
+    opType: Int;
+    tokenId: Int;
+    isLong: Bool;
+    marginDelta: Int;
+    sizeDelta: Int;
+    triggerPrice: Int;
+}
+
 message CancelPerpPositionOrder {
     executionFeeReceiver: Address?;
     orderId: Int;
@@ -140,26 +150,40 @@ message ExecutePerpPositionOrder {
     executionFeeReceiver: Address?;
     orderId: Int;
     trxId: Int;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
-message CreateDecreasePerpPositionOrder {
-    executionFee: Int;
-    marginDelta: Int;
-    liquidityDelta: Int;
-}
-
-message(0xe89cd45f) UpdatePerpPosition {
-    isIncrease: Bool;
-    orderId: Int as uint64;
+message LiquidatePerpPositionOrder {
+    executionFeeReceiver: Address?;
+    tokenId: Int;
     account: Address;
-    liquidityDelta: Int;
-    trxId: Int as uint64;
+    isLong: Bool;
+    trxId: Int;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
-message(0x1cf0cf81) UpdatePerpPositionSuccess {
+message UpdatePerpPosition {
+    orderId: Int as uint64;
+    opType: Int as uint8;
+    account: Address;
+    marginDelta: Int;
+    sizeDelta: Int;
+    triggerPrice: Int;
+    triggerAbove: Bool;
+    trxId: Int as uint64;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
+}
+
+message UpdatePerpPositionSuccess {
     orderId: Int;
     receive: Int;
     trxId: Int as uint64;
+    isClosed: Bool;
+    tpSlLength: Int;
+    tpSlOrders: map<Int, Int>;
 }
 
 message CompensatePerpPositionOrder {

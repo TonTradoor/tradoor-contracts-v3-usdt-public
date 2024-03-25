@@ -308,7 +308,7 @@
     if (($pricesLength <= 0)) {
         return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIndexNext, $self'rbfLockTime, $self'bonusFactor, $self'minLPMargin, $self'maxLPLeverage, $self'lpLiquidationFee, $self'lpMaxRiskRate, $self'owner, $self'orderBook, ($self'globalRBFPosition'riskBufferFund, $self'globalRBFPosition'liquidity), $self'rbfPositions, $self'rbfPositionIndexNext, $self'globalLiquidity, $self'globalLPPositions, $self'lpPositions, $self'lpPositionIndexNext, $self'lpTradingFeeGrowth, $self'lpFundingFeeGrowth, $self'perpPositions, $self'perpPositionIndexNext, $self'prices), ());
     }
-    int $i = 1;
+    int $i = 0;
     while (($i < $pricesLength)) {
         tuple $updatePrice = $UpdatePrice$_load_opt(__tact_dict_get_int_cell($prices, 257, $i));
         if ((~ null?($updatePrice))) {

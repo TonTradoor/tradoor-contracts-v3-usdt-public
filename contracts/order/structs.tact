@@ -10,7 +10,6 @@ struct ConfigData {
     minTimeDelayExecutor: Int;
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
-    minPendingTimeDelayCompensator: Int;
     minExecutionFee: Int;
     gasConsumption: Int;
     minTonsForStorage: Int;
@@ -22,7 +21,6 @@ struct ConfigData {
 struct JettonCallback {
     orderType: Int;
     orderId: Int;
-    tokenId: Int?;
     amount: Int;
     receiver: Address;
     trxId: Int;
@@ -36,7 +34,6 @@ struct RBFPositionOrder {
     executionFee: Int;
     blockTime: Int;
     isPending: Bool;
-    pendingTime: Int;
     callbackId: Int?;
     executionFeeReceiver: Address?;
     lastOperator: Address?;
@@ -51,26 +48,34 @@ struct LPPositionOrder {
     executionFee: Int;
     blockTime: Int;
     isPending: Bool;
-    pendingTime: Int;
     callbackId: Int?;
     executionFeeReceiver: Address?;
     lastOperator: Address?;
 }
 
 // ============================ Perp ================================ //
-// increase market order
-struct IncreasePerpPositionMarketOrders {
-    increasePerpPositionMarketOrders: map<Int, IncreasePerpPositionMarketOrder>;
-}
-
-struct IncreasePerpPositionMarketOrder {
+struct PerpPositionOrder {
+    opType: Int as uint8;
+    tokenId: Int;
     account: Address;
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
-    acceptablePrice: Int;
+    triggerPrice: Int;
+    triggerAbove: Bool;
     executionFee: Int;
     blockTime: Int;
+    isPending: Bool;
+    callbackId: Int?;
+    executionFeeReceiver: Address?;
+    lastOperator: Address?;
+}
+
+struct PerpPositionOrderEx {
+    tpSize: Int;
+    tpPrice: Int;
+    slSize: Int;
+    slPrice: Int;
 }
 
 // ============================ Price ================================ //

@@ -43,98 +43,31 @@ message LPPositionOrderExecutedEvent {
 }
 
 // ============================ Perp ================================ //
-// increase Perp
-message IncreasePerpPositionMarketOrderCreatedEvent {
+message PerpPositionOrderCreatedEvent {
+    opType: Int as uint8;
+    tokenId: Int;
     account: Address;
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    acceptablePrice: Int;
-    executionFee: Int;
-    orderId: Int;
-}
-
-message IncreasePerpPositionMarketOrderCancelledEvent {
-    token: String;
-    orderId: Int;
-    trxId: Int;
-}
-
-message IncreasePerpPositionMarketOrderExecutedEvent {
-    token: String;
-    orderId: Int;
-    trxId: Int;
-}
-
-message IncreasePerpPositionLimitOrderCreatedEvent {
-    account: Address;
-    token: String;
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
     triggerPrice: Int;
     triggerAbove: Bool;
+    tpSize: Int;
+    tpPrice: Int;
+    slSize: Int;
+    slPrice: Int;
     executionFee: Int;
     orderId: Int;
 }
 
-message IncreasePerpPositionLimitOrderCancelledEvent {
-    token: String;
+message PerpPositionOrderCancelledEvent {
+    opType: Int as uint8;
     orderId: Int;
     trxId: Int;
 }
 
-message IncreasePerpPositionLimitOrderExecutedEvent {
-    token: String;
-    orderId: Int;
-    trxId: Int;
-}
-
-// decrease Perp
-message DecreasePerpPositionMarketOrderCreatedEvent {
-    account: Address;
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    acceptablePrice: Int;
-    executionFee: Int;
-    orderId: Int;
-}
-
-message DecreasePerpPositionMarketOrderCancelledEvent {
-    token: String;
-    orderId: Int;
-    trxId: Int;
-}
-
-message DecreasePerpPositionMarketOrderExecutedEvent {
-    token: String;
-    orderId: Int;
-    trxId: Int;
-}
-
-message DecreasePerpPositionLimitOrderCreatedEvent {
-    account: Address;
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
-    triggerAbove: Bool;
-    executionFee: Int;
-    orderId: Int;
-}
-
-message DecreasePerpPositionLimitOrderCancelledEvent {
-    token: String;
-    orderId: Int;
-    trxId: Int;
-}
-
-message DecreasePerpPositionLimitOrderExecutedEvent {
-    token: String;
+message PerpPositionOrderExecutedEvent {
+    opType: Int as uint8;
     orderId: Int;
     trxId: Int;
 }

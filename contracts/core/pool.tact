@@ -742,7 +742,7 @@ contract Pool with Deployable, Ownable {
         if (pricesLength <= 0) {
             return;
         }
-        let i: Int = 1;
+        let i: Int = 0;
         while(i < pricesLength) {
             let updatePrice: UpdatePrice? = prices.get(i);
             if (updatePrice != null) {

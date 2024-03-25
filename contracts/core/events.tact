@@ -43,6 +43,8 @@ message LPPositionIncreasedEvent {
     marginAfter: Int;
     liquidityDelta: Int;
     liquidityAfter: Int;
+    // tradingFee: Int; // TODO
+    // fundingFee: Int;
     entryFundingFeeGrowth: Int;
     entryTradingFeeGrowth: Int;
     trxId: Int;
@@ -60,6 +62,8 @@ message LPPositionDecreasedEvent {
     fundingFee: Int;
     realizedLoss: Int;
     receive: Int;
+    // entryFundingFeeGrowth: Int; // TODO
+    // entryTradingFeeGrowth: Int;
     trxId: Int;
 }
 
