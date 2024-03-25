@@ -22,3 +22,5 @@ const ORDER_OP_TYPE_INCREASE: Int = 1;
 const ORDER_OP_TYPE_DECREASE: Int = 2;
 const ORDER_OP_TYPE_LIQUIDATION: Int = 3;
 const ORDER_OP_TYPE_ADL: Int = 4;
+
+const Test: Int = 1;
