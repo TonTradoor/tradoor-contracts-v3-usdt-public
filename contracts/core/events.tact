@@ -90,57 +90,11 @@ message GlobalLPPositionChangedEvent {
 }
 
 // ============================ Perp ================================ //
-// increase Perp
-message IncreasePerpPositionMarketCreatedEvent {
-    account: Address;
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    acceptablePrice: Int;
-    executionFee: Int;
-    index: Int;
-}
-
-message IncreasePerpPositionMarketCancelledEvent {
-    token: String;
-    index: Int;
-    trxId: Int;
-}
-
-message IncreasePerpPositionMarketExecutedEvent {
-    token: String;
-    index: Int;
-    trxId: Int;
-}
-
-message IncreasePerpPositionLimitCreatedEvent {
-    account: Address;
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
-    triggerAbove: Bool;
-    executionFee: Int;
-    index: Int;
-}
-
-message IncreasePerpPositionLimitCancelledEvent {
-    token: String;
-    index: Int;
-    trxId: Int;
-}
-
-message IncreasePerpPositionLimitExecutedEvent {
-    token: String;
-    index: Int;
-    trxId: Int;
-}
-
 message PerpPositionIncreasedEvent {
+    positionId: Int;
     account: Address;
-    token: String;
+    tokenId: Int;
+    isLong: Bool;
     marginDelta: Int;
     marginAfter: Int;
     sizeDelta: Int;
@@ -149,59 +103,14 @@ message PerpPositionIncreasedEvent {
     entryPrice: Int;
     fundingFee: Int;
     tradingFee: Int;
-}
-
-// decrease Perp
-message DecreasePerpPositionMarketCreatedEvent {
-    account: Address;
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    acceptablePrice: Int;
-    executionFee: Int;
-    index: Int;
-}
-
-message DecreasePerpPositionMarketCancelledEvent {
-    token: String;
-    index: Int;
-    trxId: Int;
-}
-
-message DecreasePerpPositionMarketExecutedEvent {
-    token: String;
-    index: Int;
-    trxId: Int;
-}
-
-message DecreasePerpPositionLimitCreatedEvent {
-    account: Address;
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
-    triggerAbove: Bool;
-    executionFee: Int;
-    index: Int;
-}
-
-message DecreasePerpPositionLimitCancelledEvent {
-    token: String;
-    index: Int;
-    trxId: Int;
-}
-
-message DecreasePerpPositionLimitExecutedEvent {
-    token: String;
-    index: Int;
     trxId: Int;
 }
 
 message PerpPositionDecreasedEvent {
+    positionId: Int;
     account: Address;
-    token: String;
+    tokenId: Int;
+    isLong: Bool;
     marginDelta: Int;
     marginAfter: Int;
     sizeDelta: Int;
@@ -210,6 +119,7 @@ message PerpPositionDecreasedEvent {
     realizedPnLDelta: Int;
     fundingFee: Int;
     tradingFee: Int;
+    trxId: Int;
 }
 
 // ============================ Price ================================ //

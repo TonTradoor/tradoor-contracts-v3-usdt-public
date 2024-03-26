@@ -17,10 +17,12 @@ message UpdateTokenConfig {
     tokenId: Int;
     name: String?;
     enable: Bool?;
-    minMarginPerPosition: Int?;
-    maxLeveragePerPosition: Int?;
-    liquidationFeeRatePerPosition: Int?;
-    liquidationExecutionFee: Int?;
+    minMargin: Int?;
+    maxLeverage: Int?;
+    liquidationFee: Int?;
+    tradingFeeRate: Int?;
+    lpTradingFeeRate: Int?;
+    protocalTradingFeeRate: Int?;
     interestRate: Int?;
     maxFundingRate: Int?;
 }
@@ -61,72 +63,23 @@ message(0x4989c7c1) UpdateLPPositionSuccess {
 }
 
 // ============================ Perp ================================ //
-// increase market Perp
-message CancelIncreasePerpPositionMarketOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message ExecuteIncreasePerpPositionMarketOrder {
-    index: Int;
-    trxId: Int;
-}
-
-// decrease market Perp
-message CreateDecreasePerpPositionMarketOrder {
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    acceptablePrice: Int;
-}
-
-message CancelDecreasePerpPositionMarketOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message ExecuteDecreasePerpPositionMarketOrder {
-    index: Int;
-    trxId: Int;
-}
-
-// increase limit Perp
-message CreateIncreasePerpPositionLimitOrder {
-    token: String;
+message(0xff57e557) UpdatePerpPosition {
+    orderId: Int as uint64;
+    opType: Int as uint8;
+    tokenId: Int;
+    account: Address;
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
     triggerPrice: Int;
     triggerAbove: Bool;
+    trxId: Int as uint64;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }
 
-message CancelIncreasePerpPositionLimitOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message ExecuteIncreasePerpPositionLimitOrder {
-    index: Int;
-    trxId: Int;
-}
-
-// decrease limit Perp
-message CreateDecreasePerpPositionLimitOrder {
-    token: String;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
-    triggerAbove: Bool;
-}
-
-message CancelDecreasePerpPositionLimitOrder {
-    index: Int;
-    trxId: Int;
-}
-
-message ExecuteDecreasePerpPositionLimitOrder {
-    index: Int;
-    trxId: Int;
+message(0xef01c2b4) UpdatePerpPositionSuccess {
+    orderId: Int;
+    receive: Int;
+    trxId: Int as uint64;
 }

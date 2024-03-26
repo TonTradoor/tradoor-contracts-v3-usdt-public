@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 15607 bytes
+BOC Size: 15620 bytes
 
 # Types
 Total Types: 48
@@ -118,12 +118,12 @@ TLB: `liquidate_perp_position_order#9ab10b46 executionFeeReceiver:Maybe address 
 Signature: `LiquidatePerpPositionOrder{executionFeeReceiver:Maybe address,tokenId:int257,account:address,isLong:bool,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 account:address marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,account:address,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:int257 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:int257,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdatePerpPositionSuccess
-TLB: `update_perp_position_success#ef01c2b4 orderId:int257 receive:int257 trxId:uint64 isClosed:bool tpSlLength:int257 tpSlOrders:dict<int, int> = UpdatePerpPositionSuccess`
-Signature: `UpdatePerpPositionSuccess{orderId:int257,receive:int257,trxId:uint64,isClosed:bool,tpSlLength:int257,tpSlOrders:dict<int, int>}`
+TLB: `update_perp_position_success#ef01c2b4 orderId:int257 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
+Signature: `UpdatePerpPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
 ## CompensatePerpPositionOrder
 TLB: `compensate_perp_position_order#48618973 orderId:int257 trxId:int257 needRefund:bool isExecute:bool executionFeeReceiver:Maybe address = CompensatePerpPositionOrder`

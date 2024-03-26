@@ -403,18 +403,20 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, int, cell) v
 ;;
 ;; Type: UpdatePerpPosition
 ;; Header: 0xff57e557
-;; TLB: update_perp_position#ff57e557 orderId:uint64 opType:uint8 account:address marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition
+;; TLB: update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:int257 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition
 ;;
 
-builder $UpdatePerpPosition$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, cell) v) inline_ref {
-    var (v'orderId, v'opType, v'account, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'trxId, v'pricesLength, v'prices) = v;
+builder $UpdatePerpPosition$_store(builder build_0, (int, int, int, slice, int, int, int, int, int, int, int, cell) v) inline_ref {
+    var (v'orderId, v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'trxId, v'pricesLength, v'prices) = v;
     build_0 = store_uint(build_0, 4283950423, 32);
     build_0 = build_0.store_uint(v'orderId, 64);
     build_0 = build_0.store_uint(v'opType, 8);
+    build_0 = build_0.store_int(v'tokenId, 257);
     build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'isLong, 1);
     build_0 = build_0.store_int(v'marginDelta, 257);
-    build_0 = build_0.store_int(v'sizeDelta, 257);
     var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'sizeDelta, 257);
     build_1 = build_1.store_int(v'triggerPrice, 257);
     build_1 = build_1.store_int(v'triggerAbove, 1);
     build_1 = build_1.store_uint(v'trxId, 64);
@@ -424,7 +426,7 @@ builder $UpdatePerpPosition$_store(builder build_0, (int, int, slice, int, int, 
     return build_0;
 }
 
-cell $UpdatePerpPosition$_store_cell((int, int, slice, int, int, int, int, int, int, cell) v) inline {
+cell $UpdatePerpPosition$_store_cell((int, int, int, slice, int, int, int, int, int, int, int, cell) v) inline {
     return $UpdatePerpPosition$_store(begin_cell(), v).end_cell();
 }
 
@@ -435,29 +437,26 @@ cell $UpdatePerpPosition$_store_cell((int, int, slice, int, int, int, int, int, 
     return (sc_0, (v'orderId, v'opType));
 }
 
-((int, int, slice, int, int, int, int, int, int, cell)) $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(int orderId, int opType, int trxId, slice account, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int pricesLength, cell prices) inline {
-    return (orderId, opType, account, marginDelta, sizeDelta, triggerPrice, triggerAbove, trxId, pricesLength, prices);
+((int, int, int, slice, int, int, int, int, int, int, int, cell)) $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(int orderId, int opType, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int pricesLength, cell prices) inline {
+    return (orderId, opType, tokenId, account, isLong, marginDelta, sizeDelta, triggerPrice, triggerAbove, trxId, pricesLength, prices);
 }
 
-((int, int, slice, int, int, int, int, int, int, cell)) $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(int opType, int orderId, int trxId, slice account, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int pricesLength, cell prices) inline {
-    return (orderId, opType, account, marginDelta, sizeDelta, triggerPrice, triggerAbove, trxId, pricesLength, prices);
+((int, int, int, slice, int, int, int, int, int, int, int, cell)) $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(int opType, int orderId, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int pricesLength, cell prices) inline {
+    return (orderId, opType, tokenId, account, isLong, marginDelta, sizeDelta, triggerPrice, triggerAbove, trxId, pricesLength, prices);
 }
 
 ;;
 ;; Type: UpdatePerpPositionSuccess
 ;; Header: 0xef01c2b4
-;; TLB: update_perp_position_success#ef01c2b4 orderId:int257 receive:int257 trxId:uint64 isClosed:bool tpSlLength:int257 tpSlOrders:dict<int, int> = UpdatePerpPositionSuccess
+;; TLB: update_perp_position_success#ef01c2b4 orderId:int257 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess
 ;;
 
-(slice, ((int, int, int, int, int, cell))) $UpdatePerpPositionSuccess$_load(slice sc_0) inline_ref {
+(slice, ((int, int, int))) $UpdatePerpPositionSuccess$_load(slice sc_0) inline {
     throw_unless(129, sc_0~load_uint(32) == 4009870004);
     var v'orderId = sc_0~load_int(257);
     var v'receive = sc_0~load_int(257);
     var v'trxId = sc_0~load_uint(64);
-    var v'isClosed = sc_0~load_int(1);
-    var v'tpSlLength = sc_0~load_int(257);
-    var v'tpSlOrders = sc_0~load_dict();
-    return (sc_0, (v'orderId, v'receive, v'trxId, v'isClosed, v'tpSlLength, v'tpSlOrders));
+    return (sc_0, (v'orderId, v'receive, v'trxId));
 }
 
 ;;

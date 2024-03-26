@@ -163,10 +163,12 @@ message LiquidatePerpPositionOrder {
     prices: map<Int, UpdatePrice>;
 }
 
-message UpdatePerpPosition {
+message(0xff57e557) UpdatePerpPosition {
     orderId: Int as uint64;
     opType: Int as uint8;
+    tokenId: Int;
     account: Address;
+    isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
     triggerPrice: Int;
@@ -176,13 +178,10 @@ message UpdatePerpPosition {
     prices: map<Int, UpdatePrice>;
 }
 
-message UpdatePerpPositionSuccess {
+message(0xef01c2b4) UpdatePerpPositionSuccess {
     orderId: Int;
     receive: Int;
     trxId: Int as uint64;
-    isClosed: Bool;
-    tpSlLength: Int;
-    tpSlOrders: map<Int, Int>;
 }
 
 message CompensatePerpPositionOrder {
