@@ -1056,6 +1056,19 @@ cell $PerpPositionOrderEx$_store_cell((int, int, int, int) v) inline {
     return $PerpPositionOrderEx$_store(begin_cell(), v).end_cell();
 }
 
+((int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'tpSize, int vvv'tpPrice, int vvv'slSize, int vvv'slPrice) = __tact_tuple_destroy_4(v);
+    return (vvv'tpSize, vvv'tpPrice, vvv'slSize, vvv'slPrice);
+}
+
+cell $PerpPositionOrderEx$_store_opt(tuple v) inline {
+    if (null?(v)) {
+        return null();
+    }
+    return $PerpPositionOrderEx$_store_cell($PerpPositionOrderEx$_not_null(v));
+}
+
 (slice, ((int, int, int, int))) $PerpPositionOrderEx$_load(slice sc_0) inline {
     var v'tpSize = sc_0~load_int(257);
     var v'tpPrice = sc_0~load_int(257);
@@ -1076,12 +1089,6 @@ tuple $PerpPositionOrderEx$_load_opt(cell cl) inline {
     }
     var sc = cl.begin_parse();
     return $PerpPositionOrderEx$_as_optional(sc~$PerpPositionOrderEx$_load());
-}
-
-((int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (int vvv'tpSize, int vvv'tpPrice, int vvv'slSize, int vvv'slPrice) = __tact_tuple_destroy_4(v);
-    return (vvv'tpSize, vvv'tpPrice, vvv'slSize, vvv'slPrice);
 }
 
 ((int, int, int, int)) $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice(int tpSize, int tpPrice, int slSize, int slPrice) inline {

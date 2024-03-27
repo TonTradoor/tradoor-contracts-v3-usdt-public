@@ -147,6 +147,18 @@ builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, slice, int, in
 ;; $PerpPositionIncreasedEvent$_store_cell
 cell $PerpPositionIncreasedEvent$_store_cell((int, slice, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
+;; $PerpPositionDecreasedEvent$_store
+builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
+
+;; $PerpPositionDecreasedEvent$_store_cell
+cell $PerpPositionDecreasedEvent$_store_cell((int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $PerpPositionLiquidatedEvent$_store
+builder $PerpPositionLiquidatedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int) v) inline_ref;
+
+;; $PerpPositionLiquidatedEvent$_store_cell
+cell $PerpPositionLiquidatedEvent$_store_cell((int, slice, int, int, int, int, int, int, int, int, int) v) inline;
+
 ;; $UpdatePriceEvent$_store
 builder $UpdatePriceEvent$_store(builder build_0, (int, cell) v) inline;
 
@@ -348,6 +360,18 @@ tuple $LPPosition$_to_opt_external(tuple v) inline;
 ;; $DirectionPerpPosition$_not_null
 (((int, int, int, int, int), (int, int, int, int, int))) $DirectionPerpPosition$_not_null(tuple v) inline;
 
+;; $PerpPosition$_to_tuple
+tuple $PerpPosition$_to_tuple(((int, int, int, int, int)) v) inline;
+
+;; $DirectionPerpPosition$_to_tuple
+tuple $DirectionPerpPosition$_to_tuple((((int, int, int, int, int), (int, int, int, int, int))) v) inline;
+
+;; $DirectionPerpPosition$_to_opt_tuple
+tuple $DirectionPerpPosition$_to_opt_tuple(tuple v) inline;
+
+;; $DirectionPerpPosition$_to_opt_external
+tuple $DirectionPerpPosition$_to_opt_external(tuple v) inline;
+
 ;; $PriceData$_get_price
 _ $PriceData$_get_price((int) v) inline;
 
@@ -456,17 +480,14 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_increaseLPPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), ()) $Pool$_fun_increaseLPPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account, int $marginDelta, int $liquidityDelta, int $trxId) impure inline_ref;
 
+;; $LPPositionLiquidatedEvent$_constructor_positionId_account_margin_liquidity_tradingFee_fundingFee_liquidationFee_trxId
+((int, slice, int, int, int, int, int, int)) $LPPositionLiquidatedEvent$_constructor_positionId_account_margin_liquidity_tradingFee_fundingFee_liquidationFee_trxId(int positionId, slice account, int margin, int liquidity, int tradingFee, int fundingFee, int liquidationFee, int trxId) inline;
+
 ;; $LPPositionDecreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_tradingFee_fundingFee_realizedLoss_receive_trxId
 ((int, slice, int, int, int, int, int, int, int, int, int)) $LPPositionDecreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_tradingFee_fundingFee_realizedLoss_receive_trxId(int positionId, slice account, int marginDelta, int marginAfter, int liquidityDelta, int liquidityAfter, int tradingFee, int fundingFee, int realizedLoss, int receive, int trxId) inline;
 
 ;; $Pool$_fun_decreaseLPPosition
-((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), int) $Pool$_fun_decreaseLPPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account, int $marginDelta, int $liquidityDelta, int $trxId) impure inline_ref;
-
-;; $LPPositionLiquidatedEvent$_constructor_positionId_account_margin_liquidity_tradingFee_fundingFee_liquidationFee_trxId
-((int, slice, int, int, int, int, int, int)) $LPPositionLiquidatedEvent$_constructor_positionId_account_margin_liquidity_tradingFee_fundingFee_liquidationFee_trxId(int positionId, slice account, int margin, int liquidity, int tradingFee, int fundingFee, int liquidationFee, int trxId) inline;
-
-;; $Pool$_fun_liquidateLPPosition
-((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), int) $Pool$_fun_liquidateLPPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account, int $trxId) impure inline_ref;
+((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), int) $Pool$_fun_decreaseLPPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account, int $isLiquidate, int $marginDelta, int $liquidityDelta, int $trxId) impure inline_ref;
 
 ;; $Pool$_fun_lpPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), tuple) $Pool$_fun_lpPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account) impure inline_ref;
@@ -494,6 +515,18 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $Pool$_fun_increasePerpPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), ()) $Pool$_fun_increasePerpPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, int $trxId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice) impure inline_ref;
+
+;; $PerpPositionLiquidatedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_sizeDelta_liquidatePrice_tradingFee_fundingFee_liquidationFee_trxId
+((int, slice, int, int, int, int, int, int, int, int, int)) $PerpPositionLiquidatedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_sizeDelta_liquidatePrice_tradingFee_fundingFee_liquidationFee_trxId(int positionId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int liquidatePrice, int tradingFee, int fundingFee, int liquidationFee, int trxId) inline;
+
+;; $PerpPositionDecreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_receive_trxId
+((int, slice, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionDecreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_receive_trxId(int positionId, slice account, int tokenId, int isLong, int marginDelta, int marginAfter, int sizeDelta, int sizeAfter, int tradePrice, int realizedPnLDelta, int tradingFee, int fundingFee, int receive, int trxId) inline;
+
+;; $Pool$_fun_decreasePerpPosition
+((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), int) $Pool$_fun_decreasePerpPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, int $trxId, int $isLiquidate, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice) impure inline_ref;
+
+;; $Pool$_fun_perpPosition
+((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), tuple) $Pool$_fun_perpPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, int $tokenId, slice $account) impure inline_ref;
 
 ;; $PriceData$_constructor_price
 ((int)) $PriceData$_constructor_price(int price) inline;

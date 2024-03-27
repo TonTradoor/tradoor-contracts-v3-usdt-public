@@ -92,6 +92,8 @@ PROGRAM{
   DECLPROC $PerpPositionOrder$_load_opt
   DECLPROC $PerpPositionOrderEx$_store
   DECLPROC $PerpPositionOrderEx$_store_cell
+  DECLPROC $PerpPositionOrderEx$_not_null
+  DECLPROC $PerpPositionOrderEx$_store_opt
   DECLPROC $PerpPositionOrderEx$_load
   DECLPROC $PerpPositionOrderEx$_as_optional
   DECLPROC $PerpPositionOrderEx$_load_opt
@@ -106,7 +108,6 @@ PROGRAM{
   DECLPROC $LPPositionOrder$_to_tuple
   DECLPROC $LPPositionOrder$_to_opt_tuple
   DECLPROC $LPPositionOrder$_to_opt_external
-  DECLPROC $PerpPositionOrderEx$_not_null
   DECLPROC $OrderBook$init$_load
   DECLPROC $OrderBook$_contract_init
   DECLPROC $OrderBook$_contract_load
@@ -143,8 +144,10 @@ PROGRAM{
   DECLPROC $PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator
   DECLPROC $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice
   DECLPROC $OrderBook$_fun_createPerpOrder
+  DECLPROC $OrderBook$_fun_handleCreateIncreasePerpPositionOrder
   DECLPROC $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
   DECLPROC $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
+  DECLPROC $OrderBook$_fun_handelPerpPositionOrderCallback
   DECLPROC $OrderBook$_fun_perpPositionOrder
   DECLPROC $OrderBook$_fun_perpPositionOrderIndexNext
   DECLPROC $OrderBook$_fun_shouldCancel
@@ -1566,6 +1569,23 @@ PROGRAM{
     $PerpPositionOrderEx$_store INLINECALLDICT
     ENDC
   }>
+  $PerpPositionOrderEx$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+    4 UNTUPLE
+  }>
+  $PerpPositionOrderEx$_store_opt PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+      $PerpPositionOrderEx$_not_null INLINECALLDICT
+      $PerpPositionOrderEx$_store_cell INLINECALLDICT
+    }>
+  }>
   $PerpPositionOrderEx$_load PROCINLINE:<{
     257 PUSHINT
     LDIX
@@ -1773,12 +1793,6 @@ PROGRAM{
       PUSHNULL
     }>ELSE<{
     }>
-  }>
-  $PerpPositionOrderEx$_not_null PROCINLINE:<{
-    DUP
-    ISNULL
-    128 THROWIF
-    4 UNTUPLE
   }>
   $OrderBook$init$_load PROCINLINE:<{
     257 PUSHINT
@@ -2617,9 +2631,201 @@ PROGRAM{
     $global_emit INLINECALLDICT
     3 -ROLL
   }>
+  $OrderBook$_fun_handleCreateIncreasePerpPositionOrder PROCREF:<{
+    __tact_context_get INLINECALLDICT
+    s3 s3 s0 XCHG3
+    s3 s(-1) PUXC
+    $Context$_fun_readForwardFee INLINECALLDICT
+    1 LSHIFT#
+    s12 s(-1) PUXC
+    ADD
+    33 s() PUSH
+    ADD
+    32 s() PUSH
+    ADD
+    LESS
+    IFJMP:<{
+      11 BLKDROP
+      DUP
+      $OrderBook$_fun_refundJetton INLINECALLDICT
+    }>
+    s12 s6 PUSH2
+    LESS
+    IFJMP:<{
+      11 BLKDROP
+      DUP
+      $OrderBook$_fun_refundJetton INLINECALLDICT
+    }>
+    s10 PUSH
+    33 s() PUSH
+    LESS
+    IFJMP:<{
+      11 BLKDROP
+      DUP
+      $OrderBook$_fun_refundJetton INLINECALLDICT
+    }>
+    s12 POP
+    s12 POP
+    s0 s7 XCHG
+    IF:<{
+      10 PUSHINT
+    }>ELSE<{
+      11 PUSHINT
+    }>
+    31 s() 33 s() XCHG
+    30 s() 32 s() XCHG
+    29 s() 33 s() XCHG
+    28 s() 32 s() XCHG
+    27 s() 33 s() XCHG
+    26 s() 32 s() XCHG
+    25 s() 33 s() XCHG
+    24 s() 32 s() XCHG
+    23 s() 33 s() XCHG
+    22 s() 32 s() XCHG
+    21 s() 33 s() XCHG
+    20 s() 32 s() XCHG
+    19 s() 33 s() XCHG
+    18 s() 32 s() XCHG
+    17 s() 33 s() XCHG
+    16 s() 32 s() XCHG
+    s15 33 s() XCHG
+    s14 32 s() XCHG
+    s13 33 s() XCHG
+    s12 32 s() XCHG
+    s11 33 s() XCHG
+    s10 32 s() XCHG
+    s9 s0 XCPU
+    s0 s9 XCHG
+    s7 s8 XCHG
+    s6 s7 XCHG
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s2 s3 XCHG
+    s1 34 s() XCHG
+    s0 33 s() XCHG
+    33 s() PUSH
+    $OrderBook$_fun_createPerpOrder INLINECALLDICT
+    DROP
+    21 s() 23 s() XCHG
+    20 s() 22 s() XCHG
+    19 s() 21 s() XCHG
+    18 s() 20 s() XCHG
+    17 s() 19 s() XCHG
+    16 s() 18 s() XCHG
+    s15 17 s() XCHG
+    s14 16 s() XCHG
+    2 14 BLKSWAP
+    $OrderBook$_fun_refundExecessTon INLINECALLDICT
+  }>
   $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
   $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
+  }>
+  $OrderBook$_fun_handelPerpPositionOrderCallback PROCREF:<{
+    __tact_context_get INLINECALLDICT
+    s3 s2 s3 XC2PU
+    19305 PUSHINT
+    s0 s4 XCHG
+    $Context$_fun_readForwardFee INLINECALLDICT
+    22 s() PUSH
+    ADD
+    s1 s2 XCHG
+    GEQ
+    THROWANYIFNOT
+    s4 PUSH
+    257 PUSHINT
+    s3 PUSH
+    __tact_dict_get_int_cell INLINECALLDICT
+    $PerpPositionOrder$_load_opt INLINECALLDICT
+    DUP
+    ISNULL
+    IFJMP:<{
+      3 BLKDROP
+    }>
+    $PerpPositionOrder$_not_null INLINECALLDICT
+    s6 s7 XCHG2
+    5 BLKDROP
+    3 3 BLKDROP2
+    s3 POP
+    s3 POP
+    257 PUSHINT
+    PUSHNULL
+    $PerpPositionOrder$_store_opt INLINECALLDICT
+    s7 PUSH
+    s3 s11 XCHG
+    SWAP
+    __tact_dict_set_int_cell INLINECALLDICT
+    257 PUSHINT
+    PUSHNULL
+    $PerpPositionOrderEx$_store_opt INLINECALLDICT
+    s7 PUSH
+    s3 s10 XCHG
+    SWAP
+    __tact_dict_set_int_cell INLINECALLDICT
+    s3 PUSH
+    1 EQINT
+    IF:<{
+      s3 s5 s4 XCHG3
+      $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId INLINECALLDICT
+      $PerpPositionOrderCancelledEvent$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+      DUP
+      ISNULL
+      NOT
+      IF:<{
+        __tact_not_null INLINECALLDICT
+        TRUE
+        ROT
+        s0 s3 XCHG
+        1 PUSHINT
+        $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
+        $global_send INLINECALLDICT
+      }>ELSE<{
+        DROP
+        NIP
+      }>
+    }>ELSE<{
+      s3 s5 s4 XCHG3
+      $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId INLINECALLDICT
+      $PerpPositionOrderExecutedEvent$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+      DUP
+      ISNULL
+      NOT
+      IF:<{
+        s2 PUSH
+        0 NEQINT
+      }>ELSE<{
+        FALSE
+      }>
+      IF:<{
+        __tact_not_null INLINECALLDICT
+        TRUE
+        ROT
+        s0 s3 XCHG
+        1 PUSHINT
+        $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
+        $global_send INLINECALLDICT
+      }>ELSE<{
+        DROP
+        NIP
+      }>
+    }>
+    s3 PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s0 s3 XCHG
+      __tact_not_null INLINECALLDICT
+      s2 s3 XCHG
+      0 PUSHINT
+      $OrderBook$_fun_refundExecessTon INLINECALLDICT
+      s1 s2 XCHG
+    }>ELSE<{
+      s3 POP
+    }>
+    s1 s2 XCHG
   }>
   $OrderBook$_fun_perpPositionOrder PROCREF:<{
     257 PUSHINT
@@ -3074,12 +3280,25 @@ PROGRAM{
           SWAP
           3 EQINT
           IF:<{
-            128 LDI
-            128 LDI
             LDGRAMS
+            1 LDI
+            SWAP
+            -1 EQINT
+            SWAP
+            64 LDI
+            1 LDI
+            SWAP
+            -1 EQINT
+            SWAP
+            128 LDI
+            128 LDI
+            256 LDI
+            128 LDI
+            256 LDI
+            128 LDI
+            256 LDI
             DROP
-            -ROT
-            $OrderBook$_fun_handleCreateIncreaseLPPositionOrder INLINECALLDICT
+            $OrderBook$_fun_handleCreateIncreasePerpPositionOrder INLINECALLDICT
           }>ELSE<{
             4 BLKDROP
           }>
@@ -3124,7 +3343,7 @@ PROGRAM{
           3 EQINT
           IF:<{
             s10 s10 XCHG2
-            $OrderBook$_fun_handelLPPositionOrderCallback INLINECALLDICT
+            $OrderBook$_fun_handelPerpPositionOrderCallback INLINECALLDICT
           }>ELSE<{
             s10 POP
             DROP

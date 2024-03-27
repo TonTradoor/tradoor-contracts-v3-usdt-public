@@ -529,6 +529,85 @@ cell $PerpPositionIncreasedEvent$_store_cell((int, slice, int, int, int, int, in
 }
 
 ;;
+;; Type: PerpPositionDecreasedEvent
+;; Header: 0x2c4f1505
+;; TLB: perp_position_decreased_event#2c4f1505 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 receive:int257 trxId:int257 = PerpPositionDecreasedEvent
+;;
+
+builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'realizedPnLDelta, v'fundingFee, v'tradingFee, v'receive, v'trxId) = v;
+    build_0 = store_uint(build_0, 743380229, 32);
+    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'tokenId, 257);
+    build_0 = build_0.store_int(v'isLong, 1);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'marginDelta, 257);
+    build_1 = build_1.store_int(v'marginAfter, 257);
+    build_1 = build_1.store_int(v'sizeDelta, 257);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_int(v'sizeAfter, 257);
+    build_2 = build_2.store_int(v'tradePrice, 257);
+    build_2 = build_2.store_int(v'realizedPnLDelta, 257);
+    var build_3 = begin_cell();
+    build_3 = build_3.store_int(v'fundingFee, 257);
+    build_3 = build_3.store_int(v'tradingFee, 257);
+    build_3 = build_3.store_int(v'receive, 257);
+    var build_4 = begin_cell();
+    build_4 = build_4.store_int(v'trxId, 257);
+    build_3 = store_ref(build_3, build_4.end_cell());
+    build_2 = store_ref(build_2, build_3.end_cell());
+    build_1 = store_ref(build_1, build_2.end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $PerpPositionDecreasedEvent$_store_cell((int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    return $PerpPositionDecreasedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, slice, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionDecreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_receive_trxId(int positionId, slice account, int tokenId, int isLong, int marginDelta, int marginAfter, int sizeDelta, int sizeAfter, int tradePrice, int realizedPnLDelta, int tradingFee, int fundingFee, int receive, int trxId) inline {
+    return (positionId, account, tokenId, isLong, marginDelta, marginAfter, sizeDelta, sizeAfter, tradePrice, realizedPnLDelta, fundingFee, tradingFee, receive, trxId);
+}
+
+;;
+;; Type: PerpPositionLiquidatedEvent
+;; Header: 0xe4d104b0
+;; TLB: perp_position_liquidated_event#e4d104b0 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 sizeDelta:int257 liquidatePrice:int257 fundingFee:int257 tradingFee:int257 liquidationFee:int257 trxId:int257 = PerpPositionLiquidatedEvent
+;;
+
+builder $PerpPositionLiquidatedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'sizeDelta, v'liquidatePrice, v'fundingFee, v'tradingFee, v'liquidationFee, v'trxId) = v;
+    build_0 = store_uint(build_0, 3838903472, 32);
+    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = __tact_store_address(build_0, v'account);
+    build_0 = build_0.store_int(v'tokenId, 257);
+    build_0 = build_0.store_int(v'isLong, 1);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'marginDelta, 257);
+    build_1 = build_1.store_int(v'sizeDelta, 257);
+    build_1 = build_1.store_int(v'liquidatePrice, 257);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_int(v'fundingFee, 257);
+    build_2 = build_2.store_int(v'tradingFee, 257);
+    build_2 = build_2.store_int(v'liquidationFee, 257);
+    var build_3 = begin_cell();
+    build_3 = build_3.store_int(v'trxId, 257);
+    build_2 = store_ref(build_2, build_3.end_cell());
+    build_1 = store_ref(build_1, build_2.end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $PerpPositionLiquidatedEvent$_store_cell((int, slice, int, int, int, int, int, int, int, int, int) v) inline {
+    return $PerpPositionLiquidatedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, slice, int, int, int, int, int, int, int, int, int)) $PerpPositionLiquidatedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_sizeDelta_liquidatePrice_tradingFee_fundingFee_liquidationFee_trxId(int positionId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int liquidatePrice, int tradingFee, int fundingFee, int liquidationFee, int trxId) inline {
+    return (positionId, account, tokenId, isLong, marginDelta, sizeDelta, liquidatePrice, fundingFee, tradingFee, liquidationFee, trxId);
+}
+
+;;
 ;; Type: UpdatePriceEvent
 ;; Header: 0x6793c3e9
 ;; TLB: update_price_event#6793c3e9 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePriceEvent
@@ -958,6 +1037,11 @@ builder $PerpPosition$_store(builder build_0, (int, int, int, int, int) v) inlin
     return (sc_0, (v'positionId, v'margin, v'size, v'entryPrice, v'entryFundingFeeGrowth));
 }
 
+tuple $PerpPosition$_to_tuple(((int, int, int, int, int)) v) inline {
+    var (v'positionId, v'margin, v'size, v'entryPrice, v'entryFundingFeeGrowth) = v;
+    return __tact_tuple_create_5(v'positionId, v'margin, v'size, v'entryPrice, v'entryFundingFeeGrowth);
+}
+
 ((int, int, int, int, int)) $PerpPosition$_constructor_positionId_margin_size_entryPrice_entryFundingFeeGrowth(int positionId, int margin, int size, int entryPrice, int entryFundingFeeGrowth) inline {
     return (positionId, margin, size, entryPrice, entryFundingFeeGrowth);
 }
@@ -1004,6 +1088,25 @@ tuple $DirectionPerpPosition$_load_opt(cell cl) inline {
     throw_if(128, null?(v));
     var (int vvv'longPosition'positionId, int vvv'longPosition'margin, int vvv'longPosition'size, int vvv'longPosition'entryPrice, int vvv'longPosition'entryFundingFeeGrowth, int vvv'shortPosition'positionId, int vvv'shortPosition'margin, int vvv'shortPosition'size, int vvv'shortPosition'entryPrice, int vvv'shortPosition'entryFundingFeeGrowth) = __tact_tuple_destroy_10(v);
     return ((vvv'longPosition'positionId, vvv'longPosition'margin, vvv'longPosition'size, vvv'longPosition'entryPrice, vvv'longPosition'entryFundingFeeGrowth), (vvv'shortPosition'positionId, vvv'shortPosition'margin, vvv'shortPosition'size, vvv'shortPosition'entryPrice, vvv'shortPosition'entryFundingFeeGrowth));
+}
+
+tuple $DirectionPerpPosition$_to_tuple((((int, int, int, int, int), (int, int, int, int, int))) v) inline {
+    var (v'longPosition, v'shortPosition) = v;
+    return __tact_tuple_create_2($PerpPosition$_to_tuple(v'longPosition), $PerpPosition$_to_tuple(v'shortPosition));
+}
+
+tuple $DirectionPerpPosition$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $DirectionPerpPosition$_to_tuple($DirectionPerpPosition$_not_null(v)); 
+}
+
+tuple $DirectionPerpPosition$_to_opt_external(tuple v) inline {
+    var loaded = $DirectionPerpPosition$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
 }
 
 (((int, int, int, int, int), (int, int, int, int, int))) $DirectionPerpPosition$_constructor_longPosition_shortPosition((int, int, int, int, int) longPosition, (int, int, int, int, int) shortPosition) inline {

@@ -157,11 +157,20 @@ contract OrderBook with Deployable, Ownable {
             self.handleCreateIncreaseLPPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, marginDelta, liquidityDelta);
         }
         else if (opCode == OP_CREATE_INCREASE_PERP_POSITION_ORDER) {
-            let marginDelta: Int = operation.loadInt(128);
-            let liquidityDelta: Int = operation.loadInt(128);
             let executionFee: Int = operation.loadCoins();
+            let isMarket: Bool = operation.loadInt(1) == -1;
+            let tokenId: Int = operation.loadInt(64);
+            let isLong: Bool = operation.loadInt(1) == -1;
+            let marginDelta: Int = operation.loadInt(128);
+            let sizeDelta: Int = operation.loadInt(128);
+            let triggerPrice: Int = operation.loadInt(256);
+            let tpSize: Int = operation.loadInt(128);
+            let tpPrice: Int = operation.loadInt(256);
+            let slSize: Int = operation.loadInt(128);
+            let slPrice: Int = operation.loadInt(256);
 
-            self.handleCreateIncreaseLPPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, marginDelta, liquidityDelta);
+            self.handleCreateIncreasePerpPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, isMarket, tokenId, isLong, marginDelta, 
+                sizeDelta, triggerPrice, tpSize, tpPrice, slSize, slPrice);
         }
     }
     
@@ -185,7 +194,7 @@ contract OrderBook with Deployable, Ownable {
             self.handelLPPositionOrderCallback(jettonCallback.orderId, jettonCallback.trxId);
         }
         else if (jettonCallback.orderType == ORDER_TYPE_PERP) {
-            self.handelLPPositionOrderCallback(jettonCallback.orderId, jettonCallback.trxId);
+            self.handelPerpPositionOrderCallback(jettonCallback.orderId, jettonCallback.trxId);
         }
     }
 

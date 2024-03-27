@@ -119,6 +119,21 @@ message PerpPositionDecreasedEvent {
     realizedPnLDelta: Int;
     fundingFee: Int;
     tradingFee: Int;
+    receive: Int;
+    trxId: Int;
+}
+
+message PerpPositionLiquidatedEvent {
+    positionId: Int;
+    account: Address;
+    tokenId: Int;
+    isLong: Bool;
+    marginDelta: Int;
+    sizeDelta: Int;
+    liquidatePrice: Int;
+    fundingFee: Int;
+    tradingFee: Int;
+    liquidationFee: Int;
     trxId: Int;
 }
 

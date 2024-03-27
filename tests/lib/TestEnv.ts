@@ -22,6 +22,7 @@ export class TestEnv {
 
     // config
     static jettonDecimal: number = 6;
+    static priceDecimal: number = 20;
 
     static async resetEnv() {
         TestEnv.blockchain = await Blockchain.create();

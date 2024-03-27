@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 14135 bytes
+BOC Size: 17699 bytes
 
 # Types
-Total Types: 41
+Total Types: 42
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -106,8 +106,12 @@ TLB: `perp_position_increased_event#07903041 positionId:int257 account:address t
 Signature: `PerpPositionIncreasedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,entryPrice:int257,fundingFee:int257,tradingFee:int257,trxId:int257}`
 
 ## PerpPositionDecreasedEvent
-TLB: `perp_position_decreased_event#61ddc6b4 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 trxId:int257 = PerpPositionDecreasedEvent`
-Signature: `PerpPositionDecreasedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257,trxId:int257}`
+TLB: `perp_position_decreased_event#2c4f1505 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 receive:int257 trxId:int257 = PerpPositionDecreasedEvent`
+Signature: `PerpPositionDecreasedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257,receive:int257,trxId:int257}`
+
+## PerpPositionLiquidatedEvent
+TLB: `perp_position_liquidated_event#e4d104b0 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 sizeDelta:int257 liquidatePrice:int257 fundingFee:int257 tradingFee:int257 liquidationFee:int257 trxId:int257 = PerpPositionLiquidatedEvent`
+Signature: `PerpPositionLiquidatedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,sizeDelta:int257,liquidatePrice:int257,fundingFee:int257,tradingFee:int257,liquidationFee:int257,trxId:int257}`
 
 ## UpdatePriceEvent
 TLB: `update_price_event#6793c3e9 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePriceEvent`
@@ -170,7 +174,7 @@ TLB: `_ tokenId:int257 price:int257 = UpdatePrice`
 Signature: `UpdatePrice{tokenId:int257,price:int257}`
 
 # Get Methods
-Total Get Methods: 6
+Total Get Methods: 7
 
 ## configData
 
@@ -184,6 +188,10 @@ Argument: tokenId
 Argument: account
 
 ## lpPosition
+Argument: account
+
+## perpPosition
+Argument: tokenId
 Argument: account
 
 ## owner
@@ -216,6 +224,7 @@ Argument: account
 1644: not reach trigger price
 5238: position not exist
 9429: send gas not enough
+18995: margin rate too low
 22749: risk rate too hig
 23236: insufficient global RBF
 27798: invalid token
@@ -224,6 +233,7 @@ Argument: account
 36718: disabled token
 41207: invalid sender
 42634: legerage too high
+55429: not reach liquidate price
 58161: insufficient liquidity
 60602: risk rate too high
 61867: insuficient global net RBF

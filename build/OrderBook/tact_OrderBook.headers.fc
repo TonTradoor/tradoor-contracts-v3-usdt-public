@@ -282,6 +282,12 @@ builder $PerpPositionOrderEx$_store(builder build_0, (int, int, int, int) v) inl
 ;; $PerpPositionOrderEx$_store_cell
 cell $PerpPositionOrderEx$_store_cell((int, int, int, int) v) inline;
 
+;; $PerpPositionOrderEx$_not_null
+((int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline;
+
+;; $PerpPositionOrderEx$_store_opt
+cell $PerpPositionOrderEx$_store_opt(tuple v) inline;
+
 ;; $PerpPositionOrderEx$_load
 (slice, ((int, int, int, int))) $PerpPositionOrderEx$_load(slice sc_0) inline;
 
@@ -323,9 +329,6 @@ tuple $LPPositionOrder$_to_opt_tuple(tuple v) inline;
 
 ;; $LPPositionOrder$_to_opt_external
 tuple $LPPositionOrder$_to_opt_external(tuple v) inline;
-
-;; $PerpPositionOrderEx$_not_null
-((int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline;
 
 ;; $OrderBook$init$_load
 (slice, ((int))) $OrderBook$init$_load(slice sc_0) inline;
@@ -435,11 +438,17 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $OrderBook$_fun_createPerpOrder
 ((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int), int) $OrderBook$_fun_createPerpOrder((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee) impure inline_ref;
 
+;; $OrderBook$_fun_handleCreateIncreasePerpPositionOrder
+((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int), ()) $OrderBook$_fun_handleCreateIncreasePerpPositionOrder((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice) impure inline_ref;
+
 ;; $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
 ;; $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
+
+;; $OrderBook$_fun_handelPerpPositionOrderCallback
+((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int), ()) $OrderBook$_fun_handelPerpPositionOrderCallback((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $orderId, int $trxId) impure inline_ref;
 
 ;; $OrderBook$_fun_perpPositionOrder
 ((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int), tuple) $OrderBook$_fun_perpPositionOrder((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $orderId) impure inline_ref;
