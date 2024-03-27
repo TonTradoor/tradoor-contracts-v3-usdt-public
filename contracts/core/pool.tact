@@ -539,6 +539,8 @@ contract Pool with Deployable, Ownable {
             lpPosition.entryTradingFeeGrowth = self.lpTradingFeeGrowth;
             self.lpPositions.set(account, lpPosition);
         } else {
+            lpPosition.margin = 0;
+            lpPosition.liquidity = 0;
             // delete position
             self.lpPositions.set(account, null);
         }
