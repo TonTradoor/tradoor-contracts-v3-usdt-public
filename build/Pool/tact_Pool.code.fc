@@ -259,6 +259,8 @@
         $lpPosition'entryTradingFeeGrowth = $self'lpTradingFeeGrowth;
         $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_cell(($lpPosition'positionId, $lpPosition'margin, $lpPosition'liquidity, $lpPosition'entryFundingFeeGrowth, $lpPosition'entryTradingFeeGrowth)));
     } else {
+        $lpPosition'margin = 0;
+        $lpPosition'liquidity = 0;
         $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_opt(null()));
     }
     __tact_debug_str(__gen_slice_string_a51705071274ff74441265571fd72050dbd3b016392e8e260c7423300143d29e());
