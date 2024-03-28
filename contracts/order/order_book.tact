@@ -8,25 +8,24 @@ import "./constants";
 contract OrderBook with Deployable, Ownable {
     
     // config
-    minTimeDelayExecutor: Int = 6; // executor execute after 6s
     maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
     minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
 
     // TODO gas
-    minExecutionFee: Int = ton("0.2"); // fee for every operation
+    minExecutionFee: Int = ton("0.1"); // fee for every operation
     gasConsumption: Int = ton("0.05"); // min consumption gas
     minTonsForStorage: Int = ton("0.03"); // min storage gas
 
     usdtWallet: Address; // order book USDT jetton wallet address
     pool: Address; // pool address
 
-    tokenConfigs: map<Int, TokenConfig>; // tokenIndex => tokenConfig
-    tokenIndexNext: Int as uint64 = 1;
+    // tokenConfigs: map<Int, TokenConfig>; // tokenIndex => tokenConfig
+    // tokenIndexNext: Int as uint64 = 1;
 
     // admin
     owner: Address;
     executors: map<Address, Bool>; // account => enabled
-    compensators: map<Address, Bool>; // account => enabled
+    // compensators: map<Address, Bool>; // account => enabled
 
     jettonCallbacks: map<Int, JettonCallback>; // queryId => callback
     jettonCallbackQueryIdNext: Int as uint64 = 1;
@@ -48,7 +47,7 @@ contract OrderBook with Deployable, Ownable {
         self.owner = sender();
 
         self.executors.set(sender(), true);
-        self.compensators.set(sender(), true);
+        // self.compensators.set(sender(), true);
 
         self.usdtWallet = newAddress(0, 0);
         self.pool = newAddress(0, 0);
@@ -61,34 +60,15 @@ contract OrderBook with Deployable, Ownable {
         if (msg.executor != null && msg.enableExecutor != null) {
             self.executors.set(msg.executor!!, msg.enableExecutor!!);
         }
-        if (msg.compensator != null && msg.enableCompensator != null) {
-            self.compensators.set(msg.compensator!!, msg.enableCompensator!!);
-        }
+
         // config
-        if (msg.minTimeDelayExecutor != null){
-            self.minTimeDelayExecutor = msg.minTimeDelayExecutor!!;
-        }
-        if (msg.maxTimeDelayExecutor != null){
-            self.maxTimeDelayExecutor = msg.maxTimeDelayExecutor!!;
-        }
-        if (msg.minTimeDelayTrader != null){
-            self.minTimeDelayTrader = msg.minTimeDelayTrader!!;
-        }
-        if (msg.minExecutionFee != null){
-            self.minExecutionFee = msg.minExecutionFee!!;
-        }
-        if (msg.gasConsumption != null){
-            self.gasConsumption = msg.gasConsumption!!;
-        }
-        if (msg.minTonsForStorage != null){
-            self.minTonsForStorage = msg.minTonsForStorage!!;
-        }
-        if (msg.usdtWallet != null){
-            self.usdtWallet = msg.usdtWallet!!;
-        }
-        if (msg.pool != null){
-            self.pool = msg.pool!!;
-        }
+        self.maxTimeDelayExecutor = msg.maxTimeDelayExecutor;
+        self.minTimeDelayTrader = msg.minTimeDelayTrader;
+        self.minExecutionFee = msg.minExecutionFee;
+        self.gasConsumption = msg.gasConsumption;
+        self.minTonsForStorage = msg.minTonsForStorage;
+        self.usdtWallet = msg.usdtWallet;
+        self.pool = msg.pool;
         send(SendParameters{
             to: sender(),
             bounce: false,
@@ -97,20 +77,14 @@ contract OrderBook with Deployable, Ownable {
         });
     }
 
-    get fun configData(executor: Address?, compensator: Address?): ConfigData {
+    get fun configData(executor: Address?): ConfigData {
         let isExecutor: Bool? = null;
         if (executor != null) {
             isExecutor = self.executors.get(executor!!);
         }
-        let isCompensator: Bool? = null;
-        if (compensator != null) {
-            isCompensator = self.compensators.get(compensator!!);
-        }
 
         return ConfigData{
             isExecutor: isExecutor,
-            isCompensator: isCompensator,
-            minTimeDelayExecutor: self.minTimeDelayExecutor,
             maxTimeDelayExecutor: self.maxTimeDelayExecutor,
             minTimeDelayTrader: self.minTimeDelayTrader,
             minExecutionFee: self.minExecutionFee,
@@ -164,10 +138,11 @@ contract OrderBook with Deployable, Ownable {
             let marginDelta: Int = operation.loadInt(128);
             let sizeDelta: Int = operation.loadInt(128);
             let triggerPrice: Int = operation.loadInt(256);
-            let tpSize: Int = operation.loadInt(128);
-            let tpPrice: Int = operation.loadInt(256);
-            let slSize: Int = operation.loadInt(128);
-            let slPrice: Int = operation.loadInt(256);
+            let tpSl: Slice = operation.loadRef().asSlice();
+            let tpSize: Int = tpSl.loadInt(128);
+            let tpPrice: Int = tpSl.loadInt(256);
+            let slSize: Int = tpSl.loadInt(128);
+            let slPrice: Int = tpSl.loadInt(256);
 
             self.handleCreateIncreasePerpPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, isMarket, tokenId, isLong, marginDelta, 
                 sizeDelta, triggerPrice, tpSize, tpPrice, slSize, slPrice);
@@ -1768,12 +1743,12 @@ contract OrderBook with Deployable, Ownable {
     // }
 
     // ============================ Getter ================================ //
-    get fun perpPositionOrder(orderId: Int): LPPositionOrder? {
-        return self.lpPositionOrders.get(orderId);
+    get fun perpPositionOrder(orderId: Int): PerpPositionOrder? {
+        return self.perpPositionOrders.get(orderId);
     }
 
     get fun perpPositionOrderIndexNext(): Int {
-        return self.lpPositionOrderIndexNext;
+        return self.perpPositionOrderIndexNext;
     }
 
     // ======================================================== private function ================================================================ //
@@ -1787,10 +1762,6 @@ contract OrderBook with Deployable, Ownable {
             isExecutor = isExecutorOpt!!;
         }
 
-        // executor cancel must after minTimeDelayExecutor
-        if (isExecutor) {
-            require(blockTime + self.minTimeDelayExecutor <= now(), "too early");
-        }
         // check sender
         require(sender() == account || isExecutor, "invalid sender");
         // trader cancel must after minTimeDelayTrader
@@ -1811,9 +1782,6 @@ contract OrderBook with Deployable, Ownable {
 
         // check sender
         require(isExecutor, "invalid sender");
-
-        // executor cancel must after minTimeDelayExecutor
-        require(blockTime + self.minTimeDelayExecutor <= now(), "too early");
 
         // executor cancel must before maxTimeDelayExecutor
         require(blockTime + self.maxTimeDelayExecutor > now(), "order expired");

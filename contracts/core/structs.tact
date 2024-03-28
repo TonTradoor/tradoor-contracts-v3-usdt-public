@@ -25,6 +25,11 @@ struct TokenConfig {
     maxFundingRate: Int;
 }
 
+struct TokenConfigData {
+    tokenIdNext: Int;
+    tokenConfig: TokenConfig?;
+}
+
 // ============================ RBF ================================ //
 struct RBFPosition {
     positionId: Int;

@@ -17,16 +17,13 @@ message(0xd53276db) TokenExcesses {
 message UpdateConfig {
     executor: Address?;
     enableExecutor: Bool?;
-    compensator: Address?;
-    enableCompensator: Bool?;
-    minTimeDelayExecutor: Int?;
-    maxTimeDelayExecutor: Int?;
-    minTimeDelayTrader: Int?;
-    minExecutionFee: Int?;
-    gasConsumption: Int?;
-    minTonsForStorage: Int?;
-    usdtWallet: Address?;
-    pool: Address?;
+    maxTimeDelayExecutor: Int;
+    minTimeDelayTrader: Int;
+    minExecutionFee: Int;
+    gasConsumption: Int;
+    minTonsForStorage: Int;
+    usdtWallet: Address;
+    pool: Address;
 }
 
 // ============================ RBF ================================ //

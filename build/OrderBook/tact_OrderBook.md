@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 16300 bytes
+BOC Size: 14728 bytes
 
 # Types
-Total Types: 48
+Total Types: 47
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -46,8 +46,8 @@ TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
 Signature: `TokenExcesses{queryId:uint64}`
 
 ## UpdateConfig
-TLB: `update_config#a152c301 executor:Maybe address enableExecutor:Maybe bool compensator:Maybe address enableCompensator:Maybe bool minTimeDelayExecutor:Maybe int257 maxTimeDelayExecutor:Maybe int257 minTimeDelayTrader:Maybe int257 minExecutionFee:Maybe int257 gasConsumption:Maybe int257 minTonsForStorage:Maybe int257 usdtWallet:Maybe address pool:Maybe address = UpdateConfig`
-Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,compensator:Maybe address,enableCompensator:Maybe bool,minTimeDelayExecutor:Maybe int257,maxTimeDelayExecutor:Maybe int257,minTimeDelayTrader:Maybe int257,minExecutionFee:Maybe int257,gasConsumption:Maybe int257,minTonsForStorage:Maybe int257,usdtWallet:Maybe address,pool:Maybe address}`
+TLB: `update_config#6de0047e executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = UpdateConfig`
+Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address}`
 
 ## CreateDecreaseRBFPositionOrder
 TLB: `create_decrease_rbf_position_order#a11162ed executionFee:int257 liquidityDelta:int257 = CreateDecreaseRBFPositionOrder`
@@ -165,13 +165,9 @@ Signature: `PerpPositionOrderCancelledEvent{opType:uint8,orderId:int257,trxId:in
 TLB: `perp_position_order_executed_event#fecf3a7f opType:uint8 orderId:int257 trxId:int257 = PerpPositionOrderExecutedEvent`
 Signature: `PerpPositionOrderExecutedEvent{opType:uint8,orderId:int257,trxId:int257}`
 
-## TokenConfig
-TLB: `_ name:^string enable:bool = TokenConfig`
-Signature: `TokenConfig{name:^string,enable:bool}`
-
 ## ConfigData
-TLB: `_ isExecutor:Maybe bool isCompensator:Maybe bool minTimeDelayExecutor:int257 maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData`
-Signature: `ConfigData{isExecutor:Maybe bool,isCompensator:Maybe bool,minTimeDelayExecutor:int257,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address}`
+TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address}`
 
 ## JettonCallback
 TLB: `_ orderType:int257 orderId:int257 amount:int257 receiver:address trxId:int257 = JettonCallback`
@@ -202,7 +198,6 @@ Total Get Methods: 8
 
 ## configData
 Argument: executor
-Argument: compensator
 
 ## rbfPositionOrder
 Argument: orderId

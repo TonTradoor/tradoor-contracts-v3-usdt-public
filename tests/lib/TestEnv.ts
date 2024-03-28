@@ -5,6 +5,7 @@ import { MockJetton } from '../../wrappers/MockJetton';
 import { toNano } from '@ton/core';
 import { buildOnchainMetadata } from '../../contracts/mock/utils/jetton-helpers';
 import { JettonDefaultWallet } from '../../wrappers/JettonDefaultWallet';
+import { toJettonUnits } from './TokenHelper';
 
 export class TestEnv {
 
@@ -118,14 +119,11 @@ export class TestEnv {
                 $$type: 'UpdateConfig',
                 executor: TestEnv.executor.address,
                 enableExecutor: true,
-                compensator: TestEnv.compensator.address,
-                enableCompensator: true,
-                minTimeDelayExecutor: null,
-                maxTimeDelayExecutor: null,
-                minTimeDelayTrader: null,
-                minExecutionFee: null,
-                gasConsumption: null,
-                minTonsForStorage: null,
+                maxTimeDelayExecutor: 30n * 60n,
+                minTimeDelayTrader: 3n * 60n,
+                minExecutionFee: toNano(0.1),
+                gasConsumption: toNano(0.05),
+                minTonsForStorage: toNano(0.03),
                 usdtWallet: TestEnv.orderBookJettonWallet.address,
                 pool: TestEnv.pool.address
             }
@@ -145,14 +143,14 @@ export class TestEnv {
             },
             {
                 $$type: 'UpdateConfig',
-                gasConsumption: null,
-                minTonsForStorage: null,
-                rbfLockTime: null,
-                bonusFactor: null,
-                minLPMargin: null,
-                maxLPLeverage: null,
-                lpLiquidationFee: null,
-                lpMaxRiskRate: null,
+                gasConsumption: toNano(0.05),
+                minTonsForStorage: toNano(0.03),
+                rbfLockTime: 5n * 60n,
+                bonusFactor: 1n,
+                minLPMargin: toJettonUnits(10),
+                maxLPLeverage: 100n,
+                lpLiquidationFee: toJettonUnits(0.2),
+                lpMaxRiskRate: 10n**6n,
                 orderBook: TestEnv.orderBook.address
             }
         );
@@ -162,6 +160,35 @@ export class TestEnv {
             to: TestEnv.pool.address,
             success: true,
         });
+
+        // set BTC config to orderbook
+        const setPoolTokenConfigResult = await TestEnv.pool.send(
+            TestEnv.deployer.getSender(),
+            {
+                value: toNano('0.1'),
+            },
+            {
+                $$type: 'UpdateTokenConfig',
+                tokenId: 1n,
+                name: "BTC",
+                enable: true,
+                minMargin: toJettonUnits(10), // 10U
+                maxLeverage: 100n,
+                liquidationFee: toJettonUnits(0.2), // 0.2U
+                tradingFeeRate: 1_000n, // 0.1%
+                lpTradingFeeRate: 300_000n, // 30%
+                protocalTradingFeeRate: 300_000n, // 30%
+                interestRate: 0n,
+                maxFundingRate: 0n
+            }
+        );
+
+        expect(setPoolTokenConfigResult.transactions).toHaveTransaction({
+            from: TestEnv.deployer.address,
+            to: TestEnv.pool.address,
+            success: true,
+        });
+
     }
 
 }

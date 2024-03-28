@@ -2,29 +2,29 @@ import "./structs";
 
 // ============================ admin ================================ //
 message UpdateConfig {
-    gasConsumption: Int?;
-    minTonsForStorage: Int?;
-    rbfLockTime: Int?;
-    bonusFactor: Int?;
-    minLPMargin: Int?;
-    maxLPLeverage: Int?;
-    lpLiquidationFee: Int?;
-    lpMaxRiskRate: Int?;
-    orderBook: Address?;
+    gasConsumption: Int;
+    minTonsForStorage: Int;
+    rbfLockTime: Int;
+    bonusFactor: Int;
+    minLPMargin: Int;
+    maxLPLeverage: Int;
+    lpLiquidationFee: Int;
+    lpMaxRiskRate: Int;
+    orderBook: Address;
 }
 
 message UpdateTokenConfig {
     tokenId: Int;
-    name: String?;
-    enable: Bool?;
-    minMargin: Int?;
-    maxLeverage: Int?;
-    liquidationFee: Int?;
-    tradingFeeRate: Int?;
-    lpTradingFeeRate: Int?;
-    protocalTradingFeeRate: Int?;
-    interestRate: Int?;
-    maxFundingRate: Int?;
+    name: String;
+    enable: Bool;
+    minMargin: Int;
+    maxLeverage: Int;
+    liquidationFee: Int;
+    tradingFeeRate: Int;
+    lpTradingFeeRate: Int;
+    protocalTradingFeeRate: Int;
+    interestRate: Int;
+    maxFundingRate: Int;
 }
 
 // ============================ RBF ================================ //

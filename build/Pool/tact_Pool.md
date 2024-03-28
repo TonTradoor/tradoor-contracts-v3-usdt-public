@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 17699 bytes
+BOC Size: 17254 bytes
 
 # Types
-Total Types: 42
+Total Types: 43
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -38,12 +38,12 @@ TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
 ## UpdateConfig
-TLB: `update_config#4d35a99c gasConsumption:Maybe int257 minTonsForStorage:Maybe int257 rbfLockTime:Maybe int257 bonusFactor:Maybe int257 minLPMargin:Maybe int257 maxLPLeverage:Maybe int257 lpLiquidationFee:Maybe int257 lpMaxRiskRate:Maybe int257 orderBook:Maybe address = UpdateConfig`
-Signature: `UpdateConfig{gasConsumption:Maybe int257,minTonsForStorage:Maybe int257,rbfLockTime:Maybe int257,bonusFactor:Maybe int257,minLPMargin:Maybe int257,maxLPLeverage:Maybe int257,lpLiquidationFee:Maybe int257,lpMaxRiskRate:Maybe int257,orderBook:Maybe address}`
+TLB: `update_config#65ef9afd gasConsumption:int257 minTonsForStorage:int257 rbfLockTime:int257 bonusFactor:int257 minLPMargin:int257 maxLPLeverage:int257 lpLiquidationFee:int257 lpMaxRiskRate:int257 orderBook:address = UpdateConfig`
+Signature: `UpdateConfig{gasConsumption:int257,minTonsForStorage:int257,rbfLockTime:int257,bonusFactor:int257,minLPMargin:int257,maxLPLeverage:int257,lpLiquidationFee:int257,lpMaxRiskRate:int257,orderBook:address}`
 
 ## UpdateTokenConfig
-TLB: `update_token_config#8207f92f tokenId:int257 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 protocalTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 = UpdateTokenConfig`
-Signature: `UpdateTokenConfig{tokenId:int257,name:Maybe ^string,enable:Maybe bool,minMargin:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,protocalTradingFeeRate:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257}`
+TLB: `update_token_config#38215eb9 tokenId:int257 name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 protocalTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = UpdateTokenConfig`
+Signature: `UpdateTokenConfig{tokenId:int257,name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,protocalTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
 
 ## UpdateRBFPosition
 TLB: `update_rbf_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateRBFPosition`
@@ -125,6 +125,10 @@ Signature: `ConfigData{rbfLockTime:int257,bonusFactor:int257,minLPMargin:int257,
 TLB: `_ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 protocalTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
 Signature: `TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,protocalTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
 
+## TokenConfigData
+TLB: `_ tokenIdNext:int257 tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,protocalTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257} = TokenConfigData`
+Signature: `TokenConfigData{tokenIdNext:int257,tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,protocalTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}}`
+
 ## RBFPosition
 TLB: `_ positionId:int257 liquidity:int257 bonus:int257 unlockTime:int257 = RBFPosition`
 Signature: `RBFPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTime:int257}`
@@ -174,14 +178,11 @@ TLB: `_ tokenId:int257 price:int257 = UpdatePrice`
 Signature: `UpdatePrice{tokenId:int257,price:int257}`
 
 # Get Methods
-Total Get Methods: 7
+Total Get Methods: 6
 
 ## configData
 
 ## tokenConfig
-Argument: tokenId
-
-## priceData
 Argument: tokenId
 
 ## rbfPosition

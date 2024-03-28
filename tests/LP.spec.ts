@@ -43,11 +43,10 @@ describe('LP', () => {
         expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('100'));
 
         // check config
-        let orderBookConfigData = await orderBook.getConfigData(executor.address, compensator.address);
+        let orderBookConfigData = await orderBook.getConfigData(executor.address);
         expect(orderBookConfigData.pool).toEqualAddress(pool.address);
         expect(orderBookConfigData.usdtWallet).toEqualAddress(orderBookJettonWallet.address);
         expect(orderBookConfigData.isExecutor).toBeTruthy();
-        expect(orderBookConfigData.isCompensator).toBeTruthy();
 
         let poolConfigData = await pool.getConfigData();
         expect(poolConfigData.orderBook).toEqualAddress(orderBook.address);
@@ -61,7 +60,7 @@ describe('LP', () => {
     it('auto refund -- not enough execution fee', async () => {
         let margin = 10;
         let liquidity = 100;
-        let executionFee = 0.1;
+        let executionFee = 0.05;
         
         // get orderBook TON balance
         console.log("orderBookTonBalance", await getFriendlyTonBalance(orderBook.address));
@@ -90,7 +89,7 @@ describe('LP', () => {
     it('should create increase LP order', async () => {
         let margin = 10;
         let liquidity = 100;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -122,7 +121,7 @@ describe('LP', () => {
         /// create order
         let margin = 10;
         let liquidity = 100;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -130,9 +129,6 @@ describe('LP', () => {
 
         // create order
         const createResult = await createIncreaseLPOrder(user0, margin, liquidity, executionFee);
-        
-        // wait for 6s (cancel )
-        blockchain.now = blockchain.now + 6;
 
         /// cancel order
         const cancelResult = await cancelLPOrder(executor, createResult.orderIdBefore);
@@ -158,7 +154,7 @@ describe('LP', () => {
         /// create order
         let margin = 10;
         let liquidity = 100;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -166,9 +162,6 @@ describe('LP', () => {
 
         // create order
         const createResult = await createIncreaseLPOrder(user0, margin, liquidity, executionFee);
-        
-        // wait for 6s (cancel )
-        blockchain.now = blockchain.now + 6;
 
         /// executor order
         const executeResult = await executeLPOrder(executor, createResult.orderIdBefore);
@@ -193,7 +186,7 @@ describe('LP', () => {
     it('should create decrease LP order', async () => {
         let margin = 10;
         let liquidity = 100;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -222,7 +215,7 @@ describe('LP', () => {
         /// create order
         let margin = 10;
         let liquidity = 100;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -231,9 +224,6 @@ describe('LP', () => {
         // create order
         const createResult = await createDecreaseLPOrder(user0, margin, liquidity, executionFee);
         console.log('orderId', createResult.orderIdBefore);
-
-        // wait for 6s (cancel )
-        blockchain.now = blockchain.now + 6;
 
         /// cancel order
         const cancelResult = await cancelLPOrder(executor, createResult.orderIdBefore);
@@ -257,7 +247,7 @@ describe('LP', () => {
         /// create order
         let margin = 10;
         let liquidity = 100;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -265,9 +255,6 @@ describe('LP', () => {
 
         // create order
         const createIncreaseResult = await createIncreaseLPOrder(user0, margin, liquidity, executionFee);
-        
-        // wait for 6s (cancel )
-        blockchain.now = blockchain.now + 6;
 
         /// executor order
         const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);

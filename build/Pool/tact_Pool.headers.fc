@@ -9,9 +9,6 @@ slice __tact_verify_address(slice address) inline;
 ;; __tact_load_address
 (slice, slice) __tact_load_address(slice cs) inline;
 
-;; __tact_load_address_opt
-(slice, slice) __tact_load_address_opt(slice cs) inline;
-
 ;; __tact_store_address
 builder __tact_store_address(builder b, slice address) inline;
 
@@ -164,6 +161,12 @@ builder $UpdatePriceEvent$_store(builder build_0, (int, cell) v) inline;
 
 ;; $UpdatePriceEvent$_store_cell
 cell $UpdatePriceEvent$_store_cell((int, cell) v) inline;
+
+;; $TokenConfig$_store
+builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int) v) inline_ref;
+
+;; $TokenConfig$_store_cell
+cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $TokenConfig$_load
 (slice, ((slice, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref;
@@ -330,8 +333,8 @@ tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, in
 ;; $TokenConfig$_to_opt_tuple
 tuple $TokenConfig$_to_opt_tuple(tuple v) inline;
 
-;; $TokenConfig$_to_opt_external
-tuple $TokenConfig$_to_opt_external(tuple v) inline;
+;; $TokenConfigData$_to_external
+(int, tuple) $TokenConfigData$_to_external(((int, tuple)) v) inline;
 
 ;; $RBFPosition$_to_tuple
 tuple $RBFPosition$_to_tuple(((int, int, int, int)) v) inline;
@@ -378,15 +381,6 @@ _ $PriceData$_get_price((int) v) inline;
 ;; $PriceData$_not_null
 ((int)) $PriceData$_not_null(tuple v) inline;
 
-;; $PriceData$_to_tuple
-tuple $PriceData$_to_tuple(((int)) v) inline;
-
-;; $PriceData$_to_opt_tuple
-tuple $PriceData$_to_opt_tuple(tuple v) inline;
-
-;; $PriceData$_to_opt_external
-tuple $PriceData$_to_opt_external(tuple v) inline;
-
 ;; $UpdatePrice$_get_tokenId
 _ $UpdatePrice$_get_tokenId((int, int) v) inline;
 
@@ -429,11 +423,11 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_configData
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), (int, int, int, int, int, int, slice)) $Pool$_fun_configData((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self) impure inline_ref;
 
-;; $Pool$_fun_tokenConfig
-((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), tuple) $Pool$_fun_tokenConfig((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, int $tokenId) impure inline_ref;
+;; $TokenConfigData$_constructor_tokenIdNext_tokenConfig
+((int, tuple)) $TokenConfigData$_constructor_tokenIdNext_tokenConfig(int tokenIdNext, tuple tokenConfig) inline;
 
-;; $Pool$_fun_priceData
-((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), tuple) $Pool$_fun_priceData((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, int $tokenId) impure inline_ref;
+;; $Pool$_fun_tokenConfig
+((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), (int, tuple)) $Pool$_fun_tokenConfig((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, int $tokenId) impure inline_ref;
 
 ;; $RBFPosition$_constructor_positionId_liquidity_bonus_unlockTime
 ((int, int, int, int)) $RBFPosition$_constructor_positionId_liquidity_bonus_unlockTime(int positionId, int liquidity, int bonus, int unlockTime) inline;

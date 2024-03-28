@@ -98,28 +98,24 @@ cell $DeployOk$_store_cell((int) v) inline {
 
 ;;
 ;; Type: UpdateConfig
-;; Header: 0xa152c301
-;; TLB: update_config#a152c301 executor:Maybe address enableExecutor:Maybe bool compensator:Maybe address enableCompensator:Maybe bool minTimeDelayExecutor:Maybe int257 maxTimeDelayExecutor:Maybe int257 minTimeDelayTrader:Maybe int257 minExecutionFee:Maybe int257 gasConsumption:Maybe int257 minTonsForStorage:Maybe int257 usdtWallet:Maybe address pool:Maybe address = UpdateConfig
+;; Header: 0x6de0047e
+;; TLB: update_config#6de0047e executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = UpdateConfig
 ;;
 
-(slice, ((slice, int, slice, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 2706555649);
+(slice, ((slice, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 1843397758);
     var v'executor = sc_0~__tact_load_address_opt();
     var v'enableExecutor = sc_0~load_int(1) ? sc_0~load_int(1) : null();
-    var v'compensator = sc_0~__tact_load_address_opt();
-    var v'enableCompensator = sc_0~load_int(1) ? sc_0~load_int(1) : null();
-    var v'minTimeDelayExecutor = sc_0~load_int(1) ? sc_0~load_int(257) : null();
+    var v'maxTimeDelayExecutor = sc_0~load_int(257);
+    var v'minTimeDelayTrader = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'maxTimeDelayExecutor = sc_1~load_int(1) ? sc_1~load_int(257) : null();
-    var v'minTimeDelayTrader = sc_1~load_int(1) ? sc_1~load_int(257) : null();
-    var v'minExecutionFee = sc_1~load_int(1) ? sc_1~load_int(257) : null();
+    var v'minExecutionFee = sc_1~load_int(257);
+    var v'gasConsumption = sc_1~load_int(257);
+    var v'minTonsForStorage = sc_1~load_int(257);
     slice sc_2 = sc_1~load_ref().begin_parse();
-    var v'gasConsumption = sc_2~load_int(1) ? sc_2~load_int(257) : null();
-    var v'minTonsForStorage = sc_2~load_int(1) ? sc_2~load_int(257) : null();
-    var v'usdtWallet = sc_2~__tact_load_address_opt();
-    slice sc_3 = sc_2~load_ref().begin_parse();
-    var v'pool = sc_3~__tact_load_address_opt();
-    return (sc_0, (v'executor, v'enableExecutor, v'compensator, v'enableCompensator, v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool));
+    var v'usdtWallet = sc_2~__tact_load_address();
+    var v'pool = sc_2~__tact_load_address();
+    return (sc_0, (v'executor, v'enableExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool));
 }
 
 ;;
@@ -694,16 +690,16 @@ cell $PerpPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: ConfigData
-;; TLB: _ isExecutor:Maybe bool isCompensator:Maybe bool minTimeDelayExecutor:int257 maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData
+;; TLB: _ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData
 ;;
 
-(int, int, int, int, int, int, int, int, slice, slice) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, slice, slice)) v) inline {
-    var (v'isExecutor, v'isCompensator, v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool) = v; 
-    return (v'isExecutor, v'isCompensator, v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool);
+(int, int, int, int, int, int, slice, slice) $ConfigData$_to_external(((int, int, int, int, int, int, slice, slice)) v) inline {
+    var (v'isExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool) = v; 
+    return (v'isExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool);
 }
 
-((int, int, int, int, int, int, int, int, slice, slice)) $ConfigData$_constructor_isExecutor_isCompensator_minTimeDelayExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool(int isExecutor, int isCompensator, int minTimeDelayExecutor, int maxTimeDelayExecutor, int minTimeDelayTrader, int minExecutionFee, int gasConsumption, int minTonsForStorage, slice usdtWallet, slice pool) inline {
-    return (isExecutor, isCompensator, minTimeDelayExecutor, maxTimeDelayExecutor, minTimeDelayTrader, minExecutionFee, gasConsumption, minTonsForStorage, usdtWallet, pool);
+((int, int, int, int, int, int, slice, slice)) $ConfigData$_constructor_isExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool(int isExecutor, int maxTimeDelayExecutor, int minTimeDelayTrader, int minExecutionFee, int gasConsumption, int minTonsForStorage, slice usdtWallet, slice pool) inline {
+    return (isExecutor, maxTimeDelayExecutor, minTimeDelayTrader, minExecutionFee, gasConsumption, minTonsForStorage, usdtWallet, pool);
 }
 
 ;;
@@ -1032,6 +1028,25 @@ tuple $PerpPositionOrder$_load_opt(cell cl) inline {
     return $PerpPositionOrder$_as_optional(sc~$PerpPositionOrder$_load());
 }
 
+tuple $PerpPositionOrder$_to_tuple(((int, int, slice, int, int, int, int, int, int, int, int, int, slice, slice)) v) inline {
+    var (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'executionFee, v'blockTime, v'isPending, v'callbackId, v'executionFeeReceiver, v'lastOperator) = v;
+    return __tact_tuple_create_14(v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'executionFee, v'blockTime, v'isPending, v'callbackId, v'executionFeeReceiver, v'lastOperator);
+}
+
+tuple $PerpPositionOrder$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $PerpPositionOrder$_to_tuple($PerpPositionOrder$_not_null(v)); 
+}
+
+tuple $PerpPositionOrder$_to_opt_external(tuple v) inline {
+    var loaded = $PerpPositionOrder$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
 ((int, int, slice, int, int, int, int, int, int, int, int, int, slice, slice)) $PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator(int opType, int tokenId, slice account, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int executionFee, int blockTime, int isPending, int callbackId, slice executionFeeReceiver, slice lastOperator) inline {
     return (opType, tokenId, account, isLong, marginDelta, sizeDelta, triggerPrice, triggerAbove, executionFee, blockTime, isPending, callbackId, executionFeeReceiver, lastOperator);
 }
@@ -1099,69 +1114,58 @@ tuple $PerpPositionOrderEx$_load_opt(cell cl) inline {
 ;; Type: OrderBook
 ;;
 
-builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) v) inline {
-    var (v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'tokenConfigs, v'tokenIndexNext, v'owner, v'executors, v'compensators, v'jettonCallbacks, v'jettonCallbackQueryIdNext, v'rbfPositionOrders, v'rbfPositionOrderIndexNext, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext) = v;
-    build_0 = build_0.store_int(v'minTimeDelayExecutor, 257);
+builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) v) inline {
+    var (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'executors, v'jettonCallbacks, v'jettonCallbackQueryIdNext, v'rbfPositionOrders, v'rbfPositionOrderIndexNext, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext) = v;
     build_0 = build_0.store_int(v'maxTimeDelayExecutor, 257);
     build_0 = build_0.store_int(v'minTimeDelayTrader, 257);
+    build_0 = build_0.store_int(v'minExecutionFee, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'minExecutionFee, 257);
     build_1 = build_1.store_int(v'gasConsumption, 257);
     build_1 = build_1.store_int(v'minTonsForStorage, 257);
+    build_1 = __tact_store_address(build_1, v'usdtWallet);
     var build_2 = begin_cell();
-    build_2 = __tact_store_address(build_2, v'usdtWallet);
     build_2 = __tact_store_address(build_2, v'pool);
-    build_2 = build_2.store_dict(v'tokenConfigs);
-    build_2 = build_2.store_uint(v'tokenIndexNext, 64);
     build_2 = __tact_store_address(build_2, v'owner);
     build_2 = build_2.store_dict(v'executors);
-    build_2 = build_2.store_dict(v'compensators);
+    build_2 = build_2.store_dict(v'jettonCallbacks);
+    build_2 = build_2.store_uint(v'jettonCallbackQueryIdNext, 64);
+    build_2 = build_2.store_dict(v'rbfPositionOrders);
+    build_2 = build_2.store_uint(v'rbfPositionOrderIndexNext, 64);
     var build_3 = begin_cell();
-    build_3 = build_3.store_dict(v'jettonCallbacks);
-    build_3 = build_3.store_uint(v'jettonCallbackQueryIdNext, 64);
-    build_3 = build_3.store_dict(v'rbfPositionOrders);
-    build_3 = build_3.store_uint(v'rbfPositionOrderIndexNext, 64);
     build_3 = build_3.store_dict(v'lpPositionOrders);
     build_3 = build_3.store_uint(v'lpPositionOrderIndexNext, 64);
-    var build_4 = begin_cell();
-    build_4 = build_4.store_dict(v'perpPositionOrders);
-    build_4 = build_4.store_dict(v'perpPositionOrderExs);
-    build_4 = build_4.store_uint(v'perpPositionOrderIndexNext, 64);
-    build_3 = store_ref(build_3, build_4.end_cell());
+    build_3 = build_3.store_dict(v'perpPositionOrders);
+    build_3 = build_3.store_dict(v'perpPositionOrderExs);
+    build_3 = build_3.store_uint(v'perpPositionOrderIndexNext, 64);
     build_2 = store_ref(build_2, build_3.end_cell());
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-(slice, ((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int))) $OrderBook$_load(slice sc_0) inline {
-    var v'minTimeDelayExecutor = sc_0~load_int(257);
+(slice, ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int))) $OrderBook$_load(slice sc_0) inline {
     var v'maxTimeDelayExecutor = sc_0~load_int(257);
     var v'minTimeDelayTrader = sc_0~load_int(257);
+    var v'minExecutionFee = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'minExecutionFee = sc_1~load_int(257);
     var v'gasConsumption = sc_1~load_int(257);
     var v'minTonsForStorage = sc_1~load_int(257);
+    var v'usdtWallet = sc_1~__tact_load_address();
     slice sc_2 = sc_1~load_ref().begin_parse();
-    var v'usdtWallet = sc_2~__tact_load_address();
     var v'pool = sc_2~__tact_load_address();
-    var v'tokenConfigs = sc_2~load_dict();
-    var v'tokenIndexNext = sc_2~load_uint(64);
     var v'owner = sc_2~__tact_load_address();
     var v'executors = sc_2~load_dict();
-    var v'compensators = sc_2~load_dict();
+    var v'jettonCallbacks = sc_2~load_dict();
+    var v'jettonCallbackQueryIdNext = sc_2~load_uint(64);
+    var v'rbfPositionOrders = sc_2~load_dict();
+    var v'rbfPositionOrderIndexNext = sc_2~load_uint(64);
     slice sc_3 = sc_2~load_ref().begin_parse();
-    var v'jettonCallbacks = sc_3~load_dict();
-    var v'jettonCallbackQueryIdNext = sc_3~load_uint(64);
-    var v'rbfPositionOrders = sc_3~load_dict();
-    var v'rbfPositionOrderIndexNext = sc_3~load_uint(64);
     var v'lpPositionOrders = sc_3~load_dict();
     var v'lpPositionOrderIndexNext = sc_3~load_uint(64);
-    slice sc_4 = sc_3~load_ref().begin_parse();
-    var v'perpPositionOrders = sc_4~load_dict();
-    var v'perpPositionOrderExs = sc_4~load_dict();
-    var v'perpPositionOrderIndexNext = sc_4~load_uint(64);
-    return (sc_0, (v'minTimeDelayExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'tokenConfigs, v'tokenIndexNext, v'owner, v'executors, v'compensators, v'jettonCallbacks, v'jettonCallbackQueryIdNext, v'rbfPositionOrders, v'rbfPositionOrderIndexNext, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext));
+    var v'perpPositionOrders = sc_3~load_dict();
+    var v'perpPositionOrderExs = sc_3~load_dict();
+    var v'perpPositionOrderIndexNext = sc_3~load_uint(64);
+    return (sc_0, (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'executors, v'jettonCallbacks, v'jettonCallbackQueryIdNext, v'rbfPositionOrders, v'rbfPositionOrderIndexNext, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext));
 }
 
 (slice, ((int))) $OrderBook$init$_load(slice sc_0) inline {
@@ -1169,7 +1173,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, slice,
     return (sc_0, (v'deployId));
 }
 
-(int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) $OrderBook$_contract_load() impure inline_ref {
+(int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $OrderBook$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1184,7 +1188,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, slice,
     }
 }
 
-() $OrderBook$_contract_store((int, int, int, int, int, int, slice, slice, cell, int, slice, cell, cell, cell, int, cell, int, cell, int, cell, cell, int) v) impure inline {
+() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

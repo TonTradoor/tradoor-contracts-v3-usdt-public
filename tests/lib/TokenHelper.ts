@@ -77,3 +77,11 @@ export async function getAllBalance() {
         user1JettonBalance: await getJettonBalance(TestEnv.user1.address),
     }
 }
+
+export function toPriceUnits(src: number | string | bigint) {
+    return toUnits(src, TestEnv.priceDecimal);
+}
+
+export function fromPriceUnits(src: number | string | bigint) {
+    return fromUnits(src, TestEnv.priceDecimal);
+}

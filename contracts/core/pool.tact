@@ -12,15 +12,15 @@ contract Pool with Deployable, Ownable {
     minTonsForStorage: Int = ton("0.03");
 
     tokenConfigs: map<Int, TokenConfig>; // tokenId => tokenConfig
-    tokenIndexNext: Int = 1;
+    tokenIdNext: Int = 1;
 
     // rbfLockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
     rbfLockTime: Int = 5 * 60; // TODO lock 5 min for test
     bonusFactor: Int = 1;
 
-    minLPMargin: Int = 10;
+    minLPMargin: Int = 10 * pow(10, 6);
     maxLPLeverage: Int = 100;
-    lpLiquidationFee: Int = 5 * pow(10, 5); // 0.5u
+    lpLiquidationFee: Int = 2 * pow(10, 5); // 0.2u
     lpMaxRiskRate: Int = pow(10, 6);
 
     // admin
@@ -60,33 +60,16 @@ contract Pool with Deployable, Ownable {
     // ======================================================== Admin ================================================================ //
     receive(msg: UpdateConfig) {
         self.requireOwner();
-        if (msg.gasConsumption != null){
-            self.gasConsumption = msg.gasConsumption!!;
-        }
-        if (msg.minTonsForStorage != null){
-            self.minTonsForStorage = msg.minTonsForStorage!!;
-        }
-        if (msg.rbfLockTime != null){
-            self.rbfLockTime = msg.rbfLockTime!!;
-        }
-        if (msg.bonusFactor != null){
-            self.bonusFactor = msg.bonusFactor!!;
-        }
-        if (msg.minLPMargin != null){
-            self.minLPMargin = msg.minLPMargin!!;
-        }
-        if (msg.maxLPLeverage != null){
-            self.maxLPLeverage = msg.maxLPLeverage!!;
-        }
-        if (msg.lpLiquidationFee != null){
-            self.lpLiquidationFee = msg.lpLiquidationFee!!;
-        }
-        if (msg.lpMaxRiskRate != null){
-            self.lpMaxRiskRate = msg.lpMaxRiskRate!!;
-        }
-        if (msg.orderBook != null){
-            self.orderBook = msg.orderBook!!;
-        }
+
+        self.gasConsumption = msg.gasConsumption;
+        self.minTonsForStorage = msg.minTonsForStorage;
+        self.rbfLockTime = msg.rbfLockTime;
+        self.bonusFactor = msg.bonusFactor;
+        self.minLPMargin = msg.minLPMargin;
+        self.maxLPLeverage = msg.maxLPLeverage;
+        self.lpLiquidationFee = msg.lpLiquidationFee;
+        self.lpMaxRiskRate = msg.lpMaxRiskRate;
+        self.orderBook = msg.orderBook;
         send(SendParameters{
             to: sender(),
             bounce: false,
@@ -102,49 +85,54 @@ contract Pool with Deployable, Ownable {
         let tokenConfig: TokenConfig = TokenConfig{
             name: "",
             enable: false,
-            minMargin: 1,
+            minMargin: 10 * pow(10, 6), // 10U
             maxLeverage: 50,
-            liquidationFee: 5 * pow(10, 5), // 0.5U
+            liquidationFee: 2 * pow(10, 5), // 0.2U
             tradingFeeRate: 1_000, // 0.1%
             lpTradingFeeRate: 300_000, // 30%
             protocalTradingFeeRate: 300_000, // 30%
             interestRate: 0,
             maxFundingRate: 0
         };
-        if (tokenConfigOpt != null) {
-            tokenConfig = tokenConfigOpt!!;
+        // if (tokenConfigOpt != null) {
+            // tokenConfig = tokenConfigOpt!!;
+        // }
+
+        // if (msg.name != null){
+            tokenConfig.name = msg.name;
+        // }
+        // if (msg.enable != null){
+            tokenConfig.enable = msg.enable;
+        // }
+        // if (msg.minMargin != null){
+            tokenConfig.minMargin = msg.minMargin;
+        // }
+        // if (msg.maxLeverage != null){
+            tokenConfig.maxLeverage = msg.maxLeverage;
+        // }
+        // if (msg.liquidationFee != null){
+            tokenConfig.liquidationFee = msg.liquidationFee;
+        // }
+        // if (msg.interestRate != null){
+            tokenConfig.interestRate = msg.interestRate;
+        // }
+        // if (msg.tradingFeeRate != null){
+            tokenConfig.tradingFeeRate = msg.tradingFeeRate;
+        // }
+        // if (msg.lpTradingFeeRate != null){
+            tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate;
+        // }
+        // if (msg.protocalTradingFeeRate != null){
+            tokenConfig.protocalTradingFeeRate = msg.protocalTradingFeeRate;
+        // }
+        // if (msg.maxFundingRate != null){
+            tokenConfig.maxFundingRate = msg.maxFundingRate;
+        // }
+        if (msg.tokenId >= self.tokenIdNext) {
+            self.tokenIdNext = msg.tokenId + 1;
         }
 
-        if (msg.name != null){
-            tokenConfig.name = msg.name!!;
-        }
-        if (msg.enable != null){
-            tokenConfig.enable = msg.enable!!;
-        }
-        if (msg.minMargin != null){
-            tokenConfig.minMargin = msg.minMargin!!;
-        }
-        if (msg.maxLeverage != null){
-            tokenConfig.maxLeverage = msg.maxLeverage!!;
-        }
-        if (msg.liquidationFee != null){
-            tokenConfig.liquidationFee = msg.liquidationFee!!;
-        }
-        if (msg.interestRate != null){
-            tokenConfig.interestRate = msg.interestRate!!;
-        }
-        if (msg.tradingFeeRate != null){
-            tokenConfig.tradingFeeRate = msg.tradingFeeRate!!;
-        }
-        if (msg.lpTradingFeeRate != null){
-            tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate!!;
-        }
-        if (msg.protocalTradingFeeRate != null){
-            tokenConfig.protocalTradingFeeRate = msg.protocalTradingFeeRate!!;
-        }
-        if (msg.maxFundingRate != null){
-            tokenConfig.maxFundingRate = msg.maxFundingRate!!;
-        }
+        self.tokenConfigs.set(msg.tokenId, tokenConfig);
         
         send(SendParameters{
             to: sender(),
@@ -166,13 +154,16 @@ contract Pool with Deployable, Ownable {
         };
     }
 
-    get fun tokenConfig(tokenId: Int): TokenConfig? {
-        return self.tokenConfigs.get(tokenId);
+    get fun tokenConfig(tokenId: Int): TokenConfigData {
+        return TokenConfigData{
+            tokenIdNext: self.tokenIdNext,
+            tokenConfig: self.tokenConfigs.get(tokenId)
+        };
     }
 
-    get fun priceData(tokenId: Int): PriceData? {
-        return self.prices.get(tokenId);
-    }
+    // get fun priceData(tokenId: Int): PriceData? {
+    //     return self.prices.get(tokenId);
+    // }
 
     // ======================================================== RBF ================================================================ //
     receive(msg: UpdateRBFPosition) {
@@ -745,8 +736,11 @@ contract Pool with Deployable, Ownable {
         let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let protocalTradingFee: Int = tradingFee * tokenConfig.protocalTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let rbfTradingFee: Int = tradingFee - lpTradingFee - protocalTradingFee;
-
-        self.globalLPLiquidity.tradingFeeGrowth += lpTradingFee * DECIMAL_FACTOR / self.globalLPLiquidity.liquidity;
+        if (self.globalLPLiquidity.liquidity != 0) {
+            self.globalLPLiquidity.tradingFeeGrowth += lpTradingFee * DECIMAL_FACTOR / self.globalLPLiquidity.liquidity;
+        } else {
+            protocalTradingFee += lpTradingFee;
+        }
         self.protocalTradingFee += protocalTradingFee;
         self.globalRBFPosition.riskBufferFund += lpRealizedPnl + rbfTradingFee;
 
@@ -765,6 +759,8 @@ contract Pool with Deployable, Ownable {
         // check maintain margin
         let unrealizedPnl: Int = self.calculateUnrealizedPnL(isLong, perpPosition.size, perpPosition.entryPrice, tradePrice);
         let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * DECIMAL_FACTOR) + tokenConfig.liquidationFee;
+        dump(maintenanceMargin);
+        dump(perpPosition.margin);
         require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
 
         // check leverage
@@ -905,7 +901,11 @@ contract Pool with Deployable, Ownable {
         let protocalTradingFee: Int = tradingFee * tokenConfig.protocalTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let rbfTradingFee: Int = tradingFee - lpTradingFee - protocalTradingFee;
 
-        self.globalLPLiquidity.tradingFeeGrowth += lpTradingFee * DECIMAL_FACTOR / self.globalLPLiquidity.liquidity;
+        if (self.globalLPLiquidity.liquidity != 0) {
+            self.globalLPLiquidity.tradingFeeGrowth += lpTradingFee * DECIMAL_FACTOR / self.globalLPLiquidity.liquidity;
+        } else {
+            protocalTradingFee += lpTradingFee;
+        }
         self.protocalTradingFee += protocalTradingFee;
         self.globalRBFPosition.riskBufferFund += lpRealizedPnl + rbfTradingFee;
 
@@ -1035,7 +1035,7 @@ contract Pool with Deployable, Ownable {
         dump("calculate total pnl");
         let totalGlobalUnrealizedPnl: Int = 0;
         let i: Int = 1;
-        while(i < self.tokenIndexNext) {
+        while(i < self.tokenIdNext) {
             let tokenEnabled: Bool = self.tokenEnabled(i);
             if (tokenEnabled) {
                 let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(i);

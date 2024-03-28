@@ -1,13 +1,11 @@
 // ============================ Config ================================ //
-struct TokenConfig {
-    name: String;
-    enable: Bool;
-}
+// struct TokenConfig {
+//     name: String;
+//     enable: Bool;
+// }
 
 struct ConfigData {
     isExecutor: Bool?;
-    isCompensator: Bool?;
-    minTimeDelayExecutor: Int;
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
     minExecutionFee: Int;

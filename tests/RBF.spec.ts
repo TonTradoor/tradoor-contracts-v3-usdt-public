@@ -43,11 +43,10 @@ describe('RBF', () => {
         expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('100'));
 
         // check config
-        let orderBookConfigData = await orderBook.getConfigData(executor.address, compensator.address);
+        let orderBookConfigData = await orderBook.getConfigData(executor.address);
         expect(orderBookConfigData.pool).toEqualAddress(pool.address);
         expect(orderBookConfigData.usdtWallet).toEqualAddress(orderBookJettonWallet.address);
         expect(orderBookConfigData.isExecutor).toBeTruthy();
-        expect(orderBookConfigData.isCompensator).toBeTruthy();
 
         let poolConfigData = await pool.getConfigData();
         expect(poolConfigData.orderBook).toEqualAddress(orderBook.address);
@@ -60,7 +59,7 @@ describe('RBF', () => {
 
     it('auto refund -- not enough execution fee', async () => {
         let liquidity = 10;
-        let executionFee = 0.1;
+        let executionFee = 0.05;
         
         // get orderBook TON balance
         console.log("orderBookTonBalance", await getFriendlyTonBalance(orderBook.address));
@@ -88,7 +87,7 @@ describe('RBF', () => {
 
     it('should create increase RBF order', async () => {
         let liquidity = 10;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -118,7 +117,7 @@ describe('RBF', () => {
     it('should cancel increase RBF order', async () => {
         /// create order
         let liquidity = 10;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -126,9 +125,6 @@ describe('RBF', () => {
 
         // create order
         const createResult = await createIncreaseRBFOrder(user0, liquidity, executionFee);
-        
-        // wait for 6s (cancel )
-        blockchain.now = blockchain.now + 6;
 
         /// cancel order
         const cancelResult = await cancelRBFOrder(executor, createResult.orderIdBefore);
@@ -153,7 +149,7 @@ describe('RBF', () => {
     it('should execute increase RBF', async () => {
         /// create order
         let liquidity = 10;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -161,9 +157,6 @@ describe('RBF', () => {
 
         // create order
         const createResult = await createIncreaseRBFOrder(user0, liquidity, executionFee);
-        
-        // wait for 6s (cancel )
-        blockchain.now = blockchain.now + 6;
 
         /// executor order
         const executeResult = await executeRBFOrder(executor, createResult.orderIdBefore);
@@ -186,7 +179,7 @@ describe('RBF', () => {
 
     it('should create decrease RBF order', async () => {
         let liquidity = 10;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -213,7 +206,7 @@ describe('RBF', () => {
     it('should cancel decrease RBF order', async () => {
         /// create order
         let liquidity = 10;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
@@ -222,9 +215,6 @@ describe('RBF', () => {
         // create order
         const createResult = await createDecreaseRBFOrder(user0, liquidity, executionFee);
         console.log('orderId', createResult.orderIdBefore);
-
-        // wait for 6s (cancel )
-        blockchain.now = blockchain.now + 6;
 
         /// cancel order
         const cancelResult = await cancelRBFOrder(executor, createResult.orderIdBefore);
@@ -247,7 +237,7 @@ describe('RBF', () => {
         /* =========================== increase RBF ================================ */
         /// create order
         let liquidity = 10;
-        let executionFee = 0.2;
+        let executionFee = 0.1;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
