@@ -1183,14 +1183,14 @@ contract OrderBook with Deployable, Ownable {
         }
 
         if (jettonFromAmount < marginDelta) {
-            self.refundJetton(queryId, jettonFromAmount, account, account);
             dump("refund from not enough margin");
+            self.refundJetton(queryId, jettonFromAmount, account, account);
             return;
         }
 
         if (executionFee < self.minExecutionFee) {
-            self.refundJetton(queryId, jettonFromAmount, account, account);
             dump("execution fee not enough");
+            self.refundJetton(queryId, jettonFromAmount, account, account);
             return;
         }
 
@@ -1214,6 +1214,7 @@ contract OrderBook with Deployable, Ownable {
         require(ctx.value - msg.executionFee >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
         // check execution fee TODO tp/sl
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
+        require(msg.opType == ORDER_OP_TYPE_DECREASE_MARKET || msg.opType == ORDER_OP_TYPE_DECREASE_TP || msg.opType == ORDER_OP_TYPE_DECREASE_SL, "invalid op type");
 
         // add new order
         self.createPerpOrder(msg.opType, sender(), msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.triggerPrice, 
@@ -1300,7 +1301,7 @@ contract OrderBook with Deployable, Ownable {
         let order: PerpPositionOrder = orderOpt!!;
 
         // check gas
-        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+        if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + ton("0.032"), "gas not enough");
         } else {
             require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
@@ -1308,7 +1309,7 @@ contract OrderBook with Deployable, Ownable {
 
         self.shouldCancel(order.blockTime, sender(), order.isPending);
 
-        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+        if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             // add callback
             let callbackId: Int = self.jettonCallbackQueryIdNext;
             self.jettonCallbackQueryIdNext = callbackId + 1;
@@ -1330,7 +1331,7 @@ contract OrderBook with Deployable, Ownable {
             order.isPending = true;
             order.callbackId = callbackId;
             self.perpPositionOrders.set(msg.orderId, order);
-
+            dump("cancel perp order");
             // transfer jetton
             self.refundJetton(callbackId, order.marginDelta, order.account, myAddress());
         } else {
@@ -1375,7 +1376,7 @@ contract OrderBook with Deployable, Ownable {
         let order: PerpPositionOrder = orderOpt!!;
 
         // check gas
-        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+        if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
         } else {
             require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
@@ -1524,7 +1525,7 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ============================ Liquidation ================================ //
-    receive(msg: LiquidatePerpPositionOrder) {
+    receive(msg: LiquidateOrADLPerpPosition) {
         let ctx: Context = context();
 
         // check gas
@@ -1606,7 +1607,7 @@ contract OrderBook with Deployable, Ownable {
         self.perpPositionOrders.set(orderId, null);
         self.perpPositionOrderExs.set(orderId, null);
 
-        if (order.opType == ORDER_OP_TYPE_INCREASE) {
+        if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             // event
             emit(PerpPositionOrderCancelledEvent{
                 opType: order.opType,

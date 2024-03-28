@@ -378,13 +378,13 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, int, cell) v
 }
 
 ;;
-;; Type: LiquidatePerpPositionOrder
-;; Header: 0x9ab10b46
-;; TLB: liquidate_perp_position_order#9ab10b46 executionFeeReceiver:Maybe address tokenId:int257 account:address isLong:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = LiquidatePerpPositionOrder
+;; Type: LiquidateOrADLPerpPosition
+;; Header: 0x1d571000
+;; TLB: liquidate_or_adl_perp_position#1d571000 executionFeeReceiver:Maybe address tokenId:int257 account:address isLong:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = LiquidateOrADLPerpPosition
 ;;
 
-(slice, ((slice, int, slice, int, int, int, cell))) $LiquidatePerpPositionOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 2595294022);
+(slice, ((slice, int, slice, int, int, int, cell))) $LiquidateOrADLPerpPosition$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 492244992);
     var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
     var v'tokenId = sc_0~load_int(257);
     var v'account = sc_0~__tact_load_address();

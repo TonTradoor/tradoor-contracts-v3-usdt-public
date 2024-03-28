@@ -68,7 +68,7 @@ export async function cancelPerpOrder(executor: SandboxContract<TreasuryContract
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano(0.3),
         },
         {
             $$type: 'CancelPerpPositionOrder',
@@ -109,7 +109,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano('0.3'),
         },
         {
             $$type: 'ExecutePerpPositionOrder',
@@ -153,7 +153,7 @@ export async function createDecreasePerpOrder(user: SandboxContract<TreasuryCont
     const trxResult = await TestEnv.orderBook.send(
         user.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano('0.3'),
         },
         {
             $$type: 'CreateDecreasePerpPositionOrder',

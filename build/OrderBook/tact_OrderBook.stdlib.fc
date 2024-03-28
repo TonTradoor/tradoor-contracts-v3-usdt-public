@@ -60,6 +60,8 @@ forall X -> X __tact_not_null(X x) inline {
 
 (slice, int) __tact_dict_get(cell dict, int key_len, slice index) asm(index dict key_len) "DICTGET" "NULLSWAPIFNOT";
 
+() __tact_debug_str(slice value) impure asm "STRDUMP" "DROP";
+
 (int, slice, int, slice) __tact_context_get() inline {
     return __tact_context;
 }

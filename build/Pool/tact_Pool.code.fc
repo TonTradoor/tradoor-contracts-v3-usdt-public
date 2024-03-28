@@ -343,6 +343,7 @@
         $globalLpPosition'isLong = (~ $isLong);
     }
     int $tradingFee = ((($sizeDelta * $tradePrice) * $tokenConfig'tradingFeeRate) / (1000000 * 100000000000000000000));
+    __tact_debug_str(__tact_int_to_string($tradingFee));
     int $lpTradingFee = (($tradingFee * $tokenConfig'lpTradingFeeRate) / 1000000);
     int $protocalTradingFee = (($tradingFee * $tokenConfig'protocalTradingFeeRate) / 1000000);
     int $rbfTradingFee = (($tradingFee - $lpTradingFee) - $protocalTradingFee);
@@ -363,7 +364,7 @@
     __tact_debug_str(__tact_int_to_string($maintenanceMargin));
     __tact_debug_str(__tact_int_to_string($perpPosition'margin));
     throw_unless(28603, ($maintenanceMargin < ($perpPosition'margin + $unrealizedPnl)));
-    throw_unless(42634, (($perpPosition'margin * $tokenConfig'maxLeverage) >= $perpPosition'size));
+    throw_unless(42634, (($perpPosition'margin * $tokenConfig'maxLeverage) >= (($perpPosition'size * $perpPosition'entryPrice) / 100000000000000000000)));
     if ($isLong) {
         ($directionPerpPosition'longPosition'positionId, $directionPerpPosition'longPosition'margin, $directionPerpPosition'longPosition'size, $directionPerpPosition'longPosition'entryPrice, $directionPerpPosition'longPosition'entryFundingFeeGrowth) = ($perpPosition'positionId, $perpPosition'margin, $perpPosition'size, $perpPosition'entryPrice, $perpPosition'entryFundingFeeGrowth);
     } else {

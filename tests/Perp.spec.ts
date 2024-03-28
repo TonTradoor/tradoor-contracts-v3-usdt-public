@@ -8,7 +8,7 @@ import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
-import { createIncreasePerpOrder, executePerpOrder } from './lib/PerpHelper';
+import { cancelPerpOrder, createIncreasePerpOrder, executePerpOrder } from './lib/PerpHelper';
 
 describe('LP', () => {
     let blockchain: Blockchain;
@@ -38,10 +38,12 @@ describe('LP', () => {
         user0JettonWallet = TestEnv.user0JettonWallet;
         orderBookJettonWallet = TestEnv.orderBookJettonWallet;
 
-        // mint to user0
-        await mint(user0.address, '100');
-        // get user jetton balance
-        expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('100'));
+        // mint
+        await mint(user0.address, '1000');
+        expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('1000'));
+
+        await mint(user1.address, '1000');
+        expect(await getJettonBalance(user1.address)).toEqual(toJettonUnits('1000'));
 
         // check config
         let orderBookConfigData = await orderBook.getConfigData(executor.address);
@@ -63,20 +65,16 @@ describe('LP', () => {
         let isMarket = true;
         let tokenId = 1;
         let isLong = true;
-        let margin = 10;
-        let size = 100;
-        let triggerPrice = 61000;
-        let tpsize = 0;
-        let tpPrice = 0;
-        let slSize = 0;
-        let slPrice = 0;
+        let margin = 100;
+        let size = 0.02;
+        let triggerPrice = 51000;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
         blockchain.now = time1;
 
         // create order
-        const createResult = await createIncreasePerpOrder(user0, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, tpsize, tpPrice, slSize, slPrice);
+        const createResult = await createIncreasePerpOrder(user0, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
             to: orderBook.address,
@@ -98,20 +96,23 @@ describe('LP', () => {
     });
 
     it('should cancel increase perp order', async () => {
-        /// create order
-        let margin = 10;
-        let liquidity = 100;
         let executionFee = 0.1;
+        let isMarket = true;
+        let tokenId = 1;
+        let isLong = true;
+        let margin = 100;
+        let size = 0.02;
+        let triggerPrice = 51000;
 
         // set block time
         const time1 = Math.floor(Date.now() / 1000); 
         blockchain.now = time1;
 
         // create order
-        const createResult = await createIncreaseLPOrder(user0, margin, liquidity, executionFee);
-
+        const createResult = await createIncreasePerpOrder(user0, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        
         /// cancel order
-        const cancelResult = await cancelLPOrder(executor, createResult.orderIdBefore);
+        const cancelResult = await cancelPerpOrder(executor, createResult.orderIdBefore);
         printTransactionFees(cancelResult.trxResult.transactions);
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
@@ -168,13 +169,13 @@ describe('LP', () => {
         let isMarket = true;
         let tokenId = 1;
         let isLong = true;
-        let margin = 10;
-        let size = 100;
-        let triggerPrice = 61000;
-        let indexPrice = 60000;
+        let margin = 100;
+        let size = 0.02; // 1000u
+        let triggerPrice = 51000;
+        let indexPrice = 50000;
 
         // create order
-        const createResult = await createIncreasePerpOrder(user0, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
             to: orderBook.address,
@@ -197,7 +198,9 @@ describe('LP', () => {
         // check position
         let perpPosition = executeResult.positionAfter;
         expect(perpPosition).not.toBeNull();
-        expect(perpPosition?.margin).toEqual(toJettonUnits(margin));
+        let tradingFee = size * indexPrice * TestEnv.tradingFeeRate;
+        console.log('tradingFee:', tradingFee);
+        expect(perpPosition?.margin).toEqual(toJettonUnits(margin - tradingFee));
         expect(perpPosition?.size).toEqual(toJettonUnits(size));
     });
 

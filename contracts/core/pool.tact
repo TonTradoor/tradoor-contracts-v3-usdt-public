@@ -733,6 +733,7 @@ contract Pool with Deployable, Ownable {
 
         // trading fee
         let tradingFee: Int = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * DECIMAL_FACTOR);
+        dump(tradingFee);
         let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let protocalTradingFee: Int = tradingFee * tokenConfig.protocalTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let rbfTradingFee: Int = tradingFee - lpTradingFee - protocalTradingFee;
@@ -764,7 +765,7 @@ contract Pool with Deployable, Ownable {
         require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
 
         // check leverage
-        require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size, "legerage too high");
+        require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size * perpPosition.entryPrice / DECIMAL_FACTOR, "legerage too high");
 
         // update position
         if (isLong) {

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 14728 bytes
+BOC Size: 15569 bytes
 
 # Types
 Total Types: 47
@@ -113,9 +113,9 @@ Signature: `CancelPerpPositionOrder{executionFeeReceiver:Maybe address,orderId:i
 TLB: `execute_perp_position_order#e30b9e9b executionFeeReceiver:Maybe address orderId:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecutePerpPositionOrder`
 Signature: `ExecutePerpPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
-## LiquidatePerpPositionOrder
-TLB: `liquidate_perp_position_order#9ab10b46 executionFeeReceiver:Maybe address tokenId:int257 account:address isLong:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = LiquidatePerpPositionOrder`
-Signature: `LiquidatePerpPositionOrder{executionFeeReceiver:Maybe address,tokenId:int257,account:address,isLong:bool,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+## LiquidateOrADLPerpPosition
+TLB: `liquidate_or_adl_perp_position#1d571000 executionFeeReceiver:Maybe address tokenId:int257 account:address isLong:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = LiquidateOrADLPerpPosition`
+Signature: `LiquidateOrADLPerpPosition{executionFeeReceiver:Maybe address,tokenId:int257,account:address,isLong:bool,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdatePerpPosition
 TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:int257 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition`
@@ -248,3 +248,4 @@ Argument: orderId
 32637: order not exist
 39703: too early
 41207: invalid sender
+54499: invalid op type

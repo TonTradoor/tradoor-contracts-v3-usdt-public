@@ -150,11 +150,12 @@ message ExecutePerpPositionOrder {
     prices: map<Int, UpdatePrice>;
 }
 
-message LiquidatePerpPositionOrder {
+message LiquidateOrADLPerpPosition {
     executionFeeReceiver: Address?;
     tokenId: Int;
     account: Address;
     isLong: Bool;
+    // adlSize: Int;
     trxId: Int;
     pricesLength: Int;
     prices: map<Int, UpdatePrice>;

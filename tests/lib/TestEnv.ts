@@ -25,6 +25,8 @@ export class TestEnv {
     static jettonDecimal: number = 6;
     static priceDecimal: number = 20;
 
+    static tradingFeeRate: number = 0.001;
+
     static async resetEnv() {
         TestEnv.blockchain = await Blockchain.create();
         TestEnv.orderBook = TestEnv.blockchain.openContract(await OrderBook.fromInit(0n));
@@ -175,7 +177,7 @@ export class TestEnv {
                 minMargin: toJettonUnits(10), // 10U
                 maxLeverage: 100n,
                 liquidationFee: toJettonUnits(0.2), // 0.2U
-                tradingFeeRate: 1_000n, // 0.1%
+                tradingFeeRate: BigInt(TestEnv.tradingFeeRate * 1000000), // 0.1%
                 lpTradingFeeRate: 300_000n, // 30%
                 protocalTradingFeeRate: 300_000n, // 30%
                 interestRate: 0n,
