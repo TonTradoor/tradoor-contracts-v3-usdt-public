@@ -1,7 +1,7 @@
 // ============================ RBF ================================ //
 // increase RBF
 message RBFPositionOrderCreatedEvent {
-    isIncrease: Bool;
+    opType: Int as uint8;
     account: Address;
     liquidityDelta: Int;
     executionFee: Int;
@@ -9,13 +9,13 @@ message RBFPositionOrderCreatedEvent {
 }
 
 message RBFPositionOrderCancelledEvent {
-    isIncrease: Bool;
+    opType: Int as uint8;
     orderId: Int;
     trxId: Int;
 }
 
 message RBFPositionOrderExecutedEvent {
-    isIncrease: Bool;
+    opType: Int as uint8;
     orderId: Int;
     trxId: Int;
 }
