@@ -80,7 +80,9 @@ export async function cancelRBFOrder(executor: SandboxContract<TreasuryContract>
 export async function executeRBFOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
     let balanceBefore = await getAllBalance();
     let orderBefore = await TestEnv.orderBook.getRbfPositionOrder(orderId);
-    let positionBefore = await TestEnv.pool.getRbfPosition(orderBefore?.account!!);
+    let positionDataBefore = await TestEnv.pool.getRbfPosition(orderBefore?.account!!);
+    let positionBefore = positionDataBefore?.rbfPosition;
+    let globalPositionBefore = positionDataBefore?.globalRBFPosition;
     
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
@@ -100,14 +102,18 @@ export async function executeRBFOrder(executor: SandboxContract<TreasuryContract
     // after trx
     let balanceAfter = await getAllBalance();
     let order = await TestEnv.orderBook.getRbfPositionOrder(orderId);
-    let positionAfter = await TestEnv.pool.getRbfPosition(orderBefore?.account!!);
-
+    let positionDataAfter = await TestEnv.pool.getRbfPosition(orderBefore?.account!!);
+    let positionAfter = positionDataAfter?.rbfPosition;
+    let globalPositionAfter = positionDataAfter?.globalRBFPosition;
+    
     return {
         trxResult,
         balanceBefore,
         balanceAfter,
         positionBefore,
         positionAfter,
+        globalPositionBefore,
+        globalPositionAfter,
         order
     };
 }

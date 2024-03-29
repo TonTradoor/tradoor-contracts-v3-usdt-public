@@ -81,7 +81,9 @@ export async function cancelLPOrder(executor: SandboxContract<TreasuryContract>,
 export async function executeLPOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
     let balanceBefore = await getAllBalance();
     let orderBefore = await TestEnv.orderBook.getLpPositionOrder(orderId);
-    let positionBefore = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
+    let positionDataBefore = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
+    let positionBefore = positionDataBefore?.lpPosition;
+    let globalLiquidityBefore = positionDataBefore?.globalLPLiquidity;
     
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
@@ -101,14 +103,18 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
     // after trx
     let balanceAfter = await getAllBalance();
     let order = await TestEnv.orderBook.getLpPositionOrder(orderId);
-    let positionAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
-
+    let positionDataAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
+    let positionAfter = positionDataAfter?.lpPosition;
+    let globalLiquidityAfter = positionDataAfter?.globalLPLiquidity;
+    
     return {
         trxResult,
         balanceBefore,
         balanceAfter,
         positionBefore,
         positionAfter,
+        globalLiquidityBefore,
+        globalLiquidityAfter,
         order
     };
 }

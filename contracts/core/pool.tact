@@ -167,7 +167,6 @@ contract Pool with Deployable, Ownable {
 
     // ======================================================== RBF ================================================================ //
     receive(msg: UpdateRBFPosition) {
-        dump("receive update position msg");
         require(sender() == self.orderBook, "invalid sender");
 
         // update price
@@ -197,7 +196,6 @@ contract Pool with Deployable, Ownable {
                 trxId: msg.trxId
             }.toCell()
         });
-        dump("send update RBF position msg");
     }
 
     fun increaseRBFPosition(account: Address, liquidityDelta: Int, trxId: Int) {
@@ -227,9 +225,7 @@ contract Pool with Deployable, Ownable {
         if (globalNetRBF < self.globalRBFPosition.liquidity) {
             // bonus = b + s (1 - x) * liquidity
             bonus = self.bonusFactor * (self.globalRBFPosition.liquidity - globalNetRBF)
-                 * liquidityDelta / self.globalRBFPosition.liquidity;
-            dump("bonus:");
-            dump(bonus);
+                 * liquidityDelta / self.globalRBFPosition.liquidity;                         
             rbfPosition.bonus = rbfPosition.bonus + bonus;
         }
 
@@ -238,9 +234,6 @@ contract Pool with Deployable, Ownable {
         rbfPosition.unlockTime = now() + self.rbfLockTime;
 
         // set position
-        dump("execute increase rbf position");
-        dump(beginCell().storeAddress(account).endCell().hash());
-
         self.rbfPositions.set(account, rbfPosition);
 
         // update global position
@@ -264,7 +257,6 @@ contract Pool with Deployable, Ownable {
             liquidation: 0,
             trxId: trxId
         }.toCell());
-        dump("increase rbf position success");
     }
 
     fun decreaseRBFPosition(account: Address, liquidityDelta: Int, trxId: Int): Int {
@@ -275,8 +267,6 @@ contract Pool with Deployable, Ownable {
         let rbfPosition: RBFPosition = rbfPositionOpt!!;
 
         // check unlock time
-        dump(rbfPosition.unlockTime);
-        dump(now());
         require(rbfPosition.unlockTime <= now(), "not reach unlock time");
 
         // decrease liquidity delta
@@ -319,9 +309,6 @@ contract Pool with Deployable, Ownable {
         rbfPosition.bonus = rbfPosition.bonus - bonus;
 
         // set position
-        dump("execute decrease rbf position");
-        dump(beginCell().storeAddress(account).endCell().hash());
-
         if (rbfPosition.liquidity > 0 || rbfPosition.bonus > 0) {
             self.rbfPositions.set(account, rbfPosition);
         } else {
@@ -353,13 +340,19 @@ contract Pool with Deployable, Ownable {
         return receive;
     }
 
-    get fun rbfPosition(account: Address): RBFPosition? {
-        return self.rbfPositions.get(account);
+    get fun rbfPosition(account: Address?): RBFPositionData? {
+        let rbfPosition: RBFPosition? = null; 
+        if (account != null) {
+            rbfPosition = self.rbfPositions.get(account!!);
+        }
+        return RBFPositionData {
+            rbfPosition: rbfPosition,
+            globalRBFPosition: self.globalRBFPosition
+        };
     }
 
     // ============================ LP ================================ //
     receive(msg: UpdateLPPosition) {
-        dump("receive update LP position msg");
         require(sender() == self.orderBook, "invalid sender");
 
         // update price
@@ -391,7 +384,6 @@ contract Pool with Deployable, Ownable {
                 trxId: msg.trxId
             }.toCell()
         });
-        dump("send update LP position msg");
     }
 
     fun increaseLPPosition(account: Address, marginDelta: Int, liquidityDelta: Int, trxId: Int) {
@@ -446,9 +438,6 @@ contract Pool with Deployable, Ownable {
         lpPosition.entryTradingFeeGrowth = self.lpTradingFeeGrowth;
 
         // set position
-        dump("execute increase lp position order");
-        dump(beginCell().storeAddress(account).endCell().hash());
-
         self.lpPositions.set(account, lpPosition);
 
         // update global position
@@ -593,8 +582,6 @@ contract Pool with Deployable, Ownable {
             }.toCell());
         }
         
-        dump("execute decrease lp position order");
-
         // update global position
         self.globalLPLiquidity.margin = self.globalLPLiquidity.margin - marginDelta;
         self.globalLPLiquidity.liquidity = self.globalLPLiquidity.liquidity - liquidityDelta;
@@ -607,13 +594,19 @@ contract Pool with Deployable, Ownable {
         return receive;
     }
 
-    get fun lpPosition(account: Address): LPPosition? {
-        return self.lpPositions.get(account);
+    get fun lpPosition(account: Address?): LPPositionData? {
+        let lpPosition: LPPosition? = null;
+        if (account != null) {
+            lpPosition = self.lpPositions.get(account!!);
+        }
+        return LPPositionData {
+            lpPosition: lpPosition,
+            globalLPLiquidity: self.globalLPLiquidity
+        };
     }
 
     // ============================ Perp ================================ //
     receive(msg: UpdatePerpPosition) {
-        dump("receive update LP position msg");
         require(sender() == self.orderBook, "invalid sender");
 
         // update price
@@ -661,7 +654,6 @@ contract Pool with Deployable, Ownable {
                 trxId: msg.trxId
             }.toCell()
         });
-        dump("send update perp position msg");
     }
 
     fun increasePerpPosition(trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int) {
@@ -733,7 +725,6 @@ contract Pool with Deployable, Ownable {
 
         // trading fee
         let tradingFee: Int = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * DECIMAL_FACTOR);
-        dump(tradingFee);
         let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let protocalTradingFee: Int = tradingFee * tokenConfig.protocalTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let rbfTradingFee: Int = tradingFee - lpTradingFee - protocalTradingFee;
@@ -760,8 +751,6 @@ contract Pool with Deployable, Ownable {
         // check maintain margin
         let unrealizedPnl: Int = self.calculateUnrealizedPnL(isLong, perpPosition.size, perpPosition.entryPrice, tradePrice);
         let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * DECIMAL_FACTOR) + tokenConfig.liquidationFee;
-        dump(maintenanceMargin);
-        dump(perpPosition.margin);
         require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
 
         // check leverage
@@ -938,19 +927,18 @@ contract Pool with Deployable, Ownable {
         } else {
             // position pnl
             let realizedPnl: Int = self.calculateUnrealizedPnL(isLong, sizeDelta, perpPosition.entryPrice, tradePrice);
-
             // check liquidity
             require(globalLpPosition.netSize <= self.globalRBFPosition.riskBufferFund + self.calculateTotalGlobalUnrealizedPnl() + self.globalLPLiquidity.liquidity, 
                 "insufficient liquidity");
 
             // update position
             perpPosition.margin += realizedPnl + fundingFee - tradingFee;
+                                    
             require(perpPosition.margin >= 0, "insufficient margin");
             if (marginDelta > perpPosition.margin) {
                 marginDelta = perpPosition.margin;
             }
             perpPosition.margin -= marginDelta;
-            perpPosition.entryPrice = self.calculateEntryPrice(perpPosition.size, perpPosition.entryPrice, sizeDelta, tradePrice);
             perpPosition.size -= sizeDelta;
 
             if (perpPosition.size > 0) {
@@ -1020,20 +1008,24 @@ contract Pool with Deployable, Ownable {
         return receive;
     }
 
-    get fun perpPosition(tokenId: Int, account: Address): DirectionPerpPosition? {
+    get fun perpPosition(tokenId: Int, account: Address?): PerpPositionData? {
         // get position
-        if (self.perpPositions.get(tokenId) == null) {
-            return null;
+        let perpPosition: DirectionPerpPosition? = null;
+        if (account != null) {
+            let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
+            if (accountPerpPositionOpt != null) {
+                perpPosition = (accountPerpPositionOpt!!).positions.get(account!!);
+            }
         }
-
-        let accountPerpPosition: AccountPerpPosition = self.perpPositions.get(tokenId)!!;
-        return accountPerpPosition.positions.get(account);
+        return PerpPositionData{
+            perpPosition: perpPosition,
+            globalLPPosition: self.globalLPPositions.get(tokenId)
+        };
     }
 
     // ============================ private function ================================ //
     // TODO update token pnl in trx, save gas
     fun calculateTotalGlobalUnrealizedPnl(): Int {
-        dump("calculate total pnl");
         let totalGlobalUnrealizedPnl: Int = 0;
         let i: Int = 1;
         while(i < self.tokenIdNext) {
@@ -1052,7 +1044,6 @@ contract Pool with Deployable, Ownable {
             }
             i = i + 1;
         }
-        dump(totalGlobalUnrealizedPnl);
         return totalGlobalUnrealizedPnl;
     }
 

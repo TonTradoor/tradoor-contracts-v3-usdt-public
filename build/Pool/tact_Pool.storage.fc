@@ -804,15 +804,6 @@ tuple $RBFPosition$_to_opt_tuple(tuple v) inline {
     return $RBFPosition$_to_tuple($RBFPosition$_not_null(v)); 
 }
 
-tuple $RBFPosition$_to_opt_external(tuple v) inline {
-    var loaded = $RBFPosition$_to_opt_tuple(v);
-    if (null?(loaded)) {
-        return null();
-    } else {
-        return (loaded);
-    }
-}
-
 ((int, int, int, int)) $RBFPosition$_constructor_positionId_liquidity_bonus_unlockTime(int positionId, int liquidity, int bonus, int unlockTime) inline {
     return (positionId, liquidity, bonus, unlockTime);
 }
@@ -835,8 +826,52 @@ builder $GlobalRBFPosition$_store(builder build_0, (int, int) v) inline {
     return (sc_0, (v'riskBufferFund, v'liquidity));
 }
 
+tuple $GlobalRBFPosition$_to_tuple(((int, int)) v) inline {
+    var (v'riskBufferFund, v'liquidity) = v;
+    return __tact_tuple_create_2(v'riskBufferFund, v'liquidity);
+}
+
 ((int, int)) $GlobalRBFPosition$_constructor_riskBufferFund_liquidity(int riskBufferFund, int liquidity) inline {
     return (riskBufferFund, liquidity);
+}
+
+;;
+;; Type: RBFPositionData
+;; TLB: _ rbfPosition:Maybe RBFPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTime:int257} globalRBFPosition:GlobalRBFPosition{riskBufferFund:int257,liquidity:int257} = RBFPositionData
+;;
+
+((tuple, (int, int))) $RBFPositionData$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (tuple vvv'rbfPosition, int vvv'globalRBFPosition'riskBufferFund, int vvv'globalRBFPosition'liquidity) = __tact_tuple_destroy_3(v);
+    return (vvv'rbfPosition, (vvv'globalRBFPosition'riskBufferFund, vvv'globalRBFPosition'liquidity));
+}
+
+tuple $RBFPositionData$_as_optional((tuple, (int, int)) v) inline {
+    var (v'rbfPosition, (v'globalRBFPosition'riskBufferFund, v'globalRBFPosition'liquidity)) = v;
+    return __tact_tuple_create_3(v'rbfPosition, v'globalRBFPosition'riskBufferFund, v'globalRBFPosition'liquidity);
+}
+
+tuple $RBFPositionData$_to_tuple(((tuple, (int, int))) v) inline {
+    var (v'rbfPosition, v'globalRBFPosition) = v;
+    return __tact_tuple_create_2($RBFPosition$_to_opt_tuple(v'rbfPosition), $GlobalRBFPosition$_to_tuple(v'globalRBFPosition));
+}
+
+tuple $RBFPositionData$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $RBFPositionData$_to_tuple($RBFPositionData$_not_null(v)); 
+}
+
+tuple $RBFPositionData$_to_opt_external(tuple v) inline {
+    var loaded = $RBFPositionData$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
+((tuple, (int, int))) $RBFPositionData$_constructor_rbfPosition_globalRBFPosition(tuple rbfPosition, (int, int) globalRBFPosition) inline {
+    return (rbfPosition, globalRBFPosition);
 }
 
 ;;
@@ -906,15 +941,6 @@ tuple $LPPosition$_to_opt_tuple(tuple v) inline {
     return $LPPosition$_to_tuple($LPPosition$_not_null(v)); 
 }
 
-tuple $LPPosition$_to_opt_external(tuple v) inline {
-    var loaded = $LPPosition$_to_opt_tuple(v);
-    if (null?(loaded)) {
-        return null();
-    } else {
-        return (loaded);
-    }
-}
-
 ((int, int, int, int, int)) $LPPosition$_constructor_positionId_margin_liquidity_entryFundingFeeGrowth_entryTradingFeeGrowth(int positionId, int margin, int liquidity, int entryFundingFeeGrowth, int entryTradingFeeGrowth) inline {
     return (positionId, margin, liquidity, entryFundingFeeGrowth, entryTradingFeeGrowth);
 }
@@ -944,55 +970,52 @@ builder $GlobalLPLiquidity$_store(builder build_0, (int, int, int, int) v) inlin
     return (sc_0, (v'margin, v'liquidity, v'fundingFeeGrowth, v'tradingFeeGrowth));
 }
 
+tuple $GlobalLPLiquidity$_to_tuple(((int, int, int, int)) v) inline {
+    var (v'margin, v'liquidity, v'fundingFeeGrowth, v'tradingFeeGrowth) = v;
+    return __tact_tuple_create_4(v'margin, v'liquidity, v'fundingFeeGrowth, v'tradingFeeGrowth);
+}
+
 ((int, int, int, int)) $GlobalLPLiquidity$_constructor_margin_liquidity_fundingFeeGrowth_tradingFeeGrowth(int margin, int liquidity, int fundingFeeGrowth, int tradingFeeGrowth) inline {
     return (margin, liquidity, fundingFeeGrowth, tradingFeeGrowth);
 }
 
 ;;
-;; Type: GlobalLPPosition
-;; TLB: _ netSize:int257 isLong:bool entryPrice:int257 = GlobalLPPosition
+;; Type: LPPositionData
+;; TLB: _ lpPosition:Maybe LPPosition{positionId:int257,margin:int257,liquidity:int257,entryFundingFeeGrowth:int257,entryTradingFeeGrowth:int257} globalLPLiquidity:GlobalLPLiquidity{margin:int257,liquidity:int257,fundingFeeGrowth:int257,tradingFeeGrowth:int257} = LPPositionData
 ;;
 
-builder $GlobalLPPosition$_store(builder build_0, (int, int, int) v) inline {
-    var (v'netSize, v'isLong, v'entryPrice) = v;
-    build_0 = build_0.store_int(v'netSize, 257);
-    build_0 = build_0.store_int(v'isLong, 1);
-    build_0 = build_0.store_int(v'entryPrice, 257);
-    return build_0;
-}
-
-cell $GlobalLPPosition$_store_cell((int, int, int) v) inline {
-    return $GlobalLPPosition$_store(begin_cell(), v).end_cell();
-}
-
-(slice, ((int, int, int))) $GlobalLPPosition$_load(slice sc_0) inline {
-    var v'netSize = sc_0~load_int(257);
-    var v'isLong = sc_0~load_int(1);
-    var v'entryPrice = sc_0~load_int(257);
-    return (sc_0, (v'netSize, v'isLong, v'entryPrice));
-}
-
-tuple $GlobalLPPosition$_as_optional((int, int, int) v) inline {
-    var (v'netSize, v'isLong, v'entryPrice) = v;
-    return __tact_tuple_create_3(v'netSize, v'isLong, v'entryPrice);
-}
-
-tuple $GlobalLPPosition$_load_opt(cell cl) inline {
-    if (null?(cl)) {
-        return null();
-    }
-    var sc = cl.begin_parse();
-    return $GlobalLPPosition$_as_optional(sc~$GlobalLPPosition$_load());
-}
-
-((int, int, int)) $GlobalLPPosition$_not_null(tuple v) inline {
+((tuple, (int, int, int, int))) $LPPositionData$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'netSize, int vvv'isLong, int vvv'entryPrice) = __tact_tuple_destroy_3(v);
-    return (vvv'netSize, vvv'isLong, vvv'entryPrice);
+    var (tuple vvv'lpPosition, int vvv'globalLPLiquidity'margin, int vvv'globalLPLiquidity'liquidity, int vvv'globalLPLiquidity'fundingFeeGrowth, int vvv'globalLPLiquidity'tradingFeeGrowth) = __tact_tuple_destroy_5(v);
+    return (vvv'lpPosition, (vvv'globalLPLiquidity'margin, vvv'globalLPLiquidity'liquidity, vvv'globalLPLiquidity'fundingFeeGrowth, vvv'globalLPLiquidity'tradingFeeGrowth));
 }
 
-((int, int, int)) $GlobalLPPosition$_constructor_netSize_isLong_entryPrice(int netSize, int isLong, int entryPrice) inline {
-    return (netSize, isLong, entryPrice);
+tuple $LPPositionData$_as_optional((tuple, (int, int, int, int)) v) inline {
+    var (v'lpPosition, (v'globalLPLiquidity'margin, v'globalLPLiquidity'liquidity, v'globalLPLiquidity'fundingFeeGrowth, v'globalLPLiquidity'tradingFeeGrowth)) = v;
+    return __tact_tuple_create_5(v'lpPosition, v'globalLPLiquidity'margin, v'globalLPLiquidity'liquidity, v'globalLPLiquidity'fundingFeeGrowth, v'globalLPLiquidity'tradingFeeGrowth);
+}
+
+tuple $LPPositionData$_to_tuple(((tuple, (int, int, int, int))) v) inline {
+    var (v'lpPosition, v'globalLPLiquidity) = v;
+    return __tact_tuple_create_2($LPPosition$_to_opt_tuple(v'lpPosition), $GlobalLPLiquidity$_to_tuple(v'globalLPLiquidity));
+}
+
+tuple $LPPositionData$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $LPPositionData$_to_tuple($LPPositionData$_not_null(v)); 
+}
+
+tuple $LPPositionData$_to_opt_external(tuple v) inline {
+    var loaded = $LPPositionData$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
+((tuple, (int, int, int, int))) $LPPositionData$_constructor_lpPosition_globalLPLiquidity(tuple lpPosition, (int, int, int, int) globalLPLiquidity) inline {
+    return (lpPosition, globalLPLiquidity);
 }
 
 ;;
@@ -1026,6 +1049,11 @@ tuple $AccountPerpPosition$_load_opt(cell cl) inline {
     }
     var sc = cl.begin_parse();
     return $AccountPerpPosition$_as_optional(sc~$AccountPerpPosition$_load());
+}
+
+_ $AccountPerpPosition$_get_positions((cell) v) inline {
+    var (v'positions) = v;
+    return v'positions;
 }
 
 ((cell)) $AccountPerpPosition$_not_null(tuple v) inline {
@@ -1128,8 +1156,95 @@ tuple $DirectionPerpPosition$_to_opt_tuple(tuple v) inline {
     return $DirectionPerpPosition$_to_tuple($DirectionPerpPosition$_not_null(v)); 
 }
 
-tuple $DirectionPerpPosition$_to_opt_external(tuple v) inline {
-    var loaded = $DirectionPerpPosition$_to_opt_tuple(v);
+(((int, int, int, int, int), (int, int, int, int, int))) $DirectionPerpPosition$_constructor_longPosition_shortPosition((int, int, int, int, int) longPosition, (int, int, int, int, int) shortPosition) inline {
+    return (longPosition, shortPosition);
+}
+
+;;
+;; Type: GlobalLPPosition
+;; TLB: _ netSize:int257 isLong:bool entryPrice:int257 = GlobalLPPosition
+;;
+
+builder $GlobalLPPosition$_store(builder build_0, (int, int, int) v) inline {
+    var (v'netSize, v'isLong, v'entryPrice) = v;
+    build_0 = build_0.store_int(v'netSize, 257);
+    build_0 = build_0.store_int(v'isLong, 1);
+    build_0 = build_0.store_int(v'entryPrice, 257);
+    return build_0;
+}
+
+cell $GlobalLPPosition$_store_cell((int, int, int) v) inline {
+    return $GlobalLPPosition$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((int, int, int))) $GlobalLPPosition$_load(slice sc_0) inline {
+    var v'netSize = sc_0~load_int(257);
+    var v'isLong = sc_0~load_int(1);
+    var v'entryPrice = sc_0~load_int(257);
+    return (sc_0, (v'netSize, v'isLong, v'entryPrice));
+}
+
+tuple $GlobalLPPosition$_as_optional((int, int, int) v) inline {
+    var (v'netSize, v'isLong, v'entryPrice) = v;
+    return __tact_tuple_create_3(v'netSize, v'isLong, v'entryPrice);
+}
+
+tuple $GlobalLPPosition$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $GlobalLPPosition$_as_optional(sc~$GlobalLPPosition$_load());
+}
+
+((int, int, int)) $GlobalLPPosition$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'netSize, int vvv'isLong, int vvv'entryPrice) = __tact_tuple_destroy_3(v);
+    return (vvv'netSize, vvv'isLong, vvv'entryPrice);
+}
+
+tuple $GlobalLPPosition$_to_tuple(((int, int, int)) v) inline {
+    var (v'netSize, v'isLong, v'entryPrice) = v;
+    return __tact_tuple_create_3(v'netSize, v'isLong, v'entryPrice);
+}
+
+tuple $GlobalLPPosition$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $GlobalLPPosition$_to_tuple($GlobalLPPosition$_not_null(v)); 
+}
+
+((int, int, int)) $GlobalLPPosition$_constructor_netSize_isLong_entryPrice(int netSize, int isLong, int entryPrice) inline {
+    return (netSize, isLong, entryPrice);
+}
+
+;;
+;; Type: PerpPositionData
+;; TLB: _ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257} = PerpPositionData
+;;
+
+((tuple, tuple)) $PerpPositionData$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (tuple vvv'perpPosition, tuple vvv'globalLPPosition) = __tact_tuple_destroy_2(v);
+    return (vvv'perpPosition, vvv'globalLPPosition);
+}
+
+tuple $PerpPositionData$_as_optional((tuple, tuple) v) inline {
+    var (v'perpPosition, v'globalLPPosition) = v;
+    return __tact_tuple_create_2(v'perpPosition, v'globalLPPosition);
+}
+
+tuple $PerpPositionData$_to_tuple(((tuple, tuple)) v) inline {
+    var (v'perpPosition, v'globalLPPosition) = v;
+    return __tact_tuple_create_2($DirectionPerpPosition$_to_opt_tuple(v'perpPosition), $GlobalLPPosition$_to_opt_tuple(v'globalLPPosition));
+}
+
+tuple $PerpPositionData$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $PerpPositionData$_to_tuple($PerpPositionData$_not_null(v)); 
+}
+
+tuple $PerpPositionData$_to_opt_external(tuple v) inline {
+    var loaded = $PerpPositionData$_to_opt_tuple(v);
     if (null?(loaded)) {
         return null();
     } else {
@@ -1137,8 +1252,8 @@ tuple $DirectionPerpPosition$_to_opt_external(tuple v) inline {
     }
 }
 
-(((int, int, int, int, int), (int, int, int, int, int))) $DirectionPerpPosition$_constructor_longPosition_shortPosition((int, int, int, int, int) longPosition, (int, int, int, int, int) shortPosition) inline {
-    return (longPosition, shortPosition);
+((tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition(tuple perpPosition, tuple globalLPPosition) inline {
+    return (perpPosition, globalLPPosition);
 }
 
 ;;

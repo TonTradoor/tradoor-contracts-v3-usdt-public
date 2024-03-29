@@ -174,5 +174,3 @@ export async function attachJettonWallet(provider: NetworkProvider, userAddress:
     let walletAddress = await jetton.getGetWalletAddress(userAddress);
     return provider.open(JettonDefaultWallet.fromAddress(walletAddress));
 }
-
-

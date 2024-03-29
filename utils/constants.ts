@@ -1,0 +1,9 @@
+export const ORDER_OP_TYPE_INCREASE = 1;
+export const ORDER_OP_TYPE_DECREASE = 2;
+export const ORDER_OP_TYPE_LIQUIDATION = 3;
+export const ORDER_OP_TYPE_ADL = 4;
+export const ORDER_OP_TYPE_INCREASE_MARKET = 10;
+export const ORDER_OP_TYPE_INCREASE_LIMIT = 11;
+export const ORDER_OP_TYPE_DECREASE_MARKET = 12;
+export const ORDER_OP_TYPE_DECREASE_TP = 13;
+export const ORDER_OP_TYPE_DECREASE_SL = 14;

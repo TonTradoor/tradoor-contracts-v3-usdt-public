@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 17277 bytes
+BOC Size: 16630 bytes
 
 # Types
-Total Types: 43
+Total Types: 46
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -137,6 +137,10 @@ Signature: `RBFPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTi
 TLB: `_ riskBufferFund:int257 liquidity:int257 = GlobalRBFPosition`
 Signature: `GlobalRBFPosition{riskBufferFund:int257,liquidity:int257}`
 
+## RBFPositionData
+TLB: `_ rbfPosition:Maybe RBFPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTime:int257} globalRBFPosition:GlobalRBFPosition{riskBufferFund:int257,liquidity:int257} = RBFPositionData`
+Signature: `RBFPositionData{rbfPosition:Maybe RBFPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTime:int257},globalRBFPosition:GlobalRBFPosition{riskBufferFund:int257,liquidity:int257}}`
+
 ## IncreaseLPPositionOrder
 TLB: `_ account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 = IncreaseLPPositionOrder`
 Signature: `IncreaseLPPositionOrder{account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,blockTime:int257}`
@@ -153,9 +157,9 @@ Signature: `LPPosition{positionId:int257,margin:int257,liquidity:int257,entryFun
 TLB: `_ margin:int257 liquidity:int257 fundingFeeGrowth:int257 tradingFeeGrowth:int257 = GlobalLPLiquidity`
 Signature: `GlobalLPLiquidity{margin:int257,liquidity:int257,fundingFeeGrowth:int257,tradingFeeGrowth:int257}`
 
-## GlobalLPPosition
-TLB: `_ netSize:int257 isLong:bool entryPrice:int257 = GlobalLPPosition`
-Signature: `GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257}`
+## LPPositionData
+TLB: `_ lpPosition:Maybe LPPosition{positionId:int257,margin:int257,liquidity:int257,entryFundingFeeGrowth:int257,entryTradingFeeGrowth:int257} globalLPLiquidity:GlobalLPLiquidity{margin:int257,liquidity:int257,fundingFeeGrowth:int257,tradingFeeGrowth:int257} = LPPositionData`
+Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:int257,margin:int257,liquidity:int257,entryFundingFeeGrowth:int257,entryTradingFeeGrowth:int257},globalLPLiquidity:GlobalLPLiquidity{margin:int257,liquidity:int257,fundingFeeGrowth:int257,tradingFeeGrowth:int257}}`
 
 ## AccountPerpPosition
 TLB: `_ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}> = AccountPerpPosition`
@@ -168,6 +172,14 @@ Signature: `DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,ma
 ## PerpPosition
 TLB: `_ positionId:int257 margin:int257 size:int257 entryPrice:int257 entryFundingFeeGrowth:int257 = PerpPosition`
 Signature: `PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}`
+
+## GlobalLPPosition
+TLB: `_ netSize:int257 isLong:bool entryPrice:int257 = GlobalLPPosition`
+Signature: `GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257}`
+
+## PerpPositionData
+TLB: `_ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257} = PerpPositionData`
+Signature: `PerpPositionData{perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257}}`
 
 ## PriceData
 TLB: `_ price:int257 = PriceData`

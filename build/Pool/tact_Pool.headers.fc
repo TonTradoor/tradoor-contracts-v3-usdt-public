@@ -45,9 +45,6 @@ cell __tact_dict_get_slice_cell(cell d, int kl, slice k) inline;
 ;; __tact_slice_eq_bits
 int __tact_slice_eq_bits(slice a, slice b) inline;
 
-;; __tact_int_to_string
-slice __tact_int_to_string(int src) inline_ref;
-
 ;; $Deploy$_load
 (slice, ((int))) $Deploy$_load(slice sc_0) inline;
 
@@ -231,21 +228,6 @@ builder $GlobalLPLiquidity$_store(builder build_0, (int, int, int, int) v) inlin
 ;; $GlobalLPLiquidity$_load
 (slice, ((int, int, int, int))) $GlobalLPLiquidity$_load(slice sc_0) inline;
 
-;; $GlobalLPPosition$_store
-builder $GlobalLPPosition$_store(builder build_0, (int, int, int) v) inline;
-
-;; $GlobalLPPosition$_store_cell
-cell $GlobalLPPosition$_store_cell((int, int, int) v) inline;
-
-;; $GlobalLPPosition$_load
-(slice, ((int, int, int))) $GlobalLPPosition$_load(slice sc_0) inline;
-
-;; $GlobalLPPosition$_as_optional
-tuple $GlobalLPPosition$_as_optional((int, int, int) v) inline;
-
-;; $GlobalLPPosition$_load_opt
-tuple $GlobalLPPosition$_load_opt(cell cl) inline;
-
 ;; $AccountPerpPosition$_store
 builder $AccountPerpPosition$_store(builder build_0, (cell) v) inline;
 
@@ -281,6 +263,21 @@ tuple $DirectionPerpPosition$_as_optional(((int, int, int, int, int), (int, int,
 
 ;; $DirectionPerpPosition$_load_opt
 tuple $DirectionPerpPosition$_load_opt(cell cl) inline;
+
+;; $GlobalLPPosition$_store
+builder $GlobalLPPosition$_store(builder build_0, (int, int, int) v) inline;
+
+;; $GlobalLPPosition$_store_cell
+cell $GlobalLPPosition$_store_cell((int, int, int) v) inline;
+
+;; $GlobalLPPosition$_load
+(slice, ((int, int, int))) $GlobalLPPosition$_load(slice sc_0) inline;
+
+;; $GlobalLPPosition$_as_optional
+tuple $GlobalLPPosition$_as_optional((int, int, int) v) inline;
+
+;; $GlobalLPPosition$_load_opt
+tuple $GlobalLPPosition$_load_opt(cell cl) inline;
 
 ;; $PriceData$_store
 builder $PriceData$_store(builder build_0, (int) v) inline;
@@ -342,8 +339,23 @@ tuple $RBFPosition$_to_tuple(((int, int, int, int)) v) inline;
 ;; $RBFPosition$_to_opt_tuple
 tuple $RBFPosition$_to_opt_tuple(tuple v) inline;
 
-;; $RBFPosition$_to_opt_external
-tuple $RBFPosition$_to_opt_external(tuple v) inline;
+;; $GlobalRBFPosition$_to_tuple
+tuple $GlobalRBFPosition$_to_tuple(((int, int)) v) inline;
+
+;; $RBFPositionData$_not_null
+((tuple, (int, int))) $RBFPositionData$_not_null(tuple v) inline;
+
+;; $RBFPositionData$_as_optional
+tuple $RBFPositionData$_as_optional((tuple, (int, int)) v) inline;
+
+;; $RBFPositionData$_to_tuple
+tuple $RBFPositionData$_to_tuple(((tuple, (int, int))) v) inline;
+
+;; $RBFPositionData$_to_opt_tuple
+tuple $RBFPositionData$_to_opt_tuple(tuple v) inline;
+
+;; $RBFPositionData$_to_opt_external
+tuple $RBFPositionData$_to_opt_external(tuple v) inline;
 
 ;; $LPPosition$_to_tuple
 tuple $LPPosition$_to_tuple(((int, int, int, int, int)) v) inline;
@@ -351,11 +363,26 @@ tuple $LPPosition$_to_tuple(((int, int, int, int, int)) v) inline;
 ;; $LPPosition$_to_opt_tuple
 tuple $LPPosition$_to_opt_tuple(tuple v) inline;
 
-;; $LPPosition$_to_opt_external
-tuple $LPPosition$_to_opt_external(tuple v) inline;
+;; $GlobalLPLiquidity$_to_tuple
+tuple $GlobalLPLiquidity$_to_tuple(((int, int, int, int)) v) inline;
 
-;; $GlobalLPPosition$_not_null
-((int, int, int)) $GlobalLPPosition$_not_null(tuple v) inline;
+;; $LPPositionData$_not_null
+((tuple, (int, int, int, int))) $LPPositionData$_not_null(tuple v) inline;
+
+;; $LPPositionData$_as_optional
+tuple $LPPositionData$_as_optional((tuple, (int, int, int, int)) v) inline;
+
+;; $LPPositionData$_to_tuple
+tuple $LPPositionData$_to_tuple(((tuple, (int, int, int, int))) v) inline;
+
+;; $LPPositionData$_to_opt_tuple
+tuple $LPPositionData$_to_opt_tuple(tuple v) inline;
+
+;; $LPPositionData$_to_opt_external
+tuple $LPPositionData$_to_opt_external(tuple v) inline;
+
+;; $AccountPerpPosition$_get_positions
+_ $AccountPerpPosition$_get_positions((cell) v) inline;
 
 ;; $AccountPerpPosition$_not_null
 ((cell)) $AccountPerpPosition$_not_null(tuple v) inline;
@@ -372,8 +399,29 @@ tuple $DirectionPerpPosition$_to_tuple((((int, int, int, int, int), (int, int, i
 ;; $DirectionPerpPosition$_to_opt_tuple
 tuple $DirectionPerpPosition$_to_opt_tuple(tuple v) inline;
 
-;; $DirectionPerpPosition$_to_opt_external
-tuple $DirectionPerpPosition$_to_opt_external(tuple v) inline;
+;; $GlobalLPPosition$_not_null
+((int, int, int)) $GlobalLPPosition$_not_null(tuple v) inline;
+
+;; $GlobalLPPosition$_to_tuple
+tuple $GlobalLPPosition$_to_tuple(((int, int, int)) v) inline;
+
+;; $GlobalLPPosition$_to_opt_tuple
+tuple $GlobalLPPosition$_to_opt_tuple(tuple v) inline;
+
+;; $PerpPositionData$_not_null
+((tuple, tuple)) $PerpPositionData$_not_null(tuple v) inline;
+
+;; $PerpPositionData$_as_optional
+tuple $PerpPositionData$_as_optional((tuple, tuple) v) inline;
+
+;; $PerpPositionData$_to_tuple
+tuple $PerpPositionData$_to_tuple(((tuple, tuple)) v) inline;
+
+;; $PerpPositionData$_to_opt_tuple
+tuple $PerpPositionData$_to_opt_tuple(tuple v) inline;
+
+;; $PerpPositionData$_to_opt_external
+tuple $PerpPositionData$_to_opt_external(tuple v) inline;
 
 ;; $PriceData$_get_price
 _ $PriceData$_get_price((int) v) inline;
@@ -459,6 +507,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_decreaseRBFPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), int) $Pool$_fun_decreaseRBFPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account, int $liquidityDelta, int $trxId) impure inline_ref;
 
+;; $RBFPositionData$_constructor_rbfPosition_globalRBFPosition
+((tuple, (int, int))) $RBFPositionData$_constructor_rbfPosition_globalRBFPosition(tuple rbfPosition, (int, int) globalRBFPosition) inline;
+
 ;; $Pool$_fun_rbfPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), tuple) $Pool$_fun_rbfPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account) impure inline_ref;
 
@@ -482,6 +533,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $Pool$_fun_decreaseLPPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), int) $Pool$_fun_decreaseLPPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account, int $isLiquidate, int $marginDelta, int $liquidityDelta, int $trxId) impure inline_ref;
+
+;; $LPPositionData$_constructor_lpPosition_globalLPLiquidity
+((tuple, (int, int, int, int))) $LPPositionData$_constructor_lpPosition_globalLPLiquidity(tuple lpPosition, (int, int, int, int) globalLPLiquidity) inline;
 
 ;; $Pool$_fun_lpPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), tuple) $Pool$_fun_lpPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, slice $account) impure inline_ref;
@@ -518,6 +572,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $Pool$_fun_decreasePerpPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), int) $Pool$_fun_decreasePerpPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, int $trxId, int $isLiquidate, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice) impure inline_ref;
+
+;; $PerpPositionData$_constructor_perpPosition_globalLPPosition
+((tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition(tuple perpPosition, tuple globalLPPosition) inline;
 
 ;; $Pool$_fun_perpPosition
 ((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int), tuple) $Pool$_fun_perpPosition((int, int, cell, int, int, int, int, int, int, int, slice, slice, cell, int, (int, int), cell, int, (int, int, int, int), cell, int, int, cell, int, cell, int) $self, int $tokenId, slice $account) impure inline_ref;

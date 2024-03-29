@@ -94,8 +94,9 @@ export async function cancelPerpOrder(executor: SandboxContract<TreasuryContract
 export async function executePerpOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint, price: number) {
     let balanceBefore = await getAllBalance();
     let orderBefore = await TestEnv.orderBook.getPerpPositionOrder(orderId);
-    let accountPositionBefore = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
-    let positionBefore = orderBefore?.isLong!! ? accountPositionBefore?.longPosition!! : accountPositionBefore?.shortPosition!!;
+    let positionDataBefore = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
+    let positionBefore = orderBefore?.isLong!! ? positionDataBefore?.perpPosition?.longPosition!! : positionDataBefore?.perpPosition?.shortPosition!!;
+    let globalPositionBefore = positionDataBefore?.globalLPPosition;
 
     let UpdatePriceValue: DictionaryValue<UpdatePrice> = {
         serialize(src, builder) {
@@ -109,7 +110,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.3'),
+            value: toNano('0.5'),
         },
         {
             $$type: 'ExecutePerpPositionOrder',
@@ -131,15 +132,18 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     // after trx
     let balanceAfter = await getAllBalance();
     let order = await TestEnv.orderBook.getPerpPositionOrder(orderId);
-    let accountPositionAfter = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
-    let positionAfter = orderBefore?.isLong!! ? accountPositionAfter?.longPosition!! : accountPositionAfter?.shortPosition!!;
-    
+    let positionDataAfter = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
+    let positionAfter = orderBefore?.isLong!! ? positionDataAfter?.perpPosition?.longPosition!! : positionDataAfter?.perpPosition?.shortPosition!!;
+    let globalPositionAfter = positionDataAfter?.globalLPPosition;
+
     return {
         trxResult,
         balanceBefore,
         balanceAfter,
         positionBefore,
         positionAfter,
+        globalPositionBefore,
+        globalPositionAfter,
         order
     };
 }
