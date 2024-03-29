@@ -4,7 +4,6 @@
 
 #include "tact_OrderBook.headers.fc";
 #include "tact_OrderBook.stdlib.fc";
-#include "tact_OrderBook.constants.fc";
 #include "tact_OrderBook.storage.fc";
 
 ;;
@@ -29,14 +28,9 @@
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), $ConfigData$_constructor_isExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool($isExecutor, $self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool));
 }
 
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int), cell) $OrderBook$_fun_createJettonTransferBody((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $queryId, int $jettonAmount, slice $to, slice $responseDestination) impure inline_ref {
-    var (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)) = $self;
-    return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), end_cell(store_slice(store_coins(store_int(__tact_store_address(__tact_store_address(store_coins(store_int(store_int(begin_cell(), 260734629, 32), $queryId, 64), $jettonAmount), $to), $responseDestination), 0, 1), 0), $Cell$_fun_asSlice(end_cell(begin_cell())))));
-}
-
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int), ()) $OrderBook$_fun_refundJetton((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $queryId, int $amount, slice $to, slice $response) impure inline_ref {
     var (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)) = $self;
-    $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'usdtWallet, 0, 64, false, ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_createJettonTransferBody($queryId, $amount, $to, $response)));
+    $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'usdtWallet, 32000000, 2, false, $TokenTransfer$_store_cell($TokenTransfer$_constructor_queryId_amount_receiver_responseDestination_customPayload_forwardTonAmount_forwardPayload($queryId, $amount, $to, $response, null(), 0, $Cell$_fun_asSlice(end_cell(begin_cell()))))));
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
@@ -116,21 +110,21 @@
 
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int), ()) $OrderBook$_fun_handleCreateIncreaseLPPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $marginDelta, int $liquidityDelta) impure inline_ref {
     var (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)) = $self;
-    __tact_debug_str(__gen_slice_string_d36d79fa3e85b73d9b17c78297dda1c895e60d67dd375a5420e1d5b93ab812af());
+    __tact_nop();
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     if (($ctx'value < ((($executionFee + ($Context$_fun_readForwardFee(($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw)) * 2)) + $self'gasConsumption) + $self'minTonsForStorage))) {
-        __tact_debug_str(__gen_slice_string_8ba9018bc74a66ae95c44ce5cb80fbce64c3667445aa0d92336158bca8b98806());
+        __tact_nop();
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($queryId, $jettonFromAmount, $account, $account);
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     if (($jettonFromAmount < $marginDelta)) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($queryId, $jettonFromAmount, $account, $account);
-        __tact_debug_str(__gen_slice_string_c37cf014856f37ddf83b5ee98f6a57e181f4dfa2dc1c76391ecf07524b8548bc());
+        __tact_nop();
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     if (($executionFee < $self'minExecutionFee)) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($queryId, $jettonFromAmount, $account, $account);
-        __tact_debug_str(__gen_slice_string_dec71a65a2cdc865d4307f5761ab01137c82cb0513cb4734f6a1048ca6ce4039());
+        __tact_nop();
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     int $orderId = $self'lpPositionOrderIndexNext;
@@ -156,7 +150,7 @@
         if ((~ null?($order'executionFeeReceiver))) {
             $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($order'executionFeeReceiver), true, $order'executionFee, 1));
         }
-        __tact_debug_str(__gen_slice_string_4497b45b5a0167a8c78a78ab3398fa6edfeaa832e4d2812257eb19eaf21c4d76());
+        __tact_nop();
     } else {
         $global_emit($LPPositionOrderExecutedEvent$_store_cell($LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId($order'opType, $orderId, $trxId)));
         if (( ((~ null?($order'executionFeeReceiver))) ? (($order'executionFee != 0)) : (false) )) {
@@ -205,20 +199,20 @@
 
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int), ()) $OrderBook$_fun_handleCreateIncreasePerpPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice) impure inline_ref {
     var (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)) = $self;
-    __tact_debug_str(__gen_slice_string_e816158bc5b5c6cad5970b3d6ca8d736fae0f0e097d978ca9dac82a23dedcb93());
+    __tact_nop();
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     if (($ctx'value < ((($executionFee + ($Context$_fun_readForwardFee(($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw)) * 2)) + $self'gasConsumption) + $self'minTonsForStorage))) {
-        __tact_debug_str(__gen_slice_string_8ba9018bc74a66ae95c44ce5cb80fbce64c3667445aa0d92336158bca8b98806());
+        __tact_nop();
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($queryId, $jettonFromAmount, $account, $account);
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     if (($jettonFromAmount < $marginDelta)) {
-        __tact_debug_str(__gen_slice_string_c37cf014856f37ddf83b5ee98f6a57e181f4dfa2dc1c76391ecf07524b8548bc());
+        __tact_nop();
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($queryId, $jettonFromAmount, $account, $account);
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     if (($executionFee < $self'minExecutionFee)) {
-        __tact_debug_str(__gen_slice_string_dec71a65a2cdc865d4307f5761ab01137c82cb0513cb4734f6a1048ca6ce4039());
+        __tact_nop();
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($queryId, $jettonFromAmount, $account, $account);
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
@@ -249,7 +243,7 @@
         if ((~ null?($order'executionFeeReceiver))) {
             $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($order'executionFeeReceiver), true, $order'executionFee, 1));
         }
-        __tact_debug_str(__gen_slice_string_dabf56291b878ad5728ead7069f0d800c621acc1200320dc381f1c83de04e322());
+        __tact_nop();
     } else {
         $global_emit($PerpPositionOrderExecutedEvent$_store_cell($PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId($order'opType, $orderId, $trxId)));
         if (( ((~ null?($order'executionFeeReceiver))) ? (($order'executionFee != 0)) : (false) )) {
@@ -337,7 +331,7 @@
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($msg'queryId, $msg'amount, $msg'from, $msg'forwardPayload) = $msg;
     if (( ~ __tact_slice_eq_bits($self'usdtWallet, __tact_context_get_sender()) )) {
-        $global_send($SendParameters$_constructor_to_value_mode_bounce_body(__tact_context_get_sender(), 0, 64, false, ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_createJettonTransferBody($msg'queryId, $msg'amount, $msg'from, $msg'from)));
+        $global_send($SendParameters$_constructor_to_value_mode_bounce_body(__tact_context_get_sender(), 0, 64, false, $TokenTransfer$_store_cell($TokenTransfer$_constructor_queryId_amount_receiver_responseDestination_customPayload_forwardTonAmount_forwardPayload($msg'queryId, $msg'amount, $msg'from, null(), null(), 0, $Cell$_fun_asSlice(end_cell(begin_cell()))))));
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     slice $operation = $Cell$_fun_asSlice($msg'forwardPayload~load_ref());
@@ -514,6 +508,28 @@
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
+(((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_CompensateOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, (int, int, int, slice, int, slice, int) $msg) impure inline {
+    var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
+    var ($msg'orderType, $msg'orderId, $msg'trxId, $msg'refundReceiver, $msg'refundAmount, $msg'executionFeeReceiver, $msg'executionFeeAmount) = $msg;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    int $isExecutor = false;
+    int $isExecutorOpt = __tact_dict_get_slice_int($self'executors, 267, __tact_context_get_sender(), 1);
+    if ((~ null?($isExecutorOpt))) {
+        $isExecutor = __tact_not_null($isExecutorOpt);
+    }
+    throw_unless(41207, $isExecutor);
+    throw_unless(19305, ($ctx'value >= ((($Context$_fun_readForwardFee(($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw)) * 2) + $self'gasConsumption) + $self'minTonsForStorage)));
+    if (( ((~ null?($msg'refundReceiver))) ? (($msg'refundAmount > 0)) : (false) )) {
+        ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton(0, $msg'refundAmount, __tact_not_null($msg'refundReceiver), null());
+    }
+    if (( ((~ null?($msg'executionFeeReceiver))) ? (($msg'executionFeeAmount > 0)) : (false) )) {
+        $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($msg'executionFeeReceiver), true, $msg'executionFeeAmount, 1));
+    }
+    $global_emit($CompensateOrderEvent$_store_cell($CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFeeAmount($msg'orderType, $msg'orderId, $msg'trxId, $msg'refundReceiver, $msg'refundAmount, $msg'executionFeeReceiver, $msg'executionFeeAmount)));
+    ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundExecessTon(__tact_context_get_sender(), 0);
+    return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
+}
+
 (((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_CreateDecreaseLPPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, (int, int, int) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($msg'executionFee, $msg'marginDelta, $msg'liquidityDelta) = $msg;
@@ -589,19 +605,19 @@
     $order'isPending = true;
     $self'lpPositionOrders~__tact_dict_set_int_cell(257, $msg'orderId, $LPPositionOrder$_store_cell(($order'opType, $order'account, $order'marginDelta, $order'liquidityDelta, $order'executionFee, $order'blockTime, $order'isPending, $order'callbackId, $order'executionFeeReceiver, $order'lastOperator)));
     $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'pool, 0, 64, true, $UpdateLPPosition$_store_cell($UpdateLPPosition$_constructor_orderId_opType_trxId_account_marginDelta_liquidityDelta_pricesLength_prices($msg'orderId, $order'opType, $msg'trxId, $order'account, $order'marginDelta, $order'liquidityDelta, $msg'pricesLength, $msg'prices))));
-    __tact_debug_str(__gen_slice_string_0b657a3e11b29949adb061b2e124385753f1a5061aaaa4258e8018f671140e06());
+    __tact_nop();
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
 (((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_UpdateLPPositionSuccess((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, (int, int, int) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($msg'orderId, $msg'receive, $msg'trxId) = $msg;
-    __tact_debug_str(__gen_slice_string_dd5bad7b39f5ff4dc1d648ed112d00f2e676077c075562f9fe103b231c9b01d6());
+    __tact_nop();
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(41207, ( __tact_slice_eq_bits($self'pool, __tact_context_get_sender()) ));
     tuple $orderOpt = $LPPositionOrder$_load_opt(__tact_dict_get_int_cell($self'lpPositionOrders, 257, $msg'orderId));
     if (null?($orderOpt)) {
-        __tact_debug_str(__gen_slice_string_e35cff11d4c106bfb709820db1d703f557107cb3f046571d890d6d578ad27374());
+        __tact_nop();
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     var ($order'opType, $order'account, $order'marginDelta, $order'liquidityDelta, $order'executionFee, $order'blockTime, $order'isPending, $order'callbackId, $order'executionFeeReceiver, $order'lastOperator) = $LPPositionOrder$_not_null($orderOpt);
@@ -637,10 +653,10 @@
 (((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int)), ()) $OrderBook$_receive_binary_bounce_UpdateLPPosition((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, (int, int) $src) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($src'orderId, $src'opType) = $src;
-    __tact_debug_str(__gen_slice_string_9f52dcba91362758d2d7e0481ec3df3c87819c1775d433860bcee085edf9e5c7());
+    __tact_nop();
     tuple $orderOpt = $LPPositionOrder$_load_opt(__tact_dict_get_int_cell($self'lpPositionOrders, 257, $src'orderId));
     if (null?($orderOpt)) {
-        __tact_debug_str(__gen_slice_string_e35cff11d4c106bfb709820db1d703f557107cb3f046571d890d6d578ad27374());
+        __tact_nop();
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     var ($order'opType, $order'account, $order'marginDelta, $order'liquidityDelta, $order'executionFee, $order'blockTime, $order'isPending, $order'callbackId, $order'executionFeeReceiver, $order'lastOperator) = $LPPositionOrder$_not_null($orderOpt);
@@ -672,7 +688,7 @@
     $self'lpPositionOrderIndexNext = ($self'lpPositionOrderIndexNext + 1);
     $self'lpPositionOrders~__tact_dict_set_int_cell(257, $orderId, $LPPositionOrder$_store_cell($LPPositionOrder$_constructor_opType_account_marginDelta_liquidityDelta_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator(3, $msg'account, 0, 0, 0, now(), true, null(), $executionFeeReceiver, __tact_context_get_sender())));
     $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'pool, 0, 64, true, $UpdateLPPosition$_store_cell($UpdateLPPosition$_constructor_opType_orderId_trxId_account_marginDelta_liquidityDelta_pricesLength_prices(3, $orderId, $msg'trxId, $msg'account, 0, 0, $msg'pricesLength, $msg'prices))));
-    __tact_debug_str(__gen_slice_string_15b65c263366771f78a82b8114cb5f7da8d74685f3d97a4a1556e32c1dd9c526());
+    __tact_nop();
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
@@ -714,7 +730,7 @@
         $order'isPending = true;
         $order'callbackId = $callbackId;
         $self'perpPositionOrders~__tact_dict_set_int_cell(257, $msg'orderId, $PerpPositionOrder$_store_cell(($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending, $order'callbackId, $order'executionFeeReceiver, $order'lastOperator)));
-        __tact_debug_str(__gen_slice_string_4248a257778a781102277d1c722ebee514753e50083f6838d0b40235ffd1ee7d());
+        __tact_nop();
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($callbackId, $order'marginDelta, $order'account, my_address());
     } else {
         slice $executionFeeReceiver = __tact_context_get_sender();
@@ -750,19 +766,19 @@
     $order'isPending = true;
     $self'perpPositionOrders~__tact_dict_set_int_cell(257, $msg'orderId, $PerpPositionOrder$_store_cell(($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending, $order'callbackId, $order'executionFeeReceiver, $order'lastOperator)));
     $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'pool, 0, 64, true, $UpdatePerpPosition$_store_cell($UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices($msg'orderId, $order'opType, $msg'trxId, $order'account, $order'tokenId, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $msg'pricesLength, $msg'prices))));
-    __tact_debug_str(__gen_slice_string_cc25ea6db91addb9bd2eb612e72e0b532047d41bc260b525329d84b9ac2c5a17());
+    __tact_nop();
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
 (((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_UpdatePerpPositionSuccess((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, (int, int, int) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($msg'orderId, $msg'receive, $msg'trxId) = $msg;
-    __tact_debug_str(__gen_slice_string_8883622eab3d70a1103a50773012720a4372e449b6da540065256fc4c05ae816());
+    __tact_nop();
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(41207, ( __tact_slice_eq_bits($self'pool, __tact_context_get_sender()) ));
     tuple $orderOpt = $PerpPositionOrder$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrders, 257, $msg'orderId));
     if (null?($orderOpt)) {
-        __tact_debug_str(__gen_slice_string_e35cff11d4c106bfb709820db1d703f557107cb3f046571d890d6d578ad27374());
+        __tact_nop();
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     var ($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending, $order'callbackId, $order'executionFeeReceiver, $order'lastOperator) = $PerpPositionOrder$_not_null($orderOpt);
@@ -808,10 +824,10 @@
 (((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int)), ()) $OrderBook$_receive_binary_bounce_UpdatePerpPosition((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, (int, int) $src) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($src'orderId, $src'opType) = $src;
-    __tact_debug_str(__gen_slice_string_7c014d89d7842f1153c106526425c491c82c4421b1882426fb737182099b3cd0());
+    __tact_nop();
     tuple $orderOpt = $PerpPositionOrder$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrders, 257, $src'orderId));
     if (null?($orderOpt)) {
-        __tact_debug_str(__gen_slice_string_e35cff11d4c106bfb709820db1d703f557107cb3f046571d890d6d578ad27374());
+        __tact_nop();
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     var ($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending, $order'callbackId, $order'executionFeeReceiver, $order'lastOperator) = $PerpPositionOrder$_not_null($orderOpt);
@@ -843,7 +859,7 @@
     $self'perpPositionOrderIndexNext = ($self'perpPositionOrderIndexNext + 1);
     $self'perpPositionOrders~__tact_dict_set_int_cell(257, $orderId, $PerpPositionOrder$_store_cell($PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator(3, $msg'tokenId, $msg'account, $msg'isLong, 0, 0, 0, false, 0, now(), true, null(), $executionFeeReceiver, __tact_context_get_sender())));
     $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'pool, 0, 64, true, $UpdatePerpPosition$_store_cell($UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(3, $orderId, $msg'trxId, $msg'account, $msg'tokenId, $msg'isLong, 0, 0, 0, false, $msg'pricesLength, $msg'prices))));
-    __tact_debug_str(__gen_slice_string_f078649be37c211d5264886c5b8a01c867760519d1028a0c0a7de1eb2f21020e());
+    __tact_nop();
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
@@ -915,14 +931,13 @@ _ supported_interfaces() method_id {
         "org.ton.introspection.v0"H >> 128,
         "org.ton.abi.ipfs.v0"H >> 128,
         "org.ton.deploy.lazy.v0"H >> 128,
-        "org.ton.debug.v0"H >> 128,
         "org.ton.chain.workchain.v0"H >> 128,
         "org.ton.ownable"H >> 128
     );
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmYkkEp1CoW9DaFxuJZRPDoQMMh9rJNvVgCEZGqyNpRcgv";
+    return "ipfs://Qmd5pgyLdKJaPYJoEfbwMHLDrTdFRbTpUZ71huF8rh9hNi";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -1023,6 +1038,13 @@ _ lazy_deployment_completed() method_id {
     if (op == 485543809) {
         var msg = in_msg~$UpdateRBFPositionSuccess$_load();
         self~$OrderBook$_internal_binary_UpdateRBFPositionSuccess(msg);
+        return (self, true);
+    }
+    
+    ;; Receive CompensateOrder message
+    if (op == 903497951) {
+        var msg = in_msg~$CompensateOrder$_load();
+        self~$OrderBook$_internal_binary_CompensateOrder(msg);
         return (self, true);
     }
     

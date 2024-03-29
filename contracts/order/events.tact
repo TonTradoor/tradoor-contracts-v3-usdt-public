@@ -71,3 +71,14 @@ message PerpPositionOrderExecutedEvent {
     orderId: Int;
     trxId: Int;
 }
+
+// ============================ Compensate ================================ //
+message CompensateOrderEvent {
+    orderType: Int?;
+    orderId: Int;
+    trxId: Int;
+    refundReceiver: Address?;
+    refundAmount: Int;
+    executionFeeReceiver: Address?;
+    executionFeeAmount: Int;
+}

@@ -109,7 +109,15 @@ contract OrderBook with Deployable, Ownable {
                 value: 0,
                 mode: SendRemainingValue, 
                 bounce: false,
-                body: self.createJettonTransferBody(msg.queryId, msg.amount, msg.from, msg.from)
+                body: TokenTransfer{
+                    queryId: msg.queryId,
+                    amount: msg.amount,
+                    receiver: msg.from,
+                    responseDestination: null,
+                    customPayload: null,
+                    forwardTonAmount: 0,
+                    forwardPayload: beginCell().endCell().asSlice()
+                }.toCell()
             });
             return;
         }
@@ -173,13 +181,21 @@ contract OrderBook with Deployable, Ownable {
         }
     }
 
-    fun refundJetton(queryId: Int, amount: Int, to: Address, response: Address) {
+    fun refundJetton(queryId: Int, amount: Int, to: Address, response: Address?) {
         send(SendParameters{
             to: self.usdtWallet, 
-            value: 0,
-            mode: SendRemainingValue, 
+            value: GAS_TRANSFER_JETTON,
+            mode: SendIgnoreErrors, 
             bounce: false,
-            body: self.createJettonTransferBody(queryId, amount, to, response)
+            body: TokenTransfer{
+                queryId: queryId,
+                amount: amount,
+                receiver: to,
+                responseDestination: response,
+                customPayload: null,
+                forwardTonAmount: 0,
+                forwardPayload: beginCell().endCell().asSlice()
+            }.toCell()
         });
     }
 
@@ -295,7 +311,7 @@ contract OrderBook with Deployable, Ownable {
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + GAS_TRANSFER_JETTON, "gas not enough");
         } else {
             require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
         }
@@ -372,7 +388,7 @@ contract OrderBook with Deployable, Ownable {
         if (order.isIncrease) {
             require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
         self.shouldExecute(order.blockTime, order.isPending);
@@ -421,7 +437,7 @@ contract OrderBook with Deployable, Ownable {
         if (order.isIncrease) {
             require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption, "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
         if (order.isIncrease) {
@@ -544,97 +560,85 @@ contract OrderBook with Deployable, Ownable {
 
     // ============================ Compensate ================================ //
     // compensate RBF
-    // receive(msg: CompensateRBFPositionOrder) {
-    //     let ctx: Context = context();
+    receive(msg: CompensateOrder) {
+        let ctx: Context = context();
 
-    //     // check compensator
-    //     let isCompensator: Bool = false;
-    //     let isCompensatorOpt: Bool? = self.compensators.get(sender());
-    //     if (isCompensatorOpt != null) {
-    //         isCompensator = isCompensatorOpt!!;
-    //     }
-    //     require(isCompensator, "not compensator");
-        
-    //     // check order pending
-    //     let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(msg.orderId);
-    //     require(orderOpt != null, "order not exist");
-    //     let order: RBFPositionOrder = orderOpt!!;
+        // executor or trader
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
 
-    //     // check gas
-    //     if (order.isIncrease) {
-    //         require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
-    //     } else {
-    //         require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
-    //     }
+        // check sender
+        require(isExecutor, "invalid sender");
 
-    //     require(order.isPending, "order not pending");
+        // check gas
+        require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
 
-    //     // refund
-    //     if (msg.needRefund) {
-    //         // increase position failed, cancel order
-    //         // refund jetton failed
-    //         // get callback
-    //         require(order.callbackId != null, "jetton callback not exist");
-    //         let callbackId: Int = order.callbackId!!;
-    //         let jettonCallbackOpt: JettonCallback? = self.jettonCallbacks.get(callbackId);
-    //         if (jettonCallbackOpt == null) {
-    //             return;
-    //         }
-    //         let jettonCallback: JettonCallback = jettonCallbackOpt!!;
-    //         // update trxId
-    //         jettonCallback.trxId = msg.trxId;
-    //         self.jettonCallbacks.set(callbackId, jettonCallback);
+        // get order
+        if(msg.orderType != null) {
+            let callbackId: Int? = null;
+            let isPending: Bool = true;
+            if (msg.orderType == ORDER_TYPE_RBF) {
+                let orderOpt: RBFPositionOrder? = self.rbfPositionOrders.get(msg.orderId);
+                if (orderOpt != null) {
+                    callbackId = (orderOpt!!).callbackId;
+                    isPending = (orderOpt!!).isPending;
+                }
+                self.rbfPositionOrders.set(msg.orderId, null);
+            } else if (msg.orderType == ORDER_TYPE_LP) {
+                let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(msg.orderId);
+                if (orderOpt != null) {
+                    callbackId = (orderOpt!!).callbackId;
+                    isPending = (orderOpt!!).isPending;
+                }
+                self.lpPositionOrders.set(msg.orderId, null);
+            } else {
+                let orderOpt: PerpPositionOrder? = self.perpPositionOrders.get(msg.orderId);
+                if (orderOpt != null) {
+                    callbackId = (orderOpt!!).callbackId;
+                    isPending = (orderOpt!!).isPending;
+                }
+                self.perpPositionOrders.set(msg.orderId, null);
+            }
+            require(isPending, "order not pending");
+            // delete callback
+            if (callbackId != null) {
+                self.jettonCallbacks.set(callbackId!!, null);
+            }
+        }
 
-    //         // update execution fee receiver
-    //         if (msg.executionFeeReceiver != null) {
-    //             order.executionFeeReceiver = msg.executionFeeReceiver!!;
-    //         }
-    //         order.lastOperator = sender();
-    //         self.rbfPositionOrders.set(msg.orderId, order);
+        // refund
+        if (msg.refundReceiver != null && msg.refundAmount > 0) {
+            // transfer jetton
+            self.refundJetton(0, msg.refundAmount, msg.refundReceiver!!, null);
+        }
 
-    //         // transfer jetton
-    //         self.refundJetton(callbackId, jettonCallback.amount, jettonCallback.receiver, myAddress());
-    //         return;
-    //     }
+        // transfer execution fee
+        if (msg.executionFeeReceiver != null && msg.executionFeeAmount > 0) {
+            send(SendParameters{
+                to: msg.executionFeeReceiver!!,
+                bounce: true,
+                value: msg.executionFeeAmount,
+                mode: SendPayGasSeparately
+            });
+        }
 
-    //     if (msg.isExecute) {
-    //         // delete order
-    //         self.rbfPositionOrders.set(msg.orderId, null);
-    //         // event
-    //         emit(RBFPositionOrderExecutedEvent{
-    //             isIncrease: true,
-    //             orderId: msg.orderId,
-    //             trxId: msg.trxId
-    //         }.toCell());
-    //     } else {
-    //         if (order.callbackId != null) {
-    //             // delete callback
-    //             self.jettonCallbacks.set(order.callbackId!!, null);
-    //         }
-    //         // delete order
-    //         self.rbfPositionOrders.set(msg.orderId, null);
-    //         // event
-    //         emit(RBFPositionOrderCancelledEvent{
-    //             isIncrease: true,
-    //             orderId: msg.orderId,
-    //             trxId: msg.trxId
-    //         }.toCell());
-    //     }
+        emit(CompensateOrderEvent{
+            orderType: msg.orderType,
+            orderId: msg.orderId,
+            trxId: msg.trxId,
+            refundReceiver: msg.refundReceiver,
+            refundAmount: msg.refundAmount,
+            executionFeeReceiver: msg.executionFeeReceiver,
+            executionFeeAmount: msg.executionFeeAmount
+        }.toCell());
 
-    //     // transfer execution fee
-    //     if (order.executionFeeReceiver != null) {
-    //         send(SendParameters{
-    //             to: order.executionFeeReceiver!!,
-    //             bounce: true,
-    //             value: order.executionFee,
-    //             mode: SendPayGasSeparately
-    //         });
-    //     }
-
-    //     // transfer execess gas
-    //     self.refundExecessTon(sender(), order.executionFee);
-    //     return;
-    // }
+        // transfer execess gas
+        self.refundExecessTon(sender(), 0);
+        return;
+    }
 
     // ============================ Getter ================================ //
     get fun rbfPositionOrder(orderId: Int): RBFPositionOrder? {
@@ -748,7 +752,7 @@ contract OrderBook with Deployable, Ownable {
 
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE) {
-            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + GAS_TRANSFER_JETTON, "gas not enough");
         } else {
             require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
         }
@@ -825,7 +829,7 @@ contract OrderBook with Deployable, Ownable {
         if (order.opType == ORDER_OP_TYPE_INCREASE) {
             require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
         self.shouldExecute(order.blockTime, order.isPending);
@@ -878,7 +882,7 @@ contract OrderBook with Deployable, Ownable {
         if (order.opType == ORDER_OP_TYPE_INCREASE) {
             require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption, "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
         if (order.opType == ORDER_OP_TYPE_INCREASE) {
@@ -955,7 +959,7 @@ contract OrderBook with Deployable, Ownable {
         let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+        require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
 
         // check sender
         let isExecutor: Bool = false;
@@ -1088,7 +1092,7 @@ contract OrderBook with Deployable, Ownable {
     //     if (order.opType == ORDER_OP_TYPE_INCREASE) {
     //         require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
     //     } else {
-    //         require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+    //         require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
     //     }
 
     //     require(order.isPending, "order not pending");
@@ -1302,7 +1306,7 @@ contract OrderBook with Deployable, Ownable {
 
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + self.minTonsForStorage + GAS_TRANSFER_JETTON, "gas not enough");
         } else {
             require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption + self.minTonsForStorage, "gas not enough");
         }
@@ -1379,7 +1383,7 @@ contract OrderBook with Deployable, Ownable {
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
         self.shouldExecute(order.blockTime, order.isPending);
@@ -1436,7 +1440,7 @@ contract OrderBook with Deployable, Ownable {
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             require(ctx.value >= ctx.readForwardFee() * 2 + self.gasConsumption, "gas not enough");
         } else {
-            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + ton("0.032"), "gas not enough");
+            require(ctx.value >= ctx.readForwardFee() * 4 + self.gasConsumption * 2 + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
@@ -1529,7 +1533,7 @@ contract OrderBook with Deployable, Ownable {
         let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+        require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
 
         // check sender
         let isExecutor: Bool = false;
@@ -1671,7 +1675,7 @@ contract OrderBook with Deployable, Ownable {
     //     if (order.opType == ORDER_OP_TYPE_INCREASE) {
     //         require(ctx.value >= ctx.readForwardFee() * 3 + self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
     //     } else {
-    //         require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + ton("0.032"), "gas not enough");
+    //         require(ctx.value >= ctx.readForwardFee() * 6 + self.gasConsumption * 3 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
     //     }
 
     //     require(order.isPending, "order not pending");
@@ -1795,20 +1799,6 @@ contract OrderBook with Deployable, Ownable {
     //     }
     //     return (tokenConfigOpt!!).enable;
     // }
-
-    // create jetton transfer body
-    fun createJettonTransferBody(queryId: Int, jettonAmount: Int, to: Address, responseDestination: Address): Cell {
-        return beginCell()
-            .storeInt(0xf8a7ea5, 32)
-            .storeInt(queryId, 64)
-            .storeCoins(jettonAmount)
-            .storeAddress(to) // to_owner_address
-            .storeAddress(responseDestination)
-            .storeInt(0, 1) // custom payload
-            .storeCoins(0) // forward_ton_amount
-            .storeSlice(beginCell().endCell().asSlice()) // forward payload
-            .endCell();
-    }
 
 
 }

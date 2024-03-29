@@ -60,6 +60,12 @@ builder $DeployOk$_store(builder build_0, (int) v) inline;
 ;; $DeployOk$_store_cell
 cell $DeployOk$_store_cell((int) v) inline;
 
+;; $TokenTransfer$_store
+builder $TokenTransfer$_store(builder build_0, (int, int, slice, slice, cell, int, slice) v) inline_ref;
+
+;; $TokenTransfer$_store_cell
+cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) inline;
+
 ;; $TokenNotification$_load
 (slice, ((int, int, slice, slice))) $TokenNotification$_load(slice sc_0) inline;
 
@@ -89,6 +95,9 @@ cell $UpdateRBFPosition$_store_cell((int, int, slice, int, int, int, cell) v) in
 
 ;; $UpdateRBFPositionSuccess$_load
 (slice, ((int, int, int))) $UpdateRBFPositionSuccess$_load(slice sc_0) inline;
+
+;; $CompensateOrder$_load
+(slice, ((int, int, int, slice, int, slice, int))) $CompensateOrder$_load(slice sc_0) inline_ref;
 
 ;; $CreateDecreaseLPPositionOrder$_load
 (slice, ((int, int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline;
@@ -191,6 +200,12 @@ builder $PerpPositionOrderExecutedEvent$_store(builder build_0, (int, int, int) 
 
 ;; $PerpPositionOrderExecutedEvent$_store_cell
 cell $PerpPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline;
+
+;; $CompensateOrderEvent$_store
+builder $CompensateOrderEvent$_store(builder build_0, (int, int, int, slice, int, slice, int) v) inline_ref;
+
+;; $CompensateOrderEvent$_store_cell
+cell $CompensateOrderEvent$_store_cell((int, int, int, slice, int, slice, int) v) inline;
 
 ;; $JettonCallback$_store
 builder $JettonCallback$_store(builder build_0, (int, int, int, slice, int) v) inline;
@@ -372,8 +387,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $SendParameters$_constructor_to_value_mode_bounce_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice to, int value, int mode, int bounce, cell body) inline;
 
-;; $OrderBook$_fun_createJettonTransferBody
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int), cell) $OrderBook$_fun_createJettonTransferBody((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $queryId, int $jettonAmount, slice $to, slice $responseDestination) impure inline_ref;
+;; $TokenTransfer$_constructor_queryId_amount_receiver_responseDestination_customPayload_forwardTonAmount_forwardPayload
+((int, int, slice, slice, cell, int, slice)) $TokenTransfer$_constructor_queryId_amount_receiver_responseDestination_customPayload_forwardTonAmount_forwardPayload(int queryId, int amount, slice receiver, slice responseDestination, cell customPayload, int forwardTonAmount, slice forwardPayload) inline;
 
 ;; $OrderBook$_fun_refundJetton
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int), ()) $OrderBook$_fun_refundJetton((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $queryId, int $amount, slice $to, slice $response) impure inline_ref;
@@ -491,6 +506,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $UpdateRBFPosition$_constructor_isIncrease_orderId_trxId_account_liquidityDelta_pricesLength_prices
 ((int, int, slice, int, int, int, cell)) $UpdateRBFPosition$_constructor_isIncrease_orderId_trxId_account_liquidityDelta_pricesLength_prices(int isIncrease, int orderId, int trxId, slice account, int liquidityDelta, int pricesLength, cell prices) inline;
+
+;; $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFeeAmount
+((int, int, int, slice, int, slice, int)) $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFeeAmount(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFeeAmount) inline;
 
 ;; $UpdateLPPosition$_constructor_orderId_opType_trxId_account_marginDelta_liquidityDelta_pricesLength_prices
 ((int, int, slice, int, int, int, int, cell)) $UpdateLPPosition$_constructor_orderId_opType_trxId_account_marginDelta_liquidityDelta_pricesLength_prices(int orderId, int opType, int trxId, slice account, int marginDelta, int liquidityDelta, int pricesLength, cell prices) inline;

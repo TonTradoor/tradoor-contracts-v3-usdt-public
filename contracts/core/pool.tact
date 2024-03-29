@@ -216,7 +216,7 @@ contract Pool with Deployable, Ownable {
         }
 
         // update RBF
-        // TODO calculate bonus
+        // calculate bonus
         let globalNetRBF: Int = self.globalRBFPosition.riskBufferFund + self.calculateTotalGlobalUnrealizedPnl();
         if (globalNetRBF < 0) {
             globalNetRBF = 0;
@@ -225,7 +225,7 @@ contract Pool with Deployable, Ownable {
         if (globalNetRBF < self.globalRBFPosition.liquidity) {
             // bonus = b + s (1 - x) * liquidity
             bonus = self.bonusFactor * (self.globalRBFPosition.liquidity - globalNetRBF)
-                 * liquidityDelta / self.globalRBFPosition.liquidity;                         
+                 * liquidityDelta / self.globalRBFPosition.liquidity;
             rbfPosition.bonus = rbfPosition.bonus + bonus;
         }
 
@@ -358,7 +358,7 @@ contract Pool with Deployable, Ownable {
         // update price
         self.setPrice(msg.pricesLength, msg.prices);
 
-        // TODO update funding rate        
+        // TODO update funding rate
 
         // update position
         let receive: Int = 0;

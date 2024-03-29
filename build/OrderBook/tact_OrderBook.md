@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 15569 bytes
+BOC Size: 15238 bytes
 
 # Types
-Total Types: 47
+Total Types: 49
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -37,6 +37,10 @@ Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
 TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
+## TokenTransfer
+TLB: `token_transfer#0f8a7ea5 queryId:uint64 amount:coins receiver:address responseDestination:Maybe address customPayload:Maybe ^cell forwardTonAmount:coins forwardPayload:remainder<slice> = TokenTransfer`
+Signature: `TokenTransfer{queryId:uint64,amount:coins,receiver:address,responseDestination:Maybe address,customPayload:Maybe ^cell,forwardTonAmount:coins,forwardPayload:remainder<slice>}`
+
 ## TokenNotification
 TLB: `token_notification#7362d09c queryId:uint64 amount:coins from:address forwardPayload:remainder<slice> = TokenNotification`
 Signature: `TokenNotification{queryId:uint64,amount:coins,from:address,forwardPayload:remainder<slice>}`
@@ -69,9 +73,9 @@ Signature: `UpdateRBFPosition{isIncrease:bool,orderId:uint64,account:address,liq
 TLB: `update_rbf_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateRBFPositionSuccess`
 Signature: `UpdateRBFPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
-## CompensateRBFPositionOrder
-TLB: `compensate_rbf_position_order#09f91fd2 orderId:int257 trxId:int257 needRefund:bool isExecute:bool executionFeeReceiver:Maybe address pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = CompensateRBFPositionOrder`
-Signature: `CompensateRBFPositionOrder{orderId:int257,trxId:int257,needRefund:bool,isExecute:bool,executionFeeReceiver:Maybe address,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+## CompensateOrder
+TLB: `compensate_order#35da48df orderType:Maybe int257 orderId:int257 trxId:int257 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFeeAmount:int257 = CompensateOrder`
+Signature: `CompensateOrder{orderType:Maybe int257,orderId:int257,trxId:int257,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFeeAmount:int257}`
 
 ## CreateDecreaseLPPositionOrder
 TLB: `create_decrease_lp_position_order#7202bd7d executionFee:int257 marginDelta:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder`
@@ -164,6 +168,10 @@ Signature: `PerpPositionOrderCancelledEvent{opType:uint8,orderId:int257,trxId:in
 ## PerpPositionOrderExecutedEvent
 TLB: `perp_position_order_executed_event#fecf3a7f opType:uint8 orderId:int257 trxId:int257 = PerpPositionOrderExecutedEvent`
 Signature: `PerpPositionOrderExecutedEvent{opType:uint8,orderId:int257,trxId:int257}`
+
+## CompensateOrderEvent
+TLB: `compensate_order_event#f0ed7b76 orderType:Maybe int257 orderId:int257 trxId:int257 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFeeAmount:int257 = CompensateOrderEvent`
+Signature: `CompensateOrderEvent{orderType:Maybe int257,orderId:int257,trxId:int257,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFeeAmount:int257}`
 
 ## ConfigData
 TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData`
