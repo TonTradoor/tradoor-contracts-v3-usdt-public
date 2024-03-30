@@ -484,14 +484,14 @@ cell $UpdatePerpPosition$_store_cell((int, int, int, slice, int, int, int, int, 
 
 ;;
 ;; Type: RBFPositionOrderCreatedEvent
-;; Header: 0xcf635798
-;; TLB: rbf_position_order_created_event#cf635798 isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 orderId:int257 = RBFPositionOrderCreatedEvent
+;; Header: 0x59e185f1
+;; TLB: rbf_position_order_created_event#59e185f1 opType:uint8 account:address liquidityDelta:int257 executionFee:int257 orderId:int257 = RBFPositionOrderCreatedEvent
 ;;
 
 builder $RBFPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, int, int) v) inline {
-    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'orderId) = v;
-    build_0 = store_uint(build_0, 3479394200, 32);
-    build_0 = build_0.store_int(v'isIncrease, 1);
+    var (v'opType, v'account, v'liquidityDelta, v'executionFee, v'orderId) = v;
+    build_0 = store_uint(build_0, 1507952113, 32);
+    build_0 = build_0.store_uint(v'opType, 8);
     build_0 = __tact_store_address(build_0, v'account);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
     build_0 = build_0.store_int(v'executionFee, 257);
@@ -505,20 +505,20 @@ cell $RBFPositionOrderCreatedEvent$_store_cell((int, slice, int, int, int) v) in
     return $RBFPositionOrderCreatedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, slice, int, int, int)) $RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId(int isIncrease, slice account, int liquidityDelta, int executionFee, int orderId) inline {
-    return (isIncrease, account, liquidityDelta, executionFee, orderId);
+((int, slice, int, int, int)) $RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId(int opType, slice account, int liquidityDelta, int executionFee, int orderId) inline {
+    return (opType, account, liquidityDelta, executionFee, orderId);
 }
 
 ;;
 ;; Type: RBFPositionOrderCancelledEvent
-;; Header: 0x245466c4
-;; TLB: rbf_position_order_cancelled_event#245466c4 isIncrease:bool orderId:int257 trxId:int257 = RBFPositionOrderCancelledEvent
+;; Header: 0x9822e3aa
+;; TLB: rbf_position_order_cancelled_event#9822e3aa opType:uint8 orderId:int257 trxId:int257 = RBFPositionOrderCancelledEvent
 ;;
 
 builder $RBFPositionOrderCancelledEvent$_store(builder build_0, (int, int, int) v) inline {
-    var (v'isIncrease, v'orderId, v'trxId) = v;
-    build_0 = store_uint(build_0, 609511108, 32);
-    build_0 = build_0.store_int(v'isIncrease, 1);
+    var (v'opType, v'orderId, v'trxId) = v;
+    build_0 = store_uint(build_0, 2552423338, 32);
+    build_0 = build_0.store_uint(v'opType, 8);
     build_0 = build_0.store_int(v'orderId, 257);
     build_0 = build_0.store_int(v'trxId, 257);
     return build_0;
@@ -528,20 +528,20 @@ cell $RBFPositionOrderCancelledEvent$_store_cell((int, int, int) v) inline {
     return $RBFPositionOrderCancelledEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int)) $RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId(int isIncrease, int orderId, int trxId) inline {
-    return (isIncrease, orderId, trxId);
+((int, int, int)) $RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline {
+    return (opType, orderId, trxId);
 }
 
 ;;
 ;; Type: RBFPositionOrderExecutedEvent
-;; Header: 0x912bb14f
-;; TLB: rbf_position_order_executed_event#912bb14f isIncrease:bool orderId:int257 trxId:int257 = RBFPositionOrderExecutedEvent
+;; Header: 0x508154c5
+;; TLB: rbf_position_order_executed_event#508154c5 opType:uint8 orderId:int257 trxId:int257 = RBFPositionOrderExecutedEvent
 ;;
 
 builder $RBFPositionOrderExecutedEvent$_store(builder build_0, (int, int, int) v) inline {
-    var (v'isIncrease, v'orderId, v'trxId) = v;
-    build_0 = store_uint(build_0, 2435559759, 32);
-    build_0 = build_0.store_int(v'isIncrease, 1);
+    var (v'opType, v'orderId, v'trxId) = v;
+    build_0 = store_uint(build_0, 1350653125, 32);
+    build_0 = build_0.store_uint(v'opType, 8);
     build_0 = build_0.store_int(v'orderId, 257);
     build_0 = build_0.store_int(v'trxId, 257);
     return build_0;
@@ -551,8 +551,8 @@ cell $RBFPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline {
     return $RBFPositionOrderExecutedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int)) $RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId(int isIncrease, int orderId, int trxId) inline {
-    return (isIncrease, orderId, trxId);
+((int, int, int)) $RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline {
+    return (opType, orderId, trxId);
 }
 
 ;;

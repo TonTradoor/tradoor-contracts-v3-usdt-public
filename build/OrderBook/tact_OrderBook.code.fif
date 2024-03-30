@@ -130,10 +130,10 @@ PROGRAM{
   DECLPROC $OrderBook$_fun_refundExecessTon
   DECLPROC $OrderBook$_fun_getPoolGas
   DECLPROC $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator
-  DECLPROC $RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId
+  DECLPROC $RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId
   DECLPROC $OrderBook$_fun_handleCreateIncreaseRBFPositionOrder
-  DECLPROC $RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId
-  DECLPROC $RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId
+  DECLPROC $RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
+  DECLPROC $RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
   DECLPROC $OrderBook$_fun_handelRBFPositionOrderCallback
   DECLPROC $OrderBook$_fun_rbfPositionOrder
   DECLPROC $OrderBook$_fun_rbfPositionOrderIndexNext
@@ -847,11 +847,11 @@ PROGRAM{
     3 -ROLL
   }>
   $RBFPositionOrderCreatedEvent$_store PROCINLINE:<{
-    3479394200 PUSHINT
+    1507952113 PUSHINT
     s0 s6 XCHG2
     32 STU
     s1 s4 XCHG
-    1 STI
+    8 STU
     ROT
     __tact_store_address INLINECALLDICT
     257 PUSHINT
@@ -873,11 +873,11 @@ PROGRAM{
     ENDC
   }>
   $RBFPositionOrderCancelledEvent$_store PROCINLINE:<{
-    609511108 PUSHINT
+    2552423338 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
-    1 STI
+    8 STU
     257 PUSHINT
     STIX
     257 PUSHINT
@@ -890,11 +890,11 @@ PROGRAM{
     ENDC
   }>
   $RBFPositionOrderExecutedEvent$_store PROCINLINE:<{
-    2435559759 PUSHINT
+    1350653125 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
-    1 STI
+    8 STU
     257 PUSHINT
     STIX
     257 PUSHINT
@@ -2084,7 +2084,7 @@ PROGRAM{
   }>
   $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator PROCINLINE:<{
   }>
-  $RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId PROCINLINE:<{
+  $RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId PROCINLINE:<{
   }>
   $OrderBook$_fun_handleCreateIncreaseRBFPositionOrder PROCREF:<{
     __tact_context_get INLINECALLDICT
@@ -2142,19 +2142,19 @@ PROGRAM{
     s3 s13 XCHG
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
-    TRUE
+    1 PUSHINT
     s2 s1 s2 XCPUXC
     s4 s5 s11 XCPUXC
-    $RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId INLINECALLDICT
+    $RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId INLINECALLDICT
     $RBFPositionOrderCreatedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     s7 s8 XCHG
     SWAP
     $OrderBook$_fun_refundExecessTon INLINECALLDICT
   }>
-  $RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId PROCINLINE:<{
+  $RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
-  $RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId PROCINLINE:<{
+  $RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
   $OrderBook$_fun_handelRBFPositionOrderCallback PROCREF:<{
     __tact_context_get INLINECALLDICT
@@ -2189,9 +2189,9 @@ PROGRAM{
     __tact_dict_set_int_cell INLINECALLDICT
     s0 s3 XCHG
     IF:<{
-      TRUE
+      1 PUSHINT
       s0 s5 s4 XCHG3
-      $RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId INLINECALLDICT
+      $RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId INLINECALLDICT
       $RBFPositionOrderCancelledEvent$_store_cell INLINECALLDICT
       $global_emit INLINECALLDICT
       s2 PUSH
@@ -2211,9 +2211,9 @@ PROGRAM{
         s8 POP
       }>
     }>ELSE<{
-      FALSE
+      2 PUSHINT
       s0 s5 s4 XCHG3
-      $RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId INLINECALLDICT
+      $RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId INLINECALLDICT
       $RBFPositionOrderExecutedEvent$_store_cell INLINECALLDICT
       $global_emit INLINECALLDICT
       s2 PUSH
@@ -3127,11 +3127,11 @@ PROGRAM{
     s3 s12 XCHG
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
-    FALSE
+    2 PUSHINT
     __tact_context_get_sender INLINECALLDICT
     s3 s4 s2 XCPUXC
     s0 s11 XCHG
-    $RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId INLINECALLDICT
+    $RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId INLINECALLDICT
     $RBFPositionOrderCreatedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     __tact_context_get_sender INLINECALLDICT
@@ -3299,11 +3299,11 @@ PROGRAM{
       21 s() PUSH
       SWAP
       __tact_dict_set_int_cell INLINECALLDICT
-      FALSE
+      2 PUSHINT
       s0 s2 XCHG
       s1 20 s() XCHG
       s0 19 s() XCHG
-      $RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId INLINECALLDICT
+      $RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId INLINECALLDICT
       $RBFPositionOrderCancelledEvent$_store_cell INLINECALLDICT
       $global_emit INLINECALLDICT
       s1 s15 XCHG
@@ -3552,9 +3552,9 @@ PROGRAM{
         s3 s14 XCHG
         SWAP
         __tact_dict_set_int_cell INLINECALLDICT
-        TRUE
+        1 PUSHINT
         s0 s5 s3 XCHG3
-        $RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId INLINECALLDICT
+        $RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId INLINECALLDICT
         $RBFPositionOrderExecutedEvent$_store_cell INLINECALLDICT
         $global_emit INLINECALLDICT
         s9 PUSH
@@ -5410,7 +5410,11 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
+<<<<<<< HEAD
     x{697066733a2f2f516d5159575737753750557636747169757438637746375644535738387a51615375535243796371786879534b66} PUSHSLICE
+=======
+    x{697066733a2f2f516d5450785356423341657473655557434d474b4a4b4b6969574c74444d436d776f515a73695357563150553778} PUSHSLICE
+>>>>>>> perp
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

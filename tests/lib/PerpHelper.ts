@@ -149,7 +149,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
 }
 
 
-export async function createDecreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, opType: number, 
+export async function createDecreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, opType: bigint, 
     tokenId: number, isLong: boolean, margin: number, size: number, triggerPrice: number) {
     let balanceBefore = await getAllBalance();
     let orderIdBefore = await TestEnv.orderBook.getPerpPositionOrderIndexNext();
@@ -162,7 +162,7 @@ export async function createDecreasePerpOrder(user: SandboxContract<TreasuryCont
         {
             $$type: 'CreateDecreasePerpPositionOrder',
             executionFee: toNano(executionFee),
-            opType: BigInt(opType),
+            opType: opType,
             tokenId: BigInt(tokenId),
             isLong: isLong,
             marginDelta: toJettonUnits(margin),

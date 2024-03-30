@@ -396,17 +396,17 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator
 ((int, slice, int, int, int, int, int, slice, slice)) $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator(int isIncrease, slice account, int liquidityDelta, int executionFee, int blockTime, int isPending, int callbackId, slice executionFeeReceiver, slice lastOperator) inline;
 
-;; $RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId
-((int, slice, int, int, int)) $RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId(int isIncrease, slice account, int liquidityDelta, int executionFee, int orderId) inline;
+;; $RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId
+((int, slice, int, int, int)) $RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId(int opType, slice account, int liquidityDelta, int executionFee, int orderId) inline;
 
 ;; $OrderBook$_fun_handleCreateIncreaseRBFPositionOrder
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int), ()) $OrderBook$_fun_handleCreateIncreaseRBFPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $liquidityDelta) impure inline_ref;
 
-;; $RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId
-((int, int, int)) $RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId(int isIncrease, int orderId, int trxId) inline;
+;; $RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
+((int, int, int)) $RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
-;; $RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId
-((int, int, int)) $RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId(int isIncrease, int orderId, int trxId) inline;
+;; $RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
+((int, int, int)) $RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
 ;; $OrderBook$_fun_handelRBFPositionOrderCallback
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int), ()) $OrderBook$_fun_handelRBFPositionOrderCallback((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, int, cell, cell, int) $self, int $orderId, int $trxId) impure inline_ref;

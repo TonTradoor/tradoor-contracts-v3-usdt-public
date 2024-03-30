@@ -170,7 +170,7 @@ contract OrderBook with Deployable, Ownable {
         self.jettonCallbacks.set(msg.queryId, null);
 
         // order type
-        else if (jettonCallback.orderType == ORDER_TYPE_LP) {
+        if (jettonCallback.orderType == ORDER_TYPE_LP) {
             self.handelLPPositionOrderCallback(jettonCallback.orderId, jettonCallback.trxId);
         }
         else if (jettonCallback.orderType == ORDER_TYPE_PERP) {
@@ -253,7 +253,7 @@ contract OrderBook with Deployable, Ownable {
 
         // event
         emit(RBFPositionOrderCreatedEvent{
-            isIncrease: true,
+            opType: ORDER_OP_TYPE_INCREASE,
             account: account,
             liquidityDelta: liquidityDelta,
             executionFee: executionFee,
@@ -288,7 +288,7 @@ contract OrderBook with Deployable, Ownable {
 
         // event
         emit(RBFPositionOrderCreatedEvent{
-            isIncrease: false,
+            opType: ORDER_OP_TYPE_DECREASE,
             account: sender(),
             liquidityDelta: msg.liquidityDelta,
             executionFee: msg.executionFee,

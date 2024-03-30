@@ -563,6 +563,8 @@ contract Pool with Deployable, Ownable {
                 realizedLoss = unrealizedLoss;
                 marginAfter = marginAfter - realizedLoss;
                 receive = marginAfter;
+                lpPosition.margin = 0;
+                lpPosition.liquidity = 0;
                 self.lpPositions.set(account, null);
             }
 

@@ -267,6 +267,8 @@
             $realizedLoss = $unrealizedLoss;
             $marginAfter = ($marginAfter - $realizedLoss);
             $receive = $marginAfter;
+            $lpPosition'margin = 0;
+            $lpPosition'liquidity = 0;
             $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_opt(null()));
         }
         $global_emit($LPPositionDecreasedEvent$_store_cell($LPPositionDecreasedEvent$_constructor_positionId_account_marginDelta_marginAfter_liquidityDelta_liquidityAfter_tradingFee_fundingFee_realizedLoss_receive_trxId($lpPosition'positionId, $account, $marginDelta, $lpPosition'margin, $liquidityDelta, $lpPosition'liquidity, $tradingFee, $fundingFee, $realizedLoss, $receive, $trxId)));
