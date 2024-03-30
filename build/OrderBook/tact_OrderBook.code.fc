@@ -72,7 +72,7 @@
     int $orderId = $self'rbfPositionOrderIndexNext;
     $self'rbfPositionOrderIndexNext = ($orderId + 1);
     $self'rbfPositionOrders~__tact_dict_set_int_cell(257, $orderId, $RBFPositionOrder$_store_cell($RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator(true, $account, $liquidityDelta, $executionFee, now(), false, null(), null(), null())));
-    $global_emit($RBFPositionOrderCreatedEvent$_store_cell($RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId(true, $account, $liquidityDelta, $executionFee, $orderId)));
+    $global_emit($RBFPositionOrderCreatedEvent$_store_cell($RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId(1, $account, $liquidityDelta, $executionFee, $orderId)));
     ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundExecessTon($account, $executionFee);
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
@@ -88,12 +88,12 @@
     var ($order'isIncrease, $order'account, $order'liquidityDelta, $order'executionFee, $order'blockTime, $order'isPending, $order'callbackId, $order'executionFeeReceiver, $order'lastOperator) = $RBFPositionOrder$_not_null($orderOpt);
     $self'rbfPositionOrders~__tact_dict_set_int_cell(257, $orderId, $RBFPositionOrder$_store_opt(null()));
     if ($order'isIncrease) {
-        $global_emit($RBFPositionOrderCancelledEvent$_store_cell($RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId(true, $orderId, $trxId)));
+        $global_emit($RBFPositionOrderCancelledEvent$_store_cell($RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(1, $orderId, $trxId)));
         if ((~ null?($order'executionFeeReceiver))) {
             $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($order'executionFeeReceiver), true, $order'executionFee, 1));
         }
     } else {
-        $global_emit($RBFPositionOrderExecutedEvent$_store_cell($RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId(false, $orderId, $trxId)));
+        $global_emit($RBFPositionOrderExecutedEvent$_store_cell($RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(2, $orderId, $trxId)));
         if ((~ null?($order'executionFeeReceiver))) {
             $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($order'executionFeeReceiver), true, $order'executionFee, 1));
         }
@@ -397,7 +397,7 @@
     int $orderId = $self'rbfPositionOrderIndexNext;
     $self'rbfPositionOrderIndexNext = ($self'rbfPositionOrderIndexNext + 1);
     $self'rbfPositionOrders~__tact_dict_set_int_cell(257, $orderId, $RBFPositionOrder$_store_cell($RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_callbackId_executionFeeReceiver_lastOperator(false, __tact_context_get_sender(), $msg'liquidityDelta, $msg'executionFee, now(), false, null(), null(), null())));
-    $global_emit($RBFPositionOrderCreatedEvent$_store_cell($RBFPositionOrderCreatedEvent$_constructor_isIncrease_account_liquidityDelta_executionFee_orderId(false, __tact_context_get_sender(), $msg'liquidityDelta, $msg'executionFee, $orderId)));
+    $global_emit($RBFPositionOrderCreatedEvent$_store_cell($RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId(2, __tact_context_get_sender(), $msg'liquidityDelta, $msg'executionFee, $orderId)));
     ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundExecessTon(__tact_context_get_sender(), $msg'executionFee);
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
@@ -435,7 +435,7 @@
             $executionFeeReceiver = __tact_not_null($msg'executionFeeReceiver);
         }
         $self'rbfPositionOrders~__tact_dict_set_int_cell(257, $msg'orderId, $RBFPositionOrder$_store_opt(null()));
-        $global_emit($RBFPositionOrderCancelledEvent$_store_cell($RBFPositionOrderCancelledEvent$_constructor_isIncrease_orderId_trxId(false, $msg'orderId, $msg'trxId)));
+        $global_emit($RBFPositionOrderCancelledEvent$_store_cell($RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(2, $msg'orderId, $msg'trxId)));
         $global_send($SendParameters$_constructor_to_bounce_value_mode($executionFeeReceiver, true, $order'executionFee, 1));
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'jettonCallbacks, $self'jettonCallbackQueryIdNext, $self'rbfPositionOrders, $self'rbfPositionOrderIndexNext, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundExecessTon(__tact_context_get_sender(), 0);
     }
@@ -483,7 +483,7 @@
     }
     if ($order'isIncrease) {
         $self'rbfPositionOrders~__tact_dict_set_int_cell(257, $msg'orderId, $RBFPositionOrder$_store_opt(null()));
-        $global_emit($RBFPositionOrderExecutedEvent$_store_cell($RBFPositionOrderExecutedEvent$_constructor_isIncrease_orderId_trxId(true, $msg'orderId, $msg'trxId)));
+        $global_emit($RBFPositionOrderExecutedEvent$_store_cell($RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(1, $msg'orderId, $msg'trxId)));
         if ((~ null?($order'executionFeeReceiver))) {
             $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($order'executionFeeReceiver), true, $order'executionFee, 1));
         }
@@ -922,7 +922,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmYkkEp1CoW9DaFxuJZRPDoQMMh9rJNvVgCEZGqyNpRcgv";
+    return "ipfs://QmTPxSVB3AetseUWCMGKJKKiiWLtDMCmwoQZsiSWV1PU7x";
 }
 
 _ lazy_deployment_completed() method_id {

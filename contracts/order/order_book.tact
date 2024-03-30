@@ -237,7 +237,7 @@ contract OrderBook with Deployable, Ownable {
 
         // event
         emit(RBFPositionOrderCreatedEvent{
-            isIncrease: true,
+            opType: ORDER_OP_TYPE_INCREASE,
             account: account,
             liquidityDelta: liquidityDelta,
             executionFee: executionFee,
@@ -272,7 +272,7 @@ contract OrderBook with Deployable, Ownable {
 
         // event
         emit(RBFPositionOrderCreatedEvent{
-            isIncrease: false,
+            opType: ORDER_OP_TYPE_DECREASE,
             account: sender(),
             liquidityDelta: msg.liquidityDelta,
             executionFee: msg.executionFee,
@@ -338,7 +338,7 @@ contract OrderBook with Deployable, Ownable {
             self.rbfPositionOrders.set(msg.orderId, null);
             // event
             emit(RBFPositionOrderCancelledEvent{
-                isIncrease: false,
+                opType: ORDER_OP_TYPE_DECREASE,
                 orderId: msg.orderId,
                 trxId: msg.trxId
             }.toCell());
@@ -429,7 +429,7 @@ contract OrderBook with Deployable, Ownable {
             self.rbfPositionOrders.set(msg.orderId, null);
             // event
             emit(RBFPositionOrderExecutedEvent{
-                isIncrease: true,
+                opType: ORDER_OP_TYPE_INCREASE,
                 orderId: msg.orderId,
                 trxId: msg.trxId
             }.toCell());
@@ -503,7 +503,7 @@ contract OrderBook with Deployable, Ownable {
         if (order.isIncrease) {
             // event
             emit(RBFPositionOrderCancelledEvent{
-                isIncrease: true,
+                opType: ORDER_OP_TYPE_INCREASE,
                 orderId: orderId,
                 trxId: trxId
             }.toCell());
@@ -520,7 +520,7 @@ contract OrderBook with Deployable, Ownable {
         } else {
             // event
             emit(RBFPositionOrderExecutedEvent{
-                isIncrease: false,
+                opType: ORDER_OP_TYPE_DECREASE,
                 orderId: orderId,
                 trxId: trxId
             }.toCell());

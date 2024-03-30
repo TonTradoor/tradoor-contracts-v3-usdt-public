@@ -130,16 +130,16 @@ TLB: `compensate_perp_position_order#48618973 orderId:int257 trxId:int257 needRe
 Signature: `CompensatePerpPositionOrder{orderId:int257,trxId:int257,needRefund:bool,isExecute:bool,executionFeeReceiver:Maybe address}`
 
 ## RBFPositionOrderCreatedEvent
-TLB: `rbf_position_order_created_event#cf635798 isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 orderId:int257 = RBFPositionOrderCreatedEvent`
-Signature: `RBFPositionOrderCreatedEvent{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,orderId:int257}`
+TLB: `rbf_position_order_created_event#59e185f1 opType:uint8 account:address liquidityDelta:int257 executionFee:int257 orderId:int257 = RBFPositionOrderCreatedEvent`
+Signature: `RBFPositionOrderCreatedEvent{opType:uint8,account:address,liquidityDelta:int257,executionFee:int257,orderId:int257}`
 
 ## RBFPositionOrderCancelledEvent
-TLB: `rbf_position_order_cancelled_event#245466c4 isIncrease:bool orderId:int257 trxId:int257 = RBFPositionOrderCancelledEvent`
-Signature: `RBFPositionOrderCancelledEvent{isIncrease:bool,orderId:int257,trxId:int257}`
+TLB: `rbf_position_order_cancelled_event#9822e3aa opType:uint8 orderId:int257 trxId:int257 = RBFPositionOrderCancelledEvent`
+Signature: `RBFPositionOrderCancelledEvent{opType:uint8,orderId:int257,trxId:int257}`
 
 ## RBFPositionOrderExecutedEvent
-TLB: `rbf_position_order_executed_event#912bb14f isIncrease:bool orderId:int257 trxId:int257 = RBFPositionOrderExecutedEvent`
-Signature: `RBFPositionOrderExecutedEvent{isIncrease:bool,orderId:int257,trxId:int257}`
+TLB: `rbf_position_order_executed_event#508154c5 opType:uint8 orderId:int257 trxId:int257 = RBFPositionOrderExecutedEvent`
+Signature: `RBFPositionOrderExecutedEvent{opType:uint8,orderId:int257,trxId:int257}`
 
 ## LPPositionOrderCreatedEvent
 TLB: `lp_position_order_created_event#e9304df3 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 orderId:int257 = LPPositionOrderCreatedEvent`

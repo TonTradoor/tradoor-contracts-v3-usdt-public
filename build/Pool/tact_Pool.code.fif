@@ -3228,19 +3228,20 @@ PROGRAM{
       $GlobalRBFChangedEvent$_store_cell INLINECALLDICT
       $global_emit INLINECALLDICT
     }>ELSE<{
+      30 s() POP
       62259 PUSHINT
-      16 s() PUSH
-      s12 PUSH
+      s15 s10 PUSH2
       ADD
-      ROT
+      SWAP
+      s0 31 s() XCHG
       ADD
-      34 s() PUSH
+      33 s() PUSH
       GEQ
+      s1 30 s() XCHG
       THROWANYIFNOT
-      36 s() PUSH
+      35 s() PUSH
       0 GTINT
       IF:<{
-        29 s() POP
         33 s() PUSH
         32 s() PUSH
         MUL
@@ -3297,10 +3298,13 @@ PROGRAM{
         SWAP
         __tact_dict_set_slice_cell INLINECALLDICT
       }>ELSE<{
-        36 s() POP
-        s0 36 s() XCHG
-        33 s() PUSH
+        35 s() POP
+        38 s() POP
+        s0 34 s() XCHG
+        31 s() PUSH
         SUB
+        0 PUSHINT
+        DUP
         267 PUSHINT
         PUSHNULL
         $LPPosition$_store_opt INLINECALLDICT
@@ -3308,10 +3312,11 @@ PROGRAM{
         36 s() PUSH
         SWAP
         __tact_dict_set_slice_cell INLINECALLDICT
-        36 s() 39 s() XCHG
-        28 s() 36 s() XCHG
-        28 s() 35 s() XCHG
-        s11 33 s() XCHG
+        35 s() 39 s() XCHG
+        s1 36 s() XCHG
+        s11 35 s() XCHG
+        s2 33 s() XCHG
+        s1 s11 s0 XCHG3
       }>
       s6 29 s() XCHG
       s5 34 s() XCHG
