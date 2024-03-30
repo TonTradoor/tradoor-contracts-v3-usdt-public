@@ -30,7 +30,6 @@ PROGRAM{
   DECLPROC $UpdateRBFPosition$_store_cell
   DECLPROC $UpdateRBFPosition$_load_bounced
   DECLPROC $UpdateRBFPositionSuccess$_load
-  DECLPROC $CompensateOrder$_load
   DECLPROC $CreateDecreaseLPPositionOrder$_load
   DECLPROC $CancelLPPositionOrder$_load
   DECLPROC $ExecuteLPPositionOrder$_load
@@ -65,8 +64,6 @@ PROGRAM{
   DECLPROC $PerpPositionOrderCancelledEvent$_store_cell
   DECLPROC $PerpPositionOrderExecutedEvent$_store
   DECLPROC $PerpPositionOrderExecutedEvent$_store_cell
-  DECLPROC $CompensateOrderEvent$_store
-  DECLPROC $CompensateOrderEvent$_store_cell
   DECLPROC $JettonCallback$_store
   DECLPROC $JettonCallback$_store_cell
   DECLPROC $JettonCallback$_not_null
@@ -167,7 +164,6 @@ PROGRAM{
   DECLPROC $OrderBook$_fun_owner
   DECLPROC $JettonCallback$_constructor_orderType_orderId_amount_receiver_trxId
   DECLPROC $UpdateRBFPosition$_constructor_isIncrease_orderId_trxId_account_liquidityDelta_pricesLength_prices
-  DECLPROC $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFeeAmount
   DECLPROC $UpdateLPPosition$_constructor_orderId_opType_trxId_account_marginDelta_liquidityDelta_pricesLength_prices
   DECLPROC $UpdateLPPosition$_constructor_opType_orderId_trxId_account_marginDelta_liquidityDelta_pricesLength_prices
   DECLPROC $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
@@ -181,7 +177,6 @@ PROGRAM{
   DECLPROC $OrderBook$_internal_binary_ExecuteRBFPositionOrder
   DECLPROC $OrderBook$_internal_binary_UpdateRBFPositionSuccess
   DECLPROC $OrderBook$_receive_binary_bounce_UpdateRBFPosition
-  DECLPROC $OrderBook$_internal_binary_CompensateOrder
   DECLPROC $OrderBook$_internal_binary_CreateDecreaseLPPositionOrder
   DECLPROC $OrderBook$_internal_binary_CancelLPPositionOrder
   DECLPROC $OrderBook$_internal_binary_ExecuteLPPositionOrder
@@ -564,44 +559,6 @@ PROGRAM{
     LDIX
     64 LDU
     3 -ROLL
-  }>
-  $CompensateOrder$_load PROCREF:<{
-    32 LDU
-    SWAP
-    903497951 PUSHINT
-    EQUAL
-    129 THROWIFNOT
-    1 LDI
-    SWAP
-    IF:<{
-      257 PUSHINT
-      LDIX
-    }>ELSE<{
-      PUSHNULL
-      SWAP
-    }>
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
-    LDREF
-    SWAP
-    CTOS
-    __tact_load_address_opt INLINECALLDICT
-    SWAP
-    257 PUSHINT
-    LDIX
-    __tact_load_address_opt INLINECALLDICT
-    SWAP
-    LDREF
-    DROP
-    CTOS
-    257 PUSHINT
-    LDIX
-    DROP
-    s4 s7 XCHG
-    s4 s6 XCHG
-    s4 s5 XCHG
   }>
   $CreateDecreaseLPPositionOrder$_load PROCINLINE:<{
     32 LDU
@@ -1104,57 +1061,6 @@ PROGRAM{
     NEWC
     3 -ROLL
     $PerpPositionOrderExecutedEvent$_store INLINECALLDICT
-    ENDC
-  }>
-  $CompensateOrderEvent$_store PROCREF:<{
-    4042095478 PUSHINT
-    s0 s8 XCHG2
-    32 STU
-    s6 PUSH
-    ISNULL
-    NOT
-    IF:<{
-      TRUE
-      SWAP
-      1 STI
-      s1 s6 XCHG
-      257 PUSHINT
-      STIX
-    }>ELSE<{
-      s6 POP
-      FALSE
-      s0 s6 XCHG2
-      1 STI
-    }>
-    s1 s4 XCHG
-    257 PUSHINT
-    STIX
-    s1 s2 XCHG
-    257 PUSHINT
-    STIX
-    NEWC
-    ROT
-    __tact_store_address_opt INLINECALLDICT
-    s1 s2 XCHG
-    257 PUSHINT
-    STIX
-    ROT
-    __tact_store_address_opt INLINECALLDICT
-    s0 s2 XCHG
-    NEWC
-    257 PUSHINT
-    STIX
-    ENDC
-    ROT
-    STREF
-    ENDC
-    SWAP
-    STREF
-  }>
-  $CompensateOrderEvent$_store_cell PROCINLINE:<{
-    NEWC
-    7 -ROLL
-    $CompensateOrderEvent$_store INLINECALLDICT
     ENDC
   }>
   $JettonCallback$_store PROCINLINE:<{
@@ -2950,8 +2856,6 @@ PROGRAM{
     s3 s4 XCHG
     s2 s3 XCHG
   }>
-  $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFeeAmount PROCINLINE:<{
-  }>
   $UpdateLPPosition$_constructor_orderId_opType_trxId_account_marginDelta_liquidityDelta_pricesLength_prices PROCINLINE:<{
     s4 s5 XCHG
     s3 s4 XCHG
@@ -3745,112 +3649,6 @@ PROGRAM{
       __tact_dict_set_int_cell INLINECALLDICT
       s0 s6 XCHG
     }>
-  }>
-  $OrderBook$_internal_binary_CompensateOrder PROCINLINE:<{
-    __tact_context_get INLINECALLDICT
-    FALSE
-    267 PUSHINT
-    __tact_context_get_sender INLINECALLDICT
-    23 s() PUSH
-    -ROT
-    1 PUSHINT
-    __tact_dict_get_slice_int INLINECALLDICT
-    DUP
-    ISNULL
-    NOT
-    IF:<{
-      NIP
-      __tact_not_null INLINECALLDICT
-    }>ELSE<{
-      DROP
-    }>
-    41207 PUSHINT
-    SWAP
-    THROWANYIFNOT
-    s3 s2 s3 XC2PU
-    19305 PUSHINT
-    s0 s4 XCHG
-    $Context$_fun_readForwardFee INLINECALLDICT
-    1 LSHIFT#
-    24 s() PUSH
-    ADD
-    23 s() PUSH
-    ADD
-    s1 s2 XCHG
-    GEQ
-    THROWANYIFNOT
-    s3 PUSH
-    ISNULL
-    NOT
-    IF:<{
-      s2 PUSH
-      0 GTINT
-    }>ELSE<{
-      FALSE
-    }>
-    IF:<{
-      0 PUSHINT
-      s4 PUSH
-      __tact_not_null INLINECALLDICT
-      19 s() 26 s() XCHG
-      18 s() 25 s() XCHG
-      17 s() 24 s() XCHG
-      16 s() 23 s() XCHG
-      s15 22 s() XCHG
-      s14 21 s() XCHG
-      s13 20 s() XCHG
-      s12 26 s() XCHG
-      s11 25 s() XCHG
-      s10 24 s() XCHG
-      s9 23 s() XCHG
-      s8 22 s() XCHG
-      s7 21 s() XCHG
-      s6 20 s() XCHG
-      s5 26 s() XCHG
-      s4 25 s() XCHG
-      s3 24 s() XCHG
-      s2 23 s() XCHG
-      25 s() PUSH
-      SWAP
-      PUSHNULL
-      $OrderBook$_fun_refundJetton INLINECALLDICT
-      17 s() 24 s() XCHG
-      16 s() 23 s() XCHG
-      s15 22 s() XCHG
-      s14 21 s() XCHG
-      s13 20 s() XCHG
-      s12 19 s() XCHG
-      s11 18 s() XCHG
-      s10 17 s() XCHG
-      s9 16 s() XCHG
-      s8 s15 XCHG
-      s7 s14 XCHG
-      7 7 BLKSWAP
-    }>
-    OVER
-    ISNULL
-    NOT
-    IF:<{
-      DUP
-      0 GTINT
-    }>ELSE<{
-      FALSE
-    }>
-    IF:<{
-      OVER
-      __tact_not_null INLINECALLDICT
-      TRUE
-      s2 PUSH
-      1 PUSHINT
-      $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
-      $global_send INLINECALLDICT
-    }>
-    $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFeeAmount INLINECALLDICT
-    $CompensateOrderEvent$_store_cell INLINECALLDICT
-    $global_emit INLINECALLDICT
-    __tact_context_get_sender INLINECALLDICT
-    0 PUSHINT
-    $OrderBook$_fun_refundExecessTon INLINECALLDICT
   }>
   $OrderBook$_internal_binary_CreateDecreaseLPPositionOrder PROCINLINE:<{
     __tact_context_get INLINECALLDICT
@@ -5612,7 +5410,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d64357067794c644b4a6150594a6f456662774d484c447254644652625470555a373168754638726839684e69} PUSHSLICE
+    x{697066733a2f2f516d5159575737753750557636747169757438637746375644535738387a51615375535243796371786879534b66} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -5742,16 +5540,6 @@ PROGRAM{
       $UpdateRBFPositionSuccess$_load INLINECALLDICT
       1 3 BLKDROP2
       $OrderBook$_internal_binary_UpdateRBFPositionSuccess INLINECALLDICT
-      TRUE
-    }>
-    DUP
-    903497951 PUSHINT
-    EQUAL
-    IFJMP:<{
-      DROP
-      $CompensateOrder$_load INLINECALLDICT
-      1 7 BLKDROP2
-      $OrderBook$_internal_binary_CompensateOrder INLINECALLDICT
       TRUE
     }>
     DUP

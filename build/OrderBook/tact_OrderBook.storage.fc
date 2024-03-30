@@ -238,26 +238,6 @@ cell $UpdateRBFPosition$_store_cell((int, int, slice, int, int, int, cell) v) in
 }
 
 ;;
-;; Type: CompensateOrder
-;; Header: 0x35da48df
-;; TLB: compensate_order#35da48df orderType:Maybe int257 orderId:int257 trxId:int257 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFeeAmount:int257 = CompensateOrder
-;;
-
-(slice, ((int, int, int, slice, int, slice, int))) $CompensateOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 903497951);
-    var v'orderType = sc_0~load_int(1) ? sc_0~load_int(257) : null();
-    var v'orderId = sc_0~load_int(257);
-    var v'trxId = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'refundReceiver = sc_1~__tact_load_address_opt();
-    var v'refundAmount = sc_1~load_int(257);
-    var v'executionFeeReceiver = sc_1~__tact_load_address_opt();
-    slice sc_2 = sc_1~load_ref().begin_parse();
-    var v'executionFeeAmount = sc_2~load_int(257);
-    return (sc_0, (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFeeAmount));
-}
-
-;;
 ;; Type: CreateDecreaseLPPositionOrder
 ;; Header: 0x7202bd7d
 ;; TLB: create_decrease_lp_position_order#7202bd7d executionFee:int257 marginDelta:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder
@@ -733,37 +713,6 @@ cell $PerpPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline {
 
 ((int, int, int)) $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline {
     return (opType, orderId, trxId);
-}
-
-;;
-;; Type: CompensateOrderEvent
-;; Header: 0xf0ed7b76
-;; TLB: compensate_order_event#f0ed7b76 orderType:Maybe int257 orderId:int257 trxId:int257 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFeeAmount:int257 = CompensateOrderEvent
-;;
-
-builder $CompensateOrderEvent$_store(builder build_0, (int, int, int, slice, int, slice, int) v) inline_ref {
-    var (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFeeAmount) = v;
-    build_0 = store_uint(build_0, 4042095478, 32);
-    build_0 = ~ null?(v'orderType) ? build_0.store_int(true, 1).store_int(v'orderType, 257) : build_0.store_int(false, 1);
-    build_0 = build_0.store_int(v'orderId, 257);
-    build_0 = build_0.store_int(v'trxId, 257);
-    var build_1 = begin_cell();
-    build_1 = __tact_store_address_opt(build_1, v'refundReceiver);
-    build_1 = build_1.store_int(v'refundAmount, 257);
-    build_1 = __tact_store_address_opt(build_1, v'executionFeeReceiver);
-    var build_2 = begin_cell();
-    build_2 = build_2.store_int(v'executionFeeAmount, 257);
-    build_1 = store_ref(build_1, build_2.end_cell());
-    build_0 = store_ref(build_0, build_1.end_cell());
-    return build_0;
-}
-
-cell $CompensateOrderEvent$_store_cell((int, int, int, slice, int, slice, int) v) inline {
-    return $CompensateOrderEvent$_store(begin_cell(), v).end_cell();
-}
-
-((int, int, int, slice, int, slice, int)) $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFeeAmount(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFeeAmount) inline {
-    return (orderType, orderId, trxId, refundReceiver, refundAmount, executionFeeReceiver, executionFeeAmount);
 }
 
 ;;
