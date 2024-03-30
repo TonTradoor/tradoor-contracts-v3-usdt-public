@@ -78,7 +78,7 @@ message CompensateOrder {
     refundReceiver: Address?;
     refundAmount: Int;
     executionFeeReceiver: Address?;
-    executionFeeAmount: Int;
+    executionFee: Int;
 }
 // ============================ LP ================================ //
 message CreateDecreaseLPPositionOrder {

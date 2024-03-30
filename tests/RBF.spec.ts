@@ -66,6 +66,8 @@ describe('RBF', () => {
 
         // create order
         let createResult = await createIncreaseRBFOrder(user0, liquidity, executionFee);
+        printTransactionFees(createResult.trxResult.transactions);
+        prettyLogTransactions(createResult.trxResult.transactions);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
             to: orderBook.address,
@@ -132,8 +134,8 @@ describe('RBF', () => {
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
         expect(cancelResult.trxResult.transactions).toHaveTransaction({
-            from: user0JettonWallet.address,
-            to: orderBook.address,
+            from: orderBookJettonWallet.address,
+            to: user0JettonWallet.address,
             success: true,
         });
 
@@ -308,4 +310,5 @@ describe('RBF', () => {
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(liquidity - decreaseLiquidity));
     });
+
 });

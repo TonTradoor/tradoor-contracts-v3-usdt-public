@@ -80,5 +80,5 @@ message CompensateOrderEvent {
     refundReceiver: Address?;
     refundAmount: Int;
     executionFeeReceiver: Address?;
-    executionFeeAmount: Int;
+    executionFee: Int;
 }
