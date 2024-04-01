@@ -19,7 +19,7 @@ struct TokenConfig {
     // ==================== Trading Fee Configuration ==================
     tradingFeeRate: Int;
     lpTradingFeeRate: Int;
-    protocalTradingFeeRate: Int;
+    protocolTradingFeeRate: Int;
     // ==================== Other Configuration ==========================
     interestRate: Int;
     maxFundingRate: Int;
@@ -108,6 +108,7 @@ struct GlobalLPPosition {
     netSize: Int;
     isLong: Bool;
     entryPrice: Int;
+    unrealizedPnl: Int;
 }
 
 struct PerpPositionData {
@@ -123,4 +124,30 @@ struct PriceData {
 struct UpdatePrice {
     tokenId: Int;
     price: Int;
+}
+
+// ============================ funding rate ================================ //
+struct GlobalPosition {
+    longSize: Int;
+    shortSize: Int;
+    longFundingRateGrowth: Int;
+    shortFundingRateGrowth: Int;
+}
+
+struct GlobalFundingRateSample {
+    lastAdjustFundingRateTime: Int;
+    sampleCount: Int;
+    cumulativePremiumRate: Int;
+}
+
+struct FundingRateGrowth {
+    clampedFundingRateDelta: Int;
+    longFundingRateGrowthAfter: Int;
+    shortFundingRateGrowthAfter: Int;
+}
+
+struct SamplePremiumRateResult {
+    sample: GlobalFundingRateSample;
+    shouldAdjustFundingRate: Bool;
+    fundingRateDelta: Int;
 }
