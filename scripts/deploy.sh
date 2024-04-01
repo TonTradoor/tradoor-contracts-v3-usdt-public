@@ -5,3 +5,4 @@ yarn rundev deployOrderBook
 yarn rundev deployPool
 yarn rundev orderBookSetConfig
 yarn rundev poolSetConfig
+yarn rundev poolSetTokenConfig

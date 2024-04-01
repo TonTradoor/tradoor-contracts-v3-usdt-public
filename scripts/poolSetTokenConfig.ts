@@ -17,24 +17,26 @@ export async function run(provider: NetworkProvider) {
             value: toNano('0.1'),
         },
         {
-            $$type: 'UpdateConfig',
-            gasConsumption: toNano(0.05),
-            minTonsForStorage: toNano(0.03),
-            rbfLockTime: 5n * 60n,
-            bonusFactor: 1n,
-            minLPMargin: toUnits(10, jettonDecimal),
-            maxLPLeverage: 100n,
-            lpLiquidationFee: toUnits(0.2, jettonDecimal),
-            lpMaxRiskRate: 10n**6n,
-            orderBook: orderBook.address
+            $$type: 'UpdateTokenConfig',
+            tokenId: 1n,
+            name: "BTC",
+            enable: true,
+            minMargin: toUnits(10, jettonDecimal), // 10U
+            maxLeverage: 100n,
+            liquidationFee: toUnits(0.2, jettonDecimal), // 0.2U
+            tradingFeeRate: BigInt(0.001 * 1000000), // 0.1%
+            lpTradingFeeRate: 300_000n, // 30%
+            protocalTradingFeeRate: 300_000n, // 30%
+            interestRate: 0n,
+            maxFundingRate: 0n
         }
     );
 
     const transDone = await waitForTransaction(provider, pool.address, lastTrx, 10);
     if (transDone) {
-        console.log(`set config success`);
+        console.log(`set token config success`);
     } else {
-        console.error(`set config failed`);
+        console.error(`set token config failed`);
     }
 
 }

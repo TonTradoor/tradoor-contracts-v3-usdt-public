@@ -7,6 +7,8 @@ export async function run(provider: NetworkProvider) {
     let deployId = getConfig(provider, "deployId");
     const orderBook = provider.open(await OrderBook.fromInit(deployId));
 
+    console.log('deploying order book to address:', orderBook.address);
+
     await orderBook.send(
         provider.sender(),
         {
