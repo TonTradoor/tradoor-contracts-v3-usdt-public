@@ -97,8 +97,8 @@ describe('LP', () => {
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
         expect(cancelResult.trxResult.transactions).toHaveTransaction({
-            from: user0JettonWallet.address,
-            to: orderBook.address,
+            from: orderBookJettonWallet.address,
+            to: user0JettonWallet.address,
             success: true,
         });
 

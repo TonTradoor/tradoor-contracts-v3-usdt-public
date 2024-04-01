@@ -11,7 +11,7 @@ export async function run(provider: NetworkProvider) {
 
     // const executor = Address.parse(await provider.ui().input('executor address:'));
     const executor = Address.parse(getConfig(provider, "executor"));
-    const compensator = Address.parse(getConfig(provider, "compensator"));
+    
 
     const orderBookJettonWallet = await jetton.getGetWalletAddress(orderBook.address!!);
 
@@ -37,6 +37,8 @@ export async function run(provider: NetworkProvider) {
     const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 10);
     if (transDone) {
         console.log(`set config success`);
+    } else {
+        console.error(`set config failed`);
     }
 
 }

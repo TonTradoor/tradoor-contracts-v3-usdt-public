@@ -3,12 +3,13 @@ import { Address, SendMode, beginCell, toNano } from '@ton/core';
 import { NetworkProvider } from '@ton/blueprint';
 import { MockJetton } from '../wrappers/MockJetton';
 import { buildOnchainMetadata } from '../contracts/mock/utils/jetton-helpers';
-import { setConfig } from '../utils/util';
+import { getConfig, setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
+    let deployId = getConfig(provider, "deployId");
 
     const jettonParams = {
-        name: 'Mock USDT New',
+        name: 'Mock USDT ' + deployId,
         description: 'Mock USDT Token in Tact-lang',
         symbol: 'mUSDT',
         image: 'https://avatars.githubusercontent.com/u/104382459?s=200&v=4',
@@ -21,6 +22,8 @@ export async function run(provider: NetworkProvider) {
     let address = provider.sender().address!!;
     // create jetton contract
     const sampleJetton = provider.open(await MockJetton.fromInit(address, content));
+
+    console.log('deploying jetton to address:', sampleJetton.address);
 
     // deploy
     await sampleJetton.send(

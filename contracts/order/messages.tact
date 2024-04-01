@@ -1,6 +1,15 @@
 import "./structs";
 
 // ============================ JETTON ============================= //
+message(0xf8a7ea5) TokenTransfer {
+    queryId: Int as uint64;
+    amount: Int as coins;
+    receiver: Address;
+    responseDestination: Address?;
+    customPayload: Cell?;
+    forwardTonAmount: Int as coins;
+    forwardPayload: Slice as remaining; 
+}
 
 message(0x7362d09c) TokenNotification {
     queryId: Int as uint64;
@@ -62,14 +71,14 @@ message(0x1cf0cf81) UpdateRBFPositionSuccess {
     trxId: Int as uint64;
 }
 
-message CompensateRBFPositionOrder {
+message CompensateOrder {
+    orderType: Int?;
     orderId: Int;
     trxId: Int;
-    needRefund: Bool;
-    isExecute: Bool;
+    refundReceiver: Address?;
+    refundAmount: Int;
     executionFeeReceiver: Address?;
-    pricesLength: Int;
-    prices: map<Int, UpdatePrice>;
+    executionFee: Int;
 }
 // ============================ LP ================================ //
 message CreateDecreaseLPPositionOrder {

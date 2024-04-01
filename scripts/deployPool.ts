@@ -7,6 +7,8 @@ export async function run(provider: NetworkProvider) {
     let deployId = getConfig(provider, "deployId");
     const pool = provider.open(await Pool.fromInit(deployId));
 
+    console.log('deploying pool to address:', pool.address);
+
     await pool.send(
         provider.sender(),
         {
@@ -19,7 +21,6 @@ export async function run(provider: NetworkProvider) {
     );
 
     await provider.waitForDeploy(pool.address);
-    console.log('pool deployed: ', pool.address);
     
     setConfig(provider, "pool", pool.address.toString());
 }

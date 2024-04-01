@@ -15,15 +15,6 @@ struct ConfigData {
     pool: Address;
 }
 
-// ============================ Callback ================================ //
-struct JettonCallback {
-    orderType: Int;
-    orderId: Int;
-    amount: Int;
-    receiver: Address;
-    trxId: Int;
-}
-
 // ============================ RBF ================================ //
 struct RBFPositionOrder {
     isIncrease: Bool;
@@ -32,7 +23,6 @@ struct RBFPositionOrder {
     executionFee: Int;
     blockTime: Int;
     isPending: Bool;
-    callbackId: Int?;
     executionFeeReceiver: Address?;
     lastOperator: Address?;
 }
@@ -46,7 +36,6 @@ struct LPPositionOrder {
     executionFee: Int;
     blockTime: Int;
     isPending: Bool;
-    callbackId: Int?;
     executionFeeReceiver: Address?;
     lastOperator: Address?;
 }
@@ -64,7 +53,6 @@ struct PerpPositionOrder {
     executionFee: Int;
     blockTime: Int;
     isPending: Bool;
-    callbackId: Int?;
     executionFeeReceiver: Address?;
     lastOperator: Address?;
 }

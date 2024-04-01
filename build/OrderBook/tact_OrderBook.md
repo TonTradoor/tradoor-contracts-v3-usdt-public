@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 15569 bytes
+BOC Size: 13575 bytes
 
 # Types
-Total Types: 47
+Total Types: 48
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -37,6 +37,10 @@ Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
 TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
+## TokenTransfer
+TLB: `token_transfer#0f8a7ea5 queryId:uint64 amount:coins receiver:address responseDestination:Maybe address customPayload:Maybe ^cell forwardTonAmount:coins forwardPayload:remainder<slice> = TokenTransfer`
+Signature: `TokenTransfer{queryId:uint64,amount:coins,receiver:address,responseDestination:Maybe address,customPayload:Maybe ^cell,forwardTonAmount:coins,forwardPayload:remainder<slice>}`
+
 ## TokenNotification
 TLB: `token_notification#7362d09c queryId:uint64 amount:coins from:address forwardPayload:remainder<slice> = TokenNotification`
 Signature: `TokenNotification{queryId:uint64,amount:coins,from:address,forwardPayload:remainder<slice>}`
@@ -69,9 +73,9 @@ Signature: `UpdateRBFPosition{isIncrease:bool,orderId:uint64,account:address,liq
 TLB: `update_rbf_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateRBFPositionSuccess`
 Signature: `UpdateRBFPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
-## CompensateRBFPositionOrder
-TLB: `compensate_rbf_position_order#09f91fd2 orderId:int257 trxId:int257 needRefund:bool isExecute:bool executionFeeReceiver:Maybe address pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = CompensateRBFPositionOrder`
-Signature: `CompensateRBFPositionOrder{orderId:int257,trxId:int257,needRefund:bool,isExecute:bool,executionFeeReceiver:Maybe address,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+## CompensateOrder
+TLB: `compensate_order#f828370b orderType:Maybe int257 orderId:int257 trxId:int257 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:int257 = CompensateOrder`
+Signature: `CompensateOrder{orderType:Maybe int257,orderId:int257,trxId:int257,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:int257}`
 
 ## CreateDecreaseLPPositionOrder
 TLB: `create_decrease_lp_position_order#7202bd7d executionFee:int257 marginDelta:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder`
@@ -165,25 +169,25 @@ Signature: `PerpPositionOrderCancelledEvent{opType:uint8,orderId:int257,trxId:in
 TLB: `perp_position_order_executed_event#fecf3a7f opType:uint8 orderId:int257 trxId:int257 = PerpPositionOrderExecutedEvent`
 Signature: `PerpPositionOrderExecutedEvent{opType:uint8,orderId:int257,trxId:int257}`
 
+## CompensateOrderEvent
+TLB: `compensate_order_event#f4885d16 orderType:Maybe int257 orderId:int257 trxId:int257 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:int257 = CompensateOrderEvent`
+Signature: `CompensateOrderEvent{orderType:Maybe int257,orderId:int257,trxId:int257,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:int257}`
+
 ## ConfigData
 TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData`
 Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address}`
 
-## JettonCallback
-TLB: `_ orderType:int257 orderId:int257 amount:int257 receiver:address trxId:int257 = JettonCallback`
-Signature: `JettonCallback{orderType:int257,orderId:int257,amount:int257,receiver:address,trxId:int257}`
-
 ## RBFPositionOrder
-TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool callbackId:Maybe int257 executionFeeReceiver:Maybe address lastOperator:Maybe address = RBFPositionOrder`
-Signature: `RBFPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,callbackId:Maybe int257,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
+TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = RBFPositionOrder`
+Signature: `RBFPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
 
 ## LPPositionOrder
-TLB: `_ opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool callbackId:Maybe int257 executionFeeReceiver:Maybe address lastOperator:Maybe address = LPPositionOrder`
-Signature: `LPPositionOrder{opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,callbackId:Maybe int257,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
+TLB: `_ opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = LPPositionOrder`
+Signature: `LPPositionOrder{opType:uint8,account:address,marginDelta:int257,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
 
 ## PerpPositionOrder
-TLB: `_ opType:uint8 tokenId:int257 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:int257 blockTime:int257 isPending:bool callbackId:Maybe int257 executionFeeReceiver:Maybe address lastOperator:Maybe address = PerpPositionOrder`
-Signature: `PerpPositionOrder{opType:uint8,tokenId:int257,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257,isPending:bool,callbackId:Maybe int257,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
+TLB: `_ opType:uint8 tokenId:int257 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:int257 blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = PerpPositionOrder`
+Signature: `PerpPositionOrder{opType:uint8,tokenId:int257,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257,isPending:bool,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
 
 ## PerpPositionOrderEx
 TLB: `_ tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 = PerpPositionOrderEx`
@@ -248,4 +252,5 @@ Argument: orderId
 32637: order not exist
 39703: too early
 41207: invalid sender
+42241: order not pending
 54499: invalid op type
