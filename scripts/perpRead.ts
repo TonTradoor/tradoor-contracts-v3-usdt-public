@@ -21,4 +21,7 @@ export async function run(provider: NetworkProvider) {
     // get position
     let position = await pool.getPerpPosition(tokenId, account);
     console.log(`position:`, position);
+
+    let tokenConfig = await pool.getTokenConfig(tokenId);
+    console.log('tokenConfig:', tokenConfig);
 }
