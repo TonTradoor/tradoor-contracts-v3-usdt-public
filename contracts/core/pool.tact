@@ -178,6 +178,8 @@ contract Pool with Deployable, Ownable {
                 positionId: 0,
                 liquidity: 0,
                 bonus: 0,
+                realizedFundingFee: 0,
+                entryFundingFeeGrowth: 0,
                 unlockTime: 0
             };
         if (lpPositionOpt != null) {
@@ -200,6 +202,7 @@ contract Pool with Deployable, Ownable {
                  * liquidityDelta / self.globalLPLiquidity.liquidity;
             lpPosition.bonus = lpPosition.bonus + bonus;
         }
+        // TODO funding fee
 
         // update position
         lpPosition.liquidity = lpPosition.liquidity + liquidityDelta;
@@ -220,6 +223,8 @@ contract Pool with Deployable, Ownable {
             bonusDelta: bonus,
             bonusAfter: lpPosition.bonus,
             unlockTimeAfter: lpPosition.unlockTime,
+            realizedFundingFee: 0,
+            realizedFundingFeeAfter: lpPosition.realizedFundingFee,
             trxId: trxId
         }.toCell());
         emit(GlobalLPChangedEvent{
@@ -276,6 +281,8 @@ contract Pool with Deployable, Ownable {
         } else {
             receive = liquidityDelta * globalNetLP / self.globalLPLiquidity.liquidity;
         }
+        // funding fee TODO
+
         // update position
         lpPosition.liquidity = lpPosition.liquidity - liquidityDelta;
         lpPosition.bonus = lpPosition.bonus - bonus;
@@ -299,6 +306,7 @@ contract Pool with Deployable, Ownable {
             liquidityAfter: lpPosition.liquidity,
             bonusDelta: bonus,
             bonusAfter: lpPosition.bonus,
+            fundingFeeDelta: lpPosition.realizedFundingFee,
             receive: receive,
             trxId: trxId
         }.toCell());

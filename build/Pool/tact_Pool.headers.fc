@@ -79,16 +79,16 @@ builder $UpdatePerpPositionSuccess$_store(builder build_0, (int, int, int) v) in
 cell $UpdatePerpPositionSuccess$_store_cell((int, int, int) v) inline;
 
 ;; $LPPositionIncreasedEvent$_store
-builder $LPPositionIncreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int) v) inline_ref;
+builder $LPPositionIncreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $LPPositionIncreasedEvent$_store_cell
-cell $LPPositionIncreasedEvent$_store_cell((int, slice, int, int, int, int, int, int) v) inline;
+cell $LPPositionIncreasedEvent$_store_cell((int, slice, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $LPPositionDecreasedEvent$_store
-builder $LPPositionDecreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int) v) inline_ref;
+builder $LPPositionDecreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $LPPositionDecreasedEvent$_store_cell
-cell $LPPositionDecreasedEvent$_store_cell((int, slice, int, int, int, int, int, int) v) inline;
+cell $LPPositionDecreasedEvent$_store_cell((int, slice, int, int, int, int, int, int, int) v) inline;
 
 ;; $GlobalLPChangedEvent$_store
 builder $GlobalLPChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline;
@@ -142,22 +142,22 @@ tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int) 
 tuple $TokenConfig$_load_opt(cell cl) inline;
 
 ;; $LPPosition$_store
-builder $LPPosition$_store(builder build_0, (int, int, int, int) v) inline;
+builder $LPPosition$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref;
 
 ;; $LPPosition$_store_cell
-cell $LPPosition$_store_cell((int, int, int, int) v) inline;
+cell $LPPosition$_store_cell((int, int, int, int, int, int) v) inline;
 
 ;; $LPPosition$_not_null
-((int, int, int, int)) $LPPosition$_not_null(tuple v) inline;
+((int, int, int, int, int, int)) $LPPosition$_not_null(tuple v) inline;
 
 ;; $LPPosition$_store_opt
 cell $LPPosition$_store_opt(tuple v) inline;
 
 ;; $LPPosition$_load
-(slice, ((int, int, int, int))) $LPPosition$_load(slice sc_0) inline;
+(slice, ((int, int, int, int, int, int))) $LPPosition$_load(slice sc_0) inline_ref;
 
 ;; $LPPosition$_as_optional
-tuple $LPPosition$_as_optional((int, int, int, int) v) inline;
+tuple $LPPosition$_as_optional((int, int, int, int, int, int) v) inline;
 
 ;; $LPPosition$_load_opt
 tuple $LPPosition$_load_opt(cell cl) inline;
@@ -274,7 +274,7 @@ tuple $TokenConfig$_to_opt_tuple(tuple v) inline;
 (int, tuple) $TokenConfigData$_to_external(((int, tuple)) v) inline;
 
 ;; $LPPosition$_to_tuple
-tuple $LPPosition$_to_tuple(((int, int, int, int)) v) inline;
+tuple $LPPosition$_to_tuple(((int, int, int, int, int, int)) v) inline;
 
 ;; $LPPosition$_to_opt_tuple
 tuple $LPPosition$_to_opt_tuple(tuple v) inline;
@@ -402,11 +402,11 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_priceData
 ((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int), tuple) $Pool$_fun_priceData((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $self, int $tokenId) impure inline_ref;
 
-;; $LPPosition$_constructor_positionId_liquidity_bonus_unlockTime
-((int, int, int, int)) $LPPosition$_constructor_positionId_liquidity_bonus_unlockTime(int positionId, int liquidity, int bonus, int unlockTime) inline;
+;; $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime
+((int, int, int, int, int, int)) $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime(int positionId, int liquidity, int bonus, int realizedFundingFee, int entryFundingFeeGrowth, int unlockTime) inline;
 
-;; $LPPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_trxId
-((int, slice, int, int, int, int, int, int)) $LPPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_trxId(int positionId, slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int unlockTimeAfter, int trxId) inline;
+;; $LPPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFee_realizedFundingFeeAfter_trxId
+((int, slice, int, int, int, int, int, int, int, int)) $LPPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFee_realizedFundingFeeAfter_trxId(int positionId, slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int unlockTimeAfter, int realizedFundingFee, int realizedFundingFeeAfter, int trxId) inline;
 
 ;; $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId
 ((int, int, int, int, int)) $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId(int lpFundAfter, int liquidityAfter, int tradingFee, int fundingFee, int trxId) inline;
@@ -426,8 +426,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_increaseLPPosition
 ((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int), ()) $Pool$_fun_increaseLPPosition((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $self, slice $account, int $liquidityDelta, int $trxId) impure inline_ref;
 
-;; $LPPositionDecreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_receive_trxId
-((int, slice, int, int, int, int, int, int)) $LPPositionDecreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_receive_trxId(int positionId, slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int receive, int trxId) inline;
+;; $LPPositionDecreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_fundingFeeDelta_receive_trxId
+((int, slice, int, int, int, int, int, int, int)) $LPPositionDecreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_fundingFeeDelta_receive_trxId(int positionId, slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int fundingFeeDelta, int receive, int trxId) inline;
 
 ;; $Pool$_fun_decreaseLPPosition
 ((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int), int) $Pool$_fun_decreaseLPPosition((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $self, slice $account, int $liquidityDelta, int $trxId) impure inline_ref;

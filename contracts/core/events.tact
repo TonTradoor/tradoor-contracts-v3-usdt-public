@@ -10,6 +10,8 @@ message LPPositionIncreasedEvent {
     bonusDelta: Int;
     bonusAfter: Int;
     unlockTimeAfter: Int;
+    realizedFundingFee: Int;
+    realizedFundingFeeAfter: Int;
     trxId: Int;
 }
 
@@ -21,6 +23,7 @@ message LPPositionDecreasedEvent {
     liquidityAfter: Int;
     bonusDelta: Int;
     bonusAfter: Int;
+    fundingFeeDelta: Int;
     receive: Int; // realizedPnl = receive - liquidityDelta
     trxId: Int;
 }

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 9991 bytes
+BOC Size: 9998 bytes
 
 # Types
 Total Types: 35
@@ -62,12 +62,12 @@ TLB: `update_perp_position_success#ef01c2b4 orderId:int257 receive:int257 trxId:
 Signature: `UpdatePerpPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
 ## LPPositionIncreasedEvent
-TLB: `lp_position_increased_event#b0e1242c positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 trxId:int257 = LPPositionIncreasedEvent`
-Signature: `LPPositionIncreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,unlockTimeAfter:int257,trxId:int257}`
+TLB: `lp_position_increased_event#d07dde06 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFee:int257 realizedFundingFeeAfter:int257 trxId:int257 = LPPositionIncreasedEvent`
+Signature: `LPPositionIncreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,unlockTimeAfter:int257,realizedFundingFee:int257,realizedFundingFeeAfter:int257,trxId:int257}`
 
 ## LPPositionDecreasedEvent
-TLB: `lp_position_decreased_event#248e77b6 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 receive:int257 trxId:int257 = LPPositionDecreasedEvent`
-Signature: `LPPositionDecreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,receive:int257,trxId:int257}`
+TLB: `lp_position_decreased_event#d2393e17 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 fundingFeeDelta:int257 receive:int257 trxId:int257 = LPPositionDecreasedEvent`
+Signature: `LPPositionDecreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,fundingFeeDelta:int257,receive:int257,trxId:int257}`
 
 ## GlobalLPChangedEvent
 TLB: `global_lp_changed_event#3f230825 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 trxId:int257 = GlobalLPChangedEvent`
@@ -106,16 +106,16 @@ TLB: `_ tokenIdNext:int257 tokenConfig:Maybe TokenConfig{name:^string,enable:boo
 Signature: `TokenConfigData{tokenIdNext:int257,tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}}`
 
 ## LPPosition
-TLB: `_ positionId:int257 liquidity:int257 bonus:int257 unlockTime:int257 = LPPosition`
-Signature: `LPPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTime:int257}`
+TLB: `_ positionId:int257 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition`
+Signature: `LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257}`
 
 ## GlobalLPLiquidity
 TLB: `_ lpFund:int257 liquidity:int257 fundingFeeGrowth:int257 = GlobalLPLiquidity`
 Signature: `GlobalLPLiquidity{lpFund:int257,liquidity:int257,fundingFeeGrowth:int257}`
 
 ## LPPositionData
-TLB: `_ lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTime:int257} globalLPLiquidity:GlobalLPLiquidity{lpFund:int257,liquidity:int257,fundingFeeGrowth:int257} = LPPositionData`
-Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,unlockTime:int257},globalLPLiquidity:GlobalLPLiquidity{lpFund:int257,liquidity:int257,fundingFeeGrowth:int257}}`
+TLB: `_ lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} globalLPLiquidity:GlobalLPLiquidity{lpFund:int257,liquidity:int257,fundingFeeGrowth:int257} = LPPositionData`
+Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257},globalLPLiquidity:GlobalLPLiquidity{lpFund:int257,liquidity:int257,fundingFeeGrowth:int257}}`
 
 ## AccountPerpPosition
 TLB: `_ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}> = AccountPerpPosition`

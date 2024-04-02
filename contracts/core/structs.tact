@@ -30,6 +30,8 @@ struct LPPosition {
     positionId: Int;
     liquidity: Int;
     bonus: Int;
+    realizedFundingFee: Int;
+    entryFundingFeeGrowth: Int;
     unlockTime: Int;
 }
 
