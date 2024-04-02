@@ -1,8 +1,8 @@
 import "./structs";
 
-// ============================ RBF ================================ //
-// increase RBF
-message RBFPositionIncreasedEvent {
+// ============================ LP ================================ //
+// increase LP
+message LPPositionIncreasedEvent {
     positionId: Int;
     account: Address;
     liquidityDelta: Int;
@@ -13,8 +13,8 @@ message RBFPositionIncreasedEvent {
     trxId: Int;
 }
 
-// decrease RBF
-message RBFPositionDecreasedEvent {
+// decrease LP
+message LPPositionDecreasedEvent {
     positionId: Int;
     account: Address;
     liquidityDelta: Int; // decrease liquidty
@@ -25,62 +25,15 @@ message RBFPositionDecreasedEvent {
     trxId: Int;
 }
 
-// global RBF
-message GlobalRBFChangedEvent {
-    riskBufferFundAfter: Int;
-    liquidityAfter: Int;
-    tradingFee: Int;
-    liquidation: Int;
-    trxId: Int;
-}
-
-// ============================ LP ================================ //
-// increase LP
-message LPPositionIncreasedEvent {
-    positionId: Int;
-    account: Address;
-    marginDelta: Int;
-    marginAfter: Int;
-    liquidityDelta: Int;
-    liquidityAfter: Int;
-    tradingFee: Int;
-    fundingFee: Int;
-    trxId: Int;
-}
-
-// decrease LP
-message LPPositionDecreasedEvent {
-    positionId: Int;
-    account: Address;
-    marginDelta: Int;
-    marginAfter: Int;
-    liquidityDelta: Int;
-    liquidityAfter: Int;
-    tradingFee: Int;
-    fundingFee: Int;
-    realizedLoss: Int;
-    receive: Int;
-    trxId: Int;
-}
-
-// liquidate LP
-message LPPositionLiquidatedEvent {
-    positionId: Int;
-    account: Address;
-    margin: Int;
-    liquidity: Int;
-    tradingFee: Int;
-    fundingFee: Int;
-    liquidationFee: Int;
-    trxId: Int;
-}
-
 // global LP
-message GlobalLPLiquidityChangedEvent {
-    marginAfter: Int;
+message GlobalLPChangedEvent {
+    lpFundAfter: Int;
     liquidityAfter: Int;
+    tradingFee: Int;
+    fundingFee: Int;
     trxId: Int;
 }
+
 message GlobalLPPositionChangedEvent {
     tokenId: Int;
     netSizeAfter: Int;

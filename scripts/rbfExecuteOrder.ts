@@ -5,7 +5,7 @@ import { attachOrderBook, attachPool, getConfig, getLastTransaction, waitForTran
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
     const pool = attachPool(provider);
-    let orderIdNext = await orderBook.getRbfPositionOrderIndexNext();
+    let orderIdNext = await orderBook.getLpPositionOrderIndexNext();
     let orderId = orderIdNext - 1n;
     console.log(`orderIdNext:`, orderIdNext);
     console.log(`orderId:`, orderId);
@@ -16,7 +16,7 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get last order
-    let order = await orderBook.getRbfPositionOrder(orderId);
+    let order = await orderBook.getLpPositionOrder(orderId);
     console.log(`order:`, order);
 
     // execute order
@@ -27,7 +27,7 @@ export async function run(provider: NetworkProvider) {
             value: toNano('0.5'),
         },
         {
-            $$type: 'ExecuteRBFPositionOrder',
+            $$type: 'ExecuteLPPositionOrder',
             orderId: orderId,
             trxId: 2n,
             executionFeeReceiver: provider.sender().address!!,
@@ -38,11 +38,11 @@ export async function run(provider: NetworkProvider) {
     // wait for trx
     const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 10);
     if (transDone) {
-        console.log(`execute RBF success`);
+        console.log(`execute LP success`);
     }
 
     // get position
-    let position = await pool.getRbfPosition(order!!.account);
+    let position = await pool.getLpPosition(order!!.account);
     console.log(`position:`, position);
 
 }

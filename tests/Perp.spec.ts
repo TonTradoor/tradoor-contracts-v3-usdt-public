@@ -115,8 +115,7 @@ describe('LP', () => {
         
         /* =========================== increase LP ================================ */
         /// create order
-        let lpMargin = 10;
-        let lpLiquidity = 100;
+        let lpLiquidity = 1000;
         let executionFee = 0.1;
 
         // set block time
@@ -124,7 +123,7 @@ describe('LP', () => {
         blockchain.now = time1;
 
         // create order
-        const createIncreaseResult = await createIncreaseLPOrder(user0, lpMargin, lpLiquidity, executionFee);
+        const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
 
         /// executor order
         const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
@@ -142,7 +141,6 @@ describe('LP', () => {
         // check position
         let position = executeIncreaseResult.positionAfter;
         expect(position).not.toBeNull();
-        expect(position?.margin).toEqual(toJettonUnits(lpMargin));
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
 
         /* =========================== increase perp ================================ */
@@ -234,12 +232,11 @@ describe('LP', () => {
     it('should execute decrease LP', async () => {
         /* =========================== increase LP ================================ */
         /// create order
-        let lpMargin = 100;
         let lpLiquidity = 1000;
         let executionFee = 0.1;
 
         // create order
-        const createIncreaseResult = await createIncreaseLPOrder(user0, lpMargin, lpLiquidity, executionFee);
+        const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
 
         /// executor order
         const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
@@ -255,7 +252,6 @@ describe('LP', () => {
         // check position
         let position = executeIncreaseResult.positionAfter;
         expect(position).not.toBeNull();
-        expect(position?.margin).toEqual(toJettonUnits(lpMargin));
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
         /* =========================== increase perp ================================ */

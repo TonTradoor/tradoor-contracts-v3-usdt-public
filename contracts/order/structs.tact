@@ -15,23 +15,10 @@ struct ConfigData {
     pool: Address;
 }
 
-// ============================ RBF ================================ //
-struct RBFPositionOrder {
-    isIncrease: Bool;
-    account: Address;
-    liquidityDelta: Int;
-    executionFee: Int;
-    blockTime: Int;
-    isPending: Bool;
-    executionFeeReceiver: Address?;
-    lastOperator: Address?;
-}
-
 // ============================ LP ================================ //
 struct LPPositionOrder {
-    opType: Int as uint8;
+    isIncrease: Bool;
     account: Address;
-    marginDelta: Int;
     liquidityDelta: Int;
     executionFee: Int;
     blockTime: Int;

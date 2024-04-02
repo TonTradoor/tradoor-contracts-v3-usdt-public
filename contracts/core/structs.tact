@@ -1,11 +1,7 @@
 // ============================ Config ================================ //
 struct ConfigData {
-    rbfLockTime: Int;
+    lpLockTime: Int;
     bonusFactor: Int;
-    minLPMargin: Int;
-    maxLPLeverage: Int;
-    lpLiquidationFee: Int;
-    lpMaxRiskRate: Int;
     orderBook: Address;
 }
 
@@ -19,7 +15,6 @@ struct TokenConfig {
     // ==================== Trading Fee Configuration ==================
     tradingFeeRate: Int;
     lpTradingFeeRate: Int;
-    protocalTradingFeeRate: Int;
     // ==================== Other Configuration ==========================
     interestRate: Int;
     maxFundingRate: Int;
@@ -30,54 +25,18 @@ struct TokenConfigData {
     tokenConfig: TokenConfig?;
 }
 
-// ============================ RBF ================================ //
-struct RBFPosition {
+// ============================ LP ================================ //
+struct LPPosition {
     positionId: Int;
     liquidity: Int;
     bonus: Int;
     unlockTime: Int;
 }
 
-struct GlobalRBFPosition {
-    riskBufferFund: Int;
-    liquidity: Int;
-}
-
-struct RBFPositionData {
-    rbfPosition: RBFPosition?;
-    globalRBFPosition: GlobalRBFPosition;
-}
-
-// ============================ LP ================================ //
-struct IncreaseLPPositionOrder {
-    account: Address;
-    marginDelta: Int;
-    liquidityDelta: Int;
-    executionFee: Int;
-    blockTime: Int;
-}
-
-struct DecreaseLPPositionOrder {
-    account: Address;
-    marginDelta: Int;
-    liquidityDelta: Int;
-    executionFee: Int;
-    blockTime: Int;
-}
-
-struct LPPosition {
-    positionId: Int;
-    margin: Int;
-    liquidity: Int;
-    entryFundingFeeGrowth: Int;
-    entryTradingFeeGrowth: Int;
-}
-
 struct GlobalLPLiquidity {
-    margin: Int;
+    lpFund: Int;
     liquidity: Int;
     fundingFeeGrowth: Int;
-    tradingFeeGrowth: Int;
 }
 
 struct LPPositionData {

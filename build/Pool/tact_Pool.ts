@@ -419,75 +419,52 @@ export type UpdateConfig = {
     $$type: 'UpdateConfig';
     gasConsumption: bigint;
     minTonsForStorage: bigint;
-    rbfLockTime: bigint;
+    lpLockTime: bigint;
     bonusFactor: bigint;
-    minLPMargin: bigint;
-    maxLPLeverage: bigint;
-    lpLiquidationFee: bigint;
-    lpMaxRiskRate: bigint;
     orderBook: Address;
 }
 
 export function storeUpdateConfig(src: UpdateConfig) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(1710201597, 32);
+        b_0.storeUint(2443370762, 32);
         b_0.storeInt(src.gasConsumption, 257);
         b_0.storeInt(src.minTonsForStorage, 257);
-        b_0.storeInt(src.rbfLockTime, 257);
+        b_0.storeInt(src.lpLockTime, 257);
         let b_1 = new Builder();
         b_1.storeInt(src.bonusFactor, 257);
-        b_1.storeInt(src.minLPMargin, 257);
-        b_1.storeInt(src.maxLPLeverage, 257);
-        let b_2 = new Builder();
-        b_2.storeInt(src.lpLiquidationFee, 257);
-        b_2.storeInt(src.lpMaxRiskRate, 257);
-        b_2.storeAddress(src.orderBook);
-        b_1.storeRef(b_2.endCell());
+        b_1.storeAddress(src.orderBook);
         b_0.storeRef(b_1.endCell());
     };
 }
 
 export function loadUpdateConfig(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 1710201597) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 2443370762) { throw Error('Invalid prefix'); }
     let _gasConsumption = sc_0.loadIntBig(257);
     let _minTonsForStorage = sc_0.loadIntBig(257);
-    let _rbfLockTime = sc_0.loadIntBig(257);
+    let _lpLockTime = sc_0.loadIntBig(257);
     let sc_1 = sc_0.loadRef().beginParse();
     let _bonusFactor = sc_1.loadIntBig(257);
-    let _minLPMargin = sc_1.loadIntBig(257);
-    let _maxLPLeverage = sc_1.loadIntBig(257);
-    let sc_2 = sc_1.loadRef().beginParse();
-    let _lpLiquidationFee = sc_2.loadIntBig(257);
-    let _lpMaxRiskRate = sc_2.loadIntBig(257);
-    let _orderBook = sc_2.loadAddress();
-    return { $$type: 'UpdateConfig' as const, gasConsumption: _gasConsumption, minTonsForStorage: _minTonsForStorage, rbfLockTime: _rbfLockTime, bonusFactor: _bonusFactor, minLPMargin: _minLPMargin, maxLPLeverage: _maxLPLeverage, lpLiquidationFee: _lpLiquidationFee, lpMaxRiskRate: _lpMaxRiskRate, orderBook: _orderBook };
+    let _orderBook = sc_1.loadAddress();
+    return { $$type: 'UpdateConfig' as const, gasConsumption: _gasConsumption, minTonsForStorage: _minTonsForStorage, lpLockTime: _lpLockTime, bonusFactor: _bonusFactor, orderBook: _orderBook };
 }
 
 function loadTupleUpdateConfig(source: TupleReader) {
     let _gasConsumption = source.readBigNumber();
     let _minTonsForStorage = source.readBigNumber();
-    let _rbfLockTime = source.readBigNumber();
+    let _lpLockTime = source.readBigNumber();
     let _bonusFactor = source.readBigNumber();
-    let _minLPMargin = source.readBigNumber();
-    let _maxLPLeverage = source.readBigNumber();
-    let _lpLiquidationFee = source.readBigNumber();
-    let _lpMaxRiskRate = source.readBigNumber();
     let _orderBook = source.readAddress();
-    return { $$type: 'UpdateConfig' as const, gasConsumption: _gasConsumption, minTonsForStorage: _minTonsForStorage, rbfLockTime: _rbfLockTime, bonusFactor: _bonusFactor, minLPMargin: _minLPMargin, maxLPLeverage: _maxLPLeverage, lpLiquidationFee: _lpLiquidationFee, lpMaxRiskRate: _lpMaxRiskRate, orderBook: _orderBook };
+    return { $$type: 'UpdateConfig' as const, gasConsumption: _gasConsumption, minTonsForStorage: _minTonsForStorage, lpLockTime: _lpLockTime, bonusFactor: _bonusFactor, orderBook: _orderBook };
 }
 
 function storeTupleUpdateConfig(source: UpdateConfig) {
     let builder = new TupleBuilder();
     builder.writeNumber(source.gasConsumption);
     builder.writeNumber(source.minTonsForStorage);
-    builder.writeNumber(source.rbfLockTime);
+    builder.writeNumber(source.lpLockTime);
     builder.writeNumber(source.bonusFactor);
-    builder.writeNumber(source.minLPMargin);
-    builder.writeNumber(source.maxLPLeverage);
-    builder.writeNumber(source.lpLiquidationFee);
-    builder.writeNumber(source.lpMaxRiskRate);
     builder.writeAddress(source.orderBook);
     return builder.build();
 }
@@ -513,7 +490,6 @@ export type UpdateTokenConfig = {
     liquidationFee: bigint;
     tradingFeeRate: bigint;
     lpTradingFeeRate: bigint;
-    protocalTradingFeeRate: bigint;
     interestRate: bigint;
     maxFundingRate: bigint;
 }
@@ -521,7 +497,7 @@ export type UpdateTokenConfig = {
 export function storeUpdateTokenConfig(src: UpdateTokenConfig) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(941711033, 32);
+        b_0.storeUint(2464869117, 32);
         b_0.storeInt(src.tokenId, 257);
         b_0.storeStringRefTail(src.name);
         b_0.storeBit(src.enable);
@@ -532,7 +508,6 @@ export function storeUpdateTokenConfig(src: UpdateTokenConfig) {
         b_1.storeInt(src.tradingFeeRate, 257);
         b_1.storeInt(src.lpTradingFeeRate, 257);
         let b_2 = new Builder();
-        b_2.storeInt(src.protocalTradingFeeRate, 257);
         b_2.storeInt(src.interestRate, 257);
         b_2.storeInt(src.maxFundingRate, 257);
         b_1.storeRef(b_2.endCell());
@@ -542,7 +517,7 @@ export function storeUpdateTokenConfig(src: UpdateTokenConfig) {
 
 export function loadUpdateTokenConfig(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 941711033) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 2464869117) { throw Error('Invalid prefix'); }
     let _tokenId = sc_0.loadIntBig(257);
     let _name = sc_0.loadStringRefTail();
     let _enable = sc_0.loadBit();
@@ -553,10 +528,9 @@ export function loadUpdateTokenConfig(slice: Slice) {
     let _tradingFeeRate = sc_1.loadIntBig(257);
     let _lpTradingFeeRate = sc_1.loadIntBig(257);
     let sc_2 = sc_1.loadRef().beginParse();
-    let _protocalTradingFeeRate = sc_2.loadIntBig(257);
     let _interestRate = sc_2.loadIntBig(257);
     let _maxFundingRate = sc_2.loadIntBig(257);
-    return { $$type: 'UpdateTokenConfig' as const, tokenId: _tokenId, name: _name, enable: _enable, minMargin: _minMargin, maxLeverage: _maxLeverage, liquidationFee: _liquidationFee, tradingFeeRate: _tradingFeeRate, lpTradingFeeRate: _lpTradingFeeRate, protocalTradingFeeRate: _protocalTradingFeeRate, interestRate: _interestRate, maxFundingRate: _maxFundingRate };
+    return { $$type: 'UpdateTokenConfig' as const, tokenId: _tokenId, name: _name, enable: _enable, minMargin: _minMargin, maxLeverage: _maxLeverage, liquidationFee: _liquidationFee, tradingFeeRate: _tradingFeeRate, lpTradingFeeRate: _lpTradingFeeRate, interestRate: _interestRate, maxFundingRate: _maxFundingRate };
 }
 
 function loadTupleUpdateTokenConfig(source: TupleReader) {
@@ -568,10 +542,9 @@ function loadTupleUpdateTokenConfig(source: TupleReader) {
     let _liquidationFee = source.readBigNumber();
     let _tradingFeeRate = source.readBigNumber();
     let _lpTradingFeeRate = source.readBigNumber();
-    let _protocalTradingFeeRate = source.readBigNumber();
     let _interestRate = source.readBigNumber();
     let _maxFundingRate = source.readBigNumber();
-    return { $$type: 'UpdateTokenConfig' as const, tokenId: _tokenId, name: _name, enable: _enable, minMargin: _minMargin, maxLeverage: _maxLeverage, liquidationFee: _liquidationFee, tradingFeeRate: _tradingFeeRate, lpTradingFeeRate: _lpTradingFeeRate, protocalTradingFeeRate: _protocalTradingFeeRate, interestRate: _interestRate, maxFundingRate: _maxFundingRate };
+    return { $$type: 'UpdateTokenConfig' as const, tokenId: _tokenId, name: _name, enable: _enable, minMargin: _minMargin, maxLeverage: _maxLeverage, liquidationFee: _liquidationFee, tradingFeeRate: _tradingFeeRate, lpTradingFeeRate: _lpTradingFeeRate, interestRate: _interestRate, maxFundingRate: _maxFundingRate };
 }
 
 function storeTupleUpdateTokenConfig(source: UpdateTokenConfig) {
@@ -584,7 +557,6 @@ function storeTupleUpdateTokenConfig(source: UpdateTokenConfig) {
     builder.writeNumber(source.liquidationFee);
     builder.writeNumber(source.tradingFeeRate);
     builder.writeNumber(source.lpTradingFeeRate);
-    builder.writeNumber(source.protocalTradingFeeRate);
     builder.writeNumber(source.interestRate);
     builder.writeNumber(source.maxFundingRate);
     return builder.build();
@@ -601,8 +573,8 @@ function dictValueParserUpdateTokenConfig(): DictionaryValue<UpdateTokenConfig> 
     }
 }
 
-export type UpdateRBFPosition = {
-    $$type: 'UpdateRBFPosition';
+export type UpdateLPPosition = {
+    $$type: 'UpdateLPPosition';
     isIncrease: boolean;
     orderId: bigint;
     account: Address;
@@ -612,7 +584,7 @@ export type UpdateRBFPosition = {
     prices: Dictionary<bigint, UpdatePrice>;
 }
 
-export function storeUpdateRBFPosition(src: UpdateRBFPosition) {
+export function storeUpdateLPPosition(src: UpdateLPPosition) {
     return (builder: Builder) => {
         let b_0 = builder;
         b_0.storeUint(3902592095, 32);
@@ -626,7 +598,7 @@ export function storeUpdateRBFPosition(src: UpdateRBFPosition) {
     };
 }
 
-export function loadUpdateRBFPosition(slice: Slice) {
+export function loadUpdateLPPosition(slice: Slice) {
     let sc_0 = slice;
     if (sc_0.loadUint(32) !== 3902592095) { throw Error('Invalid prefix'); }
     let _isIncrease = sc_0.loadBit();
@@ -636,10 +608,10 @@ export function loadUpdateRBFPosition(slice: Slice) {
     let _trxId = sc_0.loadUintBig(64);
     let _pricesLength = sc_0.loadIntBig(257);
     let _prices = Dictionary.load(Dictionary.Keys.BigInt(257), dictValueParserUpdatePrice(), sc_0);
-    return { $$type: 'UpdateRBFPosition' as const, isIncrease: _isIncrease, orderId: _orderId, account: _account, liquidityDelta: _liquidityDelta, trxId: _trxId, pricesLength: _pricesLength, prices: _prices };
+    return { $$type: 'UpdateLPPosition' as const, isIncrease: _isIncrease, orderId: _orderId, account: _account, liquidityDelta: _liquidityDelta, trxId: _trxId, pricesLength: _pricesLength, prices: _prices };
 }
 
-function loadTupleUpdateRBFPosition(source: TupleReader) {
+function loadTupleUpdateLPPosition(source: TupleReader) {
     let _isIncrease = source.readBoolean();
     let _orderId = source.readBigNumber();
     let _account = source.readAddress();
@@ -647,146 +619,14 @@ function loadTupleUpdateRBFPosition(source: TupleReader) {
     let _trxId = source.readBigNumber();
     let _pricesLength = source.readBigNumber();
     let _prices = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), dictValueParserUpdatePrice(), source.readCellOpt());
-    return { $$type: 'UpdateRBFPosition' as const, isIncrease: _isIncrease, orderId: _orderId, account: _account, liquidityDelta: _liquidityDelta, trxId: _trxId, pricesLength: _pricesLength, prices: _prices };
-}
-
-function storeTupleUpdateRBFPosition(source: UpdateRBFPosition) {
-    let builder = new TupleBuilder();
-    builder.writeBoolean(source.isIncrease);
-    builder.writeNumber(source.orderId);
-    builder.writeAddress(source.account);
-    builder.writeNumber(source.liquidityDelta);
-    builder.writeNumber(source.trxId);
-    builder.writeNumber(source.pricesLength);
-    builder.writeCell(source.prices.size > 0 ? beginCell().storeDictDirect(source.prices, Dictionary.Keys.BigInt(257), dictValueParserUpdatePrice()).endCell() : null);
-    return builder.build();
-}
-
-function dictValueParserUpdateRBFPosition(): DictionaryValue<UpdateRBFPosition> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeUpdateRBFPosition(src)).endCell());
-        },
-        parse: (src) => {
-            return loadUpdateRBFPosition(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type UpdateRBFPositionSuccess = {
-    $$type: 'UpdateRBFPositionSuccess';
-    orderId: bigint;
-    receive: bigint;
-    trxId: bigint;
-}
-
-export function storeUpdateRBFPositionSuccess(src: UpdateRBFPositionSuccess) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(485543809, 32);
-        b_0.storeInt(src.orderId, 257);
-        b_0.storeInt(src.receive, 257);
-        b_0.storeUint(src.trxId, 64);
-    };
-}
-
-export function loadUpdateRBFPositionSuccess(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 485543809) { throw Error('Invalid prefix'); }
-    let _orderId = sc_0.loadIntBig(257);
-    let _receive = sc_0.loadIntBig(257);
-    let _trxId = sc_0.loadUintBig(64);
-    return { $$type: 'UpdateRBFPositionSuccess' as const, orderId: _orderId, receive: _receive, trxId: _trxId };
-}
-
-function loadTupleUpdateRBFPositionSuccess(source: TupleReader) {
-    let _orderId = source.readBigNumber();
-    let _receive = source.readBigNumber();
-    let _trxId = source.readBigNumber();
-    return { $$type: 'UpdateRBFPositionSuccess' as const, orderId: _orderId, receive: _receive, trxId: _trxId };
-}
-
-function storeTupleUpdateRBFPositionSuccess(source: UpdateRBFPositionSuccess) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.orderId);
-    builder.writeNumber(source.receive);
-    builder.writeNumber(source.trxId);
-    return builder.build();
-}
-
-function dictValueParserUpdateRBFPositionSuccess(): DictionaryValue<UpdateRBFPositionSuccess> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeUpdateRBFPositionSuccess(src)).endCell());
-        },
-        parse: (src) => {
-            return loadUpdateRBFPositionSuccess(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type UpdateLPPosition = {
-    $$type: 'UpdateLPPosition';
-    orderId: bigint;
-    opType: bigint;
-    account: Address;
-    marginDelta: bigint;
-    liquidityDelta: bigint;
-    trxId: bigint;
-    pricesLength: bigint;
-    prices: Dictionary<bigint, UpdatePrice>;
-}
-
-export function storeUpdateLPPosition(src: UpdateLPPosition) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(4272122737, 32);
-        b_0.storeUint(src.orderId, 64);
-        b_0.storeUint(src.opType, 8);
-        b_0.storeAddress(src.account);
-        b_0.storeInt(src.marginDelta, 257);
-        b_0.storeInt(src.liquidityDelta, 257);
-        b_0.storeUint(src.trxId, 64);
-        let b_1 = new Builder();
-        b_1.storeInt(src.pricesLength, 257);
-        b_1.storeDict(src.prices, Dictionary.Keys.BigInt(257), dictValueParserUpdatePrice());
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadUpdateLPPosition(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 4272122737) { throw Error('Invalid prefix'); }
-    let _orderId = sc_0.loadUintBig(64);
-    let _opType = sc_0.loadUintBig(8);
-    let _account = sc_0.loadAddress();
-    let _marginDelta = sc_0.loadIntBig(257);
-    let _liquidityDelta = sc_0.loadIntBig(257);
-    let _trxId = sc_0.loadUintBig(64);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _pricesLength = sc_1.loadIntBig(257);
-    let _prices = Dictionary.load(Dictionary.Keys.BigInt(257), dictValueParserUpdatePrice(), sc_1);
-    return { $$type: 'UpdateLPPosition' as const, orderId: _orderId, opType: _opType, account: _account, marginDelta: _marginDelta, liquidityDelta: _liquidityDelta, trxId: _trxId, pricesLength: _pricesLength, prices: _prices };
-}
-
-function loadTupleUpdateLPPosition(source: TupleReader) {
-    let _orderId = source.readBigNumber();
-    let _opType = source.readBigNumber();
-    let _account = source.readAddress();
-    let _marginDelta = source.readBigNumber();
-    let _liquidityDelta = source.readBigNumber();
-    let _trxId = source.readBigNumber();
-    let _pricesLength = source.readBigNumber();
-    let _prices = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), dictValueParserUpdatePrice(), source.readCellOpt());
-    return { $$type: 'UpdateLPPosition' as const, orderId: _orderId, opType: _opType, account: _account, marginDelta: _marginDelta, liquidityDelta: _liquidityDelta, trxId: _trxId, pricesLength: _pricesLength, prices: _prices };
+    return { $$type: 'UpdateLPPosition' as const, isIncrease: _isIncrease, orderId: _orderId, account: _account, liquidityDelta: _liquidityDelta, trxId: _trxId, pricesLength: _pricesLength, prices: _prices };
 }
 
 function storeTupleUpdateLPPosition(source: UpdateLPPosition) {
     let builder = new TupleBuilder();
+    builder.writeBoolean(source.isIncrease);
     builder.writeNumber(source.orderId);
-    builder.writeNumber(source.opType);
     builder.writeAddress(source.account);
-    builder.writeNumber(source.marginDelta);
     builder.writeNumber(source.liquidityDelta);
     builder.writeNumber(source.trxId);
     builder.writeNumber(source.pricesLength);
@@ -815,7 +655,7 @@ export type UpdateLPPositionSuccess = {
 export function storeUpdateLPPositionSuccess(src: UpdateLPPositionSuccess) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(1233766337, 32);
+        b_0.storeUint(485543809, 32);
         b_0.storeInt(src.orderId, 257);
         b_0.storeInt(src.receive, 257);
         b_0.storeUint(src.trxId, 64);
@@ -824,7 +664,7 @@ export function storeUpdateLPPositionSuccess(src: UpdateLPPositionSuccess) {
 
 export function loadUpdateLPPositionSuccess(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 1233766337) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 485543809) { throw Error('Invalid prefix'); }
     let _orderId = sc_0.loadIntBig(257);
     let _receive = sc_0.loadIntBig(257);
     let _trxId = sc_0.loadUintBig(64);
@@ -1009,8 +849,8 @@ function dictValueParserUpdatePerpPositionSuccess(): DictionaryValue<UpdatePerpP
     }
 }
 
-export type RBFPositionIncreasedEvent = {
-    $$type: 'RBFPositionIncreasedEvent';
+export type LPPositionIncreasedEvent = {
+    $$type: 'LPPositionIncreasedEvent';
     positionId: bigint;
     account: Address;
     liquidityDelta: bigint;
@@ -1021,10 +861,10 @@ export type RBFPositionIncreasedEvent = {
     trxId: bigint;
 }
 
-export function storeRBFPositionIncreasedEvent(src: RBFPositionIncreasedEvent) {
+export function storeLPPositionIncreasedEvent(src: LPPositionIncreasedEvent) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(4037720789, 32);
+        b_0.storeUint(2967544876, 32);
         b_0.storeInt(src.positionId, 257);
         b_0.storeAddress(src.account);
         b_0.storeInt(src.liquidityDelta, 257);
@@ -1040,9 +880,9 @@ export function storeRBFPositionIncreasedEvent(src: RBFPositionIncreasedEvent) {
     };
 }
 
-export function loadRBFPositionIncreasedEvent(slice: Slice) {
+export function loadLPPositionIncreasedEvent(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 4037720789) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 2967544876) { throw Error('Invalid prefix'); }
     let _positionId = sc_0.loadIntBig(257);
     let _account = sc_0.loadAddress();
     let _liquidityDelta = sc_0.loadIntBig(257);
@@ -1053,10 +893,10 @@ export function loadRBFPositionIncreasedEvent(slice: Slice) {
     let sc_2 = sc_1.loadRef().beginParse();
     let _unlockTimeAfter = sc_2.loadIntBig(257);
     let _trxId = sc_2.loadIntBig(257);
-    return { $$type: 'RBFPositionIncreasedEvent' as const, positionId: _positionId, account: _account, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, bonusDelta: _bonusDelta, bonusAfter: _bonusAfter, unlockTimeAfter: _unlockTimeAfter, trxId: _trxId };
+    return { $$type: 'LPPositionIncreasedEvent' as const, positionId: _positionId, account: _account, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, bonusDelta: _bonusDelta, bonusAfter: _bonusAfter, unlockTimeAfter: _unlockTimeAfter, trxId: _trxId };
 }
 
-function loadTupleRBFPositionIncreasedEvent(source: TupleReader) {
+function loadTupleLPPositionIncreasedEvent(source: TupleReader) {
     let _positionId = source.readBigNumber();
     let _account = source.readAddress();
     let _liquidityDelta = source.readBigNumber();
@@ -1065,10 +905,10 @@ function loadTupleRBFPositionIncreasedEvent(source: TupleReader) {
     let _bonusAfter = source.readBigNumber();
     let _unlockTimeAfter = source.readBigNumber();
     let _trxId = source.readBigNumber();
-    return { $$type: 'RBFPositionIncreasedEvent' as const, positionId: _positionId, account: _account, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, bonusDelta: _bonusDelta, bonusAfter: _bonusAfter, unlockTimeAfter: _unlockTimeAfter, trxId: _trxId };
+    return { $$type: 'LPPositionIncreasedEvent' as const, positionId: _positionId, account: _account, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, bonusDelta: _bonusDelta, bonusAfter: _bonusAfter, unlockTimeAfter: _unlockTimeAfter, trxId: _trxId };
 }
 
-function storeTupleRBFPositionIncreasedEvent(source: RBFPositionIncreasedEvent) {
+function storeTupleLPPositionIncreasedEvent(source: LPPositionIncreasedEvent) {
     let builder = new TupleBuilder();
     builder.writeNumber(source.positionId);
     builder.writeAddress(source.account);
@@ -1077,242 +917,6 @@ function storeTupleRBFPositionIncreasedEvent(source: RBFPositionIncreasedEvent) 
     builder.writeNumber(source.bonusDelta);
     builder.writeNumber(source.bonusAfter);
     builder.writeNumber(source.unlockTimeAfter);
-    builder.writeNumber(source.trxId);
-    return builder.build();
-}
-
-function dictValueParserRBFPositionIncreasedEvent(): DictionaryValue<RBFPositionIncreasedEvent> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeRBFPositionIncreasedEvent(src)).endCell());
-        },
-        parse: (src) => {
-            return loadRBFPositionIncreasedEvent(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type RBFPositionDecreasedEvent = {
-    $$type: 'RBFPositionDecreasedEvent';
-    positionId: bigint;
-    account: Address;
-    liquidityDelta: bigint;
-    liquidityAfter: bigint;
-    bonusDelta: bigint;
-    bonusAfter: bigint;
-    receive: bigint;
-    trxId: bigint;
-}
-
-export function storeRBFPositionDecreasedEvent(src: RBFPositionDecreasedEvent) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(2882242104, 32);
-        b_0.storeInt(src.positionId, 257);
-        b_0.storeAddress(src.account);
-        b_0.storeInt(src.liquidityDelta, 257);
-        let b_1 = new Builder();
-        b_1.storeInt(src.liquidityAfter, 257);
-        b_1.storeInt(src.bonusDelta, 257);
-        b_1.storeInt(src.bonusAfter, 257);
-        let b_2 = new Builder();
-        b_2.storeInt(src.receive, 257);
-        b_2.storeInt(src.trxId, 257);
-        b_1.storeRef(b_2.endCell());
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadRBFPositionDecreasedEvent(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 2882242104) { throw Error('Invalid prefix'); }
-    let _positionId = sc_0.loadIntBig(257);
-    let _account = sc_0.loadAddress();
-    let _liquidityDelta = sc_0.loadIntBig(257);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _liquidityAfter = sc_1.loadIntBig(257);
-    let _bonusDelta = sc_1.loadIntBig(257);
-    let _bonusAfter = sc_1.loadIntBig(257);
-    let sc_2 = sc_1.loadRef().beginParse();
-    let _receive = sc_2.loadIntBig(257);
-    let _trxId = sc_2.loadIntBig(257);
-    return { $$type: 'RBFPositionDecreasedEvent' as const, positionId: _positionId, account: _account, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, bonusDelta: _bonusDelta, bonusAfter: _bonusAfter, receive: _receive, trxId: _trxId };
-}
-
-function loadTupleRBFPositionDecreasedEvent(source: TupleReader) {
-    let _positionId = source.readBigNumber();
-    let _account = source.readAddress();
-    let _liquidityDelta = source.readBigNumber();
-    let _liquidityAfter = source.readBigNumber();
-    let _bonusDelta = source.readBigNumber();
-    let _bonusAfter = source.readBigNumber();
-    let _receive = source.readBigNumber();
-    let _trxId = source.readBigNumber();
-    return { $$type: 'RBFPositionDecreasedEvent' as const, positionId: _positionId, account: _account, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, bonusDelta: _bonusDelta, bonusAfter: _bonusAfter, receive: _receive, trxId: _trxId };
-}
-
-function storeTupleRBFPositionDecreasedEvent(source: RBFPositionDecreasedEvent) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.positionId);
-    builder.writeAddress(source.account);
-    builder.writeNumber(source.liquidityDelta);
-    builder.writeNumber(source.liquidityAfter);
-    builder.writeNumber(source.bonusDelta);
-    builder.writeNumber(source.bonusAfter);
-    builder.writeNumber(source.receive);
-    builder.writeNumber(source.trxId);
-    return builder.build();
-}
-
-function dictValueParserRBFPositionDecreasedEvent(): DictionaryValue<RBFPositionDecreasedEvent> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeRBFPositionDecreasedEvent(src)).endCell());
-        },
-        parse: (src) => {
-            return loadRBFPositionDecreasedEvent(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type GlobalRBFChangedEvent = {
-    $$type: 'GlobalRBFChangedEvent';
-    riskBufferFundAfter: bigint;
-    liquidityAfter: bigint;
-    tradingFee: bigint;
-    liquidation: bigint;
-    trxId: bigint;
-}
-
-export function storeGlobalRBFChangedEvent(src: GlobalRBFChangedEvent) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(3450643003, 32);
-        b_0.storeInt(src.riskBufferFundAfter, 257);
-        b_0.storeInt(src.liquidityAfter, 257);
-        b_0.storeInt(src.tradingFee, 257);
-        let b_1 = new Builder();
-        b_1.storeInt(src.liquidation, 257);
-        b_1.storeInt(src.trxId, 257);
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadGlobalRBFChangedEvent(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 3450643003) { throw Error('Invalid prefix'); }
-    let _riskBufferFundAfter = sc_0.loadIntBig(257);
-    let _liquidityAfter = sc_0.loadIntBig(257);
-    let _tradingFee = sc_0.loadIntBig(257);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _liquidation = sc_1.loadIntBig(257);
-    let _trxId = sc_1.loadIntBig(257);
-    return { $$type: 'GlobalRBFChangedEvent' as const, riskBufferFundAfter: _riskBufferFundAfter, liquidityAfter: _liquidityAfter, tradingFee: _tradingFee, liquidation: _liquidation, trxId: _trxId };
-}
-
-function loadTupleGlobalRBFChangedEvent(source: TupleReader) {
-    let _riskBufferFundAfter = source.readBigNumber();
-    let _liquidityAfter = source.readBigNumber();
-    let _tradingFee = source.readBigNumber();
-    let _liquidation = source.readBigNumber();
-    let _trxId = source.readBigNumber();
-    return { $$type: 'GlobalRBFChangedEvent' as const, riskBufferFundAfter: _riskBufferFundAfter, liquidityAfter: _liquidityAfter, tradingFee: _tradingFee, liquidation: _liquidation, trxId: _trxId };
-}
-
-function storeTupleGlobalRBFChangedEvent(source: GlobalRBFChangedEvent) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.riskBufferFundAfter);
-    builder.writeNumber(source.liquidityAfter);
-    builder.writeNumber(source.tradingFee);
-    builder.writeNumber(source.liquidation);
-    builder.writeNumber(source.trxId);
-    return builder.build();
-}
-
-function dictValueParserGlobalRBFChangedEvent(): DictionaryValue<GlobalRBFChangedEvent> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeGlobalRBFChangedEvent(src)).endCell());
-        },
-        parse: (src) => {
-            return loadGlobalRBFChangedEvent(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type LPPositionIncreasedEvent = {
-    $$type: 'LPPositionIncreasedEvent';
-    positionId: bigint;
-    account: Address;
-    marginDelta: bigint;
-    marginAfter: bigint;
-    liquidityDelta: bigint;
-    liquidityAfter: bigint;
-    tradingFee: bigint;
-    fundingFee: bigint;
-    trxId: bigint;
-}
-
-export function storeLPPositionIncreasedEvent(src: LPPositionIncreasedEvent) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(3487229017, 32);
-        b_0.storeInt(src.positionId, 257);
-        b_0.storeAddress(src.account);
-        b_0.storeInt(src.marginDelta, 257);
-        let b_1 = new Builder();
-        b_1.storeInt(src.marginAfter, 257);
-        b_1.storeInt(src.liquidityDelta, 257);
-        b_1.storeInt(src.liquidityAfter, 257);
-        let b_2 = new Builder();
-        b_2.storeInt(src.tradingFee, 257);
-        b_2.storeInt(src.fundingFee, 257);
-        b_2.storeInt(src.trxId, 257);
-        b_1.storeRef(b_2.endCell());
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadLPPositionIncreasedEvent(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 3487229017) { throw Error('Invalid prefix'); }
-    let _positionId = sc_0.loadIntBig(257);
-    let _account = sc_0.loadAddress();
-    let _marginDelta = sc_0.loadIntBig(257);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _marginAfter = sc_1.loadIntBig(257);
-    let _liquidityDelta = sc_1.loadIntBig(257);
-    let _liquidityAfter = sc_1.loadIntBig(257);
-    let sc_2 = sc_1.loadRef().beginParse();
-    let _tradingFee = sc_2.loadIntBig(257);
-    let _fundingFee = sc_2.loadIntBig(257);
-    let _trxId = sc_2.loadIntBig(257);
-    return { $$type: 'LPPositionIncreasedEvent' as const, positionId: _positionId, account: _account, marginDelta: _marginDelta, marginAfter: _marginAfter, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, tradingFee: _tradingFee, fundingFee: _fundingFee, trxId: _trxId };
-}
-
-function loadTupleLPPositionIncreasedEvent(source: TupleReader) {
-    let _positionId = source.readBigNumber();
-    let _account = source.readAddress();
-    let _marginDelta = source.readBigNumber();
-    let _marginAfter = source.readBigNumber();
-    let _liquidityDelta = source.readBigNumber();
-    let _liquidityAfter = source.readBigNumber();
-    let _tradingFee = source.readBigNumber();
-    let _fundingFee = source.readBigNumber();
-    let _trxId = source.readBigNumber();
-    return { $$type: 'LPPositionIncreasedEvent' as const, positionId: _positionId, account: _account, marginDelta: _marginDelta, marginAfter: _marginAfter, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, tradingFee: _tradingFee, fundingFee: _fundingFee, trxId: _trxId };
-}
-
-function storeTupleLPPositionIncreasedEvent(source: LPPositionIncreasedEvent) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.positionId);
-    builder.writeAddress(source.account);
-    builder.writeNumber(source.marginDelta);
-    builder.writeNumber(source.marginAfter);
-    builder.writeNumber(source.liquidityDelta);
-    builder.writeNumber(source.liquidityAfter);
-    builder.writeNumber(source.tradingFee);
-    builder.writeNumber(source.fundingFee);
     builder.writeNumber(source.trxId);
     return builder.build();
 }
@@ -1332,13 +936,10 @@ export type LPPositionDecreasedEvent = {
     $$type: 'LPPositionDecreasedEvent';
     positionId: bigint;
     account: Address;
-    marginDelta: bigint;
-    marginAfter: bigint;
     liquidityDelta: bigint;
     liquidityAfter: bigint;
-    tradingFee: bigint;
-    fundingFee: bigint;
-    realizedLoss: bigint;
+    bonusDelta: bigint;
+    bonusAfter: bigint;
     receive: bigint;
     trxId: bigint;
 }
@@ -1346,22 +947,17 @@ export type LPPositionDecreasedEvent = {
 export function storeLPPositionDecreasedEvent(src: LPPositionDecreasedEvent) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(2843728201, 32);
+        b_0.storeUint(613316534, 32);
         b_0.storeInt(src.positionId, 257);
         b_0.storeAddress(src.account);
-        b_0.storeInt(src.marginDelta, 257);
+        b_0.storeInt(src.liquidityDelta, 257);
         let b_1 = new Builder();
-        b_1.storeInt(src.marginAfter, 257);
-        b_1.storeInt(src.liquidityDelta, 257);
         b_1.storeInt(src.liquidityAfter, 257);
+        b_1.storeInt(src.bonusDelta, 257);
+        b_1.storeInt(src.bonusAfter, 257);
         let b_2 = new Builder();
-        b_2.storeInt(src.tradingFee, 257);
-        b_2.storeInt(src.fundingFee, 257);
-        b_2.storeInt(src.realizedLoss, 257);
-        let b_3 = new Builder();
-        b_3.storeInt(src.receive, 257);
-        b_3.storeInt(src.trxId, 257);
-        b_2.storeRef(b_3.endCell());
+        b_2.storeInt(src.receive, 257);
+        b_2.storeInt(src.trxId, 257);
         b_1.storeRef(b_2.endCell());
         b_0.storeRef(b_1.endCell());
     };
@@ -1369,50 +965,40 @@ export function storeLPPositionDecreasedEvent(src: LPPositionDecreasedEvent) {
 
 export function loadLPPositionDecreasedEvent(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 2843728201) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 613316534) { throw Error('Invalid prefix'); }
     let _positionId = sc_0.loadIntBig(257);
     let _account = sc_0.loadAddress();
-    let _marginDelta = sc_0.loadIntBig(257);
+    let _liquidityDelta = sc_0.loadIntBig(257);
     let sc_1 = sc_0.loadRef().beginParse();
-    let _marginAfter = sc_1.loadIntBig(257);
-    let _liquidityDelta = sc_1.loadIntBig(257);
     let _liquidityAfter = sc_1.loadIntBig(257);
+    let _bonusDelta = sc_1.loadIntBig(257);
+    let _bonusAfter = sc_1.loadIntBig(257);
     let sc_2 = sc_1.loadRef().beginParse();
-    let _tradingFee = sc_2.loadIntBig(257);
-    let _fundingFee = sc_2.loadIntBig(257);
-    let _realizedLoss = sc_2.loadIntBig(257);
-    let sc_3 = sc_2.loadRef().beginParse();
-    let _receive = sc_3.loadIntBig(257);
-    let _trxId = sc_3.loadIntBig(257);
-    return { $$type: 'LPPositionDecreasedEvent' as const, positionId: _positionId, account: _account, marginDelta: _marginDelta, marginAfter: _marginAfter, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, tradingFee: _tradingFee, fundingFee: _fundingFee, realizedLoss: _realizedLoss, receive: _receive, trxId: _trxId };
+    let _receive = sc_2.loadIntBig(257);
+    let _trxId = sc_2.loadIntBig(257);
+    return { $$type: 'LPPositionDecreasedEvent' as const, positionId: _positionId, account: _account, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, bonusDelta: _bonusDelta, bonusAfter: _bonusAfter, receive: _receive, trxId: _trxId };
 }
 
 function loadTupleLPPositionDecreasedEvent(source: TupleReader) {
     let _positionId = source.readBigNumber();
     let _account = source.readAddress();
-    let _marginDelta = source.readBigNumber();
-    let _marginAfter = source.readBigNumber();
     let _liquidityDelta = source.readBigNumber();
     let _liquidityAfter = source.readBigNumber();
-    let _tradingFee = source.readBigNumber();
-    let _fundingFee = source.readBigNumber();
-    let _realizedLoss = source.readBigNumber();
+    let _bonusDelta = source.readBigNumber();
+    let _bonusAfter = source.readBigNumber();
     let _receive = source.readBigNumber();
     let _trxId = source.readBigNumber();
-    return { $$type: 'LPPositionDecreasedEvent' as const, positionId: _positionId, account: _account, marginDelta: _marginDelta, marginAfter: _marginAfter, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, tradingFee: _tradingFee, fundingFee: _fundingFee, realizedLoss: _realizedLoss, receive: _receive, trxId: _trxId };
+    return { $$type: 'LPPositionDecreasedEvent' as const, positionId: _positionId, account: _account, liquidityDelta: _liquidityDelta, liquidityAfter: _liquidityAfter, bonusDelta: _bonusDelta, bonusAfter: _bonusAfter, receive: _receive, trxId: _trxId };
 }
 
 function storeTupleLPPositionDecreasedEvent(source: LPPositionDecreasedEvent) {
     let builder = new TupleBuilder();
     builder.writeNumber(source.positionId);
     builder.writeAddress(source.account);
-    builder.writeNumber(source.marginDelta);
-    builder.writeNumber(source.marginAfter);
     builder.writeNumber(source.liquidityDelta);
     builder.writeNumber(source.liquidityAfter);
-    builder.writeNumber(source.tradingFee);
-    builder.writeNumber(source.fundingFee);
-    builder.writeNumber(source.realizedLoss);
+    builder.writeNumber(source.bonusDelta);
+    builder.writeNumber(source.bonusAfter);
     builder.writeNumber(source.receive);
     builder.writeNumber(source.trxId);
     return builder.build();
@@ -1429,137 +1015,67 @@ function dictValueParserLPPositionDecreasedEvent(): DictionaryValue<LPPositionDe
     }
 }
 
-export type LPPositionLiquidatedEvent = {
-    $$type: 'LPPositionLiquidatedEvent';
-    positionId: bigint;
-    account: Address;
-    margin: bigint;
-    liquidity: bigint;
+export type GlobalLPChangedEvent = {
+    $$type: 'GlobalLPChangedEvent';
+    lpFundAfter: bigint;
+    liquidityAfter: bigint;
     tradingFee: bigint;
     fundingFee: bigint;
-    liquidationFee: bigint;
     trxId: bigint;
 }
 
-export function storeLPPositionLiquidatedEvent(src: LPPositionLiquidatedEvent) {
+export function storeGlobalLPChangedEvent(src: GlobalLPChangedEvent) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(3220731385, 32);
-        b_0.storeInt(src.positionId, 257);
-        b_0.storeAddress(src.account);
-        b_0.storeInt(src.margin, 257);
+        b_0.storeUint(1059260453, 32);
+        b_0.storeInt(src.lpFundAfter, 257);
+        b_0.storeInt(src.liquidityAfter, 257);
+        b_0.storeInt(src.tradingFee, 257);
         let b_1 = new Builder();
-        b_1.storeInt(src.liquidity, 257);
-        b_1.storeInt(src.tradingFee, 257);
         b_1.storeInt(src.fundingFee, 257);
-        let b_2 = new Builder();
-        b_2.storeInt(src.liquidationFee, 257);
-        b_2.storeInt(src.trxId, 257);
-        b_1.storeRef(b_2.endCell());
+        b_1.storeInt(src.trxId, 257);
         b_0.storeRef(b_1.endCell());
     };
 }
 
-export function loadLPPositionLiquidatedEvent(slice: Slice) {
+export function loadGlobalLPChangedEvent(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 3220731385) { throw Error('Invalid prefix'); }
-    let _positionId = sc_0.loadIntBig(257);
-    let _account = sc_0.loadAddress();
-    let _margin = sc_0.loadIntBig(257);
+    if (sc_0.loadUint(32) !== 1059260453) { throw Error('Invalid prefix'); }
+    let _lpFundAfter = sc_0.loadIntBig(257);
+    let _liquidityAfter = sc_0.loadIntBig(257);
+    let _tradingFee = sc_0.loadIntBig(257);
     let sc_1 = sc_0.loadRef().beginParse();
-    let _liquidity = sc_1.loadIntBig(257);
-    let _tradingFee = sc_1.loadIntBig(257);
     let _fundingFee = sc_1.loadIntBig(257);
-    let sc_2 = sc_1.loadRef().beginParse();
-    let _liquidationFee = sc_2.loadIntBig(257);
-    let _trxId = sc_2.loadIntBig(257);
-    return { $$type: 'LPPositionLiquidatedEvent' as const, positionId: _positionId, account: _account, margin: _margin, liquidity: _liquidity, tradingFee: _tradingFee, fundingFee: _fundingFee, liquidationFee: _liquidationFee, trxId: _trxId };
+    let _trxId = sc_1.loadIntBig(257);
+    return { $$type: 'GlobalLPChangedEvent' as const, lpFundAfter: _lpFundAfter, liquidityAfter: _liquidityAfter, tradingFee: _tradingFee, fundingFee: _fundingFee, trxId: _trxId };
 }
 
-function loadTupleLPPositionLiquidatedEvent(source: TupleReader) {
-    let _positionId = source.readBigNumber();
-    let _account = source.readAddress();
-    let _margin = source.readBigNumber();
-    let _liquidity = source.readBigNumber();
+function loadTupleGlobalLPChangedEvent(source: TupleReader) {
+    let _lpFundAfter = source.readBigNumber();
+    let _liquidityAfter = source.readBigNumber();
     let _tradingFee = source.readBigNumber();
     let _fundingFee = source.readBigNumber();
-    let _liquidationFee = source.readBigNumber();
     let _trxId = source.readBigNumber();
-    return { $$type: 'LPPositionLiquidatedEvent' as const, positionId: _positionId, account: _account, margin: _margin, liquidity: _liquidity, tradingFee: _tradingFee, fundingFee: _fundingFee, liquidationFee: _liquidationFee, trxId: _trxId };
+    return { $$type: 'GlobalLPChangedEvent' as const, lpFundAfter: _lpFundAfter, liquidityAfter: _liquidityAfter, tradingFee: _tradingFee, fundingFee: _fundingFee, trxId: _trxId };
 }
 
-function storeTupleLPPositionLiquidatedEvent(source: LPPositionLiquidatedEvent) {
+function storeTupleGlobalLPChangedEvent(source: GlobalLPChangedEvent) {
     let builder = new TupleBuilder();
-    builder.writeNumber(source.positionId);
-    builder.writeAddress(source.account);
-    builder.writeNumber(source.margin);
-    builder.writeNumber(source.liquidity);
+    builder.writeNumber(source.lpFundAfter);
+    builder.writeNumber(source.liquidityAfter);
     builder.writeNumber(source.tradingFee);
     builder.writeNumber(source.fundingFee);
-    builder.writeNumber(source.liquidationFee);
     builder.writeNumber(source.trxId);
     return builder.build();
 }
 
-function dictValueParserLPPositionLiquidatedEvent(): DictionaryValue<LPPositionLiquidatedEvent> {
+function dictValueParserGlobalLPChangedEvent(): DictionaryValue<GlobalLPChangedEvent> {
     return {
         serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeLPPositionLiquidatedEvent(src)).endCell());
+            buidler.storeRef(beginCell().store(storeGlobalLPChangedEvent(src)).endCell());
         },
         parse: (src) => {
-            return loadLPPositionLiquidatedEvent(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type GlobalLPLiquidityChangedEvent = {
-    $$type: 'GlobalLPLiquidityChangedEvent';
-    marginAfter: bigint;
-    liquidityAfter: bigint;
-    trxId: bigint;
-}
-
-export function storeGlobalLPLiquidityChangedEvent(src: GlobalLPLiquidityChangedEvent) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(1513930700, 32);
-        b_0.storeInt(src.marginAfter, 257);
-        b_0.storeInt(src.liquidityAfter, 257);
-        b_0.storeInt(src.trxId, 257);
-    };
-}
-
-export function loadGlobalLPLiquidityChangedEvent(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 1513930700) { throw Error('Invalid prefix'); }
-    let _marginAfter = sc_0.loadIntBig(257);
-    let _liquidityAfter = sc_0.loadIntBig(257);
-    let _trxId = sc_0.loadIntBig(257);
-    return { $$type: 'GlobalLPLiquidityChangedEvent' as const, marginAfter: _marginAfter, liquidityAfter: _liquidityAfter, trxId: _trxId };
-}
-
-function loadTupleGlobalLPLiquidityChangedEvent(source: TupleReader) {
-    let _marginAfter = source.readBigNumber();
-    let _liquidityAfter = source.readBigNumber();
-    let _trxId = source.readBigNumber();
-    return { $$type: 'GlobalLPLiquidityChangedEvent' as const, marginAfter: _marginAfter, liquidityAfter: _liquidityAfter, trxId: _trxId };
-}
-
-function storeTupleGlobalLPLiquidityChangedEvent(source: GlobalLPLiquidityChangedEvent) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.marginAfter);
-    builder.writeNumber(source.liquidityAfter);
-    builder.writeNumber(source.trxId);
-    return builder.build();
-}
-
-function dictValueParserGlobalLPLiquidityChangedEvent(): DictionaryValue<GlobalLPLiquidityChangedEvent> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeGlobalLPLiquidityChangedEvent(src)).endCell());
-        },
-        parse: (src) => {
-            return loadGlobalLPLiquidityChangedEvent(src.loadRef().beginParse());
+            return loadGlobalLPChangedEvent(src.loadRef().beginParse());
         }
     }
 }
@@ -2009,65 +1525,39 @@ function dictValueParserUpdatePriceEvent(): DictionaryValue<UpdatePriceEvent> {
 
 export type ConfigData = {
     $$type: 'ConfigData';
-    rbfLockTime: bigint;
+    lpLockTime: bigint;
     bonusFactor: bigint;
-    minLPMargin: bigint;
-    maxLPLeverage: bigint;
-    lpLiquidationFee: bigint;
-    lpMaxRiskRate: bigint;
     orderBook: Address;
 }
 
 export function storeConfigData(src: ConfigData) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeInt(src.rbfLockTime, 257);
+        b_0.storeInt(src.lpLockTime, 257);
         b_0.storeInt(src.bonusFactor, 257);
-        b_0.storeInt(src.minLPMargin, 257);
-        let b_1 = new Builder();
-        b_1.storeInt(src.maxLPLeverage, 257);
-        b_1.storeInt(src.lpLiquidationFee, 257);
-        b_1.storeInt(src.lpMaxRiskRate, 257);
-        let b_2 = new Builder();
-        b_2.storeAddress(src.orderBook);
-        b_1.storeRef(b_2.endCell());
-        b_0.storeRef(b_1.endCell());
+        b_0.storeAddress(src.orderBook);
     };
 }
 
 export function loadConfigData(slice: Slice) {
     let sc_0 = slice;
-    let _rbfLockTime = sc_0.loadIntBig(257);
+    let _lpLockTime = sc_0.loadIntBig(257);
     let _bonusFactor = sc_0.loadIntBig(257);
-    let _minLPMargin = sc_0.loadIntBig(257);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _maxLPLeverage = sc_1.loadIntBig(257);
-    let _lpLiquidationFee = sc_1.loadIntBig(257);
-    let _lpMaxRiskRate = sc_1.loadIntBig(257);
-    let sc_2 = sc_1.loadRef().beginParse();
-    let _orderBook = sc_2.loadAddress();
-    return { $$type: 'ConfigData' as const, rbfLockTime: _rbfLockTime, bonusFactor: _bonusFactor, minLPMargin: _minLPMargin, maxLPLeverage: _maxLPLeverage, lpLiquidationFee: _lpLiquidationFee, lpMaxRiskRate: _lpMaxRiskRate, orderBook: _orderBook };
+    let _orderBook = sc_0.loadAddress();
+    return { $$type: 'ConfigData' as const, lpLockTime: _lpLockTime, bonusFactor: _bonusFactor, orderBook: _orderBook };
 }
 
 function loadTupleConfigData(source: TupleReader) {
-    let _rbfLockTime = source.readBigNumber();
+    let _lpLockTime = source.readBigNumber();
     let _bonusFactor = source.readBigNumber();
-    let _minLPMargin = source.readBigNumber();
-    let _maxLPLeverage = source.readBigNumber();
-    let _lpLiquidationFee = source.readBigNumber();
-    let _lpMaxRiskRate = source.readBigNumber();
     let _orderBook = source.readAddress();
-    return { $$type: 'ConfigData' as const, rbfLockTime: _rbfLockTime, bonusFactor: _bonusFactor, minLPMargin: _minLPMargin, maxLPLeverage: _maxLPLeverage, lpLiquidationFee: _lpLiquidationFee, lpMaxRiskRate: _lpMaxRiskRate, orderBook: _orderBook };
+    return { $$type: 'ConfigData' as const, lpLockTime: _lpLockTime, bonusFactor: _bonusFactor, orderBook: _orderBook };
 }
 
 function storeTupleConfigData(source: ConfigData) {
     let builder = new TupleBuilder();
-    builder.writeNumber(source.rbfLockTime);
+    builder.writeNumber(source.lpLockTime);
     builder.writeNumber(source.bonusFactor);
-    builder.writeNumber(source.minLPMargin);
-    builder.writeNumber(source.maxLPLeverage);
-    builder.writeNumber(source.lpLiquidationFee);
-    builder.writeNumber(source.lpMaxRiskRate);
     builder.writeAddress(source.orderBook);
     return builder.build();
 }
@@ -2092,7 +1582,6 @@ export type TokenConfig = {
     liquidationFee: bigint;
     tradingFeeRate: bigint;
     lpTradingFeeRate: bigint;
-    protocalTradingFeeRate: bigint;
     interestRate: bigint;
     maxFundingRate: bigint;
 }
@@ -2108,9 +1597,8 @@ export function storeTokenConfig(src: TokenConfig) {
         let b_1 = new Builder();
         b_1.storeInt(src.tradingFeeRate, 257);
         b_1.storeInt(src.lpTradingFeeRate, 257);
-        b_1.storeInt(src.protocalTradingFeeRate, 257);
+        b_1.storeInt(src.interestRate, 257);
         let b_2 = new Builder();
-        b_2.storeInt(src.interestRate, 257);
         b_2.storeInt(src.maxFundingRate, 257);
         b_1.storeRef(b_2.endCell());
         b_0.storeRef(b_1.endCell());
@@ -2127,11 +1615,10 @@ export function loadTokenConfig(slice: Slice) {
     let sc_1 = sc_0.loadRef().beginParse();
     let _tradingFeeRate = sc_1.loadIntBig(257);
     let _lpTradingFeeRate = sc_1.loadIntBig(257);
-    let _protocalTradingFeeRate = sc_1.loadIntBig(257);
+    let _interestRate = sc_1.loadIntBig(257);
     let sc_2 = sc_1.loadRef().beginParse();
-    let _interestRate = sc_2.loadIntBig(257);
     let _maxFundingRate = sc_2.loadIntBig(257);
-    return { $$type: 'TokenConfig' as const, name: _name, enable: _enable, minMargin: _minMargin, maxLeverage: _maxLeverage, liquidationFee: _liquidationFee, tradingFeeRate: _tradingFeeRate, lpTradingFeeRate: _lpTradingFeeRate, protocalTradingFeeRate: _protocalTradingFeeRate, interestRate: _interestRate, maxFundingRate: _maxFundingRate };
+    return { $$type: 'TokenConfig' as const, name: _name, enable: _enable, minMargin: _minMargin, maxLeverage: _maxLeverage, liquidationFee: _liquidationFee, tradingFeeRate: _tradingFeeRate, lpTradingFeeRate: _lpTradingFeeRate, interestRate: _interestRate, maxFundingRate: _maxFundingRate };
 }
 
 function loadTupleTokenConfig(source: TupleReader) {
@@ -2142,10 +1629,9 @@ function loadTupleTokenConfig(source: TupleReader) {
     let _liquidationFee = source.readBigNumber();
     let _tradingFeeRate = source.readBigNumber();
     let _lpTradingFeeRate = source.readBigNumber();
-    let _protocalTradingFeeRate = source.readBigNumber();
     let _interestRate = source.readBigNumber();
     let _maxFundingRate = source.readBigNumber();
-    return { $$type: 'TokenConfig' as const, name: _name, enable: _enable, minMargin: _minMargin, maxLeverage: _maxLeverage, liquidationFee: _liquidationFee, tradingFeeRate: _tradingFeeRate, lpTradingFeeRate: _lpTradingFeeRate, protocalTradingFeeRate: _protocalTradingFeeRate, interestRate: _interestRate, maxFundingRate: _maxFundingRate };
+    return { $$type: 'TokenConfig' as const, name: _name, enable: _enable, minMargin: _minMargin, maxLeverage: _maxLeverage, liquidationFee: _liquidationFee, tradingFeeRate: _tradingFeeRate, lpTradingFeeRate: _lpTradingFeeRate, interestRate: _interestRate, maxFundingRate: _maxFundingRate };
 }
 
 function storeTupleTokenConfig(source: TokenConfig) {
@@ -2157,7 +1643,6 @@ function storeTupleTokenConfig(source: TokenConfig) {
     builder.writeNumber(source.liquidationFee);
     builder.writeNumber(source.tradingFeeRate);
     builder.writeNumber(source.lpTradingFeeRate);
-    builder.writeNumber(source.protocalTradingFeeRate);
     builder.writeNumber(source.interestRate);
     builder.writeNumber(source.maxFundingRate);
     return builder.build();
@@ -2227,15 +1712,15 @@ function dictValueParserTokenConfigData(): DictionaryValue<TokenConfigData> {
     }
 }
 
-export type RBFPosition = {
-    $$type: 'RBFPosition';
+export type LPPosition = {
+    $$type: 'LPPosition';
     positionId: bigint;
     liquidity: bigint;
     bonus: bigint;
     unlockTime: bigint;
 }
 
-export function storeRBFPosition(src: RBFPosition) {
+export function storeLPPosition(src: LPPosition) {
     return (builder: Builder) => {
         let b_0 = builder;
         b_0.storeInt(src.positionId, 257);
@@ -2247,317 +1732,30 @@ export function storeRBFPosition(src: RBFPosition) {
     };
 }
 
-export function loadRBFPosition(slice: Slice) {
+export function loadLPPosition(slice: Slice) {
     let sc_0 = slice;
     let _positionId = sc_0.loadIntBig(257);
     let _liquidity = sc_0.loadIntBig(257);
     let _bonus = sc_0.loadIntBig(257);
     let sc_1 = sc_0.loadRef().beginParse();
     let _unlockTime = sc_1.loadIntBig(257);
-    return { $$type: 'RBFPosition' as const, positionId: _positionId, liquidity: _liquidity, bonus: _bonus, unlockTime: _unlockTime };
-}
-
-function loadTupleRBFPosition(source: TupleReader) {
-    let _positionId = source.readBigNumber();
-    let _liquidity = source.readBigNumber();
-    let _bonus = source.readBigNumber();
-    let _unlockTime = source.readBigNumber();
-    return { $$type: 'RBFPosition' as const, positionId: _positionId, liquidity: _liquidity, bonus: _bonus, unlockTime: _unlockTime };
-}
-
-function storeTupleRBFPosition(source: RBFPosition) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.positionId);
-    builder.writeNumber(source.liquidity);
-    builder.writeNumber(source.bonus);
-    builder.writeNumber(source.unlockTime);
-    return builder.build();
-}
-
-function dictValueParserRBFPosition(): DictionaryValue<RBFPosition> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeRBFPosition(src)).endCell());
-        },
-        parse: (src) => {
-            return loadRBFPosition(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type GlobalRBFPosition = {
-    $$type: 'GlobalRBFPosition';
-    riskBufferFund: bigint;
-    liquidity: bigint;
-}
-
-export function storeGlobalRBFPosition(src: GlobalRBFPosition) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeInt(src.riskBufferFund, 257);
-        b_0.storeInt(src.liquidity, 257);
-    };
-}
-
-export function loadGlobalRBFPosition(slice: Slice) {
-    let sc_0 = slice;
-    let _riskBufferFund = sc_0.loadIntBig(257);
-    let _liquidity = sc_0.loadIntBig(257);
-    return { $$type: 'GlobalRBFPosition' as const, riskBufferFund: _riskBufferFund, liquidity: _liquidity };
-}
-
-function loadTupleGlobalRBFPosition(source: TupleReader) {
-    let _riskBufferFund = source.readBigNumber();
-    let _liquidity = source.readBigNumber();
-    return { $$type: 'GlobalRBFPosition' as const, riskBufferFund: _riskBufferFund, liquidity: _liquidity };
-}
-
-function storeTupleGlobalRBFPosition(source: GlobalRBFPosition) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.riskBufferFund);
-    builder.writeNumber(source.liquidity);
-    return builder.build();
-}
-
-function dictValueParserGlobalRBFPosition(): DictionaryValue<GlobalRBFPosition> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeGlobalRBFPosition(src)).endCell());
-        },
-        parse: (src) => {
-            return loadGlobalRBFPosition(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type RBFPositionData = {
-    $$type: 'RBFPositionData';
-    rbfPosition: RBFPosition | null;
-    globalRBFPosition: GlobalRBFPosition;
-}
-
-export function storeRBFPositionData(src: RBFPositionData) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        if (src.rbfPosition !== null && src.rbfPosition !== undefined) { b_0.storeBit(true); b_0.store(storeRBFPosition(src.rbfPosition)); } else { b_0.storeBit(false); }
-        let b_1 = new Builder();
-        b_1.store(storeGlobalRBFPosition(src.globalRBFPosition));
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadRBFPositionData(slice: Slice) {
-    let sc_0 = slice;
-    let _rbfPosition = sc_0.loadBit() ? loadRBFPosition(sc_0) : null;
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _globalRBFPosition = loadGlobalRBFPosition(sc_1);
-    return { $$type: 'RBFPositionData' as const, rbfPosition: _rbfPosition, globalRBFPosition: _globalRBFPosition };
-}
-
-function loadTupleRBFPositionData(source: TupleReader) {
-    const _rbfPosition_p = source.readTupleOpt();
-    const _rbfPosition = _rbfPosition_p ? loadTupleRBFPosition(_rbfPosition_p) : null;
-    const _globalRBFPosition = loadTupleGlobalRBFPosition(source.readTuple());
-    return { $$type: 'RBFPositionData' as const, rbfPosition: _rbfPosition, globalRBFPosition: _globalRBFPosition };
-}
-
-function storeTupleRBFPositionData(source: RBFPositionData) {
-    let builder = new TupleBuilder();
-    if (source.rbfPosition !== null && source.rbfPosition !== undefined) {
-        builder.writeTuple(storeTupleRBFPosition(source.rbfPosition));
-    } else {
-        builder.writeTuple(null);
-    }
-    builder.writeTuple(storeTupleGlobalRBFPosition(source.globalRBFPosition));
-    return builder.build();
-}
-
-function dictValueParserRBFPositionData(): DictionaryValue<RBFPositionData> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeRBFPositionData(src)).endCell());
-        },
-        parse: (src) => {
-            return loadRBFPositionData(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type IncreaseLPPositionOrder = {
-    $$type: 'IncreaseLPPositionOrder';
-    account: Address;
-    marginDelta: bigint;
-    liquidityDelta: bigint;
-    executionFee: bigint;
-    blockTime: bigint;
-}
-
-export function storeIncreaseLPPositionOrder(src: IncreaseLPPositionOrder) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeAddress(src.account);
-        b_0.storeInt(src.marginDelta, 257);
-        b_0.storeInt(src.liquidityDelta, 257);
-        let b_1 = new Builder();
-        b_1.storeInt(src.executionFee, 257);
-        b_1.storeInt(src.blockTime, 257);
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadIncreaseLPPositionOrder(slice: Slice) {
-    let sc_0 = slice;
-    let _account = sc_0.loadAddress();
-    let _marginDelta = sc_0.loadIntBig(257);
-    let _liquidityDelta = sc_0.loadIntBig(257);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _executionFee = sc_1.loadIntBig(257);
-    let _blockTime = sc_1.loadIntBig(257);
-    return { $$type: 'IncreaseLPPositionOrder' as const, account: _account, marginDelta: _marginDelta, liquidityDelta: _liquidityDelta, executionFee: _executionFee, blockTime: _blockTime };
-}
-
-function loadTupleIncreaseLPPositionOrder(source: TupleReader) {
-    let _account = source.readAddress();
-    let _marginDelta = source.readBigNumber();
-    let _liquidityDelta = source.readBigNumber();
-    let _executionFee = source.readBigNumber();
-    let _blockTime = source.readBigNumber();
-    return { $$type: 'IncreaseLPPositionOrder' as const, account: _account, marginDelta: _marginDelta, liquidityDelta: _liquidityDelta, executionFee: _executionFee, blockTime: _blockTime };
-}
-
-function storeTupleIncreaseLPPositionOrder(source: IncreaseLPPositionOrder) {
-    let builder = new TupleBuilder();
-    builder.writeAddress(source.account);
-    builder.writeNumber(source.marginDelta);
-    builder.writeNumber(source.liquidityDelta);
-    builder.writeNumber(source.executionFee);
-    builder.writeNumber(source.blockTime);
-    return builder.build();
-}
-
-function dictValueParserIncreaseLPPositionOrder(): DictionaryValue<IncreaseLPPositionOrder> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeIncreaseLPPositionOrder(src)).endCell());
-        },
-        parse: (src) => {
-            return loadIncreaseLPPositionOrder(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type DecreaseLPPositionOrder = {
-    $$type: 'DecreaseLPPositionOrder';
-    account: Address;
-    marginDelta: bigint;
-    liquidityDelta: bigint;
-    executionFee: bigint;
-    blockTime: bigint;
-}
-
-export function storeDecreaseLPPositionOrder(src: DecreaseLPPositionOrder) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeAddress(src.account);
-        b_0.storeInt(src.marginDelta, 257);
-        b_0.storeInt(src.liquidityDelta, 257);
-        let b_1 = new Builder();
-        b_1.storeInt(src.executionFee, 257);
-        b_1.storeInt(src.blockTime, 257);
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadDecreaseLPPositionOrder(slice: Slice) {
-    let sc_0 = slice;
-    let _account = sc_0.loadAddress();
-    let _marginDelta = sc_0.loadIntBig(257);
-    let _liquidityDelta = sc_0.loadIntBig(257);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _executionFee = sc_1.loadIntBig(257);
-    let _blockTime = sc_1.loadIntBig(257);
-    return { $$type: 'DecreaseLPPositionOrder' as const, account: _account, marginDelta: _marginDelta, liquidityDelta: _liquidityDelta, executionFee: _executionFee, blockTime: _blockTime };
-}
-
-function loadTupleDecreaseLPPositionOrder(source: TupleReader) {
-    let _account = source.readAddress();
-    let _marginDelta = source.readBigNumber();
-    let _liquidityDelta = source.readBigNumber();
-    let _executionFee = source.readBigNumber();
-    let _blockTime = source.readBigNumber();
-    return { $$type: 'DecreaseLPPositionOrder' as const, account: _account, marginDelta: _marginDelta, liquidityDelta: _liquidityDelta, executionFee: _executionFee, blockTime: _blockTime };
-}
-
-function storeTupleDecreaseLPPositionOrder(source: DecreaseLPPositionOrder) {
-    let builder = new TupleBuilder();
-    builder.writeAddress(source.account);
-    builder.writeNumber(source.marginDelta);
-    builder.writeNumber(source.liquidityDelta);
-    builder.writeNumber(source.executionFee);
-    builder.writeNumber(source.blockTime);
-    return builder.build();
-}
-
-function dictValueParserDecreaseLPPositionOrder(): DictionaryValue<DecreaseLPPositionOrder> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeDecreaseLPPositionOrder(src)).endCell());
-        },
-        parse: (src) => {
-            return loadDecreaseLPPositionOrder(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type LPPosition = {
-    $$type: 'LPPosition';
-    positionId: bigint;
-    margin: bigint;
-    liquidity: bigint;
-    entryFundingFeeGrowth: bigint;
-    entryTradingFeeGrowth: bigint;
-}
-
-export function storeLPPosition(src: LPPosition) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeInt(src.positionId, 257);
-        b_0.storeInt(src.margin, 257);
-        b_0.storeInt(src.liquidity, 257);
-        let b_1 = new Builder();
-        b_1.storeInt(src.entryFundingFeeGrowth, 257);
-        b_1.storeInt(src.entryTradingFeeGrowth, 257);
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadLPPosition(slice: Slice) {
-    let sc_0 = slice;
-    let _positionId = sc_0.loadIntBig(257);
-    let _margin = sc_0.loadIntBig(257);
-    let _liquidity = sc_0.loadIntBig(257);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _entryFundingFeeGrowth = sc_1.loadIntBig(257);
-    let _entryTradingFeeGrowth = sc_1.loadIntBig(257);
-    return { $$type: 'LPPosition' as const, positionId: _positionId, margin: _margin, liquidity: _liquidity, entryFundingFeeGrowth: _entryFundingFeeGrowth, entryTradingFeeGrowth: _entryTradingFeeGrowth };
+    return { $$type: 'LPPosition' as const, positionId: _positionId, liquidity: _liquidity, bonus: _bonus, unlockTime: _unlockTime };
 }
 
 function loadTupleLPPosition(source: TupleReader) {
     let _positionId = source.readBigNumber();
-    let _margin = source.readBigNumber();
     let _liquidity = source.readBigNumber();
-    let _entryFundingFeeGrowth = source.readBigNumber();
-    let _entryTradingFeeGrowth = source.readBigNumber();
-    return { $$type: 'LPPosition' as const, positionId: _positionId, margin: _margin, liquidity: _liquidity, entryFundingFeeGrowth: _entryFundingFeeGrowth, entryTradingFeeGrowth: _entryTradingFeeGrowth };
+    let _bonus = source.readBigNumber();
+    let _unlockTime = source.readBigNumber();
+    return { $$type: 'LPPosition' as const, positionId: _positionId, liquidity: _liquidity, bonus: _bonus, unlockTime: _unlockTime };
 }
 
 function storeTupleLPPosition(source: LPPosition) {
     let builder = new TupleBuilder();
     builder.writeNumber(source.positionId);
-    builder.writeNumber(source.margin);
     builder.writeNumber(source.liquidity);
-    builder.writeNumber(source.entryFundingFeeGrowth);
-    builder.writeNumber(source.entryTradingFeeGrowth);
+    builder.writeNumber(source.bonus);
+    builder.writeNumber(source.unlockTime);
     return builder.build();
 }
 
@@ -2574,48 +1772,40 @@ function dictValueParserLPPosition(): DictionaryValue<LPPosition> {
 
 export type GlobalLPLiquidity = {
     $$type: 'GlobalLPLiquidity';
-    margin: bigint;
+    lpFund: bigint;
     liquidity: bigint;
     fundingFeeGrowth: bigint;
-    tradingFeeGrowth: bigint;
 }
 
 export function storeGlobalLPLiquidity(src: GlobalLPLiquidity) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeInt(src.margin, 257);
+        b_0.storeInt(src.lpFund, 257);
         b_0.storeInt(src.liquidity, 257);
         b_0.storeInt(src.fundingFeeGrowth, 257);
-        let b_1 = new Builder();
-        b_1.storeInt(src.tradingFeeGrowth, 257);
-        b_0.storeRef(b_1.endCell());
     };
 }
 
 export function loadGlobalLPLiquidity(slice: Slice) {
     let sc_0 = slice;
-    let _margin = sc_0.loadIntBig(257);
+    let _lpFund = sc_0.loadIntBig(257);
     let _liquidity = sc_0.loadIntBig(257);
     let _fundingFeeGrowth = sc_0.loadIntBig(257);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _tradingFeeGrowth = sc_1.loadIntBig(257);
-    return { $$type: 'GlobalLPLiquidity' as const, margin: _margin, liquidity: _liquidity, fundingFeeGrowth: _fundingFeeGrowth, tradingFeeGrowth: _tradingFeeGrowth };
+    return { $$type: 'GlobalLPLiquidity' as const, lpFund: _lpFund, liquidity: _liquidity, fundingFeeGrowth: _fundingFeeGrowth };
 }
 
 function loadTupleGlobalLPLiquidity(source: TupleReader) {
-    let _margin = source.readBigNumber();
+    let _lpFund = source.readBigNumber();
     let _liquidity = source.readBigNumber();
     let _fundingFeeGrowth = source.readBigNumber();
-    let _tradingFeeGrowth = source.readBigNumber();
-    return { $$type: 'GlobalLPLiquidity' as const, margin: _margin, liquidity: _liquidity, fundingFeeGrowth: _fundingFeeGrowth, tradingFeeGrowth: _tradingFeeGrowth };
+    return { $$type: 'GlobalLPLiquidity' as const, lpFund: _lpFund, liquidity: _liquidity, fundingFeeGrowth: _fundingFeeGrowth };
 }
 
 function storeTupleGlobalLPLiquidity(source: GlobalLPLiquidity) {
     let builder = new TupleBuilder();
-    builder.writeNumber(source.margin);
+    builder.writeNumber(source.lpFund);
     builder.writeNumber(source.liquidity);
     builder.writeNumber(source.fundingFeeGrowth);
-    builder.writeNumber(source.tradingFeeGrowth);
     return builder.build();
 }
 
@@ -3040,8 +2230,8 @@ function initPool_init_args(src: Pool_init_args) {
 }
 
 async function Pool_init(deployId: bigint) {
-    const __code = Cell.fromBase64('te6ccgECvgEAQO8AART/APSkE/S88sgLAQIBYgIDAvDQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zwRHBEeERwRGxEdERsRGhEcERoRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERK3BAIBIJ6fApIRERETEREREBESERAPEREPDhEQDhDfVRzbPPLggsj4QwHMfwHKABEdERwRGxEaERkRGBEXERYRFREUERMREhERERBV4Ns8ye1UBQYEbgGSMH/gcCHXScIflTAg1wsf3iCCEGXvmv26jwgw2zxsGds8f+AgghA4IV65uuMCIIIQ6JzUX7oHCAkKAeYBERwBER2BAQHPAAERGgGBAQHPAAERGAH0AAERFgGBAQHPABEUyIEBAc8AARETAYEBAc8AARERAYEBAc8AD8iBAQHPAB6BAQHPAByBAQHPAMhQCyDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAJIADC0x8BghBl75r9uvLggYEBAdcAgQEB1wCBAQHXANQB0IEBAdcAgQEB1wCBAQHXANQw0IEBAdcAgQEB1wD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIMRBpEGgQZwH0ERwRJREcERsRJBEbERoRIxEaERkRIhEZERgRIREYERcRIBEXERYRHxEWERURHhEVERQRHREUERMRJRETERIRJBESERERIxERERARIhEQDxEhDw4RIA4NER8NDBEeDAsRHQsKESUKCREkCQgRIwgHESIHBhEhBgURIAULAhAw2zxsG9s8fwwNBDqPCDDbPGwX2zx/4CCCEP6ja3G64wIgghD/V+VXuhITFBUC2AQRHwQDER4DAhEdAgERJQERJNs8VxFXElcSVxJXElcSVxJXFFcU+EJwcIBAECNtbW3bPBEaERwRGhEZERsRGRERERoREREQERkREBERERMREQkREgkREBERERAHERAHEG8QXhBNEDxLGQdQqA9JAKLTHwGCEDghXrm68uCBgQEB1wDUAdAB0gCBAQHXAIEBAdcA1AHQgQEB1wCBAQHXAIEBAdcA1DDQgQEB1wCBAQHXAIEBAdcAMBBrEGoQaRBoEGcB9BEcEScRHBEbESYRGxEaESURGhEZESQRGREYESMRGBEXESIRFxEWESERFhEVESARFREUER8RFBETER4RExESER0REhEREScREREQESYREA8RJQ8OESQODREjDQwRIgwLESELChEgCgkRHwkIER4IBxEdBwYRJwYFESYFDgT4BBElBAMRJAMCESMCAREiAREh2zxWIFYavpdXGVYfpBEZ3ggRHwgHER4HBhEdBgURJwUEESYEAxElAwIRJAIBESMBESKBAQERIshVkNs8yQMREgMCERkCAREYASBulTBZ9FowlEEz9BXi+EJwcIBAECNtbW3bPBERERwREQ8QSREAFPhCVhMBxwXy4IQAhshQCs8WyVAKzBfKABWBAQHPABOBAQHPAIEBAc8AAciBAQHPABKBAQHPABKBAQHPAAPIgQEBzwASgQEBzwDJWMzJAcwAjBEQERsREBEaDhEZDg0RGA0MERcMCxEWCwoRFQoJERQJCBETCAcREgcGEREGBREQBRBPED5NwBBLEEoQSRBIEEcQRhBFVSAAgtMfAYIQ6JzUX7ry4IHSANM/+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAGBAQHXANM/gQEB1wD0BFVgAfaCAKD3+EJWGgHHBfL0ER4RIxEeER0RIhEdERwRIREcERsRIBEbERoRHxEaERkRIxEZERgRIhEYERcRIREXERYRIBEWERURHxEVERQRIxEUERMRIhETERIRIRESERERIBERERARHxEQDxEjDw4RIg4NESENDBEgDAsRHwsiAhAw2zxsGNs8fzg5A3yPCDDbPGwc2zx/4IIQlGqYtrqOp9MfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+AwcBYXGADE0x8BghD/V+VXuvLggdM/0weBAQHXAPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gCBAQHXANQB0IEBAdcAgQEB1wDSANM/gQEB1wD0BDAQbBBrEGoQaRBoEGcB9oIAoPf4QlYfAccF8vQRHhEoER4RHREnER0RHBEmERwRGxElERsRGhEkERoRGREjERkRGBEiERgRFxEhERcRFhEgERYRFREfERURFBEoERQRExEnERMREhEmERIRERElEREREBEkERAPESMPDhEiDg0RIQ0MESAMCxEfCxkBOm1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8SQNuChEoCgkRJwkIESYIBxElBwYRJAYFESMFBBEiBAMRIQMCESAC2zxWJds8cFYowAqRf5RWKMAL4juRGgSAjykwESfAA+MPER8RHhEdERwRGxEaERkRGBEXERYRFREUERMREhERERBV4OMN+EFvJBNfA1YdqgChVhyh+EFvJBscHR4B/FcfVx9XH1cff3AgERsRIxEbERoRIhEaERkRIREZERgRIBEYERcRHxEXERYRHhEWERURHREVERQRHBEUERMRGxETERIRGhESERERGRERERARGBEQDxEXDw4RFg4NERUNDBEUDAsREwsKERIKCRERCQgREAgQfxBuEF0QTBA7JVwB/hEfmVYlAREgvvLmbJlWJQERILvy5mziERoRIhEaERkRIREZERgRIBEYERcRHxEXERYRHhEWERURHREVERQRHBEUERMRGxETERIRGhESERERGRERERARGBEQDxEXDw4RFg4NERUNDBEUDAsREwsKERIKCRERCQgREAhVdxBnEFZdAf5XKBEgmVYfAREhvvLmbJlWHwERIbvy5mziERsRIhEbERoRIREaERkRIBEZERgRHxEYERcRHhEXERYRHREWERURHBEVERQRGxEUERMRGhETERIRGRESERERGBERERARFxEQDxEWDw4RFQ4NERQNDBETDAsREgsKEREKCREQCRCPfAP02zyhgSTVIcIA8vQRHnARIXERIchVIIIQ7wHCtFAEyx8SgQEBzwCBAQHPAMs/yVYSBAMRHwMCESECESABECQQI21t2zwRGREcERkRGBEbERgRFxEaERcRFhEZERYRFREYERURFBEXERQRExEWERMREhEVERIREREUERFISR8AKBEQERMREA8REg8OEREODREQDVUsAf4g10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYX9AAVyz/IQEMCgQEBzwCBAQHPAPQAEss/yEQUUGdQNIEBAc8AgQEBzwCBAQHPAAHIgQEBzwDJAcwV9AAFyIEBAc8AF4EBAc8AF/QAF8s/F/QAF4EBAc8AyVAGzMkBzMkBIQAUzMlYzMkBzMkBzAR8ChEjCgkRIgkIESEIBxEgBwYRHwYFESMFBBEiBAMRIQMCESAC2zxwER7jD/hBbyQTXwNWHaoAoVYcofhBbyQ7IyQlAcQRHBEeERwRGxEdERsRGhEcERoRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERIRERETEREREBESERAPEREPDhEQDlUdAREgAREfVh/bPCYC/lcdERsRHhEbERoRHREaERkRHBEZERgRGxEYERcRGhEXERYRGREWERURGBEVERQRFxEUERMRFhETERIRFRESERERFBERERARExEQDxESDw4REQ4NERANEM9VKxIBER8BVh/bPBEeER0RHBEbERoRGREYERcRFhEVERQRExESEREuLwP02zyhgSTVIcIA8vQRIHARIHERIMhVIIIQHPDPgVAEyx8SgQEBzwCBAQHPAMs/yVYSBAMRIQMCESACER8BECQQI21t2zwRGREcERkRGBEbERgRFxEaERcRFhEZERYRFREYERURFBEXERQRExEWERMREhEVERIREREUERFISS0B8lYTgQELJFn0C2+hkjBt3yBukjBtjiDQgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wAwFEMwbBRvBOJwVHAAMDIibrOZWyBu8tCAbyQwlzJWFKQRFVniVhQRHBEjERwRGxEiERsRGhEhERoRGREgERkRGBEfERgRFxEeERcnA/wRFhEdERYRFREjERURFBEiERQRExEhERMREhEgERIREREfEREREBEeERAPER0PDhEjDg0RIg0MESEMCxEgCwoRHwoJER4JCBEdCAcRIwcGESIGBREhBQQRIAQDER8DAhEeAgERHQERI9s8AREkAaAgwQCSMHDecFMeuZEx4w2JKCkAKjBS0KFWFwGoViGoLakEER1WHaARHQLcER5WIaD4I1YZoIEBC1YhI1YhJMhVMFA0gQEBzwCBAQHPAIEBAc8AAciBAQHPAMkBzMkCERMCViUBIG6VMFn0WTCUQTP0E+IPViKgDlYioAYRIAYFESMFBBEiBBMCER8CAREeARERViHIVXDbPMkqKwC4ghDwqrrVUAnLHxeBAQHPAFAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WE4EBAc8AAciBAQHPABKBAQHPABKBAQHPAALIgQEBzwATgQEBzwDJAczJAcwB9MiCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AHBTCFE9VSARHshVQIIQzayiO1AGyx8UgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAERURHBEVERQRGxEUERMRGhETLACEERIRGRESERERGBERERARFxEQDxEWDw4RFQ4NERQNDBETDAsREgsKEREKBxEQBxCPEG4QnRBcEEsQOkmHEEYQNUEEACwREBETERAPERIPDhERDg0REA0Qz1UrAexWE4EBCyRZ9AtvoZIwbd8gbpIwbY4g0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAMBRDMGwUbwTigRR2IW6z8vQgbvLQgG8kgXrBIfgju/L0UyW5lDVUQRXeERwRIxEcERsRIhEbERoRIREaERkRIBEZERgRHxEYMAAIERBV4AL2ERcRHhEXERYRHREWERURIxEVERQRIhEUERMRIRETERIRIBESERERHxERERARHhEQDxEdDw4RIw4NESINDBEhDAsRIAsKER8KCREeCQgRHQgHESMHBhEiBgURIQUEESAEAxEfAwIRHgIBER0BESPbPC+BWsQCoMIA8vQuiTEC/hEcER0RHBEbER0RGxEaER0RGhEZER0RGREYER0RGBEXER0RFxEWER0RFhEVER0RFREUER0RFBETER0RExESER0REhERER0REREQER0REA8RHQ8OER0ODREdDQwRHQwLER0LChEdCgkRHQkRHQgHBlVA2zwBER4BoCDBAJIwcN6JMgH8ggDxqyHCAPL0cFMevo5dMPgjViWhVhmgggFRgKkEVh/AAI4WViNWGahTL6GoAYBktgioAYED6KipBI4rUx6hViQBqCKpBFYgViVWG6gkVhKhqAOAZLYIE6gDgQPoqBOpBFm2CAG2CeJWIiGgl1YjWKguqQTiESBWI6ERHyGhMwL0Vh/CAJF/kyDCAOKOSVclgQELbSBukjBtjiYgbvLQgG8kyFUwUDSBAQHPAIEBAc8AgQEBzwAByIEBAc8AyQHMyeICERICViUBIG6VMFn0WTCUQTP0E+LjDQ5WH6ENViKhBREgBQQRIwQDESIDAhEeAgEREAERJFYfViI0NQCEViFWICKBAQsRKchVMFA0gQEBzwCBAQHPAIEBAc8AAciBAQHPAMkBzMkCERICAREmAVYlASBulTBZ9FkwlEEz9BPiAvbIVXDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBwUwgDViFVIBEfyFVAghDNrKI7UAbLHxSBAQHPABKBAQHPAIEBAc8AAciBAQHPABKBAQHPAMkBzMnIgljAAAAAAAAAAAAAAAABActnzMlw+wARFREdERURFBEcERQ2NwC4ghCry4Y4UAnLHxeBAQHPAFAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WE4EBAc8AAciBAQHPABKBAQHPABKBAQHPAALIgQEBzwATgQEBzwDJAczJAcwAnBETERsRExESERoREhERERkREREQERgREA8RFw8OERYODREVDQwRFAwLERMLChESCgcREQcIERAIEG8Q3hBdEEwQO0qYECcQJhBFEDRBMACo0x8BghD+o2txuvLggdM/0wf6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAYEBAdcAgQEB1wDTP9QB0IEBAdcA9AQwECgQJxAmECUQJBAjAfaCAKD3+EJWGwHHBfL0ER4RJBEeER0RIxEdERwRIhEcERsRIREbERoRIBEaERkRHxEZERgRJBEYERcRIxEXERYRIhEWERURIREVERQRIBEUERMRHxETERIRJBESERERIxERERARIhEQDxEhDw4RIA4NER8NDBEkDAsRIws6BIAKESIKCREhCQgRIAgHER8HBhEkBgURIwUEESIEAxEhAwIRIALbPHBWI8AB4w/4QW8kE18DVh2qAKFWHKH4QW8kOzw9PgHSIcEBkVvgcJNTArmOriGBAQEiWfQNb6GSMG3fIG6SMG2OENCBAQHXAIEBAdcAWWwSbwLiIG6zkTDjDaToMMhZghBnk8PpUAPLH4EBAc8A9ADJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAPwHWVyMRHBEfERwRGxEeERsRGhEdERoRGREcERkRGBEbERgRFxEaERcRFhEZERYRFREYERURFBEXERQRExEWERMREhEVERIREREUEREREBETERAPERIPDhERDg0REA0Qz1UrAhEhAhEgAVYg2zxAA/4wESLAAo7uERsRHxEbERoRHhEaERkRHREZERgRHBEYERcRGxEXERYRGhEWERURGREVERQRGBEUERMRFxETERIRFhESERERFRERERARFBEQDxETDw4REg4NERENDBEQDFU7AxEhAwIRIAJwAgERIgERIVYh2zzjDhEfER4RHREcT0xNA/TbPKGBJNUhwgDy9BEfcBEhcREgyFUgghBJicfBUATLHxKBAQHPAIEBAc8Ayz/JVhIEAxEgAwIRIQIRHwEQJBAjbW3bPBEZERwRGREYERsRGBEXERoRFxEWERkRFhEVERgRFREUERcRFBETERYRExESERUREhERERQREUhJSgDqICBu8tCAbyIxASBu8tCAbyIwJoEBASJZ9A1voZIwbd8gbpIwbZrQgQEB1wABMW8B4iBuMbOOHYEBAQLIAQGBAQHPAMkQNyBulTBZ9FowlEEz9BXijh2BAQECyAEBgQEBzwDJEDcgbpUwWfRaMJRBM/QV4uIEA+ZWEIEBCyVZ9AtvoZIwbd8gbpIwbY4o0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAgQEB1wAwECUQJBAjbBVvBeJwVHAAIDQkbrOZXwQgbvLQgG8lmTRWE6QRFEFEA+JwUwPAAOMPUSagU96BAQsnVEYwVEVQQUJDADRsIjMmggDzySFWIb7y9IIApoohViCoKL7y9AH4W1LSoSKoUuKhIqhRM6AhoCegERwRJREcERsRJBEbERoRIxEaERkRIhEZERgRIREYERcRIBEXERYRHxEWERURHhEVERQRHREUERMRJRETERIRJBESERERIxERERARIhEQDxEhDw4RIA4NER8NDBEeDAsRHQsKESUKCREkCUQC6shVQFBFgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJAhEXAlKgIG6VMFn0WTCUQTP0E+IREyegERImoBBHEGgQRRAkEDgCERUCUIhWFchVgNs8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AFRqD0ZHAv4IESMIBxEiBwYRIQYFESAFBBEfBAMRHgMCER0CARElAREk2zwvoCqoVh6pBHAhwQCSMKORMeKCAOy6ViZWF6FWFqiCCA9CQKkEWLzy9IIApopWJVYXqFYjvvL0ERwRJREcERsRJBEbERoRIxEaERkRIhEZERgRIREYERcRIBEXiUUAsBEWER8RFhEVER4RFREUER0RFBETERwRExESERsREhERERoREREQERkREA8RGA8OERcODREWDQwRFQwLERQLChETCgkREgkIEREIBxEQBxBvEF4QTRA8S6kAwoIQz9rkWVAKyx8YgQEBzwBQBiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhSBAQHPAALIgQEBzwCBAQHPABKBAQHPAALIgQEBzwATgQEBzwATgQEBzwDJWMzJAcwAdMhVIIIQWjy/zFAEyx8SgQEBzwCBAQHPAIEBAc8AyciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABCsEJoAZGwx+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiDD6ADFx1yH6ADH6ADCnA6sAAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7AEsAUhEQERMREA8REg8OEREODREQDRDPEL4QrRCcEIsQehBpEFgQRxA2RTMEAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAfpXHlcef3AgERwRIBEcERsRHxEbERoRHhEaERkRHREZERgRHBEYERcRGxEXERYRGhEWERURGREVERQRGBEUERMRFxETERIRFhESERERFRERERARFBEQDxETDw4REg4NERENDBEQDBC/EK4QnRCMEHsQahBZEEheMxA1BBEiBE4ANBEbERoRGREYERcRFhEVERQRExESEREREFXgARwDESEDViLbPBEeER8RHk8B9FYRgQELJln0C2+hkjBt3yBukjBtjijQgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wCBAQHXADAQJRAkECNsFW8F4oEUdiFus/L0IG7y0IBvJVLioSKoUvKhIqhTMKAioCmSNyKOEFNzvJM3IgfeUwi5kjgn3gfiUXihUzehUAH8ERwRKBEcERsRJxEbERoRJhEaERkRJREZERgRJBEYERcRIxEXERYRIhEWERURIREVERQRIBEUERMRHxETERIRHhESERERHRERERARKBEQDxEnDw4RJg4NESUNDBEkDAsRIwsKESIKCREhCQgRIAgHER8HBhEeBgURHQUEESgEUQT4AxEnAwIRJgIBESUBESTbPC+gK6hWKakEcCHBAJMwIKPeESTjDxEZEqERF6FWFlEQERfIVSCCEFo8v8xQBMsfEoEBAc8AgQEBzwCBAQHPAMnIgljAAAAAAAAAAAAAAAABActnzMlw+wAREREdEREREBEcERAPERsPDhEaDolSU1QB6DBXJIIA7LpWJVYVoVYUqIIID0JAqQQBESO7AREiAfL0VhJWJFYUuZIwcJURJFYToeJWE1DuoIEBC20gbpIwbY4tIG7y0IBvJchVQFBFgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJ4hAtViQBVQP6Vx6CAPMzU/qgAREfoFYhvgERHgHy9FYjwgDjDwYRHQYFESIFViAFBBElBFYgBAMRJQMCEScCAREoAQ1WI1YhyFWg2zzJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAER0RIBEdERwRHxEcBBEeBAQRHQQRFREcERUEERoEEEZYWVoAbg0RGQ0MERgMCxEXCwoRFgoJERUJCBEUCAcREwcGERIGBRERBQQREARO8E0cEJsQihCJB0iIBAMC/iBulTBZ9FkwlEEz9BPiBhEdBgURIgUEERwEAxEnAwIRJQIBESYBESRWHshVcNs8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AHBUVQAoAlYbyFVAghDNrKI7UAbLHxSBAQHPABKBAQHPAIEBAc8AAciBAQHPABKBAQHPAMkBzMlWVwC4ghC/+HX5UAnLHxeBAQHPAFAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WE4EBAc8AAciBAQHPABKBAQHPABKBAQHPAALIgQEBzwATgQEBzwDJAczJAcwAMMiCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AAH8ViFWIKgBESipBCBWIbuUViAhoZpwESVWIaAhoREl4oFY3VYmVhahVhWogggPQkCpBAERJLwBESMB8vSCAKaKViVWFqhWIb7y9FM0gQELViACVigCVihQUshVQFBFgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJWwDWVyNXJhEiVh+hcCCBAQttIG6SMG2OLSBu8tCAbyXIVUBQRYEBAc8AEoEBAc8AgQEBzwAByIEBAc8AEoEBAc8AyQHMyeIQLVYkASBulTBZ9FkwlEEz9BPiESMRJxEjAREkAQsRIwsCESECQbAA4oIQqX/ZSVAMyx8agQEBzwBQCCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhaBAQHPAATIgQEBzwATgQEBzwCBAQHPAAHIgQEBzwATgQEBzwATgQEBzwADyIEBAc8AFIEBAc8AyVjMyVjMyQHMACYQLVYkASBulTBZ9FkwlEEz9BPiASYQqxCaEIkHCF4jBBElBAMRJts8XgEecCVQZxBFBBElBAERJts8XgLkViKBAQEmWfQNb6GSMG3fIG6SMG2Oh9DbPGwabwrigWyWIW6z8vQgbvLQgG8qWzU2ggCPblAF8vRWEIEBAStZ9A1voZIwbd8gbpIwbZfQ9AQBMW8B4iBus5cgbvLQgG8hkjBt4iCBAQstWfQLb6GSMG3ftl8C/CBukjBtjlTQgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wCBAQHXADAQJRAkECMF1AHQgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wCBAQHXADAQJRAkECM1EFpVA2wabwriIG6zlyBu8tCAbyqbMHBUcAAgcFRwACDiVhOVVHQyU0PjDX9gBPRWG5VXFlcWXI4RVhYjvJVXFiERFt4BERcBERbicFYc4wBWJIEBAVYcWfQNb6GSMG3fIG6SMG2OE9CBAQHXANIAgQEB1wBVIGwTbwPiIG6zlyBu8tCAbyOUMCBwIeJUc0LCAJRWHiS9kXDi4wAgwgCRMOMNJVYbqFYZqGFiY2QB/BEcEToRHBEbETkRGxEaETgRGhEZETcRGREYETYRGBEXETURFxEWETQRFhEVETMRFREUETIRFBETETERExESETAREhERES8REREQES4REA8RLQ8OESwODRErDQwRKgwLESkLChEoCgkRJwkIESYIBxElBwYRJAYFESMFBBEiBGUB/jFTU7yRI5El4hEcET8RHBEbET4RGxEaET0RGhEZETwRGREYETsRGBEXEToRFxEWETkRFhEVETgRFREUETcRFBETETYRExESETUREhERETQREREQETMREA8RMg8OETEODREwDQwRLwwLES4LChEtCgkRLAkIESsIBxEqBwYRKQZoAfozER0RPhEdERwRPREcERsRPBEbERoROxEaERkROhEZERgROREYERcROBEXERYRNxEWERURNhEVERQRNREUERMRNBETERIRMxESERERMhERERARMREQDxEwDw4RLw4NES4NDBEtDAsRLAsKESsKCREqCQgRKQgHESgHBhEnBmoD/oIwFK30tzIDNLmqGakEIBEbqIIID0JAqQRWGgERGaiCCA9CQKkEVhpWGaEhoVYtwwCOFxEZgjgFa8deLWMQAACoVi2pBAERKwGglREZoBEq4gERIwERKqARIlYXoAERMAGgKBEg4w8RFJJsVZlfBRwQSxA6RxniEIsQehBqEFxsbW4C+AMRIQMCESACAREfAREeVjdWIlY4VjfbPFYiARE2qFYzqIIwFK30tzIDNLmqGakEVjCgViOBSjMRN6C+ARE1AfL0ViFWL6GCOAVrx14tYxAAAKhWN5ZWNqNWIqiVVjZWIqjioFY3lYIP8L3AlYIID0JA4lYzAaBWIgGoqQSWZgH6ggDYhVY4lCFWOLmUIVY4vOLy9BEcEToRHBEbETkRGxEaETgRGhEZETcRGREYETYRGBEXETURFxEWETQRFhEVETMRFREUETIRFBETETERExESETAREhERES8REREQES4REA8RLQ8OESwODRErDQwRKgwLESkLChEoCgkRJwlnAEgIESYIBxElBwYRJAYFESMFBBEiBAMRIQMCESACAREfAREWER4C/gURKAUEEScEAxEmAwIRJQIBESQBESNWHlYkVidWQds8ESVWJKEBESgBESShIMAAllclVicRJd4RHBE/ERwRGxE+ERsRGhE9ERoRGRE8ERkRGBE7ERgRFxE6ERcRFhE5ERYRFRE4ERURFBE3ERQRExE2ERMREhE1ERIRERE0ERGWaQCKERARMxEQDxEyDw4RMQ4NETANDBEvDAsRLgsKES0KCREsCQgRKwgHESoHBhEpBgURKAUEEScEAxEmAwIRJQIBESQBBBEjAvoFESYFBBElBAMRJAMCESMCAREiAVYkAREjVidWPds8AREkAREjoFY9sxEdET4RHREcET0RHBEbETwRGxEaETsRGhEZEToRGREYETkRGBEXETgRFxEWETcRFhEVETYRFREUETURFBETETQRExESETMREhERETIREREQETEREJRrAHwPETAPDhEvDg0RLg0MES0MCxEsCwoRKwoJESoJCBEpCAcRKAcGEScGBREmBQQRJQQDESQDAhEjAgMRIgNAAwGmNjY2VxJXE1cVVxVUfu5TAAURHQVWHAVWHAVWHAUEERsEAxEYAwIRGgIBERkBERZWFVYiECPIVaDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBvAfhXHxEcETwRHBEbETsRGxEaEToRGhEZETkRGREYETgRGBEXETcRFxEWETYRFhEVETURFREUETQRFBETETMRExESETIREhERETEREREQETAREA8RLw8OER4ODREtDQwRLAwLESsLChEqCgkRKQkIESgIBxEnBwYRJgYFESUFcAH8CVUwgQELCshVkBBaEEkQOEdqUEWBAQHPABKBAQHPAIEBAc8AAciBAQHPABKBAQHPAMkBzMhVQAZQRYEBAc8AEoEBAc8AgQEBzwAByIEBAc8AEoEBAc8AyQHMyQHMyRA0QYAgbpUwWfRZMJRBM/QT4oEBAQHIAQH0AMklED0BegDeghDk0QSwUAzLHxqBAQHPAFAIINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WFoEBAc8AFMoAAsiBAQHPAIEBAc8AEoEBAc8AAsiBAQHPABOBAQHPABOBAQHPAAPIgQEBzwDJUAPMyQHMyQHMAvgEESQEAxEjAwIRIgIBESEBESBWO1YkVjxWO9s8ggDjMVYQERwRHxEcERsRHhEbERoRHREaERkRHxEZERgRHhEYERcRHREXERYRHxEWERURHhEVERQRHREUERMRHxETERIRHhESERERHRERERARHxEQDxEeDw4RHQ4NER8NlnEE/gwRHgwLER0LChEfCgkRHgkIER0IBxEfBwYRHgYFER0FBBEfBAMRHgMCER0CAREfAREe2zwBER8BoCmgViQBuwERHwHy9FYbVjmhAREoAaCCAPPJIcL/8vRWJSG8lFclViTeViWhESZWJKEgwgDjD1YmBlYdBlY9BlY9BgURJwWJcnN0Av4RGhEcERoRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERIRERETEREREBESERAPEREPDhEQDhDfEM4QvRCsEJsQihB5EGgQVxBGEDVEMAIRJwIBER0BESdWPFYoVj1WPNs8VihWO6gBETmolnUB/jBXJ1cyVzJXM1c1VzVWHFRwACABETkBETgRGxE1ERsRJREzESURGhEyERoEESYEAhElAgMRJAMRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERIRERETEREREBESERAPEREPDhEQDhDfEM52AvxWKAUEEScEVioEAxE9AwIRIQIBETwBESdWPFYlECPIVdDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wARFBE1ERQRExE0ERMREhEzERIREREyEREREBExERAPETAPDhEvDg0RLg0MES0MCxEsCwoRKwoJESoJCBEpCAcRKAd3eABqgjAUrfS3MgM0uaoZqQQBETWgViaBb7sROaC5ARE3AfL0ViSCAKaKETWoVia+ARE0AfL0ViIAJhC9EKwQmxCKEHkQaAUHUERGFgMB9IIQLE8VBVAPyx8dgQEBzwBQCyDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhmBAQHPABfKAAXIgQEBzwAUgQEBzwASgQEBzwAByIEBAc8AEoEBAc8AE4EBAc8AA8iBAQHPABSBAQHPABSBAQHPAATIgQEBzwDJeQDUBREmBQQRJQQDESQDAhEjAgERIgERIREcESARHBEbER8RGxEQER4REBEVER0RFREVERwRFQwRGwwOERoOCxEZCwsRFwsRFBEVERQRExEUERMGERMGBhERBhBvEN4QzRBsEKsQmhCJEHhVBQAaUATMyVADzMkBzMkBzAHSIG6VMFn0WjCUQTP0FeKBAQFTNlYYyFUgUCOBAQHPAMoAgQEBzwDJEC9SUCBulTBZ9FowlEEz9BXiERVUFQbIVUCCEH63+5ZQBssfFIEBAc8AEoEBAc8AygCBAQHPAAHIgQEBzwDJAczJewDUyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAcCJWEgNJlchVQIIQzayiO1AGyx8UgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAEE8QRwE6EH5VZiEQRwYFESQFBBElBAMRJQMCAREkAREl2zx9AuJWIYEBASZZ9A1voZIwbd8gbpIwbY6H0Ns8bBpvCuKBbJYhbrPy9CBu8tCAbypbN4IAj25QBvL0VhCBAQEsWfQNb6GSMG3fIG6SMG2X0PQEATFvAeIgbrOXIG7y0IBvIZIwbeIggQELLln0C2+hkjBt37Z+Av4gbpIwbY5U0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAgQEB1wAwECUQJBAjBdQB0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAgQEB1wAwECUQJBAjNRBaVQNsGm8K4iBus5cgbvLQgG8qmzBwVHAAIHBUcAAg4lYUlVR0MlND4w0if4AAClR5h1OYA/bAAI4YNFYXggDzyREUvgEREwHy9FYdpBEeAxESklcT4lYigQEBVhtZ9A1voZIwbd8gbpIwbY4T0IEBAdcA0gCBAQHXAFUgbBNvA+IgbrOXIG7y0IBvI5QwcHAh4nBWGiTCAJRWHSS6kXDi4wAgwgCRMOMNVhpWGqhWFKiBgoMB+jFWGiS8kSOSVhriERwRPREcERsRPBEbERoROxEaERkROhEZERgROREYERcROBEXERYRNxEWERURNhEVERQRNREUERMRNBETERIRMxESERERMhERERARMREQDxEwDw4RLw4NES4NDBEtDAsRLAsKESsKCREqCQgRKQgHESgHhAH6MxEdETwRHREcETsRHBEbEToRGxEaETkRGhEZETgRGREYETcRGBEXETYRFxEWETURFhEVETQRFREUETMRFBETETIRExESETEREhERETAREREQES8REA8RLg8OES0ODREsDQwRKwwLESoLChEpCgkRKAkIEScIBxEmBwYRJQaGAf6CMBSt9LcyAzS5qhmpBCARGaiCCA9CQKkEVhgBERqogggPQkCpBFYYVhqhIaFWK8MAjhcRGoI4BWvHXi1jEAAAqFYrqQQBESkBoJURGqARKOIBESEBESigESBWGKABES4BoIIA4zEhERwRPREcERsRPBEbERoROxEaERkROhEZiAL0BhEnBgURJgUEESUEAxEkAwIRIwIBESIBESFWHVYiViVWPts8ESNWIqEBESYBESKhIMAAk3BXJN4RHBE9ERwRGxE8ERsRGhE7ERoRGRE6ERkRGBE5ERgRFxE4ERcRFhE3ERYRFRE2ERURFBE1ERQRExE0ERMREhEzERKWhQCWERERMhERERARMREQDxEwDw4RLw4NES4NDBEtDAsRLAsKESsKCREqCQgRKQgHESgHBhEnBgURJgUEESUEAxEkAwIRIwIBESIBBBEhAvoFESQFBBEjBAMRIgMCESECAREgAVYiAREhViJWOts8AREiAREhoFY6sxEdETwRHREcETsRHBEbEToRGxEaETkRGhEZETgRGREYETcRGBEXETYRFxEWETURFhEVETQRFREUETMRFBETETIRExESETEREhERETAREREQES8REJSHAHwPES4PDhEtDg0RLA0MESsMCxEqCwoRKQoJESgJCBEnCAcRJgcGESUGBREkBQQRIwQDESIDAhEhAgMRIANAAwL+ERgROREYERcROBEXERYRNxEWERURNhEVERQRNREUERMRNBETERIRMxESERERMhERERARMREQDxEwDxAuDREuDQwRLQwLESwLChErCgkRKgkIESkIBxEoBwYRJwYFESYFBBElBAMRJAMCESMCAREiAREh2zwBESIBoCmgViUBu4mKARRwcZQgVhy5iugwiwH6AREiAfL0cFY8VjmhAREoAaARGxEdERsRGhEcERoRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERIRERETEREREBESERAPEREPDhEQDhDfEM4QvRCsEJsQihB5EGgQVxBGEDVEMAIRIQKTAfwRHBEeERwRGxEdERsRGhEeERoRGREdERkRGBEeERgRFxEdERcRFhEeERYRFREdERURFBEeERQRExEdERMREhEeERIREREdEREREBEeERAPER0PDhEeDg0RHQ0MER4MCxEdCwoRHgoJER0JCBEeCAcRHQcGER4GBREdBQQRHgSMA/4DER0DAhEeAgERHQERHlYe2zyOsSaBAQFWIFn0DW+hkjBt3yBukjBtjhPQgQEB1wDSAIEBAdcAVSBsE28D4iBus5Ew4w3eER6kERwRHhEcERsRHREbERoRHBEaERkRGxEZERgRGhEYERcRGREXERYRGBEWERURFxEVERQRFhEUjY6PAV6BAQFWHAJZ9A1voZIwbd8gbpIwbY6H0Ns8bBpvCuIgbpIwcOAgbvLQgG8qEIlfCbYB+iBu8tCAbyMRHBEfERwRGxEeERsRGhEdERoRGREfERkRGBEeERgRFxEdERcRFhEfERYRFREeERURFBEdERQRExEfERMREhEeERIREREdEREREBEfERAPER4PDhEdDg0RHw0MER4MCxEdCwoRHwoJER4JCBEdCAcRHwcGER4GkABwERMRFRETERIRFBESERERExERERAREhEQDxERDw4REA4Q3xDOEL0QrBCbEIoQeRBoEFcQRhA1RDAC/AURHQUEER8EAxEeAwIRHQIBER8BER5WIds8ER0RIBEdERwRHxEcERsRHhEbERoRHREaERkRHBEZERgRGxEYERcRGhEXERYRGREW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');
-    const __system = Cell.fromBase64('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Ess/yEQUUGdQNIEBAc8AgQEBzwCBAQHPAAHIgQEBzwDJAcwV9AAFyIEBAc8AF4EBAc8AF/QAF8s/F/QAF4EBAc8AyVAGzMkBzMkBIwAUzMlYzMkBzMkBzARuAZIwf+BwIddJwh+VMCDXCx/eIIIQZe+a/bqPCDDbPGwZ2zx/4CCCEDghXrm64wIgghDonNRfurq1ryUEOo8IMNs8bBfbPH/gIIIQ/qNrcbrjAiCCEP9X5Ve6rolpJgN8jwgw2zxsHNs8f+CCEJRqmLa6jqfTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gMHBoKCcBOm1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8twH2ggCg9/hCVh8BxwXy9BEeESgRHhEdEScRHREcESYRHBEbESURGxEaESQRGhEZESMRGREYESIRGBEXESERFxEWESARFhEVER8RFREUESgRFBETEScRExESESYREhERESUREREQESQREA8RIw8OESIODREhDQwRIAwLER8LKQNuChEoCgkRJwkIESYIBxElBwYRJAYFESMFBBEiBAMRIQMCESAC2zxWJds8cFYowAqRf5RWKMAL4qypKgSAjykwESfAA+MPER8RHhEdERwRGxEaERkRGBEXERYRFREUERMREhERERBV4OMN+EFvJBNfA1YdqgChVhyh+EFvJEZELSsD9Ns8oYEk1SHCAPL0ER5wESFxESHIVSCCEO8BwrRQBMsfEoEBAc8AgQEBzwDLP8lWEgQDER8DAhEhAhEgARAkECNtbds8ERkRHBEZERgRGxEYERcRGhEXERYRGREWERURGBEVERQRFxEUERMRFhETERIRFRESERERFBERjbcsACgREBETERAPERIPDhERDg0REA1VLAH+VygRIJlWHwERIb7y5myZVh8BESG78uZs4hEbESIRGxEaESERGhEZESARGREYER8RGBEXER4RFxEWER0RFhEVERwRFREUERsRFBETERoRExESERkREhERERgREREQERcREA8RFg8OERUODREUDQwREwwLERILChERCgkREAkQjy4BOhB+VWYhEEcGBREkBQQRJQQDESUDAgERJAERJds8LwLiViGBAQEmWfQNb6GSMG3fIG6SMG2Oh9DbPGwabwrigWyWIW6z8vQgbvLQgG8qWzeCAI9uUAby9FYQgQEBLFn0DW+hkjBt3yBukjBtl9D0BAExbwHiIG6zlyBu8tCAbyGSMG3iIIEBCy5Z9AtvoZIwbd+rMAL+IG6SMG2OVNCBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAMBAlECQQIwXUAdCBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAMBAlECQQIzUQWlUDbBpvCuIgbrOXIG7y0IBvKpswcFRwACBwVHAAIOJWFJVUdDJTQ+MNImcxA/bAAI4YNFYXggDzyREUvgEREwHy9FYdpBEeAxESklcT4lYigQEBVhtZ9A1voZIwbd8gbpIwbY4T0IEBAdcA0gCBAQHXAFUgbBNvA+IgbrOXIG7y0IBvI5QwcHAh4nBWGiTCAJRWHSS6kXDi4wAgwgCRMOMNVhpWGqhWFKhBPjIB/oIwFK30tzIDNLmqGakEIBEZqIIID0JAqQRWGAERGqiCCA9CQKkEVhhWGqEhoVYrwwCOFxEagjgFa8deLWMQAACoViupBAERKQGglREaoBEo4gERIQERKKARIFYYoAERLgGgggDjMSERHBE9ERwRGxE8ERsRGhE7ERoRGRE6ERkzAv4RGBE5ERgRFxE4ERcRFhE3ERYRFRE2ERURFBE1ERQRExE0ERMREhEzERIREREyEREREBExERAPETAPEC4NES4NDBEtDAsRLAsKESsKCREqCQgRKQgHESgHBhEnBgURJgUEESUEAxEkAwIRIwIBESIBESHbPAERIgGgKaBWJQG7oTQB+gERIgHy9HBWPFY5oQERKAGgERsRHREbERoRHBEaERkRGxEZERgRGhEYERcRGREXERYRGBEWERURFxEVERQRFhEUERMRFRETERIRFBESERERExERERAREhEQDxERDw4REA4Q3xDOEL0QrBCbEIoQeRBoEFcQRhA1RDACESECNQL8AREgAVYmAREmVjxWPNs8ESZWO6ARHBEdERwRGxEdERsRGhEdERoRGREdERkRGBEdERgRFxEdERcRFhEdERYRFREdERURFBEdERQRExEdERMREhEdERIREREdEREREBEdERAPER0PDhEdDg0RHQ0MER0MCxEdCwoRHQoJER0JXzYD+hEdCAcGVUBWIVYeVihWPds8Vh5WPKgBETaogjAUrfS3MgM0uaoZqQQBETagViWBb7sRNqC5ARE0AfL0ViOCAKaKETaoVhxWJqiCOAVrx14tYxAAAKkEvgERNQHy9FYejhJXH1crVytXK1crViBWHlYXViHjDhA4R2UEETMEqD03AeoDESkDAhEoAgERJwERJoEBCxEmyFWQEFoQSRA4R2pQRYEBAc8AEoEBAc8AgQEBzwAByIEBAc8AEoEBAc8AyQHMyFVABlBFgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJAczJAhEnAgERHQFWEgE4AfggbpUwWfRZMJRBM/QT4oEBAQHIAQH0AMkCERUCVhMBIG6VMFn0WjCUQTP0FeKBAQFWFlYWViLIVSBQI4EBAc8AygCBAQHPAMkCESQCVhMBIG6VMFn0WjCUQTP0FeIKERkKEJ9WEQkIERMIBxEuBwYRFwYFES0FEE8DESwDOQL+AhEYAgERKgERGVYREshVwNs8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABA2ECoRFFQZBchVQIIQfrf7llAGyx8UgQEBzwASgQEBzwDKAIEBAc8AAciBAQHPAMkBzMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBwVhZRPQMRHjw6AfxZyFVAghDNrKI7UAbLHxSBAQHPABKBAQHPAIEBAc8AAciBAQHPABKBAQHPAMkBzMnIgljAAAAAAAAAAAAAAAABActnzMlw+wAEERwEAxEbAw4RGg4IERkICBEYCAcRFwcBERYBBBEVBAURFAUDERMDERIOEREOBhEQBhAvED47ABwQnRCcEJsQmgcIBkFVBAD0ghAHkDBBUA7LHxyBAQHPAFAKINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WGIEBAc8AFsoABMiBAQHPABOBAQHPAIEBAc8AAciBAQHPABOBAQHPABOBAQHPAAPIgQEBzwAUgQEBzwAUgQEBzwDJAczJAczJAcwAiFcmVyZXJlcmVyZWIFYeVhdWIREeETMRHhEpES4RKREoES0RKBEnESwRJxEmESsRJgMRKQMCESgCAREnAREmER4RJREeAfozER0RPBEdERwROxEcERsROhEbERoROREaERkROBEZERgRNxEYERcRNhEXERYRNREWERURNBEVERQRMxEUERMRMhETERIRMRESERERMBERERARLxEQDxEuDw4RLQ4NESwNDBErDAsRKgsKESkKCREoCQgRJwgHESYHBhElBj8C+gURJAUEESMEAxEiAwIRIQIBESABViIBESFWIlY62zwBESIBESGgVjqzER0RPBEdERwROxEcERsROhEbERoROREaERkROBEZERgRNxEYERcRNhEXERYRNREWERURNBEVERQRMxEUERMRMhETERIRMRESERERMBERERARLxEQX0AAfA8RLg8OES0ODREsDQwRKwwLESoLChEpCgkRKAkIEScIBxEmBwYRJQYFESQFBBEjBAMRIgMCESECAxEgA0ADAfoxVhokvJEjklYa4hEcET0RHBEbETwRGxEaETsRGhEZEToRGREYETkRGBEXETgRFxEWETcRFhEVETYRFREUETURFBETETQRExESETMREhERETIREREQETEREA8RMA8OES8ODREuDQwRLQwLESwLChErCgkRKgkIESkIBxEoB0IC9AYRJwYFESYFBBElBAMRJAMCESMCAREiAREhVh1WIlYlVj7bPBEjViKhAREmAREioSDAAJNwVyTeERwRPREcERsRPBEbERoROxEaERkROhEZERgROREYERcROBEXERYRNxEWERURNhEVERQRNREUERMRNBETERIRMxESqEMAlhERETIREREQETEREA8RMA8OES8ODREuDQwRLQwLESwLChErCgkRKgkIESkIBxEoBwYRJwYFESYFBBElBAMRJAMCESMCAREiAQQRIQH+ER+ZViUBESC+8uZsmVYlAREgu/LmbOIRGhEiERoRGREhERkRGBEgERgRFxEfERcRFhEeERYRFREdERURFBEcERQRExEbERMREhEaERIREREZEREREBEYERAPERcPDhEWDg0RFQ0MERQMCxETCwoREgoJEREJCBEQCFV3EGcQVkUBHnAlUGcQRQQRJQQBESbbPEgB/FcfVx9XH1cff3AgERsRIxEbERoRIhEaERkRIREZERgRIBEYERcRHxEXERYRHhEWERURHREVERQRHBEUERMRGxETERIRGhESERERGRERERARGBEQDxEXDw4RFg4NERUNDBEUDAsREwsKERIKCRERCQgREAgQfxBuEF0QTBA7JUcBJhCrEJoQiQcIXiMEESUEAxEm2zxIAuRWIoEBASZZ9A1voZIwbd8gbpIwbY6H0Ns8bBpvCuKBbJYhbrPy9CBu8tCAbypbNTaCAI9uUAXy9FYQgQEBK1n0DW+hkjBt3yBukjBtl9D0BAExbwHiIG6zlyBu8tCAbyGSMG3iIIEBCy1Z9AtvoZIwbd+rSQL8IG6SMG2OVNCBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAMBAlECQQIwXUAdCBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAMBAlECQQIzUQWlUDbBpvCuIgbrOXIG7y0IBvKpswcFRwACBwVHAAIOJWE5VUdDJTQ+MNZ0oE9FYblVcWVxZcjhFWFiO8lVcWIREW3gERFwERFuJwVhzjAFYkgQEBVhxZ9A1voZIwbd8gbpIwbY4T0IEBAdcA0gCBAQHXAFUgbBNvA+IgbrOXIG7y0IBvI5QwIHAh4lRzQsIAlFYeJL2RcOLjACDCAJEw4w0lVhuoVhmoY2BcSwP+gjAUrfS3MgM0uaoZqQQgERuogggPQkCpBFYaAREZqIIID0JAqQRWGlYZoSGhVi3DAI4XERmCOAVrx14tYxAAAKhWLakEARErAaCVERmgESriAREjAREqoBEiVhegAREwAaAoESDjDxEUkmxVmV8FHBBLEDpHGeIQixB6EGoQXFpPTAH8CVUwgQELCshVkBBaEEkQOEdqUEWBAQHPABKBAQHPAIEBAc8AAciBAQHPABKBAQHPAMkBzMhVQAZQRYEBAc8AEoEBAc8AgQEBzwAByIEBAc8AEoEBAc8AyQHMyQHMyRA0QYAgbpUwWfRZMJRBM/QT4oEBAQHIAQH0AMklED0BTQHSIG6VMFn0WjCUQTP0FeKBAQFTNlYYyFUgUCOBAQHPAMoAgQEBzwDJEC9SUCBulTBZ9FowlEEz9BXiERVUFQbIVUCCEH63+5ZQBssfFIEBAc8AEoEBAc8AygCBAQHPAAHIgQEBzwDJAczJTgDUyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAcCJWEgNJlchVQIIQzayiO1AGyx8UgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAEE8QRwH4Vx8RHBE8ERwRGxE7ERsRGhE6ERoRGRE5ERkRGBE4ERgRFxE3ERcRFhE2ERYRFRE1ERURFBE0ERQRExEzERMREhEyERIRERExEREREBEwERAPES8PDhEeDg0RLQ0MESwMCxErCwoRKgoJESkJCBEoCAcRJwcGESYGBRElBVAC+AQRJAQDESMDAhEiAgERIQERIFY7ViRWPFY72zyCAOMxVhARHBEfERwRGxEeERsRGhEdERoRGREfERkRGBEeERgRFxEdERcRFhEfERYRFREeERURFBEdERQRExEfERMREhEeERIREREdEREREBEfERAPER4PDhEdDg0RHw2oUQT+DBEeDAsRHQsKER8KCREeCQgRHQgHER8HBhEeBgURHQUEER8EAxEeAwIRHQIBER8BER7bPAERHwGgKaBWJAG7AREfAfL0VhtWOaEBESgBoIIA88khwv/y9FYlIbyUVyVWJN5WJaERJlYkoSDCAOMPViYGVh0GVj0GVj0GBREnBaFYVlIC/FYoBQQRJwRWKgQDET0DAhEhAgERPAERJ1Y8ViUQI8hV0Ns8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABEUETURFBETETQRExESETMREhERETIREREQETEREA8RMA8OES8ODREuDQwRLQwLESwLChErCgkRKgkIESkIBxEoB1RTANQFESYFBBElBAMRJAMCESMCAREiAREhERwRIBEcERsRHxEbERARHhEQERURHREVERURHBEVDBEbDA4RGg4LERkLCxEXCxEUERURFBETERQREwYREwYGEREGEG8Q3hDNEGwQqxCaEIkQeFUFAfSCECxPFQVQD8sfHYEBAc8AUAsg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYZgQEBzwAXygAFyIEBAc8AFIEBAc8AEoEBAc8AAciBAQHPABKBAQHPABOBAQHPAAPIgQEBzwAUgQEBzwAUgQEBzwAEyIEBAc8AyVUAGlAEzMlQA8zJAczJAcwB/jBXJ1cyVzJXM1c1VzVWHFRwACABETkBETgRGxE1ERsRJREzESURGhEyERoEESYEAhElAgMRJAMRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERIRERETEREREBESERAPEREPDhEQDhDfEM5XACYQvRCsEJsQihB5EGgFB1BERhYDAv4RGhEcERoRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERIRERETEREREBESERAPEREPDhEQDhDfEM4QvRCsEJsQihB5EGgQVxBGEDVEMAIRJwIBER0BESdWPFYoVj1WPNs8VihWO6gBETmoqFkAaoIwFK30tzIDNLmqGakEARE1oFYmgW+7ETmguQERNwHy9FYkggCmihE1qFYmvgERNAHy9FYiAaY2NjZXElcTVxVXFVR+7lMABREdBVYcBVYcBVYcBQQRGwQDERgDAhEaAgERGQERFlYVViIQI8hVoNs8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AFsA3oIQ5NEEsFAMyx8agQEBzwBQCCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhaBAQHPABTKAALIgQEBzwCBAQHPABKBAQHPAALIgQEBzwATgQEBzwATgQEBzwADyIEBAc8AyVADzMkBzMkBzAH6MxEdET4RHREcET0RHBEbETwRGxEaETsRGhEZEToRGREYETkRGBEXETgRFxEWETcRFhEVETYRFREUETURFBETETQRExESETMREhERETIREREQETEREA8RMA8OES8ODREuDQwRLQwLESwLChErCgkRKgkIESkIBxEoBwYRJwZdAvoFESYFBBElBAMRJAMCESMCAREiAVYkAREjVidWPds8AREkAREjoFY9sxEdET4RHREcET0RHBEbETwRGxEaETsRGhEZEToRGREYETkRGBEXETgRFxEWETcRFhEVETYRFREUETURFBETETQRExESETMREhERETIREREQETEREF9eAHwPETAPDhEvDg0RLg0MES0MCxEsCwoRKwoJESoJCBEpCAcRKAcGEScGBREmBQQRJQQDESQDAhEjAgMRIgNAAwBWI8AAkyHAAJFw4pNfBHDgI8AAkmwx4CHAAJQQI18D4FIzqFITqBKgWaCpBAH+MVNTvJEjkSXiERwRPxEcERsRPhEbERoRPREaERkRPBEZERgROxEYERcROhEXERYROREWERUROBEVERQRNxEUERMRNhETERIRNRESERERNBERERARMxEQDxEyDw4RMQ4NETANDBEvDAsRLgsKES0KCREsCQgRKwgHESoHBhEpBmEC/gURKAUEEScEAxEmAwIRJQIBESQBESNWHlYkVidWQds8ESVWJKEBESgBESShIMAAllclVicRJd4RHBE/ERwRGxE+ERsRGhE9ERoRGRE8ERkRGBE7ERgRFxE6ERcRFhE5ERYRFRE4ERURFBE3ERQRExE2ERMREhE1ERIRERE0ERGoYgCKERARMxEQDxEyDw4RMQ4NETANDBEvDAsRLgsKES0KCREsCQgRKwgHESoHBhEpBgURKAUEEScEAxEmAwIRJQIBESQBBBEjAfwRHBE6ERwRGxE5ERsRGhE4ERoRGRE3ERkRGBE2ERgRFxE1ERcRFhE0ERYRFREzERURFBEyERQRExExERMREhEwERIREREvEREREBEuERAPES0PDhEsDg0RKw0MESoMCxEpCwoRKAoJEScJCBEmCAcRJQcGESQGBREjBQQRIgRkAvgDESEDAhEgAgERHwERHlY3ViJWOFY32zxWIgERNqhWM6iCMBSt9LcyAzS5qhmpBFYwoFYjgUozETegvgERNQHy9FYhVi+hgjgFa8deLWMQAACoVjeWVjajViKolVY2ViKo4qBWN5WCD/C9wJWCCA9CQOJWMwGgViIBqKkEqGUB+oIA2IVWOJQhVji5lCFWOLzi8vQRHBE6ERwRGxE5ERsRGhE4ERoRGRE3ERkRGBE2ERgRFxE1ERcRFhE0ERYRFREzERURFBEyERQRExExERMREhEwERIREREvEREREBEuERAPES0PDhEsDg0RKw0MESoMCxEpCwoRKAoJEScJZgBICBEmCAcRJQcGESQGBREjBQQRIgQDESEDAhEgAgERHwERFhEeAApUeYdTmADE0x8BghD/V+VXuvLggdM/0weBAQHXAPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gCBAQHXANQB0IEBAdcAgQEB1wDSANM/gQEB1wD0BDAQbBBrEGoQaRBoEGcCEDDbPGwY2zx/iGoB9oIAoPf4QlYbAccF8vQRHhEkER4RHREjER0RHBEiERwRGxEhERsRGhEgERoRGREfERkRGBEkERgRFxEjERcRFhEiERYRFREhERURFBEgERQRExEfERMREhEkERIREREjEREREBEiERAPESEPDhEgDg0RHw0MESQMCxEjC2sEgAoRIgoJESEJCBEgCAcRHwcGESQGBREjBQQRIgQDESEDAhEgAts8cFYjwAHjD/hBbyQTXwNWHaoAoVYcofhBbySsf25sA/TbPKGBJNUhwgDy9BEfcBEhcREgyFUgghBJicfBUATLHxKBAQHPAIEBAc8Ayz/JVhIEAxEgAwIRIQIRHwEQJBAjbW3bPBEZERwRGREYERsRGBEXERoRFxEWERkRFhEVERgRFREUERcRFBETERYRExESERUREhERERQREY23bQBSERARExEQDxESDw4REQ4NERANEM8QvhCtEJwQixB6EGkQWBBHEDZFMwQD/jARIsACju4RGxEfERsRGhEeERoRGREdERkRGBEcERgRFxEbERcRFhEaERYRFREZERURFBEYERQRExEXERMREhEWERIREREVEREREBEUERAPERMPDhESDg0REQ0MERAMVTsDESEDAhEgAnACAREiAREhViHbPOMOER8RHhEdERxycG8ANBEbERoRGREYERcRFhEVERQRExESEREREFXgAfpXHlcef3AgERwRIBEcERsRHxEbERoRHhEaERkRHREZERgRHBEYERcRGxEXERYRGhEWERURGREVERQRGBEUERMRFxETERIRFhESERERFRERERARFBEQDxETDw4REg4NERENDBEQDBC/EK4QnRCMEHsQahBZEEheMxA1BBEiBHEBHAMRIQNWIts8ER4RHxEecgH0VhGBAQsmWfQLb6GSMG3fIG6SMG2OKNCBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAMBAlECQQI2wVbwXigRR2IW6z8vQgbvLQgG8lUuKhIqhS8qEiqFMwoCKgKZI3Io4QU3O8kzciB95TCLmSOCfeB+JReKFTN6FzAfwRHBEoERwRGxEnERsRGhEmERoRGRElERkRGBEkERgRFxEjERcRFhEiERYRFREhERURFBEgERQRExEfERMREhEeERIREREdEREREBEoERAPEScPDhEmDg0RJQ0MESQMCxEjCwoRIgoJESEJCBEgCAcRHwcGER4GBREdBQQRKAR0BPgDEScDAhEmAgERJQERJNs8L6ArqFYpqQRwIcEAkzAgo94RJOMPERkSoREXoVYWURARF8hVIIIQWjy/zFAEyx8SgQEBzwCBAQHPAIEBAc8AyciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABERER0REREQERwREA8RGw8OERoOoXt2dQBuDREZDQwRGAwLERcLChEWCgkRFQkIERQIBxETBwYREgYFEREFBBEQBE7wTRwQmxCKEIkHSIgEAwP6Vx6CAPMzU/qgAREfoFYhvgERHgHy9FYjwgDjDwYRHQYFESIFViAFBBElBFYgBAMR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oPf4QlYaAccF8vQRHhEjER4RHREiER0RHBEhERwRGxEgERsRGhEfERoRGREjERkRGBEiERgRFxEhERcRFhEgERYRFREfERURFBEjERQRExEiERMREhEhERIREREgEREREBEfERAPESMPDhEiDg0RIQ0MESAMCxEfC4oEfAoRIwoJESIJCBEhCAcRIAcGER8GBREjBQQRIgQDESEDAhEgAts8cBEe4w/4QW8kE18DVh2qAKFWHKH4QW8krJmOiwP02zyhgSTVIcIA8vQRIHARIHERIMhVIIIQHPDPgVAEyx8SgQEBzwCBAQHPAMs/yVYSBAMRIQMCESACER8BECQQI21t2zwRGREcERkRGBEbERgRFxEaERcRFhEZERYRFREYERURFBEXERQRExEWERMREhEVERIREREUERGNt4wALBEQERMREA8REg8OEREODREQDRDPVSsAZGwx+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiDD6ADFx1yH6ADH6ADCnA6sAAv5XHREbER4RGxEaER0RGhEZERwRGREYERsRGBEXERoRFxEWERkRFhEVERgRFREUERcRFBETERYRExESERUREhERERQREREQERMREA8REg8OEREODREQDRDPVSsSAREfAVYf2zwRHhEdERwRGxEaERkRGBEXERYRFREUERMREhERkI8ACBEQVeAB7FYTgQELJFn0C2+hkjBt3yBukjBtjiDQgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wAwFEMwbBRvBOKBFHYhbrPy9CBu8tCAbySBesEh+CO78vRTJbmUNVRBFd4RHBEjERwRGxEiERsRGhEhERoRGREgERkRGBEfERiRAvYRFxEeERcRFhEdERYRFREjERURFBEiERQRExEhERMREhEgERIREREfEREREBEeERAPER0PDhEjDg0RIg0MESEMCxEgCwoRHwoJER4JCBEdCAcRIwcGESIGBREhBQQRIAQDER8DAhEeAgERHQERI9s8L4FaxAKgwgDy9C6hkgL+ERwRHREcERsRHREbERoRHREaERkRHREZERgRHREYERcRHREXERYRHREWERURHREVERQRHREUERMRHRETERIRHRESERERHRERERARHREQDxEdDw4RHQ4NER0NDBEdDAsRHQsKER0KCREdCREdCAcGVUDbPAERHgGgIMEAkjBw3qGTAfyCAPGrIcIA8vRwUx6+jl0w+CNWJaFWGaCCAVGAqQRWH8AAjhZWI1YZqFMvoagBgGS2CKgBgQPoqKkEjitTHqFWJAGoIqkEViBWJVYbqCRWEqGoA4BktggTqAOBA+ioE6kEWbYIAbYJ4lYiIaCXViNYqC6pBOIRIFYjoREfIaGUAvRWH8IAkX+TIMIA4o5JVyWBAQttIG6SMG2OJiBu8tCAbyTIVTBQNIEBAc8AgQEBzwCBAQHPAAHIgQEBzwDJAczJ4gIREgJWJQEgbpUwWfRZMJRBM/QT4uMNDlYfoQ1WIqEFESAFBBEjBAMRIgMCER4CAREQAREkVh9WIpiVAvbIVXDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBwUwgDViFVIBEfyFVAghDNrKI7UAbLHxSBAQHPABKBAQHPAIEBAc8AAciBAQHPABKBAQHPAMkBzMnIgljAAAAAAAAAAAAAAAABActnzMlw+wARFREdERURFBEcERSXlgCcERMRGxETERIRGhESERERGRERERARGBEQDxEXDw4RFg4NERUNDBEUDAsREwsKERIKBxERBwgREAgQbxDeEF0QTBA7SpgQJxAmEEUQNEEwALiCEKvLhjhQCcsfF4EBAc8AUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYTgQEBzwAByIEBAc8AEoEBAc8AEoEBAc8AAsiBAQHPABOBAQHPAMkBzMkBzACEViFWICKBAQsRKchVMFA0gQEBzwCBAQHPAIEBAc8AAciBAQHPAMkBzMkCERICAREmAVYlASBulTBZ9FkwlEEz9BPiAcQRHBEeERwRGxEdERsRGhEcERoRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERIRERETEREREBESERAPEREPDhEQDlUdAREgAREfVh/bPJoB8lYTgQELJFn0C2+hkjBt3yBukjBtjiDQgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wAwFEMwbBRvBOJwVHAAMDIibrOZWyBu8tCAbyQwlzJWFKQRFVniVhQRHBEjERwRGxEiERsRGhEhERoRGREgERkRGBEfERgRFxEeERebA/wRFhEdERYRFREjERURFBEiERQRExEhERMREhEgERIREREfEREREBEeERAPER0PDhEjDg0RIg0MESEMCxEgCwoRHwoJER4JCBEdCAcRIwcGESIGBREhBQQRIAQDER8DAhEeAgERHQERI9s8AREkAaAgwQCSMHDecFMeuZEx4w2hoJwC3BEeViGg+CNWGaCBAQtWISNWISTIVTBQNIEBAc8AgQEBzwCBAQHPAAHIgQEBzwDJAczJAhETAlYlASBulTBZ9FkwlEEz9BPiD1YioA5WIqAGESAGBREjBQQRIgQTAhEfAgERHgEREVYhyFVw2zzJn50B9MiCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AHBTCFE9VSARHshVQIIQzayiO1AGyx8UgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAERURHBEVERQRGxEUERMRGhETngCEERIRGRESERERGBERERARFxEQDxEWDw4RFQ4NERQNDBETDAsREgsKEREKBxEQBxCPEG4QnRBcEEsQOkmHEEYQNUEEALiCEPCqutVQCcsfF4EBAc8AUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYTgQEBzwAByIEBAc8AEoEBAc8AEoEBAc8AAsiBAQHPABOBAQHPAMkBzMkBzAAqMFLQoVYXAahWIagtqQQRHVYdoBEdARRwcZQgVhy5iugwogH8ERwRHhEcERsRHREbERoRHhEaERkRHREZERgRHhEYERcRHREXERYRHhEWERURHREVERQRHhEUERMRHRETERIRHhESERERHRERERARHhEQDxEdDw4RHg4NER0NDBEeDAsRHQsKER4KCREdCQgRHggHER0HBhEeBgURHQUEER4EowP+AxEdAwIRHgIBER0BER5WHts8jrEmgQEBViBZ9A1voZIwbd8gbpIwbY4T0IEBAdcA0gCBAQHXAFUgbBNvA+IgbrORMOMN3hEepBEcER4RHBEbER0RGxEaERwRGhEZERsRGREYERoRGBEXERkRFxEWERgRFhEVERcRFREUERYRFKqlpABwERMRFRETERIRFBESERERExERERAREhEQDxERDw4REA4Q3xDOEL0QrBCbEIoQeRBoEFcQRhA1RDAB+iBu8tCAbyMRHBEfERwRGxEeERsRGhEdERoRGREfERkRGBEeERgRFxEdERcRFhEfERYRFREeERURFBEdERQRExEfERMREhEeERIREREdEREREBEfERAPER4PDhEdDg0RHw0MER4MCxEdCwoRHwoJER4JCBEdCAcRHwcGER4GpgL8BREdBQQRHwQDER4DAhEdAgERHwERHlYh2zwRHREgER0RHBEfERwRGxEeERsRGhEdERoRGREcERkRGBEbERgRFxEaERcRFhEZERYRFREYERURFBEXERQRExEWERMREhEVERIREREUEREREBETERAPERIPDhERDg0REA0QzxC+qacBOhCtEJwQixB6EGkQWBBHEDZFQBAj2zwBER4BoBEdqABIA44QEqGogjgFa8deLWMQAACpBOBYoaiCOAVrx14tYxAAAKkEAF6BAQEjAln0DW+hkjBt3yBukjBtmtCBAQHXAAExbwHicCFus5gwIG7y0IBvIZEx4gFegQEBVhwCWfQNb6GSMG3fIG6SMG2Oh9DbPGwabwriIG6SMHDgIG7y0IBvKhCJXwmrAH7UAdAB0gCBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAgQEB1wDUMNCBAQHXAIEBAdcAMBBaEFkQWBBXEFYB0iHBAZFb4HCTUwK5jq4hgQEBIln0DW+hkjBt3yBukjBtjhDQgQEB1wCBAQHXAFlsEm8C4iBus5Ew4w2k6DDIWYIQZ5PD6VADyx+BAQHPAPQAyciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AK0A6iAgbvLQgG8iMQEgbvLQgG8iMCaBAQEiWfQNb6GSMG3fIG6SMG2a0IEBAdcAATFvAeIgbjGzjh2BAQECyAEBgQEBzwDJEDcgbpUwWfRaMJRBM/QV4o4dgQEBAsgBAYEBAc8AyRA3IG6VMFn0WjCUQTP0FeLiBACC0x8BghDonNRfuvLggdIA0z/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAYEBAdcA0z+BAQHXAPQEVWACEDDbPGwb2zx/tLAB9BEcEScRHBEbESYRGxEaESURGhEZESQRGREYESMRGBEXESIRFxEWESERFhEVESARFREUER8RFBETER4RExESER0REhEREScREREQESYREA8RJQ8OESQODREjDQwRIgwLESELChEgCgkRHwkIER4IBxEdBwYRJwYFESYFsQT4BBElBAMRJAMCESMCAREiAREh2zxWIFYavpdXGVYfpBEZ3ggRHwgHER4HBhEdBgURJwUEESYEAxElAwIRJAIBESMBESKBAQERIshVkNs8yQMREgMCERkCAREYASBulTBZ9FowlEEz9BXi+EJwcIBAECNtbW3bPBERERwREbmzt7IAjBEQERsREBEaDhEZDg0RGA0MERcMCxEWCwoRFQoJERQJCBETCAcREgcGEREGBREQBRBPED5NwBBLEEoQSRBIEEcQRhBFVSAAhshQCs8WyVAKzBfKABWBAQHPABOBAQHPAIEBAc8AAciBAQHPABKBAQHPABKBAQHPAAPIgQEBzwASgQEBzwDJWMzJAcwAotMfAYIQOCFeubry4IGBAQHXANQB0AHSAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAgQEB1wDUMNCBAQHXAIEBAdcAgQEB1wAwEGsQahBpEGgQZwH0ERwRJREcERsRJBEbERoRIxEaERkRIhEZERgRIREYERcRIBEXERYRHxEWERURHhEVERQRHREUERMRJRETERIRJBESERERIxERERARIhEQDxEhDw4RIA4NER8NDBEeDAsRHQsKESUKCREkCQgRIwgHESIHBhEhBgURIAW2AtgEER8EAxEeAwIRHQIBESUBESTbPFcRVxJXElcSVxJXElcSVxRXFPhCcHCAQBAjbW1t2zwRGhEcERoRGREbERkREREaEREREBEZERARERETEREJERIJERAREREQBxEQBxBvEF4QTRA8SxkHUKi5twHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wC4AJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMABT4QlYTAccF8uCEAMLTHwGCEGXvmv268uCBgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wCBAQHXAIEBAdcA1DDQgQEB1wCBAQHXAPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgxEGkQaBBnAujtRNDUAfhj0gABjtLbPFcdERsRHBEbERoRGxEaERkRGhEZERgRGREYERcRGBEXERYRFxEWERURFhEVERQRFREUERMRFBETERIRExESEREREhERERAREREQDxEQD1UO4Pgo1wsKgwm68uCJgQEB1wABAdHbPL68AfQwggr68ICCCcnDgG1xgQEsIYIImJaAgGSCAw1AgggPQkBtJW0hbXAgbSRtI/hCUxHIcgHLAXABywASygfL/8nQINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFMiVHREIAcREgcGEREGBxEQBxBvEF4QTRB8EGsQOr0AEEmHEFYEBVUgAfSBAQHXAIEBAdcA9ASBAQHXANQB0IEBAdcAgQEB1wCBAQHXANQw0IEBAdcAgQEB1wCBAQHXANQw0PpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH0BL8A3tM/1DDQgQEB1wCBAQHXAFkC9ATTP9Qw0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAMBRDMAT0BNQw0IEBAdcAgQEB1wD0BNM/9ASBAQHXADARGREdERkRGREcERkRGREbERkRGREaERkQ3hCaEIkQeMFDh1g=');
+    const __code = Cell.fromBase64('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ERQREREQERMREA8REg8OERQODRETDQwREgwLERQLChETCgkREgkIERQIBxETBwYREgYFERQFBBETBAMREgMCERQCARETARESVhXbPBESERUREhERERQREREQERMREA8REg8OEREODREQDRDPEL4QrRCcEIsQei4vAFgRERETEREREBESERAPEREPDhEQDhDfEM4QvRCsEJsQihB5EGgQVxBGEDVEMABegQEBIwJZ9A1voZIwbd8gbpIwbZrQgQEB1wABMW8B4nAhbrOYMCBu8tCAbyGRMeIBKhBpEFgQRxA2RUAQI9s8AREUAaARE1gAgFYaVhkigQELERvIVTBQNIEBAc8AgQEBzwCBAQHPAAHIgQEBzwDJAczJECwBERgBVhcBIG6VMFn0WTCUQTP0E+IAuIIQJI53tlAJyx8XgQEBzwBQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhOBAQHPAAHIgQEBzwASgQEBzwASgQEBzwACyIEBAc8AE4EBAc8AyQHMyQHMAf7IgljAAAAAAAAAAAAAAAABActnzMlw+wBwUwIDVhNVIBERyFVAghA/IwglUAbLHxSBAQHPABKBAQHPAIEBAc8AAciBAQHPABKBAQHPAMkBzMnIgljAAAAAAAAAAAAAAAABActnzMlw+wALERILChERCgkREAkQjxB+EG0QXBBLMwASSagHEFYEBVAzAGRsMfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4Igw+gAxcdch+gAx+gAwpwOrAAHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wA2AJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAvwgbpIwbY5U0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAgQEB1wAwECUQJBAjBdQB0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAgQEB1wAwECUQJBAjNRBaVQNsGm8K4iBus5cgbvLQgG8qmzBwVHAAIHBUcAAg4lYSlVR0MlND4w1POAT0VhqVVxVXFVyOEVYVI7yVVxUhERXeAREWAREV4nBWG+MAVh+BAQFWG1n0DW+hkjBt3yBukjBtjhPQgQEB1wDSAIEBAdcAVSBsE28D4iBus5cgbvLQgG8jlDAgcCHiVHNCwgCUVh0kvZFw4uMAIMIAkTDjDSVWGqhWGag5Ojs8Av4REREuEREREBEtERAPESwPDhErDg0RKg0MESkMCxEoCwoRJwoJESYJCBElCAcRJAcGESMGBREiBQQRIQQDESADAhEfAgERHgERHVYYViFWGVYY2zxWIQERF6hWFaiCMBSt9LcyAzS5qhmpBFYUoFYigUozERigvgERFgHy9FYgWD0C9DFTU7yRI5El4hERETMREREQETIREA8RMQ8OETAODREvDQwRLgwLES0LChEsCgkRKwkIESoIBxEpBwYRKAYFEScFBBEmBAMRJQMCESQCAREjAREiVh1WI1YmVh3bPBEkViOhAREnAREjoSDAAJZXJFYmESTeERERMxERWD8C/DMREhEyERIRERExEREREBEwERAPES8PDhEuDg0RLQ0MESwMCxErCwoRKgoJESkJCBEoCAcRJwcGESYGBRElBQQRJAQDESMDAhEiAgERIQFWIwERIlYmVhvbPAERIwERIqBWG7MREhEyERIRERExEREREBEwERAPES8PDhEuDldAA6yCMBSt9LcyAzS5qhmpBCARGKiCCA9CQKkEVhchoQERIwGgAVYioAERKQGgKREg4w8RFJU2NjY2NpxsUU3AEFsQOhBIVQTiEIsQexBqEF0QTE3DgQELDkFCQwH4VhOhgjgFa8deLWMQAACoVhiWVhejViGolVYXViGo4qBWGJWCD/C9wJWCCA9CQOJWFQGgViEBqKkEggDYhVYZlCFWGbmUIVYZvOLy9BERES4REREQES0REA8RLA8OESsODREqDQwRKQwLESgLChEnCgkRJgkIESUIBxEkBz4AOAYRIwYFESIFBBEhBAMRIAMCER8CAREeAREVER0AihEQETIREA8RMQ8OETAODREvDQwRLgwLES0LChEsCgkRKwkIESoIBxEpBwYRKAYFEScFBBEmBAMRJQMCESQCAREjAQQRIgBsDREtDQwRLAwLESsLChEqCgkRKQkIESgIBxEnBwYRJgYFESUFBBEkBAMRIwMCESICAxEhA0ADAag3NzdXElcUVxVXFVYRVHAAIAURHQVWHAVWHAVWHAUEERwEAxEbAwIRGgIBERcBERlWGFYiECPIVaDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBEAvxXHxERETEREREQETAREA8RLw8OES4ODREtDQwRLAwLESsLChEqCgkRKQkIESgIBxEeBwYRJgYFESUFBBEkBAMRIwMCESICAREhAREnVhtWJVYcVhvbPIIA4zFWJFYqqII4BWvHXi1jEAAAqQQqu/L0IFYXoQERIAGgggDzySFYRQHuyFWQEFoQSRA4R2pQRYEBAc8AEoEBAc8AgQEBzwAByIEBAc8AEoEBAc8AyQHMyFVABlBFgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJAczJECNFgCBulTBZ9FkwlEEz9BPigQEBAcgBAfQAySUQPgFLAN6CEOTRBLBQDMsfGoEBAc8AUAgg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYWgQEBzwAUygACyIEBAc8AgQEBzwASgQEBzwACyIEBAc8AE4EBAc8AE4EBAc8AA8iBAQHPAMlQA8zJAczJAcwC/ML/8vRWJiG8lFcmViXeViahESdWJaEgwgCORzBXFFcVVxVXFlcWVyNWHVRwACAEEScEAxElAwERGQERGBEVERYRFRETERUREwIREAIQLxAuEC0QLBArECoQKRAoQQcGBQQD4w1WJwZWHQZWHQZWHQYFESgFVikFBBEoBFYVBEZHAe4RERESEREREBESERAPERIPDhESDg0REg0MERIMCxESCwoREgoJERIJERIIBwZVQFYcVhNWHVYc2zxWE1YbqAERGqiCMBSt9LcyAzS5qhmpBAERGKBWJ4FvuxEaoLkBERgB8vRWJYIApooRFahWEb4BERQB8vRWI1gC/AMRHQMCESMCAREaAREoVhpWJRAjyFXQ2zzJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsACREqCQgRKQgHESgHBhEnBgURJgUEESUEAxEkAwIRIwIBESIBESEPESAPERwRHxEcERERHhERERcRHREXERERHBERDREbDREQERoREEhJAfSCECxPFQVQD8sfHYEBAc8AUAsg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYZgQEBzwAXygAFyIEBAc8AFIEBAc8A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');
+    const __system = Cell.fromBase64('te6cckECfAEAJdQAAQHAAQEFoOi/AgEU/wD0pBP0vPLICwMCAWIaBAIBIBUFAgEgDwYCASAJBwJftQObZ4IiIiJCIiIiAiIiIgHiIgHqodtniuJK4gvh5kQN0kYNsyQN3loQDeUt4TxQeAgBQIEBAVYRAln0DW+hkjBt3yBukjBtjofQ2zxsGW8J4lLwawIBIA4KAgEgDAsAdazdxoatLgzOZ0Xl6i2qro7KpswsRksmzcos5y0nCK1q6Y4I6qsprk7uCmkHLiyHLqoJTekMbums6xBAAtuufZA3SRg2xw4Qa6TAgIXdeXBEEGuFhRBAgn/deWhEwYTdeXBEcW2eCIiIiQiIiIgIiIiIB4iIB6qHbZ4riC+HthCQN0kYNscOkDd5aEA3kgGQN0kYNsyQN3loQDeSN4JxAbeBt4FxEDdJGDbvQHgNAJZtIW6zjj0wgQELASBu8tCAK1lZ9AtvoZIwbd8gbpIwbY4g0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAMBRDMGwUbwTikTHiVHh2bwQAEbCvu1E0NIAAYAIBIBEQAN23ejBOC52Hq6WVz2PQnYc6yVCjbNBOE7rGpaVsj5ZkWnXlv74sRzBOBAq4A3AM7HKZywdVyOS2WHBOA3qTvfKost446np7wKs4ZNBOE7Lpy1Zp2W5nQdLNsozdFJBOCBnOrTzivzpKFgOsLcTI9lADjbdRBA3SRg2xw4Qa6TAgIXdeXBEEGuFhRBAgn/deWhEwYTdeXBEcW2eCIiIiYiIiIgIiQiIB4iIh4cIiAcqju2eK4gvh7YQweBMSAIQgbpIwbY40IG7y0IBvIgEgbpIwbY4RIG7y0IBvKlVEbwVVQG8FbwLiASBukjBtmSBu8tCAbyNvA+JvAuIgbpIwbd4Bsm0hbrOOpCeBAQEkWfQNb6GSMG3fIG6SMG2X0PQEATFvAeIgbrOSMDHjDZEx4oEBAVRFE1n0DW+hkjBt3yBukjBtjhPQgQEB1wDSAIEBAdcAVSBsE28D4m8CFADuMSBu8tCAbyGBAQsCIG7y0IASWfQLb6GSMG3fIG6SMG2OVNCBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAMBAlECQQIwXUAdCBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAIEBAdcAMBAlECQQIzUQWlUDbBpvCuICA3ogGBYCGKkd2zzbPFcQXw9sIXgXAAIrAhSq4ds82zxs82wzeBkABlR9ygPO0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8ERERExERERAREhEQDxERDw4REA5VHds88uCCyPhDAcx/AcoAERIREREQVeDbPMntVHgdGwHiARERARESgQEBzwAfgQEBzwAd9AAbgQEBzwAJyIEBAc8AGIEBAc8AUAYg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbIUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYT9ADLP8gDUEUcAGJQI4EBAc8AgQEBzwCBAQHPABT0ABTLPxT0ABT0AATIgQEBzwDJUATMyVjMyVjMyQHMA/YBkjB/4HAh10nCH5UwINcLH94gghCRouEKuo7NMNMfAYIQkaLhCrry4IGBAQHXAIEBAdcAgQEB1wDUAdCBAQHXAPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgxECUQJBAjbBXgIIIQkurq/brjAiCCEOic1F90bx4EOrqPCDDbPGwX2zx/4CCCEP9X5Ve64wKCEJRqmLa6blEhHwFYjqfTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gMHAgATptbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPHUCEDDbPGwc2zx/UCID4IIAoPf4QlYYAccF8vQRExEdERMREhEcERIREREbEREREBEaERAPERkPDhEYDg0RFw0MERYMCxEVCwoRFAoJER0JCBEcCAcRGwcGERoGBREZBQQRGAQDERcDAhEWAts8VhvbPHBWFMAKkX+UVhTAC+JsaSME+o9mMBETwAOO0xEVmVYRAREWvvLmbJlWEQERFrvy5mziDxEXDw4RFg4NERUNDBEUDAsREwsKERIKCRERCQgREAhVdxBHEDZwI1BnBREaBQQRGwQTAhEaAgERGts84w0RFBESEREREFXg4w34QW8kE18DVhKqAKFWEaH4QW8kNzYlJALG2zyhgSTVIcIA8vQRFHARFnERFchVIIIQ7wHCtFAEyx8SgQEBzwCBAQHPAMs/ySsEAxEVAwIRFgIRFAEQJBAjbW3bPA4REQ4NERANEM8QvhCtEJwQixB6EGkQWBBHEDZFE1BCU3UBtFcUERaZVhUBERe+8uZsmVYVAREXu/LmbOIREBEXERAPERYPDhEVDg0RFA0MERMMCxESCwoREQoJERAJEI8QfhBtEFwQSxA6SRdUGGUFERoFBBEbBBEZVSDbPCYC4lYWgQEBJln0DW+hkjBt3yBukjBtjofQ2zxsGW8J4oFsliFus/L0IG7y0IBvKVs2ggCPblAF8vRWEIEBAStZ9A1voZIwbd8gbpIwbZfQ9AQBMW8B4iBus5cgbvLQgG8hkjBt4iCBAQstWfQLb6GSMG3faycC/iBukjBtjlTQgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wCBAQHXADAQJRAkECMF1AHQgQEB1wCBAQHXAIEBAdcA1AHQgQEB1wCBAQHXADAQJRAkECM1EFpVA2wabwriIG6zlyBu8tCAbyqbMHBUcAAgcFRwACDiVhOVVHQyU0PjDSJPKAP2wACOGDRWFoIA88kRE74BERIB8vRWHaQRHgMREZJXEuJWHYEBAVYaWfQNb6GSMG3fIG6SMG2OE9CBAQHXANIAgQEB1wBVIGwTbwPiIG6zlyBu8tCAbyOUMHBwIeJwVhkkwgCUVhwkupFw4uMAIMIAkTDjDVYZVhmoVheoNDIpAfyCMBSt9LcyAzS5qhmpBCARGaiCCA9CQKkEVhghoQERIQGgAVYgoAERJwGgggDjMVNCqII4BWvHXi1jEAAAqQQiu/L0cFYbVhmhGKAREhExERIREREwEREREBEvERAPES4PDhEtDg0RLA0MESsMCxEqCwoRKQoJESgJGAcRJgcqA/wGESUGBREkBQQRIwQDESIDAhEhAgERJwFWJQERJVYbVhvbPBElVhqgEREREhERERAREhEQDxESDw4REg4NERINDBESDAsREgsKERIKCRESCRESCAcGVUBWHFYTVidWHNs8VhNWG6gBERmogjAUrfS3MgM0uaoZqQQBERWgViRJaCsC+IFvuxEZoLkBERcB8vRWIoIApooRFahWEVYlqII4BWvHXi1jEAAAqQS+AREUAfL0VhmOQ1clVyVXJVclVyVWH1YdLFYgESgRLREoEScRLBEnESYRKxEmESURKhElESQRKREkAxEoAwIRJwIBESYBESUREhEkERLjDRA4R2UxLAHuBBESBAMRKAMCEScCAREmARElgQELESXIVZAQWhBJEDhHalBFgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczIVUAGUEWBAQHPABKBAQHPAIEBAc8AAciBAQHPABKBAQHPAMkBzMkBzMkQJwERHAFWEgEtAfwgbpUwWfRZMJRBM/QT4oEBAQHIAQH0AMkCESECVhABIG6VMFn0WjCUQTP0FeKBAQFWFVYVVhXIVSBQI4EBAc8AygCBAQHPAMkQKFYQASBulTBZ9FowlEEz9BXiChEYChCfLgkQjhB9BhEWBhBcAxEZAwIRFwIBERABERhWERIuAtrIVcDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBJhyXIVUCCEH63+5ZQBssfFIEBAc8AEoEBAc8AygCBAQHPAAHIgQEBzwDJAczJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAcFYUA1YUA0VVMC8AsMhVQIIQPyMIJVAGyx8UgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsABxERBwUREAUeHxCNEDhAVBYA9IIQB5AwQVAOyx8cgQEBzwBQCiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhiBAQHPABbKAATIgQEBzwATgQEBzwCBAQHPAAHIgQEBzwATgQEBzwATgQEBzwADyIEBAc8AFIEBAc8AFIEBAc8AyQHMyQHMyQHMACJXKlcqVypXKlcqVh9WHSxWIAL8MxESETAREhERES8REREQES4REA8RLQ8OESwODRErDQwRKgwLESkLChEoCgkRJwkIESYIBxElBwYRJAYFESMFBBEiBAMRIQMCESACAREfAVYhAREgViFWGts8AREhAREgoFYasxESETAREhERES8REREQES4REA8RLQ8OESwOSTMAbA0RKw0MESoMCxEpCwoRKAoJEScJCBEmCAcRJQcGESQGBREjBQQRIgQDESEDAhEgAgMRHwNAAwL+MVYZJLyRI5JWGeIRERExEREREBEwERAPES8PDhEuDg0RLQ0MESwMCxErCwoRKgoJESkJCBEoCAcRJwcGESYGBRElBQQRJAQDESMDAhEiAgERIQERIFYcViFWJFYc2zwRIlYhoQERJQERIaEgwACTcFcj3hERETEREREQETAREGg1AH4PES8PDhEuDg0RLQ0MESwMCxErCwoRKgoJESkJCBEoCAcRJwcGESYGBRElBQQRJAQDESMDAhEiAgERIQEEESABolcVVxVXFVcVf3AgERARGBEQDxEXDw4RFg4NERUNDBEUDAsREwsKERIKCRERCQgREAgQfxBuEF0QTBA7IxCLEHoQaRBYBxA2BREaBQQRGwTbPDcC5FYXgQEBJln0DW+hkjBt3yBukjBtjofQ2zxsGW8J4oFsliFus/L0IG7y0IBvKVs0NYIAj25QBPL0VhCBAQEqWfQNb6GSMG3fIG6SMG2X0PQEATFvAeIgbrOXIG7y0IBvIZIwbeIggQELLFn0C2+hkjBt32s4AvwgbpIwbY5U0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAgQEB1wAwECUQJBAjBdQB0IEBAdcAgQEB1wCBAQHXANQB0IEBAdcAgQEB1wAwECUQJBAjNRBaVQNsGm8K4iBus5cgbvLQgG8qmzBwVHAAIHBUcAAg4lYSlVR0MlND4w1POQT0VhqVVxVXFVyOEVYVI7yVVxUhERXeAREWAREV4nBWG+MAVh+BAQFWG1n0DW+hkjBt3yBukjBtjhPQgQEB1wDSAIEBAdcAVSBsE28D4iBus5cgbvLQgG8jlDAgcCHiVHNCwgCUVh0kvZFw4uMAIMIAkTDjDSVWGqhWGahMSkc6A6yCMBSt9LcyAzS5qhmpBCARGKiCCA9CQKkEVhchoQERIwGgAVYioAERKQGgKREg4w8RFJU2NjY2NpxsUU3AEFsQOhBIVQTiEIsQexBqEF0QTE3DgQELDkU+OwHuyFWQEFoQSRA4R2pQRYEBAc8AEoEBAc8AgQEBzwAByIEBAc8AEoEBAc8AyQHMyFVABlBFgQEBzwASgQEBzwCBAQHPAAHIgQEBzwASgQEBzwDJAczJAczJECNFgCBulTBZ9FkwlEEz9BPigQEBAcgBAfQAySUQPgE8Af4gbpUwWfRaMJRBM/QV4oEBAVRyw8hVIFAjgQEBzwDKAIEBAc8AySUQPAEgbpUwWfRaMJRBM/QV4kG7JshVQIIQfrf7llAGyx8UgQEBzwASgQEBzwDKAIEBAc8AAciBAQHPAMkBzMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBwPQCeUyoDRmXIVUCCED8jCCVQBssfFIEBAc8AEoEBAc8AgQEBzwAByIEBAc8AEoEBAc8AyQHMyciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABgQNQL8Vx8RERExEREREBEwERAPES8PDhEuDg0RLQ0MESwMCxErCwoRKgoJESkJCBEoCAcRHgcGESYGBRElBQQRJAQDESMDAhEiAgERIQERJ1YbViVWHFYb2zyCAOMxViRWKqiCOAVrx14tYxAAAKkEKrvy9CBWF6EBESABoIIA88khaD8C/ML/8vRWJiG8lFcmViXeViahESdWJaEgwgCORzBXFFcVVxVXFlcWVyNWHVRwACAEEScEAxElAwERGQERGBEVERYRFRETERUREwIREAIQLxAuEC0QLBArECoQKRAoQQcGBQQD4w1WJwZWHQZWHQZWHQYFESgFVikFBBEoBFYVBERAAvwDER0DAhEjAgERGgERKFYaViUQI8hV0Ns8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AAkRKgkIESkIBxEoBwYRJwYFESYFBBElBAMRJAMCESMCAREiAREhDxEgDxEcER8RHBERER4REREXER0RFxERERwREQ0RGw0REBEaERBCQQAwEREKERAKDg8QmhCJEHgQZxBWEEUQNEEwAfSCECxPFQVQD8sfHYEBAc8AUAsg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYZgQEBzwAXygAFyIEBAc8AFIEBAc8AEoEBAc8AAciBAQHPABKBAQHPABOBAQHPAAPIgQEBzwAUgQEBzwAUgQEBzwAEyIEBAc8AyUMAGlAEzMlQA8zJAczJAcwB7hERERIREREQERIREA8REg8OERIODRESDQwREgwLERILChESCgkREgkREggHBlVAVhxWE1YdVhzbPFYTVhuoAREaqIIwFK30tzIDNLmqGakEAREYoFYngW+7ERqguQERGAHy9FYlggCmihEVqFYRvgERFAHy9FYjaAGoNzc3VxJXFFcVVxVWEVRwACAFER0FVhwFVhwFVhwFBBEcBAMRGwMCERoCAREXAREZVhhWIhAjyFWg2zzJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsARgDeghDk0QSwUAzLHxqBAQHPAFAIINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WFoEBAc8AFMoAAsiBAQHPAIEBAc8AEoEBAc8AAsiBAQHPABOBAQHPABOBAQHPAAPIgQEBzwDJUAPMyQHMyQHMAvwzERIRMhESERERMRERERARMBEQDxEvDw4RLg4NES0NDBEsDAsRKwsKESoKCREpCQgRKAgHEScHBhEmBgURJQUEESQEAxEjAwIRIgIBESEBViMBESJWJlYb2zwBESMBESKgVhuzERIRMhESERERMRERERARMBEQDxEvDw4RLg5JSABsDREtDQwRLAwLESsLChEqCgkRKQkIESgIBxEnBwYRJgYFESUFBBEkBAMRIwMCESICAxEhA0ADAFYjwACTIcAAkXDik18EcOAjwACSbDHgIcAAlBAjXwPgUjOoUhOoEqBZoKkEAvQxU1O8kSORJeIREREzEREREBEyERAPETEPDhEwDg0RLw0MES4MCxEtCwoRLAoJESsJCBEqCAcRKQcGESgGBREnBQQRJgQDESUDAhEkAgERIwERIlYdViNWJlYd2zwRJFYjoQERJwERI6EgwACWVyRWJhEk3hERETMREWhLAIoREBEyERAPETEPDhEwDg0RLw0MES4MCxEtCwoRLAoJESsJCBEqCAcRKQcGESgGBREnBQQRJgQDESUDAhEkAgERIwEEESIC/hERES4REREQES0REA8RLA8OESsODREqDQwRKQwLESgLChEnCgkRJgkIESUIBxEkBwYRIwYFESIFBBEhBAMRIAMCER8CAREeAREdVhhWIVYZVhjbPFYhAREXqFYVqIIwFK30tzIDNLmqGakEVhSgViKBSjMRGKC+AREWAfL0ViBoTQH4VhOhgjgFa8deLWMQAACoVhiWVhejViGolVYXViGo4qBWGJWCD/C9wJWCCA9CQOJWFQGgViEBqKkEggDYhVYZlCFWGbmUIVYZvOLy9BERES4REREQES0REA8RLA8OESsODREqDQwRKQwLESgLChEnCgkRJgkIESUIBxEkB04AOAYRIwYFESIFBBEhBAMRIAMCER8CAREeAREVER0AClR5h1OYAMTTHwGCEP9X5Ve68uCB0z/TB4EBAdcA+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHSAIEBAdcA1AHQgQEB1wCBAQHXANIA0z+BAQHXAPQEMBBsEGsQahBpEGgQZwTuggCg9/hCVhMBxwXy9BETERgRExESERcREhERERYREREQERUREA8RFA8OERgODREXDQwRFgwLERULChEUCgkR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');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
@@ -3078,20 +2268,17 @@ const Pool_errors: { [key: number]: { message: string } } = {
     1644: { message: `not reach trigger price` },
     5238: { message: `position not exist` },
     9429: { message: `send gas not enough` },
+    11117: { message: `insuficient global net LP` },
     18995: { message: `margin rate too low` },
-    22749: { message: `risk rate too hig` },
-    23236: { message: `insufficient global RBF` },
     27798: { message: `invalid token` },
     28603: { message: `margin rate too high` },
     31425: { message: `not reach unlock time` },
     36718: { message: `disabled token` },
+    39251: { message: `insufficient global LP` },
     41207: { message: `invalid sender` },
     42634: { message: `legerage too high` },
     55429: { message: `not reach liquidate price` },
     58161: { message: `insufficient liquidity` },
-    60602: { message: `risk rate too high` },
-    61867: { message: `insuficient global net RBF` },
-    62259: { message: `insufficient global liquidity` },
     62409: { message: `insufficient margin` },
 }
 
@@ -3104,36 +2291,25 @@ const Pool_types: ABIType[] = [
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwner","header":2174598809,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwnerOk","header":846932810,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"UpdateConfig","header":1710201597,"fields":[{"name":"gasConsumption","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"minTonsForStorage","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"rbfLockTime","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusFactor","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"minLPMargin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxLPLeverage","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpLiquidationFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpMaxRiskRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"orderBook","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"UpdateTokenConfig","header":941711033,"fields":[{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"name","type":{"kind":"simple","type":"string","optional":false}},{"name":"enable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"minMargin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxLeverage","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidationFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpTradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"protocalTradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"interestRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxFundingRate","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"UpdateRBFPosition","header":3902592095,"fields":[{"name":"isIncrease","type":{"kind":"simple","type":"bool","optional":false}},{"name":"orderId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"pricesLength","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"prices","type":{"kind":"dict","key":"int","value":"UpdatePrice","valueFormat":"ref"}}]},
-    {"name":"UpdateRBFPositionSuccess","header":485543809,"fields":[{"name":"orderId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receive","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
-    {"name":"UpdateLPPosition","header":4272122737,"fields":[{"name":"orderId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"opType","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"pricesLength","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"prices","type":{"kind":"dict","key":"int","value":"UpdatePrice","valueFormat":"ref"}}]},
-    {"name":"UpdateLPPositionSuccess","header":1233766337,"fields":[{"name":"orderId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receive","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
+    {"name":"UpdateConfig","header":2443370762,"fields":[{"name":"gasConsumption","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"minTonsForStorage","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpLockTime","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusFactor","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"orderBook","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"UpdateTokenConfig","header":2464869117,"fields":[{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"name","type":{"kind":"simple","type":"string","optional":false}},{"name":"enable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"minMargin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxLeverage","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidationFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpTradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"interestRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxFundingRate","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"UpdateLPPosition","header":3902592095,"fields":[{"name":"isIncrease","type":{"kind":"simple","type":"bool","optional":false}},{"name":"orderId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"pricesLength","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"prices","type":{"kind":"dict","key":"int","value":"UpdatePrice","valueFormat":"ref"}}]},
+    {"name":"UpdateLPPositionSuccess","header":485543809,"fields":[{"name":"orderId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receive","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"UpdatePerpPosition","header":4283950423,"fields":[{"name":"orderId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"opType","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"isLong","type":{"kind":"simple","type":"bool","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"sizeDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"triggerPrice","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"triggerAbove","type":{"kind":"simple","type":"bool","optional":false}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"pricesLength","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"prices","type":{"kind":"dict","key":"int","value":"UpdatePrice","valueFormat":"ref"}}]},
     {"name":"UpdatePerpPositionSuccess","header":4009870004,"fields":[{"name":"orderId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receive","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
-    {"name":"RBFPositionIncreasedEvent","header":4037720789,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"unlockTimeAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"RBFPositionDecreasedEvent","header":2882242104,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receive","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"GlobalRBFChangedEvent","header":3450643003,"fields":[{"name":"riskBufferFundAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidation","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"LPPositionIncreasedEvent","header":3487229017,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"marginAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"LPPositionDecreasedEvent","header":2843728201,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"marginAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"realizedLoss","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receive","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"LPPositionLiquidatedEvent","header":3220731385,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"margin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidity","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidationFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"GlobalLPLiquidityChangedEvent","header":1513930700,"fields":[{"name":"marginAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"LPPositionIncreasedEvent","header":2967544876,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"unlockTimeAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"LPPositionDecreasedEvent","header":613316534,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receive","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"GlobalLPChangedEvent","header":1059260453,"fields":[{"name":"lpFundAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"GlobalLPPositionChangedEvent","header":2125986710,"fields":[{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"netSizeAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"isLong","type":{"kind":"simple","type":"bool","optional":false}},{"name":"entryPriceAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"PerpPositionIncreasedEvent","header":126890049,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"isLong","type":{"kind":"simple","type":"bool","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"marginAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"sizeDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"sizeAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradePrice","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"entryPrice","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"PerpPositionDecreasedEvent","header":743380229,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"isLong","type":{"kind":"simple","type":"bool","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"marginAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"sizeDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"sizeAfter","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradePrice","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"realizedPnLDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receive","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"PerpPositionLiquidatedEvent","header":3838903472,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"isLong","type":{"kind":"simple","type":"bool","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"sizeDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidatePrice","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidationFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"trxId","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"UpdatePriceEvent","header":1737737193,"fields":[{"name":"pricesLength","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"prices","type":{"kind":"dict","key":"int","value":"UpdatePrice","valueFormat":"ref"}}]},
-    {"name":"ConfigData","header":null,"fields":[{"name":"rbfLockTime","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusFactor","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"minLPMargin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxLPLeverage","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpLiquidationFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpMaxRiskRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"orderBook","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"TokenConfig","header":null,"fields":[{"name":"name","type":{"kind":"simple","type":"string","optional":false}},{"name":"enable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"minMargin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxLeverage","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidationFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpTradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"protocalTradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"interestRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxFundingRate","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"ConfigData","header":null,"fields":[{"name":"lpLockTime","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonusFactor","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"orderBook","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"TokenConfig","header":null,"fields":[{"name":"name","type":{"kind":"simple","type":"string","optional":false}},{"name":"enable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"minMargin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxLeverage","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidationFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"lpTradingFeeRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"interestRate","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"maxFundingRate","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"TokenConfigData","header":null,"fields":[{"name":"tokenIdNext","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tokenConfig","type":{"kind":"simple","type":"TokenConfig","optional":true}}]},
-    {"name":"RBFPosition","header":null,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidity","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonus","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"unlockTime","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"GlobalRBFPosition","header":null,"fields":[{"name":"riskBufferFund","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidity","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"RBFPositionData","header":null,"fields":[{"name":"rbfPosition","type":{"kind":"simple","type":"RBFPosition","optional":true}},{"name":"globalRBFPosition","type":{"kind":"simple","type":"GlobalRBFPosition","optional":false}}]},
-    {"name":"IncreaseLPPositionOrder","header":null,"fields":[{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"executionFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"blockTime","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"DecreaseLPPositionOrder","header":null,"fields":[{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidityDelta","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"executionFee","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"blockTime","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"LPPosition","header":null,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"margin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidity","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"entryFundingFeeGrowth","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"entryTradingFeeGrowth","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
-    {"name":"GlobalLPLiquidity","header":null,"fields":[{"name":"margin","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidity","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFeeGrowth","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"tradingFeeGrowth","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"LPPosition","header":null,"fields":[{"name":"positionId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidity","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bonus","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"unlockTime","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"GlobalLPLiquidity","header":null,"fields":[{"name":"lpFund","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"liquidity","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"fundingFeeGrowth","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"LPPositionData","header":null,"fields":[{"name":"lpPosition","type":{"kind":"simple","type":"LPPosition","optional":true}},{"name":"globalLPLiquidity","type":{"kind":"simple","type":"GlobalLPLiquidity","optional":false}}]},
     {"name":"AccountPerpPosition","header":null,"fields":[{"name":"positions","type":{"kind":"dict","key":"address","value":"DirectionPerpPosition","valueFormat":"ref"}}]},
     {"name":"DirectionPerpPosition","header":null,"fields":[{"name":"longPosition","type":{"kind":"simple","type":"PerpPosition","optional":false}},{"name":"shortPosition","type":{"kind":"simple","type":"PerpPosition","optional":false}}]},
@@ -3147,7 +2323,6 @@ const Pool_types: ABIType[] = [
 const Pool_getters: ABIGetter[] = [
     {"name":"configData","arguments":[],"returnType":{"kind":"simple","type":"ConfigData","optional":false}},
     {"name":"tokenConfig","arguments":[{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}}],"returnType":{"kind":"simple","type":"TokenConfigData","optional":false}},
-    {"name":"rbfPosition","arguments":[{"name":"account","type":{"kind":"simple","type":"address","optional":true}}],"returnType":{"kind":"simple","type":"RBFPositionData","optional":true}},
     {"name":"lpPosition","arguments":[{"name":"account","type":{"kind":"simple","type":"address","optional":true}}],"returnType":{"kind":"simple","type":"LPPositionData","optional":true}},
     {"name":"perpPosition","arguments":[{"name":"tokenId","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"account","type":{"kind":"simple","type":"address","optional":true}}],"returnType":{"kind":"simple","type":"PerpPositionData","optional":true}},
     {"name":"owner","arguments":[],"returnType":{"kind":"simple","type":"address","optional":false}},
@@ -3156,7 +2331,6 @@ const Pool_getters: ABIGetter[] = [
 const Pool_receivers: ABIReceiver[] = [
     {"receiver":"internal","message":{"kind":"typed","type":"UpdateConfig"}},
     {"receiver":"internal","message":{"kind":"typed","type":"UpdateTokenConfig"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"UpdateRBFPosition"}},
     {"receiver":"internal","message":{"kind":"typed","type":"UpdateLPPosition"}},
     {"receiver":"internal","message":{"kind":"typed","type":"UpdatePerpPosition"}},
     {"receiver":"internal","message":{"kind":"typed","type":"Deploy"}},
@@ -3192,7 +2366,7 @@ export class Pool implements Contract {
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: UpdateConfig | UpdateTokenConfig | UpdateRBFPosition | UpdateLPPosition | UpdatePerpPosition | Deploy) {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: UpdateConfig | UpdateTokenConfig | UpdateLPPosition | UpdatePerpPosition | Deploy) {
         
         let body: Cell | null = null;
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'UpdateConfig') {
@@ -3200,9 +2374,6 @@ export class Pool implements Contract {
         }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'UpdateTokenConfig') {
             body = beginCell().store(storeUpdateTokenConfig(message)).endCell();
-        }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'UpdateRBFPosition') {
-            body = beginCell().store(storeUpdateRBFPosition(message)).endCell();
         }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'UpdateLPPosition') {
             body = beginCell().store(storeUpdateLPPosition(message)).endCell();
@@ -3231,15 +2402,6 @@ export class Pool implements Contract {
         builder.writeNumber(tokenId);
         let source = (await provider.get('tokenConfig', builder.build())).stack;
         const result = loadTupleTokenConfigData(source);
-        return result;
-    }
-    
-    async getRbfPosition(provider: ContractProvider, account: Address | null) {
-        let builder = new TupleBuilder();
-        builder.writeAddress(account);
-        let source = (await provider.get('rbfPosition', builder.build())).stack;
-        const result_p = source.readTupleOpt();
-        const result = result_p ? loadTupleRBFPositionData(result_p) : null;
         return result;
     }
     

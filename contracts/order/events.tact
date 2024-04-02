@@ -1,30 +1,8 @@
-// ============================ RBF ================================ //
-// increase RBF
-message RBFPositionOrderCreatedEvent {
-    opType: Int as uint8;
-    account: Address;
-    liquidityDelta: Int;
-    executionFee: Int;
-    orderId: Int;
-}
-
-message RBFPositionOrderCancelledEvent {
-    opType: Int as uint8;
-    orderId: Int;
-    trxId: Int;
-}
-
-message RBFPositionOrderExecutedEvent {
-    opType: Int as uint8;
-    orderId: Int;
-    trxId: Int;
-}
-
 // ============================ LP ================================ //
+// increase LP
 message LPPositionOrderCreatedEvent {
     opType: Int as uint8;
     account: Address;
-    marginDelta: Int;
     liquidityDelta: Int;
     executionFee: Int;
     orderId: Int;

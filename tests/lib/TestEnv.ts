@@ -147,12 +147,8 @@ export class TestEnv {
                 $$type: 'UpdateConfig',
                 gasConsumption: toNano(0.05),
                 minTonsForStorage: toNano(0.03),
-                rbfLockTime: 5n * 60n,
+                lpLockTime: 5n * 60n,
                 bonusFactor: 1n,
-                minLPMargin: toJettonUnits(10),
-                maxLPLeverage: 100n,
-                lpLiquidationFee: toJettonUnits(0.2),
-                lpMaxRiskRate: 10n**6n,
                 orderBook: TestEnv.orderBook.address
             }
         );
@@ -178,8 +174,7 @@ export class TestEnv {
                 maxLeverage: 100n,
                 liquidationFee: toJettonUnits(0.2), // 0.2U
                 tradingFeeRate: BigInt(TestEnv.tradingFeeRate * 1000000), // 0.1%
-                lpTradingFeeRate: 300_000n, // 30%
-                protocalTradingFeeRate: 300_000n, // 30%
+                lpTradingFeeRate: 600_000n, // 60%
                 interestRate: 0n,
                 maxFundingRate: 0n
             }

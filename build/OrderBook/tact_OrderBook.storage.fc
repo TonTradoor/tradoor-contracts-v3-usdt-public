@@ -138,26 +138,26 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 }
 
 ;;
-;; Type: CreateDecreaseRBFPositionOrder
-;; Header: 0xa11162ed
-;; TLB: create_decrease_rbf_position_order#a11162ed executionFee:int257 liquidityDelta:int257 = CreateDecreaseRBFPositionOrder
+;; Type: CreateDecreaseLPPositionOrder
+;; Header: 0xcb2656d3
+;; TLB: create_decrease_lp_position_order#cb2656d3 executionFee:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder
 ;;
 
-(slice, ((int, int))) $CreateDecreaseRBFPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2702271213);
+(slice, ((int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3408287443);
     var v'executionFee = sc_0~load_int(257);
     var v'liquidityDelta = sc_0~load_int(257);
     return (sc_0, (v'executionFee, v'liquidityDelta));
 }
 
 ;;
-;; Type: CancelRBFPositionOrder
-;; Header: 0xbc6f0603
-;; TLB: cancel_rbf_position_order#bc6f0603 orderId:int257 trxId:int257 executionFeeReceiver:Maybe address = CancelRBFPositionOrder
+;; Type: CancelLPPositionOrder
+;; Header: 0x483932cd
+;; TLB: cancel_lp_position_order#483932cd orderId:int257 trxId:int257 executionFeeReceiver:Maybe address = CancelLPPositionOrder
 ;;
 
-(slice, ((int, int, slice))) $CancelRBFPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 3161392643);
+(slice, ((int, int, slice))) $CancelLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1211708109);
     var v'orderId = sc_0~load_int(257);
     var v'trxId = sc_0~load_int(257);
     var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
@@ -165,13 +165,13 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 }
 
 ;;
-;; Type: ExecuteRBFPositionOrder
-;; Header: 0x25ec63c1
-;; TLB: execute_rbf_position_order#25ec63c1 orderId:int257 trxId:int257 executionFeeReceiver:Maybe address pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecuteRBFPositionOrder
+;; Type: ExecuteLPPositionOrder
+;; Header: 0x7cd41541
+;; TLB: execute_lp_position_order#7cd41541 orderId:int257 trxId:int257 executionFeeReceiver:Maybe address pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecuteLPPositionOrder
 ;;
 
-(slice, ((int, int, slice, int, cell))) $ExecuteRBFPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 636249025);
+(slice, ((int, int, slice, int, cell))) $ExecuteLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2094273857);
     var v'orderId = sc_0~load_int(257);
     var v'trxId = sc_0~load_int(257);
     var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
@@ -182,12 +182,12 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 }
 
 ;;
-;; Type: UpdateRBFPosition
+;; Type: UpdateLPPosition
 ;; Header: 0xe89cd45f
-;; TLB: update_rbf_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateRBFPosition
+;; TLB: update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateLPPosition
 ;;
 
-builder $UpdateRBFPosition$_store(builder build_0, (int, int, slice, int, int, int, cell) v) inline_ref {
+builder $UpdateLPPosition$_store(builder build_0, (int, int, slice, int, int, int, cell) v) inline_ref {
     var (v'isIncrease, v'orderId, v'account, v'liquidityDelta, v'trxId, v'pricesLength, v'prices) = v;
     build_0 = store_uint(build_0, 3902592095, 32);
     build_0 = build_0.store_int(v'isIncrease, 1);
@@ -200,28 +200,28 @@ builder $UpdateRBFPosition$_store(builder build_0, (int, int, slice, int, int, i
     return build_0;
 }
 
-cell $UpdateRBFPosition$_store_cell((int, int, slice, int, int, int, cell) v) inline {
-    return $UpdateRBFPosition$_store(begin_cell(), v).end_cell();
+cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inline {
+    return $UpdateLPPosition$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((int, int))) $UpdateRBFPosition$_load_bounced(slice sc_0) inline {
+(slice, ((int, int))) $UpdateLPPosition$_load_bounced(slice sc_0) inline {
     throw_unless(129, sc_0~load_uint(32) == 3902592095);
     var v'isIncrease = sc_0~load_int(1);
     var v'orderId = sc_0~load_uint(64);
     return (sc_0, (v'isIncrease, v'orderId));
 }
 
-((int, int, slice, int, int, int, cell)) $UpdateRBFPosition$_constructor_isIncrease_orderId_trxId_account_liquidityDelta_pricesLength_prices(int isIncrease, int orderId, int trxId, slice account, int liquidityDelta, int pricesLength, cell prices) inline {
+((int, int, slice, int, int, int, cell)) $UpdateLPPosition$_constructor_isIncrease_orderId_trxId_account_liquidityDelta_pricesLength_prices(int isIncrease, int orderId, int trxId, slice account, int liquidityDelta, int pricesLength, cell prices) inline {
     return (isIncrease, orderId, account, liquidityDelta, trxId, pricesLength, prices);
 }
 
 ;;
-;; Type: UpdateRBFPositionSuccess
+;; Type: UpdateLPPositionSuccess
 ;; Header: 0x1cf0cf81
-;; TLB: update_rbf_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateRBFPositionSuccess
+;; TLB: update_lp_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateLPPositionSuccess
 ;;
 
-(slice, ((int, int, int))) $UpdateRBFPositionSuccess$_load(slice sc_0) inline {
+(slice, ((int, int, int))) $UpdateLPPositionSuccess$_load(slice sc_0) inline {
     throw_unless(129, sc_0~load_uint(32) == 485543809);
     var v'orderId = sc_0~load_int(257);
     var v'receive = sc_0~load_int(257);
@@ -247,123 +247,6 @@ cell $UpdateRBFPosition$_store_cell((int, int, slice, int, int, int, cell) v) in
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'executionFee = sc_2~load_int(257);
     return (sc_0, (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee));
-}
-
-;;
-;; Type: CreateDecreaseLPPositionOrder
-;; Header: 0x7202bd7d
-;; TLB: create_decrease_lp_position_order#7202bd7d executionFee:int257 marginDelta:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder
-;;
-
-(slice, ((int, int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 1912782205);
-    var v'executionFee = sc_0~load_int(257);
-    var v'marginDelta = sc_0~load_int(257);
-    var v'liquidityDelta = sc_0~load_int(257);
-    return (sc_0, (v'executionFee, v'marginDelta, v'liquidityDelta));
-}
-
-;;
-;; Type: CancelLPPositionOrder
-;; Header: 0x58157fbb
-;; TLB: cancel_lp_position_order#58157fbb executionFeeReceiver:Maybe address orderId:int257 trxId:int257 = CancelLPPositionOrder
-;;
-
-(slice, ((slice, int, int))) $CancelLPPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 1477803963);
-    var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
-    var v'orderId = sc_0~load_int(257);
-    var v'trxId = sc_0~load_int(257);
-    return (sc_0, (v'executionFeeReceiver, v'orderId, v'trxId));
-}
-
-;;
-;; Type: ExecuteLPPositionOrder
-;; Header: 0xd0a15205
-;; TLB: execute_lp_position_order#d0a15205 executionFeeReceiver:Maybe address orderId:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecuteLPPositionOrder
-;;
-
-(slice, ((slice, int, int, int, cell))) $ExecuteLPPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 3500233221);
-    var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
-    var v'orderId = sc_0~load_int(257);
-    var v'trxId = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'pricesLength = sc_1~load_int(257);
-    var v'prices = sc_1~load_dict();
-    return (sc_0, (v'executionFeeReceiver, v'orderId, v'trxId, v'pricesLength, v'prices));
-}
-
-;;
-;; Type: LiquidateLPPositionOrder
-;; Header: 0x63dd28a7
-;; TLB: liquidate_lp_position_order#63dd28a7 executionFeeReceiver:Maybe address account:address trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = LiquidateLPPositionOrder
-;;
-
-(slice, ((slice, slice, int, int, cell))) $LiquidateLPPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 1675438247);
-    var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
-    var v'account = sc_0~__tact_load_address();
-    var v'trxId = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'pricesLength = sc_1~load_int(257);
-    var v'prices = sc_1~load_dict();
-    return (sc_0, (v'executionFeeReceiver, v'account, v'trxId, v'pricesLength, v'prices));
-}
-
-;;
-;; Type: UpdateLPPosition
-;; Header: 0xfea36b71
-;; TLB: update_lp_position#fea36b71 orderId:uint64 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateLPPosition
-;;
-
-builder $UpdateLPPosition$_store(builder build_0, (int, int, slice, int, int, int, int, cell) v) inline_ref {
-    var (v'orderId, v'opType, v'account, v'marginDelta, v'liquidityDelta, v'trxId, v'pricesLength, v'prices) = v;
-    build_0 = store_uint(build_0, 4272122737, 32);
-    build_0 = build_0.store_uint(v'orderId, 64);
-    build_0 = build_0.store_uint(v'opType, 8);
-    build_0 = __tact_store_address(build_0, v'account);
-    build_0 = build_0.store_int(v'marginDelta, 257);
-    build_0 = build_0.store_int(v'liquidityDelta, 257);
-    build_0 = build_0.store_uint(v'trxId, 64);
-    var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'pricesLength, 257);
-    build_1 = build_1.store_dict(v'prices);
-    build_0 = store_ref(build_0, build_1.end_cell());
-    return build_0;
-}
-
-cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, int, cell) v) inline {
-    return $UpdateLPPosition$_store(begin_cell(), v).end_cell();
-}
-
-(slice, ((int, int))) $UpdateLPPosition$_load_bounced(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 4272122737);
-    var v'orderId = sc_0~load_uint(64);
-    var v'opType = sc_0~load_uint(8);
-    return (sc_0, (v'orderId, v'opType));
-}
-
-((int, int, slice, int, int, int, int, cell)) $UpdateLPPosition$_constructor_orderId_opType_trxId_account_marginDelta_liquidityDelta_pricesLength_prices(int orderId, int opType, int trxId, slice account, int marginDelta, int liquidityDelta, int pricesLength, cell prices) inline {
-    return (orderId, opType, account, marginDelta, liquidityDelta, trxId, pricesLength, prices);
-}
-
-((int, int, slice, int, int, int, int, cell)) $UpdateLPPosition$_constructor_opType_orderId_trxId_account_marginDelta_liquidityDelta_pricesLength_prices(int opType, int orderId, int trxId, slice account, int marginDelta, int liquidityDelta, int pricesLength, cell prices) inline {
-    return (orderId, opType, account, marginDelta, liquidityDelta, trxId, pricesLength, prices);
-}
-
-;;
-;; Type: UpdateLPPositionSuccess
-;; Header: 0x4989c7c1
-;; TLB: update_lp_position_success#4989c7c1 orderId:int257 receive:int257 trxId:uint64 = UpdateLPPositionSuccess
-;;
-
-(slice, ((int, int, int))) $UpdateLPPositionSuccess$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 1233766337);
-    var v'orderId = sc_0~load_int(257);
-    var v'receive = sc_0~load_int(257);
-    var v'trxId = sc_0~load_uint(64);
-    return (sc_0, (v'orderId, v'receive, v'trxId));
 }
 
 ;;
@@ -495,14 +378,14 @@ cell $UpdatePerpPosition$_store_cell((int, int, int, slice, int, int, int, int, 
 }
 
 ;;
-;; Type: RBFPositionOrderCreatedEvent
-;; Header: 0x59e185f1
-;; TLB: rbf_position_order_created_event#59e185f1 opType:uint8 account:address liquidityDelta:int257 executionFee:int257 orderId:int257 = RBFPositionOrderCreatedEvent
+;; Type: LPPositionOrderCreatedEvent
+;; Header: 0xabaac7f8
+;; TLB: lp_position_order_created_event#abaac7f8 opType:uint8 account:address liquidityDelta:int257 executionFee:int257 orderId:int257 = LPPositionOrderCreatedEvent
 ;;
 
-builder $RBFPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, int, int) v) inline {
+builder $LPPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, int, int) v) inline {
     var (v'opType, v'account, v'liquidityDelta, v'executionFee, v'orderId) = v;
-    build_0 = store_uint(build_0, 1507952113, 32);
+    build_0 = store_uint(build_0, 2880096248, 32);
     build_0 = build_0.store_uint(v'opType, 8);
     build_0 = __tact_store_address(build_0, v'account);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
@@ -513,86 +396,12 @@ builder $RBFPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, 
     return build_0;
 }
 
-cell $RBFPositionOrderCreatedEvent$_store_cell((int, slice, int, int, int) v) inline {
-    return $RBFPositionOrderCreatedEvent$_store(begin_cell(), v).end_cell();
-}
-
-((int, slice, int, int, int)) $RBFPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId(int opType, slice account, int liquidityDelta, int executionFee, int orderId) inline {
-    return (opType, account, liquidityDelta, executionFee, orderId);
-}
-
-;;
-;; Type: RBFPositionOrderCancelledEvent
-;; Header: 0x9822e3aa
-;; TLB: rbf_position_order_cancelled_event#9822e3aa opType:uint8 orderId:int257 trxId:int257 = RBFPositionOrderCancelledEvent
-;;
-
-builder $RBFPositionOrderCancelledEvent$_store(builder build_0, (int, int, int) v) inline {
-    var (v'opType, v'orderId, v'trxId) = v;
-    build_0 = store_uint(build_0, 2552423338, 32);
-    build_0 = build_0.store_uint(v'opType, 8);
-    build_0 = build_0.store_int(v'orderId, 257);
-    build_0 = build_0.store_int(v'trxId, 257);
-    return build_0;
-}
-
-cell $RBFPositionOrderCancelledEvent$_store_cell((int, int, int) v) inline {
-    return $RBFPositionOrderCancelledEvent$_store(begin_cell(), v).end_cell();
-}
-
-((int, int, int)) $RBFPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline {
-    return (opType, orderId, trxId);
-}
-
-;;
-;; Type: RBFPositionOrderExecutedEvent
-;; Header: 0x508154c5
-;; TLB: rbf_position_order_executed_event#508154c5 opType:uint8 orderId:int257 trxId:int257 = RBFPositionOrderExecutedEvent
-;;
-
-builder $RBFPositionOrderExecutedEvent$_store(builder build_0, (int, int, int) v) inline {
-    var (v'opType, v'orderId, v'trxId) = v;
-    build_0 = store_uint(build_0, 1350653125, 32);
-    build_0 = build_0.store_uint(v'opType, 8);
-    build_0 = build_0.store_int(v'orderId, 257);
-    build_0 = build_0.store_int(v'trxId, 257);
-    return build_0;
-}
-
-cell $RBFPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline {
-    return $RBFPositionOrderExecutedEvent$_store(begin_cell(), v).end_cell();
-}
-
-((int, int, int)) $RBFPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline {
-    return (opType, orderId, trxId);
-}
-
-;;
-;; Type: LPPositionOrderCreatedEvent
-;; Header: 0xe9304df3
-;; TLB: lp_position_order_created_event#e9304df3 opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 orderId:int257 = LPPositionOrderCreatedEvent
-;;
-
-builder $LPPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, int, int, int) v) inline_ref {
-    var (v'opType, v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'orderId) = v;
-    build_0 = store_uint(build_0, 3912257011, 32);
-    build_0 = build_0.store_uint(v'opType, 8);
-    build_0 = __tact_store_address(build_0, v'account);
-    build_0 = build_0.store_int(v'marginDelta, 257);
-    build_0 = build_0.store_int(v'liquidityDelta, 257);
-    var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'executionFee, 257);
-    build_1 = build_1.store_int(v'orderId, 257);
-    build_0 = store_ref(build_0, build_1.end_cell());
-    return build_0;
-}
-
-cell $LPPositionOrderCreatedEvent$_store_cell((int, slice, int, int, int, int) v) inline {
+cell $LPPositionOrderCreatedEvent$_store_cell((int, slice, int, int, int) v) inline {
     return $LPPositionOrderCreatedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, slice, int, int, int, int)) $LPPositionOrderCreatedEvent$_constructor_opType_account_marginDelta_liquidityDelta_executionFee_orderId(int opType, slice account, int marginDelta, int liquidityDelta, int executionFee, int orderId) inline {
-    return (opType, account, marginDelta, liquidityDelta, executionFee, orderId);
+((int, slice, int, int, int)) $LPPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId(int opType, slice account, int liquidityDelta, int executionFee, int orderId) inline {
+    return (opType, account, liquidityDelta, executionFee, orderId);
 }
 
 ;;
@@ -773,11 +582,11 @@ cell $CompensateOrderEvent$_store_cell((int, int, int, slice, int, slice, int) v
 }
 
 ;;
-;; Type: RBFPositionOrder
-;; TLB: _ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = RBFPositionOrder
+;; Type: LPPositionOrder
+;; TLB: _ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = LPPositionOrder
 ;;
 
-builder $RBFPositionOrder$_store(builder build_0, (int, slice, int, int, int, int, slice, slice) v) inline_ref {
+builder $LPPositionOrder$_store(builder build_0, (int, slice, int, int, int, int, slice, slice) v) inline_ref {
     var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
     build_0 = build_0.store_int(v'isIncrease, 1);
     build_0 = __tact_store_address(build_0, v'account);
@@ -792,24 +601,24 @@ builder $RBFPositionOrder$_store(builder build_0, (int, slice, int, int, int, in
     return build_0;
 }
 
-cell $RBFPositionOrder$_store_cell((int, slice, int, int, int, int, slice, slice) v) inline {
-    return $RBFPositionOrder$_store(begin_cell(), v).end_cell();
+cell $LPPositionOrder$_store_cell((int, slice, int, int, int, int, slice, slice) v) inline {
+    return $LPPositionOrder$_store(begin_cell(), v).end_cell();
 }
 
-((int, slice, int, int, int, int, slice, slice)) $RBFPositionOrder$_not_null(tuple v) inline {
+((int, slice, int, int, int, int, slice, slice)) $LPPositionOrder$_not_null(tuple v) inline {
     throw_if(128, null?(v));
     var (int vvv'isIncrease, slice vvv'account, int vvv'liquidityDelta, int vvv'executionFee, int vvv'blockTime, int vvv'isPending, slice vvv'executionFeeReceiver, slice vvv'lastOperator) = __tact_tuple_destroy_8(v);
     return (vvv'isIncrease, vvv'account, vvv'liquidityDelta, vvv'executionFee, vvv'blockTime, vvv'isPending, vvv'executionFeeReceiver, vvv'lastOperator);
 }
 
-cell $RBFPositionOrder$_store_opt(tuple v) inline {
+cell $LPPositionOrder$_store_opt(tuple v) inline {
     if (null?(v)) {
         return null();
     }
-    return $RBFPositionOrder$_store_cell($RBFPositionOrder$_not_null(v));
+    return $LPPositionOrder$_store_cell($LPPositionOrder$_not_null(v));
 }
 
-(slice, ((int, slice, int, int, int, int, slice, slice))) $RBFPositionOrder$_load(slice sc_0) inline_ref {
+(slice, ((int, slice, int, int, int, int, slice, slice))) $LPPositionOrder$_load(slice sc_0) inline_ref {
     var v'isIncrease = sc_0~load_int(1);
     var v'account = sc_0~__tact_load_address();
     var v'liquidityDelta = sc_0~load_int(257);
@@ -822,105 +631,9 @@ cell $RBFPositionOrder$_store_opt(tuple v) inline {
     return (sc_0, (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator));
 }
 
-tuple $RBFPositionOrder$_as_optional((int, slice, int, int, int, int, slice, slice) v) inline {
+tuple $LPPositionOrder$_as_optional((int, slice, int, int, int, int, slice, slice) v) inline {
     var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
     return __tact_tuple_create_8(v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator);
-}
-
-tuple $RBFPositionOrder$_load_opt(cell cl) inline {
-    if (null?(cl)) {
-        return null();
-    }
-    var sc = cl.begin_parse();
-    return $RBFPositionOrder$_as_optional(sc~$RBFPositionOrder$_load());
-}
-
-_ $RBFPositionOrder$_get_isPending((int, slice, int, int, int, int, slice, slice) v) inline {
-    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
-    return v'isPending;
-}
-
-tuple $RBFPositionOrder$_to_tuple(((int, slice, int, int, int, int, slice, slice)) v) inline {
-    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
-    return __tact_tuple_create_8(v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator);
-}
-
-tuple $RBFPositionOrder$_to_opt_tuple(tuple v) inline {
-    if (null?(v)) { return null(); } 
-    return $RBFPositionOrder$_to_tuple($RBFPositionOrder$_not_null(v)); 
-}
-
-tuple $RBFPositionOrder$_to_opt_external(tuple v) inline {
-    var loaded = $RBFPositionOrder$_to_opt_tuple(v);
-    if (null?(loaded)) {
-        return null();
-    } else {
-        return (loaded);
-    }
-}
-
-((int, slice, int, int, int, int, slice, slice)) $RBFPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(int isIncrease, slice account, int liquidityDelta, int executionFee, int blockTime, int isPending, slice executionFeeReceiver, slice lastOperator) inline {
-    return (isIncrease, account, liquidityDelta, executionFee, blockTime, isPending, executionFeeReceiver, lastOperator);
-}
-
-;;
-;; Type: LPPositionOrder
-;; TLB: _ opType:uint8 account:address marginDelta:int257 liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = LPPositionOrder
-;;
-
-builder $LPPositionOrder$_store(builder build_0, (int, slice, int, int, int, int, int, slice, slice) v) inline_ref {
-    var (v'opType, v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
-    build_0 = build_0.store_uint(v'opType, 8);
-    build_0 = __tact_store_address(build_0, v'account);
-    build_0 = build_0.store_int(v'marginDelta, 257);
-    build_0 = build_0.store_int(v'liquidityDelta, 257);
-    var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'executionFee, 257);
-    build_1 = build_1.store_int(v'blockTime, 257);
-    build_1 = build_1.store_int(v'isPending, 1);
-    build_1 = __tact_store_address_opt(build_1, v'executionFeeReceiver);
-    var build_2 = begin_cell();
-    build_2 = __tact_store_address_opt(build_2, v'lastOperator);
-    build_1 = store_ref(build_1, build_2.end_cell());
-    build_0 = store_ref(build_0, build_1.end_cell());
-    return build_0;
-}
-
-cell $LPPositionOrder$_store_cell((int, slice, int, int, int, int, int, slice, slice) v) inline {
-    return $LPPositionOrder$_store(begin_cell(), v).end_cell();
-}
-
-((int, slice, int, int, int, int, int, slice, slice)) $LPPositionOrder$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (int vvv'opType, slice vvv'account, int vvv'marginDelta, int vvv'liquidityDelta, int vvv'executionFee, int vvv'blockTime, int vvv'isPending, slice vvv'executionFeeReceiver, slice vvv'lastOperator) = __tact_tuple_destroy_9(v);
-    return (vvv'opType, vvv'account, vvv'marginDelta, vvv'liquidityDelta, vvv'executionFee, vvv'blockTime, vvv'isPending, vvv'executionFeeReceiver, vvv'lastOperator);
-}
-
-cell $LPPositionOrder$_store_opt(tuple v) inline {
-    if (null?(v)) {
-        return null();
-    }
-    return $LPPositionOrder$_store_cell($LPPositionOrder$_not_null(v));
-}
-
-(slice, ((int, slice, int, int, int, int, int, slice, slice))) $LPPositionOrder$_load(slice sc_0) inline_ref {
-    var v'opType = sc_0~load_uint(8);
-    var v'account = sc_0~__tact_load_address();
-    var v'marginDelta = sc_0~load_int(257);
-    var v'liquidityDelta = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'executionFee = sc_1~load_int(257);
-    var v'blockTime = sc_1~load_int(257);
-    var v'isPending = sc_1~load_int(1);
-    var v'executionFeeReceiver = sc_1~__tact_load_address_opt();
-    slice sc_2 = sc_1~load_ref().begin_parse();
-    var v'lastOperator = sc_2~__tact_load_address_opt();
-    return (sc_0, (v'opType, v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator));
-}
-
-tuple $LPPositionOrder$_as_optional((int, slice, int, int, int, int, int, slice, slice) v) inline {
-    var (v'opType, v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
-    return __tact_tuple_create_9(v'opType, v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator);
 }
 
 tuple $LPPositionOrder$_load_opt(cell cl) inline {
@@ -931,14 +644,14 @@ tuple $LPPositionOrder$_load_opt(cell cl) inline {
     return $LPPositionOrder$_as_optional(sc~$LPPositionOrder$_load());
 }
 
-_ $LPPositionOrder$_get_isPending((int, slice, int, int, int, int, int, slice, slice) v) inline {
-    var (v'opType, v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
+_ $LPPositionOrder$_get_isPending((int, slice, int, int, int, int, slice, slice) v) inline {
+    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
     return v'isPending;
 }
 
-tuple $LPPositionOrder$_to_tuple(((int, slice, int, int, int, int, int, slice, slice)) v) inline {
-    var (v'opType, v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
-    return __tact_tuple_create_9(v'opType, v'account, v'marginDelta, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator);
+tuple $LPPositionOrder$_to_tuple(((int, slice, int, int, int, int, slice, slice)) v) inline {
+    var (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator) = v;
+    return __tact_tuple_create_8(v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator);
 }
 
 tuple $LPPositionOrder$_to_opt_tuple(tuple v) inline {
@@ -955,8 +668,8 @@ tuple $LPPositionOrder$_to_opt_external(tuple v) inline {
     }
 }
 
-((int, slice, int, int, int, int, int, slice, slice)) $LPPositionOrder$_constructor_opType_account_marginDelta_liquidityDelta_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(int opType, slice account, int marginDelta, int liquidityDelta, int executionFee, int blockTime, int isPending, slice executionFeeReceiver, slice lastOperator) inline {
-    return (opType, account, marginDelta, liquidityDelta, executionFee, blockTime, isPending, executionFeeReceiver, lastOperator);
+((int, slice, int, int, int, int, slice, slice)) $LPPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(int isIncrease, slice account, int liquidityDelta, int executionFee, int blockTime, int isPending, slice executionFeeReceiver, slice lastOperator) inline {
+    return (isIncrease, account, liquidityDelta, executionFee, blockTime, isPending, executionFeeReceiver, lastOperator);
 }
 
 ;;
@@ -1119,8 +832,8 @@ tuple $PerpPositionOrderEx$_load_opt(cell cl) inline {
 ;; Type: OrderBook
 ;;
 
-builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, cell, int) v) inline {
-    var (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'executors, v'rbfPositionOrders, v'rbfPositionOrderIndexNext, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext) = v;
+builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) v) inline {
+    var (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext) = v;
     build_0 = build_0.store_int(v'maxTimeDelayExecutor, 257);
     build_0 = build_0.store_int(v'minTimeDelayTrader, 257);
     build_0 = build_0.store_int(v'minExecutionFee, 257);
@@ -1132,12 +845,10 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     build_2 = __tact_store_address(build_2, v'pool);
     build_2 = __tact_store_address(build_2, v'owner);
     build_2 = build_2.store_dict(v'executors);
-    build_2 = build_2.store_dict(v'rbfPositionOrders);
-    build_2 = build_2.store_uint(v'rbfPositionOrderIndexNext, 64);
     build_2 = build_2.store_dict(v'lpPositionOrders);
     build_2 = build_2.store_uint(v'lpPositionOrderIndexNext, 64);
+    build_2 = build_2.store_dict(v'perpPositionOrders);
     var build_3 = begin_cell();
-    build_3 = build_3.store_dict(v'perpPositionOrders);
     build_3 = build_3.store_dict(v'perpPositionOrderExs);
     build_3 = build_3.store_uint(v'perpPositionOrderIndexNext, 64);
     build_2 = store_ref(build_2, build_3.end_cell());
@@ -1146,7 +857,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     return build_0;
 }
 
-(slice, ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, cell, int))) $OrderBook$_load(slice sc_0) inline {
+(slice, ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int))) $OrderBook$_load(slice sc_0) inline {
     var v'maxTimeDelayExecutor = sc_0~load_int(257);
     var v'minTimeDelayTrader = sc_0~load_int(257);
     var v'minExecutionFee = sc_0~load_int(257);
@@ -1158,15 +869,13 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     var v'pool = sc_2~__tact_load_address();
     var v'owner = sc_2~__tact_load_address();
     var v'executors = sc_2~load_dict();
-    var v'rbfPositionOrders = sc_2~load_dict();
-    var v'rbfPositionOrderIndexNext = sc_2~load_uint(64);
     var v'lpPositionOrders = sc_2~load_dict();
     var v'lpPositionOrderIndexNext = sc_2~load_uint(64);
+    var v'perpPositionOrders = sc_2~load_dict();
     slice sc_3 = sc_2~load_ref().begin_parse();
-    var v'perpPositionOrders = sc_3~load_dict();
     var v'perpPositionOrderExs = sc_3~load_dict();
     var v'perpPositionOrderIndexNext = sc_3~load_uint(64);
-    return (sc_0, (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'executors, v'rbfPositionOrders, v'rbfPositionOrderIndexNext, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext));
+    return (sc_0, (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext));
 }
 
 (slice, ((int))) $OrderBook$init$_load(slice sc_0) inline {
@@ -1174,7 +883,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     return (sc_0, (v'deployId));
 }
 
-(int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, cell, int) $OrderBook$_contract_load() impure inline_ref {
+(int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $OrderBook$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1189,7 +898,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     }
 }
 
-() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, int, cell, cell, int) v) impure inline {
+() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

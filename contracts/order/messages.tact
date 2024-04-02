@@ -35,19 +35,19 @@ message UpdateConfig {
     pool: Address;
 }
 
-// ============================ RBF ================================ //
-message CreateDecreaseRBFPositionOrder {
+// ============================ LP ================================ //
+message CreateDecreaseLPPositionOrder {
     executionFee: Int;
     liquidityDelta: Int;
 }
 
-message CancelRBFPositionOrder {
+message CancelLPPositionOrder {
     orderId: Int;
     trxId: Int;
     executionFeeReceiver: Address?;
 }
 
-message ExecuteRBFPositionOrder {
+message ExecuteLPPositionOrder {
     orderId: Int;
     trxId: Int;
     executionFeeReceiver: Address?;
@@ -55,7 +55,7 @@ message ExecuteRBFPositionOrder {
     prices: map<Int, UpdatePrice>;
 }
 
-message(0xe89cd45f) UpdateRBFPosition {
+message(0xe89cd45f) UpdateLPPosition {
     isIncrease: Bool;
     orderId: Int as uint64;
     account: Address;
@@ -65,7 +65,7 @@ message(0xe89cd45f) UpdateRBFPosition {
     prices: map<Int, UpdatePrice>;
 }
 
-message(0x1cf0cf81) UpdateRBFPositionSuccess {
+message(0x1cf0cf81) UpdateLPPositionSuccess {
     orderId: Int;
     receive: Int;
     trxId: Int as uint64;
@@ -79,59 +79,6 @@ message CompensateOrder {
     refundAmount: Int;
     executionFeeReceiver: Address?;
     executionFee: Int;
-}
-// ============================ LP ================================ //
-message CreateDecreaseLPPositionOrder {
-    executionFee: Int;
-    marginDelta: Int;
-    liquidityDelta: Int;
-}
-
-message CancelLPPositionOrder {
-    executionFeeReceiver: Address?;
-    orderId: Int;
-    trxId: Int;
-}
-
-message ExecuteLPPositionOrder {
-    executionFeeReceiver: Address?;
-    orderId: Int;
-    trxId: Int;
-    pricesLength: Int;
-    prices: map<Int, UpdatePrice>;
-}
-
-message LiquidateLPPositionOrder {
-    executionFeeReceiver: Address?;
-    account: Address;
-    trxId: Int;
-    pricesLength: Int;
-    prices: map<Int, UpdatePrice>;
-}
-
-message(0xfea36b71) UpdateLPPosition {
-    orderId: Int as uint64;
-    opType: Int as uint8;
-    account: Address;
-    marginDelta: Int;
-    liquidityDelta: Int;
-    trxId: Int as uint64;
-    pricesLength: Int;
-    prices: map<Int, UpdatePrice>;
-}
-
-message(0x4989c7c1) UpdateLPPositionSuccess {
-    orderId: Int;
-    receive: Int;
-    trxId: Int as uint64;
-}
-
-message CompensateLPPositionOrder {
-    orderId: Int;
-    trxId: Int;
-    needRefund: Bool;
-    isExecute: Bool;
-    executionFeeReceiver: Address?;
 }
 
 // ============================ Perp ================================ //
@@ -189,12 +136,4 @@ message(0xef01c2b4) UpdatePerpPositionSuccess {
     orderId: Int;
     receive: Int;
     trxId: Int as uint64;
-}
-
-message CompensatePerpPositionOrder {
-    orderId: Int;
-    trxId: Int;
-    needRefund: Bool;
-    isExecute: Bool;
-    executionFeeReceiver: Address?;
 }
