@@ -321,7 +321,7 @@
             $receive = $perpPosition'margin;
             ($perpPosition'positionId, $perpPosition'margin, $perpPosition'size, $perpPosition'entryPrice, $perpPosition'entryFundingFeeGrowth) = $PerpPosition$_constructor_positionId_margin_size_entryPrice_entryFundingFeeGrowth(0, 0, 0, 0, 0);
         }
-        $global_emit($PerpPositionDecreasedEvent$_store_cell($PerpPositionDecreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_receive_trxId($perpPosition'positionId, $account, $tokenId, $isLong, $marginDelta, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $realizedPnl, $tradingFee, $fundingFee, $receive, $trxId)));
+        $global_emit($PerpPositionDecreasedEvent$_store_cell($PerpPositionDecreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_receive_trxId($positionId, $account, $tokenId, $isLong, $marginDelta, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $realizedPnl, $tradingFee, $fundingFee, $receive, $trxId)));
     }
     if ($isLong) {
         ($directionPerpPosition'longPosition'positionId, $directionPerpPosition'longPosition'margin, $directionPerpPosition'longPosition'size, $directionPerpPosition'longPosition'entryPrice, $directionPerpPosition'longPosition'entryFundingFeeGrowth) = ($perpPosition'positionId, $perpPosition'margin, $perpPosition'size, $perpPosition'entryPrice, $perpPosition'entryFundingFeeGrowth);

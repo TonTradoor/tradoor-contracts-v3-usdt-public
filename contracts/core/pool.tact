@@ -677,7 +677,7 @@ contract Pool with Deployable, Ownable {
 
             // event
             emit(PerpPositionDecreasedEvent{
-                positionId: perpPosition.positionId,
+                positionId: positionId,
                 account: account,
                 tokenId: tokenId,
                 isLong: isLong,
