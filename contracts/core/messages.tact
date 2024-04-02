@@ -4,12 +4,8 @@ import "./structs";
 message UpdateConfig {
     gasConsumption: Int;
     minTonsForStorage: Int;
-    rbfLockTime: Int;
+    lpLockTime: Int;
     bonusFactor: Int;
-    minLPMargin: Int;
-    maxLPLeverage: Int;
-    lpLiquidationFee: Int;
-    lpMaxRiskRate: Int;
     orderBook: Address;
 }
 
@@ -22,13 +18,12 @@ message UpdateTokenConfig {
     liquidationFee: Int;
     tradingFeeRate: Int;
     lpTradingFeeRate: Int;
-    protocalTradingFeeRate: Int;
     interestRate: Int;
     maxFundingRate: Int;
 }
 
-// ============================ RBF ================================ //
-message(0xe89cd45f) UpdateRBFPosition {
+// ============================ LP ================================ //
+message(0xe89cd45f) UpdateLPPosition {
     isIncrease: Bool;
     orderId: Int as uint64;
     account: Address;
@@ -38,25 +33,7 @@ message(0xe89cd45f) UpdateRBFPosition {
     prices: map<Int, UpdatePrice>;
 }
 
-message(0x1cf0cf81) UpdateRBFPositionSuccess {
-    orderId: Int;
-    receive: Int;
-    trxId: Int as uint64;
-}
-
-// ============================ LP ================================ //
-message(0xfea36b71) UpdateLPPosition {
-    orderId: Int as uint64;
-    opType: Int as uint8;
-    account: Address;
-    marginDelta: Int;
-    liquidityDelta: Int;
-    trxId: Int as uint64;
-    pricesLength: Int;
-    prices: map<Int, UpdatePrice>;
-}
-
-message(0x4989c7c1) UpdateLPPositionSuccess {
+message(0x1cf0cf81) UpdateLPPositionSuccess {
     orderId: Int;
     receive: Int;
     trxId: Int as uint64;

@@ -4,7 +4,7 @@ import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits } from "./TokenHelper";
 
-export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContract>, margin: number, liquidity: number, executionFee: number) {
+export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
     let orderIdBefore = await TestEnv.orderBook.getLpPositionOrderIndexNext();
     // create order
@@ -17,7 +17,7 @@ export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContra
         {
             $$type: 'TokenTransfer',
             query_id: 0n,
-            amount: toUnits(margin, TestEnv.jettonDecimal),
+            amount: toUnits(liquidity, TestEnv.jettonDecimal),
             destination: TestEnv.orderBook.address,
             response_destination: user.address,
             custom_payload: null,
@@ -26,8 +26,7 @@ export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContra
                 beginCell()
                 .storeRef(
                     beginCell()
-                    .storeInt(2,32) // op
-                    .storeInt(toUnits(margin, TestEnv.jettonDecimal), 128) // margin
+                    .storeInt(1,32) // op
                     .storeInt(toUnits(liquidity, TestEnv.jettonDecimal), 128) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()
@@ -83,7 +82,7 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
     let orderBefore = await TestEnv.orderBook.getLpPositionOrder(orderId);
     let positionDataBefore = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
     let positionBefore = positionDataBefore?.lpPosition;
-    let globalLiquidityBefore = positionDataBefore?.globalLPLiquidity;
+    let globalLPLiquidityBefore = positionDataBefore?.globalLPLiquidity;
     
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
@@ -105,7 +104,7 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
     let order = await TestEnv.orderBook.getLpPositionOrder(orderId);
     let positionDataAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
     let positionAfter = positionDataAfter?.lpPosition;
-    let globalLiquidityAfter = positionDataAfter?.globalLPLiquidity;
+    let globalLPLiquidityAfter = positionDataAfter?.globalLPLiquidity;
     
     return {
         trxResult,
@@ -113,14 +112,14 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
         balanceAfter,
         positionBefore,
         positionAfter,
-        globalLiquidityBefore,
-        globalLiquidityAfter,
+        globalLPLiquidityBefore,
+        globalLPLiquidityAfter,
         order
     };
 }
 
 
-export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContract>, margin: number, liquidity: number, executionFee: number) {
+export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
     let orderIdBefore = await TestEnv.orderBook.getLpPositionOrderIndexNext();
     // create order
@@ -132,7 +131,6 @@ export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContra
         {
             $$type: 'CreateDecreaseLPPositionOrder',
             executionFee: toNano(executionFee),
-            marginDelta: toJettonUnits(margin),
             liquidityDelta: toJettonUnits(liquidity)
         }
     );

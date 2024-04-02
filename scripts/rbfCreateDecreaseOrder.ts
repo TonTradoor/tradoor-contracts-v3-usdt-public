@@ -7,7 +7,7 @@ export async function run(provider: NetworkProvider) {
     const jettonDecimal = getConfig(provider, "jettonDecimal");
 
     /// create order
-    let orderId = await orderBook.getRbfPositionOrderIndexNext();
+    let orderId = await orderBook.getLpPositionOrderIndexNext();
     let decreaseLiquidity = 4;
     let executionFee = 0.2;
 
@@ -18,7 +18,7 @@ export async function run(provider: NetworkProvider) {
             value: toNano('1'),
         },
         {
-            $$type: 'CreateDecreaseRBFPositionOrder',
+            $$type: 'CreateDecreaseLPPositionOrder',
             executionFee: toNano(executionFee),
             liquidityDelta: toUnits(decreaseLiquidity, jettonDecimal)
         }
@@ -27,16 +27,16 @@ export async function run(provider: NetworkProvider) {
     // wait for trx
     const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 10);
     if (transDone) {
-        console.log(`create decrease RBF success`);
+        console.log(`create decrease LP success`);
     }
 
     // get index
-    let orderIdNext = await orderBook.getRbfPositionOrderIndexNext();
+    let orderIdNext = await orderBook.getLpPositionOrderIndexNext();
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
     // get order
-    let order = await orderBook.getRbfPositionOrder(orderId);
+    let order = await orderBook.getLpPositionOrder(orderId);
     console.log(`order:`, order);
 
 }

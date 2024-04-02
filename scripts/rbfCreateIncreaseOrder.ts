@@ -11,7 +11,7 @@ export async function run(provider: NetworkProvider) {
     let liquidity = 10;
     let executionFee = 0.2;
 
-    // transfer jetton with create increase RBF position order payload
+    // transfer jetton with create increase LP position order payload
     // get user jetton wallet address
     let user0JettonWallet = await attachJettonWallet(provider, provider.sender().address!!);
 
@@ -19,7 +19,7 @@ export async function run(provider: NetworkProvider) {
     let user0JettonData = await user0JettonWallet.getGetWalletData();
     console.log('user jetton balance:', user0JettonData.balance);
 
-    let orderId = await orderBook.getRbfPositionOrderIndexNext();
+    let orderId = await orderBook.getLpPositionOrderIndexNext();
 
     const lastTrx = await getLastTransaction(provider, orderBook.address);
     await user0JettonWallet.send(
@@ -60,12 +60,12 @@ export async function run(provider: NetworkProvider) {
     console.log('pool jetton balance:', poolJettonData.balance);
 
     // get index
-    let orderIdNext = await orderBook.getRbfPositionOrderIndexNext();
+    let orderIdNext = await orderBook.getLpPositionOrderIndexNext();
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
     // get order
-    let order = await orderBook.getRbfPositionOrder(orderId);
+    let order = await orderBook.getLpPositionOrder(orderId);
     console.log(`order:`, order);
 
 }
