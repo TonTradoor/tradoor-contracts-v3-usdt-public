@@ -20,12 +20,8 @@ export async function run(provider: NetworkProvider) {
             $$type: 'UpdateConfig',
             gasConsumption: toNano(0.05),
             minTonsForStorage: toNano(0.03),
-            rbfLockTime: 5n * 60n,
+            lpLockTime: 5n * 60n,
             bonusFactor: 1n,
-            minLPMargin: toUnits(10, jettonDecimal),
-            maxLPLeverage: 100n,
-            lpLiquidationFee: toUnits(0.2, jettonDecimal),
-            lpMaxRiskRate: 10n**6n,
             orderBook: orderBook.address
         }
     );

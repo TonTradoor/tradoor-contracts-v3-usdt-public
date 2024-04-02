@@ -98,7 +98,7 @@ contract Pool with Deployable, Ownable {
         if (msg.tradingFeeRate != null){
             tokenConfig.tradingFeeRate = msg.tradingFeeRate;
         }
-        if (msg.protocalTradingFeeRate != null){
+        if (msg.lpTradingFeeRate != null){
             tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate;
         }
         if (msg.maxFundingRate != null){

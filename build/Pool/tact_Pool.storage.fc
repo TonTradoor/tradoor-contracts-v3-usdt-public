@@ -982,6 +982,25 @@ _ $PriceData$_get_price((int) v) inline {
     return (vvv'price);
 }
 
+tuple $PriceData$_to_tuple(((int)) v) inline {
+    var (v'price) = v;
+    return __tact_tuple_create_1(v'price);
+}
+
+tuple $PriceData$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $PriceData$_to_tuple($PriceData$_not_null(v)); 
+}
+
+tuple $PriceData$_to_opt_external(tuple v) inline {
+    var loaded = $PriceData$_to_opt_tuple(v);
+    if (null?(loaded)) {
+        return null();
+    } else {
+        return (loaded);
+    }
+}
+
 ((int)) $PriceData$_constructor_price(int price) inline {
     return (price);
 }

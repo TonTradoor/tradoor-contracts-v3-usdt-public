@@ -396,9 +396,6 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
-;; $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee
-((int, int, int, slice, int, slice, int)) $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee) inline;
-
 ;; $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
@@ -410,6 +407,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
 ((int, int, int, slice, int, int, int, int, int, int, int, cell)) $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(int opType, int orderId, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int pricesLength, cell prices) inline;
+
+;; $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee
+((int, int, int, slice, int, slice, int)) $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee) inline;
 
 ;; $DeployOk$_constructor_queryId
 ((int)) $DeployOk$_constructor_queryId(int queryId) inline;

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 9686 bytes
+BOC Size: 9991 bytes
 
 # Types
 Total Types: 35
@@ -146,11 +146,14 @@ TLB: `_ tokenId:int257 price:int257 = UpdatePrice`
 Signature: `UpdatePrice{tokenId:int257,price:int257}`
 
 # Get Methods
-Total Get Methods: 5
+Total Get Methods: 6
 
 ## configData
 
 ## tokenConfig
+Argument: tokenId
+
+## priceData
 Argument: tokenId
 
 ## lpPosition

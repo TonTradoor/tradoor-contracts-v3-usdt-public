@@ -25,8 +25,7 @@ export async function run(provider: NetworkProvider) {
             maxLeverage: 100n,
             liquidationFee: toUnits(0.2, jettonDecimal), // 0.2U
             tradingFeeRate: BigInt(0.001 * 1000000), // 0.1%
-            lpTradingFeeRate: 300_000n, // 30%
-            protocalTradingFeeRate: 300_000n, // 30%
+            lpTradingFeeRate: 600_000n, // 60%
             interestRate: 0n,
             maxFundingRate: 0n
         }

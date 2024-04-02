@@ -12,7 +12,7 @@
 ;;
 
 (int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $Pool$_contract_init(int $deployId) impure inline_ref {
-    var (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'lpPositions, $self'lpPositionIndexNext, ($self'globalLPLiquidity'lpFund, $self'globalLPLiquidity'liquidity, $self'globalLPLiquidity'fundingFeeGrowth), $self'perpPositions, $self'perpPositionIndexNext, $self'globalLPPositions, $self'prices, $self'protocalTradingFee)) = (50000000, 30000000, null(), 1, 300, 1, null(), null(), null(), 1, null(), null(), 1, null(), null(), 0);
+    var (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'lpPositions, $self'lpPositionIndexNext, ($self'globalLPLiquidity'lpFund, $self'globalLPLiquidity'liquidity, $self'globalLPLiquidity'fundingFeeGrowth), $self'perpPositions, $self'perpPositionIndexNext, $self'globalLPPositions, $self'prices, $self'protocalTradingFee)) = (50000000, 30000000, null(), 1, 600, 1, null(), null(), null(), 1, null(), null(), 1, null(), null(), 0);
     $self'owner = __tact_context_get_sender();
     $self'orderBook = __tact_create_address(0, 0);
     ($self'globalLPLiquidity'lpFund, $self'globalLPLiquidity'liquidity, $self'globalLPLiquidity'fundingFeeGrowth) = $GlobalLPLiquidity$_constructor_lpFund_liquidity_fundingFeeGrowth(0, 0, 0);
@@ -27,6 +27,11 @@
 ((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int), (int, tuple)) $Pool$_fun_tokenConfig((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $self, int $tokenId) impure inline_ref {
     var (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'lpPositions, $self'lpPositionIndexNext, ($self'globalLPLiquidity'lpFund, $self'globalLPLiquidity'liquidity, $self'globalLPLiquidity'fundingFeeGrowth), $self'perpPositions, $self'perpPositionIndexNext, $self'globalLPPositions, $self'prices, $self'protocalTradingFee)) = $self;
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'lpPositions, $self'lpPositionIndexNext, ($self'globalLPLiquidity'lpFund, $self'globalLPLiquidity'liquidity, $self'globalLPLiquidity'fundingFeeGrowth), $self'perpPositions, $self'perpPositionIndexNext, $self'globalLPPositions, $self'prices, $self'protocalTradingFee), $TokenConfigData$_constructor_tokenIdNext_tokenConfig($self'tokenIdNext, $TokenConfig$_load_opt(__tact_dict_get_int_cell($self'tokenConfigs, 257, $tokenId))));
+}
+
+((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int), tuple) $Pool$_fun_priceData((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $self, int $tokenId) impure inline_ref {
+    var (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'lpPositions, $self'lpPositionIndexNext, ($self'globalLPLiquidity'lpFund, $self'globalLPLiquidity'liquidity, $self'globalLPLiquidity'fundingFeeGrowth), $self'perpPositions, $self'perpPositionIndexNext, $self'globalLPPositions, $self'prices, $self'protocalTradingFee)) = $self;
+    return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'lpPositions, $self'lpPositionIndexNext, ($self'globalLPLiquidity'lpFund, $self'globalLPLiquidity'liquidity, $self'globalLPLiquidity'fundingFeeGrowth), $self'perpPositions, $self'perpPositionIndexNext, $self'globalLPPositions, $self'prices, $self'protocalTradingFee), $PriceData$_load_opt(__tact_dict_get_int_cell($self'prices, 257, $tokenId)));
 }
 
 ((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int), int) $Pool$_fun_tokenEnabled((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $self, int $tokenIndex) impure inline_ref {
@@ -402,16 +407,34 @@
     var ($msg'tokenId, $msg'name, $msg'enable, $msg'minMargin, $msg'maxLeverage, $msg'liquidationFee, $msg'tradingFeeRate, $msg'lpTradingFeeRate, $msg'interestRate, $msg'maxFundingRate) = $msg;
     ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'lpPositions, $self'lpPositionIndexNext, ($self'globalLPLiquidity'lpFund, $self'globalLPLiquidity'liquidity, $self'globalLPLiquidity'fundingFeeGrowth), $self'perpPositions, $self'perpPositionIndexNext, $self'globalLPPositions, $self'prices, $self'protocalTradingFee)~$Pool$_fun_requireOwner();
     tuple $tokenConfigOpt = $TokenConfig$_load_opt(__tact_dict_get_int_cell($self'tokenConfigs, 257, $msg'tokenId));
-    var ($tokenConfig'name, $tokenConfig'enable, $tokenConfig'minMargin, $tokenConfig'maxLeverage, $tokenConfig'liquidationFee, $tokenConfig'tradingFeeRate, $tokenConfig'lpTradingFeeRate, $tokenConfig'interestRate, $tokenConfig'maxFundingRate) = $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_interestRate_maxFundingRate(__gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), false, (10 * 1000000), 50, (2 * 100000), 1000, 600000, 0, 0);
-    $tokenConfig'name = $msg'name;
-    $tokenConfig'enable = $msg'enable;
-    $tokenConfig'minMargin = $msg'minMargin;
-    $tokenConfig'maxLeverage = $msg'maxLeverage;
-    $tokenConfig'liquidationFee = $msg'liquidationFee;
-    $tokenConfig'interestRate = $msg'interestRate;
-    $tokenConfig'tradingFeeRate = $msg'tradingFeeRate;
-    $tokenConfig'lpTradingFeeRate = $msg'lpTradingFeeRate;
-    $tokenConfig'maxFundingRate = $msg'maxFundingRate;
+    var ($tokenConfig'name, $tokenConfig'enable, $tokenConfig'minMargin, $tokenConfig'maxLeverage, $tokenConfig'liquidationFee, $tokenConfig'tradingFeeRate, $tokenConfig'lpTradingFeeRate, $tokenConfig'interestRate, $tokenConfig'maxFundingRate) = ((~ null?($tokenConfigOpt)) ? $TokenConfig$_not_null($tokenConfigOpt) : $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_interestRate_maxFundingRate(__gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), false, (10 * 1000000), 100, (2 * 100000), 1000, 600000, 0, 0));
+    if ((~ null?($msg'name))) {
+        $tokenConfig'name = $msg'name;
+    }
+    if ((~ null?($msg'enable))) {
+        $tokenConfig'enable = $msg'enable;
+    }
+    if ((~ null?($msg'minMargin))) {
+        $tokenConfig'minMargin = $msg'minMargin;
+    }
+    if ((~ null?($msg'maxLeverage))) {
+        $tokenConfig'maxLeverage = $msg'maxLeverage;
+    }
+    if ((~ null?($msg'liquidationFee))) {
+        $tokenConfig'liquidationFee = $msg'liquidationFee;
+    }
+    if ((~ null?($msg'interestRate))) {
+        $tokenConfig'interestRate = $msg'interestRate;
+    }
+    if ((~ null?($msg'tradingFeeRate))) {
+        $tokenConfig'tradingFeeRate = $msg'tradingFeeRate;
+    }
+    if ((~ null?($msg'lpTradingFeeRate))) {
+        $tokenConfig'lpTradingFeeRate = $msg'lpTradingFeeRate;
+    }
+    if ((~ null?($msg'maxFundingRate))) {
+        $tokenConfig'maxFundingRate = $msg'maxFundingRate;
+    }
     if (($msg'tokenId >= $self'tokenIdNext)) {
         $self'tokenIdNext = ($msg'tokenId + 1);
     }
@@ -491,6 +514,13 @@ _ %tokenConfig(int $$tokenId) method_id(124956) {
     return $TokenConfigData$_to_external(res);
 }
 
+_ %priceData(int $$tokenId) method_id(71672) {
+    int $tokenId = $$tokenId;
+    var self = $Pool$_contract_load();
+    var res = self~$Pool$_fun_priceData($tokenId);
+    return $PriceData$_to_opt_external(res);
+}
+
 _ %lpPosition(slice $$account) method_id(120059) {
     slice $account = null?($$account) ? null() : __tact_verify_address($$account);
     var self = $Pool$_contract_load();
@@ -524,7 +554,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmUtvU6ab2Y6nQg9i8EkWLpGUYMrwpSH9qd9uPJoHcwMgX";
+    return "ipfs://QmXDdpWH4sddgjyFmvYFvkN48fBa6AnYr45qY4PWS5nDXX";
 }
 
 _ lazy_deployment_completed() method_id {

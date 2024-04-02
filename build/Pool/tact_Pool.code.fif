@@ -113,6 +113,9 @@ PROGRAM{
   DECLPROC $PerpPositionData$_to_opt_external
   DECLPROC $PriceData$_get_price
   DECLPROC $PriceData$_not_null
+  DECLPROC $PriceData$_to_tuple
+  DECLPROC $PriceData$_to_opt_tuple
+  DECLPROC $PriceData$_to_opt_external
   DECLPROC $UpdatePrice$_get_tokenId
   DECLPROC $UpdatePrice$_get_price
   DECLPROC $UpdatePrice$_not_null
@@ -128,6 +131,7 @@ PROGRAM{
   DECLPROC $Pool$_fun_configData
   DECLPROC $TokenConfigData$_constructor_tokenIdNext_tokenConfig
   DECLPROC $Pool$_fun_tokenConfig
+  DECLPROC $Pool$_fun_priceData
   DECLPROC $LPPosition$_constructor_positionId_liquidity_bonus_unlockTime
   DECLPROC $LPPositionIncreasedEvent$_constructor_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_trxId
   DECLPROC $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId
@@ -174,6 +178,7 @@ PROGRAM{
   DECLPROC $Pool$_internal_binary_Deploy
   82657 DECLMETHOD %configData
   124956 DECLMETHOD %tokenConfig
+  71672 DECLMETHOD %priceData
   120059 DECLMETHOD %lpPosition
   105096 DECLMETHOD %perpPosition
   83229 DECLMETHOD %owner
@@ -1486,6 +1491,30 @@ PROGRAM{
     128 THROWIF
     1 UNTUPLE
   }>
+  $PriceData$_to_tuple PROCINLINE:<{
+    1 TUPLE
+  }>
+  $PriceData$_to_opt_tuple PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+      $PriceData$_not_null INLINECALLDICT
+      $PriceData$_to_tuple INLINECALLDICT
+    }>
+  }>
+  $PriceData$_to_opt_external PROCINLINE:<{
+    $PriceData$_to_opt_tuple INLINECALLDICT
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+    }>
+  }>
   $UpdatePrice$_get_tokenId PROCINLINE:<{
     DROP
   }>
@@ -1511,7 +1540,7 @@ PROGRAM{
     30000000 PUSHINT
     PUSHNULL
     1 PUSHINT
-    300 PUSHINT
+    600 PUSHINT
     OVER
     PUSHNULL
     OVER
@@ -1713,6 +1742,13 @@ PROGRAM{
     $TokenConfig$_load_opt INLINECALLDICT
     s15 s(-1) PUXC
     $TokenConfigData$_constructor_tokenIdNext_tokenConfig INLINECALLDICT
+  }>
+  $Pool$_fun_priceData PROCREF:<{
+    257 PUSHINT
+    s3 PUSH
+    s0 s2 XCHG
+    __tact_dict_get_int_cell INLINECALLDICT
+    $PriceData$_load_opt INLINECALLDICT
   }>
   $LPPosition$_constructor_positionId_liquidity_bonus_unlockTime PROCINLINE:<{
   }>
@@ -3577,6 +3613,109 @@ PROGRAM{
     s1 21 s() XCHG
     s0 20 s() XCHG
     $Pool$_fun_requireOwner INLINECALLDICT
+    s15 PUSH
+    257 PUSHINT
+    21 s() PUSH
+    __tact_dict_get_int_cell INLINECALLDICT
+    $TokenConfig$_load_opt INLINECALLDICT
+    DUP
+    ISNULL
+    NOT
+    IF:<{
+      $TokenConfig$_not_null INLINECALLDICT
+    }>ELSE<{
+      DROP
+      B{b5ee9c724101010100020000004cacb9cd} B>boc <s PUSHSLICE
+      FALSE
+      10000000 PUSHINT
+      100 PUSHINT
+      200000 PUSHINT
+      1000 PUSHINT
+      600000 PUSHINT
+      0 PUSHINT
+      DUP
+      $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_interestRate_maxFundingRate INLINECALLDICT
+    }>
+    27 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s8 POP
+      s7 26 s() XCHG
+    }>ELSE<{
+      27 s() POP
+    }>
+    35 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s6 POP
+      s5 34 s() XCHG
+    }>ELSE<{
+      35 s() POP
+    }>
+    33 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s4 POP
+      s3 32 s() XCHG
+    }>ELSE<{
+      33 s() POP
+    }>
+    31 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s2 POP
+      s1 30 s() XCHG
+    }>ELSE<{
+      31 s() POP
+    }>
+    29 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      DROP
+    }>ELSE<{
+      29 s() POP
+    }>
+    25 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      31 s() POP
+      24 s() 30 s() XCHG
+    }>ELSE<{
+      25 s() POP
+    }>
+    26 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      28 s() POP
+      25 s() 27 s() XCHG
+    }>ELSE<{
+      26 s() POP
+    }>
+    24 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      28 s() POP
+      23 s() 27 s() XCHG
+    }>ELSE<{
+      24 s() POP
+    }>
+    21 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      19 s() POP
+      18 s() 20 s() XCHG
+    }>ELSE<{
+      21 s() POP
+    }>
     19 s() PUSH
     s15 PUSH
     GEQ
@@ -3586,19 +3725,19 @@ PROGRAM{
       INC
       s0 s14 XCHG
     }>
-    s7 18 s() XCHG
-    s6 27 s() XCHG
-    s5 26 s() XCHG
-    s4 25 s() XCHG
+    s7 20 s() XCHG
+    s6 22 s() XCHG
+    s5 23 s() XCHG
+    s4 21 s() XCHG
     s3 24 s() XCHG
-    s2 23 s() XCHG
-    s1 22 s() XCHG
-    s0 21 s() XCHG
+    s2 25 s() XCHG
+    s1 26 s() XCHG
+    s0 27 s() XCHG
     257 PUSHINT
-    s0 21 s() XCHG
+    s0 19 s() XCHG
     $TokenConfig$_store_cell INLINECALLDICT
     s3 s8 XCHG
-    s13 s12 s0 XCHG3
+    s11 s12 s0 XCHG3
     __tact_dict_set_int_cell INLINECALLDICT
     __tact_context_get_sender INLINECALLDICT
     FALSE
@@ -3613,11 +3752,11 @@ PROGRAM{
     s3 s13 XCHG
     s12 s11 s0 XCHG3
     s5 s10 XCHG
-    s5 s9 XCHG
-    s5 s8 XCHG
+    s8 s9 XCHG
     s5 s7 XCHG
-    s5 s6 XCHG
-    4 -ROLL
+    5 2 REVERSE
+    s0 s0 s4 XCHG3
+    s0 s3 XCHG
   }>
   $Pool$_internal_binary_UpdateLPPosition PROCINLINE:<{
     41207 PUSHINT
@@ -3951,6 +4090,18 @@ PROGRAM{
     s2 POP
     $TokenConfigData$_to_external INLINECALLDICT
   }>
+  %priceData PROC:<{
+    $Pool$_contract_load INLINECALLDICT
+    17 s() 18 s() XCHG
+    16 s() 17 s() XCHG
+    s15 16 s() XCHG
+    15 ROLL
+    $Pool$_fun_priceData INLINECALLDICT
+    16 s() POP
+    15 BLKDROP
+    2 1 BLKDROP2
+    $PriceData$_to_opt_external INLINECALLDICT
+  }>
   %lpPosition PROC:<{
     DUP
     ISNULL
@@ -4008,7 +4159,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d557476553661623259366e5167396938456b574c704755594d72777053483971643975504a6f4863774d6758} PUSHSLICE
+    x{697066733a2f2f516d58446470574834736464676a79466d765946766b4e343866426136416e59723435715934505753356e445858} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

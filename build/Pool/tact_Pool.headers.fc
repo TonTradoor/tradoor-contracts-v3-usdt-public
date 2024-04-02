@@ -345,6 +345,15 @@ _ $PriceData$_get_price((int) v) inline;
 ;; $PriceData$_not_null
 ((int)) $PriceData$_not_null(tuple v) inline;
 
+;; $PriceData$_to_tuple
+tuple $PriceData$_to_tuple(((int)) v) inline;
+
+;; $PriceData$_to_opt_tuple
+tuple $PriceData$_to_opt_tuple(tuple v) inline;
+
+;; $PriceData$_to_opt_external
+tuple $PriceData$_to_opt_external(tuple v) inline;
+
 ;; $UpdatePrice$_get_tokenId
 _ $UpdatePrice$_get_tokenId((int, int) v) inline;
 
@@ -389,6 +398,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $Pool$_fun_tokenConfig
 ((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int), (int, tuple)) $Pool$_fun_tokenConfig((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $self, int $tokenId) impure inline_ref;
+
+;; $Pool$_fun_priceData
+((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int), tuple) $Pool$_fun_priceData((int, int, cell, int, int, int, slice, slice, cell, int, (int, int, int), cell, int, cell, cell, int) $self, int $tokenId) impure inline_ref;
 
 ;; $LPPosition$_constructor_positionId_liquidity_bonus_unlockTime
 ((int, int, int, int)) $LPPosition$_constructor_positionId_liquidity_bonus_unlockTime(int positionId, int liquidity, int bonus, int unlockTime) inline;

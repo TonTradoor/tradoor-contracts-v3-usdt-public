@@ -130,11 +130,11 @@ PROGRAM{
   DECLPROC $LPPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
   DECLPROC $UpdateLPPosition$_constructor_isIncrease_orderId_trxId_account_liquidityDelta_pricesLength_prices
   DECLPROC $LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
-  DECLPROC $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee
   DECLPROC $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
   DECLPROC $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
   DECLPROC $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
   DECLPROC $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
+  DECLPROC $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $OrderBook$_internal_binary_UpdateConfig
   DECLPROC $OrderBook$_internal_binary_TokenNotification
@@ -143,13 +143,13 @@ PROGRAM{
   DECLPROC $OrderBook$_internal_binary_ExecuteLPPositionOrder
   DECLPROC $OrderBook$_internal_binary_UpdateLPPositionSuccess
   DECLPROC $OrderBook$_receive_binary_bounce_UpdateLPPosition
-  DECLPROC $OrderBook$_internal_binary_CompensateOrder
   DECLPROC $OrderBook$_internal_binary_CreateDecreasePerpPositionOrder
   DECLPROC $OrderBook$_internal_binary_CancelPerpPositionOrder
   DECLPROC $OrderBook$_internal_binary_ExecutePerpPositionOrder
   DECLPROC $OrderBook$_internal_binary_UpdatePerpPositionSuccess
   DECLPROC $OrderBook$_receive_binary_bounce_UpdatePerpPosition
   DECLPROC $OrderBook$_internal_binary_LiquidateOrADLPerpPosition
+  DECLPROC $OrderBook$_internal_binary_CompensateOrder
   DECLPROC $OrderBook$_internal_binary_Deploy
   82657 DECLMETHOD %configData
   67995 DECLMETHOD %lpPositionOrder
@@ -2199,8 +2199,6 @@ PROGRAM{
   }>
   $LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
-  $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee PROCINLINE:<{
-  }>
   $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
   $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices PROCINLINE:<{
@@ -2221,6 +2219,8 @@ PROGRAM{
     s4 s5 XCHG
     s3 s4 XCHG
     s2 s3 XCHG
+  }>
+  $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee PROCINLINE:<{
   }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
@@ -2849,184 +2849,6 @@ PROGRAM{
       __tact_dict_set_int_cell INLINECALLDICT
       s0 s4 XCHG
     }>
-  }>
-  $OrderBook$_internal_binary_CompensateOrder PROCINLINE:<{
-    __tact_context_get INLINECALLDICT
-    s1 s3 XCHG
-    3 BLKDROP
-    FALSE
-    267 PUSHINT
-    __tact_context_get_sender INLINECALLDICT
-    16 s() PUSH
-    -ROT
-    1 PUSHINT
-    __tact_dict_get_slice_int INLINECALLDICT
-    DUP
-    ISNULL
-    NOT
-    IF:<{
-      NIP
-      __tact_not_null INLINECALLDICT
-    }>ELSE<{
-      DROP
-    }>
-    41207 PUSHINT
-    SWAP
-    THROWANYIFNOT
-    s4 PUSH
-    ISNULL
-    NOT
-    IF:<{
-      s3 PUSH
-      0 GTINT
-    }>ELSE<{
-      FALSE
-    }>
-    IF:<{
-      19305 PUSHINT
-      19 s() PUSH
-      19 s() PUSH
-      ADD
-      100000000 PUSHINT
-      ADD
-      s1 s2 XCHG
-      GEQ
-      THROWANYIFNOT
-    }>ELSE<{
-      19305 PUSHINT
-      19 s() PUSH
-      19 s() PUSH
-      ADD
-      s1 s2 XCHG
-      GEQ
-      THROWANYIFNOT
-    }>
-    s6 PUSH
-    ISNULL
-    NOT
-    IF:<{
-      TRUE
-      s7 PUSH
-      1 PUSHINT
-      __tact_int_eq_nullable_one INLINECALLDICT
-      IF:<{
-        s12 PUSH
-        257 PUSHINT
-        s8 PUSH
-        __tact_dict_get_int_cell INLINECALLDICT
-        $LPPositionOrder$_load_opt INLINECALLDICT
-        DUP
-        ISNULL
-        NOT
-        IF:<{
-          NIP
-          $LPPositionOrder$_not_null INLINECALLDICT
-          $LPPositionOrder$_get_isPending INLINECALLDICT
-        }>ELSE<{
-          DROP
-        }>
-        257 PUSHINT
-        PUSHNULL
-        $LPPositionOrder$_store_opt INLINECALLDICT
-        s8 PUSH
-        s3 s15 XCHG
-        SWAP
-        __tact_dict_set_int_cell INLINECALLDICT
-      }>ELSE<{
-        s10 PUSH
-        257 PUSHINT
-        s8 PUSH
-        __tact_dict_get_int_cell INLINECALLDICT
-        $PerpPositionOrder$_load_opt INLINECALLDICT
-        DUP
-        ISNULL
-        NOT
-        IF:<{
-          NIP
-          $PerpPositionOrder$_not_null INLINECALLDICT
-          $PerpPositionOrder$_get_isPending INLINECALLDICT
-        }>ELSE<{
-          DROP
-        }>
-        257 PUSHINT
-        PUSHNULL
-        $PerpPositionOrder$_store_opt INLINECALLDICT
-        s8 PUSH
-        s3 s13 XCHG
-        SWAP
-        __tact_dict_set_int_cell INLINECALLDICT
-        s0 s10 XCHG
-        s0 s12 XCHG
-      }>
-      42241 PUSHINT
-      s0 s13 XCHG2
-      THROWANYIFNOT
-    }>
-    s3 PUSH
-    ISNULL
-    NOT
-    IF:<{
-      s2 PUSH
-      0 GTINT
-    }>ELSE<{
-      FALSE
-    }>
-    IF:<{
-      s3 PUSH
-      __tact_not_null INLINECALLDICT
-      __tact_context_get_sender INLINECALLDICT
-      s15 22 s() XCHG
-      s14 21 s() XCHG
-      s13 20 s() XCHG
-      s12 19 s() XCHG
-      s11 18 s() XCHG
-      s10 17 s() XCHG
-      s9 16 s() XCHG
-      s8 22 s() XCHG
-      s7 21 s() XCHG
-      s6 20 s() XCHG
-      s5 19 s() XCHG
-      s4 18 s() XCHG
-      s3 17 s() XCHG
-      s2 16 s() XCHG
-      20 s() PUSH
-      s0 s2 XCHG
-      19 s() PUSH
-      s0 s2 XCHG
-      $OrderBook$_fun_refundJetton INLINECALLDICT
-      s13 20 s() XCHG
-      s12 19 s() XCHG
-      s11 18 s() XCHG
-      s10 17 s() XCHG
-      s9 16 s() XCHG
-      s8 s15 XCHG
-      s7 s14 XCHG
-      7 7 BLKSWAP
-    }>
-    OVER
-    ISNULL
-    NOT
-    IF:<{
-      DUP
-      0 GTINT
-    }>ELSE<{
-      FALSE
-    }>
-    IF:<{
-      OVER
-      __tact_not_null INLINECALLDICT
-      TRUE
-      s2 PUSH
-      2 PUSHINT
-      $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
-      $global_send INLINECALLDICT
-    }>
-    $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee INLINECALLDICT
-    $CompensateOrderEvent$_store_cell INLINECALLDICT
-    $global_emit INLINECALLDICT
-    __tact_context_get_sender INLINECALLDICT
-    0 PUSHINT
-    $OrderBook$_fun_refundExecessTon INLINECALLDICT
   }>
   $OrderBook$_internal_binary_CreateDecreasePerpPositionOrder PROCINLINE:<{
     __tact_context_get INLINECALLDICT
@@ -3795,6 +3617,184 @@ PROGRAM{
     s0 s5 XCHG
     s3 s3 s4 XCHG3
   }>
+  $OrderBook$_internal_binary_CompensateOrder PROCINLINE:<{
+    __tact_context_get INLINECALLDICT
+    s1 s3 XCHG
+    3 BLKDROP
+    FALSE
+    267 PUSHINT
+    __tact_context_get_sender INLINECALLDICT
+    16 s() PUSH
+    -ROT
+    1 PUSHINT
+    __tact_dict_get_slice_int INLINECALLDICT
+    DUP
+    ISNULL
+    NOT
+    IF:<{
+      NIP
+      __tact_not_null INLINECALLDICT
+    }>ELSE<{
+      DROP
+    }>
+    41207 PUSHINT
+    SWAP
+    THROWANYIFNOT
+    s4 PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s3 PUSH
+      0 GTINT
+    }>ELSE<{
+      FALSE
+    }>
+    IF:<{
+      19305 PUSHINT
+      19 s() PUSH
+      19 s() PUSH
+      ADD
+      100000000 PUSHINT
+      ADD
+      s1 s2 XCHG
+      GEQ
+      THROWANYIFNOT
+    }>ELSE<{
+      19305 PUSHINT
+      19 s() PUSH
+      19 s() PUSH
+      ADD
+      s1 s2 XCHG
+      GEQ
+      THROWANYIFNOT
+    }>
+    s6 PUSH
+    ISNULL
+    NOT
+    IF:<{
+      TRUE
+      s7 PUSH
+      1 PUSHINT
+      __tact_int_eq_nullable_one INLINECALLDICT
+      IF:<{
+        s12 PUSH
+        257 PUSHINT
+        s8 PUSH
+        __tact_dict_get_int_cell INLINECALLDICT
+        $LPPositionOrder$_load_opt INLINECALLDICT
+        DUP
+        ISNULL
+        NOT
+        IF:<{
+          NIP
+          $LPPositionOrder$_not_null INLINECALLDICT
+          $LPPositionOrder$_get_isPending INLINECALLDICT
+        }>ELSE<{
+          DROP
+        }>
+        257 PUSHINT
+        PUSHNULL
+        $LPPositionOrder$_store_opt INLINECALLDICT
+        s8 PUSH
+        s3 s15 XCHG
+        SWAP
+        __tact_dict_set_int_cell INLINECALLDICT
+      }>ELSE<{
+        s10 PUSH
+        257 PUSHINT
+        s8 PUSH
+        __tact_dict_get_int_cell INLINECALLDICT
+        $PerpPositionOrder$_load_opt INLINECALLDICT
+        DUP
+        ISNULL
+        NOT
+        IF:<{
+          NIP
+          $PerpPositionOrder$_not_null INLINECALLDICT
+          $PerpPositionOrder$_get_isPending INLINECALLDICT
+        }>ELSE<{
+          DROP
+        }>
+        257 PUSHINT
+        PUSHNULL
+        $PerpPositionOrder$_store_opt INLINECALLDICT
+        s8 PUSH
+        s3 s13 XCHG
+        SWAP
+        __tact_dict_set_int_cell INLINECALLDICT
+        s0 s10 XCHG
+        s0 s12 XCHG
+      }>
+      42241 PUSHINT
+      s0 s13 XCHG2
+      THROWANYIFNOT
+    }>
+    s3 PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s2 PUSH
+      0 GTINT
+    }>ELSE<{
+      FALSE
+    }>
+    IF:<{
+      s3 PUSH
+      __tact_not_null INLINECALLDICT
+      __tact_context_get_sender INLINECALLDICT
+      s15 22 s() XCHG
+      s14 21 s() XCHG
+      s13 20 s() XCHG
+      s12 19 s() XCHG
+      s11 18 s() XCHG
+      s10 17 s() XCHG
+      s9 16 s() XCHG
+      s8 22 s() XCHG
+      s7 21 s() XCHG
+      s6 20 s() XCHG
+      s5 19 s() XCHG
+      s4 18 s() XCHG
+      s3 17 s() XCHG
+      s2 16 s() XCHG
+      20 s() PUSH
+      s0 s2 XCHG
+      19 s() PUSH
+      s0 s2 XCHG
+      $OrderBook$_fun_refundJetton INLINECALLDICT
+      s13 20 s() XCHG
+      s12 19 s() XCHG
+      s11 18 s() XCHG
+      s10 17 s() XCHG
+      s9 16 s() XCHG
+      s8 s15 XCHG
+      s7 s14 XCHG
+      7 7 BLKSWAP
+    }>
+    OVER
+    ISNULL
+    NOT
+    IF:<{
+      DUP
+      0 GTINT
+    }>ELSE<{
+      FALSE
+    }>
+    IF:<{
+      OVER
+      __tact_not_null INLINECALLDICT
+      TRUE
+      s2 PUSH
+      2 PUSHINT
+      $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
+      $global_send INLINECALLDICT
+    }>
+    $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee INLINECALLDICT
+    $CompensateOrderEvent$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    __tact_context_get_sender INLINECALLDICT
+    0 PUSHINT
+    $OrderBook$_fun_refundExecessTon INLINECALLDICT
+  }>
   $OrderBook$_internal_binary_Deploy PROCINLINE:<{
     $DeployOk$_constructor_queryId INLINECALLDICT
     $DeployOk$_store_cell INLINECALLDICT
@@ -3852,7 +3852,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d535a454463504762576d436e6977576674486f31487a38793356675956354e514a39436d587231726f736d56} PUSHSLICE
+    x{697066733a2f2f516d6364354c674e4b6b5a54396732386975615852676553686932397239426636386d725474366a454c61316971} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -3965,16 +3965,6 @@ PROGRAM{
       TRUE
     }>
     DUP
-    4163385099 PUSHINT
-    EQUAL
-    IFJMP:<{
-      DROP
-      $CompensateOrder$_load INLINECALLDICT
-      1 7 BLKDROP2
-      $OrderBook$_internal_binary_CompensateOrder INLINECALLDICT
-      TRUE
-    }>
-    DUP
     229084921 PUSHINT
     EQUAL
     IFJMP:<{
@@ -4022,6 +4012,16 @@ PROGRAM{
       $LiquidateOrADLPerpPosition$_load INLINECALLDICT
       1 7 BLKDROP2
       $OrderBook$_internal_binary_LiquidateOrADLPerpPosition INLINECALLDICT
+      TRUE
+    }>
+    DUP
+    4163385099 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $CompensateOrder$_load INLINECALLDICT
+      1 7 BLKDROP2
+      $OrderBook$_internal_binary_CompensateOrder INLINECALLDICT
       TRUE
     }>
     2490013878 PUSHINT

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 9655 bytes
+BOC Size: 9657 bytes
 
 # Types
 Total Types: 36
