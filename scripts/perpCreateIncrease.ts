@@ -45,7 +45,7 @@ export async function run(provider: NetworkProvider) {
                 beginCell()
                 .storeRef(
                     beginCell()
-                    .storeInt(3,32) // op
+                    .storeInt(2,32) // op
                     .storeCoins(toNano(executionFee)) // execution fee
                     .storeInt(isMarket? -1n : 0n, 1)
                     .storeInt(tokenId, 64)
