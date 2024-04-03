@@ -8,7 +8,7 @@ export async function run(provider: NetworkProvider) {
     const jettonDecimal = getConfig(provider, "jettonDecimal");
 
     /// create order
-    let liquidity = 10;
+    let liquidity = 10000;
     let executionFee = 0.2;
 
     // transfer jetton with create increase LP position order payload

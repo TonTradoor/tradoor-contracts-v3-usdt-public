@@ -15,7 +15,7 @@ export async function run(provider: NetworkProvider) {
     let isLong = true;
     let margin = 100;
     let size = 0.02;
-    let triggerPrice = 51000;
+    let triggerPrice = 67180;
 
     // transfer jetton with create increase perp position order payload
     // get user jetton wallet address
