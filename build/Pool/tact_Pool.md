@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 9082 bytes
+BOC Size: 10747 bytes
 
 # Types
-Total Types: 39
+Total Types: 40
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -42,24 +42,28 @@ TLB: `update_config#91a2e10a gasConsumption:int257 minTonsForStorage:int257 lpLo
 Signature: `UpdateConfig{gasConsumption:int257,minTonsForStorage:int257,lpLockTime:int257,bonusFactor:int257,orderBook:address}`
 
 ## UpdateTokenConfig
-TLB: `update_token_config#92eaeafd tokenId:int257 name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = UpdateTokenConfig`
-Signature: `UpdateTokenConfig{tokenId:int257,name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
+TLB: `update_token_config#13cd5d53 tokenId:uint64 name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = UpdateTokenConfig`
+Signature: `UpdateTokenConfig{tokenId:uint64,name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
 
 ## UpdateLPPosition
 TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateLPPosition`
 Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdateLPPositionSuccess
-TLB: `update_lp_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
-Signature: `UpdateLPPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
+TLB: `update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
+Signature: `UpdateLPPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:int257 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:int257,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## UpdatePerpPositionSuccess
-TLB: `update_perp_position_success#ef01c2b4 orderId:int257 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
-Signature: `UpdatePerpPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
+TLB: `update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
+Signature: `UpdatePerpPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
+
+## UpdateFundingFee
+TLB: `update_funding_fee#f381d427 trxId:uint64 tokenId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateFundingFee`
+Signature: `UpdateFundingFee{trxId:uint64,tokenId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
 
 ## LPPositionIncreasedEvent
 TLB: `lp_position_increased_event#c73030a5 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFeeDelta:int257 realizedFundingFeeAfter:int257 entryFundingFeeGrowthAfter:int257 trxId:int257 = LPPositionIncreasedEvent`
@@ -90,8 +94,8 @@ TLB: `perp_position_liquidated_event#e4d104b0 positionId:int257 account:address 
 Signature: `PerpPositionLiquidatedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,sizeDelta:int257,liquidatePrice:int257,fundingFee:int257,tradingFee:int257,liquidationFee:int257,trxId:int257}`
 
 ## GlobalPositionChangedEvent
-TLB: `global_position_changed_event#319091c1 longSizeAfter:int257 shortSizeAfter:int257 longFundingRateGrowthAfter:int257 shortFundingRateGrowthAfter:int257 trxId:int257 = GlobalPositionChangedEvent`
-Signature: `GlobalPositionChangedEvent{longSizeAfter:int257,shortSizeAfter:int257,longFundingRateGrowthAfter:int257,shortFundingRateGrowthAfter:int257,trxId:int257}`
+TLB: `global_position_changed_event#2e6cc0f5 longSizeAfter:int257 shortSizeAfter:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 trxId:int257 = GlobalPositionChangedEvent`
+Signature: `GlobalPositionChangedEvent{longSizeAfter:int257,shortSizeAfter:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257,trxId:int257}`
 
 ## UpdatePriceEvent
 TLB: `update_price_event#6793c3e9 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePriceEvent`
@@ -114,8 +118,8 @@ TLB: `_ positionId:int257 liquidity:int257 bonus:int257 realizedFundingFee:int25
 Signature: `LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257}`
 
 ## LPPositionData
-TLB: `_ lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} lpFund:int257 lpLiquidity:int257 lpFundingFeeGrowth:int257 lpUnrealizedPnl:int257 = LPPositionData`
-Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257},lpFund:int257,lpLiquidity:int257,lpFundingFeeGrowth:int257,lpUnrealizedPnl:int257}`
+TLB: `_ lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} globalLPFund:int257 globalLPLiquidity:int257 globalLPFundingFeeGrowth:int257 globalLPUnrealizedPnl:int257 = LPPositionData`
+Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257},globalLPFund:int257,globalLPLiquidity:int257,globalLPFundingFeeGrowth:int257,globalLPUnrealizedPnl:int257}`
 
 ## AccountPerpPosition
 TLB: `_ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}> = AccountPerpPosition`
@@ -146,16 +150,16 @@ TLB: `_ tokenId:int257 price:int257 = UpdatePrice`
 Signature: `UpdatePrice{tokenId:int257,price:int257}`
 
 ## GlobalPosition
-TLB: `_ longSize:int257 shortSize:int257 longFundingRateGrowth:int257 shortFundingRateGrowth:int257 = GlobalPosition`
-Signature: `GlobalPosition{longSize:int257,shortSize:int257,longFundingRateGrowth:int257,shortFundingRateGrowth:int257}`
+TLB: `_ longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 = GlobalPosition`
+Signature: `GlobalPosition{longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257}`
 
 ## GlobalFundingRateSample
 TLB: `_ lastAdjustFundingRateTime:int257 sampleCount:int257 cumulativePremiumRate:int257 = GlobalFundingRateSample`
 Signature: `GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257}`
 
-## FundingRateGrowth
-TLB: `_ clampedFundingRateDelta:int257 longFundingRateGrowthAfter:int257 shortFundingRateGrowthAfter:int257 = FundingRateGrowth`
-Signature: `FundingRateGrowth{clampedFundingRateDelta:int257,longFundingRateGrowthAfter:int257,shortFundingRateGrowthAfter:int257}`
+## FundingFeeGrowth
+TLB: `_ clampedFundingRateDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = FundingFeeGrowth`
+Signature: `FundingFeeGrowth{clampedFundingRateDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
 
 ## SamplePremiumRateResult
 TLB: `_ sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257} shouldAdjustFundingRate:bool fundingRateDelta:int257 = SamplePremiumRateResult`

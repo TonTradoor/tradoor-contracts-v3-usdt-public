@@ -10,7 +10,7 @@ message UpdateConfig {
 }
 
 message UpdateTokenConfig {
-    tokenId: Int;
+    tokenId: Int as uint64;
     name: String;
     enable: Bool;
     minMargin: Int;
@@ -34,7 +34,7 @@ message(0xe89cd45f) UpdateLPPosition {
 }
 
 message(0x1cf0cf81) UpdateLPPositionSuccess {
-    orderId: Int;
+    orderId: Int as uint64;
     receive: Int;
     trxId: Int as uint64;
 }
@@ -43,7 +43,7 @@ message(0x1cf0cf81) UpdateLPPositionSuccess {
 message(0xff57e557) UpdatePerpPosition {
     orderId: Int as uint64;
     opType: Int as uint8;
-    tokenId: Int;
+    tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
     marginDelta: Int;
@@ -56,7 +56,15 @@ message(0xff57e557) UpdatePerpPosition {
 }
 
 message(0xef01c2b4) UpdatePerpPositionSuccess {
-    orderId: Int;
+    orderId: Int as uint64;
     receive: Int;
     trxId: Int as uint64;
+}
+
+// ============================ Funding Fee ================================ //
+message UpdateFundingFee {
+    trxId: Int as uint64;
+    tokenId: Int as uint64;
+    pricesLength: Int;
+    prices: map<Int, UpdatePrice>;
 }

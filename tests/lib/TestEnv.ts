@@ -6,6 +6,7 @@ import { toNano } from '@ton/core';
 import { buildOnchainMetadata } from '../../contracts/mock/utils/jetton-helpers';
 import { JettonDefaultWallet } from '../../wrappers/JettonDefaultWallet';
 import { toJettonUnits } from './TokenHelper';
+import { PERCENTAGE_BASIS_POINT } from '../../utils/constants';
 
 export class TestEnv {
 
@@ -173,8 +174,8 @@ export class TestEnv {
                 minMargin: toJettonUnits(10), // 10U
                 maxLeverage: 100n,
                 liquidationFee: toJettonUnits(0.2), // 0.2U
-                tradingFeeRate: BigInt(TestEnv.tradingFeeRate * 1000000), // 0.1%
-                lpTradingFeeRate: 600_000n, // 60%
+                tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
+                lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
                 interestRate: 0n,
                 maxFundingRate: 0n
             }

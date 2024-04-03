@@ -416,8 +416,8 @@ contract OrderBook with Deployable, Ownable {
         // delete order
         self.lpPositionOrders.set(msg.orderId, null);
 
-        if (!order.isIncrease && msg.receive > 0) {
-            // transfer jetton
+        // transfer jetton
+        if (msg.receive > 0) {
             self.refundJetton(msg.trxId, msg.receive, order.account, order.lastOperator);
         }
 
@@ -682,6 +682,7 @@ contract OrderBook with Deployable, Ownable {
         } else {
             order.executionFeeReceiver = sender();
         }
+        order.lastOperator = sender();
         order.isPending = true;
         self.perpPositionOrders.set(msg.orderId, order);
 
@@ -717,7 +718,6 @@ contract OrderBook with Deployable, Ownable {
         // get order
         let orderOpt: PerpPositionOrder? = self.perpPositionOrders.get(msg.orderId);
         if (orderOpt == null) {
-            
             return;
         }
         let order: PerpPositionOrder = orderOpt!!;
@@ -746,6 +746,11 @@ contract OrderBook with Deployable, Ownable {
 
         // delete order
         self.perpPositionOrders.set(msg.orderId, null);
+
+        // transfer jetton
+        if (msg.receive > 0) {
+            self.refundJetton(msg.trxId, msg.receive, order.account, order.lastOperator);
+        }
 
         // event
         emit(PerpPositionOrderExecutedEvent{

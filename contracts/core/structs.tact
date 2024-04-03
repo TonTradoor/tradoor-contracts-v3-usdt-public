@@ -37,10 +37,10 @@ struct LPPosition {
 
 struct LPPositionData {
     lpPosition: LPPosition?;
-    lpFund: Int;
-    lpLiquidity: Int;
-    lpFundingFeeGrowth: Int;
-    lpUnrealizedPnl: Int;
+    globalLPFund: Int;
+    globalLPLiquidity: Int;
+    globalLPFundingFeeGrowth: Int;
+    globalLPUnrealizedPnl: Int;
 }
 
 // ============================ Perp ================================ //
@@ -88,8 +88,8 @@ struct UpdatePrice {
 struct GlobalPosition {
     longSize: Int;
     shortSize: Int;
-    longFundingRateGrowth: Int;
-    shortFundingRateGrowth: Int;
+    longFundingFeeGrowth: Int;
+    shortFundingFeeGrowth: Int;
 }
 
 struct GlobalFundingRateSample {
@@ -98,10 +98,10 @@ struct GlobalFundingRateSample {
     cumulativePremiumRate: Int;
 }
 
-struct FundingRateGrowth {
+struct FundingFeeGrowth {
     clampedFundingRateDelta: Int;
-    longFundingRateGrowthAfter: Int;
-    shortFundingRateGrowthAfter: Int;
+    longFundingFeeGrowthAfter: Int;
+    shortFundingFeeGrowthAfter: Int;
 }
 
 struct SamplePremiumRateResult {

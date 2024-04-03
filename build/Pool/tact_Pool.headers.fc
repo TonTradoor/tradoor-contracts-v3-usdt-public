@@ -45,6 +45,9 @@ cell __tact_dict_get_slice_cell(cell d, int kl, slice k) inline;
 ;; __tact_slice_eq_bits
 int __tact_slice_eq_bits(slice a, slice b) inline;
 
+;; __tact_int_to_string
+slice __tact_int_to_string(int src) inline_ref;
+
 ;; $Deploy$_load
 (slice, ((int))) $Deploy$_load(slice sc_0) inline;
 
@@ -77,6 +80,9 @@ builder $UpdatePerpPositionSuccess$_store(builder build_0, (int, int, int) v) in
 
 ;; $UpdatePerpPositionSuccess$_store_cell
 cell $UpdatePerpPositionSuccess$_store_cell((int, int, int) v) inline;
+
+;; $UpdateFundingFee$_load
+(slice, ((int, int, int, cell))) $UpdateFundingFee$_load(slice sc_0) inline;
 
 ;; $LPPositionIncreasedEvent$_store
 builder $LPPositionIncreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int) v) inline_ref;
@@ -252,6 +258,21 @@ tuple $GlobalPosition$_as_optional((int, int, int, int) v) inline;
 ;; $GlobalPosition$_load_opt
 tuple $GlobalPosition$_load_opt(cell cl) inline;
 
+;; $GlobalFundingRateSample$_store
+builder $GlobalFundingRateSample$_store(builder build_0, (int, int, int) v) inline;
+
+;; $GlobalFundingRateSample$_store_cell
+cell $GlobalFundingRateSample$_store_cell((int, int, int) v) inline;
+
+;; $GlobalFundingRateSample$_load
+(slice, ((int, int, int))) $GlobalFundingRateSample$_load(slice sc_0) inline;
+
+;; $GlobalFundingRateSample$_as_optional
+tuple $GlobalFundingRateSample$_as_optional((int, int, int) v) inline;
+
+;; $GlobalFundingRateSample$_load_opt
+tuple $GlobalFundingRateSample$_load_opt(cell cl) inline;
+
 ;; $Pool$_store
 builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) v) inline;
 
@@ -369,6 +390,9 @@ _ $UpdatePrice$_get_price((int, int) v) inline;
 ;; $GlobalPosition$_not_null
 ((int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline;
 
+;; $GlobalFundingRateSample$_not_null
+((int, int, int)) $GlobalFundingRateSample$_not_null(tuple v) inline;
+
 ;; $Pool$init$_load
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline;
 
@@ -423,8 +447,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_decreaseLPPosition
 ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), int) $Pool$_fun_decreaseLPPosition((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, slice $account, int $liquidityDelta, int $trxId) impure inline_ref;
 
-;; $LPPositionData$_constructor_lpPosition_lpFund_lpLiquidity_lpFundingFeeGrowth_lpUnrealizedPnl
-((tuple, int, int, int, int)) $LPPositionData$_constructor_lpPosition_lpFund_lpLiquidity_lpFundingFeeGrowth_lpUnrealizedPnl(tuple lpPosition, int lpFund, int lpLiquidity, int lpFundingFeeGrowth, int lpUnrealizedPnl) inline;
+;; $LPPositionData$_constructor_lpPosition_globalLPFund_globalLPLiquidity_globalLPFundingFeeGrowth_globalLPUnrealizedPnl
+((tuple, int, int, int, int)) $LPPositionData$_constructor_lpPosition_globalLPFund_globalLPLiquidity_globalLPFundingFeeGrowth_globalLPUnrealizedPnl(tuple lpPosition, int globalLPFund, int globalLPLiquidity, int globalLPFundingFeeGrowth, int globalLPUnrealizedPnl) inline;
 
 ;; $Pool$_fun_lpPosition
 ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), tuple) $Pool$_fun_lpPosition((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, slice $account) impure inline_ref;
@@ -441,8 +465,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $GlobalLPPosition$_constructor_netSize_isLong_entryPrice_unrealizedPnl
 ((int, int, int, int)) $GlobalLPPosition$_constructor_netSize_isLong_entryPrice_unrealizedPnl(int netSize, int isLong, int entryPrice, int unrealizedPnl) inline;
 
-;; $GlobalPosition$_constructor_longSize_shortSize_longFundingRateGrowth_shortFundingRateGrowth
-((int, int, int, int)) $GlobalPosition$_constructor_longSize_shortSize_longFundingRateGrowth_shortFundingRateGrowth(int longSize, int shortSize, int longFundingRateGrowth, int shortFundingRateGrowth) inline;
+;; $GlobalPosition$_constructor_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth
+((int, int, int, int)) $GlobalPosition$_constructor_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth(int longSize, int shortSize, int longFundingFeeGrowth, int shortFundingFeeGrowth) inline;
 
 ;; $PerpPositionIncreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId
 ((int, slice, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionIncreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId(int positionId, slice account, int tokenId, int isLong, int marginDelta, int marginAfter, int sizeDelta, int sizeAfter, int tradePrice, int entryPrice, int tradingFee, int fundingFee, int entryFundingFeeGrowthAfter, int trxId) inline;
@@ -479,6 +503,18 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $Pool$_fun_getPrice
 ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), int) $Pool$_fun_getPrice((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, int $tokenId) impure inline_ref;
+
+;; $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate
+((int, int, int)) $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate(int lastAdjustFundingRateTime, int sampleCount, int cumulativePremiumRate) inline;
+
+;; $Pool$_fun_calculatePremiumRate
+((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), int) $Pool$_fun_calculatePremiumRate((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self) impure inline_ref;
+
+;; $Pool$_fun_clamp
+((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), int) $Pool$_fun_clamp((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, int $premiumRateAvg, int $interestRate) impure inline_ref;
+
+;; $Pool$_fun_updateFundingRate
+((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), ()) $Pool$_fun_updateFundingRate((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, int $tokenId, int $indexPrice) impure inline_ref;
 
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;

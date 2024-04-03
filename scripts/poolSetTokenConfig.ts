@@ -1,6 +1,7 @@
 import { Address, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { attachMockJetton, attachOrderBook, attachPool, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
+import { PERCENTAGE_BASIS_POINT } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
@@ -24,8 +25,8 @@ export async function run(provider: NetworkProvider) {
             minMargin: toUnits(10, jettonDecimal), // 10U
             maxLeverage: 100n,
             liquidationFee: toUnits(0.2, jettonDecimal), // 0.2U
-            tradingFeeRate: BigInt(0.001 * 1000000), // 0.1%
-            lpTradingFeeRate: 600_000n, // 60%
+            tradingFeeRate: BigInt(0.001 * PERCENTAGE_BASIS_POINT), // 0.1%
+            lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
             interestRate: 0n,
             maxFundingRate: 0n
         }

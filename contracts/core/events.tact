@@ -100,8 +100,8 @@ message PerpPositionLiquidatedEvent {
 message GlobalPositionChangedEvent {
     longSizeAfter: Int;
     shortSizeAfter: Int;
-    longFundingRateGrowthAfter: Int;
-    shortFundingRateGrowthAfter: Int;
+    longFundingFeeGrowthAfter: Int;
+    shortFundingFeeGrowthAfter: Int;
     trxId: Int;
 }
 

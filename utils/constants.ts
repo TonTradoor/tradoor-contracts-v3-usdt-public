@@ -7,3 +7,5 @@ export const ORDER_OP_TYPE_INCREASE_LIMIT = 11n;
 export const ORDER_OP_TYPE_DECREASE_MARKET = 12n;
 export const ORDER_OP_TYPE_DECREASE_TP = 13n;
 export const ORDER_OP_TYPE_DECREASE_SL = 14n;
+
+export const PERCENTAGE_BASIS_POINT = 1_000_000_000;

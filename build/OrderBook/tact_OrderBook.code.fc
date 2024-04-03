@@ -334,7 +334,7 @@
         throw_unless(19305, ($ctx'value >= ($self'gasConsumption + 100000000)));
     }
     $self'lpPositionOrders~__tact_dict_set_int_cell(257, $msg'orderId, $LPPositionOrder$_store_opt(null()));
-    if (( ((~ $order'isIncrease)) ? (($msg'receive > 0)) : (false) )) {
+    if (($msg'receive > 0)) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($msg'trxId, $msg'receive, $order'account, $order'lastOperator);
     }
     if (( ((~ null?($order'executionFeeReceiver))) ? (($order'executionFee > 0)) : (false) )) {
@@ -419,6 +419,7 @@
     } else {
         $order'executionFeeReceiver = __tact_context_get_sender();
     }
+    $order'lastOperator = __tact_context_get_sender();
     $order'isPending = true;
     $self'perpPositionOrders~__tact_dict_set_int_cell(257, $msg'orderId, $PerpPositionOrder$_store_cell(($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending, $order'executionFeeReceiver, $order'lastOperator)));
     $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'pool, 0, 64, true, $UpdatePerpPosition$_store_cell($UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices($msg'orderId, $order'opType, $msg'trxId, $order'account, $order'tokenId, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $msg'pricesLength, $msg'prices))));
@@ -451,6 +452,9 @@
         throw_unless(19305, ($ctx'value >= ($self'gasConsumption + 100000000)));
     }
     $self'perpPositionOrders~__tact_dict_set_int_cell(257, $msg'orderId, $PerpPositionOrder$_store_opt(null()));
+    if (($msg'receive > 0)) {
+        ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($msg'trxId, $msg'receive, $order'account, $order'lastOperator);
+    }
     $global_emit($PerpPositionOrderExecutedEvent$_store_cell($PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId($order'opType, $msg'orderId, $msg'trxId)));
     if ((~ null?($order'executionFeeReceiver))) {
         $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($order'executionFeeReceiver), true, $order'executionFee, 2));
