@@ -45,20 +45,20 @@ export async function run(provider: NetworkProvider) {
                 beginCell()
                 .storeRef(
                     beginCell()
-                    .storeInt(3,32) // op
+                    .storeUint(2,32) // op
                     .storeCoins(toNano(executionFee)) // execution fee
                     .storeInt(isMarket? -1n : 0n, 1)
-                    .storeInt(tokenId, 64)
+                    .storeUint(tokenId, 64)
                     .storeInt(isLong? -1n : 0n, 1)
-                    .storeInt(toUnits(margin, jettonDecimal), 128)
-                    .storeInt(toUnits(size, jettonDecimal), 128)
-                    .storeInt(toUnits(triggerPrice, priceDecimal), 256)
+                    .storeUint(toUnits(margin, jettonDecimal), 128)
+                    .storeUint(toUnits(size, jettonDecimal), 128)
+                    .storeUint(toUnits(triggerPrice, priceDecimal), 256)
                     .storeRef(
                         beginCell()
-                        .storeInt(toUnits(0, jettonDecimal), 128)
-                        .storeInt(0, 256)
-                        .storeInt(toUnits(0, jettonDecimal), 128)
-                        .storeInt(0, 256)
+                        .storeUint(toUnits(0, jettonDecimal), 128)
+                        .storeUint(0, 256)
+                        .storeUint(toUnits(0, jettonDecimal), 128)
+                        .storeUint(0, 256)
                     )
                     .endCell()
                 ).endCell()

@@ -28,20 +28,20 @@ export async function createIncreasePerpOrder(user: SandboxContract<TreasuryCont
                 beginCell()
                 .storeRef(
                     beginCell()
-                    .storeInt(2,32) // op
+                    .storeUint(2,32) // op
                     .storeCoins(toNano(executionFee)) // execution fee
                     .storeInt(isMarket? -1n : 0n, 1)
-                    .storeInt(tokenId, 64)
+                    .storeUint(tokenId, 64)
                     .storeInt(isLong? -1n : 0n, 1)
-                    .storeInt(toJettonUnits(margin), 128)
-                    .storeInt(toJettonUnits(size), 128)
-                    .storeInt(toPriceUnits(triggerPrice), 256)
+                    .storeUint(toJettonUnits(margin), 128)
+                    .storeUint(toJettonUnits(size), 128)
+                    .storeUint(toPriceUnits(triggerPrice), 256)
                     .storeRef(
                         beginCell()
-                        .storeInt(toJettonUnits(tpSize), 128)
-                        .storeInt(toPriceUnits(tpPrice), 256)
-                        .storeInt(toJettonUnits(slSize), 128)
-                        .storeInt(toPriceUnits(slPrice), 256)
+                        .storeUint(toJettonUnits(tpSize), 128)
+                        .storeUint(toPriceUnits(tpPrice), 256)
+                        .storeUint(toJettonUnits(slSize), 128)
+                        .storeUint(toPriceUnits(slPrice), 256)
                     )
                     .endCell()
                 ).endCell()

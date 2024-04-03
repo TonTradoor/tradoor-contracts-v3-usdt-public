@@ -105,7 +105,7 @@ contract OrderBook with Deployable, Ownable {
                     queryId: msg.queryId,
                     amount: msg.amount,
                     receiver: msg.from,
-                    responseDestination: null,
+                    responseDestination: msg.from,
                     customPayload: null,
                     forwardTonAmount: 0,
                     forwardPayload: beginCell().endCell().asSlice()
@@ -116,29 +116,45 @@ contract OrderBook with Deployable, Ownable {
 
         // get op code
         let operation: Slice = msg.forwardPayload.loadRef().asSlice();
-        let opCode: Int = operation.loadInt(32);
+        let opCode: Int = operation.loadUint(32);
         if (opCode == OP_CREATE_INCREASE_LP_POSITION_ORDER) {
-            let liquidityDelta: Int = operation.loadInt(128);
+            let liquidityDelta: Int = operation.loadUint(128);
             let executionFee: Int = operation.loadCoins();
 
             self.handleCreateIncreaseLPPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, liquidityDelta);
         } else if (opCode == OP_CREATE_INCREASE_PERP_POSITION_ORDER) {
             let executionFee: Int = operation.loadCoins();
             let isMarket: Bool = operation.loadInt(1) == -1;
-            let tokenId: Int = operation.loadInt(64);
+            let tokenId: Int = operation.loadUint(64);
             let isLong: Bool = operation.loadInt(1) == -1;
-            let marginDelta: Int = operation.loadInt(128);
-            let sizeDelta: Int = operation.loadInt(128);
-            let triggerPrice: Int = operation.loadInt(256);
+            let marginDelta: Int = operation.loadUint(128);
+            let sizeDelta: Int = operation.loadUint(128);
+            let triggerPrice: Int = operation.loadUint(256);
             
             let tpSl: Slice = operation.loadRef().asSlice();
-            let tpSize: Int = tpSl.loadInt(128);
-            let tpPrice: Int = tpSl.loadInt(256);
-            let slSize: Int = tpSl.loadInt(128);
-            let slPrice: Int = tpSl.loadInt(256);
+            let tpSize: Int = tpSl.loadUint(128);
+            let tpPrice: Int = tpSl.loadUint(256);
+            let slSize: Int = tpSl.loadUint(128);
+            let slPrice: Int = tpSl.loadUint(256);
 
             self.handleCreateIncreasePerpPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, isMarket, tokenId, isLong, marginDelta, 
                 sizeDelta, triggerPrice, tpSize, tpPrice, slSize, slPrice);
+        } else {
+            send(SendParameters{
+                to: self.usdtWallet, 
+                value: 0,
+                mode: SendRemainingValue, 
+                bounce: false,
+                body: TokenTransfer{
+                    queryId: msg.queryId,
+                    amount: msg.amount,
+                    receiver: msg.from,
+                    responseDestination: msg.from,
+                    customPayload: null,
+                    forwardTonAmount: 0,
+                    forwardPayload: beginCell().endCell().asSlice()
+                }.toCell()
+            });
         }
     }
 

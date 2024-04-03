@@ -10,8 +10,9 @@ message LPPositionIncreasedEvent {
     bonusDelta: Int;
     bonusAfter: Int;
     unlockTimeAfter: Int;
-    realizedFundingFee: Int;
+    realizedFundingFeeDelta: Int;
     realizedFundingFeeAfter: Int;
+    entryFundingFeeGrowthAfter: Int;
     trxId: Int;
 }
 
@@ -24,6 +25,7 @@ message LPPositionDecreasedEvent {
     bonusDelta: Int;
     bonusAfter: Int;
     fundingFeeDelta: Int;
+    entryFundingFeeGrowthAfter: Int;
     receive: Int; // realizedPnl = receive - liquidityDelta
     trxId: Int;
 }
@@ -59,6 +61,7 @@ message PerpPositionIncreasedEvent {
     entryPrice: Int;
     fundingFee: Int;
     tradingFee: Int;
+    entryFundingFeeGrowthAfter: Int;
     trxId: Int;
 }
 
@@ -75,6 +78,7 @@ message PerpPositionDecreasedEvent {
     realizedPnLDelta: Int;
     fundingFee: Int;
     tradingFee: Int;
+    entryFundingFeeGrowthAfter: Int;
     receive: Int;
     trxId: Int;
 }
@@ -90,6 +94,14 @@ message PerpPositionLiquidatedEvent {
     fundingFee: Int;
     tradingFee: Int;
     liquidationFee: Int;
+    trxId: Int;
+}
+
+message GlobalPositionChangedEvent {
+    longSizeAfter: Int;
+    shortSizeAfter: Int;
+    longFundingRateGrowthAfter: Int;
+    shortFundingRateGrowthAfter: Int;
     trxId: Int;
 }
 

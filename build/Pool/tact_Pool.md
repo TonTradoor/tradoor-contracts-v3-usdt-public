@@ -1,13 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-<<<<<<< HEAD
-BOC Size: 12544 bytes
-=======
-BOC Size: 9983 bytes
->>>>>>> perp
+BOC Size: 9082 bytes
 
 # Types
-Total Types: 35
+Total Types: 39
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -66,12 +62,12 @@ TLB: `update_perp_position_success#ef01c2b4 orderId:int257 receive:int257 trxId:
 Signature: `UpdatePerpPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
 
 ## LPPositionIncreasedEvent
-TLB: `lp_position_increased_event#d07dde06 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFee:int257 realizedFundingFeeAfter:int257 trxId:int257 = LPPositionIncreasedEvent`
-Signature: `LPPositionIncreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,unlockTimeAfter:int257,realizedFundingFee:int257,realizedFundingFeeAfter:int257,trxId:int257}`
+TLB: `lp_position_increased_event#c73030a5 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFeeDelta:int257 realizedFundingFeeAfter:int257 entryFundingFeeGrowthAfter:int257 trxId:int257 = LPPositionIncreasedEvent`
+Signature: `LPPositionIncreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,unlockTimeAfter:int257,realizedFundingFeeDelta:int257,realizedFundingFeeAfter:int257,entryFundingFeeGrowthAfter:int257,trxId:int257}`
 
 ## LPPositionDecreasedEvent
-TLB: `lp_position_decreased_event#d2393e17 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 fundingFeeDelta:int257 receive:int257 trxId:int257 = LPPositionDecreasedEvent`
-Signature: `LPPositionDecreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,fundingFeeDelta:int257,receive:int257,trxId:int257}`
+TLB: `lp_position_decreased_event#bada9ef0 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 fundingFeeDelta:int257 entryFundingFeeGrowthAfter:int257 receive:int257 trxId:int257 = LPPositionDecreasedEvent`
+Signature: `LPPositionDecreasedEvent{positionId:int257,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,fundingFeeDelta:int257,entryFundingFeeGrowthAfter:int257,receive:int257,trxId:int257}`
 
 ## GlobalLPChangedEvent
 TLB: `global_lp_changed_event#3f230825 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 trxId:int257 = GlobalLPChangedEvent`
@@ -82,16 +78,20 @@ TLB: `global_lp_position_changed_event#7eb7fb96 tokenId:int257 netSizeAfter:int2
 Signature: `GlobalLPPositionChangedEvent{tokenId:int257,netSizeAfter:int257,isLong:bool,entryPriceAfter:int257,trxId:int257}`
 
 ## PerpPositionIncreasedEvent
-TLB: `perp_position_increased_event#07903041 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 entryPrice:int257 fundingFee:int257 tradingFee:int257 trxId:int257 = PerpPositionIncreasedEvent`
-Signature: `PerpPositionIncreasedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,entryPrice:int257,fundingFee:int257,tradingFee:int257,trxId:int257}`
+TLB: `perp_position_increased_event#259b2705 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 entryPrice:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 trxId:int257 = PerpPositionIncreasedEvent`
+Signature: `PerpPositionIncreasedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,entryPrice:int257,fundingFee:int257,tradingFee:int257,entryFundingFeeGrowthAfter:int257,trxId:int257}`
 
 ## PerpPositionDecreasedEvent
-TLB: `perp_position_decreased_event#2c4f1505 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 receive:int257 trxId:int257 = PerpPositionDecreasedEvent`
-Signature: `PerpPositionDecreasedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257,receive:int257,trxId:int257}`
+TLB: `perp_position_decreased_event#76a3a685 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 receive:int257 trxId:int257 = PerpPositionDecreasedEvent`
+Signature: `PerpPositionDecreasedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257,entryFundingFeeGrowthAfter:int257,receive:int257,trxId:int257}`
 
 ## PerpPositionLiquidatedEvent
 TLB: `perp_position_liquidated_event#e4d104b0 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 sizeDelta:int257 liquidatePrice:int257 fundingFee:int257 tradingFee:int257 liquidationFee:int257 trxId:int257 = PerpPositionLiquidatedEvent`
 Signature: `PerpPositionLiquidatedEvent{positionId:int257,account:address,tokenId:int257,isLong:bool,marginDelta:int257,sizeDelta:int257,liquidatePrice:int257,fundingFee:int257,tradingFee:int257,liquidationFee:int257,trxId:int257}`
+
+## GlobalPositionChangedEvent
+TLB: `global_position_changed_event#319091c1 longSizeAfter:int257 shortSizeAfter:int257 longFundingRateGrowthAfter:int257 shortFundingRateGrowthAfter:int257 trxId:int257 = GlobalPositionChangedEvent`
+Signature: `GlobalPositionChangedEvent{longSizeAfter:int257,shortSizeAfter:int257,longFundingRateGrowthAfter:int257,shortFundingRateGrowthAfter:int257,trxId:int257}`
 
 ## UpdatePriceEvent
 TLB: `update_price_event#6793c3e9 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePriceEvent`
@@ -113,13 +113,9 @@ Signature: `TokenConfigData{tokenIdNext:int257,tokenConfig:Maybe TokenConfig{nam
 TLB: `_ positionId:int257 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition`
 Signature: `LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257}`
 
-## GlobalLPLiquidity
-TLB: `_ lpFund:int257 liquidity:int257 fundingFeeGrowth:int257 = GlobalLPLiquidity`
-Signature: `GlobalLPLiquidity{lpFund:int257,liquidity:int257,fundingFeeGrowth:int257}`
-
 ## LPPositionData
-TLB: `_ lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} globalLPLiquidity:GlobalLPLiquidity{lpFund:int257,liquidity:int257,fundingFeeGrowth:int257} = LPPositionData`
-Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257},globalLPLiquidity:GlobalLPLiquidity{lpFund:int257,liquidity:int257,fundingFeeGrowth:int257}}`
+TLB: `_ lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} lpFund:int257 lpLiquidity:int257 lpFundingFeeGrowth:int257 lpUnrealizedPnl:int257 = LPPositionData`
+Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257},lpFund:int257,lpLiquidity:int257,lpFundingFeeGrowth:int257,lpUnrealizedPnl:int257}`
 
 ## AccountPerpPosition
 TLB: `_ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}> = AccountPerpPosition`
@@ -148,6 +144,22 @@ Signature: `PriceData{price:int257}`
 ## UpdatePrice
 TLB: `_ tokenId:int257 price:int257 = UpdatePrice`
 Signature: `UpdatePrice{tokenId:int257,price:int257}`
+
+## GlobalPosition
+TLB: `_ longSize:int257 shortSize:int257 longFundingRateGrowth:int257 shortFundingRateGrowth:int257 = GlobalPosition`
+Signature: `GlobalPosition{longSize:int257,shortSize:int257,longFundingRateGrowth:int257,shortFundingRateGrowth:int257}`
+
+## GlobalFundingRateSample
+TLB: `_ lastAdjustFundingRateTime:int257 sampleCount:int257 cumulativePremiumRate:int257 = GlobalFundingRateSample`
+Signature: `GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257}`
+
+## FundingRateGrowth
+TLB: `_ clampedFundingRateDelta:int257 longFundingRateGrowthAfter:int257 shortFundingRateGrowthAfter:int257 = FundingRateGrowth`
+Signature: `FundingRateGrowth{clampedFundingRateDelta:int257,longFundingRateGrowthAfter:int257,shortFundingRateGrowthAfter:int257}`
+
+## SamplePremiumRateResult
+TLB: `_ sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257} shouldAdjustFundingRate:bool fundingRateDelta:int257 = SamplePremiumRateResult`
+Signature: `SamplePremiumRateResult{sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257},shouldAdjustFundingRate:bool,fundingRateDelta:int257}`
 
 # Get Methods
 Total Get Methods: 6
@@ -195,6 +207,7 @@ Argument: account
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 1644: not reach trigger price
+4996: none available price
 5238: position not exist
 9429: send gas not enough
 11117: insuficient global net LP

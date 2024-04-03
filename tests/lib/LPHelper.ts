@@ -26,8 +26,8 @@ export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContra
                 beginCell()
                 .storeRef(
                     beginCell()
-                    .storeInt(1,32) // op
-                    .storeInt(toUnits(liquidity, TestEnv.jettonDecimal), 128) // liquidity
+                    .storeUint(1,32) // op
+                    .storeUint(toUnits(liquidity, TestEnv.jettonDecimal), 128) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()
                 ).endCell()
@@ -82,7 +82,7 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
     let orderBefore = await TestEnv.orderBook.getLpPositionOrder(orderId);
     let positionDataBefore = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
     let positionBefore = positionDataBefore?.lpPosition;
-    let globalLPLiquidityBefore = positionDataBefore?.globalLPLiquidity;
+    let globalLPLiquidityBefore = positionDataBefore;
     
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
@@ -104,7 +104,7 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
     let order = await TestEnv.orderBook.getLpPositionOrder(orderId);
     let positionDataAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
     let positionAfter = positionDataAfter?.lpPosition;
-    let globalLPLiquidityAfter = positionDataAfter?.globalLPLiquidity;
+    let globalLPLiquidityAfter = positionDataAfter;
     
     return {
         trxResult,

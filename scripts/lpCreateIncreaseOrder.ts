@@ -39,8 +39,8 @@ export async function run(provider: NetworkProvider) {
                 beginCell()
                 .storeRef(
                     beginCell()
-                    .storeInt(1,32) // op
-                    .storeInt(toUnits(liquidity, jettonDecimal), 128) // liquidity
+                    .storeUint(1,32) // op
+                    .storeUint(toUnits(liquidity, jettonDecimal), 128) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()
                 ).endCell()

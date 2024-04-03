@@ -35,15 +35,12 @@ struct LPPosition {
     unlockTime: Int;
 }
 
-struct GlobalLPLiquidity {
-    lpFund: Int;
-    liquidity: Int;
-    fundingFeeGrowth: Int;
-}
-
 struct LPPositionData {
     lpPosition: LPPosition?;
-    globalLPLiquidity: GlobalLPLiquidity;
+    lpFund: Int;
+    lpLiquidity: Int;
+    lpFundingFeeGrowth: Int;
+    lpUnrealizedPnl: Int;
 }
 
 // ============================ Perp ================================ //

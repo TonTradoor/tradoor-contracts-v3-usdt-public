@@ -2293,14 +2293,16 @@ PROGRAM{
       64 PUSHINT
       FALSE
       PUSHNULL
-      PUSHNULL
-      s4 PUSH
+      s3 PUSH
       NEWC
       ENDC
       $Cell$_fun_asSlice INLINECALLDICT
+      s7 PUSH
       s6 s10 XCHG
       s5 s9 XCHG
-      s4 s8 XCHG
+      s0 s4 XCHG
+      s0 s8 XCHG
+      3 -ROLL
       $TokenTransfer$_constructor_queryId_amount_receiver_responseDestination_customPayload_forwardTonAmount_forwardPayload INLINECALLDICT
       $TokenTransfer$_store_cell INLINECALLDICT
       s1 s4 XCHG
@@ -2311,12 +2313,12 @@ PROGRAM{
       LDREF
       DROP
       $Cell$_fun_asSlice INLINECALLDICT
-      32 LDI
+      32 LDU
       OVER
       1 EQINT
       IF:<{
         NIP
-        128 LDI
+        128 LDU
         LDGRAMS
         DROP
         SWAP
@@ -2330,25 +2332,45 @@ PROGRAM{
           SWAP
           -1 EQINT
           SWAP
-          64 LDI
+          64 LDU
           1 LDI
           SWAP
           -1 EQINT
           SWAP
-          128 LDI
-          128 LDI
-          256 LDI
+          128 LDU
+          128 LDU
+          256 LDU
           LDREF
           DROP
           $Cell$_fun_asSlice INLINECALLDICT
-          128 LDI
-          256 LDI
-          128 LDI
-          256 LDI
+          128 LDU
+          256 LDU
+          128 LDU
+          256 LDU
           DROP
           $OrderBook$_fun_handleCreateIncreasePerpPositionOrder INLINECALLDICT
         }>ELSE<{
-          4 BLKDROP
+          DROP
+          0 PUSHINT
+          64 PUSHINT
+          FALSE
+          PUSHNULL
+          s3 PUSH
+          NEWC
+          ENDC
+          $Cell$_fun_asSlice INLINECALLDICT
+          s6 PUSH
+          s6 s9 XCHG
+          s5 s8 XCHG
+          s0 s4 XCHG
+          s0 s7 XCHG
+          3 -ROLL
+          $TokenTransfer$_constructor_queryId_amount_receiver_responseDestination_customPayload_forwardTonAmount_forwardPayload INLINECALLDICT
+          $TokenTransfer$_store_cell INLINECALLDICT
+          s12 PUSH
+          4 -ROLL
+          $SendParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
+          $global_send INLINECALLDICT
         }>
       }>
     }>
