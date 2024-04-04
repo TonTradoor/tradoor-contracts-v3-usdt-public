@@ -244,6 +244,7 @@ contract Pool with Deployable, Ownable {
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: 0,
             fundingFee: 0,
+            realizedPnl: 0,
             trxId: trxId
         }.toCell());
     }
@@ -336,6 +337,7 @@ contract Pool with Deployable, Ownable {
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: 0,
             fundingFee: 0,
+            realizedPnl: 0,
             trxId: trxId
         }.toCell());
         return receive;
@@ -486,12 +488,14 @@ contract Pool with Deployable, Ownable {
         }
 
         // trading fee
-        let tradingFee: Int = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
-        let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
-        let protocolTradingFee: Int = tradingFee - lpTradingFee;
-        
-        self.protocolTradingFee += protocolTradingFee;
-        self.globalLPFund += lpRealizedPnl + lpTradingFee;
+        let tradingFee: Int = 0;
+        let lpTradingFee: Int = 0;
+        if (sizeDelta > 0) {
+            tradingFee = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
+            lpTradingFee = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
+            self.protocolTradingFee += tradingFee - lpTradingFee;
+            self.globalLPFund += lpRealizedPnl + lpTradingFee;
+        }
 
         // check liquidity
         require(globalLpPosition.netSize * globalLpPosition.entryPrice / PRICE_DECIMAL_FACTOR <= self.globalLPFund, "insufficient liquidity");
@@ -590,6 +594,7 @@ contract Pool with Deployable, Ownable {
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,
             fundingFee: 0,
+            realizedPnl: lpRealizedPnl,
             trxId: trxId
         }.toCell());
         dump("increasePerpPosition done");
@@ -689,13 +694,15 @@ contract Pool with Deployable, Ownable {
         }
 
         // trading fee
-        let tradingFee: Int = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
-        let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
-        let protocolTradingFee: Int = tradingFee - lpTradingFee;
+        let tradingFee: Int = 0;
+        let lpTradingFee: Int = 0;
+        if (sizeDelta > 0) {
+            tradingFee = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
+            lpTradingFee = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
 
-        self.protocolTradingFee += protocolTradingFee;
-        self.globalLPFund += lpRealizedPnl + lpTradingFee;
-
+            self.protocolTradingFee += tradingFee - lpTradingFee;
+            self.globalLPFund += lpRealizedPnl + lpTradingFee;
+        }
         let positionId: Int = perpPosition.positionId;
         let receive: Int = 0;
         let realizedPnl: Int = 0;
@@ -794,6 +801,7 @@ contract Pool with Deployable, Ownable {
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,
             fundingFee: 0,
+            realizedPnl: lpRealizedPnl,
             trxId: trxId
         }.toCell());
         return receive;
@@ -979,6 +987,7 @@ contract Pool with Deployable, Ownable {
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,
             fundingFee: 0,
+            realizedPnl: lpRealizedPnl,
             trxId: trxId
         }.toCell());
         return receive;

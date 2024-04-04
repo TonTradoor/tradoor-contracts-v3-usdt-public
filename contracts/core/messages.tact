@@ -28,7 +28,7 @@ message(0xe89cd45f) UpdateLPPosition {
     orderId: Int as uint64;
     account: Address;
     liquidityDelta: Int;
-    trxId: Int;
+    trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
@@ -36,7 +36,7 @@ message(0xe89cd45f) UpdateLPPosition {
 message(0x1cf0cf81) UpdateLPPositionSuccess {
     orderId: Int as uint64;
     receive: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 // ============================ Perp ================================ //
@@ -50,7 +50,7 @@ message(0xff57e557) UpdatePerpPosition {
     sizeDelta: Int;
     triggerPrice: Int;
     triggerAbove: Bool;
-    trxId: Int;
+    trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
@@ -58,12 +58,12 @@ message(0xff57e557) UpdatePerpPosition {
 message(0xef01c2b4) UpdatePerpPositionSuccess {
     orderId: Int as uint64;
     receive: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 // ============================ Funding Fee ================================ //
 message UpdateFundingFee {
-    trxId: Int;
+    trxId: Int as uint64;
     tokenId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;

@@ -14,7 +14,7 @@ message LPPositionIncreasedEvent {
     realizedFundingFeeDelta: Int;
     realizedFundingFeeAfter: Int;
     entryFundingFeeGrowthAfter: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 // decrease LP
@@ -29,7 +29,7 @@ message LPPositionDecreasedEvent {
     fundingFeeDelta: Int;
     entryFundingFeeGrowthAfter: Int;
     receive: Int; // realizedPnl = receive - liquidityDelta
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 // global LP
@@ -38,7 +38,8 @@ message GlobalLPChangedEvent {
     liquidityAfter: Int;
     tradingFee: Int;
     fundingFee: Int;
-    trxId: Int;
+    realizedPnl: Int;
+    trxId: Int as uint64;
 }
 
 message GlobalLPPositionChangedEvent {
@@ -46,7 +47,7 @@ message GlobalLPPositionChangedEvent {
     netSizeAfter: Int;
     isLong: Bool;
     entryPriceAfter: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 // ============================ Perp ================================ //
@@ -65,7 +66,7 @@ message PerpPositionIncreasedEvent {
     fundingFee: Int;
     tradingFee: Int;
     entryFundingFeeGrowthAfter: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 message PerpPositionDecreasedEvent {
@@ -84,7 +85,7 @@ message PerpPositionDecreasedEvent {
     tradingFee: Int;
     entryFundingFeeGrowthAfter: Int;
     receive: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 message PerpPositionLiquidatedEvent {
@@ -99,7 +100,7 @@ message PerpPositionLiquidatedEvent {
     fundingFee: Int;
     tradingFee: Int;
     liquidationFee: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 message GlobalPositionChangedEvent {
@@ -107,7 +108,7 @@ message GlobalPositionChangedEvent {
     shortSizeAfter: Int;
     longFundingFeeGrowthAfter: Int;
     shortFundingFeeGrowthAfter: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 // ============================ Price ================================ //

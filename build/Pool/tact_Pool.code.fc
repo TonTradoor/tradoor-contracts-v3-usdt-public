@@ -64,7 +64,7 @@
     $self'globalLPFund = ($self'globalLPFund + $liquidityDelta);
     $self'globalLPLiquidity = ($self'globalLPLiquidity + $liquidityDelta);
     $global_emit($LPPositionIncreasedEvent$_store_cell($LPPositionIncreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFeeDelta_realizedFundingFeeAfter_entryFundingFeeGrowthAfter_trxId(1, $lpPosition'positionId, $account, $liquidityDelta, $lpPosition'liquidity, $bonus, $lpPosition'bonus, $lpPosition'unlockTime, $realizedFundingFee, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $trxId)));
-    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId($self'globalLPFund, $self'globalLPLiquidity, 0, 0, $trxId)));
+    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId($self'globalLPFund, $self'globalLPLiquidity, 0, 0, 0, $trxId)));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'prices, $self'globalFundingRateSamples), ());
 }
 
@@ -117,7 +117,7 @@
     $self'globalLPFund = ($self'globalLPFund - $receive);
     $self'globalLPLiquidity = ($self'globalLPLiquidity - $liquidityDelta);
     $global_emit($LPPositionDecreasedEvent$_store_cell($LPPositionDecreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_fundingFeeDelta_entryFundingFeeGrowthAfter_receive_trxId(2, $lpPosition'positionId, $account, $liquidityDelta, $lpPosition'liquidity, $bonus, $lpPosition'bonus, $realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $receive, $trxId)));
-    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId($self'globalLPFund, $self'globalLPLiquidity, 0, 0, $trxId)));
+    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId($self'globalLPFund, $self'globalLPLiquidity, 0, 0, 0, $trxId)));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'prices, $self'globalFundingRateSamples), $receive);
 }
 
@@ -169,11 +169,14 @@
         $globalLpPosition'netSize = $globalLpPosition'netSize + $sizeRemaining;
         $globalLpPosition'isLong = (~ $isLong);
     }
-    int $tradingFee = ((($sizeDelta * $tradePrice) * $tokenConfig'tradingFeeRate) / (1000000000 * 100000000000000000000));
-    int $lpTradingFee = (($tradingFee * $tokenConfig'lpTradingFeeRate) / 1000000000);
-    int $protocolTradingFee = ($tradingFee - $lpTradingFee);
-    $self'protocolTradingFee = $self'protocolTradingFee + $protocolTradingFee;
-    $self'globalLPFund = $self'globalLPFund + ($lpRealizedPnl + $lpTradingFee);
+    int $tradingFee = 0;
+    int $lpTradingFee = 0;
+    if (($sizeDelta > 0)) {
+        $tradingFee = ((($sizeDelta * $tradePrice) * $tokenConfig'tradingFeeRate) / (1000000000 * 100000000000000000000));
+        $lpTradingFee = (($tradingFee * $tokenConfig'lpTradingFeeRate) / 1000000000);
+        $self'protocolTradingFee = $self'protocolTradingFee + ($tradingFee - $lpTradingFee);
+        $self'globalLPFund = $self'globalLPFund + ($lpRealizedPnl + $lpTradingFee);
+    }
     throw_unless(58161, ((($globalLpPosition'netSize * $globalLpPosition'entryPrice) / 100000000000000000000) <= $self'globalLPFund));
     tuple $globalPositionOpt = $GlobalPosition$_load_opt(__tact_dict_get_int_cell($self'globalPositions, 257, $tokenId));
     var ($globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth) = ((~ null?($globalPositionOpt)) ? $GlobalPosition$_not_null($globalPositionOpt) : $GlobalPosition$_constructor_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth(0, 0, 0, 0));
@@ -216,7 +219,7 @@
     $global_emit($PerpPositionIncreasedEvent$_store_cell($PerpPositionIncreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId($opType, $perpPosition'positionId, $account, $tokenId, $isLong, $marginDelta, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $perpPosition'entryPrice, $tradingFee, $fundingFee, $entryFundingFeeGrowthAfter, $trxId)));
     $global_emit($GlobalPositionChangedEvent$_store_cell($GlobalPositionChangedEvent$_constructor_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId($globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $trxId)));
     $global_emit($GlobalLPPositionChangedEvent$_store_cell($GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId($tokenId, $globalLpPosition'netSize, $globalLpPosition'isLong, $globalLpPosition'entryPrice, $trxId)));
-    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, 0, $trxId)));
+    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, 0, $lpRealizedPnl, $trxId)));
     __tact_debug_str(__gen_slice_string_e241a2144952897aec8c9dcce696f5d38dd11aaeac5255b8e55f03df31b96ca8());
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'prices, $self'globalFundingRateSamples), ());
 }
@@ -271,11 +274,14 @@
         $globalLpPosition'netSize = $globalLpPosition'netSize + $sizeRemaining;
         $globalLpPosition'isLong = (~ $isLong);
     }
-    int $tradingFee = ((($sizeDelta * $tradePrice) * $tokenConfig'tradingFeeRate) / (1000000000 * 100000000000000000000));
-    int $lpTradingFee = (($tradingFee * $tokenConfig'lpTradingFeeRate) / 1000000000);
-    int $protocolTradingFee = ($tradingFee - $lpTradingFee);
-    $self'protocolTradingFee = $self'protocolTradingFee + $protocolTradingFee;
-    $self'globalLPFund = $self'globalLPFund + ($lpRealizedPnl + $lpTradingFee);
+    int $tradingFee = 0;
+    int $lpTradingFee = 0;
+    if (($sizeDelta > 0)) {
+        $tradingFee = ((($sizeDelta * $tradePrice) * $tokenConfig'tradingFeeRate) / (1000000000 * 100000000000000000000));
+        $lpTradingFee = (($tradingFee * $tokenConfig'lpTradingFeeRate) / 1000000000);
+        $self'protocolTradingFee = $self'protocolTradingFee + ($tradingFee - $lpTradingFee);
+        $self'globalLPFund = $self'globalLPFund + ($lpRealizedPnl + $lpTradingFee);
+    }
     int $positionId = $perpPosition'positionId;
     int $receive = 0;
     int $realizedPnl = 0;
@@ -319,7 +325,7 @@
     $global_emit($PerpPositionDecreasedEvent$_store_cell($PerpPositionDecreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_entryFundingFeeGrowthAfter_receive_trxId($opType, $positionId, $account, $tokenId, $isLong, $marginDelta, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $realizedPnl, $tradingFee, $fundingFee, $entryFundingFeeGrowthAfter, $receive, $trxId)));
     $global_emit($GlobalPositionChangedEvent$_store_cell($GlobalPositionChangedEvent$_constructor_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId($globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $trxId)));
     $global_emit($GlobalLPPositionChangedEvent$_store_cell($GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId($tokenId, $globalLpPosition'netSize, $globalLpPosition'isLong, $globalLpPosition'entryPrice, $trxId)));
-    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, 0, $trxId)));
+    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, 0, $lpRealizedPnl, $trxId)));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'prices, $self'globalFundingRateSamples), $receive);
 }
 
@@ -407,7 +413,7 @@
     $global_emit($PerpPositionDecreasedEvent$_store_cell($PerpPositionDecreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_entryFundingFeeGrowthAfter_receive_trxId(3, $positionId, $account, $tokenId, $isLong, $marginDelta, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $realizedPnl, $tradingFee, $fundingFee, $entryFundingFeeGrowthAfter, $receive, $trxId)));
     $global_emit($GlobalPositionChangedEvent$_store_cell($GlobalPositionChangedEvent$_constructor_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId($globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $trxId)));
     $global_emit($GlobalLPPositionChangedEvent$_store_cell($GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId($tokenId, $globalLpPosition'netSize, $globalLpPosition'isLong, $globalLpPosition'entryPrice, $trxId)));
-    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, 0, $trxId)));
+    $global_emit($GlobalLPChangedEvent$_store_cell($GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, 0, $lpRealizedPnl, $trxId)));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'bonusFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'prices, $self'globalFundingRateSamples), $receive);
 }
 
@@ -773,7 +779,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmdZqt4YtFrP2s38xC4c699pEpaX8cr4CJn6NYqPqgsYqV";
+    return "ipfs://QmTjnPhnNfrZdXHkX4JyxeFzCofyPgXkHyMVk1VoHuhJpE";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -826,7 +832,7 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive UpdateFundingFee message
-    if (op == 2034846261) {
+    if (op == 970699954) {
         var msg = in_msg~$UpdateFundingFee$_load();
         self~$Pool$_internal_binary_UpdateFundingFee(msg);
         return (self, true);

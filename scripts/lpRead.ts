@@ -1,14 +1,16 @@
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { attachOrderBook, attachPool, getConfig } from '../utils/util';
+import { Address } from '@ton/core';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
     const pool = attachPool(provider);
 
+    const account = Address.parse(await provider.ui().input('account address:'));
+    const orderId = BigInt(await provider.ui().input('orderId:'));
+
     // get index
     let orderIdNext = await orderBook.getLpPositionOrderIndexNext();
-    let orderId = orderIdNext - 1n;
-    console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
     if (orderId < 0) {
@@ -21,6 +23,6 @@ export async function run(provider: NetworkProvider) {
     console.log(`order:`, order);
 
     // get position
-    let position = await pool.getLpPosition(order!!.account);
+    let position = await pool.getLpPosition(account);
     console.log(`position:`, position);
 }

@@ -532,24 +532,22 @@ PROGRAM{
   $CancelLPPositionOrder$_load PROCINLINE:<{
     32 LDU
     SWAP
-    1461083435 PUSHINT
+    2106714934 PUSHINT
     EQUAL
     129 THROWIFNOT
     64 LDU
-    257 PUSHINT
-    LDIX
+    64 LDU
     __tact_load_address_opt INLINECALLDICT
     s3 s3 s0 XCHG3
   }>
   $ExecuteLPPositionOrder$_load PROCINLINE:<{
     32 LDU
     SWAP
-    1452352025 PUSHINT
+    1430915153 PUSHINT
     EQUAL
     129 THROWIFNOT
     64 LDU
-    257 PUSHINT
-    LDIX
+    64 LDU
     __tact_load_address_opt INLINECALLDICT
     SWAP
     64 LDU
@@ -568,8 +566,7 @@ PROGRAM{
     __tact_store_address INLINECALLDICT
     257 PUSHINT
     STIX
-    257 PUSHINT
-    STIX
+    64 STU
     64 STU
     STDICT
   }>
@@ -598,14 +595,13 @@ PROGRAM{
     64 LDU
     257 PUSHINT
     LDIX
-    257 PUSHINT
-    LDIX
+    64 LDU
     3 -ROLL
   }>
   $CompensateOrder$_load PROCREF:<{
     32 LDU
     SWAP
-    3861006188 PUSHINT
+    2007348891 PUSHINT
     EQUAL
     129 THROWIFNOT
     1 LDI
@@ -618,23 +614,23 @@ PROGRAM{
       SWAP
     }>
     64 LDU
-    257 PUSHINT
-    LDIX
+    64 LDU
     __tact_load_address_opt INLINECALLDICT
     SWAP
+    257 PUSHINT
+    LDIX
     LDREF
     SWAP
     CTOS
-    257 PUSHINT
-    LDIX
     __tact_load_address_opt INLINECALLDICT
     SWAP
     LDGRAMS
     DROP
-    s3 s7 XCHG
-    s3 s6 XCHG
-    s3 s5 XCHG
-    s3 s4 XCHG
+    s2 s7 XCHG
+    s2 s6 XCHG
+    s2 s5 XCHG
+    s2 s4 XCHG
+    s2 s3 XCHG
   }>
   $CreateDecreasePerpPositionOrder$_load PROCREF:<{
     32 LDU
@@ -657,27 +653,25 @@ PROGRAM{
   $CancelPerpPositionOrder$_load PROCINLINE:<{
     32 LDU
     SWAP
-    3915371812 PUSHINT
+    3254342642 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
     SWAP
     64 LDU
-    257 PUSHINT
-    LDIX
+    64 LDU
     3 -ROLL
   }>
   $ExecutePerpPositionOrder$_load PROCINLINE:<{
     32 LDU
     SWAP
-    2277773520 PUSHINT
+    4188480865 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
     SWAP
     64 LDU
-    257 PUSHINT
-    LDIX
+    64 LDU
     64 LDU
     LDDICT
     5 -ROLL
@@ -685,7 +679,7 @@ PROGRAM{
   $LiquidatePerpPosition$_load PROCREF:<{
     32 LDU
     SWAP
-    504214342 PUSHINT
+    3168159377 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
@@ -694,8 +688,7 @@ PROGRAM{
     __tact_load_address INLINECALLDICT
     SWAP
     1 LDI
-    257 PUSHINT
-    LDIX
+    64 LDU
     64 LDU
     LDDICT
     7 -ROLL
@@ -703,7 +696,7 @@ PROGRAM{
   $ADLPerpPosition$_load PROCREF:<{
     32 LDU
     SWAP
-    987338766 PUSHINT
+    116682301 PUSHINT
     EQUAL
     129 THROWIFNOT
     64 LDU
@@ -714,19 +707,10 @@ PROGRAM{
     LDIX
     257 PUSHINT
     LDIX
-    LDREF
-    SWAP
-    CTOS
-    257 PUSHINT
-    LDIX
+    64 LDU
     64 LDU
     LDDICT
-    DROP
-    s3 s8 XCHG
-    s3 s7 XCHG
-    s3 s6 XCHG
-    s3 s5 XCHG
-    s3 s4 XCHG
+    8 -ROLL
   }>
   $UpdatePerpPosition$_store PROCREF:<{
     4283950423 PUSHINT
@@ -753,8 +737,7 @@ PROGRAM{
     s1 s2 XCHG
     1 STI
     s1 s2 XCHG
-    257 PUSHINT
-    STIX
+    64 STU
     s1 s2 XCHG
     64 STU
     s1 s2 XCHG
@@ -789,8 +772,7 @@ PROGRAM{
     64 LDU
     257 PUSHINT
     LDIX
-    257 PUSHINT
-    LDIX
+    64 LDU
     3 -ROLL
   }>
   $LPPositionOrderCreatedEvent$_store PROCINLINE:<{
@@ -815,14 +797,13 @@ PROGRAM{
     ENDC
   }>
   $LPPositionOrderCancelledEvent$_store PROCINLINE:<{
-    1334733875 PUSHINT
+    1264945856 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
     8 STU
     64 STU
-    257 PUSHINT
-    STIX
+    64 STU
   }>
   $LPPositionOrderCancelledEvent$_store_cell PROCINLINE:<{
     NEWC
@@ -831,14 +812,13 @@ PROGRAM{
     ENDC
   }>
   $LPPositionOrderExecutedEvent$_store PROCINLINE:<{
-    3149715906 PUSHINT
+    3003473876 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
     8 STU
     64 STU
-    257 PUSHINT
-    STIX
+    64 STU
   }>
   $LPPositionOrderExecutedEvent$_store_cell PROCINLINE:<{
     NEWC
@@ -902,14 +882,13 @@ PROGRAM{
     ENDC
   }>
   $PerpPositionOrderCancelledEvent$_store PROCINLINE:<{
-    2438616209 PUSHINT
+    2151571829 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
     8 STU
     64 STU
-    257 PUSHINT
-    STIX
+    64 STU
   }>
   $PerpPositionOrderCancelledEvent$_store_cell PROCINLINE:<{
     NEWC
@@ -918,14 +897,13 @@ PROGRAM{
     ENDC
   }>
   $PerpPositionOrderExecutedEvent$_store PROCINLINE:<{
-    958917758 PUSHINT
+    2713389887 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
     8 STU
     64 STU
-    257 PUSHINT
-    STIX
+    64 STU
   }>
   $PerpPositionOrderExecutedEvent$_store_cell PROCINLINE:<{
     NEWC
@@ -934,7 +912,7 @@ PROGRAM{
     ENDC
   }>
   $CompensateOrderEvent$_store PROCREF:<{
-    1722105882 PUSHINT
+    3937550118 PUSHINT
     s0 s8 XCHG2
     32 STU
     s6 PUSH
@@ -956,14 +934,12 @@ PROGRAM{
     s1 s4 XCHG
     64 STU
     s1 s2 XCHG
-    257 PUSHINT
-    STIX
+    64 STU
     SWAP
     __tact_store_address_opt INLINECALLDICT
-    SWAP
-    NEWC
     257 PUSHINT
     STIX
+    NEWC
     ROT
     __tact_store_address_opt INLINECALLDICT
     ROT
@@ -2405,24 +2381,25 @@ PROGRAM{
     __tact_dict_set_int_cell INLINECALLDICT
     s2 PUSH
     IF:<{
-      0 PUSHINT
       __tact_context_get_sender INLINECALLDICT
-      17 s() 22 s() XCHG
       16 s() 21 s() XCHG
       s15 20 s() XCHG
       s14 19 s() XCHG
       s13 18 s() XCHG
-      s12 22 s() XCHG
+      s12 17 s() XCHG
       s11 21 s() XCHG
       s10 20 s() XCHG
       s9 19 s() XCHG
-      s2 s8 XCHG
-      s7 22 s() XCHG
+      s8 18 s() XCHG
+      s1 s7 XCHG
       s6 21 s() XCHG
       s5 20 s() XCHG
       s4 19 s() XCHG
-      s1 s3 XCHG
+      s3 18 s() XCHG
+      21 s() PUSH
+      s0 s3 XCHG
       s2 18 s() XCHG
+      SWAP
       $OrderBook$_fun_refundJetton INLINECALLDICT
       s13 18 s() XCHG
       s12 17 s() XCHG
@@ -4013,7 +3990,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d62696d434669793862646a685478347046625668506e773146593869386d38643133666754413439596f6f36} PUSHSLICE
+    x{697066733a2f2f516d65585a676e467842594a6950764a4b32644237326f414b744145487570616b62323667374647697536714139} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -4096,7 +4073,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    1461083435 PUSHINT
+    2106714934 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4106,7 +4083,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    1452352025 PUSHINT
+    1430915153 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4136,7 +4113,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    3915371812 PUSHINT
+    3254342642 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4146,7 +4123,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    2277773520 PUSHINT
+    4188480865 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4166,7 +4143,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    504214342 PUSHINT
+    3168159377 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4176,7 +4153,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    987338766 PUSHINT
+    116682301 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4186,7 +4163,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    3861006188 PUSHINT
+    2007348891 PUSHINT
     EQUAL
     IFJMP:<{
       DROP

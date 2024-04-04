@@ -97,10 +97,10 @@ builder $LPPositionDecreasedEvent$_store(builder build_0, (int, int, slice, int,
 cell $LPPositionDecreasedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $GlobalLPChangedEvent$_store
-builder $GlobalLPChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline;
+builder $GlobalLPChangedEvent$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref;
 
 ;; $GlobalLPChangedEvent$_store_cell
-cell $GlobalLPChangedEvent$_store_cell((int, int, int, int, int) v) inline;
+cell $GlobalLPChangedEvent$_store_cell((int, int, int, int, int, int) v) inline;
 
 ;; $GlobalLPPositionChangedEvent$_store
 builder $GlobalLPPositionChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline;
@@ -441,8 +441,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $LPPositionIncreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFeeDelta_realizedFundingFeeAfter_entryFundingFeeGrowthAfter_trxId
 ((int, int, slice, int, int, int, int, int, int, int, int, int)) $LPPositionIncreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFeeDelta_realizedFundingFeeAfter_entryFundingFeeGrowthAfter_trxId(int opType, int positionId, slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int unlockTimeAfter, int realizedFundingFeeDelta, int realizedFundingFeeAfter, int entryFundingFeeGrowthAfter, int trxId) inline;
 
-;; $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId
-((int, int, int, int, int)) $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_trxId(int lpFundAfter, int liquidityAfter, int tradingFee, int fundingFee, int trxId) inline;
+;; $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId
+((int, int, int, int, int, int)) $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId(int lpFundAfter, int liquidityAfter, int tradingFee, int fundingFee, int realizedPnl, int trxId) inline;
 
 ;; $Pool$_fun_increaseLPPosition
 ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), ()) $Pool$_fun_increaseLPPosition((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, slice $account, int $liquidityDelta, int $trxId) impure inline_ref;

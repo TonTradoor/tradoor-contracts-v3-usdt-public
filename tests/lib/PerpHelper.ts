@@ -73,7 +73,7 @@ export async function cancelPerpOrder(executor: SandboxContract<TreasuryContract
         {
             $$type: 'CancelPerpPositionOrder',
             orderId: orderId,
-            trxId: 1n,
+            trxId: 0n,
             executionFeeReceiver: executor.address
         }
     );

@@ -43,13 +43,13 @@ message CreateDecreaseLPPositionOrder {
 
 message CancelLPPositionOrder {
     orderId: Int as uint64;
-    trxId: Int;
+    trxId: Int as uint64;
     executionFeeReceiver: Address?;
 }
 
 message ExecuteLPPositionOrder {
     orderId: Int as uint64;
-    trxId: Int;
+    trxId: Int as uint64;
     executionFeeReceiver: Address?;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
@@ -60,7 +60,7 @@ message(0xe89cd45f) UpdateLPPosition {
     orderId: Int as uint64;
     account: Address;
     liquidityDelta: Int;
-    trxId: Int;
+    trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
@@ -68,13 +68,13 @@ message(0xe89cd45f) UpdateLPPosition {
 message(0x1cf0cf81) UpdateLPPositionSuccess {
     orderId: Int as uint64;
     receive: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 message CompensateOrder {
     orderType: Int?;
     orderId: Int as uint64;
-    trxId: Int;
+    trxId: Int as uint64;
     refundReceiver: Address?;
     refundAmount: Int;
     executionFeeReceiver: Address?;
@@ -95,13 +95,13 @@ message CreateDecreasePerpPositionOrder {
 message CancelPerpPositionOrder {
     executionFeeReceiver: Address?;
     orderId: Int as uint64;
-    trxId: Int;
+    trxId: Int as uint64;
 }
 
 message ExecutePerpPositionOrder {
     executionFeeReceiver: Address?;
     orderId: Int as uint64;
-    trxId: Int;
+    trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
@@ -111,7 +111,7 @@ message LiquidatePerpPosition {
     tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
-    trxId: Int;
+    trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
@@ -122,7 +122,7 @@ message ADLPerpPosition {
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
-    trxId: Int;
+    trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
@@ -137,7 +137,7 @@ message(0xff57e557) UpdatePerpPosition {
     sizeDelta: Int;
     triggerPrice: Int;
     triggerAbove: Bool;
-    trxId: Int;
+    trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
@@ -145,5 +145,5 @@ message(0xff57e557) UpdatePerpPosition {
 message(0xef01c2b4) UpdatePerpPositionSuccess {
     orderId: Int as uint64;
     receive: Int;
-    trxId: Int;
+    trxId: Int as uint64;
 }

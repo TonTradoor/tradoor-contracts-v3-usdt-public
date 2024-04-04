@@ -335,7 +335,7 @@ contract OrderBook with Deployable, Ownable {
 
         if (order.isIncrease) {
             // transfer jetton
-            self.refundJetton(0, order.liquidityDelta, order.account, sender());
+            self.refundJetton(msg.trxId, order.liquidityDelta, order.account, sender());
         }
 
         // transfer execution fee
