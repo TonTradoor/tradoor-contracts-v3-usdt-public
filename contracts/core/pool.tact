@@ -226,6 +226,7 @@ contract Pool with Deployable, Ownable {
         self.globalLPLiquidity = self.globalLPLiquidity + liquidityDelta;
 
         emit(LPPositionIncreasedEvent{
+            opType: ORDER_OP_TYPE_INCREASE,
             positionId: lpPosition.positionId,
             account: account,
             liquidityDelta: liquidityDelta,
@@ -318,6 +319,7 @@ contract Pool with Deployable, Ownable {
 
         // event
         emit(LPPositionDecreasedEvent{
+            opType: ORDER_OP_TYPE_DECREASE,
             positionId: lpPosition.positionId,
             account: account,
             liquidityDelta: liquidityDelta,
@@ -380,17 +382,17 @@ contract Pool with Deployable, Ownable {
             } else {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
-            self.increasePerpPosition(msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice);
+            self.increasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice);
         } 
         else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION) {
-            receive = self.decreasePerpPosition(msg.trxId, true, msg.account, msg.tokenId, msg.isLong, 0, 0, tradePrice);
+            receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, 0, 0, tradePrice);
         } else {
             if (msg.triggerAbove) {
                 require(tradePrice >= msg.triggerPrice, "not reach trigger price");
             } else {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
-            receive = self.decreasePerpPosition(msg.trxId, false, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice);
+            receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice);
         } 
 
         let msgValue: Int = context().value - self.gasConsumption * 2 - self.minTonsForStorage - context().readForwardFee();
@@ -409,7 +411,7 @@ contract Pool with Deployable, Ownable {
         });
     }
 
-    fun increasePerpPosition(trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int) {
+    fun increasePerpPosition(opType: Int, trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int) {
         dump("increasePerpPosition");
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
@@ -553,6 +555,7 @@ contract Pool with Deployable, Ownable {
 
         // event
         emit(PerpPositionIncreasedEvent{
+            opType: opType,
             positionId: perpPosition.positionId,
             account: account,
             tokenId: tokenId,
@@ -592,7 +595,7 @@ contract Pool with Deployable, Ownable {
         dump("increasePerpPosition done");
     }
 
-    fun decreasePerpPosition(trxId: Int, isLiquidate: Bool, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int): Int {
+    fun decreasePerpPosition(opType: Int, trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int): Int {
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -624,6 +627,8 @@ contract Pool with Deployable, Ownable {
         };
 
         let perpPosition: PerpPosition = isLong ? directionPerpPosition.longPosition : directionPerpPosition.shortPosition;
+
+        let isLiquidate: Bool = opType == ORDER_OP_TYPE_LIQUIDATION ? true : false;
         // clamp delta
         if (isLiquidate) {
             marginDelta = perpPosition.margin;
@@ -717,9 +722,11 @@ contract Pool with Deployable, Ownable {
 
         let positionId: Int = perpPosition.positionId;
         let receive: Int = 0;
+        let realizedPnl: Int = 0;
         if (isLiquidate) {
             // close position
             receive = tokenConfig.liquidationFee;
+            realizedPnl = -lpRealizedPnl;
             perpPosition = PerpPosition {
                 positionId: 0,
                 margin: 0,
@@ -727,22 +734,8 @@ contract Pool with Deployable, Ownable {
                 entryPrice: 0,
                 entryFundingFeeGrowth: 0
             };
-            emit(PerpPositionLiquidatedEvent{
-                positionId: positionId,
-                account: account,
-                tokenId: tokenId,
-                isLong: isLong,
-                marginDelta: marginDelta,
-                sizeDelta: sizeDelta,
-                liquidatePrice: tradePrice,
-                tradingFee: tradingFee,
-                fundingFee: fundingFee,
-                liquidationFee: receive,
-                trxId: trxId
-            }.toCell());
         } else {
             // position pnl
-            let realizedPnl: Int = 0;
             if (isLong) {
                 realizedPnl = sizeDelta * (tradePrice - perpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
             } else {
@@ -787,25 +780,6 @@ contract Pool with Deployable, Ownable {
                     entryFundingFeeGrowth: 0
                 };
             }
-
-            // event
-            emit(PerpPositionDecreasedEvent{
-                positionId: positionId,
-                account: account,
-                tokenId: tokenId,
-                isLong: isLong,
-                marginDelta: marginDelta,
-                marginAfter: perpPosition.margin,
-                sizeDelta: sizeDelta,
-                sizeAfter: perpPosition.size,
-                tradePrice: tradePrice,
-                realizedPnLDelta: realizedPnl,
-                tradingFee: tradingFee,
-                fundingFee: fundingFee,
-                entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
-                receive: receive,
-                trxId: trxId
-            }.toCell());
         }
 
         // update position
@@ -818,6 +792,25 @@ contract Pool with Deployable, Ownable {
         self.perpPositions.set(tokenId, accountPerpPosition);
         self.globalLPPositions.set(tokenId, globalLpPosition);
 
+        // event
+        emit(PerpPositionDecreasedEvent{
+            opType: opType,
+            positionId: positionId,
+            account: account,
+            tokenId: tokenId,
+            isLong: isLong,
+            marginDelta: marginDelta,
+            marginAfter: perpPosition.margin,
+            sizeDelta: sizeDelta,
+            sizeAfter: perpPosition.size,
+            tradePrice: tradePrice,
+            realizedPnLDelta: realizedPnl,
+            tradingFee: tradingFee,
+            fundingFee: fundingFee,
+            entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
+            receive: receive,
+            trxId: trxId
+        }.toCell());
         emit(GlobalLPPositionChangedEvent{
             tokenId: tokenId,
             netSizeAfter: globalLpPosition.netSize,

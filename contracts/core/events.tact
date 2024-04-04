@@ -3,6 +3,7 @@ import "./structs";
 // ============================ LP ================================ //
 // increase LP
 message LPPositionIncreasedEvent {
+    opType: Int as uint8;
     positionId: Int as uint64;
     account: Address;
     liquidityDelta: Int;
@@ -18,6 +19,7 @@ message LPPositionIncreasedEvent {
 
 // decrease LP
 message LPPositionDecreasedEvent {
+    opType: Int as uint8;
     positionId: Int as uint64;
     account: Address;
     liquidityDelta: Int; // decrease liquidty
@@ -49,6 +51,7 @@ message GlobalLPPositionChangedEvent {
 
 // ============================ Perp ================================ //
 message PerpPositionIncreasedEvent {
+    opType: Int as uint8;
     positionId: Int as uint64;
     account: Address;
     tokenId: Int as uint64;
@@ -66,6 +69,7 @@ message PerpPositionIncreasedEvent {
 }
 
 message PerpPositionDecreasedEvent {
+    opType: Int as uint8;
     positionId: Int as uint64;
     account: Address;
     tokenId: Int as uint64;
@@ -84,6 +88,7 @@ message PerpPositionDecreasedEvent {
 }
 
 message PerpPositionLiquidatedEvent {
+    opType: Int as uint8;
     positionId: Int as uint64;
     account: Address;
     tokenId: Int as uint64;

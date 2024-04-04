@@ -5,9 +5,10 @@
         "start": "blueprint run",
         "build": "blueprint build --all",
         "test": "jest --verbose --maxWorkers=1",
-        "test-rebuild": "yarn build && yarn test",
+        "test-build": "yarn build && yarn test",
         "rundev": "blueprint run --testnet --mnemonic",
-        "rundev-rebuild": "yarn build && blueprint run --testnet --mnemonic"
+        "rundev-build": "yarn build && blueprint run --testnet --mnemonic",
+        "deploy": "sh scripts/deploy.sh"
     },
     "devDependencies": {
         "@ton/blueprint": "^0.17.0",
