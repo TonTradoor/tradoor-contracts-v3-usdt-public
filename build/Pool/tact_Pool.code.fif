@@ -413,11 +413,11 @@ PROGRAM{
   $UpdateConfig$_load PROCINLINE:<{
     32 LDU
     SWAP
-    2443370762 PUSHINT
+    735529448 PUSHINT
     EQUAL
     129 THROWIFNOT
-    257 PUSHINT
-    LDIX
+    LDGRAMS
+    LDGRAMS
     257 PUSHINT
     LDIX
     257 PUSHINT
@@ -425,13 +425,11 @@ PROGRAM{
     LDREF
     SWAP
     CTOS
-    257 PUSHINT
-    LDIX
     __tact_load_address INLINECALLDICT
     NIP
-    s2 s5 XCHG
-    s2 s4 XCHG
-    s2 s3 XCHG
+    s1 s5 XCHG
+    s1 s4 XCHG
+    s3 s3 s0 XCHG3
   }>
   $UpdateTokenConfig$_load PROCREF:<{
     32 LDU
@@ -485,11 +483,20 @@ PROGRAM{
     SWAP
     257 PUSHINT
     LDIX
-    64 LDU
+    257 PUSHINT
+    LDIX
+    LDREF
+    SWAP
+    CTOS
     257 PUSHINT
     LDIX
     LDDICT
-    7 -ROLL
+    DROP
+    s2 s7 XCHG
+    s2 s6 XCHG
+    s2 s5 XCHG
+    s2 s4 XCHG
+    s2 s3 XCHG
   }>
   $UpdateLPPositionSuccess$_store PROCINLINE:<{
     485543809 PUSHINT
@@ -499,7 +506,8 @@ PROGRAM{
     64 STU
     257 PUSHINT
     STIX
-    64 STU
+    257 PUSHINT
+    STIX
   }>
   $UpdateLPPositionSuccess$_store_cell PROCINLINE:<{
     NEWC
@@ -529,7 +537,8 @@ PROGRAM{
     257 PUSHINT
     LDIX
     1 LDI
-    64 LDU
+    257 PUSHINT
+    LDIX
     257 PUSHINT
     LDIX
     LDDICT
@@ -550,7 +559,8 @@ PROGRAM{
     64 STU
     257 PUSHINT
     STIX
-    64 STU
+    257 PUSHINT
+    STIX
   }>
   $UpdatePerpPositionSuccess$_store_cell PROCINLINE:<{
     NEWC
@@ -561,10 +571,11 @@ PROGRAM{
   $UpdateFundingFee$_load PROCINLINE:<{
     32 LDU
     SWAP
-    4085371943 PUSHINT
+    2171115616 PUSHINT
     EQUAL
     129 THROWIFNOT
-    64 LDU
+    257 PUSHINT
+    LDIX
     64 LDU
     257 PUSHINT
     LDIX
@@ -924,7 +935,7 @@ PROGRAM{
     ENDC
   }>
   $UpdatePriceEvent$_store PROCINLINE:<{
-    1737737193 PUSHINT
+    412714470 PUSHINT
     s0 s3 XCHG2
     32 STU
     257 PUSHINT
@@ -1032,18 +1043,16 @@ PROGRAM{
   }>
   $LPPosition$_store PROCREF:<{
     s5 s6 XCHG2
+    64 STU
+    s1 s3 XCHG
     257 PUSHINT
     STIX
-    s1 s3 XCHG
     257 PUSHINT
     STIX
     257 PUSHINT
     STIX
     SWAP
     NEWC
-    257 PUSHINT
-    STIX
-    s1 s2 XCHG
     257 PUSHINT
     STIX
     s1 s2 XCHG
@@ -1077,6 +1086,7 @@ PROGRAM{
     }>
   }>
   $LPPosition$_load PROCREF:<{
+    64 LDU
     257 PUSHINT
     LDIX
     257 PUSHINT
@@ -1090,12 +1100,11 @@ PROGRAM{
     LDIX
     257 PUSHINT
     LDIX
-    257 PUSHINT
-    LDIX
     DROP
-    s3 s6 XCHG
-    s3 s5 XCHG
-    s3 s4 XCHG
+    s2 s6 XCHG
+    s2 s5 XCHG
+    s2 s4 XCHG
+    s2 s3 XCHG
   }>
   $LPPosition$_as_optional PROCINLINE:<{
     6 TUPLE
@@ -1145,9 +1154,10 @@ PROGRAM{
   }>
   $PerpPosition$_store PROCINLINE:<{
     s4 s5 XCHG2
+    64 STU
+    s1 s2 XCHG
     257 PUSHINT
     STIX
-    s1 s2 XCHG
     257 PUSHINT
     STIX
     257 PUSHINT
@@ -1156,14 +1166,12 @@ PROGRAM{
     NEWC
     257 PUSHINT
     STIX
-    s1 s2 XCHG
-    257 PUSHINT
-    STIX
     ENDC
     SWAP
     STREF
   }>
   $PerpPosition$_load PROCINLINE:<{
+    64 LDU
     257 PUSHINT
     LDIX
     257 PUSHINT
@@ -1175,12 +1183,10 @@ PROGRAM{
     CTOS
     257 PUSHINT
     LDIX
-    257 PUSHINT
-    LDIX
     DROP
-    s2 s5 XCHG
-    s2 s4 XCHG
-    s2 s3 XCHG
+    s1 s5 XCHG
+    s1 s4 XCHG
+    s3 s3 s0 XCHG3
   }>
   $DirectionPerpPosition$_store PROCINLINE:<{
     s5 s10 XCHG
@@ -1304,8 +1310,7 @@ PROGRAM{
     }>
   }>
   $UpdatePrice$_load PROCINLINE:<{
-    257 PUSHINT
-    LDIX
+    64 LDU
     257 PUSHINT
     LDIX
     -ROT
@@ -4642,7 +4647,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5442577858647954575447334d594e6d68644b636843675573716b4b7955774b4336363755684b46394a7070} PUSHSLICE
+    x{697066733a2f2f516d63677956695077636268386831685134534d6b7243397274344641754e46427469316a6d616d396d624c4359} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -4666,7 +4671,7 @@ PROGRAM{
       32 PLDU
     }>
     DUP
-    2443370762 PUSHINT
+    735529448 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4706,7 +4711,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    4085371943 PUSHINT
+    2171115616 PUSHINT
     EQUAL
     IFJMP:<{
       DROP

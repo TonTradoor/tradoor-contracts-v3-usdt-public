@@ -702,7 +702,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmTBWxXdyTWTG3MYNmhdKchCgUsqkKyUwKC667UhKF9Jpp";
+    return "ipfs://QmcgyViPwcbh8h1hQ4SMkrC9rt4FAuNFBti1jmam9mbLCY";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -727,7 +727,7 @@ _ lazy_deployment_completed() method_id {
     
     
     ;; Receive UpdateConfig message
-    if (op == 2443370762) {
+    if (op == 735529448) {
         var msg = in_msg~$UpdateConfig$_load();
         self~$Pool$_internal_binary_UpdateConfig(msg);
         return (self, true);
@@ -755,7 +755,7 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive UpdateFundingFee message
-    if (op == 4085371943) {
+    if (op == 2171115616) {
         var msg = in_msg~$UpdateFundingFee$_load();
         self~$Pool$_internal_binary_UpdateFundingFee(msg);
         return (self, true);

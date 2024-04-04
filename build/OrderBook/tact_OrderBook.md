@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 9830 bytes
+BOC Size: 9769 bytes
 
 # Types
 Total Types: 36
@@ -50,56 +50,56 @@ TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
 Signature: `TokenExcesses{queryId:uint64}`
 
 ## UpdateConfig
-TLB: `update_config#6de0047e executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = UpdateConfig`
-Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address}`
+TLB: `update_config#408e9f7c executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig`
+Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
 ## CreateDecreaseLPPositionOrder
-TLB: `create_decrease_lp_position_order#cb2656d3 executionFee:int257 liquidityDelta:int257 = CreateDecreaseLPPositionOrder`
-Signature: `CreateDecreaseLPPositionOrder{executionFee:int257,liquidityDelta:int257}`
+TLB: `create_decrease_lp_position_order#89f311c8 executionFee:coins liquidityDelta:int257 = CreateDecreaseLPPositionOrder`
+Signature: `CreateDecreaseLPPositionOrder{executionFee:coins,liquidityDelta:int257}`
 
 ## CancelLPPositionOrder
-TLB: `cancel_lp_position_order#483932cd orderId:int257 trxId:int257 executionFeeReceiver:Maybe address = CancelLPPositionOrder`
-Signature: `CancelLPPositionOrder{orderId:int257,trxId:int257,executionFeeReceiver:Maybe address}`
+TLB: `cancel_lp_position_order#57165d2b orderId:uint64 trxId:int257 executionFeeReceiver:Maybe address = CancelLPPositionOrder`
+Signature: `CancelLPPositionOrder{orderId:uint64,trxId:int257,executionFeeReceiver:Maybe address}`
 
 ## ExecuteLPPositionOrder
-TLB: `execute_lp_position_order#7cd41541 orderId:int257 trxId:int257 executionFeeReceiver:Maybe address pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecuteLPPositionOrder`
-Signature: `ExecuteLPPositionOrder{orderId:int257,trxId:int257,executionFeeReceiver:Maybe address,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+TLB: `execute_lp_position_order#ee4ffa3d orderId:uint64 trxId:int257 executionFeeReceiver:Maybe address pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ExecuteLPPositionOrder`
+Signature: `ExecuteLPPositionOrder{orderId:uint64,trxId:int257,executionFeeReceiver:Maybe address,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
 ## UpdateLPPosition
-TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateLPPosition`
-Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateLPPosition`
+Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
 ## UpdateLPPositionSuccess
-TLB: `update_lp_position_success#1cf0cf81 orderId:int257 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
-Signature: `UpdateLPPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
+TLB: `update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:int257 = UpdateLPPositionSuccess`
+Signature: `UpdateLPPositionSuccess{orderId:uint64,receive:int257,trxId:int257}`
 
 ## CompensateOrder
-TLB: `compensate_order#f828370b orderType:Maybe int257 orderId:int257 trxId:int257 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:int257 = CompensateOrder`
-Signature: `CompensateOrder{orderType:Maybe int257,orderId:int257,trxId:int257,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:int257}`
+TLB: `compensate_order#e622476c orderType:Maybe int257 orderId:uint64 trxId:int257 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CompensateOrder`
+Signature: `CompensateOrder{orderType:Maybe int257,orderId:uint64,trxId:int257,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins}`
 
 ## CreateDecreasePerpPositionOrder
-TLB: `create_decrease_perp_position_order#0da78ef9 executionFee:int257 opType:int257 tokenId:int257 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 = CreateDecreasePerpPositionOrder`
-Signature: `CreateDecreasePerpPositionOrder{executionFee:int257,opType:int257,tokenId:int257,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257}`
+TLB: `create_decrease_perp_position_order#8bc0edcd executionFee:coins opType:int257 tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 = CreateDecreasePerpPositionOrder`
+Signature: `CreateDecreasePerpPositionOrder{executionFee:coins,opType:int257,tokenId:uint64,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257}`
 
 ## CancelPerpPositionOrder
-TLB: `cancel_perp_position_order#f99514f3 executionFeeReceiver:Maybe address orderId:int257 trxId:int257 = CancelPerpPositionOrder`
-Signature: `CancelPerpPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257}`
+TLB: `cancel_perp_position_order#e95fd524 executionFeeReceiver:Maybe address orderId:uint64 trxId:int257 = CancelPerpPositionOrder`
+Signature: `CancelPerpPositionOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:int257}`
 
 ## ExecutePerpPositionOrder
-TLB: `execute_perp_position_order#e30b9e9b executionFeeReceiver:Maybe address orderId:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = ExecutePerpPositionOrder`
-Signature: `ExecutePerpPositionOrder{executionFeeReceiver:Maybe address,orderId:int257,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+TLB: `execute_perp_position_order#48fbcd83 executionFeeReceiver:Maybe address orderId:uint64 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ExecutePerpPositionOrder`
+Signature: `ExecutePerpPositionOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
 ## LiquidateOrADLPerpPosition
-TLB: `liquidate_or_adl_perp_position#1d571000 executionFeeReceiver:Maybe address tokenId:int257 account:address isLong:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = LiquidateOrADLPerpPosition`
-Signature: `LiquidateOrADLPerpPosition{executionFeeReceiver:Maybe address,tokenId:int257,account:address,isLong:bool,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+TLB: `liquidate_or_adl_perp_position#2a8402e9 executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = LiquidateOrADLPerpPosition`
+Signature: `LiquidateOrADLPerpPosition{executionFeeReceiver:Maybe address,tokenId:uint64,account:address,isLong:bool,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:int257 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:int257,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}>}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:int257,pricesLength:int257,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
 ## UpdatePerpPositionSuccess
-TLB: `update_perp_position_success#ef01c2b4 orderId:int257 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
-Signature: `UpdatePerpPositionSuccess{orderId:int257,receive:int257,trxId:uint64}`
+TLB: `update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:int257 = UpdatePerpPositionSuccess`
+Signature: `UpdatePerpPositionSuccess{orderId:uint64,receive:int257,trxId:int257}`
 
 ## LPPositionOrderCreatedEvent
 TLB: `lp_position_order_created_event#abaac7f8 opType:uint8 account:address liquidityDelta:int257 executionFee:int257 orderId:int257 = LPPositionOrderCreatedEvent`
@@ -130,24 +130,24 @@ TLB: `compensate_order_event#f4885d16 orderType:Maybe int257 orderId:int257 trxI
 Signature: `CompensateOrderEvent{orderType:Maybe int257,orderId:int257,trxId:int257,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:int257}`
 
 ## ConfigData
-TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:int257 gasConsumption:int257 minTonsForStorage:int257 usdtWallet:address pool:address = ConfigData`
-Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:int257,gasConsumption:int257,minTonsForStorage:int257,usdtWallet:address,pool:address}`
+TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
 ## LPPositionOrder
-TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:int257 blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = LPPositionOrder`
-Signature: `LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:int257,blockTime:int257,isPending:bool,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
+TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = LPPositionOrder`
+Signature: `LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
 
 ## PerpPositionOrder
-TLB: `_ opType:uint8 tokenId:int257 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:int257 blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = PerpPositionOrder`
-Signature: `PerpPositionOrder{opType:uint8,tokenId:int257,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:int257,blockTime:int257,isPending:bool,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
+TLB: `_ opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = PerpPositionOrder`
+Signature: `PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:Maybe address,lastOperator:Maybe address}`
 
 ## PerpPositionOrderEx
 TLB: `_ tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 = PerpPositionOrderEx`
 Signature: `PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257}`
 
 ## UpdatePrice
-TLB: `_ tokenId:int257 price:int257 = UpdatePrice`
-Signature: `UpdatePrice{tokenId:int257,price:int257}`
+TLB: `_ tokenId:uint64 price:int257 = UpdatePrice`
+Signature: `UpdatePrice{tokenId:uint64,price:int257}`
 
 # Get Methods
 Total Get Methods: 6

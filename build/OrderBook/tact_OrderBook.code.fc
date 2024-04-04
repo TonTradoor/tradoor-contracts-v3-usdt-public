@@ -465,9 +465,9 @@
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
-(((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int)), ()) $OrderBook$_receive_binary_bounce_UpdatePerpPosition((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, (int, int) $src) impure inline {
+(((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int)), ()) $OrderBook$_receive_binary_bounce_UpdatePerpPosition((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, (int, int, int) $src) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
-    var ($src'orderId, $src'opType) = $src;
+    var ($src'orderId, $src'opType, $src'tokenId) = $src;
     tuple $orderOpt = $PerpPositionOrder$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrders, 257, $src'orderId));
     if (null?($orderOpt)) {
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
@@ -608,7 +608,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://Qmcd5LgNKkZT9g28iuaXRgeShi29r9Bf68mrTt6jELa1iq";
+    return "ipfs://Qme311WfpTjtaiMUN2UZYwWgGRYKtfigTwiPAgvKMkKW7N";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -657,7 +657,7 @@ _ lazy_deployment_completed() method_id {
     
     
     ;; Receive UpdateConfig message
-    if (op == 1843397758) {
+    if (op == 1083088764) {
         var msg = in_msg~$UpdateConfig$_load();
         self~$OrderBook$_internal_binary_UpdateConfig(msg);
         return (self, true);
@@ -671,21 +671,21 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive CreateDecreaseLPPositionOrder message
-    if (op == 3408287443) {
+    if (op == 2314408392) {
         var msg = in_msg~$CreateDecreaseLPPositionOrder$_load();
         self~$OrderBook$_internal_binary_CreateDecreaseLPPositionOrder(msg);
         return (self, true);
     }
     
     ;; Receive CancelLPPositionOrder message
-    if (op == 1211708109) {
+    if (op == 1461083435) {
         var msg = in_msg~$CancelLPPositionOrder$_load();
         self~$OrderBook$_internal_binary_CancelLPPositionOrder(msg);
         return (self, true);
     }
     
     ;; Receive ExecuteLPPositionOrder message
-    if (op == 2094273857) {
+    if (op == 3998218813) {
         var msg = in_msg~$ExecuteLPPositionOrder$_load();
         self~$OrderBook$_internal_binary_ExecuteLPPositionOrder(msg);
         return (self, true);
@@ -699,21 +699,21 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive CreateDecreasePerpPositionOrder message
-    if (op == 229084921) {
+    if (op == 2344676813) {
         var msg = in_msg~$CreateDecreasePerpPositionOrder$_load();
         self~$OrderBook$_internal_binary_CreateDecreasePerpPositionOrder(msg);
         return (self, true);
     }
     
     ;; Receive CancelPerpPositionOrder message
-    if (op == 4187297011) {
+    if (op == 3915371812) {
         var msg = in_msg~$CancelPerpPositionOrder$_load();
         self~$OrderBook$_internal_binary_CancelPerpPositionOrder(msg);
         return (self, true);
     }
     
     ;; Receive ExecutePerpPositionOrder message
-    if (op == 3809189531) {
+    if (op == 1224461699) {
         var msg = in_msg~$ExecutePerpPositionOrder$_load();
         self~$OrderBook$_internal_binary_ExecutePerpPositionOrder(msg);
         return (self, true);
@@ -727,14 +727,14 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive LiquidateOrADLPerpPosition message
-    if (op == 492244992) {
+    if (op == 713294569) {
         var msg = in_msg~$LiquidateOrADLPerpPosition$_load();
         self~$OrderBook$_internal_binary_LiquidateOrADLPerpPosition(msg);
         return (self, true);
     }
     
     ;; Receive CompensateOrder message
-    if (op == 4163385099) {
+    if (op == 3861006188) {
         var msg = in_msg~$CompensateOrder$_load();
         self~$OrderBook$_internal_binary_CompensateOrder(msg);
         return (self, true);

@@ -130,7 +130,7 @@ builder $UpdatePerpPosition$_store(builder build_0, (int, int, int, slice, int, 
 cell $UpdatePerpPosition$_store_cell((int, int, int, slice, int, int, int, int, int, int, int, cell) v) inline;
 
 ;; $UpdatePerpPosition$_load_bounced
-(slice, ((int, int))) $UpdatePerpPosition$_load_bounced(slice sc_0) inline;
+(slice, ((int, int, int))) $UpdatePerpPosition$_load_bounced(slice sc_0) inline;
 
 ;; $UpdatePerpPositionSuccess$_load
 (slice, ((int, int, int))) $UpdatePerpPositionSuccess$_load(slice sc_0) inline;

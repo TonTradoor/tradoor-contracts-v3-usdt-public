@@ -2,8 +2,8 @@ import "./structs";
 
 // ============================ admin ================================ //
 message UpdateConfig {
-    gasConsumption: Int;
-    minTonsForStorage: Int;
+    gasConsumption: Int as coins;
+    minTonsForStorage: Int as coins;
     lpLockTime: Int;
     bonusFactor: Int;
     orderBook: Address;
@@ -28,7 +28,7 @@ message(0xe89cd45f) UpdateLPPosition {
     orderId: Int as uint64;
     account: Address;
     liquidityDelta: Int;
-    trxId: Int as uint64;
+    trxId: Int;
     pricesLength: Int;
     prices: map<Int, UpdatePrice>;
 }
@@ -36,7 +36,7 @@ message(0xe89cd45f) UpdateLPPosition {
 message(0x1cf0cf81) UpdateLPPositionSuccess {
     orderId: Int as uint64;
     receive: Int;
-    trxId: Int as uint64;
+    trxId: Int;
 }
 
 // ============================ Perp ================================ //
@@ -50,7 +50,7 @@ message(0xff57e557) UpdatePerpPosition {
     sizeDelta: Int;
     triggerPrice: Int;
     triggerAbove: Bool;
-    trxId: Int as uint64;
+    trxId: Int;
     pricesLength: Int;
     prices: map<Int, UpdatePrice>;
 }
@@ -58,12 +58,12 @@ message(0xff57e557) UpdatePerpPosition {
 message(0xef01c2b4) UpdatePerpPositionSuccess {
     orderId: Int as uint64;
     receive: Int;
-    trxId: Int as uint64;
+    trxId: Int;
 }
 
 // ============================ Funding Fee ================================ //
 message UpdateFundingFee {
-    trxId: Int as uint64;
+    trxId: Int;
     tokenId: Int as uint64;
     pricesLength: Int;
     prices: map<Int, UpdatePrice>;

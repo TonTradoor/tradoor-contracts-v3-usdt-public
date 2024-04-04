@@ -71,17 +71,17 @@ cell $DeployOk$_store_cell((int) v) inline {
 
 ;;
 ;; Type: UpdateConfig
-;; Header: 0x91a2e10a
-;; TLB: update_config#91a2e10a gasConsumption:int257 minTonsForStorage:int257 lpLockTime:int257 bonusFactor:int257 orderBook:address = UpdateConfig
+;; Header: 0x2bd749e8
+;; TLB: update_config#2bd749e8 gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 bonusFactor:int257 orderBook:address = UpdateConfig
 ;;
 
 (slice, ((int, int, int, int, slice))) $UpdateConfig$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2443370762);
-    var v'gasConsumption = sc_0~load_int(257);
-    var v'minTonsForStorage = sc_0~load_int(257);
+    throw_unless(129, sc_0~load_uint(32) == 735529448);
+    var v'gasConsumption = sc_0~load_coins();
+    var v'minTonsForStorage = sc_0~load_coins();
     var v'lpLockTime = sc_0~load_int(257);
+    var v'bonusFactor = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'bonusFactor = sc_1~load_int(257);
     var v'orderBook = sc_1~__tact_load_address();
     return (sc_0, (v'gasConsumption, v'minTonsForStorage, v'lpLockTime, v'bonusFactor, v'orderBook));
 }
@@ -112,7 +112,7 @@ cell $DeployOk$_store_cell((int) v) inline {
 ;;
 ;; Type: UpdateLPPosition
 ;; Header: 0xe89cd45f
-;; TLB: update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateLPPosition
+;; TLB: update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateLPPosition
 ;;
 
 (slice, ((int, int, slice, int, int, int, cell))) $UpdateLPPosition$_load(slice sc_0) inline_ref {
@@ -121,16 +121,17 @@ cell $DeployOk$_store_cell((int) v) inline {
     var v'orderId = sc_0~load_uint(64);
     var v'account = sc_0~__tact_load_address();
     var v'liquidityDelta = sc_0~load_int(257);
-    var v'trxId = sc_0~load_uint(64);
-    var v'pricesLength = sc_0~load_int(257);
-    var v'prices = sc_0~load_dict();
+    var v'trxId = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'pricesLength = sc_1~load_int(257);
+    var v'prices = sc_1~load_dict();
     return (sc_0, (v'isIncrease, v'orderId, v'account, v'liquidityDelta, v'trxId, v'pricesLength, v'prices));
 }
 
 ;;
 ;; Type: UpdateLPPositionSuccess
 ;; Header: 0x1cf0cf81
-;; TLB: update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:uint64 = UpdateLPPositionSuccess
+;; TLB: update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:int257 = UpdateLPPositionSuccess
 ;;
 
 builder $UpdateLPPositionSuccess$_store(builder build_0, (int, int, int) v) inline {
@@ -138,7 +139,7 @@ builder $UpdateLPPositionSuccess$_store(builder build_0, (int, int, int) v) inli
     build_0 = store_uint(build_0, 485543809, 32);
     build_0 = build_0.store_uint(v'orderId, 64);
     build_0 = build_0.store_int(v'receive, 257);
-    build_0 = build_0.store_uint(v'trxId, 64);
+    build_0 = build_0.store_int(v'trxId, 257);
     return build_0;
 }
 
@@ -153,7 +154,7 @@ cell $UpdateLPPositionSuccess$_store_cell((int, int, int) v) inline {
 ;;
 ;; Type: UpdatePerpPosition
 ;; Header: 0xff57e557
-;; TLB: update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePerpPosition
+;; TLB: update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePerpPosition
 ;;
 
 (slice, ((int, int, int, slice, int, int, int, int, int, int, int, cell))) $UpdatePerpPosition$_load(slice sc_0) inline_ref {
@@ -168,7 +169,7 @@ cell $UpdateLPPositionSuccess$_store_cell((int, int, int) v) inline {
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'triggerPrice = sc_1~load_int(257);
     var v'triggerAbove = sc_1~load_int(1);
-    var v'trxId = sc_1~load_uint(64);
+    var v'trxId = sc_1~load_int(257);
     var v'pricesLength = sc_1~load_int(257);
     var v'prices = sc_1~load_dict();
     return (sc_0, (v'orderId, v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'trxId, v'pricesLength, v'prices));
@@ -177,7 +178,7 @@ cell $UpdateLPPositionSuccess$_store_cell((int, int, int) v) inline {
 ;;
 ;; Type: UpdatePerpPositionSuccess
 ;; Header: 0xef01c2b4
-;; TLB: update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess
+;; TLB: update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:int257 = UpdatePerpPositionSuccess
 ;;
 
 builder $UpdatePerpPositionSuccess$_store(builder build_0, (int, int, int) v) inline {
@@ -185,7 +186,7 @@ builder $UpdatePerpPositionSuccess$_store(builder build_0, (int, int, int) v) in
     build_0 = store_uint(build_0, 4009870004, 32);
     build_0 = build_0.store_uint(v'orderId, 64);
     build_0 = build_0.store_int(v'receive, 257);
-    build_0 = build_0.store_uint(v'trxId, 64);
+    build_0 = build_0.store_int(v'trxId, 257);
     return build_0;
 }
 
@@ -199,13 +200,13 @@ cell $UpdatePerpPositionSuccess$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: UpdateFundingFee
-;; Header: 0xf381d427
-;; TLB: update_funding_fee#f381d427 trxId:uint64 tokenId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdateFundingFee
+;; Header: 0x81689860
+;; TLB: update_funding_fee#81689860 trxId:int257 tokenId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateFundingFee
 ;;
 
 (slice, ((int, int, int, cell))) $UpdateFundingFee$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 4085371943);
-    var v'trxId = sc_0~load_uint(64);
+    throw_unless(129, sc_0~load_uint(32) == 2171115616);
+    var v'trxId = sc_0~load_int(257);
     var v'tokenId = sc_0~load_uint(64);
     var v'pricesLength = sc_0~load_int(257);
     var v'prices = sc_0~load_dict();
@@ -463,13 +464,13 @@ cell $PerpPositionLiquidatedEvent$_store_cell((int, slice, int, int, int, int, i
 
 ;;
 ;; Type: UpdatePriceEvent
-;; Header: 0x6793c3e9
-;; TLB: update_price_event#6793c3e9 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:int257,price:int257}> = UpdatePriceEvent
+;; Header: 0x189985e6
+;; TLB: update_price_event#189985e6 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePriceEvent
 ;;
 
 builder $UpdatePriceEvent$_store(builder build_0, (int, cell) v) inline {
     var (v'pricesLength, v'prices) = v;
-    build_0 = store_uint(build_0, 1737737193, 32);
+    build_0 = store_uint(build_0, 412714470, 32);
     build_0 = build_0.store_int(v'pricesLength, 257);
     build_0 = build_0.store_dict(v'prices);
     return build_0;
@@ -588,16 +589,16 @@ tuple $TokenConfig$_to_opt_tuple(tuple v) inline {
 
 ;;
 ;; Type: LPPosition
-;; TLB: _ positionId:int257 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition
+;; TLB: _ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition
 ;;
 
 builder $LPPosition$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref {
     var (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'unlockTime) = v;
-    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = build_0.store_uint(v'positionId, 64);
     build_0 = build_0.store_int(v'liquidity, 257);
     build_0 = build_0.store_int(v'bonus, 257);
+    build_0 = build_0.store_int(v'realizedFundingFee, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'realizedFundingFee, 257);
     build_1 = build_1.store_int(v'entryFundingFeeGrowth, 257);
     build_1 = build_1.store_int(v'unlockTime, 257);
     build_0 = store_ref(build_0, build_1.end_cell());
@@ -622,11 +623,11 @@ cell $LPPosition$_store_opt(tuple v) inline {
 }
 
 (slice, ((int, int, int, int, int, int))) $LPPosition$_load(slice sc_0) inline_ref {
-    var v'positionId = sc_0~load_int(257);
+    var v'positionId = sc_0~load_uint(64);
     var v'liquidity = sc_0~load_int(257);
     var v'bonus = sc_0~load_int(257);
+    var v'realizedFundingFee = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'realizedFundingFee = sc_1~load_int(257);
     var v'entryFundingFeeGrowth = sc_1~load_int(257);
     var v'unlockTime = sc_1~load_int(257);
     return (sc_0, (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'unlockTime));
@@ -661,7 +662,7 @@ tuple $LPPosition$_to_opt_tuple(tuple v) inline {
 
 ;;
 ;; Type: LPPositionData
-;; TLB: _ lpPosition:Maybe LPPosition{positionId:int257,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} globalLPFund:int257 globalLPLiquidity:int257 globalLPFundingFeeGrowth:int257 globalLPUnrealizedPnl:int257 = LPPositionData
+;; TLB: _ lpPosition:Maybe LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} globalLPFund:int257 globalLPLiquidity:int257 globalLPFundingFeeGrowth:int257 globalLPUnrealizedPnl:int257 = LPPositionData
 ;;
 
 ((tuple, int, int, int, int)) $LPPositionData$_not_null(tuple v) inline {
@@ -700,7 +701,7 @@ tuple $LPPositionData$_to_opt_external(tuple v) inline {
 
 ;;
 ;; Type: AccountPerpPosition
-;; TLB: _ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}> = AccountPerpPosition
+;; TLB: _ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}> = AccountPerpPosition
 ;;
 
 builder $AccountPerpPosition$_store(builder build_0, (cell) v) inline {
@@ -748,27 +749,27 @@ _ $AccountPerpPosition$_get_positions((cell) v) inline {
 
 ;;
 ;; Type: PerpPosition
-;; TLB: _ positionId:int257 margin:int257 size:int257 entryPrice:int257 entryFundingFeeGrowth:int257 = PerpPosition
+;; TLB: _ positionId:uint64 margin:int257 size:int257 entryPrice:int257 entryFundingFeeGrowth:int257 = PerpPosition
 ;;
 
 builder $PerpPosition$_store(builder build_0, (int, int, int, int, int) v) inline {
     var (v'positionId, v'margin, v'size, v'entryPrice, v'entryFundingFeeGrowth) = v;
-    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = build_0.store_uint(v'positionId, 64);
     build_0 = build_0.store_int(v'margin, 257);
     build_0 = build_0.store_int(v'size, 257);
+    build_0 = build_0.store_int(v'entryPrice, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'entryPrice, 257);
     build_1 = build_1.store_int(v'entryFundingFeeGrowth, 257);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
 (slice, ((int, int, int, int, int))) $PerpPosition$_load(slice sc_0) inline {
-    var v'positionId = sc_0~load_int(257);
+    var v'positionId = sc_0~load_uint(64);
     var v'margin = sc_0~load_int(257);
     var v'size = sc_0~load_int(257);
+    var v'entryPrice = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'entryPrice = sc_1~load_int(257);
     var v'entryFundingFeeGrowth = sc_1~load_int(257);
     return (sc_0, (v'positionId, v'margin, v'size, v'entryPrice, v'entryFundingFeeGrowth));
 }
@@ -784,7 +785,7 @@ tuple $PerpPosition$_to_tuple(((int, int, int, int, int)) v) inline {
 
 ;;
 ;; Type: DirectionPerpPosition
-;; TLB: _ longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257} shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257} = DirectionPerpPosition
+;; TLB: _ longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257} shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257} = DirectionPerpPosition
 ;;
 
 builder $DirectionPerpPosition$_store(builder build_0, ((int, int, int, int, int), (int, int, int, int, int)) v) inline {
@@ -901,7 +902,7 @@ tuple $GlobalLPPosition$_to_opt_tuple(tuple v) inline {
 
 ;;
 ;; Type: PerpPositionData
-;; TLB: _ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:int257,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} = PerpPositionData
+;; TLB: _ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} = PerpPositionData
 ;;
 
 ((tuple, tuple)) $PerpPositionData$_not_null(tuple v) inline {
@@ -1007,11 +1008,11 @@ tuple $PriceData$_to_opt_external(tuple v) inline {
 
 ;;
 ;; Type: UpdatePrice
-;; TLB: _ tokenId:int257 price:int257 = UpdatePrice
+;; TLB: _ tokenId:uint64 price:int257 = UpdatePrice
 ;;
 
 (slice, ((int, int))) $UpdatePrice$_load(slice sc_0) inline {
-    var v'tokenId = sc_0~load_int(257);
+    var v'tokenId = sc_0~load_uint(64);
     var v'price = sc_0~load_int(257);
     return (sc_0, (v'tokenId, v'price));
 }

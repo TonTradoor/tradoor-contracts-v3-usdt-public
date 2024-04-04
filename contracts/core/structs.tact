@@ -27,7 +27,7 @@ struct TokenConfigData {
 
 // ============================ LP ================================ //
 struct LPPosition {
-    positionId: Int;
+    positionId: Int  as uint64;
     liquidity: Int;
     bonus: Int;
     realizedFundingFee: Int;
@@ -55,7 +55,7 @@ struct DirectionPerpPosition {
 }
 
 struct PerpPosition {
-    positionId: Int;
+    positionId: Int as uint64;
     margin: Int;
     size: Int;
     entryPrice: Int;
@@ -80,7 +80,7 @@ struct PriceData {
 }
 
 struct UpdatePrice {
-    tokenId: Int;
+    tokenId: Int as uint64;
     price: Int;
 }
 

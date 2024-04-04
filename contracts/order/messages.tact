@@ -28,27 +28,27 @@ message UpdateConfig {
     enableExecutor: Bool?;
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
-    minExecutionFee: Int;
-    gasConsumption: Int;
-    minTonsForStorage: Int;
+    minExecutionFee: Int as coins;
+    gasConsumption: Int as coins;
+    minTonsForStorage: Int as coins;
     usdtWallet: Address;
     pool: Address;
 }
 
 // ============================ LP ================================ //
 message CreateDecreaseLPPositionOrder {
-    executionFee: Int;
+    executionFee: Int as coins;
     liquidityDelta: Int;
 }
 
 message CancelLPPositionOrder {
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
     executionFeeReceiver: Address?;
 }
 
 message ExecuteLPPositionOrder {
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
     executionFeeReceiver: Address?;
     pricesLength: Int;
@@ -60,32 +60,32 @@ message(0xe89cd45f) UpdateLPPosition {
     orderId: Int as uint64;
     account: Address;
     liquidityDelta: Int;
-    trxId: Int as uint64;
+    trxId: Int;
     pricesLength: Int;
     prices: map<Int, UpdatePrice>;
 }
 
 message(0x1cf0cf81) UpdateLPPositionSuccess {
-    orderId: Int;
+    orderId: Int as uint64;
     receive: Int;
-    trxId: Int as uint64;
+    trxId: Int;
 }
 
 message CompensateOrder {
     orderType: Int?;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
     refundReceiver: Address?;
     refundAmount: Int;
     executionFeeReceiver: Address?;
-    executionFee: Int;
+    executionFee: Int as coins;
 }
 
 // ============================ Perp ================================ //
 message CreateDecreasePerpPositionOrder {
-    executionFee: Int;
+    executionFee: Int as coins;
     opType: Int;
-    tokenId: Int;
+    tokenId: Int as uint64;
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
@@ -94,13 +94,13 @@ message CreateDecreasePerpPositionOrder {
 
 message CancelPerpPositionOrder {
     executionFeeReceiver: Address?;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
 }
 
 message ExecutePerpPositionOrder {
     executionFeeReceiver: Address?;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
     pricesLength: Int;
     prices: map<Int, UpdatePrice>;
@@ -108,7 +108,7 @@ message ExecutePerpPositionOrder {
 
 message LiquidateOrADLPerpPosition {
     executionFeeReceiver: Address?;
-    tokenId: Int;
+    tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
     // adlSize: Int;
@@ -120,20 +120,20 @@ message LiquidateOrADLPerpPosition {
 message(0xff57e557) UpdatePerpPosition {
     orderId: Int as uint64;
     opType: Int as uint8;
-    tokenId: Int;
+    tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
     triggerPrice: Int;
     triggerAbove: Bool;
-    trxId: Int as uint64;
+    trxId: Int;
     pricesLength: Int;
     prices: map<Int, UpdatePrice>;
 }
 
 message(0xef01c2b4) UpdatePerpPositionSuccess {
-    orderId: Int;
+    orderId: Int as uint64;
     receive: Int;
-    trxId: Int as uint64;
+    trxId: Int;
 }

@@ -8,9 +8,9 @@ struct ConfigData {
     isExecutor: Bool?;
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
-    minExecutionFee: Int;
-    gasConsumption: Int;
-    minTonsForStorage: Int;
+    minExecutionFee: Int as coins;
+    gasConsumption: Int as coins;
+    minTonsForStorage: Int as coins;
     usdtWallet: Address;
     pool: Address;
 }
@@ -20,7 +20,7 @@ struct LPPositionOrder {
     isIncrease: Bool;
     account: Address;
     liquidityDelta: Int;
-    executionFee: Int;
+    executionFee: Int as coins;
     blockTime: Int;
     isPending: Bool;
     executionFeeReceiver: Address?;
@@ -30,14 +30,14 @@ struct LPPositionOrder {
 // ============================ Perp ================================ //
 struct PerpPositionOrder {
     opType: Int as uint8;
-    tokenId: Int;
+    tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
     triggerPrice: Int;
     triggerAbove: Bool;
-    executionFee: Int;
+    executionFee: Int as coins;
     blockTime: Int;
     isPending: Bool;
     executionFeeReceiver: Address?;
@@ -53,6 +53,6 @@ struct PerpPositionOrderEx {
 
 // ============================ Price ================================ //
 struct UpdatePrice {
-    tokenId: Int;
+    tokenId: Int as uint64;
     price: Int;
 }
