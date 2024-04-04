@@ -296,40 +296,40 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 
 ;;
 ;; Type: LiquidatePerpPosition
-;; Header: 0x33f0a29c
-;; TLB: liquidate_perp_position#33f0a29c executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = LiquidatePerpPosition
+;; Header: 0x1e0db346
+;; TLB: liquidate_perp_position#1e0db346 liquidationFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = LiquidatePerpPosition
 ;;
 
 (slice, ((slice, int, slice, int, int, int, cell))) $LiquidatePerpPosition$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 871408284);
-    var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
+    throw_unless(129, sc_0~load_uint(32) == 504214342);
+    var v'liquidationFeeReceiver = sc_0~__tact_load_address_opt();
     var v'tokenId = sc_0~load_uint(64);
     var v'account = sc_0~__tact_load_address();
     var v'isLong = sc_0~load_int(1);
     var v'trxId = sc_0~load_int(257);
     var v'pricesLength = sc_0~load_uint(64);
     var v'prices = sc_0~load_dict();
-    return (sc_0, (v'executionFeeReceiver, v'tokenId, v'account, v'isLong, v'trxId, v'pricesLength, v'prices));
+    return (sc_0, (v'liquidationFeeReceiver, v'tokenId, v'account, v'isLong, v'trxId, v'pricesLength, v'prices));
 }
 
 ;;
 ;; Type: ADLPerpPosition
-;; Header: 0x316a502c
-;; TLB: adl_perp_position#316a502c executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool sizeDelta:int257 trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition
+;; Header: 0x3ad9980e
+;; TLB: adl_perp_position#3ad9980e tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition
 ;;
 
-(slice, ((slice, int, slice, int, int, int, int, cell))) $ADLPerpPosition$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 829050924);
-    var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
+(slice, ((int, slice, int, int, int, int, int, cell))) $ADLPerpPosition$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 987338766);
     var v'tokenId = sc_0~load_uint(64);
     var v'account = sc_0~__tact_load_address();
     var v'isLong = sc_0~load_int(1);
+    var v'marginDelta = sc_0~load_int(257);
     var v'sizeDelta = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'trxId = sc_1~load_int(257);
     var v'pricesLength = sc_1~load_uint(64);
     var v'prices = sc_1~load_dict();
-    return (sc_0, (v'executionFeeReceiver, v'tokenId, v'account, v'isLong, v'sizeDelta, v'trxId, v'pricesLength, v'prices));
+    return (sc_0, (v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'trxId, v'pricesLength, v'prices));
 }
 
 ;;
@@ -592,7 +592,7 @@ cell $CompensateOrderEvent$_store_cell((int, int, int, slice, int, slice, int) v
 
 ;;
 ;; Type: LPPositionOrder
-;; TLB: _ isIncrease:bool account:address liquidityDelta:int257 executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = LPPositionOrder
+;; TLB: _ isIncrease:bool account:address liquidityDelta:int257 executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = LPPositionOrder
 ;;
 
 builder $LPPositionOrder$_store(builder build_0, (int, slice, int, int, int, int, slice, slice) v) inline_ref {
@@ -604,7 +604,7 @@ builder $LPPositionOrder$_store(builder build_0, (int, slice, int, int, int, int
     build_0 = build_0.store_int(v'blockTime, 257);
     build_0 = build_0.store_int(v'isPending, 1);
     var build_1 = begin_cell();
-    build_1 = __tact_store_address_opt(build_1, v'executionFeeReceiver);
+    build_1 = __tact_store_address(build_1, v'executionFeeReceiver);
     build_1 = __tact_store_address_opt(build_1, v'lastOperator);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
@@ -635,7 +635,7 @@ cell $LPPositionOrder$_store_opt(tuple v) inline {
     var v'blockTime = sc_0~load_int(257);
     var v'isPending = sc_0~load_int(1);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'executionFeeReceiver = sc_1~__tact_load_address_opt();
+    var v'executionFeeReceiver = sc_1~__tact_load_address();
     var v'lastOperator = sc_1~__tact_load_address_opt();
     return (sc_0, (v'isIncrease, v'account, v'liquidityDelta, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator));
 }
@@ -683,7 +683,7 @@ tuple $LPPositionOrder$_to_opt_external(tuple v) inline {
 
 ;;
 ;; Type: PerpPositionOrder
-;; TLB: _ opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:Maybe address lastOperator:Maybe address = PerpPositionOrder
+;; TLB: _ opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = PerpPositionOrder
 ;;
 
 builder $PerpPositionOrder$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int, slice, slice) v) inline_ref {
@@ -700,7 +700,7 @@ builder $PerpPositionOrder$_store(builder build_0, (int, int, slice, int, int, i
     build_1 = build_1.store_coins(v'executionFee);
     build_1 = build_1.store_int(v'blockTime, 257);
     build_1 = build_1.store_int(v'isPending, 1);
-    build_1 = __tact_store_address_opt(build_1, v'executionFeeReceiver);
+    build_1 = __tact_store_address(build_1, v'executionFeeReceiver);
     var build_2 = begin_cell();
     build_2 = __tact_store_address_opt(build_2, v'lastOperator);
     build_1 = store_ref(build_1, build_2.end_cell());
@@ -738,7 +738,7 @@ cell $PerpPositionOrder$_store_opt(tuple v) inline {
     var v'executionFee = sc_1~load_coins();
     var v'blockTime = sc_1~load_int(257);
     var v'isPending = sc_1~load_int(1);
-    var v'executionFeeReceiver = sc_1~__tact_load_address_opt();
+    var v'executionFeeReceiver = sc_1~__tact_load_address();
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'lastOperator = sc_2~__tact_load_address_opt();
     return (sc_0, (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'executionFee, v'blockTime, v'isPending, v'executionFeeReceiver, v'lastOperator));

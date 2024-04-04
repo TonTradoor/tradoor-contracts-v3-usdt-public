@@ -240,7 +240,7 @@ contract OrderBook with Deployable, Ownable {
             executionFee: executionFee,
             blockTime: now(),
             isPending: false,
-            executionFeeReceiver: null,
+            executionFeeReceiver: account,
             lastOperator: null
         });
 
@@ -274,7 +274,7 @@ contract OrderBook with Deployable, Ownable {
             executionFee: msg.executionFee,
             blockTime: now(),
             isPending: false,
-            executionFeeReceiver: null,
+            executionFeeReceiver: sender(),
             lastOperator: null
         });
 
@@ -422,10 +422,9 @@ contract OrderBook with Deployable, Ownable {
         }
 
         // transfer execution fee
-        // self.transferExecutionFee(order.executionFeeReceiver, order.executionFee);
-        if (order.executionFeeReceiver != null && order.executionFee > 0) {
+        if (order.executionFee > 0) {
             send(SendParameters{
-                to: order.executionFeeReceiver!!,
+                to: order.executionFeeReceiver,
                 bounce: true,
                 value: order.executionFee,
                 mode: SendIgnoreErrors
@@ -577,7 +576,7 @@ contract OrderBook with Deployable, Ownable {
             executionFee: executionFee,
             blockTime: now(),
             isPending: false,
-            executionFeeReceiver: null,
+            executionFeeReceiver: sender(),
             lastOperator: null
         });
         // event
@@ -753,7 +752,11 @@ contract OrderBook with Deployable, Ownable {
 
         // transfer jetton
         if (msg.receive > 0) {
-            self.refundJetton(msg.trxId, msg.receive, order.account, order.lastOperator);
+            if (order.opType == ORDER_OP_TYPE_LIQUIDATION) {
+                self.refundJetton(msg.trxId, msg.receive, order.executionFeeReceiver, order.lastOperator);
+            } else {
+                self.refundJetton(msg.trxId, msg.receive, order.account, order.lastOperator);
+            }
         }
 
         // event
@@ -764,9 +767,9 @@ contract OrderBook with Deployable, Ownable {
         }.toCell());
 
         // transfer execution fee
-        if (order.executionFeeReceiver != null) {
+        if (order.executionFee > 0) {
             send(SendParameters{
-                to: order.executionFeeReceiver!!,
+                to: order.executionFeeReceiver,
                 bounce: true,
                 value: order.executionFee,
                 mode: SendIgnoreErrors
@@ -813,9 +816,9 @@ contract OrderBook with Deployable, Ownable {
         require(isExecutor, "invalid sender");
 
         // fee receiver
-        let executionFeeReceiver: Address = sender();
-        if (msg.executionFeeReceiver != null) {
-            executionFeeReceiver = msg.executionFeeReceiver!!;
+        let liquidationFeeReceiver: Address = sender();
+        if (msg.liquidationFeeReceiver != null) {
+            liquidationFeeReceiver = msg.liquidationFeeReceiver!!;
         }
 
         // add new order
@@ -833,7 +836,7 @@ contract OrderBook with Deployable, Ownable {
             executionFee: 0,
             blockTime: now(),
             isPending: true,
-            executionFeeReceiver: executionFeeReceiver,
+            executionFeeReceiver: liquidationFeeReceiver,
             lastOperator: sender()
         });
 
@@ -875,12 +878,6 @@ contract OrderBook with Deployable, Ownable {
         }
         require(isExecutor, "invalid sender");
 
-        // fee receiver
-        let executionFeeReceiver: Address = sender();
-        if (msg.executionFeeReceiver != null) {
-            executionFeeReceiver = msg.executionFeeReceiver!!;
-        }
-
         // add new order
         let orderId: Int = self.perpPositionOrderIndexNext;
         self.perpPositionOrderIndexNext = self.perpPositionOrderIndexNext + 1;
@@ -889,14 +886,14 @@ contract OrderBook with Deployable, Ownable {
             tokenId: msg.tokenId,
             account: msg.account,
             isLong: msg.isLong,
-            marginDelta: 0,
+            marginDelta: msg.marginDelta,
             sizeDelta: msg.sizeDelta,
             triggerPrice: 0,
             triggerAbove: false,
             executionFee: 0,
             blockTime: now(),
             isPending: true,
-            executionFeeReceiver: executionFeeReceiver,
+            executionFeeReceiver: sender(),
             lastOperator: sender()
         });
 

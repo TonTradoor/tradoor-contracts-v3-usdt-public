@@ -23,7 +23,7 @@ struct LPPositionOrder {
     executionFee: Int as coins;
     blockTime: Int;
     isPending: Bool;
-    executionFeeReceiver: Address?;
+    executionFeeReceiver: Address;
     lastOperator: Address?;
 }
 
@@ -40,7 +40,7 @@ struct PerpPositionOrder {
     executionFee: Int as coins;
     blockTime: Int;
     isPending: Bool;
-    executionFeeReceiver: Address?;
+    executionFeeReceiver: Address;
     lastOperator: Address?;
 }
 

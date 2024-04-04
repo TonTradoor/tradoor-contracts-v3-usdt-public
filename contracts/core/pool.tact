@@ -383,7 +383,9 @@ contract Pool with Deployable, Ownable {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
             self.increasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice);
-        } else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION || msg.opType == ORDER_OP_TYPE_ADL) {
+        } else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION) {
+            receive = self.liquidatePerpPosition(msg.trxId, msg.account, msg.tokenId, msg.isLong, tradePrice);
+        } else if (msg.opType == ORDER_OP_TYPE_ADL) {
             receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice);
         } else {
             if (msg.triggerAbove) {
@@ -536,8 +538,6 @@ contract Pool with Deployable, Ownable {
         require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size * perpPosition.entryPrice / PRICE_DECIMAL_FACTOR, "legerage too high");
 
         // update position
-        self.globalLPPositions.set(tokenId, globalLpPosition);
-
         if (isLong) {
             directionPerpPosition.longPosition = perpPosition;
             globalPosition.longSize += sizeDelta;
@@ -549,6 +549,7 @@ contract Pool with Deployable, Ownable {
         self.perpPositions.set(tokenId, accountPerpPosition);
 
         self.globalPositions.set(tokenId, globalPosition);
+        self.globalLPPositions.set(tokenId, globalLpPosition);
 
         dump("emit events");
 
@@ -629,13 +630,8 @@ contract Pool with Deployable, Ownable {
 
         let isLiquidate: Bool = opType == ORDER_OP_TYPE_LIQUIDATION ? true : false;
         // clamp delta
-        if (isLiquidate) {
-            marginDelta = perpPosition.margin;
+        if (sizeDelta > perpPosition.size) {
             sizeDelta = perpPosition.size;
-        } else {
-            if (sizeDelta > perpPosition.size) {
-                sizeDelta = perpPosition.size;
-            }
         }
 
         // get global position
@@ -658,25 +654,6 @@ contract Pool with Deployable, Ownable {
                 fundingFee = (globalPosition.shortFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
                 entryFundingFeeGrowthAfter = globalPosition.shortFundingFeeGrowth;
             }
-        }
-
-        // check liquidate
-        if (isLiquidate) {
-            // check maintain margin
-            let unrealizedPnl: Int = 0;
-            if (isLong) {
-                unrealizedPnl = perpPosition.size * (tradePrice - perpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
-            } else {
-                unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
-            }
-            let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
-            require(maintenanceMargin >= perpPosition.margin + unrealizedPnl, "margin rate too low");
-
-            // liquidate price
-            let liquidatePrice: Int = ((perpPosition.margin + fundingFee - tokenConfig.liquidationFee) * PRICE_DECIMAL_FACTOR + (isLong ? -perpPosition.entryPrice * perpPosition.size : perpPosition.entryPrice * perpPosition.size)) 
-                / (perpPosition.size * (tokenConfig.tradingFeeRate + (isLong ? - PERCENTAGE_BASIS_POINT : PERCENTAGE_BASIS_POINT)));
-            require(isLong ? liquidatePrice < perpPosition.entryPrice : liquidatePrice > perpPosition.entryPrice, "not reach liquidate price");
-            tradePrice = liquidatePrice;
         }
 
         // get global position
@@ -722,10 +699,44 @@ contract Pool with Deployable, Ownable {
         let positionId: Int = perpPosition.positionId;
         let receive: Int = 0;
         let realizedPnl: Int = 0;
-        if (isLiquidate) {
+        // position pnl
+        if (isLong) {
+            realizedPnl = sizeDelta * (tradePrice - perpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
+        } else {
+            realizedPnl = sizeDelta * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
+        }
+        // check liquidity
+        require(globalLpPosition.netSize * globalLpPosition.entryPrice / PRICE_DECIMAL_FACTOR <= self.globalLPFund, "insufficient liquidity");
+
+        // margin
+        perpPosition.margin += realizedPnl + fundingFee - tradingFee;
+                                
+        require(perpPosition.margin >= 0, "insufficient margin");
+        if (marginDelta > perpPosition.margin) {
+            marginDelta = perpPosition.margin;
+        }
+        perpPosition.margin -= marginDelta;
+        perpPosition.size -= sizeDelta;
+        perpPosition.entryFundingFeeGrowth = entryFundingFeeGrowthAfter;
+
+        if (perpPosition.size > 0) {
+            // check maintain margin
+            let unrealizedPnl: Int = 0;
+            if (isLong) {
+                unrealizedPnl = perpPosition.size * (tradePrice - perpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
+            } else {
+                unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
+            }
+            let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
+            require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
+
+            // check leverage
+            require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size, "legerage too high");
+            receive = marginDelta;
+        } else {
             // close position
-            receive = tokenConfig.liquidationFee;
-            realizedPnl = -lpRealizedPnl;
+            // withdraw all margin
+            receive = marginDelta + perpPosition.margin;
             perpPosition = PerpPosition {
                 positionId: 0,
                 margin: 0,
@@ -733,53 +744,6 @@ contract Pool with Deployable, Ownable {
                 entryPrice: 0,
                 entryFundingFeeGrowth: 0
             };
-        } else {
-            // position pnl
-            if (isLong) {
-                realizedPnl = sizeDelta * (tradePrice - perpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
-            } else {
-                realizedPnl = sizeDelta * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
-            }
-            // check liquidity
-            require(globalLpPosition.netSize * globalLpPosition.entryPrice / PRICE_DECIMAL_FACTOR <= self.globalLPFund, "insufficient liquidity");
-
-            // margin
-            perpPosition.margin += realizedPnl + fundingFee - tradingFee;
-                                    
-            require(perpPosition.margin >= 0, "insufficient margin");
-            if (marginDelta > perpPosition.margin) {
-                marginDelta = perpPosition.margin;
-            }
-            perpPosition.margin -= marginDelta;
-            perpPosition.size -= sizeDelta;
-            perpPosition.entryFundingFeeGrowth = entryFundingFeeGrowthAfter;
-
-            if (perpPosition.size > 0) {
-                // check maintain margin
-                let unrealizedPnl: Int = 0;
-                if (isLong) {
-                    unrealizedPnl = perpPosition.size * (tradePrice - perpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
-                } else {
-                    unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
-                }
-                let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
-                require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
-
-                // check leverage
-                require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size, "legerage too high");
-                receive = marginDelta;
-            } else {
-                // close position
-                // withdraw all margin
-                receive = marginDelta + perpPosition.margin;
-                perpPosition = PerpPosition {
-                    positionId: 0,
-                    margin: 0,
-                    size: 0,
-                    entryPrice: 0,
-                    entryFundingFeeGrowth: 0
-                };
-            }
         }
 
         // update position
@@ -809,6 +773,198 @@ contract Pool with Deployable, Ownable {
             fundingFee: fundingFee,
             entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
             receive: receive,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalPositionChangedEvent{
+            longSizeAfter: globalPosition.longSize,
+            shortSizeAfter: globalPosition.shortSize,
+            longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+            shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalLPPositionChangedEvent{
+            tokenId: tokenId,
+            netSizeAfter: globalLpPosition.netSize,
+            isLong: globalLpPosition.isLong,
+            entryPriceAfter: globalLpPosition.entryPrice,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalLPChangedEvent{
+            lpFundAfter: self.globalLPFund,
+            liquidityAfter: self.globalLPLiquidity,
+            tradingFee: lpTradingFee,
+            fundingFee: 0,
+            trxId: trxId
+        }.toCell());
+        return receive;
+    }
+
+    fun liquidatePerpPosition(trxId: Int, account: Address, tokenId: Int, isLong: Bool, tradePrice: Int): Int {
+        // get token config
+        let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
+        require(tokenConfigOpt != null, "invalid token");
+        let tokenConfig: TokenConfig = tokenConfigOpt!!;
+        require(tokenConfig.enable, "disabled token");
+        
+        // get position
+        let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
+        let accountPerpPosition: AccountPerpPosition = accountPerpPositionOpt != null ? accountPerpPositionOpt!! : AccountPerpPosition{
+            positions: emptyMap()
+        };
+
+        let directionPerpPositionOpt: DirectionPerpPosition? = accountPerpPosition.positions.get(account);
+        let directionPerpPosition: DirectionPerpPosition = directionPerpPositionOpt != null ? directionPerpPositionOpt!! : DirectionPerpPosition{
+            longPosition: PerpPosition {
+                positionId: 0,
+                margin: 0,
+                size: 0,
+                entryPrice: 0,
+                entryFundingFeeGrowth: 0
+            },
+            shortPosition: PerpPosition {
+                positionId: 0,
+                margin: 0,
+                size: 0,
+                entryPrice: 0,
+                entryFundingFeeGrowth: 0
+            }
+        };
+
+        let perpPosition: PerpPosition = isLong ? directionPerpPosition.longPosition : directionPerpPosition.shortPosition;
+
+        // delta
+        let marginDelta: Int = perpPosition.margin;
+        let sizeDelta: Int = perpPosition.size;
+
+        // get global position
+        let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
+        let globalPosition: GlobalPosition = globalPositionOpt != null ? globalPositionOpt!! : GlobalPosition{
+            longSize: 0,
+            shortSize: 0,
+            longFundingFeeGrowth: 0,
+            shortFundingFeeGrowth: 0
+        };
+
+        // funding fee
+        let fundingFee: Int = 0;
+        let entryFundingFeeGrowthAfter: Int = 0;
+        if (perpPosition.size > 0) {
+            if (isLong) {
+                fundingFee = (globalPosition.longFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
+                entryFundingFeeGrowthAfter = globalPosition.longFundingFeeGrowth;
+            } else {
+                fundingFee = (globalPosition.shortFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
+                entryFundingFeeGrowthAfter = globalPosition.shortFundingFeeGrowth;
+            }
+        }
+
+        // check maintain margin
+        let unrealizedPnl: Int = 0;
+        if (isLong) {
+            unrealizedPnl = perpPosition.size * (tradePrice - perpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
+        } else {
+            unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
+        }
+        let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
+        require(maintenanceMargin >= perpPosition.margin + unrealizedPnl, "margin rate too low");
+
+        // liquidate price
+        let liquidatePrice: Int = ((perpPosition.margin + fundingFee - tokenConfig.liquidationFee) * PRICE_DECIMAL_FACTOR + (isLong ? -perpPosition.entryPrice * perpPosition.size : perpPosition.entryPrice * perpPosition.size)) 
+            / (perpPosition.size * (tokenConfig.tradingFeeRate + (isLong ? - PERCENTAGE_BASIS_POINT : PERCENTAGE_BASIS_POINT)));
+        require(isLong ? liquidatePrice < perpPosition.entryPrice : liquidatePrice > perpPosition.entryPrice, "not reach liquidate price");
+        tradePrice = liquidatePrice;
+
+        // get global position
+        let globalLpPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(tokenId);
+        let globalLpPosition: GlobalLPPosition = globalLpPositionOpt != null ? globalLpPositionOpt!! : GlobalLPPosition {
+            netSize: 0,
+            isLong: false,
+            entryPrice: 0,
+            unrealizedPnl: 0
+        };
+
+        // lp pnl
+        let lpRealizedPnl: Int = 0;
+        let sizeRemaining: Int = sizeDelta;
+        if (globalLpPosition.netSize > 0 && (isLong != globalLpPosition.isLong)) {
+            let sizeUsed: Int = sizeDelta > globalLpPosition.netSize ? globalLpPosition.netSize : sizeDelta;
+            if (isLong) {
+                lpRealizedPnl = sizeUsed * (tradePrice - globalLpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
+            } else {
+                lpRealizedPnl = sizeUsed * (globalLpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
+            }
+            sizeRemaining -= sizeUsed;
+            globalLpPosition.netSize -= sizeUsed;
+            if (globalLpPosition.netSize == 0) {
+                globalLpPosition.entryPrice = 0;
+            }
+        }
+        // lp entry price
+        if (sizeRemaining > 0) {
+            globalLpPosition.entryPrice = (globalLpPosition.netSize * globalLpPosition.entryPrice + sizeRemaining * tradePrice) / (globalLpPosition.netSize + sizeRemaining);
+            globalLpPosition.netSize += sizeRemaining;
+            globalLpPosition.isLong = !isLong;
+        }
+
+        // trading fee
+        let tradingFee: Int = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
+        let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
+        let protocolTradingFee: Int = tradingFee - lpTradingFee;
+
+        self.protocolTradingFee += protocolTradingFee;
+        self.globalLPFund += lpRealizedPnl + lpTradingFee;
+
+        let positionId: Int = perpPosition.positionId;
+        let receive: Int = 0;
+        let realizedPnl: Int = 0;
+        // close position
+        receive = tokenConfig.liquidationFee;
+        realizedPnl = -lpRealizedPnl;
+        perpPosition = PerpPosition {
+            positionId: 0,
+            margin: 0,
+            size: 0,
+            entryPrice: 0,
+            entryFundingFeeGrowth: 0
+        };
+
+        // update position
+        if (isLong) {
+            directionPerpPosition.longPosition = perpPosition;
+            globalPosition.longSize -= sizeDelta;
+        } else {
+            directionPerpPosition.shortPosition = perpPosition;
+            globalPosition.shortSize -= sizeDelta;
+        }
+        accountPerpPosition.positions.set(account, directionPerpPosition);
+        self.perpPositions.set(tokenId, accountPerpPosition);
+        self.globalPositions.set(tokenId, globalPosition);
+        self.globalLPPositions.set(tokenId, globalLpPosition);
+
+        // event
+        emit(PerpPositionDecreasedEvent{
+            opType: ORDER_OP_TYPE_LIQUIDATION,
+            positionId: positionId,
+            account: account,
+            tokenId: tokenId,
+            isLong: isLong,
+            marginDelta: marginDelta,
+            marginAfter: perpPosition.margin,
+            sizeDelta: sizeDelta,
+            sizeAfter: perpPosition.size,
+            tradePrice: tradePrice,
+            realizedPnLDelta: realizedPnl,
+            tradingFee: tradingFee,
+            fundingFee: fundingFee,
+            entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
+            receive: receive,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalPositionChangedEvent{
+            longSizeAfter: globalPosition.longSize,
+            shortSizeAfter: globalPosition.shortSize,
+            longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+            shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
             trxId: trxId
         }.toCell());
         emit(GlobalLPPositionChangedEvent{

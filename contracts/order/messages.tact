@@ -107,7 +107,7 @@ message ExecutePerpPositionOrder {
 }
 
 message LiquidatePerpPosition {
-    executionFeeReceiver: Address?;
+    liquidationFeeReceiver: Address?;
     tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
@@ -117,10 +117,10 @@ message LiquidatePerpPosition {
 }
 
 message ADLPerpPosition {
-    executionFeeReceiver: Address?;
     tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
+    marginDelta: Int;
     sizeDelta: Int;
     trxId: Int;
     pricesLength: Int as uint64;

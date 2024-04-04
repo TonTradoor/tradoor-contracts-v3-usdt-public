@@ -492,6 +492,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_decreasePerpPosition
 ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), int) $Pool$_fun_decreasePerpPosition((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, int $opType, int $trxId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice) impure inline_ref;
 
+;; $Pool$_fun_liquidatePerpPosition
+((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), int) $Pool$_fun_liquidatePerpPosition((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, int $trxId, slice $account, int $tokenId, int $isLong, int $tradePrice) impure inline_ref;
+
 ;; $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition
 ((tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition(tuple perpPosition, tuple globalLPPosition, tuple globalPosition) inline;
 
