@@ -798,7 +798,7 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ============================ Liquidation ================================ //
-    receive(msg: LiquidateOrADLPerpPosition) {
+    receive(msg: LiquidatePerpPosition) {
         let ctx: Context = context();
 
         // check gas
@@ -852,6 +852,69 @@ contract OrderBook with Deployable, Ownable {
                 isLong: msg.isLong,
                 marginDelta: 0,
                 sizeDelta: 0,
+                triggerPrice: 0,
+                triggerAbove: false,
+                pricesLength: msg.pricesLength,
+                prices: msg.prices
+            }.toCell()
+        });
+    }
+    
+    // ============================ ADL ================================ //
+    receive(msg: ADLPerpPosition) {
+        let ctx: Context = context();
+
+        // check gas
+        require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
+
+        // check sender
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+        require(isExecutor, "invalid sender");
+
+        // fee receiver
+        let executionFeeReceiver: Address = sender();
+        if (msg.executionFeeReceiver != null) {
+            executionFeeReceiver = msg.executionFeeReceiver!!;
+        }
+
+        // add new order
+        let orderId: Int = self.perpPositionOrderIndexNext;
+        self.perpPositionOrderIndexNext = self.perpPositionOrderIndexNext + 1;
+        self.perpPositionOrders.set(orderId, PerpPositionOrder{
+            opType: ORDER_OP_TYPE_ADL,
+            tokenId: msg.tokenId,
+            account: msg.account,
+            isLong: msg.isLong,
+            marginDelta: 0,
+            sizeDelta: msg.sizeDelta,
+            triggerPrice: 0,
+            triggerAbove: false,
+            executionFee: 0,
+            blockTime: now(),
+            isPending: true,
+            executionFeeReceiver: executionFeeReceiver,
+            lastOperator: sender()
+        });
+
+        // send update position msg
+        send(SendParameters{
+            to: self.pool,
+            value: 0,
+            mode: SendRemainingValue,
+            bounce: true,
+            body: UpdatePerpPosition {
+                opType: ORDER_OP_TYPE_ADL,
+                orderId: orderId,
+                trxId: msg.trxId,
+                account: msg.account,
+                tokenId: msg.tokenId,
+                isLong: msg.isLong,
+                marginDelta: 0,
+                sizeDelta: msg.sizeDelta,
                 triggerPrice: 0,
                 triggerAbove: false,
                 pricesLength: msg.pricesLength,

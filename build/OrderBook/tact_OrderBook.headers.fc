@@ -120,8 +120,11 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 ;; $ExecutePerpPositionOrder$_load
 (slice, ((slice, int, int, int, cell))) $ExecutePerpPositionOrder$_load(slice sc_0) inline;
 
-;; $LiquidateOrADLPerpPosition$_load
-(slice, ((slice, int, slice, int, int, int, cell))) $LiquidateOrADLPerpPosition$_load(slice sc_0) inline_ref;
+;; $LiquidatePerpPosition$_load
+(slice, ((slice, int, slice, int, int, int, cell))) $LiquidatePerpPosition$_load(slice sc_0) inline_ref;
+
+;; $ADLPerpPosition$_load
+(slice, ((slice, int, slice, int, int, int, int, cell))) $ADLPerpPosition$_load(slice sc_0) inline_ref;
 
 ;; $UpdatePerpPosition$_store
 builder $UpdatePerpPosition$_store(builder build_0, (int, int, int, slice, int, int, int, int, int, int, int, cell) v) inline_ref;

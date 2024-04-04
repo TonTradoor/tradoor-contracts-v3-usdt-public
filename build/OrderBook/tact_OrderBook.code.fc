@@ -484,7 +484,7 @@
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
-(((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_LiquidateOrADLPerpPosition((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, (slice, int, slice, int, int, int, cell) $msg) impure inline {
+(((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_LiquidatePerpPosition((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, (slice, int, slice, int, int, int, cell) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($msg'executionFeeReceiver, $msg'tokenId, $msg'account, $msg'isLong, $msg'trxId, $msg'pricesLength, $msg'prices) = $msg;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
@@ -503,6 +503,28 @@
     $self'perpPositionOrderIndexNext = ($self'perpPositionOrderIndexNext + 1);
     $self'perpPositionOrders~__tact_dict_set_int_cell(257, $orderId, $PerpPositionOrder$_store_cell($PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(3, $msg'tokenId, $msg'account, $msg'isLong, 0, 0, 0, false, 0, now(), true, $executionFeeReceiver, __tact_context_get_sender())));
     $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'pool, 0, 64, true, $UpdatePerpPosition$_store_cell($UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(3, $orderId, $msg'trxId, $msg'account, $msg'tokenId, $msg'isLong, 0, 0, 0, false, $msg'pricesLength, $msg'prices))));
+    return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
+}
+
+(((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_ADLPerpPosition((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, (slice, int, slice, int, int, int, int, cell) $msg) impure inline {
+    var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
+    var ($msg'executionFeeReceiver, $msg'tokenId, $msg'account, $msg'isLong, $msg'sizeDelta, $msg'trxId, $msg'pricesLength, $msg'prices) = $msg;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(19305, ($ctx'value >= (((($self'gasConsumption * 2) + $self'minTonsForStorage) + ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_getPoolGas()) + 100000000)));
+    int $isExecutor = false;
+    int $isExecutorOpt = __tact_dict_get_slice_int($self'executors, 267, __tact_context_get_sender(), 1);
+    if ((~ null?($isExecutorOpt))) {
+        $isExecutor = __tact_not_null($isExecutorOpt);
+    }
+    throw_unless(41207, $isExecutor);
+    slice $executionFeeReceiver = __tact_context_get_sender();
+    if ((~ null?($msg'executionFeeReceiver))) {
+        $executionFeeReceiver = __tact_not_null($msg'executionFeeReceiver);
+    }
+    int $orderId = $self'perpPositionOrderIndexNext;
+    $self'perpPositionOrderIndexNext = ($self'perpPositionOrderIndexNext + 1);
+    $self'perpPositionOrders~__tact_dict_set_int_cell(257, $orderId, $PerpPositionOrder$_store_cell($PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(4, $msg'tokenId, $msg'account, $msg'isLong, 0, $msg'sizeDelta, 0, false, 0, now(), true, $executionFeeReceiver, __tact_context_get_sender())));
+    $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'pool, 0, 64, true, $UpdatePerpPosition$_store_cell($UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(4, $orderId, $msg'trxId, $msg'account, $msg'tokenId, $msg'isLong, 0, $msg'sizeDelta, 0, false, $msg'pricesLength, $msg'prices))));
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
 }
 
@@ -611,7 +633,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmREKW42BAiNksQzoGCrzVTo4MXS2WFmC9Y91WTgpr1Zng";
+    return "ipfs://QmX7Mp8GXddKB5rAko3dwvph3L7JN9Y18p5u8vEP3ZpJTg";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -729,10 +751,17 @@ _ lazy_deployment_completed() method_id {
         return (self, true);
     }
     
-    ;; Receive LiquidateOrADLPerpPosition message
-    if (op == 2932944209) {
-        var msg = in_msg~$LiquidateOrADLPerpPosition$_load();
-        self~$OrderBook$_internal_binary_LiquidateOrADLPerpPosition(msg);
+    ;; Receive LiquidatePerpPosition message
+    if (op == 871408284) {
+        var msg = in_msg~$LiquidatePerpPosition$_load();
+        self~$OrderBook$_internal_binary_LiquidatePerpPosition(msg);
+        return (self, true);
+    }
+    
+    ;; Receive ADLPerpPosition message
+    if (op == 829050924) {
+        var msg = in_msg~$ADLPerpPosition$_load();
+        self~$OrderBook$_internal_binary_ADLPerpPosition(msg);
         return (self, true);
     }
     

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 10612 bytes
+BOC Size: 10607 bytes
 
 # Types
 Total Types: 40
@@ -214,7 +214,6 @@ Argument: account
 4996: none available price
 5238: position not exist
 9429: send gas not enough
-11117: insuficient global net LP
 18995: margin rate too low
 27798: invalid token
 28603: margin rate too high
@@ -223,6 +222,7 @@ Argument: account
 39251: insufficient global LP
 41207: invalid sender
 42634: legerage too high
+54040: insufficient global net LP
 55429: not reach liquidate price
 58161: insufficient liquidity
 62409: insufficient margin

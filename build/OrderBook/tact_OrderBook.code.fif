@@ -38,7 +38,8 @@ PROGRAM{
   DECLPROC $CreateDecreasePerpPositionOrder$_load
   DECLPROC $CancelPerpPositionOrder$_load
   DECLPROC $ExecutePerpPositionOrder$_load
-  DECLPROC $LiquidateOrADLPerpPosition$_load
+  DECLPROC $LiquidatePerpPosition$_load
+  DECLPROC $ADLPerpPosition$_load
   DECLPROC $UpdatePerpPosition$_store
   DECLPROC $UpdatePerpPosition$_store_cell
   DECLPROC $UpdatePerpPosition$_load_bounced
@@ -148,7 +149,8 @@ PROGRAM{
   DECLPROC $OrderBook$_internal_binary_ExecutePerpPositionOrder
   DECLPROC $OrderBook$_internal_binary_UpdatePerpPositionSuccess
   DECLPROC $OrderBook$_receive_binary_bounce_UpdatePerpPosition
-  DECLPROC $OrderBook$_internal_binary_LiquidateOrADLPerpPosition
+  DECLPROC $OrderBook$_internal_binary_LiquidatePerpPosition
+  DECLPROC $OrderBook$_internal_binary_ADLPerpPosition
   DECLPROC $OrderBook$_internal_binary_CompensateOrder
   DECLPROC $OrderBook$_internal_binary_Deploy
   82657 DECLMETHOD %configData
@@ -682,10 +684,10 @@ PROGRAM{
     LDDICT
     5 -ROLL
   }>
-  $LiquidateOrADLPerpPosition$_load PROCREF:<{
+  $LiquidatePerpPosition$_load PROCREF:<{
     32 LDU
     SWAP
-    2932944209 PUSHINT
+    871408284 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
@@ -699,6 +701,34 @@ PROGRAM{
     64 LDU
     LDDICT
     7 -ROLL
+  }>
+  $ADLPerpPosition$_load PROCREF:<{
+    32 LDU
+    SWAP
+    829050924 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    __tact_load_address_opt INLINECALLDICT
+    SWAP
+    64 LDU
+    __tact_load_address INLINECALLDICT
+    SWAP
+    1 LDI
+    257 PUSHINT
+    LDIX
+    LDREF
+    SWAP
+    CTOS
+    257 PUSHINT
+    LDIX
+    64 LDU
+    LDDICT
+    DROP
+    s3 s8 XCHG
+    s3 s7 XCHG
+    s3 s6 XCHG
+    s3 s5 XCHG
+    s3 s4 XCHG
   }>
   $UpdatePerpPosition$_store PROCREF:<{
     4283950423 PUSHINT
@@ -3484,7 +3514,7 @@ PROGRAM{
       s0 s2 XCHG
     }>
   }>
-  $OrderBook$_internal_binary_LiquidateOrADLPerpPosition PROCINLINE:<{
+  $OrderBook$_internal_binary_LiquidatePerpPosition PROCINLINE:<{
     __tact_context_get INLINECALLDICT
     s1 s3 XCHG
     3 BLKDROP
@@ -3608,6 +3638,130 @@ PROGRAM{
     s3 s6 XCHG
     s0 s5 XCHG
     s3 s3 s4 XCHG3
+  }>
+  $OrderBook$_internal_binary_ADLPerpPosition PROCINLINE:<{
+    __tact_context_get INLINECALLDICT
+    s1 s3 XCHG
+    3 BLKDROP
+    19305 PUSHINT
+    20 s() PUSH
+    1 LSHIFT#
+    20 s() PUSH
+    ADD
+    s13 24 s() XCHG
+    s12 23 s() XCHG
+    s11 22 s() XCHG
+    s10 21 s() XCHG
+    s9 20 s() XCHG
+    s8 19 s() XCHG
+    s7 18 s() XCHG
+    s6 17 s() XCHG
+    s5 16 s() XCHG
+    s4 s15 XCHG
+    s3 s14 XCHG
+    s2 24 s() XCHG
+    s1 23 s() XCHG
+    s0 22 s() XCHG
+    $OrderBook$_fun_getPoolGas INLINECALLDICT
+    s1 23 s() XCHG
+    ADD
+    100000000 PUSHINT
+    ADD
+    s1 24 s() XCHG
+    GEQ
+    s1 22 s() XCHG
+    THROWANYIFNOT
+    FALSE
+    267 PUSHINT
+    __tact_context_get_sender INLINECALLDICT
+    s5 PUSH
+    -ROT
+    1 PUSHINT
+    __tact_dict_get_slice_int INLINECALLDICT
+    DUP
+    ISNULL
+    NOT
+    IF:<{
+      NIP
+      __tact_not_null INLINECALLDICT
+    }>ELSE<{
+      DROP
+    }>
+    41207 PUSHINT
+    SWAP
+    THROWANYIFNOT
+    __tact_context_get_sender INLINECALLDICT
+    19 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      DROP
+      s0 18 s() XCHG
+      __tact_not_null INLINECALLDICT
+      s0 18 s() XCHG
+    }>ELSE<{
+      19 s() POP
+    }>
+    19 s() PUSH
+    INC
+    257 PUSHINT
+    4 PUSHINT
+    0 PUSHINT
+    DUP
+    FALSE
+    OVER
+    NOW
+    TRUE
+    __tact_context_get_sender INLINECALLDICT
+    s7 s8 XCHG
+    27 s() PUSH
+    s0 s8 XCHG
+    27 s() PUSH
+    s0 s8 XCHG
+    27 s() PUSH
+    s7 s8 XCHG2
+    27 s() PUSH
+    s5 s6 s7 XCHG3
+    s3 s4 XCHG2
+    s1 32 s() XCHG
+    $PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator INLINECALLDICT
+    $PerpPositionOrder$_store_cell INLINECALLDICT
+    s2 22 s() XCHG
+    s1 20 s() XCHG
+    21 s() PUSH
+    SWAP
+    __tact_dict_set_int_cell INLINECALLDICT
+    0 PUSHINT
+    64 PUSHINT
+    TRUE
+    4 PUSHINT
+    s8 s3 s3 XCPU2
+    s9 25 s() XCHG
+    s8 19 s() XCHG
+    s7 22 s() XCHG
+    s6 23 s() XCHG
+    s5 21 s() XCHG
+    s1 s4 XCHG
+    s3 20 s() XCHG
+    s0 s2 XCHG
+    FALSE
+    s0 s2 XCHG
+    s1 19 s() XCHG
+    s0 18 s() XCHG
+    $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices INLINECALLDICT
+    $UpdatePerpPosition$_store_cell INLINECALLDICT
+    s8 PUSH
+    s0 s4 XCHG
+    s3 s12 XCHG
+    s8 s11 s11 XCHG3
+    $SendParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
+    $global_send INLINECALLDICT
+    s13 s12 s11 XCHG3
+    5 6 REVERSE
+    s3 s8 XCHG
+    s4 s7 XCHG
+    s3 s6 XCHG2
+    s4 s4 s0 XCHG3
   }>
   $OrderBook$_internal_binary_CompensateOrder PROCINLINE:<{
     __tact_context_get INLINECALLDICT
@@ -3845,7 +3999,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d52454b5734324241694e6b73517a6f4743727a56546f344d58533257466d43395939315754677072315a6e67} PUSHSLICE
+    x{697066733a2f2f516d58374d7038475864644b423572416b6f336477767068334c374a4e3959313870357538764550335a704a5467} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -3998,13 +4152,23 @@ PROGRAM{
       TRUE
     }>
     DUP
-    2932944209 PUSHINT
+    871408284 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
-      $LiquidateOrADLPerpPosition$_load INLINECALLDICT
+      $LiquidatePerpPosition$_load INLINECALLDICT
       1 7 BLKDROP2
-      $OrderBook$_internal_binary_LiquidateOrADLPerpPosition INLINECALLDICT
+      $OrderBook$_internal_binary_LiquidatePerpPosition INLINECALLDICT
+      TRUE
+    }>
+    DUP
+    829050924 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $ADLPerpPosition$_load INLINECALLDICT
+      1 8 BLKDROP2
+      $OrderBook$_internal_binary_ADLPerpPosition INLINECALLDICT
       TRUE
     }>
     DUP

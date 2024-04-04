@@ -295,13 +295,13 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 }
 
 ;;
-;; Type: LiquidateOrADLPerpPosition
-;; Header: 0xaed12d51
-;; TLB: liquidate_or_adl_perp_position#aed12d51 executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = LiquidateOrADLPerpPosition
+;; Type: LiquidatePerpPosition
+;; Header: 0x33f0a29c
+;; TLB: liquidate_perp_position#33f0a29c executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = LiquidatePerpPosition
 ;;
 
-(slice, ((slice, int, slice, int, int, int, cell))) $LiquidateOrADLPerpPosition$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 2932944209);
+(slice, ((slice, int, slice, int, int, int, cell))) $LiquidatePerpPosition$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 871408284);
     var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
     var v'tokenId = sc_0~load_uint(64);
     var v'account = sc_0~__tact_load_address();
@@ -310,6 +310,26 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
     var v'pricesLength = sc_0~load_uint(64);
     var v'prices = sc_0~load_dict();
     return (sc_0, (v'executionFeeReceiver, v'tokenId, v'account, v'isLong, v'trxId, v'pricesLength, v'prices));
+}
+
+;;
+;; Type: ADLPerpPosition
+;; Header: 0x316a502c
+;; TLB: adl_perp_position#316a502c executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool sizeDelta:int257 trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition
+;;
+
+(slice, ((slice, int, slice, int, int, int, int, cell))) $ADLPerpPosition$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 829050924);
+    var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
+    var v'tokenId = sc_0~load_uint(64);
+    var v'account = sc_0~__tact_load_address();
+    var v'isLong = sc_0~load_int(1);
+    var v'sizeDelta = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'trxId = sc_1~load_int(257);
+    var v'pricesLength = sc_1~load_uint(64);
+    var v'prices = sc_1~load_dict();
+    return (sc_0, (v'executionFeeReceiver, v'tokenId, v'account, v'isLong, v'sizeDelta, v'trxId, v'pricesLength, v'prices));
 }
 
 ;;

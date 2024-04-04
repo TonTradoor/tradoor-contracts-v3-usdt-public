@@ -272,7 +272,7 @@ contract Pool with Deployable, Ownable {
         if (globalNetLP < 0) {
             globalNetLP = 0;
         }
-        require(globalNetLP > 0, "insuficient global net LP");
+        require(globalNetLP > 0, "insufficient global net LP");
 
         let receive: Int = 0;
         let bonus: Int = 0;
@@ -383,9 +383,8 @@ contract Pool with Deployable, Ownable {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
             self.increasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice);
-        } 
-        else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION) {
-            receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, 0, 0, tradePrice);
+        } else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION || msg.opType == ORDER_OP_TYPE_ADL) {
+            receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice);
         } else {
             if (msg.triggerAbove) {
                 require(tradePrice >= msg.triggerPrice, "not reach trigger price");
@@ -744,7 +743,7 @@ contract Pool with Deployable, Ownable {
             // check liquidity
             require(globalLpPosition.netSize * globalLpPosition.entryPrice / PRICE_DECIMAL_FACTOR <= self.globalLPFund, "insufficient liquidity");
 
-            // update position
+            // margin
             perpPosition.margin += realizedPnl + fundingFee - tradingFee;
                                     
             require(perpPosition.margin >= 0, "insufficient margin");
@@ -771,7 +770,8 @@ contract Pool with Deployable, Ownable {
                 receive = marginDelta;
             } else {
                 // close position
-                receive = perpPosition.margin;
+                // withdraw all margin
+                receive = marginDelta + perpPosition.margin;
                 perpPosition = PerpPosition {
                     positionId: 0,
                     margin: 0,

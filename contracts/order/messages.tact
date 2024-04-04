@@ -106,12 +106,22 @@ message ExecutePerpPositionOrder {
     prices: map<Int, UpdatePrice>;
 }
 
-message LiquidateOrADLPerpPosition {
+message LiquidatePerpPosition {
     executionFeeReceiver: Address?;
     tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
-    // adlSize: Int;
+    trxId: Int;
+    pricesLength: Int as uint64;
+    prices: map<Int, UpdatePrice>;
+}
+
+message ADLPerpPosition {
+    executionFeeReceiver: Address?;
+    tokenId: Int as uint64;
+    account: Address;
+    isLong: Bool;
+    sizeDelta: Int;
     trxId: Int;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;

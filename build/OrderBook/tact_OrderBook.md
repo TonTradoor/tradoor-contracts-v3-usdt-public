@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 9757 bytes
+BOC Size: 10220 bytes
 
 # Types
-Total Types: 36
+Total Types: 37
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -89,9 +89,13 @@ Signature: `CancelPerpPositionOrder{executionFeeReceiver:Maybe address,orderId:u
 TLB: `execute_perp_position_order#87c410d0 executionFeeReceiver:Maybe address orderId:uint64 trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ExecutePerpPositionOrder`
 Signature: `ExecutePerpPositionOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:int257,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
-## LiquidateOrADLPerpPosition
-TLB: `liquidate_or_adl_perp_position#aed12d51 executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = LiquidateOrADLPerpPosition`
-Signature: `LiquidateOrADLPerpPosition{executionFeeReceiver:Maybe address,tokenId:uint64,account:address,isLong:bool,trxId:int257,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+## LiquidatePerpPosition
+TLB: `liquidate_perp_position#33f0a29c executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = LiquidatePerpPosition`
+Signature: `LiquidatePerpPosition{executionFeeReceiver:Maybe address,tokenId:uint64,account:address,isLong:bool,trxId:int257,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+
+## ADLPerpPosition
+TLB: `adl_perp_position#316a502c executionFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool sizeDelta:int257 trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition`
+Signature: `ADLPerpPosition{executionFeeReceiver:Maybe address,tokenId:uint64,account:address,isLong:bool,sizeDelta:int257,trxId:int257,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
 ## UpdatePerpPosition
 TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePerpPosition`
