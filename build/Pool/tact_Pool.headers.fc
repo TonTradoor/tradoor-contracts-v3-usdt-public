@@ -225,6 +225,21 @@ tuple $GlobalLPPosition$_as_optional((int, int, int, int) v) inline;
 ;; $GlobalLPPosition$_load_opt
 tuple $GlobalLPPosition$_load_opt(cell cl) inline;
 
+;; $GlobalPosition$_store
+builder $GlobalPosition$_store(builder build_0, (int, int, int, int) v) inline;
+
+;; $GlobalPosition$_store_cell
+cell $GlobalPosition$_store_cell((int, int, int, int) v) inline;
+
+;; $GlobalPosition$_load
+(slice, ((int, int, int, int))) $GlobalPosition$_load(slice sc_0) inline;
+
+;; $GlobalPosition$_as_optional
+tuple $GlobalPosition$_as_optional((int, int, int, int) v) inline;
+
+;; $GlobalPosition$_load_opt
+tuple $GlobalPosition$_load_opt(cell cl) inline;
+
 ;; $PriceData$_store
 builder $PriceData$_store(builder build_0, (int) v) inline;
 
@@ -248,21 +263,6 @@ tuple $UpdatePrice$_as_optional((int, int) v) inline;
 
 ;; $UpdatePrice$_load_opt
 tuple $UpdatePrice$_load_opt(cell cl) inline;
-
-;; $GlobalPosition$_store
-builder $GlobalPosition$_store(builder build_0, (int, int, int, int) v) inline;
-
-;; $GlobalPosition$_store_cell
-cell $GlobalPosition$_store_cell((int, int, int, int) v) inline;
-
-;; $GlobalPosition$_load
-(slice, ((int, int, int, int))) $GlobalPosition$_load(slice sc_0) inline;
-
-;; $GlobalPosition$_as_optional
-tuple $GlobalPosition$_as_optional((int, int, int, int) v) inline;
-
-;; $GlobalPosition$_load_opt
-tuple $GlobalPosition$_load_opt(cell cl) inline;
 
 ;; $GlobalFundingRateSample$_store
 builder $GlobalFundingRateSample$_store(builder build_0, (int, int, int) v) inline;
@@ -355,13 +355,22 @@ tuple $GlobalLPPosition$_to_tuple(((int, int, int, int)) v) inline;
 tuple $GlobalLPPosition$_to_opt_tuple(tuple v) inline;
 
 ;; $PerpPositionData$_not_null
-((tuple, tuple)) $PerpPositionData$_not_null(tuple v) inline;
+((tuple, tuple, tuple)) $PerpPositionData$_not_null(tuple v) inline;
 
 ;; $PerpPositionData$_as_optional
-tuple $PerpPositionData$_as_optional((tuple, tuple) v) inline;
+tuple $PerpPositionData$_as_optional((tuple, tuple, tuple) v) inline;
+
+;; $GlobalPosition$_to_tuple
+tuple $GlobalPosition$_to_tuple(((int, int, int, int)) v) inline;
+
+;; $GlobalPosition$_not_null
+((int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline;
+
+;; $GlobalPosition$_to_opt_tuple
+tuple $GlobalPosition$_to_opt_tuple(tuple v) inline;
 
 ;; $PerpPositionData$_to_tuple
-tuple $PerpPositionData$_to_tuple(((tuple, tuple)) v) inline;
+tuple $PerpPositionData$_to_tuple(((tuple, tuple, tuple)) v) inline;
 
 ;; $PerpPositionData$_to_opt_tuple
 tuple $PerpPositionData$_to_opt_tuple(tuple v) inline;
@@ -392,9 +401,6 @@ _ $UpdatePrice$_get_price((int, int) v) inline;
 
 ;; $UpdatePrice$_not_null
 ((int, int)) $UpdatePrice$_not_null(tuple v) inline;
-
-;; $GlobalPosition$_not_null
-((int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline;
 
 ;; $GlobalFundingRateSample$_not_null
 ((int, int, int)) $GlobalFundingRateSample$_not_null(tuple v) inline;
@@ -495,8 +501,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_decreasePerpPosition
 ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), int) $Pool$_fun_decreasePerpPosition((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, int $trxId, int $isLiquidate, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice) impure inline_ref;
 
-;; $PerpPositionData$_constructor_perpPosition_globalLPPosition
-((tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition(tuple perpPosition, tuple globalLPPosition) inline;
+;; $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition
+((tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition(tuple perpPosition, tuple globalLPPosition, tuple globalPosition) inline;
 
 ;; $Pool$_fun_perpPosition
 ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), tuple) $Pool$_fun_perpPosition((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, int $tokenId, slice $account) impure inline_ref;

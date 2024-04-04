@@ -72,6 +72,7 @@ struct GlobalLPPosition {
 struct PerpPositionData {
     perpPosition: DirectionPerpPosition?;
     globalLPPosition: GlobalLPPosition?;
+    globalPosition: GlobalPosition?;
 }
 
 // ============================ Price ================================ //

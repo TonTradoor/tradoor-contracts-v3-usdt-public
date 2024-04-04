@@ -846,7 +846,8 @@ contract Pool with Deployable, Ownable {
         }
         return PerpPositionData{
             perpPosition: perpPosition,
-            globalLPPosition: self.globalLPPositions.get(tokenId)
+            globalLPPosition: self.globalLPPositions.get(tokenId),
+            globalPosition: self.globalPositions.get(tokenId)
         };
     }
 

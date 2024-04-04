@@ -73,6 +73,11 @@ PROGRAM{
   DECLPROC $GlobalLPPosition$_load
   DECLPROC $GlobalLPPosition$_as_optional
   DECLPROC $GlobalLPPosition$_load_opt
+  DECLPROC $GlobalPosition$_store
+  DECLPROC $GlobalPosition$_store_cell
+  DECLPROC $GlobalPosition$_load
+  DECLPROC $GlobalPosition$_as_optional
+  DECLPROC $GlobalPosition$_load_opt
   DECLPROC $PriceData$_store
   DECLPROC $PriceData$_store_cell
   DECLPROC $PriceData$_load
@@ -81,11 +86,6 @@ PROGRAM{
   DECLPROC $UpdatePrice$_load
   DECLPROC $UpdatePrice$_as_optional
   DECLPROC $UpdatePrice$_load_opt
-  DECLPROC $GlobalPosition$_store
-  DECLPROC $GlobalPosition$_store_cell
-  DECLPROC $GlobalPosition$_load
-  DECLPROC $GlobalPosition$_as_optional
-  DECLPROC $GlobalPosition$_load_opt
   DECLPROC $GlobalFundingRateSample$_store
   DECLPROC $GlobalFundingRateSample$_store_cell
   DECLPROC $GlobalFundingRateSample$_load
@@ -118,6 +118,9 @@ PROGRAM{
   DECLPROC $GlobalLPPosition$_to_opt_tuple
   DECLPROC $PerpPositionData$_not_null
   DECLPROC $PerpPositionData$_as_optional
+  DECLPROC $GlobalPosition$_to_tuple
+  DECLPROC $GlobalPosition$_not_null
+  DECLPROC $GlobalPosition$_to_opt_tuple
   DECLPROC $PerpPositionData$_to_tuple
   DECLPROC $PerpPositionData$_to_opt_tuple
   DECLPROC $PerpPositionData$_to_opt_external
@@ -129,7 +132,6 @@ PROGRAM{
   DECLPROC $UpdatePrice$_get_tokenId
   DECLPROC $UpdatePrice$_get_price
   DECLPROC $UpdatePrice$_not_null
-  DECLPROC $GlobalPosition$_not_null
   DECLPROC $GlobalFundingRateSample$_not_null
   DECLPROC $Pool$init$_load
   DECLPROC $Pool$_contract_init
@@ -163,7 +165,7 @@ PROGRAM{
   DECLPROC $PerpPositionLiquidatedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_sizeDelta_liquidatePrice_tradingFee_fundingFee_liquidationFee_trxId
   DECLPROC $PerpPositionDecreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_entryFundingFeeGrowthAfter_receive_trxId
   DECLPROC $Pool$_fun_decreasePerpPosition
-  DECLPROC $PerpPositionData$_constructor_perpPosition_globalLPPosition
+  DECLPROC $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition
   DECLPROC $Pool$_fun_perpPosition
   DECLPROC $PriceData$_constructor_price
   DECLPROC $UpdatePriceEvent$_constructor_pricesLength_prices
@@ -1267,60 +1269,6 @@ PROGRAM{
       $GlobalLPPosition$_as_optional INLINECALLDICT
     }>
   }>
-  $PriceData$_store PROCINLINE:<{
-    SWAP
-    257 PUSHINT
-    STIX
-  }>
-  $PriceData$_store_cell PROCINLINE:<{
-    NEWC
-    SWAP
-    $PriceData$_store INLINECALLDICT
-    ENDC
-  }>
-  $PriceData$_load PROCINLINE:<{
-    257 PUSHINT
-    LDIX
-    SWAP
-  }>
-  $PriceData$_as_optional PROCINLINE:<{
-    1 TUPLE
-  }>
-  $PriceData$_load_opt PROCINLINE:<{
-    DUP
-    ISNULL
-    IF:<{
-      DROP
-      PUSHNULL
-    }>ELSE<{
-      CTOS
-      $PriceData$_load INLINECALLDICT
-      NIP
-      $PriceData$_as_optional INLINECALLDICT
-    }>
-  }>
-  $UpdatePrice$_load PROCINLINE:<{
-    64 LDU
-    257 PUSHINT
-    LDIX
-    -ROT
-  }>
-  $UpdatePrice$_as_optional PROCINLINE:<{
-    2 TUPLE
-  }>
-  $UpdatePrice$_load_opt PROCINLINE:<{
-    DUP
-    ISNULL
-    IF:<{
-      DROP
-      PUSHNULL
-    }>ELSE<{
-      CTOS
-      $UpdatePrice$_load INLINECALLDICT
-      1 2 BLKDROP2
-      $UpdatePrice$_as_optional INLINECALLDICT
-    }>
-  }>
   $GlobalPosition$_store PROCINLINE:<{
     s3 s4 XCHG2
     257 PUSHINT
@@ -1373,6 +1321,60 @@ PROGRAM{
       $GlobalPosition$_load INLINECALLDICT
       1 4 BLKDROP2
       $GlobalPosition$_as_optional INLINECALLDICT
+    }>
+  }>
+  $PriceData$_store PROCINLINE:<{
+    SWAP
+    257 PUSHINT
+    STIX
+  }>
+  $PriceData$_store_cell PROCINLINE:<{
+    NEWC
+    SWAP
+    $PriceData$_store INLINECALLDICT
+    ENDC
+  }>
+  $PriceData$_load PROCINLINE:<{
+    257 PUSHINT
+    LDIX
+    SWAP
+  }>
+  $PriceData$_as_optional PROCINLINE:<{
+    1 TUPLE
+  }>
+  $PriceData$_load_opt PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+      CTOS
+      $PriceData$_load INLINECALLDICT
+      NIP
+      $PriceData$_as_optional INLINECALLDICT
+    }>
+  }>
+  $UpdatePrice$_load PROCINLINE:<{
+    64 LDU
+    257 PUSHINT
+    LDIX
+    -ROT
+  }>
+  $UpdatePrice$_as_optional PROCINLINE:<{
+    2 TUPLE
+  }>
+  $UpdatePrice$_load_opt PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+      CTOS
+      $UpdatePrice$_load INLINECALLDICT
+      1 2 BLKDROP2
+      $UpdatePrice$_as_optional INLINECALLDICT
     }>
   }>
   $GlobalFundingRateSample$_store PROCINLINE:<{
@@ -1679,17 +1681,40 @@ PROGRAM{
     DUP
     ISNULL
     128 THROWIF
-    2 UNTUPLE
+    3 UNTUPLE
   }>
   $PerpPositionData$_as_optional PROCINLINE:<{
-    2 TUPLE
+    3 TUPLE
+  }>
+  $GlobalPosition$_to_tuple PROCINLINE:<{
+    4 TUPLE
+  }>
+  $GlobalPosition$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+    4 UNTUPLE
+  }>
+  $GlobalPosition$_to_opt_tuple PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+      $GlobalPosition$_not_null INLINECALLDICT
+      $GlobalPosition$_to_tuple INLINECALLDICT
+    }>
   }>
   $PerpPositionData$_to_tuple PROCINLINE:<{
-    SWAP
+    s0 s2 XCHG
     $DirectionPerpPosition$_to_opt_tuple INLINECALLDICT
     SWAP
     $GlobalLPPosition$_to_opt_tuple INLINECALLDICT
-    2 TUPLE
+    s0 s2 XCHG
+    $GlobalPosition$_to_opt_tuple INLINECALLDICT
+    s1 s2 XCHG
+    3 TUPLE
   }>
   $PerpPositionData$_to_opt_tuple PROCINLINE:<{
     DUP
@@ -1755,12 +1780,6 @@ PROGRAM{
     ISNULL
     128 THROWIF
     2 UNTUPLE
-  }>
-  $GlobalPosition$_not_null PROCINLINE:<{
-    DUP
-    ISNULL
-    128 THROWIF
-    4 UNTUPLE
   }>
   $GlobalFundingRateSample$_not_null PROCINLINE:<{
     DUP
@@ -3353,7 +3372,7 @@ PROGRAM{
     s0 s13 XCHG
     s0 s5 XCHG
   }>
-  $PerpPositionData$_constructor_perpPosition_globalLPPosition PROCINLINE:<{
+  $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition PROCINLINE:<{
   }>
   $Pool$_fun_perpPosition PROCREF:<{
     PUSHNULL
@@ -3386,11 +3405,17 @@ PROGRAM{
     }>ELSE<{
       NIP
     }>
+    s11 PUSH
     257 PUSHINT
-    s12 s0 s2 PUXC2
+    s3 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
     $GlobalLPPosition$_load_opt INLINECALLDICT
-    $PerpPositionData$_constructor_perpPosition_globalLPPosition INLINECALLDICT
+    257 PUSHINT
+    s6 s0 s3 PUXC2
+    __tact_dict_get_int_cell INLINECALLDICT
+    $GlobalPosition$_load_opt INLINECALLDICT
+    s1 s2 XCHG
+    $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition INLINECALLDICT
     $PerpPositionData$_as_optional INLINECALLDICT
   }>
   $PriceData$_constructor_price PROCINLINE:<{
@@ -4626,7 +4651,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d62777a6a7235675761544e74756731626332684d57334d665975387241433935647543695a78345245414a46} PUSHSLICE
+    x{697066733a2f2f516d51774a376475623876664b4a4261706645466a4674724e3671613746547a7a62333843373579516b6f723332} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

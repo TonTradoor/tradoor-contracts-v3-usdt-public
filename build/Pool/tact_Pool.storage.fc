@@ -917,24 +917,86 @@ tuple $GlobalLPPosition$_to_opt_tuple(tuple v) inline {
 }
 
 ;;
-;; Type: PerpPositionData
-;; TLB: _ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} = PerpPositionData
+;; Type: GlobalPosition
+;; TLB: _ longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 = GlobalPosition
 ;;
 
-((tuple, tuple)) $PerpPositionData$_not_null(tuple v) inline {
+builder $GlobalPosition$_store(builder build_0, (int, int, int, int) v) inline {
+    var (v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth) = v;
+    build_0 = build_0.store_int(v'longSize, 257);
+    build_0 = build_0.store_int(v'shortSize, 257);
+    build_0 = build_0.store_int(v'longFundingFeeGrowth, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'shortFundingFeeGrowth, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $GlobalPosition$_store_cell((int, int, int, int) v) inline {
+    return $GlobalPosition$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((int, int, int, int))) $GlobalPosition$_load(slice sc_0) inline {
+    var v'longSize = sc_0~load_int(257);
+    var v'shortSize = sc_0~load_int(257);
+    var v'longFundingFeeGrowth = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'shortFundingFeeGrowth = sc_1~load_int(257);
+    return (sc_0, (v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth));
+}
+
+tuple $GlobalPosition$_as_optional((int, int, int, int) v) inline {
+    var (v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth) = v;
+    return __tact_tuple_create_4(v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth);
+}
+
+tuple $GlobalPosition$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $GlobalPosition$_as_optional(sc~$GlobalPosition$_load());
+}
+
+tuple $GlobalPosition$_to_tuple(((int, int, int, int)) v) inline {
+    var (v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth) = v;
+    return __tact_tuple_create_4(v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth);
+}
+
+((int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (tuple vvv'perpPosition, tuple vvv'globalLPPosition) = __tact_tuple_destroy_2(v);
-    return (vvv'perpPosition, vvv'globalLPPosition);
+    var (int vvv'longSize, int vvv'shortSize, int vvv'longFundingFeeGrowth, int vvv'shortFundingFeeGrowth) = __tact_tuple_destroy_4(v);
+    return (vvv'longSize, vvv'shortSize, vvv'longFundingFeeGrowth, vvv'shortFundingFeeGrowth);
 }
 
-tuple $PerpPositionData$_as_optional((tuple, tuple) v) inline {
-    var (v'perpPosition, v'globalLPPosition) = v;
-    return __tact_tuple_create_2(v'perpPosition, v'globalLPPosition);
+tuple $GlobalPosition$_to_opt_tuple(tuple v) inline {
+    if (null?(v)) { return null(); } 
+    return $GlobalPosition$_to_tuple($GlobalPosition$_not_null(v)); 
 }
 
-tuple $PerpPositionData$_to_tuple(((tuple, tuple)) v) inline {
-    var (v'perpPosition, v'globalLPPosition) = v;
-    return __tact_tuple_create_2($DirectionPerpPosition$_to_opt_tuple(v'perpPosition), $GlobalLPPosition$_to_opt_tuple(v'globalLPPosition));
+((int, int, int, int)) $GlobalPosition$_constructor_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth(int longSize, int shortSize, int longFundingFeeGrowth, int shortFundingFeeGrowth) inline {
+    return (longSize, shortSize, longFundingFeeGrowth, shortFundingFeeGrowth);
+}
+
+;;
+;; Type: PerpPositionData
+;; TLB: _ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257} = PerpPositionData
+;;
+
+((tuple, tuple, tuple)) $PerpPositionData$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (tuple vvv'perpPosition, tuple vvv'globalLPPosition, tuple vvv'globalPosition) = __tact_tuple_destroy_3(v);
+    return (vvv'perpPosition, vvv'globalLPPosition, vvv'globalPosition);
+}
+
+tuple $PerpPositionData$_as_optional((tuple, tuple, tuple) v) inline {
+    var (v'perpPosition, v'globalLPPosition, v'globalPosition) = v;
+    return __tact_tuple_create_3(v'perpPosition, v'globalLPPosition, v'globalPosition);
+}
+
+tuple $PerpPositionData$_to_tuple(((tuple, tuple, tuple)) v) inline {
+    var (v'perpPosition, v'globalLPPosition, v'globalPosition) = v;
+    return __tact_tuple_create_3($DirectionPerpPosition$_to_opt_tuple(v'perpPosition), $GlobalLPPosition$_to_opt_tuple(v'globalLPPosition), $GlobalPosition$_to_opt_tuple(v'globalPosition));
 }
 
 tuple $PerpPositionData$_to_opt_tuple(tuple v) inline {
@@ -951,8 +1013,8 @@ tuple $PerpPositionData$_to_opt_external(tuple v) inline {
     }
 }
 
-((tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition(tuple perpPosition, tuple globalLPPosition) inline {
-    return (perpPosition, globalLPPosition);
+((tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition(tuple perpPosition, tuple globalLPPosition, tuple globalPosition) inline {
+    return (perpPosition, globalLPPosition, globalPosition);
 }
 
 ;;
@@ -1060,58 +1122,6 @@ _ $UpdatePrice$_get_price((int, int) v) inline {
     throw_if(128, null?(v));
     var (int vvv'tokenId, int vvv'price) = __tact_tuple_destroy_2(v);
     return (vvv'tokenId, vvv'price);
-}
-
-;;
-;; Type: GlobalPosition
-;; TLB: _ longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 = GlobalPosition
-;;
-
-builder $GlobalPosition$_store(builder build_0, (int, int, int, int) v) inline {
-    var (v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth) = v;
-    build_0 = build_0.store_int(v'longSize, 257);
-    build_0 = build_0.store_int(v'shortSize, 257);
-    build_0 = build_0.store_int(v'longFundingFeeGrowth, 257);
-    var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'shortFundingFeeGrowth, 257);
-    build_0 = store_ref(build_0, build_1.end_cell());
-    return build_0;
-}
-
-cell $GlobalPosition$_store_cell((int, int, int, int) v) inline {
-    return $GlobalPosition$_store(begin_cell(), v).end_cell();
-}
-
-(slice, ((int, int, int, int))) $GlobalPosition$_load(slice sc_0) inline {
-    var v'longSize = sc_0~load_int(257);
-    var v'shortSize = sc_0~load_int(257);
-    var v'longFundingFeeGrowth = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'shortFundingFeeGrowth = sc_1~load_int(257);
-    return (sc_0, (v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth));
-}
-
-tuple $GlobalPosition$_as_optional((int, int, int, int) v) inline {
-    var (v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth) = v;
-    return __tact_tuple_create_4(v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth);
-}
-
-tuple $GlobalPosition$_load_opt(cell cl) inline {
-    if (null?(cl)) {
-        return null();
-    }
-    var sc = cl.begin_parse();
-    return $GlobalPosition$_as_optional(sc~$GlobalPosition$_load());
-}
-
-((int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (int vvv'longSize, int vvv'shortSize, int vvv'longFundingFeeGrowth, int vvv'shortFundingFeeGrowth) = __tact_tuple_destroy_4(v);
-    return (vvv'longSize, vvv'shortSize, vvv'longFundingFeeGrowth, vvv'shortFundingFeeGrowth);
-}
-
-((int, int, int, int)) $GlobalPosition$_constructor_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth(int longSize, int shortSize, int longFundingFeeGrowth, int shortFundingFeeGrowth) inline {
-    return (longSize, shortSize, longFundingFeeGrowth, shortFundingFeeGrowth);
 }
 
 ;;
