@@ -296,7 +296,7 @@ contract OrderBook with Deployable, Ownable {
     // cancel decrease => excess gas
     receive(msg: CancelLPPositionOrder) {
         let ctx: Context = context();
-        // check order
+        // get order
         let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(msg.orderId);
         require(orderOpt != null, "order not exist");
         let order: LPPositionOrder = orderOpt!!;
@@ -307,8 +307,22 @@ contract OrderBook with Deployable, Ownable {
         } else {
             require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
         }
+        
+        // check order
+        require(!order.isPending, "order is pending");
 
-        self.shouldCancel(order.blockTime, sender(), order.isPending);
+        // executor or trader
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+        require(sender() == order.account || isExecutor, "invalid sender");
+
+        // trader cancel must after minTimeDelayTrader
+        if (!isExecutor) {
+            require(order.blockTime + self.minTimeDelayTrader <= now(), "too early");
+        }
 
         // get fee receiver
         let executionFeeReceiver: Address = sender();
@@ -352,7 +366,7 @@ contract OrderBook with Deployable, Ownable {
     receive(msg: ExecuteLPPositionOrder) {
         let ctx: Context = context();
 
-        // check order
+        // get order
         let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(msg.orderId);
         require(orderOpt != null, "order not exist");
 
@@ -365,7 +379,21 @@ contract OrderBook with Deployable, Ownable {
             require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
-        self.shouldExecute(order.blockTime, order.isPending);
+        // check order
+        require(!order.isPending, "order is pending");
+
+        // executor or trader
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+
+        // check sender
+        require(isExecutor, "invalid sender");
+
+        // execute must before maxTimeDelayExecutor
+        require(order.blockTime + self.maxTimeDelayExecutor > now(), "order expired");
 
         // update order
         if (msg.executionFeeReceiver != null) {
@@ -616,7 +644,21 @@ contract OrderBook with Deployable, Ownable {
             require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
         }
 
-        self.shouldCancel(order.blockTime, sender(), order.isPending);
+        // check order
+        require(!order.isPending, "order is pending");
+
+        // executor or trader
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+        require(sender() == order.account || isExecutor, "invalid sender");
+        
+        // trader cancel market order must after minTimeDelayTrader
+        if (!isExecutor && (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_DECREASE_MARKET)) {
+            require(order.blockTime + self.minTimeDelayTrader <= now(), "too early");
+        }
 
         // get fee receiver
         let executionFeeReceiver: Address = sender();
@@ -675,7 +717,23 @@ contract OrderBook with Deployable, Ownable {
             require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
-        self.shouldExecute(order.blockTime, order.isPending);
+        // check order
+        require(!order.isPending, "order is pending");
+
+        // executor or trader
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+
+        // check sender
+        require(isExecutor, "invalid sender");
+
+        // execute market must before maxTimeDelayExecutor
+        if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_DECREASE_MARKET) {
+            require(order.blockTime + self.maxTimeDelayExecutor > now(), "order expired");
+        }
 
         // update order
         if (msg.executionFeeReceiver != null) {
@@ -1002,40 +1060,6 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ======================================================== private function ================================================================ //
-    fun shouldCancel(blockTime: Int, account: Address, isPending: Bool) {
-        require(!isPending, "order is pending");
-
-        // executor or trader
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
-
-        // check sender
-        require(sender() == account || isExecutor, "invalid sender");
-        // trader cancel must after minTimeDelayTrader
-        if (!isExecutor) {
-            require(blockTime + self.minTimeDelayTrader <= now(), "too early");
-        }
-    }
-
-    fun shouldExecute(blockTime: Int, isPending: Bool) {
-        require(!isPending, "order is pending");
-
-        // executor or trader
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
-
-        // check sender
-        require(isExecutor, "invalid sender");
-
-        // executor cancel must before maxTimeDelayExecutor
-        require(blockTime + self.maxTimeDelayExecutor > now(), "order expired");
-    }
 
     // fun tokenEnabled(tokenIndex: Int): Bool {
     //     let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenIndex);

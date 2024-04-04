@@ -158,34 +158,6 @@
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), $self'perpPositionOrderIndexNext);
 }
 
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_shouldCancel((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $blockTime, slice $account, int $isPending) impure inline_ref {
-    var (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)) = $self;
-    throw_unless(24173, (~ $isPending));
-    int $isExecutor = false;
-    int $isExecutorOpt = __tact_dict_get_slice_int($self'executors, 267, __tact_context_get_sender(), 1);
-    if ((~ null?($isExecutorOpt))) {
-        $isExecutor = __tact_not_null($isExecutorOpt);
-    }
-    throw_unless(41207, ( (( __tact_slice_eq_bits($account, __tact_context_get_sender()) )) ? (true) : ($isExecutor) ));
-    if ((~ $isExecutor)) {
-        throw_unless(39703, (($blockTime + $self'minTimeDelayTrader) <= now()));
-    }
-    return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
-}
-
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_shouldExecute((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $blockTime, int $isPending) impure inline_ref {
-    var (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)) = $self;
-    throw_unless(24173, (~ $isPending));
-    int $isExecutor = false;
-    int $isExecutorOpt = __tact_dict_get_slice_int($self'executors, 267, __tact_context_get_sender(), 1);
-    if ((~ null?($isExecutorOpt))) {
-        $isExecutor = __tact_not_null($isExecutorOpt);
-    }
-    throw_unless(41207, $isExecutor);
-    throw_unless(16780, (($blockTime + $self'maxTimeDelayExecutor) > now()));
-    return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
-}
-
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_requireOwner((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self) impure inline_ref {
     var (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)) = $self;
     throw_unless(132, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
@@ -278,7 +250,16 @@
     } else {
         throw_unless(19305, ($ctx'value >= ($self'gasConsumption + $self'minTonsForStorage)));
     }
-    ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_shouldCancel($order'blockTime, __tact_context_get_sender(), $order'isPending);
+    throw_unless(24173, (~ $order'isPending));
+    int $isExecutor = false;
+    int $isExecutorOpt = __tact_dict_get_slice_int($self'executors, 267, __tact_context_get_sender(), 1);
+    if ((~ null?($isExecutorOpt))) {
+        $isExecutor = __tact_not_null($isExecutorOpt);
+    }
+    throw_unless(41207, ( (( __tact_slice_eq_bits($order'account, __tact_context_get_sender()) )) ? (true) : ($isExecutor) ));
+    if ((~ $isExecutor)) {
+        throw_unless(39703, (($order'blockTime + $self'minTimeDelayTrader) <= now()));
+    }
     slice $executionFeeReceiver = __tact_context_get_sender();
     if ((~ null?($msg'executionFeeReceiver))) {
         $executionFeeReceiver = __tact_not_null($msg'executionFeeReceiver);
@@ -307,7 +288,14 @@
     } else {
         throw_unless(19305, ($ctx'value >= (((($self'gasConsumption * 2) + $self'minTonsForStorage) + ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_getPoolGas()) + 100000000)));
     }
-    ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_shouldExecute($order'blockTime, $order'isPending);
+    throw_unless(24173, (~ $order'isPending));
+    int $isExecutor = false;
+    int $isExecutorOpt = __tact_dict_get_slice_int($self'executors, 267, __tact_context_get_sender(), 1);
+    if ((~ null?($isExecutorOpt))) {
+        $isExecutor = __tact_not_null($isExecutorOpt);
+    }
+    throw_unless(41207, $isExecutor);
+    throw_unless(16780, (($order'blockTime + $self'maxTimeDelayExecutor) > now()));
     if ((~ null?($msg'executionFeeReceiver))) {
         $order'executionFeeReceiver = __tact_not_null($msg'executionFeeReceiver);
     } else {
@@ -384,7 +372,16 @@
     } else {
         throw_unless(19305, ($ctx'value >= ($self'gasConsumption + $self'minTonsForStorage)));
     }
-    ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_shouldCancel($order'blockTime, __tact_context_get_sender(), $order'isPending);
+    throw_unless(24173, (~ $order'isPending));
+    int $isExecutor = false;
+    int $isExecutorOpt = __tact_dict_get_slice_int($self'executors, 267, __tact_context_get_sender(), 1);
+    if ((~ null?($isExecutorOpt))) {
+        $isExecutor = __tact_not_null($isExecutorOpt);
+    }
+    throw_unless(41207, ( (( __tact_slice_eq_bits($order'account, __tact_context_get_sender()) )) ? (true) : ($isExecutor) ));
+    if (( ((~ $isExecutor)) ? (( (($order'opType == 10)) ? (true) : (($order'opType == 12)) )) : (false) )) {
+        throw_unless(39703, (($order'blockTime + $self'minTimeDelayTrader) <= now()));
+    }
     slice $executionFeeReceiver = __tact_context_get_sender();
     if ((~ null?($msg'executionFeeReceiver))) {
         $executionFeeReceiver = __tact_not_null($msg'executionFeeReceiver);
@@ -414,7 +411,16 @@
     } else {
         throw_unless(19305, ($ctx'value >= (((($self'gasConsumption * 2) + $self'minTonsForStorage) + ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_getPoolGas()) + 100000000)));
     }
-    ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_shouldExecute($order'blockTime, $order'isPending);
+    throw_unless(24173, (~ $order'isPending));
+    int $isExecutor = false;
+    int $isExecutorOpt = __tact_dict_get_slice_int($self'executors, 267, __tact_context_get_sender(), 1);
+    if ((~ null?($isExecutorOpt))) {
+        $isExecutor = __tact_not_null($isExecutorOpt);
+    }
+    throw_unless(41207, $isExecutor);
+    if (( (($order'opType == 10)) ? (true) : (($order'opType == 12)) )) {
+        throw_unless(16780, (($order'blockTime + $self'maxTimeDelayExecutor) > now()));
+    }
     if ((~ null?($msg'executionFeeReceiver))) {
         $order'executionFeeReceiver = __tact_not_null($msg'executionFeeReceiver);
     } else {

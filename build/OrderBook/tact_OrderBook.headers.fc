@@ -369,12 +369,6 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $OrderBook$_fun_perpPositionOrderIndexNext
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), int) $OrderBook$_fun_perpPositionOrderIndexNext((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self) impure inline_ref;
 
-;; $OrderBook$_fun_shouldCancel
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_shouldCancel((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $blockTime, slice $account, int $isPending) impure inline_ref;
-
-;; $OrderBook$_fun_shouldExecute
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_shouldExecute((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $blockTime, int $isPending) impure inline_ref;
-
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;
 

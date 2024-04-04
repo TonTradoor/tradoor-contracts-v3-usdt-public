@@ -61,7 +61,7 @@ describe('LP', () => {
         // blockchain and pool are ready to use
     });
 
-    it('should cancel increase perp order', async () => {
+    it('should executor cancel market increase perp order', async () => {
         let executionFee = 0.1;
         let isMarket = true;
         let tokenId = 1;
@@ -69,10 +69,6 @@ describe('LP', () => {
         let margin = 100;
         let size = 0.02;
         let triggerPrice = 51000;
-
-        // set block time
-        const time1 = Math.floor(Date.now() / 1000); 
-        blockchain.now = time1;
 
         // create order
         const createResult = await createIncreasePerpOrder(user0, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
@@ -93,6 +89,52 @@ describe('LP', () => {
         
         /// cancel order
         const cancelResult = await cancelPerpOrder(executor, createResult.orderIdBefore);
+        printTransactionFees(cancelResult.trxResult.transactions);
+        prettyLogTransactions(cancelResult.trxResult.transactions);
+
+        expect(cancelResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: user0JettonWallet.address,
+            success: true,
+        });
+
+        // check order
+        expect(cancelResult.order).toBeNull();
+
+        // check jetton
+        expect(cancelResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance);
+
+        console.log('cancel order gas used:', fromNano(cancelResult.balanceBefore.executorTonBalance - cancelResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+    });
+
+    it('should trader cancel limit increase perp order', async () => {
+        let executionFee = 0.1;
+        let isMarket = false;
+        let tokenId = 1;
+        let isLong = true;
+        let margin = 100;
+        let size = 0.02;
+        let triggerPrice = 51000;
+
+        // create order
+        const createResult = await createIncreasePerpOrder(user0, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check order
+        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore + 1n);
+        expect(createResult.order).not.toBeNull();
+        expect(createResult.order?.marginDelta).toEqual(toJettonUnits(margin));
+        expect(createResult.order?.sizeDelta).toEqual(toJettonUnits(size));
+        // check jetton
+        expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance - toJettonUnits(margin));
+        expect(createResult.balanceAfter.orderBookJettonBalance).toEqual(createResult.balanceBefore.orderBookJettonBalance + toJettonUnits(margin));
+        
+        /// cancel order
+        const cancelResult = await cancelPerpOrder(user0, createResult.orderIdBefore);
         printTransactionFees(cancelResult.trxResult.transactions);
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
