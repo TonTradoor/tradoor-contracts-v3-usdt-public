@@ -544,7 +544,7 @@ PROGRAM{
   $ExecuteLPPositionOrder$_load PROCINLINE:<{
     32 LDU
     SWAP
-    3998218813 PUSHINT
+    1452352025 PUSHINT
     EQUAL
     129 THROWIFNOT
     64 LDU
@@ -552,8 +552,7 @@ PROGRAM{
     LDIX
     __tact_load_address_opt INLINECALLDICT
     SWAP
-    257 PUSHINT
-    LDIX
+    64 LDU
     LDDICT
     5 -ROLL
   }>
@@ -571,15 +570,8 @@ PROGRAM{
     STIX
     257 PUSHINT
     STIX
-    SWAP
-    NEWC
-    257 PUSHINT
-    STIX
-    s1 s2 XCHG
+    64 STU
     STDICT
-    ENDC
-    SWAP
-    STREF
   }>
   $UpdateLPPosition$_store_cell PROCINLINE:<{
     NEWC
@@ -647,29 +639,20 @@ PROGRAM{
   $CreateDecreasePerpPositionOrder$_load PROCREF:<{
     32 LDU
     SWAP
-    2344676813 PUSHINT
+    3586686649 PUSHINT
     EQUAL
     129 THROWIFNOT
     LDGRAMS
-    257 PUSHINT
-    LDIX
+    8 LDU
     64 LDU
     1 LDI
     257 PUSHINT
     LDIX
     257 PUSHINT
     LDIX
-    LDREF
-    SWAP
-    CTOS
     257 PUSHINT
     LDIX
-    DROP
-    s1 s7 XCHG
-    s1 s6 XCHG
-    s1 s5 XCHG
-    s1 s4 XCHG
-    s3 s3 s0 XCHG3
+    7 -ROLL
   }>
   $CancelPerpPositionOrder$_load PROCINLINE:<{
     32 LDU
@@ -687,7 +670,7 @@ PROGRAM{
   $ExecutePerpPositionOrder$_load PROCINLINE:<{
     32 LDU
     SWAP
-    1224461699 PUSHINT
+    2277773520 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
@@ -695,15 +678,14 @@ PROGRAM{
     64 LDU
     257 PUSHINT
     LDIX
-    257 PUSHINT
-    LDIX
+    64 LDU
     LDDICT
     5 -ROLL
   }>
   $LiquidateOrADLPerpPosition$_load PROCREF:<{
     32 LDU
     SWAP
-    713294569 PUSHINT
+    2932944209 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
@@ -714,18 +696,9 @@ PROGRAM{
     1 LDI
     257 PUSHINT
     LDIX
-    LDREF
-    SWAP
-    CTOS
-    257 PUSHINT
-    LDIX
+    64 LDU
     LDDICT
-    DROP
-    s2 s7 XCHG
-    s2 s6 XCHG
-    s2 s5 XCHG
-    s2 s4 XCHG
-    s2 s3 XCHG
+    7 -ROLL
   }>
   $UpdatePerpPosition$_store PROCREF:<{
     4283950423 PUSHINT
@@ -755,8 +728,7 @@ PROGRAM{
     257 PUSHINT
     STIX
     s1 s2 XCHG
-    257 PUSHINT
-    STIX
+    64 STU
     s1 s2 XCHG
     STDICT
     ENDC
@@ -794,7 +766,7 @@ PROGRAM{
     3 -ROLL
   }>
   $LPPositionOrderCreatedEvent$_store PROCINLINE:<{
-    2880096248 PUSHINT
+    3343721171 PUSHINT
     s0 s6 XCHG2
     32 STU
     s1 s4 XCHG
@@ -803,15 +775,10 @@ PROGRAM{
     __tact_store_address INLINECALLDICT
     257 PUSHINT
     STIX
+    SWAP
+    STGRAMS
     257 PUSHINT
     STIX
-    SWAP
-    NEWC
-    257 PUSHINT
-    STIX
-    ENDC
-    SWAP
-    STREF
   }>
   $LPPositionOrderCreatedEvent$_store_cell PROCINLINE:<{
     NEWC
@@ -820,13 +787,12 @@ PROGRAM{
     ENDC
   }>
   $LPPositionOrderCancelledEvent$_store PROCINLINE:<{
-    275376848 PUSHINT
+    1334733875 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
     8 STU
-    257 PUSHINT
-    STIX
+    64 STU
     257 PUSHINT
     STIX
   }>
@@ -837,13 +803,12 @@ PROGRAM{
     ENDC
   }>
   $LPPositionOrderExecutedEvent$_store PROCINLINE:<{
-    3610195672 PUSHINT
+    3149715906 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
     8 STU
-    257 PUSHINT
-    STIX
+    64 STU
     257 PUSHINT
     STIX
   }>
@@ -854,14 +819,13 @@ PROGRAM{
     ENDC
   }>
   $PerpPositionOrderCreatedEvent$_store PROCREF:<{
-    3995768881 PUSHINT
+    2583439296 PUSHINT
     s0 s15 XCHG2
     32 STU
     s1 s13 XCHG
     8 STU
     s1 s11 XCHG
-    257 PUSHINT
-    STIX
+    64 STU
     s0 s9 XCHG2
     __tact_store_address INLINECALLDICT
     s1 s7 XCHG
@@ -869,14 +833,18 @@ PROGRAM{
     s1 s5 XCHG
     257 PUSHINT
     STIX
-    s0 s3 XCHG
+    s1 s3 XCHG
+    257 PUSHINT
+    STIX
+    SWAP
     NEWC
     257 PUSHINT
     STIX
     s1 s2 XCHG
+    1 STI
+    s1 s2 XCHG
     257 PUSHINT
     STIX
-    1 STI
     s1 s2 XCHG
     257 PUSHINT
     STIX
@@ -887,19 +855,11 @@ PROGRAM{
     s1 s3 XCHG
     257 PUSHINT
     STIX
+    s0 s3 XCHG2
+    STGRAMS
     s1 s3 XCHG
     257 PUSHINT
     STIX
-    s0 s3 XCHG
-    NEWC
-    257 PUSHINT
-    STIX
-    s1 s4 XCHG
-    257 PUSHINT
-    STIX
-    ENDC
-    ROT
-    STREF
     ENDC
     SWAP
     STREF
@@ -914,13 +874,12 @@ PROGRAM{
     ENDC
   }>
   $PerpPositionOrderCancelledEvent$_store PROCINLINE:<{
-    2545166058 PUSHINT
+    2438616209 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
     8 STU
-    257 PUSHINT
-    STIX
+    64 STU
     257 PUSHINT
     STIX
   }>
@@ -931,13 +890,12 @@ PROGRAM{
     ENDC
   }>
   $PerpPositionOrderExecutedEvent$_store PROCINLINE:<{
-    4274993791 PUSHINT
+    958917758 PUSHINT
     s0 s4 XCHG2
     32 STU
     s1 s2 XCHG
     8 STU
-    257 PUSHINT
-    STIX
+    64 STU
     257 PUSHINT
     STIX
   }>
@@ -948,7 +906,7 @@ PROGRAM{
     ENDC
   }>
   $CompensateOrderEvent$_store PROCREF:<{
-    4102577430 PUSHINT
+    1722105882 PUSHINT
     s0 s8 XCHG2
     32 STU
     s6 PUSH
@@ -968,26 +926,20 @@ PROGRAM{
       1 STI
     }>
     s1 s4 XCHG
-    257 PUSHINT
-    STIX
+    64 STU
     s1 s2 XCHG
     257 PUSHINT
     STIX
-    NEWC
-    ROT
+    SWAP
     __tact_store_address_opt INLINECALLDICT
-    s1 s2 XCHG
-    257 PUSHINT
-    STIX
-    ROT
-    __tact_store_address_opt INLINECALLDICT
-    s0 s2 XCHG
+    SWAP
     NEWC
     257 PUSHINT
     STIX
-    ENDC
     ROT
-    STREF
+    __tact_store_address_opt INLINECALLDICT
+    ROT
+    STGRAMS
     ENDC
     SWAP
     STREF
@@ -3059,6 +3011,9 @@ PROGRAM{
     $OrderBook$_fun_refundExecessTon INLINECALLDICT
   }>
   $OrderBook$_internal_binary_ExecutePerpPositionOrder PROCINLINE:<{
+    B{b5ee9c7241010101001a0000304578656375746550657270506f736974696f6e4f726465728e0806e5} B>boc <s PUSHSLICE
+    STRDUMP
+    DROP
     __tact_context_get INLINECALLDICT
     s1 s3 XCHG
     3 BLKDROP
@@ -3222,6 +3177,9 @@ PROGRAM{
     s4 s4 XCHG2
   }>
   $OrderBook$_internal_binary_UpdatePerpPositionSuccess PROCINLINE:<{
+    B{b5ee9c7241010101001b00003255706461746550657270506f736974696f6e5375636365737372858bab} B>boc <s PUSHSLICE
+    STRDUMP
+    DROP
     __tact_context_get INLINECALLDICT
     s1 s3 XCHG
     3 BLKDROP
@@ -3882,11 +3840,12 @@ PROGRAM{
     123515602279859691144772641439386770278 PUSHINT
     209801025412363888721030803524359905849 PUSHINT
     42980537499636128163026532310500881091 PUSHINT
+    36993126140238121407019133875791708966 PUSHINT
     209474421377847335869795010607481022628 PUSHINT
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d65333131576670546a7461694d554e32555a597757674752594b74666967547769504167764b4d6b4b57374e} PUSHSLICE
+    x{697066733a2f2f516d52454b5734324241694e6b73517a6f4743727a56546f344d58533257466d43395939315754677072315a6e67} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -3979,7 +3938,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    3998218813 PUSHINT
+    1452352025 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -3999,7 +3958,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    2344676813 PUSHINT
+    3586686649 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4019,7 +3978,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    1224461699 PUSHINT
+    2277773520 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -4039,7 +3998,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    713294569 PUSHINT
+    2932944209 PUSHINT
     EQUAL
     IFJMP:<{
       DROP

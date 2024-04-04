@@ -404,6 +404,7 @@
 (((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_ExecutePerpPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, (slice, int, int, int, cell) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($msg'executionFeeReceiver, $msg'orderId, $msg'trxId, $msg'pricesLength, $msg'prices) = $msg;
+    __tact_debug_str(__gen_slice_string_01f1c93cb867a4fe4c33fd803533f527d78ca88e2969c311f06ce34cd265f1c4());
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     tuple $orderOpt = $PerpPositionOrder$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrders, 257, $msg'orderId));
     throw_unless(32637, (~ null?($orderOpt)));
@@ -429,6 +430,7 @@
 (((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int)), ()) $OrderBook$_internal_binary_UpdatePerpPositionSuccess((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, (int, int, int) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext) = $self;
     var ($msg'orderId, $msg'receive, $msg'trxId) = $msg;
+    __tact_debug_str(__gen_slice_string_5cb78f382776d69c89dd576c45e0626f9bbe3163a24184ad8873588adbd7678a());
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(41207, ( __tact_slice_eq_bits($self'pool, __tact_context_get_sender()) ));
     tuple $orderOpt = $PerpPositionOrder$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrders, 257, $msg'orderId));
@@ -602,13 +604,14 @@ _ supported_interfaces() method_id {
         "org.ton.introspection.v0"H >> 128,
         "org.ton.abi.ipfs.v0"H >> 128,
         "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.debug.v0"H >> 128,
         "org.ton.chain.workchain.v0"H >> 128,
         "org.ton.ownable"H >> 128
     );
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://Qme311WfpTjtaiMUN2UZYwWgGRYKtfigTwiPAgvKMkKW7N";
+    return "ipfs://QmREKW42BAiNksQzoGCrzVTo4MXS2WFmC9Y91WTgpr1Zng";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -685,7 +688,7 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive ExecuteLPPositionOrder message
-    if (op == 3998218813) {
+    if (op == 1452352025) {
         var msg = in_msg~$ExecuteLPPositionOrder$_load();
         self~$OrderBook$_internal_binary_ExecuteLPPositionOrder(msg);
         return (self, true);
@@ -699,7 +702,7 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive CreateDecreasePerpPositionOrder message
-    if (op == 2344676813) {
+    if (op == 3586686649) {
         var msg = in_msg~$CreateDecreasePerpPositionOrder$_load();
         self~$OrderBook$_internal_binary_CreateDecreasePerpPositionOrder(msg);
         return (self, true);
@@ -713,7 +716,7 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive ExecutePerpPositionOrder message
-    if (op == 1224461699) {
+    if (op == 2277773520) {
         var msg = in_msg~$ExecutePerpPositionOrder$_load();
         self~$OrderBook$_internal_binary_ExecutePerpPositionOrder(msg);
         return (self, true);
@@ -727,7 +730,7 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive LiquidateOrADLPerpPosition message
-    if (op == 713294569) {
+    if (op == 2932944209) {
         var msg = in_msg~$LiquidateOrADLPerpPosition$_load();
         self~$OrderBook$_internal_binary_LiquidateOrADLPerpPosition(msg);
         return (self, true);

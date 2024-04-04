@@ -355,6 +355,8 @@ contract Pool with Deployable, Ownable {
 
     // ============================ Perp ================================ //
     receive(msg: UpdatePerpPosition) {
+        dump("UpdatePerpPosition");
+
         require(sender() == self.orderBook, "invalid sender");
 
         // update price
@@ -365,7 +367,7 @@ contract Pool with Deployable, Ownable {
         require(indexPrice > 0, "none available price");
 
         // update funding rate
-        self.updateFundingRate(msg.tokenId, indexPrice);
+        // self.updateFundingRate(msg.tokenId, indexPrice);
 
         // TODO get trade price
         let tradePrice: Int = indexPrice;
@@ -382,8 +384,7 @@ contract Pool with Deployable, Ownable {
         } 
         else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION) {
             receive = self.decreasePerpPosition(msg.trxId, true, msg.account, msg.tokenId, msg.isLong, 0, 0, tradePrice);
-        }
-        else {
+        } else {
             if (msg.triggerAbove) {
                 require(tradePrice >= msg.triggerPrice, "not reach trigger price");
             } else {
@@ -409,6 +410,7 @@ contract Pool with Deployable, Ownable {
     }
 
     fun increasePerpPosition(trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int) {
+        dump("increasePerpPosition");
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -547,6 +549,8 @@ contract Pool with Deployable, Ownable {
 
         self.globalPositions.set(tokenId, globalPosition);
 
+        dump("emit events");
+
         // event
         emit(PerpPositionIncreasedEvent{
             positionId: perpPosition.positionId,
@@ -561,14 +565,14 @@ contract Pool with Deployable, Ownable {
             entryPrice: perpPosition.entryPrice,
             tradingFee: tradingFee,
             fundingFee: fundingFee,
-            entryFundingFeeGrowthAfter: perpPosition.entryFundingFeeGrowth,
+            entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
             trxId: trxId
         }.toCell());
-        emit(GlobalLPPositionChangedEvent{
-            tokenId: tokenId,
-            netSizeAfter: globalLpPosition.netSize,
-            isLong: globalLpPosition.isLong,
-            entryPriceAfter: globalLpPosition.entryPrice,
+        emit(GlobalPositionChangedEvent{
+            longSizeAfter: globalPosition.longSize,
+            shortSizeAfter: globalPosition.shortSize,
+            longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+            shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
             trxId: trxId
         }.toCell());
         emit(GlobalLPPositionChangedEvent{
@@ -585,6 +589,7 @@ contract Pool with Deployable, Ownable {
             fundingFee: 0,
             trxId: trxId
         }.toCell());
+        dump("increasePerpPosition done");
     }
 
     fun decreasePerpPosition(trxId: Int, isLiquidate: Bool, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int): Int {

@@ -3,7 +3,7 @@ import "./structs";
 // ============================ LP ================================ //
 // increase LP
 message LPPositionIncreasedEvent {
-    positionId: Int;
+    positionId: Int as uint64;
     account: Address;
     liquidityDelta: Int;
     liquidityAfter: Int;
@@ -18,7 +18,7 @@ message LPPositionIncreasedEvent {
 
 // decrease LP
 message LPPositionDecreasedEvent {
-    positionId: Int;
+    positionId: Int as uint64;
     account: Address;
     liquidityDelta: Int; // decrease liquidty
     liquidityAfter: Int;
@@ -40,7 +40,7 @@ message GlobalLPChangedEvent {
 }
 
 message GlobalLPPositionChangedEvent {
-    tokenId: Int;
+    tokenId: Int as uint64;
     netSizeAfter: Int;
     isLong: Bool;
     entryPriceAfter: Int;
@@ -49,9 +49,9 @@ message GlobalLPPositionChangedEvent {
 
 // ============================ Perp ================================ //
 message PerpPositionIncreasedEvent {
-    positionId: Int;
+    positionId: Int as uint64;
     account: Address;
-    tokenId: Int;
+    tokenId: Int as uint64;
     isLong: Bool;
     marginDelta: Int;
     marginAfter: Int;
@@ -66,9 +66,9 @@ message PerpPositionIncreasedEvent {
 }
 
 message PerpPositionDecreasedEvent {
-    positionId: Int;
+    positionId: Int as uint64;
     account: Address;
-    tokenId: Int;
+    tokenId: Int as uint64;
     isLong: Bool;
     marginDelta: Int;
     marginAfter: Int;
@@ -84,9 +84,9 @@ message PerpPositionDecreasedEvent {
 }
 
 message PerpPositionLiquidatedEvent {
-    positionId: Int;
+    positionId: Int as uint64;
     account: Address;
-    tokenId: Int;
+    tokenId: Int as uint64;
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
@@ -107,6 +107,6 @@ message GlobalPositionChangedEvent {
 
 // ============================ Price ================================ //
 message UpdatePriceEvent {
-    pricesLength: Int;
+    pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }

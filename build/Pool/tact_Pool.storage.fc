@@ -112,7 +112,7 @@ cell $DeployOk$_store_cell((int) v) inline {
 ;;
 ;; Type: UpdateLPPosition
 ;; Header: 0xe89cd45f
-;; TLB: update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateLPPosition
+;; TLB: update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateLPPosition
 ;;
 
 (slice, ((int, int, slice, int, int, int, cell))) $UpdateLPPosition$_load(slice sc_0) inline_ref {
@@ -122,9 +122,8 @@ cell $DeployOk$_store_cell((int) v) inline {
     var v'account = sc_0~__tact_load_address();
     var v'liquidityDelta = sc_0~load_int(257);
     var v'trxId = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'pricesLength = sc_1~load_int(257);
-    var v'prices = sc_1~load_dict();
+    var v'pricesLength = sc_0~load_uint(64);
+    var v'prices = sc_0~load_dict();
     return (sc_0, (v'isIncrease, v'orderId, v'account, v'liquidityDelta, v'trxId, v'pricesLength, v'prices));
 }
 
@@ -154,7 +153,7 @@ cell $UpdateLPPositionSuccess$_store_cell((int, int, int) v) inline {
 ;;
 ;; Type: UpdatePerpPosition
 ;; Header: 0xff57e557
-;; TLB: update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:int257 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePerpPosition
+;; TLB: update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:int257 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePerpPosition
 ;;
 
 (slice, ((int, int, int, slice, int, int, int, int, int, int, int, cell))) $UpdatePerpPosition$_load(slice sc_0) inline_ref {
@@ -170,7 +169,7 @@ cell $UpdateLPPositionSuccess$_store_cell((int, int, int) v) inline {
     var v'triggerPrice = sc_1~load_int(257);
     var v'triggerAbove = sc_1~load_int(1);
     var v'trxId = sc_1~load_int(257);
-    var v'pricesLength = sc_1~load_int(257);
+    var v'pricesLength = sc_1~load_uint(64);
     var v'prices = sc_1~load_dict();
     return (sc_0, (v'orderId, v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'trxId, v'pricesLength, v'prices));
 }
@@ -200,41 +199,41 @@ cell $UpdatePerpPositionSuccess$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: UpdateFundingFee
-;; Header: 0x81689860
-;; TLB: update_funding_fee#81689860 trxId:int257 tokenId:uint64 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateFundingFee
+;; Header: 0x79494a35
+;; TLB: update_funding_fee#79494a35 trxId:int257 tokenId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateFundingFee
 ;;
 
 (slice, ((int, int, int, cell))) $UpdateFundingFee$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2171115616);
+    throw_unless(129, sc_0~load_uint(32) == 2034846261);
     var v'trxId = sc_0~load_int(257);
     var v'tokenId = sc_0~load_uint(64);
-    var v'pricesLength = sc_0~load_int(257);
+    var v'pricesLength = sc_0~load_uint(64);
     var v'prices = sc_0~load_dict();
     return (sc_0, (v'trxId, v'tokenId, v'pricesLength, v'prices));
 }
 
 ;;
 ;; Type: LPPositionIncreasedEvent
-;; Header: 0xc73030a5
-;; TLB: lp_position_increased_event#c73030a5 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFeeDelta:int257 realizedFundingFeeAfter:int257 entryFundingFeeGrowthAfter:int257 trxId:int257 = LPPositionIncreasedEvent
+;; Header: 0xbf0c0be0
+;; TLB: lp_position_increased_event#bf0c0be0 positionId:uint64 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFeeDelta:int257 realizedFundingFeeAfter:int257 entryFundingFeeGrowthAfter:int257 trxId:int257 = LPPositionIncreasedEvent
 ;;
 
 builder $LPPositionIncreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int) v) inline_ref {
     var (v'positionId, v'account, v'liquidityDelta, v'liquidityAfter, v'bonusDelta, v'bonusAfter, v'unlockTimeAfter, v'realizedFundingFeeDelta, v'realizedFundingFeeAfter, v'entryFundingFeeGrowthAfter, v'trxId) = v;
-    build_0 = store_uint(build_0, 3341824165, 32);
-    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = store_uint(build_0, 3205237728, 32);
+    build_0 = build_0.store_uint(v'positionId, 64);
     build_0 = __tact_store_address(build_0, v'account);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
+    build_0 = build_0.store_int(v'liquidityAfter, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'liquidityAfter, 257);
     build_1 = build_1.store_int(v'bonusDelta, 257);
     build_1 = build_1.store_int(v'bonusAfter, 257);
+    build_1 = build_1.store_int(v'unlockTimeAfter, 257);
     var build_2 = begin_cell();
-    build_2 = build_2.store_int(v'unlockTimeAfter, 257);
     build_2 = build_2.store_int(v'realizedFundingFeeDelta, 257);
     build_2 = build_2.store_int(v'realizedFundingFeeAfter, 257);
+    build_2 = build_2.store_int(v'entryFundingFeeGrowthAfter, 257);
     var build_3 = begin_cell();
-    build_3 = build_3.store_int(v'entryFundingFeeGrowthAfter, 257);
     build_3 = build_3.store_int(v'trxId, 257);
     build_2 = store_ref(build_2, build_3.end_cell());
     build_1 = store_ref(build_1, build_2.end_cell());
@@ -252,27 +251,25 @@ cell $LPPositionIncreasedEvent$_store_cell((int, slice, int, int, int, int, int,
 
 ;;
 ;; Type: LPPositionDecreasedEvent
-;; Header: 0xbada9ef0
-;; TLB: lp_position_decreased_event#bada9ef0 positionId:int257 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 fundingFeeDelta:int257 entryFundingFeeGrowthAfter:int257 receive:int257 trxId:int257 = LPPositionDecreasedEvent
+;; Header: 0x9304303b
+;; TLB: lp_position_decreased_event#9304303b positionId:uint64 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 fundingFeeDelta:int257 entryFundingFeeGrowthAfter:int257 receive:int257 trxId:int257 = LPPositionDecreasedEvent
 ;;
 
 builder $LPPositionDecreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int) v) inline_ref {
     var (v'positionId, v'account, v'liquidityDelta, v'liquidityAfter, v'bonusDelta, v'bonusAfter, v'fundingFeeDelta, v'entryFundingFeeGrowthAfter, v'receive, v'trxId) = v;
-    build_0 = store_uint(build_0, 3134889712, 32);
-    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = store_uint(build_0, 2466525243, 32);
+    build_0 = build_0.store_uint(v'positionId, 64);
     build_0 = __tact_store_address(build_0, v'account);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
+    build_0 = build_0.store_int(v'liquidityAfter, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'liquidityAfter, 257);
     build_1 = build_1.store_int(v'bonusDelta, 257);
     build_1 = build_1.store_int(v'bonusAfter, 257);
+    build_1 = build_1.store_int(v'fundingFeeDelta, 257);
     var build_2 = begin_cell();
-    build_2 = build_2.store_int(v'fundingFeeDelta, 257);
     build_2 = build_2.store_int(v'entryFundingFeeGrowthAfter, 257);
     build_2 = build_2.store_int(v'receive, 257);
-    var build_3 = begin_cell();
-    build_3 = build_3.store_int(v'trxId, 257);
-    build_2 = store_ref(build_2, build_3.end_cell());
+    build_2 = build_2.store_int(v'trxId, 257);
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
@@ -315,20 +312,18 @@ cell $GlobalLPChangedEvent$_store_cell((int, int, int, int, int) v) inline {
 
 ;;
 ;; Type: GlobalLPPositionChangedEvent
-;; Header: 0x7eb7fb96
-;; TLB: global_lp_position_changed_event#7eb7fb96 tokenId:int257 netSizeAfter:int257 isLong:bool entryPriceAfter:int257 trxId:int257 = GlobalLPPositionChangedEvent
+;; Header: 0x4018e0ad
+;; TLB: global_lp_position_changed_event#4018e0ad tokenId:uint64 netSizeAfter:int257 isLong:bool entryPriceAfter:int257 trxId:int257 = GlobalLPPositionChangedEvent
 ;;
 
 builder $GlobalLPPositionChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline {
     var (v'tokenId, v'netSizeAfter, v'isLong, v'entryPriceAfter, v'trxId) = v;
-    build_0 = store_uint(build_0, 2125986710, 32);
-    build_0 = build_0.store_int(v'tokenId, 257);
+    build_0 = store_uint(build_0, 1075372205, 32);
+    build_0 = build_0.store_uint(v'tokenId, 64);
     build_0 = build_0.store_int(v'netSizeAfter, 257);
     build_0 = build_0.store_int(v'isLong, 1);
     build_0 = build_0.store_int(v'entryPriceAfter, 257);
-    var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'trxId, 257);
-    build_0 = store_ref(build_0, build_1.end_cell());
+    build_0 = build_0.store_int(v'trxId, 257);
     return build_0;
 }
 
@@ -342,32 +337,30 @@ cell $GlobalLPPositionChangedEvent$_store_cell((int, int, int, int, int) v) inli
 
 ;;
 ;; Type: PerpPositionIncreasedEvent
-;; Header: 0x259b2705
-;; TLB: perp_position_increased_event#259b2705 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 entryPrice:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 trxId:int257 = PerpPositionIncreasedEvent
+;; Header: 0x35995093
+;; TLB: perp_position_increased_event#35995093 positionId:uint64 account:address tokenId:uint64 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 entryPrice:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 trxId:int257 = PerpPositionIncreasedEvent
 ;;
 
 builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
     var (v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'entryPrice, v'fundingFee, v'tradingFee, v'entryFundingFeeGrowthAfter, v'trxId) = v;
-    build_0 = store_uint(build_0, 630925061, 32);
-    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = store_uint(build_0, 899240083, 32);
+    build_0 = build_0.store_uint(v'positionId, 64);
     build_0 = __tact_store_address(build_0, v'account);
-    build_0 = build_0.store_int(v'tokenId, 257);
+    build_0 = build_0.store_uint(v'tokenId, 64);
     build_0 = build_0.store_int(v'isLong, 1);
+    build_0 = build_0.store_int(v'marginDelta, 257);
+    build_0 = build_0.store_int(v'marginAfter, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'marginDelta, 257);
-    build_1 = build_1.store_int(v'marginAfter, 257);
     build_1 = build_1.store_int(v'sizeDelta, 257);
+    build_1 = build_1.store_int(v'sizeAfter, 257);
+    build_1 = build_1.store_int(v'tradePrice, 257);
     var build_2 = begin_cell();
-    build_2 = build_2.store_int(v'sizeAfter, 257);
-    build_2 = build_2.store_int(v'tradePrice, 257);
     build_2 = build_2.store_int(v'entryPrice, 257);
+    build_2 = build_2.store_int(v'fundingFee, 257);
+    build_2 = build_2.store_int(v'tradingFee, 257);
     var build_3 = begin_cell();
-    build_3 = build_3.store_int(v'fundingFee, 257);
-    build_3 = build_3.store_int(v'tradingFee, 257);
     build_3 = build_3.store_int(v'entryFundingFeeGrowthAfter, 257);
-    var build_4 = begin_cell();
-    build_4 = build_4.store_int(v'trxId, 257);
-    build_3 = store_ref(build_3, build_4.end_cell());
+    build_3 = build_3.store_int(v'trxId, 257);
     build_2 = store_ref(build_2, build_3.end_cell());
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
@@ -384,33 +377,31 @@ cell $PerpPositionIncreasedEvent$_store_cell((int, slice, int, int, int, int, in
 
 ;;
 ;; Type: PerpPositionDecreasedEvent
-;; Header: 0x76a3a685
-;; TLB: perp_position_decreased_event#76a3a685 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 receive:int257 trxId:int257 = PerpPositionDecreasedEvent
+;; Header: 0xc58a2311
+;; TLB: perp_position_decreased_event#c58a2311 positionId:uint64 account:address tokenId:uint64 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 receive:int257 trxId:int257 = PerpPositionDecreasedEvent
 ;;
 
 builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
     var (v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'realizedPnLDelta, v'fundingFee, v'tradingFee, v'entryFundingFeeGrowthAfter, v'receive, v'trxId) = v;
-    build_0 = store_uint(build_0, 1990436485, 32);
-    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = store_uint(build_0, 3314164497, 32);
+    build_0 = build_0.store_uint(v'positionId, 64);
     build_0 = __tact_store_address(build_0, v'account);
-    build_0 = build_0.store_int(v'tokenId, 257);
+    build_0 = build_0.store_uint(v'tokenId, 64);
     build_0 = build_0.store_int(v'isLong, 1);
+    build_0 = build_0.store_int(v'marginDelta, 257);
+    build_0 = build_0.store_int(v'marginAfter, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'marginDelta, 257);
-    build_1 = build_1.store_int(v'marginAfter, 257);
     build_1 = build_1.store_int(v'sizeDelta, 257);
+    build_1 = build_1.store_int(v'sizeAfter, 257);
+    build_1 = build_1.store_int(v'tradePrice, 257);
     var build_2 = begin_cell();
-    build_2 = build_2.store_int(v'sizeAfter, 257);
-    build_2 = build_2.store_int(v'tradePrice, 257);
     build_2 = build_2.store_int(v'realizedPnLDelta, 257);
+    build_2 = build_2.store_int(v'fundingFee, 257);
+    build_2 = build_2.store_int(v'tradingFee, 257);
     var build_3 = begin_cell();
-    build_3 = build_3.store_int(v'fundingFee, 257);
-    build_3 = build_3.store_int(v'tradingFee, 257);
     build_3 = build_3.store_int(v'entryFundingFeeGrowthAfter, 257);
-    var build_4 = begin_cell();
-    build_4 = build_4.store_int(v'receive, 257);
-    build_4 = build_4.store_int(v'trxId, 257);
-    build_3 = store_ref(build_3, build_4.end_cell());
+    build_3 = build_3.store_int(v'receive, 257);
+    build_3 = build_3.store_int(v'trxId, 257);
     build_2 = store_ref(build_2, build_3.end_cell());
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
@@ -427,28 +418,26 @@ cell $PerpPositionDecreasedEvent$_store_cell((int, slice, int, int, int, int, in
 
 ;;
 ;; Type: PerpPositionLiquidatedEvent
-;; Header: 0xe4d104b0
-;; TLB: perp_position_liquidated_event#e4d104b0 positionId:int257 account:address tokenId:int257 isLong:bool marginDelta:int257 sizeDelta:int257 liquidatePrice:int257 fundingFee:int257 tradingFee:int257 liquidationFee:int257 trxId:int257 = PerpPositionLiquidatedEvent
+;; Header: 0xa966f59c
+;; TLB: perp_position_liquidated_event#a966f59c positionId:uint64 account:address tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 liquidatePrice:int257 fundingFee:int257 tradingFee:int257 liquidationFee:int257 trxId:int257 = PerpPositionLiquidatedEvent
 ;;
 
 builder $PerpPositionLiquidatedEvent$_store(builder build_0, (int, slice, int, int, int, int, int, int, int, int, int) v) inline_ref {
     var (v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'sizeDelta, v'liquidatePrice, v'fundingFee, v'tradingFee, v'liquidationFee, v'trxId) = v;
-    build_0 = store_uint(build_0, 3838903472, 32);
-    build_0 = build_0.store_int(v'positionId, 257);
+    build_0 = store_uint(build_0, 2842097052, 32);
+    build_0 = build_0.store_uint(v'positionId, 64);
     build_0 = __tact_store_address(build_0, v'account);
-    build_0 = build_0.store_int(v'tokenId, 257);
+    build_0 = build_0.store_uint(v'tokenId, 64);
     build_0 = build_0.store_int(v'isLong, 1);
+    build_0 = build_0.store_int(v'marginDelta, 257);
+    build_0 = build_0.store_int(v'sizeDelta, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'marginDelta, 257);
-    build_1 = build_1.store_int(v'sizeDelta, 257);
     build_1 = build_1.store_int(v'liquidatePrice, 257);
+    build_1 = build_1.store_int(v'fundingFee, 257);
+    build_1 = build_1.store_int(v'tradingFee, 257);
     var build_2 = begin_cell();
-    build_2 = build_2.store_int(v'fundingFee, 257);
-    build_2 = build_2.store_int(v'tradingFee, 257);
     build_2 = build_2.store_int(v'liquidationFee, 257);
-    var build_3 = begin_cell();
-    build_3 = build_3.store_int(v'trxId, 257);
-    build_2 = store_ref(build_2, build_3.end_cell());
+    build_2 = build_2.store_int(v'trxId, 257);
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
@@ -463,15 +452,42 @@ cell $PerpPositionLiquidatedEvent$_store_cell((int, slice, int, int, int, int, i
 }
 
 ;;
+;; Type: GlobalPositionChangedEvent
+;; Header: 0x2e6cc0f5
+;; TLB: global_position_changed_event#2e6cc0f5 longSizeAfter:int257 shortSizeAfter:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 trxId:int257 = GlobalPositionChangedEvent
+;;
+
+builder $GlobalPositionChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline {
+    var (v'longSizeAfter, v'shortSizeAfter, v'longFundingFeeGrowthAfter, v'shortFundingFeeGrowthAfter, v'trxId) = v;
+    build_0 = store_uint(build_0, 778879221, 32);
+    build_0 = build_0.store_int(v'longSizeAfter, 257);
+    build_0 = build_0.store_int(v'shortSizeAfter, 257);
+    build_0 = build_0.store_int(v'longFundingFeeGrowthAfter, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'shortFundingFeeGrowthAfter, 257);
+    build_1 = build_1.store_int(v'trxId, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $GlobalPositionChangedEvent$_store_cell((int, int, int, int, int) v) inline {
+    return $GlobalPositionChangedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, int, int, int)) $GlobalPositionChangedEvent$_constructor_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId(int longSizeAfter, int shortSizeAfter, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter, int trxId) inline {
+    return (longSizeAfter, shortSizeAfter, longFundingFeeGrowthAfter, shortFundingFeeGrowthAfter, trxId);
+}
+
+;;
 ;; Type: UpdatePriceEvent
-;; Header: 0x189985e6
-;; TLB: update_price_event#189985e6 pricesLength:int257 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePriceEvent
+;; Header: 0x6a2c8eb4
+;; TLB: update_price_event#6a2c8eb4 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePriceEvent
 ;;
 
 builder $UpdatePriceEvent$_store(builder build_0, (int, cell) v) inline {
     var (v'pricesLength, v'prices) = v;
-    build_0 = store_uint(build_0, 412714470, 32);
-    build_0 = build_0.store_int(v'pricesLength, 257);
+    build_0 = store_uint(build_0, 1781305012, 32);
+    build_0 = build_0.store_uint(v'pricesLength, 64);
     build_0 = build_0.store_dict(v'prices);
     return build_0;
 }
@@ -575,7 +591,7 @@ tuple $TokenConfig$_to_opt_tuple(tuple v) inline {
 
 ;;
 ;; Type: TokenConfigData
-;; TLB: _ tokenIdNext:int257 tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257} = TokenConfigData
+;; TLB: _ tokenIdNext:uint64 tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257} = TokenConfigData
 ;;
 
 (int, tuple) $TokenConfigData$_to_external(((int, tuple)) v) inline {

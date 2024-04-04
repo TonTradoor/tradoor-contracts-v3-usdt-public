@@ -21,13 +21,13 @@ struct TokenConfig {
 }
 
 struct TokenConfigData {
-    tokenIdNext: Int;
+    tokenIdNext: Int as uint64;
     tokenConfig: TokenConfig?;
 }
 
 // ============================ LP ================================ //
 struct LPPosition {
-    positionId: Int  as uint64;
+    positionId: Int as uint64;
     liquidity: Int;
     bonus: Int;
     realizedFundingFee: Int;

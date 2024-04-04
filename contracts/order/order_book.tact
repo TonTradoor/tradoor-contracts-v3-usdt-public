@@ -659,6 +659,8 @@ contract OrderBook with Deployable, Ownable {
     // execute increase => increase position for pool => increase success / bounced => excess gas
     // execute decrease => decrease position for pool => decrease success => transfer jetton => token excesses handel cancel => excess gas
     receive(msg: ExecutePerpPositionOrder) {
+        dump("ExecutePerpPositionOrder");
+
         let ctx: Context = context();
 
         // check order
@@ -712,6 +714,8 @@ contract OrderBook with Deployable, Ownable {
     // increase success / bounced => excess gas
     // decrease success => transfer jetton => token excesses handel cancel => excess gas
     receive(msg: UpdatePerpPositionSuccess) {
+        dump("UpdatePerpPositionSuccess");
+
         let ctx: Context = context();
         require(sender() == self.pool, "invalid sender");
 

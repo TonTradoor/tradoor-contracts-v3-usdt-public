@@ -126,6 +126,12 @@ builder $PerpPositionLiquidatedEvent$_store(builder build_0, (int, slice, int, i
 ;; $PerpPositionLiquidatedEvent$_store_cell
 cell $PerpPositionLiquidatedEvent$_store_cell((int, slice, int, int, int, int, int, int, int, int, int) v) inline;
 
+;; $GlobalPositionChangedEvent$_store
+builder $GlobalPositionChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline;
+
+;; $GlobalPositionChangedEvent$_store_cell
+cell $GlobalPositionChangedEvent$_store_cell((int, int, int, int, int) v) inline;
+
 ;; $UpdatePriceEvent$_store
 builder $UpdatePriceEvent$_store(builder build_0, (int, cell) v) inline;
 
@@ -470,6 +476,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $PerpPositionIncreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId
 ((int, slice, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionIncreasedEvent$_constructor_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId(int positionId, slice account, int tokenId, int isLong, int marginDelta, int marginAfter, int sizeDelta, int sizeAfter, int tradePrice, int entryPrice, int tradingFee, int fundingFee, int entryFundingFeeGrowthAfter, int trxId) inline;
+
+;; $GlobalPositionChangedEvent$_constructor_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId
+((int, int, int, int, int)) $GlobalPositionChangedEvent$_constructor_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId(int longSizeAfter, int shortSizeAfter, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter, int trxId) inline;
 
 ;; $GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId
 ((int, int, int, int, int)) $GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId(int tokenId, int netSizeAfter, int isLong, int entryPriceAfter, int trxId) inline;

@@ -4,26 +4,26 @@ message LPPositionOrderCreatedEvent {
     opType: Int as uint8;
     account: Address;
     liquidityDelta: Int;
-    executionFee: Int;
+    executionFee: Int as coins;
     orderId: Int;
 }
 
 message LPPositionOrderCancelledEvent {
     opType: Int as uint8;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
 }
 
 message LPPositionOrderExecutedEvent {
     opType: Int as uint8;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
 }
 
 // ============================ Perp ================================ //
 message PerpPositionOrderCreatedEvent {
     opType: Int as uint8;
-    tokenId: Int;
+    tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
     marginDelta: Int;
@@ -34,29 +34,29 @@ message PerpPositionOrderCreatedEvent {
     tpPrice: Int;
     slSize: Int;
     slPrice: Int;
-    executionFee: Int;
+    executionFee: Int as coins;
     orderId: Int;
 }
 
 message PerpPositionOrderCancelledEvent {
     opType: Int as uint8;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
 }
 
 message PerpPositionOrderExecutedEvent {
     opType: Int as uint8;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
 }
 
 // ============================ Compensate ================================ //
 message CompensateOrderEvent {
     orderType: Int?;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int;
     refundReceiver: Address?;
     refundAmount: Int;
     executionFeeReceiver: Address?;
-    executionFee: Int;
+    executionFee: Int as coins;
 }

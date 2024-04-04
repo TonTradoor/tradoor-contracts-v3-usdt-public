@@ -51,7 +51,7 @@ message ExecuteLPPositionOrder {
     orderId: Int as uint64;
     trxId: Int;
     executionFeeReceiver: Address?;
-    pricesLength: Int;
+    pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
 
@@ -61,7 +61,7 @@ message(0xe89cd45f) UpdateLPPosition {
     account: Address;
     liquidityDelta: Int;
     trxId: Int;
-    pricesLength: Int;
+    pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
 
@@ -84,7 +84,7 @@ message CompensateOrder {
 // ============================ Perp ================================ //
 message CreateDecreasePerpPositionOrder {
     executionFee: Int as coins;
-    opType: Int;
+    opType: Int as uint8;
     tokenId: Int as uint64;
     isLong: Bool;
     marginDelta: Int;
@@ -102,7 +102,7 @@ message ExecutePerpPositionOrder {
     executionFeeReceiver: Address?;
     orderId: Int as uint64;
     trxId: Int;
-    pricesLength: Int;
+    pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
 
@@ -113,7 +113,7 @@ message LiquidateOrADLPerpPosition {
     isLong: Bool;
     // adlSize: Int;
     trxId: Int;
-    pricesLength: Int;
+    pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
 
@@ -128,7 +128,7 @@ message(0xff57e557) UpdatePerpPosition {
     triggerPrice: Int;
     triggerAbove: Bool;
     trxId: Int;
-    pricesLength: Int;
+    pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;
 }
 
