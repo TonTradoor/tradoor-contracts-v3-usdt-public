@@ -33,7 +33,7 @@ message LPPositionDecreasedEvent {
 }
 
 // global LP
-message GlobalLPChangedEvent {
+message GlobalLPLiquidityChangedEvent {
     lpFundAfter: Int;
     liquidityAfter: Int;
     tradingFee: Int;
@@ -104,6 +104,9 @@ message PerpPositionLiquidatedEvent {
 }
 
 message GlobalPositionChangedEvent {
+    tokenId: Int as uint64;
+    longMarginAfter: Int;
+    shortMarginAfter: Int;
     longSizeAfter: Int;
     shortSizeAfter: Int;
     longFundingFeeGrowthAfter: Int;

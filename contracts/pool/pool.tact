@@ -239,7 +239,7 @@ contract Pool with Deployable, Ownable {
             entryFundingFeeGrowthAfter: lpPosition.entryFundingFeeGrowth,
             trxId: trxId
         }.toCell());
-        emit(GlobalLPChangedEvent{
+        emit(GlobalLPLiquidityChangedEvent{
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: 0,
@@ -332,7 +332,7 @@ contract Pool with Deployable, Ownable {
             receive: receive,
             trxId: trxId
         }.toCell());
-        emit(GlobalLPChangedEvent{
+        emit(GlobalLPLiquidityChangedEvent{
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: 0,
@@ -503,6 +503,8 @@ contract Pool with Deployable, Ownable {
         // get global position
         let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
         let globalPosition: GlobalPosition = globalPositionOpt != null ? globalPositionOpt!! : GlobalPosition{
+            longMargin: 0,
+            shortMargin: 0,
             longSize: 0,
             shortSize: 0,
             longFundingFeeGrowth: 0,
@@ -544,9 +546,11 @@ contract Pool with Deployable, Ownable {
         // update position
         if (isLong) {
             directionPerpPosition.longPosition = perpPosition;
+            globalPosition.longMargin += marginDelta;
             globalPosition.longSize += sizeDelta;
         } else {
             directionPerpPosition.shortPosition = perpPosition;
+            globalPosition.shortMargin += marginDelta;
             globalPosition.shortSize += sizeDelta;
         }
         accountPerpPosition.positions.set(account, directionPerpPosition);
@@ -576,6 +580,9 @@ contract Pool with Deployable, Ownable {
             trxId: trxId
         }.toCell());
         emit(GlobalPositionChangedEvent{
+            tokenId: tokenId,
+            longMarginAfter: globalPosition.longMargin,
+            shortMarginAfter: globalPosition.shortMargin,
             longSizeAfter: globalPosition.longSize,
             shortSizeAfter: globalPosition.shortSize,
             longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
@@ -589,7 +596,7 @@ contract Pool with Deployable, Ownable {
             entryPriceAfter: globalLpPosition.entryPrice,
             trxId: trxId
         }.toCell());
-        emit(GlobalLPChangedEvent{
+        emit(GlobalLPLiquidityChangedEvent{
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,
@@ -642,6 +649,8 @@ contract Pool with Deployable, Ownable {
         // get global position
         let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
         let globalPosition: GlobalPosition = globalPositionOpt != null ? globalPositionOpt!! : GlobalPosition{
+            longMargin: 0,
+            shortMargin: 0,
             longSize: 0,
             shortSize: 0,
             longFundingFeeGrowth: 0,
@@ -756,11 +765,16 @@ contract Pool with Deployable, Ownable {
         // update position
         if (isLong) {
             directionPerpPosition.longPosition = perpPosition;
+            globalPosition.longMargin -= marginDelta;
+            globalPosition.longSize -= sizeDelta;
         } else {
             directionPerpPosition.shortPosition = perpPosition;
+            globalPosition.shortMargin -= marginDelta;
+            globalPosition.shortSize -= sizeDelta;
         }
         accountPerpPosition.positions.set(account, directionPerpPosition);
         self.perpPositions.set(tokenId, accountPerpPosition);
+        self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLpPosition);
 
         // event
@@ -783,6 +797,9 @@ contract Pool with Deployable, Ownable {
             trxId: trxId
         }.toCell());
         emit(GlobalPositionChangedEvent{
+            tokenId: tokenId,
+            longMarginAfter: globalPosition.longMargin,
+            shortMarginAfter: globalPosition.shortMargin,
             longSizeAfter: globalPosition.longSize,
             shortSizeAfter: globalPosition.shortSize,
             longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
@@ -796,7 +813,7 @@ contract Pool with Deployable, Ownable {
             entryPriceAfter: globalLpPosition.entryPrice,
             trxId: trxId
         }.toCell());
-        emit(GlobalLPChangedEvent{
+        emit(GlobalLPLiquidityChangedEvent{
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,
@@ -847,6 +864,8 @@ contract Pool with Deployable, Ownable {
         // get global position
         let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
         let globalPosition: GlobalPosition = globalPositionOpt != null ? globalPositionOpt!! : GlobalPosition{
+            longMargin: 0,
+            shortMargin: 0,
             longSize: 0,
             shortSize: 0,
             longFundingFeeGrowth: 0,
@@ -939,9 +958,11 @@ contract Pool with Deployable, Ownable {
         // update position
         if (isLong) {
             directionPerpPosition.longPosition = perpPosition;
+            globalPosition.longMargin -= marginDelta;
             globalPosition.longSize -= sizeDelta;
         } else {
             directionPerpPosition.shortPosition = perpPosition;
+            globalPosition.shortMargin -= marginDelta;
             globalPosition.shortSize -= sizeDelta;
         }
         accountPerpPosition.positions.set(account, directionPerpPosition);
@@ -969,6 +990,9 @@ contract Pool with Deployable, Ownable {
             trxId: trxId
         }.toCell());
         emit(GlobalPositionChangedEvent{
+            tokenId: tokenId,
+            longMarginAfter: globalPosition.longMargin,
+            shortMarginAfter: globalPosition.shortMargin,
             longSizeAfter: globalPosition.longSize,
             shortSizeAfter: globalPosition.shortSize,
             longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
@@ -982,7 +1006,7 @@ contract Pool with Deployable, Ownable {
             entryPriceAfter: globalLpPosition.entryPrice,
             trxId: trxId
         }.toCell());
-        emit(GlobalLPChangedEvent{
+        emit(GlobalLPLiquidityChangedEvent{
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,

@@ -87,6 +87,8 @@ struct UpdatePrice {
 
 // ============================ funding rate ================================ //
 struct GlobalPosition {
+    longMargin: Int;
+    shortMargin: Int;
     longSize: Int;
     shortSize: Int;
     longFundingFeeGrowth: Int;

@@ -96,11 +96,11 @@ builder $LPPositionDecreasedEvent$_store(builder build_0, (int, int, slice, int,
 ;; $LPPositionDecreasedEvent$_store_cell
 cell $LPPositionDecreasedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int, int) v) inline;
 
-;; $GlobalLPChangedEvent$_store
-builder $GlobalLPChangedEvent$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref;
+;; $GlobalLPLiquidityChangedEvent$_store
+builder $GlobalLPLiquidityChangedEvent$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref;
 
-;; $GlobalLPChangedEvent$_store_cell
-cell $GlobalLPChangedEvent$_store_cell((int, int, int, int, int, int) v) inline;
+;; $GlobalLPLiquidityChangedEvent$_store_cell
+cell $GlobalLPLiquidityChangedEvent$_store_cell((int, int, int, int, int, int) v) inline;
 
 ;; $GlobalLPPositionChangedEvent$_store
 builder $GlobalLPPositionChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline;
@@ -121,10 +121,10 @@ builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, slice, in
 cell $PerpPositionDecreasedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $GlobalPositionChangedEvent$_store
-builder $GlobalPositionChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline;
+builder $GlobalPositionChangedEvent$_store(builder build_0, (int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $GlobalPositionChangedEvent$_store_cell
-cell $GlobalPositionChangedEvent$_store_cell((int, int, int, int, int) v) inline;
+cell $GlobalPositionChangedEvent$_store_cell((int, int, int, int, int, int, int, int) v) inline;
 
 ;; $UpdatePriceEvent$_store
 builder $UpdatePriceEvent$_store(builder build_0, (int, cell) v) inline;
@@ -220,16 +220,16 @@ tuple $GlobalLPPosition$_as_optional((int, int, int, int) v) inline;
 tuple $GlobalLPPosition$_load_opt(cell cl) inline;
 
 ;; $GlobalPosition$_store
-builder $GlobalPosition$_store(builder build_0, (int, int, int, int) v) inline;
+builder $GlobalPosition$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref;
 
 ;; $GlobalPosition$_store_cell
-cell $GlobalPosition$_store_cell((int, int, int, int) v) inline;
+cell $GlobalPosition$_store_cell((int, int, int, int, int, int) v) inline;
 
 ;; $GlobalPosition$_load
-(slice, ((int, int, int, int))) $GlobalPosition$_load(slice sc_0) inline;
+(slice, ((int, int, int, int, int, int))) $GlobalPosition$_load(slice sc_0) inline_ref;
 
 ;; $GlobalPosition$_as_optional
-tuple $GlobalPosition$_as_optional((int, int, int, int) v) inline;
+tuple $GlobalPosition$_as_optional((int, int, int, int, int, int) v) inline;
 
 ;; $GlobalPosition$_load_opt
 tuple $GlobalPosition$_load_opt(cell cl) inline;
@@ -355,10 +355,10 @@ tuple $GlobalLPPosition$_to_opt_tuple(tuple v) inline;
 tuple $PerpPositionData$_as_optional((tuple, tuple, tuple) v) inline;
 
 ;; $GlobalPosition$_to_tuple
-tuple $GlobalPosition$_to_tuple(((int, int, int, int)) v) inline;
+tuple $GlobalPosition$_to_tuple(((int, int, int, int, int, int)) v) inline;
 
 ;; $GlobalPosition$_not_null
-((int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline;
+((int, int, int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline;
 
 ;; $GlobalPosition$_to_opt_tuple
 tuple $GlobalPosition$_to_opt_tuple(tuple v) inline;
@@ -441,8 +441,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $LPPositionIncreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFeeDelta_realizedFundingFeeAfter_entryFundingFeeGrowthAfter_trxId
 ((int, int, slice, int, int, int, int, int, int, int, int, int)) $LPPositionIncreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFeeDelta_realizedFundingFeeAfter_entryFundingFeeGrowthAfter_trxId(int opType, int positionId, slice account, int liquidityDelta, int liquidityAfter, int bonusDelta, int bonusAfter, int unlockTimeAfter, int realizedFundingFeeDelta, int realizedFundingFeeAfter, int entryFundingFeeGrowthAfter, int trxId) inline;
 
-;; $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId
-((int, int, int, int, int, int)) $GlobalLPChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId(int lpFundAfter, int liquidityAfter, int tradingFee, int fundingFee, int realizedPnl, int trxId) inline;
+;; $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId
+((int, int, int, int, int, int)) $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId(int lpFundAfter, int liquidityAfter, int tradingFee, int fundingFee, int realizedPnl, int trxId) inline;
 
 ;; $Pool$_fun_increaseLPPosition
 ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell), ()) $Pool$_fun_increaseLPPosition((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $self, slice $account, int $liquidityDelta, int $trxId) impure inline_ref;
@@ -471,14 +471,14 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $GlobalLPPosition$_constructor_netSize_isLong_entryPrice_unrealizedPnl
 ((int, int, int, int)) $GlobalLPPosition$_constructor_netSize_isLong_entryPrice_unrealizedPnl(int netSize, int isLong, int entryPrice, int unrealizedPnl) inline;
 
-;; $GlobalPosition$_constructor_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth
-((int, int, int, int)) $GlobalPosition$_constructor_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth(int longSize, int shortSize, int longFundingFeeGrowth, int shortFundingFeeGrowth) inline;
+;; $GlobalPosition$_constructor_longMargin_shortMargin_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth
+((int, int, int, int, int, int)) $GlobalPosition$_constructor_longMargin_shortMargin_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth(int longMargin, int shortMargin, int longSize, int shortSize, int longFundingFeeGrowth, int shortFundingFeeGrowth) inline;
 
 ;; $PerpPositionIncreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId
 ((int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionIncreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId(int opType, int positionId, slice account, int tokenId, int isLong, int marginDelta, int marginAfter, int sizeDelta, int sizeAfter, int tradePrice, int entryPrice, int tradingFee, int fundingFee, int entryFundingFeeGrowthAfter, int trxId) inline;
 
-;; $GlobalPositionChangedEvent$_constructor_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId
-((int, int, int, int, int)) $GlobalPositionChangedEvent$_constructor_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId(int longSizeAfter, int shortSizeAfter, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter, int trxId) inline;
+;; $GlobalPositionChangedEvent$_constructor_tokenId_longMarginAfter_shortMarginAfter_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId
+((int, int, int, int, int, int, int, int)) $GlobalPositionChangedEvent$_constructor_tokenId_longMarginAfter_shortMarginAfter_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId(int tokenId, int longMarginAfter, int shortMarginAfter, int longSizeAfter, int shortSizeAfter, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter, int trxId) inline;
 
 ;; $GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId
 ((int, int, int, int, int)) $GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId(int tokenId, int netSizeAfter, int isLong, int entryPriceAfter, int trxId) inline;

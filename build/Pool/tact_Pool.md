@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 11895 bytes
+BOC Size: 11877 bytes
 
 # Types
 Total Types: 40
@@ -73,9 +73,9 @@ Signature: `LPPositionIncreasedEvent{opType:uint8,positionId:uint64,account:addr
 TLB: `lp_position_decreased_event#054bc1b9 opType:uint8 positionId:uint64 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 fundingFeeDelta:int257 entryFundingFeeGrowthAfter:int257 receive:int257 trxId:uint64 = LPPositionDecreasedEvent`
 Signature: `LPPositionDecreasedEvent{opType:uint8,positionId:uint64,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,fundingFeeDelta:int257,entryFundingFeeGrowthAfter:int257,receive:int257,trxId:uint64}`
 
-## GlobalLPChangedEvent
-TLB: `global_lp_changed_event#789a6280 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 realizedPnl:int257 trxId:uint64 = GlobalLPChangedEvent`
-Signature: `GlobalLPChangedEvent{lpFundAfter:int257,liquidityAfter:int257,tradingFee:int257,fundingFee:int257,realizedPnl:int257,trxId:uint64}`
+## GlobalLPLiquidityChangedEvent
+TLB: `global_lp_liquidity_changed_event#0b12c192 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 realizedPnl:int257 trxId:uint64 = GlobalLPLiquidityChangedEvent`
+Signature: `GlobalLPLiquidityChangedEvent{lpFundAfter:int257,liquidityAfter:int257,tradingFee:int257,fundingFee:int257,realizedPnl:int257,trxId:uint64}`
 
 ## GlobalLPPositionChangedEvent
 TLB: `global_lp_position_changed_event#f65a7093 tokenId:uint64 netSizeAfter:int257 isLong:bool entryPriceAfter:int257 trxId:uint64 = GlobalLPPositionChangedEvent`
@@ -94,8 +94,8 @@ TLB: `perp_position_liquidated_event#3fa93499 opType:uint8 positionId:uint64 acc
 Signature: `PerpPositionLiquidatedEvent{opType:uint8,positionId:uint64,account:address,tokenId:uint64,isLong:bool,marginDelta:int257,sizeDelta:int257,liquidatePrice:int257,fundingFee:int257,tradingFee:int257,liquidationFee:int257,trxId:uint64}`
 
 ## GlobalPositionChangedEvent
-TLB: `global_position_changed_event#022a34d1 longSizeAfter:int257 shortSizeAfter:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 trxId:uint64 = GlobalPositionChangedEvent`
-Signature: `GlobalPositionChangedEvent{longSizeAfter:int257,shortSizeAfter:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257,trxId:uint64}`
+TLB: `global_position_changed_event#82e5206c tokenId:uint64 longMarginAfter:int257 shortMarginAfter:int257 longSizeAfter:int257 shortSizeAfter:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 trxId:uint64 = GlobalPositionChangedEvent`
+Signature: `GlobalPositionChangedEvent{tokenId:uint64,longMarginAfter:int257,shortMarginAfter:int257,longSizeAfter:int257,shortSizeAfter:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257,trxId:uint64}`
 
 ## UpdatePriceEvent
 TLB: `update_price_event#6a2c8eb4 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePriceEvent`
@@ -138,8 +138,8 @@ TLB: `_ netSize:int257 isLong:bool entryPrice:int257 unrealizedPnl:int257 = Glob
 Signature: `GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257}`
 
 ## PerpPositionData
-TLB: `_ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257} = PerpPositionData`
-Signature: `PerpPositionData{perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257},globalPosition:Maybe GlobalPosition{longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257}}`
+TLB: `_ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257} = PerpPositionData`
+Signature: `PerpPositionData{perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257},globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257}}`
 
 ## PriceData
 TLB: `_ price:int257 = PriceData`
@@ -150,8 +150,8 @@ TLB: `_ tokenId:uint64 price:int257 = UpdatePrice`
 Signature: `UpdatePrice{tokenId:uint64,price:int257}`
 
 ## GlobalPosition
-TLB: `_ longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 = GlobalPosition`
-Signature: `GlobalPosition{longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257}`
+TLB: `_ longMargin:int257 shortMargin:int257 longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 = GlobalPosition`
+Signature: `GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257}`
 
 ## GlobalFundingRateSample
 TLB: `_ lastAdjustFundingRateTime:int257 sampleCount:int257 cumulativePremiumRate:int257 = GlobalFundingRateSample`
