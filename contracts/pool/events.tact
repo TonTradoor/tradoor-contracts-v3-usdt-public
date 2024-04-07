@@ -88,21 +88,6 @@ message PerpPositionDecreasedEvent {
     trxId: Int as uint64;
 }
 
-message PerpPositionLiquidatedEvent {
-    opType: Int as uint8;
-    positionId: Int as uint64;
-    account: Address;
-    tokenId: Int as uint64;
-    isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    liquidatePrice: Int;
-    fundingFee: Int;
-    tradingFee: Int;
-    liquidationFee: Int;
-    trxId: Int as uint64;
-}
-
 message GlobalPositionChangedEvent {
     tokenId: Int as uint64;
     longMarginAfter: Int;

@@ -8,7 +8,7 @@ import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
-import { cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, executePerpOrder } from './lib/PerpHelper';
+import { cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, executePerpOrder, liquidatePerpPosition } from './lib/PerpHelper';
 import { ORDER_OP_TYPE_DECREASE_MARKET, ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
 
 describe('LP', () => {
@@ -178,7 +178,7 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeIncreaseResult.order).toBeNull();
+        expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
         let position = executeIncreaseResult.positionAfter;
@@ -213,17 +213,28 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeResult.order).toBeNull();
+        expect(executeResult.orderAfter).toBeNull();
 
         // check position
         let perpPosition = executeResult.positionAfter;
-        console.log('order:', executeResult.order);
-
+        console.log('postion:', perpPosition);
         expect(perpPosition).not.toBeNull();
         let tradingFee = size * indexPrice * TestEnv.tradingFeeRate;
         expect(perpPosition?.margin).toEqual(toJettonUnits(margin - tradingFee));
         expect(perpPosition?.size).toEqual(toJettonUnits(size));
         expect(perpPosition?.entryPrice).toEqual(toPriceUnits(indexPrice));
+
+        // check global position
+        let globalPosition = executeResult.globalPositionAfter;
+        console.log('globalPosition:', globalPosition);
+        expect(globalPosition?.longMargin).toEqual(toJettonUnits(margin));
+        expect(globalPosition?.longSize).toEqual(toJettonUnits(size));
+
+        let globalLPPosition = executeResult.globalLPPositionAfter;
+        console.log('globalLPPosition:', globalLPPosition);
+        expect(globalLPPosition?.netSize).toEqual(toJettonUnits(size));
+        expect(globalLPPosition?.isLong).toBeFalsy();
+
     });
 
     it('should cancel decrease perp order', async () => {
@@ -289,7 +300,7 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeIncreaseResult.order).toBeNull();
+        expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
         let position = executeIncreaseResult.positionAfter;
@@ -419,7 +430,7 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeIncreaseResult.order).toBeNull();
+        expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
         let position = executeIncreaseResult.positionAfter;
@@ -459,11 +470,11 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeResult.order).toBeNull();
+        expect(executeResult.orderAfter).toBeNull();
 
         // check position
         let perpPosition = executeResult.positionAfter;
-        console.log('order:', executeResult.order);
+        console.log('postion:', perpPosition);
 
         expect(perpPosition).not.toBeNull();
         let tradingFee = size * indexPrice * TestEnv.tradingFeeRate;
@@ -508,7 +519,7 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeIncreaseResult.order).toBeNull();
+        expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
         let position = executeIncreaseResult.positionAfter;
@@ -587,6 +598,76 @@ describe('LP', () => {
         expect(perpPositionAfterDecrease).not.toBeNull();
         expect(perpPositionAfterDecrease?.margin).toEqual(perpPositionAfterIncrease?.margin + toJettonUnits(realizedPnl) - toJettonUnits(tradingFee));
         expect(perpPositionAfterDecrease?.size).toEqual(perpPositionAfterIncrease?.size - toJettonUnits(tpSize));
+
+    });
+
+    it('should liquidate perp', async () => {
+        /* =========================== increase LP ================================ */
+        /// create order
+        let lpLiquidity = 1000;
+        let executionFee = 0.1;
+
+        // create order
+        const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
+
+        /// executor order
+        const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
+        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check order
+        expect(executeIncreaseResult.orderAfter).toBeNull();
+
+        // check position
+        let position = executeIncreaseResult.positionAfter;
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
+        
+        /* =========================== increase perp ================================ */
+        let isMarket = true;
+        let tokenId = 1;
+        let isLong = true;
+        let margin = 100;
+        let size = 0.02; // 1000u
+        let triggerPrice = 51000;
+        let increasePrice = 50000;
+
+        // create order
+        const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // executor order
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        expect(executeResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        let perpPositionAfterIncrease = executeResult.positionAfter;
+        console.log('position after increase:', perpPositionAfterIncrease);
+        console.log('global position after increase:', executeResult.globalPositionAfter);
+
+        /* =========================== liquidate perp ================================ */
+        let liquidatePrice = 45000;
+        const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice);
+        expect(liquidateResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('global position after liquidate:', liquidateResult.globalPositionAfter);
+
+        // check position
+        expect(liquidateResult.positionAfter.size).toEqual(0n);
+        expect(liquidateResult.positionAfter.margin).toEqual(0n);
 
     });
 

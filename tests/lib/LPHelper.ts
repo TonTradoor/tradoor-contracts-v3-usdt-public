@@ -101,7 +101,7 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let order = await TestEnv.orderBook.getLpPositionOrder(orderId);
+    let orderAfter = await TestEnv.orderBook.getLpPositionOrder(orderId);
     let positionDataAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
     let positionAfter = positionDataAfter?.lpPosition;
     let globalLPLiquidityAfter = positionDataAfter;
@@ -110,11 +110,12 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
         trxResult,
         balanceBefore,
         balanceAfter,
+        orderBefore,
+        orderAfter,
         positionBefore,
         positionAfter,
         globalLPLiquidityBefore,
         globalLPLiquidityAfter,
-        order
     };
 }
 

@@ -171,7 +171,7 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeResult.order).toBeNull();
+        expect(executeResult.orderAfter).toBeNull();
 
         // check position
         let position = executeResult.positionAfter;
@@ -262,7 +262,7 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeIncreaseResult.order).toBeNull();
+        expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
         let position = executeIncreaseResult.positionAfter;
@@ -303,7 +303,7 @@ describe('LP', () => {
         });
 
         // check order
-        expect(executeDecreaseResult.order).toBeNull();
+        expect(executeDecreaseResult.orderAfter).toBeNull();
 
         // check position
         position = executeDecreaseResult.positionAfter;
