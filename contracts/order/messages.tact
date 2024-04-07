@@ -39,6 +39,7 @@ message UpdateConfig {
 message CreateDecreaseLPPositionOrder {
     executionFee: Int as coins;
     liquidityDelta: Int;
+    trxId: Int as uint64;
 }
 
 message CancelLPPositionOrder {
@@ -90,6 +91,7 @@ message CreateDecreasePerpPositionOrder {
     marginDelta: Int;
     sizeDelta: Int;
     triggerPrice: Int;
+    trxId: Int as uint64;
 }
 
 message CancelPerpPositionOrder {

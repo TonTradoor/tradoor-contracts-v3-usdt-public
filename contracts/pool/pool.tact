@@ -525,7 +525,10 @@ contract Pool with Deployable, Ownable {
         }
 
         // update position
+        let marginBefore: Int = perpPosition.margin;
         perpPosition.margin += marginDelta + fundingFee - tradingFee;
+        let marginDeltaAfter: Int = perpPosition.margin - marginBefore;
+
         perpPosition.entryPrice = (perpPosition.size * perpPosition.entryPrice + sizeDelta * tradePrice) / (perpPosition.size + sizeDelta);
         perpPosition.size += sizeDelta;
         perpPosition.entryFundingFeeGrowth = entryFundingFeeGrowthAfter;
@@ -546,11 +549,11 @@ contract Pool with Deployable, Ownable {
         // update position
         if (isLong) {
             directionPerpPosition.longPosition = perpPosition;
-            globalPosition.longMargin += marginDelta;
+            globalPosition.longMargin += marginDeltaAfter;
             globalPosition.longSize += sizeDelta;
         } else {
             directionPerpPosition.shortPosition = perpPosition;
-            globalPosition.shortMargin += marginDelta;
+            globalPosition.shortMargin += marginDeltaAfter;
             globalPosition.shortSize += sizeDelta;
         }
         accountPerpPosition.positions.set(account, directionPerpPosition);
@@ -568,7 +571,7 @@ contract Pool with Deployable, Ownable {
             account: account,
             tokenId: tokenId,
             isLong: isLong,
-            marginDelta: marginDelta,
+            marginDelta: marginDeltaAfter,
             marginAfter: perpPosition.margin,
             sizeDelta: sizeDelta,
             sizeAfter: perpPosition.size,
@@ -725,8 +728,9 @@ contract Pool with Deployable, Ownable {
         require(globalLpPosition.netSize * globalLpPosition.entryPrice / PRICE_DECIMAL_FACTOR <= self.globalLPFund, "insufficient liquidity");
 
         // margin
+        let marginBefore: Int = perpPosition.margin;
         perpPosition.margin += realizedPnl + fundingFee - tradingFee;
-                                
+        
         require(perpPosition.margin >= 0, "insufficient margin");
         if (marginDelta > perpPosition.margin) {
             marginDelta = perpPosition.margin;
@@ -734,6 +738,7 @@ contract Pool with Deployable, Ownable {
         perpPosition.margin -= marginDelta;
         perpPosition.size -= sizeDelta;
         perpPosition.entryFundingFeeGrowth = entryFundingFeeGrowthAfter;
+        let marginDeltaAfter: Int = marginBefore - perpPosition.margin;
 
         if (perpPosition.size > 0) {
             // check maintain margin
@@ -752,6 +757,7 @@ contract Pool with Deployable, Ownable {
         } else {
             // close position
             // withdraw all margin
+            marginDeltaAfter += perpPosition.margin;
             receive = marginDelta + perpPosition.margin;
             perpPosition = PerpPosition {
                 positionId: 0,
@@ -765,11 +771,11 @@ contract Pool with Deployable, Ownable {
         // update position
         if (isLong) {
             directionPerpPosition.longPosition = perpPosition;
-            globalPosition.longMargin -= marginDelta;
+            globalPosition.longMargin -= marginDeltaAfter;
             globalPosition.longSize -= sizeDelta;
         } else {
             directionPerpPosition.shortPosition = perpPosition;
-            globalPosition.shortMargin -= marginDelta;
+            globalPosition.shortMargin -= marginDeltaAfter;
             globalPosition.shortSize -= sizeDelta;
         }
         accountPerpPosition.positions.set(account, directionPerpPosition);
@@ -784,7 +790,7 @@ contract Pool with Deployable, Ownable {
             account: account,
             tokenId: tokenId,
             isLong: isLong,
-            marginDelta: marginDelta,
+            marginDelta: marginDeltaAfter,
             marginAfter: perpPosition.margin,
             sizeDelta: sizeDelta,
             sizeAfter: perpPosition.size,

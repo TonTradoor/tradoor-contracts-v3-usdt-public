@@ -191,7 +191,9 @@
             $entryFundingFeeGrowthAfter = $globalPosition'shortFundingFeeGrowth;
         }
     }
+    int $marginBefore = $perpPosition'margin;
     $perpPosition'margin = $perpPosition'margin + (($marginDelta + $fundingFee) - $tradingFee);
+    int $marginDeltaAfter = ($perpPosition'margin - $marginBefore);
     $perpPosition'entryPrice = ((($perpPosition'size * $perpPosition'entryPrice) + ($sizeDelta * $tradePrice)) / ($perpPosition'size + $sizeDelta));
     $perpPosition'size = $perpPosition'size + $sizeDelta;
     $perpPosition'entryFundingFeeGrowth = $entryFundingFeeGrowthAfter;
@@ -206,11 +208,11 @@
     throw_unless(42634, (($perpPosition'margin * $tokenConfig'maxLeverage) >= (($perpPosition'size * $perpPosition'entryPrice) / 100000000000000000000)));
     if ($isLong) {
         ($directionPerpPosition'longPosition'positionId, $directionPerpPosition'longPosition'margin, $directionPerpPosition'longPosition'size, $directionPerpPosition'longPosition'entryPrice, $directionPerpPosition'longPosition'entryFundingFeeGrowth) = ($perpPosition'positionId, $perpPosition'margin, $perpPosition'size, $perpPosition'entryPrice, $perpPosition'entryFundingFeeGrowth);
-        $globalPosition'longMargin = $globalPosition'longMargin + $marginDelta;
+        $globalPosition'longMargin = $globalPosition'longMargin + $marginDeltaAfter;
         $globalPosition'longSize = $globalPosition'longSize + $sizeDelta;
     } else {
         ($directionPerpPosition'shortPosition'positionId, $directionPerpPosition'shortPosition'margin, $directionPerpPosition'shortPosition'size, $directionPerpPosition'shortPosition'entryPrice, $directionPerpPosition'shortPosition'entryFundingFeeGrowth) = ($perpPosition'positionId, $perpPosition'margin, $perpPosition'size, $perpPosition'entryPrice, $perpPosition'entryFundingFeeGrowth);
-        $globalPosition'shortMargin = $globalPosition'shortMargin + $marginDelta;
+        $globalPosition'shortMargin = $globalPosition'shortMargin + $marginDeltaAfter;
         $globalPosition'shortSize = $globalPosition'shortSize + $sizeDelta;
     }
     $accountPerpPosition'positions~__tact_dict_set_slice_cell(267, $account, $DirectionPerpPosition$_store_cell((($directionPerpPosition'longPosition'positionId, $directionPerpPosition'longPosition'margin, $directionPerpPosition'longPosition'size, $directionPerpPosition'longPosition'entryPrice, $directionPerpPosition'longPosition'entryFundingFeeGrowth), ($directionPerpPosition'shortPosition'positionId, $directionPerpPosition'shortPosition'margin, $directionPerpPosition'shortPosition'size, $directionPerpPosition'shortPosition'entryPrice, $directionPerpPosition'shortPosition'entryFundingFeeGrowth))));
@@ -218,7 +220,7 @@
     $self'globalPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalPosition$_store_cell(($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth)));
     $self'globalLPPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalLPPosition$_store_cell(($globalLpPosition'netSize, $globalLpPosition'isLong, $globalLpPosition'entryPrice, $globalLpPosition'unrealizedPnl)));
     __tact_debug_str(__gen_slice_string_0ab3aa2c75314fc0e54861d3e1d839752f9a1dad35faabbbbf79b3098d4c59af());
-    $global_emit($PerpPositionIncreasedEvent$_store_cell($PerpPositionIncreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId($opType, $perpPosition'positionId, $account, $tokenId, $isLong, $marginDelta, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $perpPosition'entryPrice, $tradingFee, $fundingFee, $entryFundingFeeGrowthAfter, $trxId)));
+    $global_emit($PerpPositionIncreasedEvent$_store_cell($PerpPositionIncreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId($opType, $perpPosition'positionId, $account, $tokenId, $isLong, $marginDeltaAfter, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $perpPosition'entryPrice, $tradingFee, $fundingFee, $entryFundingFeeGrowthAfter, $trxId)));
     $global_emit($GlobalPositionChangedEvent$_store_cell($GlobalPositionChangedEvent$_constructor_tokenId_longMarginAfter_shortMarginAfter_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId($tokenId, $globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $trxId)));
     $global_emit($GlobalLPPositionChangedEvent$_store_cell($GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId($tokenId, $globalLpPosition'netSize, $globalLpPosition'isLong, $globalLpPosition'entryPrice, $trxId)));
     $global_emit($GlobalLPLiquidityChangedEvent$_store_cell($GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, 0, $lpRealizedPnl, $trxId)));
@@ -293,6 +295,7 @@
         $realizedPnl = (($sizeDelta * ($perpPosition'entryPrice - $tradePrice)) / 100000000000000000000);
     }
     throw_unless(58161, ((($globalLpPosition'netSize * $globalLpPosition'entryPrice) / 100000000000000000000) <= $self'globalLPFund));
+    int $marginBefore = $perpPosition'margin;
     $perpPosition'margin = $perpPosition'margin + (($realizedPnl + $fundingFee) - $tradingFee);
     throw_unless(62409, ($perpPosition'margin >= 0));
     if (($marginDelta > $perpPosition'margin)) {
@@ -301,6 +304,7 @@
     $perpPosition'margin = $perpPosition'margin - $marginDelta;
     $perpPosition'size = $perpPosition'size - $sizeDelta;
     $perpPosition'entryFundingFeeGrowth = $entryFundingFeeGrowthAfter;
+    int $marginDeltaAfter = ($marginBefore - $perpPosition'margin);
     if (($perpPosition'size > 0)) {
         int $unrealizedPnl = 0;
         if ($isLong) {
@@ -313,23 +317,24 @@
         throw_unless(42634, (($perpPosition'margin * $tokenConfig'maxLeverage) >= $perpPosition'size));
         $receive = $marginDelta;
     } else {
+        $marginDeltaAfter = $marginDeltaAfter + $perpPosition'margin;
         $receive = ($marginDelta + $perpPosition'margin);
         ($perpPosition'positionId, $perpPosition'margin, $perpPosition'size, $perpPosition'entryPrice, $perpPosition'entryFundingFeeGrowth) = $PerpPosition$_constructor_positionId_margin_size_entryPrice_entryFundingFeeGrowth(0, 0, 0, 0, 0);
     }
     if ($isLong) {
         ($directionPerpPosition'longPosition'positionId, $directionPerpPosition'longPosition'margin, $directionPerpPosition'longPosition'size, $directionPerpPosition'longPosition'entryPrice, $directionPerpPosition'longPosition'entryFundingFeeGrowth) = ($perpPosition'positionId, $perpPosition'margin, $perpPosition'size, $perpPosition'entryPrice, $perpPosition'entryFundingFeeGrowth);
-        $globalPosition'longMargin = $globalPosition'longMargin - $marginDelta;
+        $globalPosition'longMargin = $globalPosition'longMargin - $marginDeltaAfter;
         $globalPosition'longSize = $globalPosition'longSize - $sizeDelta;
     } else {
         ($directionPerpPosition'shortPosition'positionId, $directionPerpPosition'shortPosition'margin, $directionPerpPosition'shortPosition'size, $directionPerpPosition'shortPosition'entryPrice, $directionPerpPosition'shortPosition'entryFundingFeeGrowth) = ($perpPosition'positionId, $perpPosition'margin, $perpPosition'size, $perpPosition'entryPrice, $perpPosition'entryFundingFeeGrowth);
-        $globalPosition'shortMargin = $globalPosition'shortMargin - $marginDelta;
+        $globalPosition'shortMargin = $globalPosition'shortMargin - $marginDeltaAfter;
         $globalPosition'shortSize = $globalPosition'shortSize - $sizeDelta;
     }
     $accountPerpPosition'positions~__tact_dict_set_slice_cell(267, $account, $DirectionPerpPosition$_store_cell((($directionPerpPosition'longPosition'positionId, $directionPerpPosition'longPosition'margin, $directionPerpPosition'longPosition'size, $directionPerpPosition'longPosition'entryPrice, $directionPerpPosition'longPosition'entryFundingFeeGrowth), ($directionPerpPosition'shortPosition'positionId, $directionPerpPosition'shortPosition'margin, $directionPerpPosition'shortPosition'size, $directionPerpPosition'shortPosition'entryPrice, $directionPerpPosition'shortPosition'entryFundingFeeGrowth))));
     $self'perpPositions~__tact_dict_set_int_cell(257, $tokenId, $AccountPerpPosition$_store_cell(($accountPerpPosition'positions)));
     $self'globalPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalPosition$_store_cell(($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth)));
     $self'globalLPPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalLPPosition$_store_cell(($globalLpPosition'netSize, $globalLpPosition'isLong, $globalLpPosition'entryPrice, $globalLpPosition'unrealizedPnl)));
-    $global_emit($PerpPositionDecreasedEvent$_store_cell($PerpPositionDecreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_entryFundingFeeGrowthAfter_receive_trxId($opType, $positionId, $account, $tokenId, $isLong, $marginDelta, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $realizedPnl, $tradingFee, $fundingFee, $entryFundingFeeGrowthAfter, $receive, $trxId)));
+    $global_emit($PerpPositionDecreasedEvent$_store_cell($PerpPositionDecreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_entryFundingFeeGrowthAfter_receive_trxId($opType, $positionId, $account, $tokenId, $isLong, $marginDeltaAfter, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $realizedPnl, $tradingFee, $fundingFee, $entryFundingFeeGrowthAfter, $receive, $trxId)));
     $global_emit($GlobalPositionChangedEvent$_store_cell($GlobalPositionChangedEvent$_constructor_tokenId_longMarginAfter_shortMarginAfter_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId($tokenId, $globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $trxId)));
     $global_emit($GlobalLPPositionChangedEvent$_store_cell($GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId($tokenId, $globalLpPosition'netSize, $globalLpPosition'isLong, $globalLpPosition'entryPrice, $trxId)));
     $global_emit($GlobalLPLiquidityChangedEvent$_store_cell($GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, 0, $lpRealizedPnl, $trxId)));
@@ -788,7 +793,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmPc6V5197m3mNqq3DTqcohKjVPAFNNWfCXv8APpVfKBa8";
+    return "ipfs://QmQfcayE6gpJpJsVLMD36SM96znYru2cEqnDwLNqxSKjub";
 }
 
 _ lazy_deployment_completed() method_id {

@@ -88,7 +88,7 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 (slice, ((slice, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref;
 
 ;; $CreateDecreaseLPPositionOrder$_load
-(slice, ((int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline;
+(slice, ((int, int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline;
 
 ;; $CancelLPPositionOrder$_load
 (slice, ((int, int, slice))) $CancelLPPositionOrder$_load(slice sc_0) inline;
@@ -112,7 +112,7 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 (slice, ((int, int, int, slice, int, slice, int))) $CompensateOrder$_load(slice sc_0) inline_ref;
 
 ;; $CreateDecreasePerpPositionOrder$_load
-(slice, ((int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref;
+(slice, ((int, int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref;
 
 ;; $CancelPerpPositionOrder$_load
 (slice, ((slice, int, int))) $CancelPerpPositionOrder$_load(slice sc_0) inline;
@@ -139,10 +139,10 @@ cell $UpdatePerpPosition$_store_cell((int, int, int, slice, int, int, int, int, 
 (slice, ((int, int, int))) $UpdatePerpPositionSuccess$_load(slice sc_0) inline;
 
 ;; $LPPositionOrderCreatedEvent$_store
-builder $LPPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, int, int) v) inline;
+builder $LPPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, int, int, int) v) inline_ref;
 
 ;; $LPPositionOrderCreatedEvent$_store_cell
-cell $LPPositionOrderCreatedEvent$_store_cell((int, slice, int, int, int) v) inline;
+cell $LPPositionOrderCreatedEvent$_store_cell((int, slice, int, int, int, int) v) inline;
 
 ;; $LPPositionOrderCancelledEvent$_store
 builder $LPPositionOrderCancelledEvent$_store(builder build_0, (int, int, int) v) inline;
@@ -157,10 +157,10 @@ builder $LPPositionOrderExecutedEvent$_store(builder build_0, (int, int, int) v)
 cell $LPPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline;
 
 ;; $PerpPositionOrderCreatedEvent$_store
-builder $PerpPositionOrderCreatedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
+builder $PerpPositionOrderCreatedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $PerpPositionOrderCreatedEvent$_store_cell
-cell $PerpPositionOrderCreatedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+cell $PerpPositionOrderCreatedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $PerpPositionOrderCancelledEvent$_store
 builder $PerpPositionOrderCancelledEvent$_store(builder build_0, (int, int, int) v) inline;
@@ -336,8 +336,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $LPPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator
 ((int, slice, int, int, int, int, slice, slice)) $LPPositionOrder$_constructor_isIncrease_account_liquidityDelta_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(int isIncrease, slice account, int liquidityDelta, int executionFee, int blockTime, int isPending, slice executionFeeReceiver, slice lastOperator) inline;
 
-;; $LPPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId
-((int, slice, int, int, int)) $LPPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId(int opType, slice account, int liquidityDelta, int executionFee, int orderId) inline;
+;; $LPPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId_trxId
+((int, slice, int, int, int, int)) $LPPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId_trxId(int opType, slice account, int liquidityDelta, int executionFee, int orderId, int trxId) inline;
 
 ;; $OrderBook$_fun_handleCreateIncreaseLPPositionOrder
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_handleCreateIncreaseLPPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $liquidityDelta) impure inline_ref;
@@ -354,11 +354,11 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator
 ((int, int, slice, int, int, int, int, int, int, int, int, slice, slice)) $PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(int opType, int tokenId, slice account, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int executionFee, int blockTime, int isPending, slice executionFeeReceiver, slice lastOperator) inline;
 
-;; $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice
-((int, int, slice, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice(int opType, int tokenId, slice account, int isLong, int marginDelta, int sizeDelta, int executionFee, int orderId, int triggerPrice, int triggerAbove, int tpSize, int tpPrice, int slSize, int slPrice) inline;
+;; $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice_trxId
+((int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice_trxId(int opType, int tokenId, slice account, int isLong, int marginDelta, int sizeDelta, int executionFee, int orderId, int triggerPrice, int triggerAbove, int tpSize, int tpPrice, int slSize, int slPrice, int trxId) inline;
 
 ;; $OrderBook$_fun_createPerpOrder
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), int) $OrderBook$_fun_createPerpOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), int) $OrderBook$_fun_createPerpOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $trxId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee) impure inline_ref;
 
 ;; $OrderBook$_fun_handleCreateIncreasePerpPositionOrder
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_handleCreateIncreasePerpPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice) impure inline_ref;

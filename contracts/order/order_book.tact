@@ -250,7 +250,8 @@ contract OrderBook with Deployable, Ownable {
             account: account,
             liquidityDelta: liquidityDelta,
             executionFee: executionFee,
-            orderId: orderId
+            orderId: orderId,
+            trxId: queryId
         }.toCell());
 
         self.refundExecessTon(account, executionFee);
@@ -284,7 +285,8 @@ contract OrderBook with Deployable, Ownable {
             account: sender(),
             liquidityDelta: msg.liquidityDelta,
             executionFee: msg.executionFee,
-            orderId: orderId
+            orderId: orderId,
+            trxId: msg.trxId
         }.toCell());
 
         // transfer execess gas
@@ -539,7 +541,7 @@ contract OrderBook with Deployable, Ownable {
         } else {
             opType = ORDER_OP_TYPE_INCREASE_LIMIT;
         }
-        self.createPerpOrder(opType, account, tokenId, isLong, marginDelta, sizeDelta, triggerPrice, 
+        self.createPerpOrder(queryId, opType, account, tokenId, isLong, marginDelta, sizeDelta, triggerPrice, 
             tpSize, tpPrice, slSize, slPrice, executionFee);
 
         self.refundExecessTon(account, executionFee);
@@ -555,14 +557,14 @@ contract OrderBook with Deployable, Ownable {
         require(msg.opType == ORDER_OP_TYPE_DECREASE_MARKET || msg.opType == ORDER_OP_TYPE_DECREASE_TP || msg.opType == ORDER_OP_TYPE_DECREASE_SL, "invalid op type");
 
         // add new order
-        self.createPerpOrder(msg.opType, sender(), msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.triggerPrice, 
+        self.createPerpOrder(msg.trxId, msg.opType, sender(), msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.triggerPrice, 
                 0, 0, 0, 0, msg.executionFee);
 
         // transfer execess gas
         self.refundExecessTon(sender(), msg.executionFee);
     }
 
-    fun createPerpOrder(opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, 
+    fun createPerpOrder(trxId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, 
         tpSize: Int, tpPrice: Int, slSize: Int, slPrice: Int, executionFee: Int): Int {
         let triggerAbove: Bool = false;
 
@@ -622,7 +624,8 @@ contract OrderBook with Deployable, Ownable {
             tpSize: tpSize,
             tpPrice: tpPrice,
             slSize: slSize,
-            slPrice: slPrice
+            slPrice: slPrice,
+            trxId: trxId
         }.toCell());
         return orderId;
     }
@@ -792,12 +795,12 @@ contract OrderBook with Deployable, Ownable {
                 let orderEx: PerpPositionOrderEx = orderExOpt!!;
                 // create tp/sl
                 if (orderEx.tpSize > 0 && orderEx.tpPrice > 0) {
-                    self.createPerpOrder(ORDER_OP_TYPE_DECREASE_TP, sender(), order.tokenId, order.isLong, 0, orderEx.tpSize, orderEx.tpPrice, 
+                    self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_TP, sender(), order.tokenId, order.isLong, 0, orderEx.tpSize, orderEx.tpPrice, 
                         0, 0, 0, 0, 0);
                 }
 
                 if (orderEx.slSize > 0 && orderEx.slPrice > 0) {
-                    self.createPerpOrder(ORDER_OP_TYPE_DECREASE_SL, sender(), order.tokenId, order.isLong, 0, orderEx.slSize, orderEx.slPrice, 
+                    self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_SL, sender(), order.tokenId, order.isLong, 0, orderEx.slSize, orderEx.slPrice, 
                         0, 0, 0, 0, 0);
                 }
             }

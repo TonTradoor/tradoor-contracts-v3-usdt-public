@@ -6,6 +6,7 @@ message LPPositionOrderCreatedEvent {
     liquidityDelta: Int;
     executionFee: Int as coins;
     orderId: Int;
+    trxId: Int as uint64;
 }
 
 message LPPositionOrderCancelledEvent {
@@ -36,6 +37,7 @@ message PerpPositionOrderCreatedEvent {
     slPrice: Int;
     executionFee: Int as coins;
     orderId: Int;
+    trxId: Int as uint64;
 }
 
 message PerpPositionOrderCancelledEvent {

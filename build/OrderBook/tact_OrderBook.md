@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 10118 bytes
+BOC Size: 10069 bytes
 
 # Types
 Total Types: 37
@@ -54,8 +54,8 @@ TLB: `update_config#408e9f7c executor:Maybe address enableExecutor:Maybe bool ma
 Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
 ## CreateDecreaseLPPositionOrder
-TLB: `create_decrease_lp_position_order#89f311c8 executionFee:coins liquidityDelta:int257 = CreateDecreaseLPPositionOrder`
-Signature: `CreateDecreaseLPPositionOrder{executionFee:coins,liquidityDelta:int257}`
+TLB: `create_decrease_lp_position_order#bdbfce48 executionFee:coins liquidityDelta:int257 trxId:uint64 = CreateDecreaseLPPositionOrder`
+Signature: `CreateDecreaseLPPositionOrder{executionFee:coins,liquidityDelta:int257,trxId:uint64}`
 
 ## CancelLPPositionOrder
 TLB: `cancel_lp_position_order#7d91eb36 orderId:uint64 trxId:uint64 executionFeeReceiver:Maybe address = CancelLPPositionOrder`
@@ -78,8 +78,8 @@ TLB: `compensate_order#77a5b69b orderType:Maybe int257 orderId:uint64 trxId:uint
 Signature: `CompensateOrder{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins}`
 
 ## CreateDecreasePerpPositionOrder
-TLB: `create_decrease_perp_position_order#d5c87eb9 executionFee:coins opType:uint8 tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 = CreateDecreasePerpPositionOrder`
-Signature: `CreateDecreasePerpPositionOrder{executionFee:coins,opType:uint8,tokenId:uint64,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257}`
+TLB: `create_decrease_perp_position_order#385f1bda executionFee:coins opType:uint8 tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder`
+Signature: `CreateDecreasePerpPositionOrder{executionFee:coins,opType:uint8,tokenId:uint64,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,trxId:uint64}`
 
 ## CancelPerpPositionOrder
 TLB: `cancel_perp_position_order#c1f953f2 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 = CancelPerpPositionOrder`
@@ -106,8 +106,8 @@ TLB: `update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:
 Signature: `UpdatePerpPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
 
 ## LPPositionOrderCreatedEvent
-TLB: `lp_position_order_created_event#c74d22d3 opType:uint8 account:address liquidityDelta:int257 executionFee:coins orderId:int257 = LPPositionOrderCreatedEvent`
-Signature: `LPPositionOrderCreatedEvent{opType:uint8,account:address,liquidityDelta:int257,executionFee:coins,orderId:int257}`
+TLB: `lp_position_order_created_event#b417cc6c opType:uint8 account:address liquidityDelta:int257 executionFee:coins orderId:int257 trxId:uint64 = LPPositionOrderCreatedEvent`
+Signature: `LPPositionOrderCreatedEvent{opType:uint8,account:address,liquidityDelta:int257,executionFee:coins,orderId:int257,trxId:uint64}`
 
 ## LPPositionOrderCancelledEvent
 TLB: `lp_position_order_cancelled_event#4b658ac0 opType:uint8 orderId:uint64 trxId:uint64 = LPPositionOrderCancelledEvent`
@@ -118,8 +118,8 @@ TLB: `lp_position_order_executed_event#b3055fd4 opType:uint8 orderId:uint64 trxI
 Signature: `LPPositionOrderExecutedEvent{opType:uint8,orderId:uint64,trxId:uint64}`
 
 ## PerpPositionOrderCreatedEvent
-TLB: `perp_position_order_created_event#99fc27c0 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:coins orderId:int257 = PerpPositionOrderCreatedEvent`
-Signature: `PerpPositionOrderCreatedEvent{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:coins,orderId:int257}`
+TLB: `perp_position_order_created_event#7263615d opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:coins orderId:int257 trxId:uint64 = PerpPositionOrderCreatedEvent`
+Signature: `PerpPositionOrderCreatedEvent{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:coins,orderId:int257,trxId:uint64}`
 
 ## PerpPositionOrderCancelledEvent
 TLB: `perp_position_order_cancelled_event#803e6175 opType:uint8 orderId:uint64 trxId:uint64 = PerpPositionOrderCancelledEvent`

@@ -132,7 +132,8 @@ export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContra
         {
             $$type: 'CreateDecreaseLPPositionOrder',
             executionFee: toNano(executionFee),
-            liquidityDelta: toJettonUnits(liquidity)
+            liquidityDelta: toJettonUnits(liquidity),
+            trxId: 1n
         }
     );
     // after trx

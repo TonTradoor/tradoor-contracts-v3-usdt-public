@@ -138,15 +138,16 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 
 ;;
 ;; Type: CreateDecreaseLPPositionOrder
-;; Header: 0x89f311c8
-;; TLB: create_decrease_lp_position_order#89f311c8 executionFee:coins liquidityDelta:int257 = CreateDecreaseLPPositionOrder
+;; Header: 0xbdbfce48
+;; TLB: create_decrease_lp_position_order#bdbfce48 executionFee:coins liquidityDelta:int257 trxId:uint64 = CreateDecreaseLPPositionOrder
 ;;
 
-(slice, ((int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2314408392);
+(slice, ((int, int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3183464008);
     var v'executionFee = sc_0~load_coins();
     var v'liquidityDelta = sc_0~load_int(257);
-    return (sc_0, (v'executionFee, v'liquidityDelta));
+    var v'trxId = sc_0~load_uint(64);
+    return (sc_0, (v'executionFee, v'liquidityDelta, v'trxId));
 }
 
 ;;
@@ -248,12 +249,12 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 
 ;;
 ;; Type: CreateDecreasePerpPositionOrder
-;; Header: 0xd5c87eb9
-;; TLB: create_decrease_perp_position_order#d5c87eb9 executionFee:coins opType:uint8 tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 = CreateDecreasePerpPositionOrder
+;; Header: 0x385f1bda
+;; TLB: create_decrease_perp_position_order#385f1bda executionFee:coins opType:uint8 tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder
 ;;
 
-(slice, ((int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 3586686649);
+(slice, ((int, int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 945757146);
     var v'executionFee = sc_0~load_coins();
     var v'opType = sc_0~load_uint(8);
     var v'tokenId = sc_0~load_uint(64);
@@ -261,7 +262,9 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
     var v'marginDelta = sc_0~load_int(257);
     var v'sizeDelta = sc_0~load_int(257);
     var v'triggerPrice = sc_0~load_int(257);
-    return (sc_0, (v'executionFee, v'opType, v'tokenId, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice));
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'trxId = sc_1~load_uint(64);
+    return (sc_0, (v'executionFee, v'opType, v'tokenId, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'trxId));
 }
 
 ;;
@@ -393,27 +396,28 @@ cell $UpdatePerpPosition$_store_cell((int, int, int, slice, int, int, int, int, 
 
 ;;
 ;; Type: LPPositionOrderCreatedEvent
-;; Header: 0xc74d22d3
-;; TLB: lp_position_order_created_event#c74d22d3 opType:uint8 account:address liquidityDelta:int257 executionFee:coins orderId:int257 = LPPositionOrderCreatedEvent
+;; Header: 0xb417cc6c
+;; TLB: lp_position_order_created_event#b417cc6c opType:uint8 account:address liquidityDelta:int257 executionFee:coins orderId:int257 trxId:uint64 = LPPositionOrderCreatedEvent
 ;;
 
-builder $LPPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, int, int) v) inline {
-    var (v'opType, v'account, v'liquidityDelta, v'executionFee, v'orderId) = v;
-    build_0 = store_uint(build_0, 3343721171, 32);
+builder $LPPositionOrderCreatedEvent$_store(builder build_0, (int, slice, int, int, int, int) v) inline_ref {
+    var (v'opType, v'account, v'liquidityDelta, v'executionFee, v'orderId, v'trxId) = v;
+    build_0 = store_uint(build_0, 3021458540, 32);
     build_0 = build_0.store_uint(v'opType, 8);
     build_0 = __tact_store_address(build_0, v'account);
     build_0 = build_0.store_int(v'liquidityDelta, 257);
     build_0 = build_0.store_coins(v'executionFee);
     build_0 = build_0.store_int(v'orderId, 257);
+    build_0 = build_0.store_uint(v'trxId, 64);
     return build_0;
 }
 
-cell $LPPositionOrderCreatedEvent$_store_cell((int, slice, int, int, int) v) inline {
+cell $LPPositionOrderCreatedEvent$_store_cell((int, slice, int, int, int, int) v) inline {
     return $LPPositionOrderCreatedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, slice, int, int, int)) $LPPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId(int opType, slice account, int liquidityDelta, int executionFee, int orderId) inline {
-    return (opType, account, liquidityDelta, executionFee, orderId);
+((int, slice, int, int, int, int)) $LPPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId_trxId(int opType, slice account, int liquidityDelta, int executionFee, int orderId, int trxId) inline {
+    return (opType, account, liquidityDelta, executionFee, orderId, trxId);
 }
 
 ;;
@@ -464,13 +468,13 @@ cell $LPPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: PerpPositionOrderCreatedEvent
-;; Header: 0x99fc27c0
-;; TLB: perp_position_order_created_event#99fc27c0 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:coins orderId:int257 = PerpPositionOrderCreatedEvent
+;; Header: 0x7263615d
+;; TLB: perp_position_order_created_event#7263615d opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:coins orderId:int257 trxId:uint64 = PerpPositionOrderCreatedEvent
 ;;
 
-builder $PerpPositionOrderCreatedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
-    var (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'tpSize, v'tpPrice, v'slSize, v'slPrice, v'executionFee, v'orderId) = v;
-    build_0 = store_uint(build_0, 2583439296, 32);
+builder $PerpPositionOrderCreatedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'tpSize, v'tpPrice, v'slSize, v'slPrice, v'executionFee, v'orderId, v'trxId) = v;
+    build_0 = store_uint(build_0, 1919115613, 32);
     build_0 = build_0.store_uint(v'opType, 8);
     build_0 = build_0.store_uint(v'tokenId, 64);
     build_0 = __tact_store_address(build_0, v'account);
@@ -487,17 +491,18 @@ builder $PerpPositionOrderCreatedEvent$_store(builder build_0, (int, int, slice,
     build_2 = build_2.store_int(v'slPrice, 257);
     build_2 = build_2.store_coins(v'executionFee);
     build_2 = build_2.store_int(v'orderId, 257);
+    build_2 = build_2.store_uint(v'trxId, 64);
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $PerpPositionOrderCreatedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+cell $PerpPositionOrderCreatedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
     return $PerpPositionOrderCreatedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, slice, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice(int opType, int tokenId, slice account, int isLong, int marginDelta, int sizeDelta, int executionFee, int orderId, int triggerPrice, int triggerAbove, int tpSize, int tpPrice, int slSize, int slPrice) inline {
-    return (opType, tokenId, account, isLong, marginDelta, sizeDelta, triggerPrice, triggerAbove, tpSize, tpPrice, slSize, slPrice, executionFee, orderId);
+((int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice_trxId(int opType, int tokenId, slice account, int isLong, int marginDelta, int sizeDelta, int executionFee, int orderId, int triggerPrice, int triggerAbove, int tpSize, int tpPrice, int slSize, int slPrice, int trxId) inline {
+    return (opType, tokenId, account, isLong, marginDelta, sizeDelta, triggerPrice, triggerAbove, tpSize, tpPrice, slSize, slPrice, executionFee, orderId, trxId);
 }
 
 ;;

@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 11877 bytes
+BOC Size: 11911 bytes
 
 # Types
-Total Types: 40
+Total Types: 39
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -88,10 +88,6 @@ Signature: `PerpPositionIncreasedEvent{opType:uint8,positionId:uint64,account:ad
 ## PerpPositionDecreasedEvent
 TLB: `perp_position_decreased_event#9dfdb1a9 opType:uint8 positionId:uint64 account:address tokenId:uint64 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 receive:int257 trxId:uint64 = PerpPositionDecreasedEvent`
 Signature: `PerpPositionDecreasedEvent{opType:uint8,positionId:uint64,account:address,tokenId:uint64,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257,entryFundingFeeGrowthAfter:int257,receive:int257,trxId:uint64}`
-
-## PerpPositionLiquidatedEvent
-TLB: `perp_position_liquidated_event#3fa93499 opType:uint8 positionId:uint64 account:address tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 liquidatePrice:int257 fundingFee:int257 tradingFee:int257 liquidationFee:int257 trxId:uint64 = PerpPositionLiquidatedEvent`
-Signature: `PerpPositionLiquidatedEvent{opType:uint8,positionId:uint64,account:address,tokenId:uint64,isLong:bool,marginDelta:int257,sizeDelta:int257,liquidatePrice:int257,fundingFee:int257,tradingFee:int257,liquidationFee:int257,trxId:uint64}`
 
 ## GlobalPositionChangedEvent
 TLB: `global_position_changed_event#82e5206c tokenId:uint64 longMarginAfter:int257 shortMarginAfter:int257 longSizeAfter:int257 shortSizeAfter:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 trxId:uint64 = GlobalPositionChangedEvent`
