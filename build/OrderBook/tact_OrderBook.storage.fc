@@ -249,14 +249,13 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 
 ;;
 ;; Type: CreateDecreasePerpPositionOrder
-;; Header: 0x385f1bda
-;; TLB: create_decrease_perp_position_order#385f1bda executionFee:coins opType:uint8 tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder
+;; Header: 0xc02023bf
+;; TLB: create_decrease_perp_position_order#c02023bf executionFee:coins tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder
 ;;
 
-(slice, ((int, int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 945757146);
+(slice, ((int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 3223331775);
     var v'executionFee = sc_0~load_coins();
-    var v'opType = sc_0~load_uint(8);
     var v'tokenId = sc_0~load_uint(64);
     var v'isLong = sc_0~load_int(1);
     var v'marginDelta = sc_0~load_int(257);
@@ -264,7 +263,27 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
     var v'triggerPrice = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'trxId = sc_1~load_uint(64);
-    return (sc_0, (v'executionFee, v'opType, v'tokenId, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'trxId));
+    return (sc_0, (v'executionFee, v'tokenId, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'trxId));
+}
+
+;;
+;; Type: CreateTpSlPerpPositionOrder
+;; Header: 0xb983c909
+;; TLB: create_tp_sl_perp_position_order#b983c909 executionFee:coins tokenId:uint64 isLong:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 trxId:uint64 = CreateTpSlPerpPositionOrder
+;;
+
+(slice, ((int, int, int, int, int, int, int, int))) $CreateTpSlPerpPositionOrder$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 3112421641);
+    var v'executionFee = sc_0~load_coins();
+    var v'tokenId = sc_0~load_uint(64);
+    var v'isLong = sc_0~load_int(1);
+    var v'tpSize = sc_0~load_int(257);
+    var v'tpPrice = sc_0~load_int(257);
+    var v'slSize = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'slPrice = sc_1~load_int(257);
+    var v'trxId = sc_1~load_uint(64);
+    return (sc_0, (v'executionFee, v'tokenId, v'isLong, v'tpSize, v'tpPrice, v'slSize, v'slPrice, v'trxId));
 }
 
 ;;
@@ -791,36 +810,38 @@ tuple $PerpPositionOrder$_to_opt_external(tuple v) inline {
 
 ;;
 ;; Type: PerpPositionOrderEx
-;; TLB: _ tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 = PerpPositionOrderEx
+;; TLB: _ tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:int257 = PerpPositionOrderEx
 ;;
 
-builder $PerpPositionOrderEx$_store(builder build_0, (int, int, int, int) v) inline {
-    var (v'tpSize, v'tpPrice, v'slSize, v'slPrice) = v;
+builder $PerpPositionOrderEx$_store(builder build_0, (int, int, int, int, int) v) inline {
+    var (v'tpSize, v'tpPrice, v'slSize, v'slPrice, v'executionFee) = v;
     build_0 = build_0.store_int(v'tpSize, 257);
     build_0 = build_0.store_int(v'tpPrice, 257);
     build_0 = build_0.store_int(v'slSize, 257);
     var build_1 = begin_cell();
     build_1 = build_1.store_int(v'slPrice, 257);
+    build_1 = build_1.store_int(v'executionFee, 257);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $PerpPositionOrderEx$_store_cell((int, int, int, int) v) inline {
+cell $PerpPositionOrderEx$_store_cell((int, int, int, int, int) v) inline {
     return $PerpPositionOrderEx$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((int, int, int, int))) $PerpPositionOrderEx$_load(slice sc_0) inline {
+(slice, ((int, int, int, int, int))) $PerpPositionOrderEx$_load(slice sc_0) inline {
     var v'tpSize = sc_0~load_int(257);
     var v'tpPrice = sc_0~load_int(257);
     var v'slSize = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'slPrice = sc_1~load_int(257);
-    return (sc_0, (v'tpSize, v'tpPrice, v'slSize, v'slPrice));
+    var v'executionFee = sc_1~load_int(257);
+    return (sc_0, (v'tpSize, v'tpPrice, v'slSize, v'slPrice, v'executionFee));
 }
 
-tuple $PerpPositionOrderEx$_as_optional((int, int, int, int) v) inline {
-    var (v'tpSize, v'tpPrice, v'slSize, v'slPrice) = v;
-    return __tact_tuple_create_4(v'tpSize, v'tpPrice, v'slSize, v'slPrice);
+tuple $PerpPositionOrderEx$_as_optional((int, int, int, int, int) v) inline {
+    var (v'tpSize, v'tpPrice, v'slSize, v'slPrice, v'executionFee) = v;
+    return __tact_tuple_create_5(v'tpSize, v'tpPrice, v'slSize, v'slPrice, v'executionFee);
 }
 
 tuple $PerpPositionOrderEx$_load_opt(cell cl) inline {
@@ -831,14 +852,14 @@ tuple $PerpPositionOrderEx$_load_opt(cell cl) inline {
     return $PerpPositionOrderEx$_as_optional(sc~$PerpPositionOrderEx$_load());
 }
 
-((int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline {
+((int, int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'tpSize, int vvv'tpPrice, int vvv'slSize, int vvv'slPrice) = __tact_tuple_destroy_4(v);
-    return (vvv'tpSize, vvv'tpPrice, vvv'slSize, vvv'slPrice);
+    var (int vvv'tpSize, int vvv'tpPrice, int vvv'slSize, int vvv'slPrice, int vvv'executionFee) = __tact_tuple_destroy_5(v);
+    return (vvv'tpSize, vvv'tpPrice, vvv'slSize, vvv'slPrice, vvv'executionFee);
 }
 
-((int, int, int, int)) $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice(int tpSize, int tpPrice, int slSize, int slPrice) inline {
-    return (tpSize, tpPrice, slSize, slPrice);
+((int, int, int, int, int)) $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee(int tpSize, int tpPrice, int slSize, int slPrice, int executionFee) inline {
+    return (tpSize, tpPrice, slSize, slPrice, executionFee);
 }
 
 ;;

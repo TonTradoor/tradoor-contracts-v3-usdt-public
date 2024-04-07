@@ -49,6 +49,7 @@ struct PerpPositionOrderEx {
     tpPrice: Int;
     slSize: Int;
     slPrice: Int;
+    executionFee: Int;
 }
 
 // ============================ Price ================================ //

@@ -120,9 +120,9 @@ int __tact_int_eq_nullable_one(int a, int b) inline {
 
 forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
 
-forall X0, X1, X2, X3 -> tuple __tact_tuple_create_4((X0, X1, X2, X3) v) asm "4 TUPLE";
+forall X0, X1, X2, X3, X4 -> tuple __tact_tuple_create_5((X0, X1, X2, X3, X4) v) asm "5 TUPLE";
 
-forall X0, X1, X2, X3 -> (X0, X1, X2, X3) __tact_tuple_destroy_4(tuple v) asm "4 UNTUPLE";
+forall X0, X1, X2, X3, X4 -> (X0, X1, X2, X3, X4) __tact_tuple_destroy_5(tuple v) asm "5 UNTUPLE";
 
 forall X0, X1, X2, X3, X4, X5, X6, X7 -> tuple __tact_tuple_create_8((X0, X1, X2, X3, X4, X5, X6, X7) v) asm "8 TUPLE";
 

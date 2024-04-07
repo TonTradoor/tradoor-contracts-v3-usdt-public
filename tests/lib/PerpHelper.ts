@@ -158,7 +158,7 @@ let UpdatePriceValue: DictionaryValue<UpdatePrice> = {
 }
 
 
-export async function createDecreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, opType: bigint, 
+export async function createDecreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, 
     tokenId: number, isLong: boolean, margin: number, size: number, triggerPrice: number) {
     let balanceBefore = await getAllBalance();
     let orderIdBefore = await TestEnv.orderBook.getPerpPositionOrderIndexNext();
@@ -171,7 +171,6 @@ export async function createDecreasePerpOrder(user: SandboxContract<TreasuryCont
         {
             $$type: 'CreateDecreasePerpPositionOrder',
             executionFee: toNano(executionFee),
-            opType: opType,
             tokenId: BigInt(tokenId),
             isLong: isLong,
             marginDelta: toJettonUnits(margin),
@@ -192,6 +191,51 @@ export async function createDecreasePerpOrder(user: SandboxContract<TreasuryCont
         orderIdBefore,
         orderIdAfter,
         order
+    };
+}
+
+export async function createTpSlPerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, 
+    tokenId: number, isLong: boolean, tpSize: number, tpPrice: number, slSize: number, slPrice: number) {
+    let balanceBefore = await getAllBalance();
+    let orderIdBefore = await TestEnv.orderBook.getPerpPositionOrderIndexNext();
+    // create order
+    const trxResult = await TestEnv.orderBook.send(
+        user.getSender(),
+        {
+            value: toNano(executionFee + 0.1),
+        },
+        {
+            $$type: 'CreateTpSlPerpPositionOrder',
+            executionFee: toNano(executionFee),
+            tokenId: BigInt(tokenId),
+            isLong: isLong,
+            tpSize: toJettonUnits(tpSize),
+            tpPrice: toPriceUnits(tpPrice),
+            slSize: toJettonUnits(slSize),
+            slPrice: toPriceUnits(slPrice),
+            trxId: 1n
+        }
+    );
+    // after trx
+    let balanceAfter = await getAllBalance();
+    let orderIdAfter = await TestEnv.orderBook.getPerpPositionOrderIndexNext();
+    let order0;
+    let order1;
+    if (orderIdAfter - orderIdBefore == 1n) {
+        order0 = await TestEnv.orderBook.getPerpPositionOrder(orderIdBefore);
+    } else {
+        order0 = await TestEnv.orderBook.getPerpPositionOrder(orderIdBefore);
+        order1 = await TestEnv.orderBook.getPerpPositionOrder(orderIdBefore + 1n);
+    }
+
+    return {
+        trxResult,
+        balanceBefore,
+        balanceAfter,
+        orderIdBefore,
+        orderIdAfter,
+        order0,
+        order1
     };
 }
 

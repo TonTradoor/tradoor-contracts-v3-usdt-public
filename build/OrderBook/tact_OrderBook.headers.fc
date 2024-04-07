@@ -112,7 +112,10 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 (slice, ((int, int, int, slice, int, slice, int))) $CompensateOrder$_load(slice sc_0) inline_ref;
 
 ;; $CreateDecreasePerpPositionOrder$_load
-(slice, ((int, int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref;
+(slice, ((int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref;
+
+;; $CreateTpSlPerpPositionOrder$_load
+(slice, ((int, int, int, int, int, int, int, int))) $CreateTpSlPerpPositionOrder$_load(slice sc_0) inline_ref;
 
 ;; $CancelPerpPositionOrder$_load
 (slice, ((slice, int, int))) $CancelPerpPositionOrder$_load(slice sc_0) inline;
@@ -223,16 +226,16 @@ tuple $PerpPositionOrder$_as_optional((int, int, slice, int, int, int, int, int,
 tuple $PerpPositionOrder$_load_opt(cell cl) inline;
 
 ;; $PerpPositionOrderEx$_store
-builder $PerpPositionOrderEx$_store(builder build_0, (int, int, int, int) v) inline;
+builder $PerpPositionOrderEx$_store(builder build_0, (int, int, int, int, int) v) inline;
 
 ;; $PerpPositionOrderEx$_store_cell
-cell $PerpPositionOrderEx$_store_cell((int, int, int, int) v) inline;
+cell $PerpPositionOrderEx$_store_cell((int, int, int, int, int) v) inline;
 
 ;; $PerpPositionOrderEx$_load
-(slice, ((int, int, int, int))) $PerpPositionOrderEx$_load(slice sc_0) inline;
+(slice, ((int, int, int, int, int))) $PerpPositionOrderEx$_load(slice sc_0) inline;
 
 ;; $PerpPositionOrderEx$_as_optional
-tuple $PerpPositionOrderEx$_as_optional((int, int, int, int) v) inline;
+tuple $PerpPositionOrderEx$_as_optional((int, int, int, int, int) v) inline;
 
 ;; $PerpPositionOrderEx$_load_opt
 tuple $PerpPositionOrderEx$_load_opt(cell cl) inline;
@@ -277,7 +280,7 @@ tuple $PerpPositionOrder$_to_opt_tuple(tuple v) inline;
 tuple $PerpPositionOrder$_to_opt_external(tuple v) inline;
 
 ;; $PerpPositionOrderEx$_not_null
-((int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline;
+((int, int, int, int, int)) $PerpPositionOrderEx$_not_null(tuple v) inline;
 
 ;; $OrderBook$init$_load
 (slice, ((int))) $OrderBook$init$_load(slice sc_0) inline;
@@ -348,8 +351,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $OrderBook$_fun_lpPositionOrderIndexNext
 ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), int) $OrderBook$_fun_lpPositionOrderIndexNext((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self) impure inline_ref;
 
-;; $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice
-((int, int, int, int)) $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice(int tpSize, int tpPrice, int slSize, int slPrice) inline;
+;; $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee
+((int, int, int, int, int)) $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee(int tpSize, int tpPrice, int slSize, int slPrice, int executionFee) inline;
 
 ;; $PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator
 ((int, int, slice, int, int, int, int, int, int, int, int, slice, slice)) $PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(int opType, int tokenId, slice account, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int executionFee, int blockTime, int isPending, slice executionFeeReceiver, slice lastOperator) inline;

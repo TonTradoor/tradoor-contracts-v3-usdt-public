@@ -516,7 +516,15 @@ contract OrderBook with Deployable, Ownable {
             refundComment = "jetton not enough";
         }
 
-        if (executionFee < self.minExecutionFee) {
+        let executionFeeMultiple: Int = 1;
+        if (tpSize > 0 && tpPrice > 0) {
+            executionFeeMultiple += 1;
+        }
+        if (slSize > 0 && slPrice > 0) {
+            executionFeeMultiple += 1;
+        }
+
+        if (executionFee < self.minExecutionFee * executionFeeMultiple) {
             refund = true;
             refundComment = "execution fee not enough";
         }
@@ -552,13 +560,42 @@ contract OrderBook with Deployable, Ownable {
         let ctx: Context = context();
         // check gas
         require(ctx.value - msg.executionFee >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
-        // check execution fee TODO tp/sl
+        // check execution fee
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
-        require(msg.opType == ORDER_OP_TYPE_DECREASE_MARKET || msg.opType == ORDER_OP_TYPE_DECREASE_TP || msg.opType == ORDER_OP_TYPE_DECREASE_SL, "invalid op type");
 
         // add new order
-        self.createPerpOrder(msg.trxId, msg.opType, sender(), msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.triggerPrice, 
+        self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_MARKET, sender(), msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.triggerPrice, 
                 0, 0, 0, 0, msg.executionFee);
+
+        // transfer execess gas
+        self.refundExecessTon(sender(), msg.executionFee);
+    }
+
+    receive(msg: CreateTpSlPerpPositionOrder) {
+        let ctx: Context = context();
+        // check gas
+        require(ctx.value - msg.executionFee >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        // check execution fee TODO tp/sl
+        require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
+
+        let executionFeeMultiple: Int = 0;
+        if (msg.tpSize > 0 && msg.tpPrice > 0) {
+            executionFeeMultiple += 1;
+        }
+        if (msg.slSize > 0 && msg.slPrice > 0) {
+            executionFeeMultiple += 1;
+        }
+
+        // create tp/sl
+        if (msg.tpSize > 0 && msg.tpPrice > 0) {
+            self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_TP, sender(), msg.tokenId, msg.isLong, 0, msg.tpSize, msg.tpPrice, 
+                0, 0, 0, 0, msg.executionFee / executionFeeMultiple);
+        }
+
+        if (msg.slSize > 0 && msg.slPrice > 0) {
+            self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_SL, sender(), msg.tokenId, msg.isLong, 0, msg.slSize, msg.slPrice, 
+                0, 0, 0, 0, msg.executionFee / executionFeeMultiple);
+        }
 
         // transfer execess gas
         self.refundExecessTon(sender(), msg.executionFee);
@@ -574,11 +611,19 @@ contract OrderBook with Deployable, Ownable {
         if (opType == ORDER_OP_TYPE_INCREASE_MARKET || opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             // increase for long order, must trigger below the price
             triggerAbove = !isLong;
+            let executionFeeMultiple: Int = 1;
+            if (tpSize > 0 && tpPrice > 0) {
+                executionFeeMultiple += 1;
+            }
+            if (slSize > 0 && slPrice > 0) {
+                executionFeeMultiple += 1;
+            }
             self.perpPositionOrderExs.set(orderId, PerpPositionOrderEx{
                 tpSize: tpSize,
                 tpPrice: tpPrice,
                 slSize: slSize,
-                slPrice: slPrice
+                slPrice: slPrice,
+                executionFee: executionFee / executionFeeMultiple
             });
         } else {
             if (opType == ORDER_OP_TYPE_DECREASE_MARKET) {
@@ -796,12 +841,12 @@ contract OrderBook with Deployable, Ownable {
                 // create tp/sl
                 if (orderEx.tpSize > 0 && orderEx.tpPrice > 0) {
                     self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_TP, sender(), order.tokenId, order.isLong, 0, orderEx.tpSize, orderEx.tpPrice, 
-                        0, 0, 0, 0, 0);
+                        0, 0, 0, 0, orderEx.executionFee);
                 }
 
                 if (orderEx.slSize > 0 && orderEx.slPrice > 0) {
                     self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_SL, sender(), order.tokenId, order.isLong, 0, orderEx.slSize, orderEx.slPrice, 
-                        0, 0, 0, 0, 0);
+                        0, 0, 0, 0, orderEx.executionFee);
                 }
             }
         } else {

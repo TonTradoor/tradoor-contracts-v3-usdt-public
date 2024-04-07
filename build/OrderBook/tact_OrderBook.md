@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 10069 bytes
+BOC Size: 10581 bytes
 
 # Types
-Total Types: 37
+Total Types: 38
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -78,8 +78,12 @@ TLB: `compensate_order#77a5b69b orderType:Maybe int257 orderId:uint64 trxId:uint
 Signature: `CompensateOrder{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins}`
 
 ## CreateDecreasePerpPositionOrder
-TLB: `create_decrease_perp_position_order#385f1bda executionFee:coins opType:uint8 tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder`
-Signature: `CreateDecreasePerpPositionOrder{executionFee:coins,opType:uint8,tokenId:uint64,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,trxId:uint64}`
+TLB: `create_decrease_perp_position_order#c02023bf executionFee:coins tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder`
+Signature: `CreateDecreasePerpPositionOrder{executionFee:coins,tokenId:uint64,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,trxId:uint64}`
+
+## CreateTpSlPerpPositionOrder
+TLB: `create_tp_sl_perp_position_order#b983c909 executionFee:coins tokenId:uint64 isLong:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 trxId:uint64 = CreateTpSlPerpPositionOrder`
+Signature: `CreateTpSlPerpPositionOrder{executionFee:coins,tokenId:uint64,isLong:bool,tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,trxId:uint64}`
 
 ## CancelPerpPositionOrder
 TLB: `cancel_perp_position_order#c1f953f2 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 = CancelPerpPositionOrder`
@@ -146,8 +150,8 @@ TLB: `_ opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int2
 Signature: `PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
 
 ## PerpPositionOrderEx
-TLB: `_ tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 = PerpPositionOrderEx`
-Signature: `PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257}`
+TLB: `_ tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:int257 = PerpPositionOrderEx`
+Signature: `PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:int257}`
 
 ## UpdatePrice
 TLB: `_ tokenId:uint64 price:int257 = UpdatePrice`
@@ -204,4 +208,3 @@ Argument: orderId
 39703: too early
 41207: invalid sender
 42241: order not pending
-54499: invalid op type

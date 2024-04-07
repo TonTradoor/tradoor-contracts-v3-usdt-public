@@ -8,7 +8,7 @@ import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
-import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, executePerpOrder, liquidatePerpPosition } from './lib/PerpHelper';
+import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition } from './lib/PerpHelper';
 import { ORDER_OP_TYPE_DECREASE_MARKET, ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
 
 describe('LP', () => {
@@ -251,8 +251,7 @@ describe('LP', () => {
         blockchain.now = time1;
 
         // create order
-        const createResult = await createDecreasePerpOrder(user0, executionFee, ORDER_OP_TYPE_DECREASE_MARKET, 
-            tokenId, isLong, margin, size, triggerPrice);
+        const createResult = await createDecreasePerpOrder(user0, executionFee, tokenId, isLong, margin, size, triggerPrice);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: user0.address,
             to: orderBook.address,
@@ -348,8 +347,7 @@ describe('LP', () => {
         blockchain.now = time1;
 
         // create order
-        const createDecreaseResult = await createDecreasePerpOrder(user1, executionFee, ORDER_OP_TYPE_DECREASE_MARKET, 
-            tokenId, isLong, decreaseMargin, decreaseSize, decreaseTriggerPrice);
+        const createDecreaseResult = await createDecreasePerpOrder(user1, executionFee, tokenId, isLong, decreaseMargin, decreaseSize, decreaseTriggerPrice);
         expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,
             to: orderBook.address,
@@ -392,8 +390,7 @@ describe('LP', () => {
         decreaseSize = size - decreaseSize;
 
         // create order
-        const createDecreaseResult1 = await createDecreasePerpOrder(user1, executionFee, ORDER_OP_TYPE_DECREASE_MARKET, 
-            tokenId, isLong, decreaseMargin, decreaseSize, decreaseTriggerPrice);
+        const createDecreaseResult1 = await createDecreasePerpOrder(user1, executionFee, tokenId, isLong, decreaseMargin, decreaseSize, decreaseTriggerPrice);
         expect(createDecreaseResult1.trxResult.transactions).toHaveTransaction({
             from: user1.address,
             to: orderBook.address,
@@ -473,7 +470,7 @@ describe('LP', () => {
         let slPrice = 49000;
 
         // create order
-        const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, tpSize, tpPrice, slSize, slPrice);
+        const createResult = await createIncreasePerpOrder(user1, executionFee * 3, isMarket, tokenId, isLong, margin, size, triggerPrice, tpSize, tpPrice, slSize, slPrice);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
             to: orderBook.address,
@@ -580,6 +577,8 @@ describe('LP', () => {
         /// create order
         let tpSize = 0.01;
         let tpPrice = 51000;
+        let slSize = 0.01;
+        let slPrice = 49000;
         let decreasePrice = 52000;
 
         // set block time
@@ -587,18 +586,23 @@ describe('LP', () => {
         blockchain.now = time1;
 
         // create order
-        const createDecreaseResult = await createDecreasePerpOrder(user1, executionFee, ORDER_OP_TYPE_DECREASE_TP, 
-            tokenId, isLong, 0, tpSize, tpPrice);
-        let tpOrder = createDecreaseResult.order;
-        expect(tpOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_TP);
-        expect(tpOrder?.sizeDelta).toEqual(toJettonUnits(tpSize));
-        expect(tpOrder?.triggerPrice).toEqual(toPriceUnits(tpPrice));
-        expect(tpOrder?.triggerAbove).toEqual(true);
+        const createDecreaseResult = await createTpSlPerpOrder(user1, executionFee, tokenId, isLong, tpSize, tpPrice, slSize, slPrice);
         expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,
             to: orderBook.address,
             success: true,
         });
+        let tpOrder = createDecreaseResult.order0;
+        expect(tpOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_TP);
+        expect(tpOrder?.sizeDelta).toEqual(toJettonUnits(tpSize));
+        expect(tpOrder?.triggerPrice).toEqual(toPriceUnits(tpPrice));
+        expect(tpOrder?.triggerAbove).toBeTruthy;
+
+        let slOrder = createDecreaseResult.order1;
+        expect(slOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_SL);
+        expect(slOrder?.sizeDelta).toEqual(toJettonUnits(slSize));
+        expect(slOrder?.triggerPrice).toEqual(toPriceUnits(slPrice));
+        expect(slOrder?.triggerAbove).toBeFalsy();
 
         /// executor order
         const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice);

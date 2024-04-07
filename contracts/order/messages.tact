@@ -85,12 +85,22 @@ message CompensateOrder {
 // ============================ Perp ================================ //
 message CreateDecreasePerpPositionOrder {
     executionFee: Int as coins;
-    opType: Int as uint8;
     tokenId: Int as uint64;
     isLong: Bool;
     marginDelta: Int;
     sizeDelta: Int;
     triggerPrice: Int;
+    trxId: Int as uint64;
+}
+
+message CreateTpSlPerpPositionOrder {
+    executionFee: Int as coins;
+    tokenId: Int as uint64;
+    isLong: Bool;
+    tpSize: Int;
+    tpPrice: Int;
+    slSize: Int;
+    slPrice: Int;
     trxId: Int as uint64;
 }
 
