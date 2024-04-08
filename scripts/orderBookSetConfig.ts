@@ -34,7 +34,7 @@ export async function run(provider: NetworkProvider) {
         }
     );
 
-    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 10);
+    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 20);
     if (transDone) {
         console.log(`set config success`);
     } else {

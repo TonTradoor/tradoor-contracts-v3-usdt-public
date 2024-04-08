@@ -20,7 +20,8 @@ export async function run(provider: NetworkProvider) {
         {
             $$type: 'CreateDecreaseLPPositionOrder',
             executionFee: toNano(executionFee),
-            liquidityDelta: toUnits(decreaseLiquidity, jettonDecimal)
+            liquidityDelta: toUnits(decreaseLiquidity, jettonDecimal),
+            trxId: 1n
         }
     );
 

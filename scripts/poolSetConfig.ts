@@ -21,12 +21,13 @@ export async function run(provider: NetworkProvider) {
             gasConsumption: toNano(0.05),
             minTonsForStorage: toNano(0.03),
             lpLockTime: 5n * 60n,
-            bonusFactor: 1n,
+            lpBonusFactor: 10n**9n,
+            lpLiquidityFactor: 2n * 10n**9n,
             orderBook: orderBook.address
         }
     );
 
-    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 10);
+    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
     if (transDone) {
         console.log(`set config success`);
     } else {

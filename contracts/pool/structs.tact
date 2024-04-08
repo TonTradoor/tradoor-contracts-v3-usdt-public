@@ -1,7 +1,10 @@
 // ============================ Config ================================ //
 struct ConfigData {
+    gasConsumption: Int as coins;
+    minTonsForStorage: Int as coins;
     lpLockTime: Int;
-    bonusFactor: Int;
+    lpBonusFactor: Int;
+    lpLiquidityFactor: Int;
     orderBook: Address;
 }
 
@@ -12,6 +15,7 @@ struct TokenConfig {
     minMargin: Int;
     maxLeverage: Int;
     liquidationFee: Int;
+    liquidityProportion: Int;
     // ==================== Trading Fee Configuration ==================
     tradingFeeRate: Int;
     lpTradingFeeRate: Int;
@@ -73,6 +77,8 @@ struct PerpPositionData {
     perpPosition: DirectionPerpPosition?;
     globalLPPosition: GlobalLPPosition?;
     globalPosition: GlobalPosition?;
+    globalPerpNetValue: Int;
+    globalPerpSingleValue: Int;
 }
 
 // ============================ Price ================================ //
@@ -93,6 +99,8 @@ struct GlobalPosition {
     shortSize: Int;
     longFundingFeeGrowth: Int;
     shortFundingFeeGrowth: Int;
+    longValue: Int;
+    shortValue: Int;
 }
 
 struct GlobalFundingRateSample {

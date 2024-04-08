@@ -26,7 +26,7 @@ export async function run(provider: NetworkProvider) {
     );
 
     // wait for trx
-    const transDone = await waitForTransaction(provider, sampleJetton.address, lastTrx, 10);
+    const transDone = await waitForTransaction(provider, sampleJetton.address, lastTrx, 20);
     if (transDone) {
         console.log(`create decrease LP success`);
     }

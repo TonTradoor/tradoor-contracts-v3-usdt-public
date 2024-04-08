@@ -5,7 +5,8 @@ message UpdateConfig {
     gasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
     lpLockTime: Int;
-    bonusFactor: Int;
+    lpBonusFactor: Int;
+    lpLiquidityFactor: Int;
     orderBook: Address;
 }
 

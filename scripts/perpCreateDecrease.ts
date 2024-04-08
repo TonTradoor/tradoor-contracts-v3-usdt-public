@@ -26,17 +26,17 @@ export async function run(provider: NetworkProvider) {
         {
             $$type: 'CreateDecreasePerpPositionOrder',
             executionFee: toNano(executionFee),
-            opType: ORDER_OP_TYPE_DECREASE_MARKET,
             tokenId: BigInt(tokenId),
             isLong: isLong,
             marginDelta: toUnits(margin, jettonDecimal),
             sizeDelta: toUnits(size, jettonDecimal),
-            triggerPrice: toUnits(triggerPrice, priceDecimal)
+            triggerPrice: toUnits(triggerPrice, priceDecimal),
+            trxId: 1n
         }
     );
 
     // wait for trx
-    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 10);
+    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 20);
     if (transDone) {
         console.log(`create decrease perp success`);
     }

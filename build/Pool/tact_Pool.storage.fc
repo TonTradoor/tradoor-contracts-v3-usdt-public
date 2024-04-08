@@ -71,19 +71,20 @@ cell $DeployOk$_store_cell((int) v) inline {
 
 ;;
 ;; Type: UpdateConfig
-;; Header: 0x2bd749e8
-;; TLB: update_config#2bd749e8 gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 bonusFactor:int257 orderBook:address = UpdateConfig
+;; Header: 0x11bde8f2
+;; TLB: update_config#11bde8f2 gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = UpdateConfig
 ;;
 
-(slice, ((int, int, int, int, slice))) $UpdateConfig$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 735529448);
+(slice, ((int, int, int, int, int, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 297658610);
     var v'gasConsumption = sc_0~load_coins();
     var v'minTonsForStorage = sc_0~load_coins();
     var v'lpLockTime = sc_0~load_int(257);
-    var v'bonusFactor = sc_0~load_int(257);
+    var v'lpBonusFactor = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'lpLiquidityFactor = sc_1~load_int(257);
     var v'orderBook = sc_1~__tact_load_address();
-    return (sc_0, (v'gasConsumption, v'minTonsForStorage, v'lpLockTime, v'bonusFactor, v'orderBook));
+    return (sc_0, (v'gasConsumption, v'minTonsForStorage, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'orderBook));
 }
 
 ;;
@@ -473,63 +474,65 @@ cell $UpdatePriceEvent$_store_cell((int, cell) v) inline {
 
 ;;
 ;; Type: ConfigData
-;; TLB: _ lpLockTime:int257 bonusFactor:int257 orderBook:address = ConfigData
+;; TLB: _ gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData
 ;;
 
-(int, int, slice) $ConfigData$_to_external(((int, int, slice)) v) inline {
-    var (v'lpLockTime, v'bonusFactor, v'orderBook) = v; 
-    return (v'lpLockTime, v'bonusFactor, v'orderBook);
+(int, int, int, int, int, slice) $ConfigData$_to_external(((int, int, int, int, int, slice)) v) inline {
+    var (v'gasConsumption, v'minTonsForStorage, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'orderBook) = v; 
+    return (v'gasConsumption, v'minTonsForStorage, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'orderBook);
 }
 
-((int, int, slice)) $ConfigData$_constructor_lpLockTime_bonusFactor_orderBook(int lpLockTime, int bonusFactor, slice orderBook) inline {
-    return (lpLockTime, bonusFactor, orderBook);
+((int, int, int, int, int, slice)) $ConfigData$_constructor_gasConsumption_minTonsForStorage_lpLockTime_lpBonusFactor_lpLiquidityFactor_orderBook(int gasConsumption, int minTonsForStorage, int lpLockTime, int lpBonusFactor, int lpLiquidityFactor, slice orderBook) inline {
+    return (gasConsumption, minTonsForStorage, lpLockTime, lpBonusFactor, lpLiquidityFactor, orderBook);
 }
 
 ;;
 ;; Type: TokenConfig
-;; TLB: _ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig
+;; TLB: _ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig
 ;;
 
-builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int) v) inline_ref {
-    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
+builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
     build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
     build_0 = build_0.store_int(v'enable, 1);
     build_0 = build_0.store_int(v'minMargin, 257);
     build_0 = build_0.store_int(v'maxLeverage, 257);
     build_0 = build_0.store_int(v'liquidationFee, 257);
     var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'liquidityProportion, 257);
     build_1 = build_1.store_int(v'tradingFeeRate, 257);
     build_1 = build_1.store_int(v'lpTradingFeeRate, 257);
-    build_1 = build_1.store_int(v'interestRate, 257);
     var build_2 = begin_cell();
+    build_2 = build_2.store_int(v'interestRate, 257);
     build_2 = build_2.store_int(v'maxFundingRate, 257);
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int) v) inline {
+cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int) v) inline {
     return $TokenConfig$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((slice, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref {
+(slice, ((slice, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref {
     var v'name = sc_0~load_ref().begin_parse();
     var v'enable = sc_0~load_int(1);
     var v'minMargin = sc_0~load_int(257);
     var v'maxLeverage = sc_0~load_int(257);
     var v'liquidationFee = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'liquidityProportion = sc_1~load_int(257);
     var v'tradingFeeRate = sc_1~load_int(257);
     var v'lpTradingFeeRate = sc_1~load_int(257);
-    var v'interestRate = sc_1~load_int(257);
     slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'interestRate = sc_2~load_int(257);
     var v'maxFundingRate = sc_2~load_int(257);
-    return (sc_0, (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate));
+    return (sc_0, (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate));
 }
 
-tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int) v) inline {
-    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
-    return __tact_tuple_create_9(v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
+tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
+    return __tact_tuple_create_10(v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
 }
 
 tuple $TokenConfig$_load_opt(cell cl) inline {
@@ -540,15 +543,15 @@ tuple $TokenConfig$_load_opt(cell cl) inline {
     return $TokenConfig$_as_optional(sc~$TokenConfig$_load());
 }
 
-((slice, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline {
+((slice, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (slice vvv'name, int vvv'enable, int vvv'minMargin, int vvv'maxLeverage, int vvv'liquidationFee, int vvv'tradingFeeRate, int vvv'lpTradingFeeRate, int vvv'interestRate, int vvv'maxFundingRate) = __tact_tuple_destroy_9(v);
-    return (vvv'name, vvv'enable, vvv'minMargin, vvv'maxLeverage, vvv'liquidationFee, vvv'tradingFeeRate, vvv'lpTradingFeeRate, vvv'interestRate, vvv'maxFundingRate);
+    var (slice vvv'name, int vvv'enable, int vvv'minMargin, int vvv'maxLeverage, int vvv'liquidationFee, int vvv'liquidityProportion, int vvv'tradingFeeRate, int vvv'lpTradingFeeRate, int vvv'interestRate, int vvv'maxFundingRate) = __tact_tuple_destroy_10(v);
+    return (vvv'name, vvv'enable, vvv'minMargin, vvv'maxLeverage, vvv'liquidationFee, vvv'liquidityProportion, vvv'tradingFeeRate, vvv'lpTradingFeeRate, vvv'interestRate, vvv'maxFundingRate);
 }
 
-tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int)) v) inline {
-    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
-    return __tact_tuple_create_9(v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
+tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int)) v) inline {
+    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
+    return __tact_tuple_create_10(v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
 }
 
 tuple $TokenConfig$_to_opt_tuple(tuple v) inline {
@@ -556,13 +559,13 @@ tuple $TokenConfig$_to_opt_tuple(tuple v) inline {
     return $TokenConfig$_to_tuple($TokenConfig$_not_null(v)); 
 }
 
-((slice, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_interestRate_maxFundingRate(slice name, int enable, int minMargin, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int interestRate, int maxFundingRate) inline {
-    return (name, enable, minMargin, maxLeverage, liquidationFee, tradingFeeRate, lpTradingFeeRate, interestRate, maxFundingRate);
+((slice, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate(slice name, int enable, int minMargin, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int liquidityProportion, int interestRate, int maxFundingRate) inline {
+    return (name, enable, minMargin, maxLeverage, liquidationFee, liquidityProportion, tradingFeeRate, lpTradingFeeRate, interestRate, maxFundingRate);
 }
 
 ;;
 ;; Type: TokenConfigData
-;; TLB: _ tokenIdNext:uint64 tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257} = TokenConfigData
+;; TLB: _ tokenIdNext:uint64 tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257} = TokenConfigData
 ;;
 
 (int, tuple) $TokenConfigData$_to_external(((int, tuple)) v) inline {
@@ -889,11 +892,11 @@ tuple $GlobalLPPosition$_to_opt_tuple(tuple v) inline {
 
 ;;
 ;; Type: GlobalPosition
-;; TLB: _ longMargin:int257 shortMargin:int257 longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 = GlobalPosition
+;; TLB: _ longMargin:int257 shortMargin:int257 longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 longValue:int257 shortValue:int257 = GlobalPosition
 ;;
 
-builder $GlobalPosition$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref {
-    var (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth) = v;
+builder $GlobalPosition$_store(builder build_0, (int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth, v'longValue, v'shortValue) = v;
     build_0 = build_0.store_int(v'longMargin, 257);
     build_0 = build_0.store_int(v'shortMargin, 257);
     build_0 = build_0.store_int(v'longSize, 257);
@@ -901,15 +904,19 @@ builder $GlobalPosition$_store(builder build_0, (int, int, int, int, int, int) v
     build_1 = build_1.store_int(v'shortSize, 257);
     build_1 = build_1.store_int(v'longFundingFeeGrowth, 257);
     build_1 = build_1.store_int(v'shortFundingFeeGrowth, 257);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_int(v'longValue, 257);
+    build_2 = build_2.store_int(v'shortValue, 257);
+    build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $GlobalPosition$_store_cell((int, int, int, int, int, int) v) inline {
+cell $GlobalPosition$_store_cell((int, int, int, int, int, int, int, int) v) inline {
     return $GlobalPosition$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((int, int, int, int, int, int))) $GlobalPosition$_load(slice sc_0) inline_ref {
+(slice, ((int, int, int, int, int, int, int, int))) $GlobalPosition$_load(slice sc_0) inline_ref {
     var v'longMargin = sc_0~load_int(257);
     var v'shortMargin = sc_0~load_int(257);
     var v'longSize = sc_0~load_int(257);
@@ -917,12 +924,15 @@ cell $GlobalPosition$_store_cell((int, int, int, int, int, int) v) inline {
     var v'shortSize = sc_1~load_int(257);
     var v'longFundingFeeGrowth = sc_1~load_int(257);
     var v'shortFundingFeeGrowth = sc_1~load_int(257);
-    return (sc_0, (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth));
+    slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'longValue = sc_2~load_int(257);
+    var v'shortValue = sc_2~load_int(257);
+    return (sc_0, (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth, v'longValue, v'shortValue));
 }
 
-tuple $GlobalPosition$_as_optional((int, int, int, int, int, int) v) inline {
-    var (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth) = v;
-    return __tact_tuple_create_6(v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth);
+tuple $GlobalPosition$_as_optional((int, int, int, int, int, int, int, int) v) inline {
+    var (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth, v'longValue, v'shortValue) = v;
+    return __tact_tuple_create_8(v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth, v'longValue, v'shortValue);
 }
 
 tuple $GlobalPosition$_load_opt(cell cl) inline {
@@ -933,15 +943,15 @@ tuple $GlobalPosition$_load_opt(cell cl) inline {
     return $GlobalPosition$_as_optional(sc~$GlobalPosition$_load());
 }
 
-tuple $GlobalPosition$_to_tuple(((int, int, int, int, int, int)) v) inline {
-    var (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth) = v;
-    return __tact_tuple_create_6(v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth);
+tuple $GlobalPosition$_to_tuple(((int, int, int, int, int, int, int, int)) v) inline {
+    var (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth, v'longValue, v'shortValue) = v;
+    return __tact_tuple_create_8(v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longFundingFeeGrowth, v'shortFundingFeeGrowth, v'longValue, v'shortValue);
 }
 
-((int, int, int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline {
+((int, int, int, int, int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'longMargin, int vvv'shortMargin, int vvv'longSize, int vvv'shortSize, int vvv'longFundingFeeGrowth, int vvv'shortFundingFeeGrowth) = __tact_tuple_destroy_6(v);
-    return (vvv'longMargin, vvv'shortMargin, vvv'longSize, vvv'shortSize, vvv'longFundingFeeGrowth, vvv'shortFundingFeeGrowth);
+    var (int vvv'longMargin, int vvv'shortMargin, int vvv'longSize, int vvv'shortSize, int vvv'longFundingFeeGrowth, int vvv'shortFundingFeeGrowth, int vvv'longValue, int vvv'shortValue) = __tact_tuple_destroy_8(v);
+    return (vvv'longMargin, vvv'shortMargin, vvv'longSize, vvv'shortSize, vvv'longFundingFeeGrowth, vvv'shortFundingFeeGrowth, vvv'longValue, vvv'shortValue);
 }
 
 tuple $GlobalPosition$_to_opt_tuple(tuple v) inline {
@@ -949,29 +959,29 @@ tuple $GlobalPosition$_to_opt_tuple(tuple v) inline {
     return $GlobalPosition$_to_tuple($GlobalPosition$_not_null(v)); 
 }
 
-((int, int, int, int, int, int)) $GlobalPosition$_constructor_longMargin_shortMargin_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth(int longMargin, int shortMargin, int longSize, int shortSize, int longFundingFeeGrowth, int shortFundingFeeGrowth) inline {
-    return (longMargin, shortMargin, longSize, shortSize, longFundingFeeGrowth, shortFundingFeeGrowth);
+((int, int, int, int, int, int, int, int)) $GlobalPosition$_constructor_longMargin_shortMargin_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth_longValue_shortValue(int longMargin, int shortMargin, int longSize, int shortSize, int longFundingFeeGrowth, int shortFundingFeeGrowth, int longValue, int shortValue) inline {
+    return (longMargin, shortMargin, longSize, shortSize, longFundingFeeGrowth, shortFundingFeeGrowth, longValue, shortValue);
 }
 
 ;;
 ;; Type: PerpPositionData
-;; TLB: _ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257} = PerpPositionData
+;; TLB: _ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257} globalPerpNetValue:int257 globalPerpSingleValue:int257 = PerpPositionData
 ;;
 
-((tuple, tuple, tuple)) $PerpPositionData$_not_null(tuple v) inline {
+((tuple, tuple, tuple, int, int)) $PerpPositionData$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (tuple vvv'perpPosition, tuple vvv'globalLPPosition, tuple vvv'globalPosition) = __tact_tuple_destroy_3(v);
-    return (vvv'perpPosition, vvv'globalLPPosition, vvv'globalPosition);
+    var (tuple vvv'perpPosition, tuple vvv'globalLPPosition, tuple vvv'globalPosition, int vvv'globalPerpNetValue, int vvv'globalPerpSingleValue) = __tact_tuple_destroy_5(v);
+    return (vvv'perpPosition, vvv'globalLPPosition, vvv'globalPosition, vvv'globalPerpNetValue, vvv'globalPerpSingleValue);
 }
 
-tuple $PerpPositionData$_as_optional((tuple, tuple, tuple) v) inline {
-    var (v'perpPosition, v'globalLPPosition, v'globalPosition) = v;
-    return __tact_tuple_create_3(v'perpPosition, v'globalLPPosition, v'globalPosition);
+tuple $PerpPositionData$_as_optional((tuple, tuple, tuple, int, int) v) inline {
+    var (v'perpPosition, v'globalLPPosition, v'globalPosition, v'globalPerpNetValue, v'globalPerpSingleValue) = v;
+    return __tact_tuple_create_5(v'perpPosition, v'globalLPPosition, v'globalPosition, v'globalPerpNetValue, v'globalPerpSingleValue);
 }
 
-tuple $PerpPositionData$_to_tuple(((tuple, tuple, tuple)) v) inline {
-    var (v'perpPosition, v'globalLPPosition, v'globalPosition) = v;
-    return __tact_tuple_create_3($DirectionPerpPosition$_to_opt_tuple(v'perpPosition), $GlobalLPPosition$_to_opt_tuple(v'globalLPPosition), $GlobalPosition$_to_opt_tuple(v'globalPosition));
+tuple $PerpPositionData$_to_tuple(((tuple, tuple, tuple, int, int)) v) inline {
+    var (v'perpPosition, v'globalLPPosition, v'globalPosition, v'globalPerpNetValue, v'globalPerpSingleValue) = v;
+    return __tact_tuple_create_5($DirectionPerpPosition$_to_opt_tuple(v'perpPosition), $GlobalLPPosition$_to_opt_tuple(v'globalLPPosition), $GlobalPosition$_to_opt_tuple(v'globalPosition), v'globalPerpNetValue, v'globalPerpSingleValue);
 }
 
 tuple $PerpPositionData$_to_opt_tuple(tuple v) inline {
@@ -988,8 +998,8 @@ tuple $PerpPositionData$_to_opt_external(tuple v) inline {
     }
 }
 
-((tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition(tuple perpPosition, tuple globalLPPosition, tuple globalPosition) inline {
-    return (perpPosition, globalLPPosition, globalPosition);
+((tuple, tuple, tuple, int, int)) $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition_globalPerpNetValue_globalPerpSingleValue(tuple perpPosition, tuple globalLPPosition, tuple globalPosition, int globalPerpNetValue, int globalPerpSingleValue) inline {
+    return (perpPosition, globalLPPosition, globalPosition, globalPerpNetValue, globalPerpSingleValue);
 }
 
 ;;
@@ -1150,32 +1160,35 @@ tuple $GlobalFundingRateSample$_load_opt(cell cl) inline {
 ;; Type: Pool
 ;;
 
-builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) v) inline {
-    var (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIdNext, v'lpLockTime, v'bonusFactor, v'owner, v'orderBook, v'protocolTradingFee, v'lpPositions, v'lpPositionIndexNext, v'globalLPPositions, v'globalLPFund, v'globalLPLiquidity, v'globalLPFundingFeeGrowth, v'globalLPUnrealizedPnl, v'perpPositions, v'perpPositionIndexNext, v'globalPositions, v'prices, v'globalFundingRateSamples) = v;
+builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell) v) inline {
+    var (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIdNext, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'owner, v'orderBook, v'protocolTradingFee, v'lpPositions, v'lpPositionIndexNext, v'globalLPPositions, v'globalLPFund, v'globalLPLiquidity, v'globalLPFundingFeeGrowth, v'globalLPUnrealizedPnl, v'perpPositions, v'perpPositionIndexNext, v'globalPositions, v'globalPerpNetValue, v'globalPerpSingleValue, v'prices, v'globalFundingRateSamples) = v;
     build_0 = build_0.store_int(v'gasConsumption, 257);
     build_0 = build_0.store_int(v'minTonsForStorage, 257);
     build_0 = build_0.store_dict(v'tokenConfigs);
     build_0 = build_0.store_uint(v'tokenIdNext, 64);
     build_0 = build_0.store_int(v'lpLockTime, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'bonusFactor, 257);
+    build_1 = build_1.store_int(v'lpBonusFactor, 257);
+    build_1 = build_1.store_int(v'lpLiquidityFactor, 257);
     build_1 = __tact_store_address(build_1, v'owner);
-    build_1 = __tact_store_address(build_1, v'orderBook);
     var build_2 = begin_cell();
+    build_2 = __tact_store_address(build_2, v'orderBook);
     build_2 = build_2.store_int(v'protocolTradingFee, 257);
     build_2 = build_2.store_dict(v'lpPositions);
     build_2 = build_2.store_uint(v'lpPositionIndexNext, 64);
     build_2 = build_2.store_dict(v'globalLPPositions);
     build_2 = build_2.store_int(v'globalLPFund, 257);
-    build_2 = build_2.store_int(v'globalLPLiquidity, 257);
     var build_3 = begin_cell();
+    build_3 = build_3.store_int(v'globalLPLiquidity, 257);
     build_3 = build_3.store_int(v'globalLPFundingFeeGrowth, 257);
     build_3 = build_3.store_int(v'globalLPUnrealizedPnl, 257);
     build_3 = build_3.store_dict(v'perpPositions);
     build_3 = build_3.store_uint(v'perpPositionIndexNext, 64);
     build_3 = build_3.store_dict(v'globalPositions);
-    build_3 = build_3.store_dict(v'prices);
     var build_4 = begin_cell();
+    build_4 = build_4.store_int(v'globalPerpNetValue, 257);
+    build_4 = build_4.store_int(v'globalPerpSingleValue, 257);
+    build_4 = build_4.store_dict(v'prices);
     build_4 = build_4.store_dict(v'globalFundingRateSamples);
     build_3 = store_ref(build_3, build_4.end_cell());
     build_2 = store_ref(build_2, build_3.end_cell());
@@ -1184,33 +1197,36 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, slice, sli
     return build_0;
 }
 
-(slice, ((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell))) $Pool$_load(slice sc_0) inline {
+(slice, ((int, int, cell, int, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell))) $Pool$_load(slice sc_0) inline {
     var v'gasConsumption = sc_0~load_int(257);
     var v'minTonsForStorage = sc_0~load_int(257);
     var v'tokenConfigs = sc_0~load_dict();
     var v'tokenIdNext = sc_0~load_uint(64);
     var v'lpLockTime = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'bonusFactor = sc_1~load_int(257);
+    var v'lpBonusFactor = sc_1~load_int(257);
+    var v'lpLiquidityFactor = sc_1~load_int(257);
     var v'owner = sc_1~__tact_load_address();
-    var v'orderBook = sc_1~__tact_load_address();
     slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'orderBook = sc_2~__tact_load_address();
     var v'protocolTradingFee = sc_2~load_int(257);
     var v'lpPositions = sc_2~load_dict();
     var v'lpPositionIndexNext = sc_2~load_uint(64);
     var v'globalLPPositions = sc_2~load_dict();
     var v'globalLPFund = sc_2~load_int(257);
-    var v'globalLPLiquidity = sc_2~load_int(257);
     slice sc_3 = sc_2~load_ref().begin_parse();
+    var v'globalLPLiquidity = sc_3~load_int(257);
     var v'globalLPFundingFeeGrowth = sc_3~load_int(257);
     var v'globalLPUnrealizedPnl = sc_3~load_int(257);
     var v'perpPositions = sc_3~load_dict();
     var v'perpPositionIndexNext = sc_3~load_uint(64);
     var v'globalPositions = sc_3~load_dict();
-    var v'prices = sc_3~load_dict();
     slice sc_4 = sc_3~load_ref().begin_parse();
+    var v'globalPerpNetValue = sc_4~load_int(257);
+    var v'globalPerpSingleValue = sc_4~load_int(257);
+    var v'prices = sc_4~load_dict();
     var v'globalFundingRateSamples = sc_4~load_dict();
-    return (sc_0, (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIdNext, v'lpLockTime, v'bonusFactor, v'owner, v'orderBook, v'protocolTradingFee, v'lpPositions, v'lpPositionIndexNext, v'globalLPPositions, v'globalLPFund, v'globalLPLiquidity, v'globalLPFundingFeeGrowth, v'globalLPUnrealizedPnl, v'perpPositions, v'perpPositionIndexNext, v'globalPositions, v'prices, v'globalFundingRateSamples));
+    return (sc_0, (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIdNext, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'owner, v'orderBook, v'protocolTradingFee, v'lpPositions, v'lpPositionIndexNext, v'globalLPPositions, v'globalLPFund, v'globalLPLiquidity, v'globalLPFundingFeeGrowth, v'globalLPUnrealizedPnl, v'perpPositions, v'perpPositionIndexNext, v'globalPositions, v'globalPerpNetValue, v'globalPerpSingleValue, v'prices, v'globalFundingRateSamples));
 }
 
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline {
@@ -1218,7 +1234,7 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, slice, sli
     return (sc_0, (v'deployId));
 }
 
-(int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) $Pool$_contract_load() impure inline_ref {
+(int, int, cell, int, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell) $Pool$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1233,7 +1249,7 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, slice, sli
     }
 }
 
-() $Pool$_contract_store((int, int, cell, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, cell, cell) v) impure inline {
+() $Pool$_contract_store((int, int, cell, int, int, int, int, slice, slice, int, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

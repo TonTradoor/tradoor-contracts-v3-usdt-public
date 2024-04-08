@@ -51,11 +51,11 @@ export const getLastTransaction = async (provider:NetworkProvider, address:Addre
     }
 }
 
-export const waitForTransaction = async (provider:NetworkProvider, address:Address, curTx:string | null, maxRetry:number, interval:number=5000) => {
+export const waitForTransaction = async (provider:NetworkProvider, address:Address, curTx:string | null, maxRetry:number, interval:number=3000) => {
     let done  = false;
     let count = 0;
     const ui  = provider.ui();
-
+    let startTime = Date.now();
     do {
         ui.write(`Awaiting transaction completion (${++count}/${maxRetry})`);
         await sleep(interval);
@@ -64,6 +64,8 @@ export const waitForTransaction = async (provider:NetworkProvider, address:Addre
             done = lastTrx !== curTx;
         }
     } while(!done && count < maxRetry);
+    let endTime = Date.now();
+    console.log(`trx period: ${(endTime - startTime) / 1000}s`);
     return done;
 }
 
