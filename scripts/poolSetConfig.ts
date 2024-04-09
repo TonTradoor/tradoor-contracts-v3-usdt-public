@@ -8,6 +8,7 @@ export async function run(provider: NetworkProvider) {
     const jetton = attachMockJetton(provider);
     const jettonDecimal = getConfig(provider, "jettonDecimal");
     const priceDecimal = getConfig(provider, "priceDecimal");
+    const executor = Address.parse(getConfig(provider, "executor"));
 
     const lastTrx = await getLastTransaction(provider, pool.address);
 
@@ -18,6 +19,8 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'UpdateConfig',
+            executor: executor,
+            enableExecutor: true,
             gasConsumption: toNano(0.05),
             minTonsForStorage: toNano(0.03),
             lpLockTime: 5n * 60n,

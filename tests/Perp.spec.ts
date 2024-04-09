@@ -8,7 +8,7 @@ import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
-import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition } from './lib/PerpHelper';
+import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, updatePrice } from './lib/PerpHelper';
 import { ORDER_OP_TYPE_DECREASE_MARKET, ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
 
 describe('LP', () => {
@@ -52,7 +52,7 @@ describe('LP', () => {
         expect(orderBookConfigData.usdtWallet).toEqualAddress(orderBookJettonWallet.address);
         expect(orderBookConfigData.isExecutor).toBeTruthy();
 
-        let poolConfigData = await pool.getConfigData();
+        let poolConfigData = await pool.getConfigData(null);
         expect(poolConfigData.orderBook).toEqualAddress(orderBook.address);
     });
 
@@ -767,6 +767,11 @@ describe('LP', () => {
         // check position
         expect(adlPosition?.size).toEqual(perpPositionAfterIncrease?.size - toJettonUnits(adlSize));
 
+    });
+
+    it("should update price", async() => {
+        const executeResult =  await updatePrice(executor, 1, 50000);
+        printTransactionFees(executeResult.trxResult.transactions);
     });
 
 });

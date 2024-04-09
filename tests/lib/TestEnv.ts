@@ -146,6 +146,8 @@ export class TestEnv {
             },
             {
                 $$type: 'UpdateConfig',
+                executor: TestEnv.executor.address,
+                enableExecutor: true,
                 gasConsumption: toNano(0.04),
                 minTonsForStorage: toNano(0.01),
                 lpLockTime: 5n * 60n,

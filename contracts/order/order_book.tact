@@ -223,7 +223,7 @@ contract OrderBook with Deployable, Ownable {
             send(SendParameters{
                 to: account,
                 bounce: true,
-                value: executionFee,
+                value: 0,
                 mode: SendIgnoreErrors + SendRemainingValue,
                 body: refundComment.asComment()
             });
@@ -384,7 +384,7 @@ contract OrderBook with Deployable, Ownable {
         // check order
         require(!order.isPending, "order is pending");
 
-        // executor or trader
+        // executor
         let isExecutor: Bool = false;
         let isExecutorOpt: Bool? = self.executors.get(sender());
         if (isExecutorOpt != null) {
@@ -535,7 +535,7 @@ contract OrderBook with Deployable, Ownable {
             send(SendParameters{
                 to: account,
                 bounce: true,
-                value: executionFee,
+                value: 0,
                 mode: SendIgnoreErrors + SendRemainingValue,
                 body: refundComment.asComment()
             });

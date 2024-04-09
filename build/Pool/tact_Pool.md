@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 13037 bytes
+BOC Size: 13522 bytes
 
 # Types
 Total Types: 39
@@ -38,32 +38,32 @@ TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
 ## UpdateConfig
-TLB: `update_config#11bde8f2 gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = UpdateConfig`
-Signature: `UpdateConfig{gasConsumption:coins,minTonsForStorage:coins,lpLockTime:int257,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
+TLB: `update_config#0bd30ead executor:Maybe address enableExecutor:Maybe bool gasConsumption:Maybe coins minTonsForStorage:Maybe coins lpLockTime:Maybe int257 lpBonusFactor:Maybe int257 lpLiquidityFactor:Maybe int257 orderBook:Maybe address = UpdateConfig`
+Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,gasConsumption:Maybe coins,minTonsForStorage:Maybe coins,lpLockTime:Maybe int257,lpBonusFactor:Maybe int257,lpLiquidityFactor:Maybe int257,orderBook:Maybe address}`
 
 ## UpdateTokenConfig
-TLB: `update_token_config#13cd5d53 tokenId:uint64 name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = UpdateTokenConfig`
-Signature: `UpdateTokenConfig{tokenId:uint64,name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
+TLB: `update_token_config#69d44870 tokenId:uint64 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 = UpdateTokenConfig`
+Signature: `UpdateTokenConfig{tokenId:uint64,name:Maybe ^string,enable:Maybe bool,minMargin:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257}`
 
 ## UpdateLPPosition
-TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateLPPosition`
-Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdateLPPosition`
+Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
 
 ## UpdateLPPositionSuccess
 TLB: `update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
 Signature: `UpdateLPPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
 
 ## UpdatePerpPositionSuccess
 TLB: `update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
 Signature: `UpdatePerpPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
 
-## UpdateFundingFee
-TLB: `update_funding_fee#39dbb4b2 trxId:uint64 tokenId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateFundingFee`
-Signature: `UpdateFundingFee{trxId:uint64,tokenId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+## UpdatePrice
+TLB: `update_price#1dc8958c trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePrice`
+Signature: `UpdatePrice{trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
 
 ## LPPositionIncreasedEvent
 TLB: `lp_position_increased_event#1f8596cf opType:uint8 positionId:uint64 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFeeDelta:int257 realizedFundingFeeAfter:int257 entryFundingFeeGrowthAfter:int257 trxId:uint64 = LPPositionIncreasedEvent`
@@ -94,12 +94,12 @@ TLB: `global_position_changed_event#82e5206c tokenId:uint64 longMarginAfter:int2
 Signature: `GlobalPositionChangedEvent{tokenId:uint64,longMarginAfter:int257,shortMarginAfter:int257,longSizeAfter:int257,shortSizeAfter:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257,trxId:uint64}`
 
 ## UpdatePriceEvent
-TLB: `update_price_event#6a2c8eb4 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePriceEvent`
-Signature: `UpdatePriceEvent{pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `update_price_event#60589463 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePriceEvent`
+Signature: `UpdatePriceEvent{pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
 
 ## ConfigData
-TLB: `_ gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
-Signature: `ConfigData{gasConsumption:coins,minTonsForStorage:coins,lpLockTime:int257,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
+TLB: `_ isExecutor:Maybe bool gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,gasConsumption:coins,minTonsForStorage:coins,lpLockTime:int257,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
 
 ## TokenConfig
 TLB: `_ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
@@ -141,9 +141,9 @@ Signature: `PerpPositionData{perpPosition:Maybe DirectionPerpPosition{longPositi
 TLB: `_ price:int257 = PriceData`
 Signature: `PriceData{price:int257}`
 
-## UpdatePrice
-TLB: `_ tokenId:uint64 price:int257 = UpdatePrice`
-Signature: `UpdatePrice{tokenId:uint64,price:int257}`
+## UpdatePriceParam
+TLB: `_ tokenId:uint64 price:int257 = UpdatePriceParam`
+Signature: `UpdatePriceParam{tokenId:uint64,price:int257}`
 
 ## GlobalPosition
 TLB: `_ longMargin:int257 shortMargin:int257 longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 longValue:int257 shortValue:int257 = GlobalPosition`
@@ -165,6 +165,7 @@ Signature: `SamplePremiumRateResult{sample:GlobalFundingRateSample{lastAdjustFun
 Total Get Methods: 6
 
 ## configData
+Argument: executor
 
 ## tokenConfig
 Argument: tokenId

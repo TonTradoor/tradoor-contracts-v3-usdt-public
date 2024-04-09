@@ -70,7 +70,7 @@
     }
     if ($refund) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($queryId, $jettonFromAmount, $account, $account);
-        $global_send($SendParameters$_constructor_to_bounce_value_mode_body($account, true, $executionFee, (2 + 64), $String$_fun_asComment($refundComment)));
+        $global_send($SendParameters$_constructor_to_bounce_value_mode_body($account, true, 0, (2 + 64), $String$_fun_asComment($refundComment)));
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     int $orderId = $self'lpPositionOrderIndexNext;
@@ -148,7 +148,7 @@
     }
     if ($refund) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext)~$OrderBook$_fun_refundJetton($queryId, $jettonFromAmount, $account, $account);
-        $global_send($SendParameters$_constructor_to_bounce_value_mode_body($account, true, $executionFee, (2 + 64), $String$_fun_asComment($refundComment)));
+        $global_send($SendParameters$_constructor_to_bounce_value_mode_body($account, true, 0, (2 + 64), $String$_fun_asComment($refundComment)));
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext), ());
     }
     int $opType = 0;

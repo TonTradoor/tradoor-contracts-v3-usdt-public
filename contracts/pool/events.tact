@@ -102,5 +102,5 @@ message GlobalPositionChangedEvent {
 // ============================ Price ================================ //
 message UpdatePriceEvent {
     pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
+    prices: map<Int, UpdatePriceParam>;
 }

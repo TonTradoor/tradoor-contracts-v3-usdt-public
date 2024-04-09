@@ -48,7 +48,7 @@ describe('LP', () => {
         expect(orderBookConfigData.usdtWallet).toEqualAddress(orderBookJettonWallet.address);
         expect(orderBookConfigData.isExecutor).toBeTruthy();
 
-        let poolConfigData = await pool.getConfigData();
+        let poolConfigData = await pool.getConfigData(null);
         expect(poolConfigData.orderBook).toEqualAddress(orderBook.address);
     });
 

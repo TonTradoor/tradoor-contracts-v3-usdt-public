@@ -1,4 +1,3 @@
-# yarn build
 yarn rundev deployMockJetton
 yarn rundev deployOrderBook
 yarn rundev deployPool

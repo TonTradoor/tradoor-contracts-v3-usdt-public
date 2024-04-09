@@ -23,6 +23,7 @@ contract Pool with Deployable, Ownable {
     owner: Address;
     orderBook: Address;
     protocolTradingFee: Int = 0;
+    executors: map<Address, Bool>; // account => enabled
 
     // LP
     lpPositions: map<Address, LPPosition>; // trader => LP
@@ -52,18 +53,34 @@ contract Pool with Deployable, Ownable {
     init(deployId: Int) {
         self.owner = sender();
         self.orderBook = newAddress(0, 0);
+        self.executors.set(sender(), true);
     }
 
     // ======================================================== Admin ================================================================ //
     receive(msg: UpdateConfig) {
         self.requireOwner();
 
-        self.gasConsumption = msg.gasConsumption;
-        self.minTonsForStorage = msg.minTonsForStorage;
-        self.lpLockTime = msg.lpLockTime;
-        self.lpBonusFactor = msg.lpBonusFactor;
-        self.lpLiquidityFactor = msg.lpLiquidityFactor;
-        self.orderBook = msg.orderBook;
+        if (msg.executor != null && msg.enableExecutor != null) {
+            self.executors.set(msg.executor!!, msg.enableExecutor!!);
+        }
+        if (msg.gasConsumption != null) {
+            self.gasConsumption = msg.gasConsumption!!;
+        }
+        if (msg.minTonsForStorage != null) {
+            self.minTonsForStorage = msg.minTonsForStorage!!;
+        }
+        if (msg.lpLockTime != null) {
+            self.lpLockTime = msg.lpLockTime!!;
+        }
+        if (msg.lpBonusFactor != null) {
+            self.lpBonusFactor = msg.lpBonusFactor!!;
+        }
+        if (msg.lpLiquidityFactor != null) {
+            self.lpLiquidityFactor = msg.lpLiquidityFactor!!;
+        }
+        if (msg.orderBook != null) {
+            self.orderBook = msg.orderBook!!;
+        }
         send(SendParameters{
             to: sender(),
             bounce: false,
@@ -90,31 +107,31 @@ contract Pool with Deployable, Ownable {
         };
 
         if (msg.name != null){
-            tokenConfig.name = msg.name;
+            tokenConfig.name = msg.name!!;
         }
         if (msg.enable != null){
-            tokenConfig.enable = msg.enable;
+            tokenConfig.enable = msg.enable!!;
         }
         if (msg.minMargin != null){
-            tokenConfig.minMargin = msg.minMargin;
+            tokenConfig.minMargin = msg.minMargin!!;
         }
         if (msg.maxLeverage != null){
-            tokenConfig.maxLeverage = msg.maxLeverage;
+            tokenConfig.maxLeverage = msg.maxLeverage!!;
         }
         if (msg.liquidationFee != null){
-            tokenConfig.liquidationFee = msg.liquidationFee;
+            tokenConfig.liquidationFee = msg.liquidationFee!!;
         }
         if (msg.interestRate != null){
-            tokenConfig.interestRate = msg.interestRate;
+            tokenConfig.interestRate = msg.interestRate!!;
         }
         if (msg.tradingFeeRate != null){
-            tokenConfig.tradingFeeRate = msg.tradingFeeRate;
+            tokenConfig.tradingFeeRate = msg.tradingFeeRate!!;
         }
         if (msg.lpTradingFeeRate != null){
-            tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate;
+            tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate!!;
         }
         if (msg.maxFundingRate != null){
-            tokenConfig.maxFundingRate = msg.maxFundingRate;
+            tokenConfig.maxFundingRate = msg.maxFundingRate!!;
         }
         if (msg.tokenId >= self.tokenIdNext) {
             self.tokenIdNext = msg.tokenId + 1;
@@ -130,8 +147,13 @@ contract Pool with Deployable, Ownable {
         });
     }
 
-    get fun configData(): ConfigData {
+    get fun configData(executor: Address?): ConfigData {
+        let isExecutor: Bool? = null;
+        if (executor != null) {
+            isExecutor = self.executors.get(executor!!);
+        }
         return ConfigData{
+            isExecutor: isExecutor,
             gasConsumption: self.gasConsumption,
             minTonsForStorage: self.minTonsForStorage,
             lpLockTime: self.lpLockTime,
@@ -378,9 +400,6 @@ contract Pool with Deployable, Ownable {
         // get index price
         let indexPrice: Int = self.getPrice(msg.tokenId);
         require(indexPrice > 0, "none available price");
-
-        // update funding rate
-        // self.updateFundingRate(msg.tokenId, indexPrice);
 
         // TODO get trade price
         let tradePrice: Int = indexPrice;
@@ -1079,30 +1098,29 @@ contract Pool with Deployable, Ownable {
         };
     }
 
-    // ============================ funding fee ================================ //
-    receive(msg: UpdateFundingFee) {
-        require(sender() == self.orderBook, "invalid sender");
+    // ============================ price ================================ //
+    receive(msg: UpdatePrice) {
+        // check sender
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+        require(isExecutor, "invalid sender");
 
         // update price
         self.setPrice(msg.pricesLength, msg.prices);
-
-        // get index price
-        let indexPrice: Int = self.getPrice(msg.tokenId);
-        require(indexPrice > 0, "none available price");
-
-        // update funding rate
-        self.updateFundingRate(msg.tokenId, indexPrice);
     }
 
     // ============================ private function ================================ //
-    fun setPrice(pricesLength: Int, prices: map<Int, UpdatePrice>) {
+    fun setPrice(pricesLength: Int, prices: map<Int, UpdatePriceParam>) {
         if (pricesLength <= 0) {
             return;
         }
         let i: Int = 0;
         let totalGlobalUnrealizedPnl: Int = self.globalLPUnrealizedPnl;
         while(i < pricesLength) {
-            let updatePrice: UpdatePrice? = prices.get(i);
+            let updatePrice: UpdatePriceParam? = prices.get(i);
             if (updatePrice != null) {
                 // TODO check price offset
                 let price: Int = (updatePrice!!).price;
@@ -1134,11 +1152,10 @@ contract Pool with Deployable, Ownable {
                     self.globalLPPositions.set(tokenId, globalLPPosition);
                 }
 
-                // get global position
+                // update global value
                 let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
                 if (globalPositionOpt != null) {
                     let globalPosition: GlobalPosition = globalPositionOpt!!;
-                    // update global value
                     let singleValueBefore: Int = max(globalPosition.longValue, globalPosition.shortValue);
                     let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
                     globalPosition.longValue = globalPosition.longSize * price / PRICE_DECIMAL_FACTOR;
@@ -1147,7 +1164,9 @@ contract Pool with Deployable, Ownable {
                     self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
                     self.globalPositions.set(tokenId, globalPosition);
                 }
-                
+
+                // update funding fee
+                self.updateFundingRate(tokenId, price);
             }
             i = i + 1;
         }
@@ -1175,9 +1194,9 @@ contract Pool with Deployable, Ownable {
         // get funding rate sample
         let sampleOpt: GlobalFundingRateSample? = self.globalFundingRateSamples.get(tokenId);
         let sample: GlobalFundingRateSample = sampleOpt != null ? sampleOpt!! : GlobalFundingRateSample{
-            lastAdjustFundingRateTime: 0,
+            lastAdjustFundingRateTime: now() - (now() % ADJUST_FUNDING_RATE_INTERVAL),
             sampleCount: 0,
-            cumulativePremiumRate: now() - (now() % ADJUST_FUNDING_RATE_INTERVAL)
+            cumulativePremiumRate: 0
         };
 
         let lastAdjustFundingRateTime: Int = sample.lastAdjustFundingRateTime;
@@ -1195,27 +1214,16 @@ contract Pool with Deployable, Ownable {
             return;
         }
 
-        // get global position
-        let globalLPPosition: GlobalLPPosition = self.globalLPPositions.get(tokenId)!!;
-
         // TODO
         let premiumRate: Int = self.calculatePremiumRate();
-
-        // calculate if should adjust funding rate and funding rate delta
-        if (globalLPPosition.isLong) {
-            premiumRate = -premiumRate;
-        }
-        dump(premiumRate);
 
         // cumulative sample count
         let sampleCountDelta: Int = timeDelta / SAMPLE_PREMIUM_RATE_INTERVAL;
         let sampleCountAfter: Int = sample.sampleCount + sampleCountDelta;
-        dump(sampleCountAfter);
 
         // cumulative PR
         let cumulativePremiumRate: Int = premiumRate * ((sample.sampleCount + 1 + sampleCountAfter) * sampleCountDelta / 2 );
         cumulativePremiumRate = sample.cumulativePremiumRate + cumulativePremiumRate;
-        dump(cumulativePremiumRate);
 
         // sample count < 720, no need update funding rate
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
@@ -1231,7 +1239,16 @@ contract Pool with Deployable, Ownable {
             premiumRateAvg = -premiumRateAvg;
         }
         // clamp (IR - avgPR) : -0.05% <= (IR - avgPR) <= 0.05%
-        let fundingRateDelta: Int = premiumRateAvg + self.clamp(premiumRateAvg, tokenConfig.interestRate);
+        let rateDelta: Int = tokenConfig.interestRate - premiumRateAvg;
+        let clampedRateDelta: Int = 0;
+        if (rateDelta > PREMIUM_RATE_CLAMP_BOUNDARY) {
+            clampedRateDelta = PREMIUM_RATE_CLAMP_BOUNDARY;
+        } else if (rateDelta < -PREMIUM_RATE_CLAMP_BOUNDARY) {
+            clampedRateDelta = -PREMIUM_RATE_CLAMP_BOUNDARY;
+        } else {
+            clampedRateDelta = rateDelta;
+        }
+        let fundingRateDelta: Int = premiumRateAvg + clampedRateDelta;
         
         sample.lastAdjustFundingRateTime = maxSamplingTime;
         sample.cumulativePremiumRate = 0;
@@ -1290,17 +1307,6 @@ contract Pool with Deployable, Ownable {
         globalPosition.longFundingFeeGrowth = longFundingFeeGrowthAfter;
         globalPosition.shortFundingFeeGrowth = shortFundingFeeGrowthAfter;
         self.globalPositions.set(tokenId, globalPosition);
-    }
-
-    fun clamp(premiumRateAvg: Int, interestRate: Int): Int {
-        let rateDelta: Int = interestRate - premiumRateAvg;
-        if (rateDelta > PREMIUM_RATE_CLAMP_BOUNDARY) {
-            return PREMIUM_RATE_CLAMP_BOUNDARY;
-        } else if (rateDelta < -PREMIUM_RATE_CLAMP_BOUNDARY) {
-            return -PREMIUM_RATE_CLAMP_BOUNDARY;
-        } else {
-            return rateDelta;
-        }
     }
 
     fun calculatePremiumRate(): Int {

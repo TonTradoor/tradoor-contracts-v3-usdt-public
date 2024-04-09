@@ -4,6 +4,7 @@ import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits, toPriceUnits } from "./TokenHelper";
 import { UpdatePrice } from "../../wrappers/OrderBook";
+import { UpdatePriceParam } from "../../wrappers/Pool";
 
 export async function createIncreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, isMarket: boolean, 
     tokenId: number, isLong: boolean, margin: number, size: number, triggerPrice: number, tpSize: number, tpPrice: number, slSize: number, slPrice: number) {
@@ -349,4 +350,40 @@ export async function adlPerpPosition(executor: SandboxContract<TreasuryContract
         globalLPLiquidityBefore,
         globalLPLiquidityAfter,
     };
+}
+
+
+export async function updatePrice(executor: SandboxContract<TreasuryContract>, tokenId: number, price: number) {
+
+    let UpdatePriceValue: DictionaryValue<UpdatePriceParam> = {
+        serialize(src, builder) {
+            builder.storeUint(src.tokenId, 64).storeUint(src.price, 256)
+        },
+        parse(src) {
+            throw '';
+        },
+    }    
+    
+    const trxResult = await TestEnv.pool.send(
+        executor.getSender(),
+        {
+            value: toNano('0.3'),
+        },
+        {
+            $$type: 'UpdatePrice',
+            trxId: 1n,
+            pricesLength: 1n,
+            prices: Dictionary.empty(Dictionary.Keys.BigInt(32), UpdatePriceValue).set(
+                0n, 
+                {
+                    $$type: 'UpdatePriceParam',
+                    tokenId: BigInt(tokenId),
+                    price: toPriceUnits(price)
+                }
+            )
+        }
+    );
+    return {
+        trxResult
+    }
 }

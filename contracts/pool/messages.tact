@@ -2,25 +2,27 @@ import "./structs";
 
 // ============================ admin ================================ //
 message UpdateConfig {
-    gasConsumption: Int as coins;
-    minTonsForStorage: Int as coins;
-    lpLockTime: Int;
-    lpBonusFactor: Int;
-    lpLiquidityFactor: Int;
-    orderBook: Address;
+    executor: Address?;
+    enableExecutor: Bool?;
+    gasConsumption: Int? as coins;
+    minTonsForStorage: Int? as coins;
+    lpLockTime: Int?;
+    lpBonusFactor: Int?;
+    lpLiquidityFactor: Int?;
+    orderBook: Address?;
 }
 
 message UpdateTokenConfig {
     tokenId: Int as uint64;
-    name: String;
-    enable: Bool;
-    minMargin: Int;
-    maxLeverage: Int;
-    liquidationFee: Int;
-    tradingFeeRate: Int;
-    lpTradingFeeRate: Int;
-    interestRate: Int;
-    maxFundingRate: Int;
+    name: String?;
+    enable: Bool?;
+    minMargin: Int?;
+    maxLeverage: Int?;
+    liquidationFee: Int?;
+    tradingFeeRate: Int?;
+    lpTradingFeeRate: Int?;
+    interestRate: Int?;
+    maxFundingRate: Int?;
 }
 
 // ============================ LP ================================ //
@@ -31,7 +33,7 @@ message(0xe89cd45f) UpdateLPPosition {
     liquidityDelta: Int;
     trxId: Int as uint64;
     pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
+    prices: map<Int, UpdatePriceParam>;
 }
 
 message(0x1cf0cf81) UpdateLPPositionSuccess {
@@ -53,7 +55,7 @@ message(0xff57e557) UpdatePerpPosition {
     triggerAbove: Bool;
     trxId: Int as uint64;
     pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
+    prices: map<Int, UpdatePriceParam>;
 }
 
 message(0xef01c2b4) UpdatePerpPositionSuccess {
@@ -62,10 +64,9 @@ message(0xef01c2b4) UpdatePerpPositionSuccess {
     trxId: Int as uint64;
 }
 
-// ============================ Funding Fee ================================ //
-message UpdateFundingFee {
+// ============================ Price ================================ //
+message UpdatePrice {
     trxId: Int as uint64;
-    tokenId: Int as uint64;
     pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
+    prices: map<Int, UpdatePriceParam>;
 }

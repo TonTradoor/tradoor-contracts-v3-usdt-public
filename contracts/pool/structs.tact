@@ -1,5 +1,6 @@
 // ============================ Config ================================ //
 struct ConfigData {
+    isExecutor: Bool?;
     gasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
     lpLockTime: Int;
@@ -86,7 +87,7 @@ struct PriceData {
     price: Int;
 }
 
-struct UpdatePrice {
+struct UpdatePriceParam {
     tokenId: Int as uint64;
     price: Int;
 }
