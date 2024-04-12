@@ -770,8 +770,17 @@ describe('LP', () => {
     });
 
     it("should update price", async() => {
+        // set block time
+        blockchain.now = Math.floor(Date.now() / 1000);
+
         const executeResult =  await updatePrice(executor, 1, 50000);
         printTransactionFees(executeResult.trxResult.transactions);
+
+        blockchain.now = Math.floor(Date.now() / 1000) + 60 * 60;
+
+        const executeResult0 =  await updatePrice(executor, 1, 50000);
+        printTransactionFees(executeResult0.trxResult.transactions);
+
     });
 
 });

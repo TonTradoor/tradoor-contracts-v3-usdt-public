@@ -1225,6 +1225,8 @@ contract Pool with Deployable, Ownable {
         let cumulativePremiumRate: Int = premiumRate * ((sample.sampleCount + 1 + sampleCountAfter) * sampleCountDelta / 2 );
         cumulativePremiumRate = sample.cumulativePremiumRate + cumulativePremiumRate;
 
+        dump(sampleCountAfter);
+
         // sample count < 720, no need update funding rate
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
             sample.cumulativePremiumRate = cumulativePremiumRate;
@@ -1267,8 +1269,15 @@ contract Pool with Deployable, Ownable {
             clampedFundingRateDelta = fundingRateDelta;
         }
 
+        dump(clampedFundingRateDelta);
+
         // get paidSize and receivedSize
-        let globalPosition: GlobalPosition = self.globalPositions.get(tokenId)!!;
+        let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
+        if (globalPositionOpt == null) {
+            return;
+        }
+
+        let globalPosition: GlobalPosition = globalPositionOpt!!;
 
         let paidSize: Int = 0;
         let receivedSize: Int = 0;
