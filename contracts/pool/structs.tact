@@ -92,7 +92,24 @@ struct UpdatePriceParam {
     price: Int;
 }
 
-// ============================ funding rate ================================ //
+// ============================ Premium Rate ================================ //
+struct PremiumRateSampleRange {
+    sampleLength: Int;
+    samples: map<Int, PremiumRateSample>;
+}
+
+struct PremiumRateSampleRangeParam {
+    sampleId: Int;
+    sampleLength: Int;
+    samples: map<Int, PremiumRateSample>;
+}
+
+struct PremiumRateSample {
+    deviationRate: Int;
+    premiumRate: Int;
+}
+
+// ============================ Funding Rate ================================ //
 struct GlobalPosition {
     longMargin: Int;
     shortMargin: Int;

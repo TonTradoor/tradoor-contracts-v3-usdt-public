@@ -1,15 +1,19 @@
 import { NetworkProvider, sleep } from "@ton/blueprint";
 import { Address } from "@ton/core";
 import { TonClient } from "@ton/ton";
-import {Decimal} from "decimal.js";
 import { Pool } from "../wrappers/Pool";
 import { MockJetton } from "../wrappers/MockJetton";
 import { JettonDefaultWallet } from "../wrappers/JettonDefaultWallet";
 import { OrderBook } from "../wrappers/OrderBook";
 let fs = require('fs');
+let readline = require('readline');
 
 function getPath(network: string) {
-    return __dirname + "/../config/" + network + ".json"
+    return getConfigPath(network + ".json")
+}
+
+function getConfigPath(fileName: string) {
+    return __dirname + "/../config/" + fileName
 }
 
 export function setConfig(provider: NetworkProvider, key: string, val: string) {
@@ -113,7 +117,7 @@ export function toUnits(src: number | string | bigint, decimal: number) {
             frac = '0';
         }
         if (frac.length > decimal) {
-            throw Error('Invalid number');
+            frac = frac.substring(0, decimal);
         }
         while (frac.length < decimal) {
             frac += '0';
@@ -175,4 +179,34 @@ export async function attachJettonWallet(provider: NetworkProvider, userAddress:
     const jetton = attachMockJetton(provider);
     let walletAddress = await jetton.getGetWalletAddress(userAddress);
     return provider.open(JettonDefaultWallet.fromAddress(walletAddress));
+}
+
+// sampleRanges: {
+//     id: number,
+//     samples: {x: string, y: string}[]
+// }[]
+export async function readPRSample() {
+    let samples: {x: number; y: number; }[] = [];
+    const allFileContents = fs.readFileSync(getConfigPath('pr_sample.csv'), 'utf-8');
+    allFileContents.split(/\r?\n/).forEach((line: string) =>  {
+        let split = line.split(' ');
+        samples.push({
+            x: Number(split[0]),
+            y: Number(split[1])
+        });
+    });
+
+    let sampleRanges;
+    let sampleRange;
+    let lastSample = samples[0];
+    let rangeId = 0;
+    for(let i = 0; i < samples.length; i++) {
+        let sample = samples[i];
+        if (sample.x * 100 < rangeId) {
+            
+        }
+        
+    }
+
+    return result;
 }

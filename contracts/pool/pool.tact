@@ -44,16 +44,24 @@ contract Pool with Deployable, Ownable {
     globalPerpNetValue: Int = 0;
     globalPerpSingleValue: Int = 0;
 
+    // funding rate
+    globalFundingRateSamples: map<Int, GlobalFundingRateSample>; // tokenId => sample
+
     // price
     prices: map<Int, PriceData>; // tokenId => priceData
 
-    // funding rate
-    globalFundingRateSamples: map<Int, GlobalFundingRateSample>; // tokenId => sample
+    premiumRateSampleRanges: map<Int, PremiumRateSampleRange>; // index => range
+    premiumRateSampleRangeLength: Int = 0;
+    prevPremiumRateSample: PremiumRateSample;
 
     init(deployId: Int) {
         self.owner = sender();
         self.orderBook = newAddress(0, 0);
         self.executors.set(sender(), true);
+        self.prevPremiumRateSample = PremiumRateSample{
+            deviationRate: 0,
+            premiumRate: 0
+        };
     }
 
     // ======================================================== Admin ================================================================ //
@@ -179,7 +187,7 @@ contract Pool with Deployable, Ownable {
         require(sender() == self.orderBook, "invalid sender");
 
         // update price
-        self.setPrice(msg.pricesLength, msg.prices);
+        self.updatePriceAndFundingFee(msg.pricesLength, msg.prices);
 
         // update position
         let receive: Int = 0;
@@ -389,58 +397,72 @@ contract Pool with Deployable, Ownable {
     }
 
     // ============================ Perp ================================ //
-    receive(msg: UpdatePerpPosition) {
-        dump("UpdatePerpPosition");
+    // receive(msg: UpdatePerpPosition) {
+    //     dump("UpdatePerpPosition");
 
-        require(sender() == self.orderBook, "invalid sender");
+    //     require(sender() == self.orderBook, "invalid sender");
 
-        // update price
-        self.setPrice(msg.pricesLength, msg.prices);
+    //     // update price
+    //     self.updatePriceAndFundingFee(msg.pricesLength, msg.prices);
 
-        // get index price
-        let indexPrice: Int = self.getPrice(msg.tokenId);
-        require(indexPrice > 0, "none available price");
+    //     // get index price
+    //     let indexPrice: Int = self.getPrice(msg.tokenId);
+    //     require(indexPrice > 0, "none available price");
 
-        // TODO get trade price
-        let tradePrice: Int = indexPrice;
+    //     // update PR
+    //     let avgPremiumRate: Int = self.prevPremiumRateSample.premiumRate;
+    //     let premiumRateSampleDataOpt: PremiumRateSampleData? = null;
+    //     if (msg.opType == ORDER_OP_TYPE_INCREASE_MARKET || msg.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
+    //         premiumRateSampleDataOpt = self.calculatePremiumRate(msg.tokenId, msg.sizeDelta, msg.isLong);
+    //     } else {
+    //         premiumRateSampleDataOpt = self.calculatePremiumRate(msg.tokenId, msg.sizeDelta, !msg.isLong);
+    //     }
+    //     if (premiumRateSampleDataOpt != null) {
+    //         let premiumRateSampleData: PremiumRateSampleData = premiumRateSampleDataOpt!!;
+    //         avgPremiumRate = (premiumRateSampleData.premiumRate + avgPremiumRate) / 2;
+    //         self.prevPremiumRateSample = premiumRateSampleData;
+    //     }
 
-        // update position
-        let receive: Int = 0;
-        if (msg.opType == ORDER_OP_TYPE_INCREASE_MARKET || msg.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            if (msg.triggerAbove) {
-                require(tradePrice >= msg.triggerPrice, "not reach trigger price");
-            } else {
-                require(tradePrice <= msg.triggerPrice, "not reach trigger price");
-            }
-            self.increasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
-        } else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION) {
-            receive = self.liquidatePerpPosition(msg.trxId, msg.account, msg.tokenId, msg.isLong, indexPrice, tradePrice);
-        } else if (msg.opType == ORDER_OP_TYPE_ADL) {
-            receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
-        } else {
-            if (msg.triggerAbove) {
-                require(tradePrice >= msg.triggerPrice, "not reach trigger price");
-            } else {
-                require(tradePrice <= msg.triggerPrice, "not reach trigger price");
-            }
-            receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
-        } 
+    //     // calculate trade price
+    //     let tradePrice: Int = (PERCENTAGE_BASIS_POINT + avgPremiumRate) * indexPrice / PERCENTAGE_BASIS_POINT;
 
-        let msgValue: Int = context().value - self.gasConsumption * 2 - self.minTonsForStorage - context().readForwardFee();
-        require(msgValue > 0, "send gas not enough");
-        // send update success msg
-        send(SendParameters{
-            to: self.orderBook,
-            value: msgValue,
-            bounce: false,
-            mode: SendPayGasSeparately,
-            body: UpdatePerpPositionSuccess {
-                orderId: msg.orderId,
-                receive: receive,
-                trxId: msg.trxId
-            }.toCell()
-        });
-    }
+    //     // update position
+    //     let receive: Int = 0;
+    //     if (msg.opType == ORDER_OP_TYPE_INCREASE_MARKET || msg.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
+    //         if (msg.triggerAbove) {
+    //             require(tradePrice >= msg.triggerPrice, "not reach trigger price");
+    //         } else {
+    //             require(tradePrice <= msg.triggerPrice, "not reach trigger price");
+    //         }
+    //         self.increasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
+    //     } else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION) {
+    //         receive = self.liquidatePerpPosition(msg.trxId, msg.account, msg.tokenId, msg.isLong, indexPrice, tradePrice);
+    //     } else if (msg.opType == ORDER_OP_TYPE_ADL) {
+    //         receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
+    //     } else {
+    //         if (msg.triggerAbove) {
+    //             require(tradePrice >= msg.triggerPrice, "not reach trigger price");
+    //         } else {
+    //             require(tradePrice <= msg.triggerPrice, "not reach trigger price");
+    //         }
+    //         receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
+    //     } 
+
+    //     let msgValue: Int = context().value - self.gasConsumption * 2 - self.minTonsForStorage - context().readForwardFee();
+    //     require(msgValue > 0, "send gas not enough");
+    //     // send update success msg
+    //     send(SendParameters{
+    //         to: self.orderBook,
+    //         value: msgValue,
+    //         bounce: false,
+    //         mode: SendPayGasSeparately,
+    //         body: UpdatePerpPositionSuccess {
+    //             orderId: msg.orderId,
+    //             receive: receive,
+    //             trxId: msg.trxId
+    //         }.toCell()
+    //     });
+    // }
 
     fun increasePerpPosition(opType: Int, trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, indexPrice: Int, tradePrice: Int) {
         dump("increasePerpPosition");
@@ -524,7 +546,7 @@ contract Pool with Deployable, Ownable {
         let lpRealizedPnl: Int = 0;
         let sizeRemaining: Int = sizeDelta;
         if (globalLPPosition.netSize > 0 && (isLong == globalLPPosition.isLong)) {
-            let sizeUsed: Int = sizeDelta > globalLPPosition.netSize ? globalLPPosition.netSize : sizeDelta;
+            let sizeUsed: Int = min(globalLPPosition.netSize, sizeDelta);
             if (isLong) {
                 lpRealizedPnl = sizeUsed * (tradePrice - globalLPPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
             } else {
@@ -726,7 +748,7 @@ contract Pool with Deployable, Ownable {
         let lpRealizedPnl: Int = 0;
         let sizeRemaining: Int = sizeDelta;
         if (globalLPPosition.netSize > 0 && (isLong != globalLPPosition.isLong)) {
-            let sizeUsed: Int = sizeDelta > globalLPPosition.netSize ? globalLPPosition.netSize : sizeDelta;
+            let sizeUsed: Int = min(globalLPPosition.netSize, sizeDelta);
             if (isLong) {
                 lpRealizedPnl = sizeUsed * (tradePrice - globalLPPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
             } else {
@@ -969,7 +991,7 @@ contract Pool with Deployable, Ownable {
         let lpRealizedPnl: Int = 0;
         let sizeRemaining: Int = sizeDelta;
         if (globalLPPosition.netSize > 0 && (isLong != globalLPPosition.isLong)) {
-            let sizeUsed: Int = sizeDelta > globalLPPosition.netSize ? globalLPPosition.netSize : sizeDelta;
+            let sizeUsed: Int = min(globalLPPosition.netSize, sizeDelta);
             if (isLong) {
                 lpRealizedPnl = sizeUsed * (tradePrice - globalLPPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
             } else {
@@ -1109,11 +1131,47 @@ contract Pool with Deployable, Ownable {
         require(isExecutor, "invalid sender");
 
         // update price
-        self.setPrice(msg.pricesLength, msg.prices);
+        self.updatePriceAndFundingFee(msg.pricesLength, msg.prices);
+    }
+
+    receive(msg: SetPremiumRateSampleRange) {
+        // check sender
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+        require(isExecutor, "invalid sender");
+
+        if (msg.sampleRangeLength <= 0) {
+            return;
+        }
+        let i: Int = 0;
+        while(i < msg.sampleRangeLength) {
+            let premiumRateSampleRangeParamOpt: PremiumRateSampleRangeParam? = msg.sampleRanges.get(i);
+
+            if (premiumRateSampleRangeParamOpt != null) {
+                let premiumRateSampleRangeParam: PremiumRateSampleRangeParam = premiumRateSampleRangeParamOpt!!;
+                self.premiumRateSampleRanges.set(premiumRateSampleRangeParam.sampleId, PremiumRateSampleRange{
+                    sampleLength: premiumRateSampleRangeParam.sampleLength,
+                    samples: premiumRateSampleRangeParam.samples
+                });
+                if (premiumRateSampleRangeParam.sampleId >= self.premiumRateSampleRangeLength) {
+                    self.premiumRateSampleRangeLength = premiumRateSampleRangeParam.sampleId + 1;
+                }
+            }
+
+            i += 1;
+        }
+        send(SendParameters{
+            to: sender(),
+            value: 0,
+            mode: SendRemainingValue
+        });
     }
 
     // ============================ private function ================================ //
-    fun setPrice(pricesLength: Int, prices: map<Int, UpdatePriceParam>) {
+    fun updatePriceAndFundingFee(pricesLength: Int, prices: map<Int, UpdatePriceParam>) {
         if (pricesLength <= 0) {
             return;
         }
@@ -1177,7 +1235,6 @@ contract Pool with Deployable, Ownable {
         }.toCell());
     }
 
-    // TODO
     fun getPrice(tokenId: Int): Int {
         let priceData: PriceData? = self.prices.get(tokenId);
         let price: Int = 0;
@@ -1188,7 +1245,9 @@ contract Pool with Deployable, Ownable {
     }
 
     fun updateFundingRate(tokenId: Int, indexPrice: Int) {
-        let tokenConfig: TokenConfig = self.tokenConfigs.get(tokenId)!!;
+        let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
+        require(tokenConfigOpt != null, "token config not exist");
+        let tokenConfig: TokenConfig = tokenConfigOpt!!;
 
         // =========== calculate sample =========== //
         // get funding rate sample
@@ -1214,8 +1273,8 @@ contract Pool with Deployable, Ownable {
             return;
         }
 
-        // TODO
-        let premiumRate: Int = self.calculatePremiumRate();
+        // get PR
+        let premiumRate: Int = self.prevPremiumRateSample.premiumRate;
 
         // cumulative sample count
         let sampleCountDelta: Int = timeDelta / SAMPLE_PREMIUM_RATE_INTERVAL;
@@ -1296,7 +1355,7 @@ contract Pool with Deployable, Ownable {
         let longFundingFeeGrowthAfter: Int = globalPosition.longFundingFeeGrowth;
         let shortFundingFeeGrowthAfter: Int = globalPosition.shortFundingFeeGrowth;
         
-        // funding rate > 0, long pay for short and LP TODO
+        // funding rate > 0, long pay for short and LP
         if (clampedFundingRateDelta >= 0) {
             longFundingFeeGrowthAfter = longFundingFeeGrowthAfter - paidFundingFeeGrowthDelta;
             shortFundingFeeGrowthAfter = shortFundingFeeGrowthAfter + receivedFundingFeeGrowthDelta;
@@ -1309,8 +1368,138 @@ contract Pool with Deployable, Ownable {
         self.globalPositions.set(tokenId, globalPosition);
     }
 
-    fun calculatePremiumRate(): Int {
-        return 0;
+    fun calculatePremiumRate(tokenId: Int, sizeDelta: Int, isLong: Bool): PremiumRateSample? {
+        // get token config
+        let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
+        if (tokenConfigOpt == null) {
+            return null;
+        }
+        let tokenConfig: TokenConfig = tokenConfigOpt!!;
+
+        // get global lp position
+        let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(tokenId);
+        if (globalLPPositionOpt == null) {
+            return null;
+        }
+        let globalLPPosition: GlobalLPPosition = globalLPPositionOpt!!;
+
+        // simulate global lp after
+        let globalLPNetSizeAfter: Int = globalLPPosition.netSize;
+        let globalLPIsLongAfter: Bool = globalLPPosition.isLong;
+        let sizeRemaining: Int = sizeDelta;
+        if (globalLPPosition.netSize > 0 && (isLong == globalLPPosition.isLong)) {
+            let sizeUsed: Int = min(globalLPPosition.netSize, sizeDelta);
+            sizeRemaining -= sizeUsed;
+            globalLPNetSizeAfter -= sizeUsed;
+        }
+        if(sizeRemaining > 0) {
+            globalLPNetSizeAfter += sizeRemaining;
+            globalLPIsLongAfter = !isLong;
+        }
+
+        // calculate DR
+        let tokenLiquidity: Int = (self.globalLPFund + self.globalLPUnrealizedPnl) * tokenConfig.liquidityProportion / PERCENTAGE_BASIS_POINT;
+        let deviationRate: Int = globalLPNetSizeAfter * PERCENTAGE_BASIS_POINT / tokenLiquidity;
+
+        let premiumRateSample: PremiumRateSample = self.searchPremiumRate(deviationRate);
+        if (globalLPIsLongAfter) {
+            premiumRateSample.deviationRate = -premiumRateSample.deviationRate;
+            premiumRateSample.premiumRate = -premiumRateSample.premiumRate;
+        }
+
+        return premiumRateSample;
     }
+
+    receive(msg: DeviationRate) {
+        // let result: PremiumRateSampleData = self.binarySearchPremiumRate(0, 1000, self.premiumRateSamples, msg.deviationRate);
+        let result: PremiumRateSample = self.searchPremiumRate(msg.deviationRate);
+        dump("find PR");
+        dump(result.deviationRate);
+        dump(result.premiumRate);
+    }
+
+    fun searchPremiumRate(deviationRate: Int): PremiumRateSample {
+        let rangeId: Int = deviationRate / 10_000_000;
+        if (rangeId >= 200) {
+            rangeId = rangeId / 10 * 10;
+        } else if (rangeId >= 300) {
+            rangeId = 300;
+        }
+        dump(rangeId);
+
+        let premiumRateSampleRangeOpt: PremiumRateSampleRange? = self.premiumRateSampleRanges.get(rangeId);
+        if (premiumRateSampleRangeOpt == null) {
+            return PremiumRateSample {
+                deviationRate: 0,
+                premiumRate: 0
+            };
+        }
+        let premiumRateSampleRange: PremiumRateSampleRange = premiumRateSampleRangeOpt!!;
+        return self.binarySearchPremiumRate(0, premiumRateSampleRange.sampleLength, premiumRateSampleRange.samples, deviationRate);
+    }
+
+    fun binarySearchPremiumRate(start: Int, end: Int, samples: map<Int, PremiumRateSample>, deviationRate: Int): PremiumRateSample {
+        let startPremiumRateSampleOpt: PremiumRateSample? = null;
+        let endPremiumRateSampleOpt: PremiumRateSample? = null;
+
+        while(start < end) {
+            let mid: Int = start + (end - start) / 2;
+            dump(mid);
+            // get mid sample
+            let midPremiumRateSample: PremiumRateSample = samples.get(mid)!!;
+
+            if (deviationRate == midPremiumRateSample.deviationRate) {
+                // find exact sample
+                return PremiumRateSample{
+                    deviationRate: midPremiumRateSample.deviationRate,
+                    premiumRate: midPremiumRateSample.premiumRate
+                };
+            } else if (deviationRate < midPremiumRateSample.deviationRate) {
+                // start < x < mid
+                if (start == mid - 1) {
+                    // return start sample
+                    if (startPremiumRateSampleOpt == null) {
+                        startPremiumRateSampleOpt = samples.get(start);
+                    }
+                    let startPremiumRateSample: PremiumRateSample = startPremiumRateSampleOpt!!;
+                    return PremiumRateSample{
+                        deviationRate: startPremiumRateSample.deviationRate,
+                        premiumRate: startPremiumRateSample.premiumRate
+                    };
+                }
+                end = mid;
+                endPremiumRateSampleOpt = midPremiumRateSample;
+            } else if (deviationRate > midPremiumRateSample.deviationRate) {
+                // mid < x < end
+                if (mid == end - 1) {
+                    // check end
+                    if (endPremiumRateSampleOpt == null) {
+                        endPremiumRateSampleOpt = samples.get(end);
+                    }
+                    let endPremiumRateSample: PremiumRateSample = endPremiumRateSampleOpt!!;
+                    if (deviationRate >= endPremiumRateSample.deviationRate) {
+                        return PremiumRateSample{
+                            deviationRate: endPremiumRateSample.deviationRate,
+                            premiumRate: endPremiumRateSample.premiumRate
+                        };
+                    } else {
+                        return PremiumRateSample{
+                            deviationRate: midPremiumRateSample.deviationRate,
+                            premiumRate: midPremiumRateSample.premiumRate
+                        };
+                    }
+                }
+                start = mid;
+                startPremiumRateSampleOpt = midPremiumRateSample;
+            }
+        }
+        // return start sample
+        let startPremiumRateSample: PremiumRateSample = samples.get(start)!!;
+        return PremiumRateSample{
+            deviationRate: startPremiumRateSample.deviationRate,
+            premiumRate: startPremiumRateSample.premiumRate
+        };
+    }
+
 
 }

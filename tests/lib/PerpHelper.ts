@@ -4,7 +4,7 @@ import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits, toPriceUnits } from "./TokenHelper";
 import { UpdatePrice } from "../../wrappers/OrderBook";
-import { UpdatePriceParam } from "../../wrappers/Pool";
+import { PremiumRateSample, PremiumRateSampleRangeParam, UpdatePriceParam } from "../../wrappers/Pool";
 
 export async function createIncreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, isMarket: boolean, 
     tokenId: number, isLong: boolean, margin: number, size: number, triggerPrice: number, tpSize: number, tpPrice: number, slSize: number, slPrice: number) {
@@ -386,4 +386,117 @@ export async function updatePrice(executor: SandboxContract<TreasuryContract>, t
     return {
         trxResult
     }
+}
+
+
+// export async function setPremiumRateSample(
+//         executor: SandboxContract<TreasuryContract>, 
+//         samples: {
+//             id: number,
+//             x: string;
+//             y: string;
+//         }[]
+//     ) {
+
+//     let PremiumRateSampleDataValue: DictionaryValue<PremiumRateSampleData> = {
+//         serialize(src, builder) {
+//             builder.storeUint(src.sampleId, 64).storeUint(src.deviationRate, 256).storeUint(src.premiumRate, 256)
+//         },
+//         parse(src) {
+//             throw '';
+//         },
+//     }
+
+//     let sampleDatas = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleDataValue);
+//     for (let index = 0; index < samples.length; index++) {
+//         const element = samples[index];
+//         sampleDatas.set(
+//                 BigInt(index),
+//                 {
+//                     $$type: 'PremiumRateSampleData',
+//                     sampleId: BigInt(element.id),
+//                     deviationRate: toUnits(element.x, 9),
+//                     premiumRate: toUnits(element.y, 9)
+//                 }
+//             )
+//     }
+    
+//     const trxResult = await TestEnv.pool.send(
+//         executor.getSender(),
+//         {
+//             value: toNano('1'),
+//         },
+//         {
+//             $$type: 'SetPremiumRateSample',
+//             sampleLength: BigInt(samples.length),
+//             samples: sampleDatas
+//         }
+//     );
+//     return trxResult
+// }
+
+export async function setPremiumRateSampleRange(
+        executor: SandboxContract<TreasuryContract>, 
+        sampleRanges: {
+            id: number,
+            samples: {x: string, y: string}[]
+        }[]
+    ) {
+
+    let PremiumRateSampleValue: DictionaryValue<PremiumRateSample> = {
+        serialize(src, builder) {
+            builder.storeInt(src.deviationRate, 257).storeInt(src.premiumRate, 257)
+        },
+        parse(src) {
+            throw '';
+        },
+    }
+    
+    let PremiumRateSampleRangeValue: DictionaryValue<PremiumRateSampleRangeParam> = {
+        serialize(src, builder) {
+            builder.storeInt(src.sampleId, 257).storeInt(src.sampleLength, 257).storeDict(src.samples)
+        },
+        parse(src) {
+            throw '';
+        },
+    }
+
+    let sampleRangeValues = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleRangeValue);
+
+    for (let index = 0; index < sampleRanges.length; index++) {
+        const sampleRange = sampleRanges[index];
+
+        let sampleValues = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleValue);
+        let samples = sampleRange.samples;
+        for (let j = 0; j < samples.length; j++) {
+            sampleValues.set(BigInt(j), {
+                $$type: 'PremiumRateSample',
+                deviationRate: toUnits(samples[j].x, 9),
+                premiumRate: toUnits(samples[j].y, 9)
+            })
+        }
+
+        sampleRangeValues.set(
+            BigInt(index),
+            {
+                $$type: 'PremiumRateSampleRangeParam',
+                sampleId: BigInt(sampleRange.id),
+                sampleLength: BigInt(samples.length),
+                samples: sampleValues
+            }
+        )
+    }
+    
+    const trxResult = await TestEnv.pool.send(
+        executor.getSender(),
+        {
+            value: toNano('1'),
+        },
+        {
+            $$type: 'SetPremiumRateSampleRange',
+            sampleRangeLength: BigInt(sampleRanges.length),
+            sampleRanges: sampleRangeValues
+        }
+    );
+    return trxResult
 }

@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 13522 bytes
+BOC Size: 8795 bytes
 
 # Types
-Total Types: 39
+Total Types: 44
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -64,6 +64,14 @@ Signature: `UpdatePerpPositionSuccess{orderId:uint64,receive:int257,trxId:uint64
 ## UpdatePrice
 TLB: `update_price#1dc8958c trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePrice`
 Signature: `UpdatePrice{trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
+
+## SetPremiumRateSampleRange
+TLB: `set_premium_rate_sample_range#2346de8f sampleRangeLength:uint64 sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:int257,sampleLength:int257,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}> = SetPremiumRateSampleRange`
+Signature: `SetPremiumRateSampleRange{sampleRangeLength:uint64,sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:int257,sampleLength:int257,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}>}`
+
+## DeviationRate
+TLB: `deviation_rate#2dd61a98 deviationRate:int257 = DeviationRate`
+Signature: `DeviationRate{deviationRate:int257}`
 
 ## LPPositionIncreasedEvent
 TLB: `lp_position_increased_event#1f8596cf opType:uint8 positionId:uint64 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFeeDelta:int257 realizedFundingFeeAfter:int257 entryFundingFeeGrowthAfter:int257 trxId:uint64 = LPPositionIncreasedEvent`
@@ -145,6 +153,18 @@ Signature: `PriceData{price:int257}`
 TLB: `_ tokenId:uint64 price:int257 = UpdatePriceParam`
 Signature: `UpdatePriceParam{tokenId:uint64,price:int257}`
 
+## PremiumRateSampleRange
+TLB: `_ sampleLength:int257 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRange`
+Signature: `PremiumRateSampleRange{sampleLength:int257,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}`
+
+## PremiumRateSampleRangeParam
+TLB: `_ sampleId:int257 sampleLength:int257 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRangeParam`
+Signature: `PremiumRateSampleRangeParam{sampleId:int257,sampleLength:int257,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}`
+
+## PremiumRateSample
+TLB: `_ deviationRate:int257 premiumRate:int257 = PremiumRateSample`
+Signature: `PremiumRateSample{deviationRate:int257,premiumRate:int257}`
+
 ## GlobalPosition
 TLB: `_ longMargin:int257 shortMargin:int257 longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 longValue:int257 shortValue:int257 = GlobalPosition`
 Signature: `GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257}`
@@ -207,8 +227,6 @@ Argument: account
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
-1644: not reach trigger price
-4996: none available price
 5238: position not exist
 9429: send gas not enough
 18995: margin rate too low
@@ -223,4 +241,5 @@ Argument: account
 54040: insufficient global net LP
 55429: not reach liquidate price
 55754: insufficient liquidity for net value
+59588: token config not exist
 62409: insufficient margin
