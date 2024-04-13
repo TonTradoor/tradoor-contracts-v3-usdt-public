@@ -24,13 +24,12 @@ export async function run(provider: NetworkProvider) {
 
         start += subLength;
         end += subLength;
-    }
-
-    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
-    if (transDone) {
-        console.log(`set config success`);
-    } else {
-        console.error(`set config failed`);
+        const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
+        if (transDone) {
+            console.log(`set config success`);
+        } else {
+            console.error(`set config failed`);
+        }
     }
 
 }
