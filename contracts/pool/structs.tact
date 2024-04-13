@@ -75,17 +75,18 @@ struct GlobalLPPosition {
 }
 
 struct PerpPositionData {
+    globalPerpNetValue: Int;
+    globalPerpSingleValue: Int;
     perpPosition: DirectionPerpPosition?;
     globalLPPosition: GlobalLPPosition?;
     globalPosition: GlobalPosition?;
-    globalPerpNetValue: Int;
-    globalPerpSingleValue: Int;
+    globalFundingRateSample: GlobalFundingRateSample?;
 }
 
 // ============================ Price ================================ //
-struct PriceData {
-    price: Int;
-}
+// struct PriceData {
+//     price: Int;
+// }
 
 struct UpdatePriceParam {
     tokenId: Int as uint64;
@@ -94,17 +95,24 @@ struct UpdatePriceParam {
 
 // ============================ Premium Rate ================================ //
 struct PremiumRateSampleRange {
-    sampleLength: Int;
+    sampleLength: Int as uint64;
     samples: map<Int, PremiumRateSample>;
 }
 
 struct PremiumRateSampleRangeParam {
-    sampleId: Int;
-    sampleLength: Int;
+    sampleId: Int as uint64;
+    sampleLength: Int as uint64;
     samples: map<Int, PremiumRateSample>;
 }
 
 struct PremiumRateSample {
+    deviationRate: Int;
+    premiumRate: Int;
+}
+
+struct PremiumRateSampleData {
+    rangeId: Int as uint64;
+    sampleId: Int as uint64;
     deviationRate: Int;
     premiumRate: Int;
 }
@@ -125,16 +133,4 @@ struct GlobalFundingRateSample {
     lastAdjustFundingRateTime: Int;
     sampleCount: Int;
     cumulativePremiumRate: Int;
-}
-
-struct FundingFeeGrowth {
-    clampedFundingRateDelta: Int;
-    longFundingFeeGrowthAfter: Int;
-    shortFundingFeeGrowthAfter: Int;
-}
-
-struct SamplePremiumRateResult {
-    sample: GlobalFundingRateSample;
-    shouldAdjustFundingRate: Bool;
-    fundingRateDelta: Int;
 }

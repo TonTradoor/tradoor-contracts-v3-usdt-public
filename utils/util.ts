@@ -196,17 +196,66 @@ export async function readPRSample() {
         });
     });
 
-    let sampleRanges;
-    let sampleRange;
-    let lastSample = samples[0];
+    let sampleRange: {id: number, samples: {x: number, y: number}[]};
+    let sampleRanges: {id: number, samples: {x: number, y: number}[]}[] = [];
     let rangeId = 0;
+    let rangeSamples: {x: number, y: number}[] = [];
+    let lastSample: {x: number, y: number} = samples[0];
     for(let i = 0; i < samples.length; i++) {
         let sample = samples[i];
-        if (sample.x * 100 < rangeId) {
-            
+        let prefix = Math.trunc(sample.x * 100);
+
+        if (prefix < 200 || rangeId < 200) {
+            if (prefix == rangeId) {
+                rangeSamples.push(sample);
+                lastSample = sample;
+            } else {
+                // rangeSamples.push(sample);
+                sampleRange = {
+                    id: rangeId,
+                    samples: rangeSamples
+                };
+                // console.log(sampleRange);
+                sampleRanges.push(sampleRange);
+                
+                // next range
+                rangeSamples = [];
+                rangeSamples.push(lastSample);
+                rangeSamples.push(sample);
+                lastSample = sample;
+
+                rangeId++;
+            }
+        } else if (prefix >= 200) {
+            prefix = Math.trunc(prefix / 10) * 10;
+            if (prefix == rangeId) {
+                rangeSamples.push(sample);
+                lastSample = sample;
+            } else {
+                // rangeSamples.push(sample);
+                sampleRange = {
+                    id: rangeId,
+                    samples: rangeSamples
+                };
+                // console.log(sampleRange);
+                rangeSamples.push(lastSample);
+                sampleRanges.push(sampleRange);
+                
+                // next range
+                rangeSamples = [];
+                rangeSamples.push(lastSample);
+                rangeSamples.push(sample);
+                lastSample = sample;
+
+                rangeId += 10;
+            }
+            if (rangeId > 300) {
+                rangeId = 300;
+            }
+        } else {
+            rangeSamples.push(sample);
         }
-        
     }
 
-    return result;
+    return sampleRanges;
 }

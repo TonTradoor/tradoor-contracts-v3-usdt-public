@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 8815 bytes
+BOC Size: 15518 bytes
 
 # Types
-Total Types: 44
+Total Types: 42
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -66,8 +66,8 @@ TLB: `update_price#1dc8958c trxId:uint64 pricesLength:uint64 prices:dict<int, ^U
 Signature: `UpdatePrice{trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
 
 ## SetPremiumRateSampleRange
-TLB: `set_premium_rate_sample_range#2346de8f sampleRangeLength:uint64 sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:int257,sampleLength:int257,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}> = SetPremiumRateSampleRange`
-Signature: `SetPremiumRateSampleRange{sampleRangeLength:uint64,sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:int257,sampleLength:int257,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}>}`
+TLB: `set_premium_rate_sample_range#0176e0c9 sampleRangeLength:uint64 sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}> = SetPremiumRateSampleRange`
+Signature: `SetPremiumRateSampleRange{sampleRangeLength:uint64,sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}>}`
 
 ## DeviationRate
 TLB: `deviation_rate#2dd61a98 deviationRate:int257 = DeviationRate`
@@ -142,28 +142,28 @@ TLB: `_ netSize:int257 isLong:bool entryPrice:int257 unrealizedPnl:int257 = Glob
 Signature: `GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257}`
 
 ## PerpPositionData
-TLB: `_ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257} globalPerpNetValue:int257 globalPerpSingleValue:int257 = PerpPositionData`
-Signature: `PerpPositionData{perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257},globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257},globalPerpNetValue:int257,globalPerpSingleValue:int257}`
-
-## PriceData
-TLB: `_ price:int257 = PriceData`
-Signature: `PriceData{price:int257}`
+TLB: `_ globalPerpNetValue:int257 globalPerpSingleValue:int257 perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257} globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257} = PerpPositionData`
+Signature: `PerpPositionData{globalPerpNetValue:int257,globalPerpSingleValue:int257,perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257},globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257},globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257}}`
 
 ## UpdatePriceParam
 TLB: `_ tokenId:uint64 price:int257 = UpdatePriceParam`
 Signature: `UpdatePriceParam{tokenId:uint64,price:int257}`
 
 ## PremiumRateSampleRange
-TLB: `_ sampleLength:int257 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRange`
-Signature: `PremiumRateSampleRange{sampleLength:int257,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}`
+TLB: `_ sampleLength:uint64 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRange`
+Signature: `PremiumRateSampleRange{sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}`
 
 ## PremiumRateSampleRangeParam
-TLB: `_ sampleId:int257 sampleLength:int257 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRangeParam`
-Signature: `PremiumRateSampleRangeParam{sampleId:int257,sampleLength:int257,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}`
+TLB: `_ sampleId:uint64 sampleLength:uint64 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRangeParam`
+Signature: `PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}`
 
 ## PremiumRateSample
 TLB: `_ deviationRate:int257 premiumRate:int257 = PremiumRateSample`
 Signature: `PremiumRateSample{deviationRate:int257,premiumRate:int257}`
+
+## PremiumRateSampleData
+TLB: `_ rangeId:uint64 sampleId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateSampleData`
+Signature: `PremiumRateSampleData{rangeId:uint64,sampleId:uint64,deviationRate:int257,premiumRate:int257}`
 
 ## GlobalPosition
 TLB: `_ longMargin:int257 shortMargin:int257 longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 longValue:int257 shortValue:int257 = GlobalPosition`
@@ -173,24 +173,13 @@ Signature: `GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,
 TLB: `_ lastAdjustFundingRateTime:int257 sampleCount:int257 cumulativePremiumRate:int257 = GlobalFundingRateSample`
 Signature: `GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257}`
 
-## FundingFeeGrowth
-TLB: `_ clampedFundingRateDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = FundingFeeGrowth`
-Signature: `FundingFeeGrowth{clampedFundingRateDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
-
-## SamplePremiumRateResult
-TLB: `_ sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257} shouldAdjustFundingRate:bool fundingRateDelta:int257 = SamplePremiumRateResult`
-Signature: `SamplePremiumRateResult{sample:GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257},shouldAdjustFundingRate:bool,fundingRateDelta:int257}`
-
 # Get Methods
-Total Get Methods: 6
+Total Get Methods: 5
 
 ## configData
 Argument: executor
 
 ## tokenConfig
-Argument: tokenId
-
-## priceData
 Argument: tokenId
 
 ## lpPosition
@@ -227,6 +216,8 @@ Argument: account
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
+1644: not reach trigger price
+4996: none available price
 5238: position not exist
 9429: send gas not enough
 18995: margin rate too low

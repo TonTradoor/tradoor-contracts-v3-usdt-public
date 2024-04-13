@@ -439,7 +439,7 @@ export async function setPremiumRateSampleRange(
         executor: SandboxContract<TreasuryContract>, 
         sampleRanges: {
             id: number,
-            samples: {x: string, y: string}[]
+            samples: {x: number, y: number}[]
         }[]
     ) {
 

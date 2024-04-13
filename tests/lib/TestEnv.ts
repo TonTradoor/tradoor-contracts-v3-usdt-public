@@ -7,6 +7,8 @@ import { buildOnchainMetadata } from '../../contracts/mock/utils/jetton-helpers'
 import { JettonDefaultWallet } from '../../wrappers/JettonDefaultWallet';
 import { toJettonUnits } from './TokenHelper';
 import { PERCENTAGE_BASIS_POINT } from '../../utils/constants';
+import { readPRSample } from '../../utils/util';
+import { setPremiumRateSampleRange } from './PerpHelper';
 
 export class TestEnv {
 
@@ -125,7 +127,7 @@ export class TestEnv {
                 maxTimeDelayExecutor: 30n * 60n,
                 minTimeDelayTrader: 3n * 60n,
                 minExecutionFee: toNano(0.1),
-                gasConsumption: toNano(0.02),
+                gasConsumption: toNano(0.03),
                 minTonsForStorage: toNano(0.01),
                 usdtWallet: TestEnv.orderBookJettonWallet.address,
                 pool: TestEnv.pool.address
@@ -148,7 +150,7 @@ export class TestEnv {
                 $$type: 'UpdateConfig',
                 executor: TestEnv.executor.address,
                 enableExecutor: true,
-                gasConsumption: toNano(0.04),
+                gasConsumption: toNano(0.05),
                 minTonsForStorage: toNano(0.01),
                 lpLockTime: 5n * 60n,
                 lpBonusFactor: 10n**9n,
@@ -163,7 +165,7 @@ export class TestEnv {
             success: true,
         });
 
-        // set BTC config to orderbook
+        // set BTC config to pool
         const setPoolTokenConfigResult = await TestEnv.pool.send(
             TestEnv.deployer.getSender(),
             {
@@ -189,6 +191,19 @@ export class TestEnv {
             to: TestEnv.pool.address,
             success: true,
         });
+
+        // set PR samples to pool
+        let samples = await readPRSample();
+        
+        let subLength = 100;
+        let start = 0, end = subLength;
+        while (end <= samples.length) {
+            // console.log('start:', start, 'end:', end);
+            await setPremiumRateSampleRange(TestEnv.deployer, samples.slice(start, end));
+
+            start += subLength;
+            end += subLength;
+        }
 
     }
 
