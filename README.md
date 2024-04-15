@@ -25,18 +25,16 @@
 
 `npx blueprint create ContractName` or `yarn blueprint create ContractName`
 
-## 步骤
-- 创建.env文件
+## step
+- create *.env
 ```
-WALLET_MNEMONIC="助记词"
+WALLET_MNEMONIC=""
 WALLET_VERSION=v4
 ```
 
-- 编译：
+- yarn build
 
-yarn build
-
-- 重新部署：
+- deploy
 
 sh scripts/deploy.sh
 
@@ -44,32 +42,28 @@ sh scripts/deploy.sh
 
 yarn rundev mintMockJetton
 
-- 添加executor:
+- add executor:
 
-修改 config/testnet.json 中 executor
+add 'executor' in config/testnet.json
 
 yarn rundev orderBookSetConfig
 
-- 创建RBF加仓订单：
-
-yarn rundev rbfCreateIncreaseOrder
-
-- 创建RBF减仓订单：
-
-yarn rundev rbfCreateDecreaseOrder
-
-- 执行RBF订单：
-
-yarn rundev rbfExecuteDecreaseOrder
-
-- 创建LP加仓订单：
+- create LP increase order:
 
 yarn rundev lpCreateIncreaseOrder
 
-- 创建LP减仓订单：
+- create LP decrease order:
 
 yarn rundev lpCreateDecreaseOrder
 
-- 执行LP订单：
+- execute LP order：
 
 yarn rundev lpExecuteDecreaseOrder
+
+- create Perp increase order:
+
+yarn rundev perpCreateIncreaseOrder
+
+- create Perp decrease order:
+
+yarn rundev perpCreateDecreaseOrder
