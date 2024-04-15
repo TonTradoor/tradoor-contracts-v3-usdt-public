@@ -25,14 +25,18 @@
 
 `npx blueprint create ContractName` or `yarn blueprint create ContractName`
 
-## step
+## build
+- yarn build
+
+## test
+- yarn test
+
+## deploy
 - create *.env
 ```
 WALLET_MNEMONIC=""
 WALLET_VERSION=v4
 ```
-
-- yarn build
 
 - deploy
 
