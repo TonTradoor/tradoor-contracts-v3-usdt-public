@@ -11,7 +11,7 @@ export async function run(provider: NetworkProvider) {
     const priceDecimal = getConfig(provider, "priceDecimal");
     const executor = Address.parse(getConfig(provider, "executor"));
 
-    const lastTrx = await getLastTransaction(provider, pool.address);
+    let lastTrx = await getLastTransaction(provider, pool.address);
 
     // set PR samples to pool
     let samples = await readPRSample();
@@ -19,7 +19,7 @@ export async function run(provider: NetworkProvider) {
     let subLength = 100;
     let start = 0, end = subLength;
     while (end <= samples.length) {
-        // console.log('start:', start, 'end:', end);
+        console.log('start:', start, 'end:', end);
         await setPremiumRateSampleRange(provider, pool, samples.slice(start, end));
 
         start += subLength;
@@ -30,6 +30,7 @@ export async function run(provider: NetworkProvider) {
         } else {
             console.error(`set config failed`);
         }
+        lastTrx = await getLastTransaction(provider, pool.address);
     }
 
 }
