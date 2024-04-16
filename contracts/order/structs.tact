@@ -10,6 +10,16 @@ struct ConfigData {
     pool: Address;
 }
 
+struct WhitelistData {
+    enableWhitelist: Bool;
+    isInWhitelist: Bool;
+}
+
+struct UpdateWhitelistParam {
+    account: Address;
+    enable: Bool;
+}
+
 // ============================ LP ================================ //
 struct LPPositionOrder {
     isIncrease: Bool;

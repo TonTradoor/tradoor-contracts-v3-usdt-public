@@ -137,6 +137,20 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 }
 
 ;;
+;; Type: UpdateWhitelist
+;; Header: 0x4f5c3f48
+;; TLB: update_whitelist#4f5c3f48 enableWhitelist:Maybe bool whitelistLength:uint64 whitelist:dict<int, ^UpdateWhitelistParam{account:address,enable:bool}> = UpdateWhitelist
+;;
+
+(slice, ((int, int, cell))) $UpdateWhitelist$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1331445576);
+    var v'enableWhitelist = sc_0~load_int(1) ? sc_0~load_int(1) : null();
+    var v'whitelistLength = sc_0~load_uint(64);
+    var v'whitelist = sc_0~load_dict();
+    return (sc_0, (v'enableWhitelist, v'whitelistLength, v'whitelist));
+}
+
+;;
 ;; Type: CreateDecreaseLPPositionOrder
 ;; Header: 0xbdbfce48
 ;; TLB: create_decrease_lp_position_order#bdbfce48 executionFee:coins liquidityDelta:int257 trxId:uint64 = CreateDecreaseLPPositionOrder
@@ -686,6 +700,60 @@ cell $CompensateExecutedEvent$_store_cell((int, int) v) inline {
 }
 
 ;;
+;; Type: WhitelistData
+;; TLB: _ enableWhitelist:bool isInWhitelist:bool = WhitelistData
+;;
+
+(int, int) $WhitelistData$_to_external(((int, int)) v) inline {
+    var (v'enableWhitelist, v'isInWhitelist) = v; 
+    return (v'enableWhitelist, v'isInWhitelist);
+}
+
+((int, int)) $WhitelistData$_constructor_enableWhitelist_isInWhitelist(int enableWhitelist, int isInWhitelist) inline {
+    return (enableWhitelist, isInWhitelist);
+}
+
+;;
+;; Type: UpdateWhitelistParam
+;; TLB: _ account:address enable:bool = UpdateWhitelistParam
+;;
+
+(slice, ((slice, int))) $UpdateWhitelistParam$_load(slice sc_0) inline {
+    var v'account = sc_0~__tact_load_address();
+    var v'enable = sc_0~load_int(1);
+    return (sc_0, (v'account, v'enable));
+}
+
+tuple $UpdateWhitelistParam$_as_optional((slice, int) v) inline {
+    var (v'account, v'enable) = v;
+    return __tact_tuple_create_2(v'account, v'enable);
+}
+
+tuple $UpdateWhitelistParam$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $UpdateWhitelistParam$_as_optional(sc~$UpdateWhitelistParam$_load());
+}
+
+_ $UpdateWhitelistParam$_get_account((slice, int) v) inline {
+    var (v'account, v'enable) = v;
+    return v'account;
+}
+
+_ $UpdateWhitelistParam$_get_enable((slice, int) v) inline {
+    var (v'account, v'enable) = v;
+    return v'enable;
+}
+
+((slice, int)) $UpdateWhitelistParam$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'account, int vvv'enable) = __tact_tuple_destroy_2(v);
+    return (vvv'account, vvv'enable);
+}
+
+;;
 ;; Type: LPPositionOrder
 ;; TLB: _ isIncrease:bool account:address liquidityDelta:int257 executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = LPPositionOrder
 ;;
@@ -1005,8 +1073,8 @@ tuple $Compensate$_load_opt(cell cl) inline {
 ;; Type: OrderBook
 ;;
 
-builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) v) inline {
-    var (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext) = v;
+builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, int, cell, int, cell, cell, int, cell, cell, int, cell, int) v) inline {
+    var (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'enableWhitelist, v'whitelist, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext) = v;
     build_0 = build_0.store_int(v'maxTimeDelayExecutor, 257);
     build_0 = build_0.store_int(v'minTimeDelayTrader, 257);
     build_0 = build_0.store_int(v'minExecutionFee, 257);
@@ -1019,10 +1087,12 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     build_2 = __tact_store_address(build_2, v'owner);
     build_2 = build_2.store_int(v'stopped, 1);
     build_2 = build_2.store_dict(v'executors);
+    build_2 = build_2.store_int(v'enableWhitelist, 1);
+    build_2 = build_2.store_dict(v'whitelist);
     build_2 = build_2.store_dict(v'lpPositionOrders);
     build_2 = build_2.store_uint(v'lpPositionOrderIndexNext, 64);
-    build_2 = build_2.store_dict(v'perpPositionOrders);
     var build_3 = begin_cell();
+    build_3 = build_3.store_dict(v'perpPositionOrders);
     build_3 = build_3.store_dict(v'perpPositionOrderExs);
     build_3 = build_3.store_uint(v'perpPositionOrderIndexNext, 64);
     build_3 = build_3.store_dict(v'compensates);
@@ -1033,7 +1103,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     return build_0;
 }
 
-(slice, ((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int))) $OrderBook$_load(slice sc_0) inline {
+(slice, ((int, int, int, int, int, slice, slice, slice, int, cell, int, cell, cell, int, cell, cell, int, cell, int))) $OrderBook$_load(slice sc_0) inline {
     var v'maxTimeDelayExecutor = sc_0~load_int(257);
     var v'minTimeDelayTrader = sc_0~load_int(257);
     var v'minExecutionFee = sc_0~load_int(257);
@@ -1046,15 +1116,17 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     var v'owner = sc_2~__tact_load_address();
     var v'stopped = sc_2~load_int(1);
     var v'executors = sc_2~load_dict();
+    var v'enableWhitelist = sc_2~load_int(1);
+    var v'whitelist = sc_2~load_dict();
     var v'lpPositionOrders = sc_2~load_dict();
     var v'lpPositionOrderIndexNext = sc_2~load_uint(64);
-    var v'perpPositionOrders = sc_2~load_dict();
     slice sc_3 = sc_2~load_ref().begin_parse();
+    var v'perpPositionOrders = sc_3~load_dict();
     var v'perpPositionOrderExs = sc_3~load_dict();
     var v'perpPositionOrderIndexNext = sc_3~load_uint(64);
     var v'compensates = sc_3~load_dict();
     var v'compensateIndexNext = sc_3~load_uint(64);
-    return (sc_0, (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext));
+    return (sc_0, (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'enableWhitelist, v'whitelist, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext));
 }
 
 (slice, ((int))) $OrderBook$init$_load(slice sc_0) inline {
@@ -1062,7 +1134,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     return (sc_0, (v'deployId));
 }
 
-(int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $OrderBook$_contract_load() impure inline_ref {
+(int, int, int, int, int, slice, slice, slice, int, cell, int, cell, cell, int, cell, cell, int, cell, int) $OrderBook$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1077,7 +1149,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     }
 }
 
-() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) v) impure inline {
+() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, int, cell, int, cell, cell, int, cell, cell, int, cell, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

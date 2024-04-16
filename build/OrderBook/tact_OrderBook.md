@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 13084 bytes
+BOC Size: 14952 bytes
 
 # Types
-Total Types: 43
+Total Types: 46
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -52,6 +52,10 @@ Signature: `TokenExcesses{queryId:uint64}`
 ## UpdateConfig
 TLB: `update_config#408e9f7c executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig`
 Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
+
+## UpdateWhitelist
+TLB: `update_whitelist#4f5c3f48 enableWhitelist:Maybe bool whitelistLength:uint64 whitelist:dict<int, ^UpdateWhitelistParam{account:address,enable:bool}> = UpdateWhitelist`
+Signature: `UpdateWhitelist{enableWhitelist:Maybe bool,whitelistLength:uint64,whitelist:dict<int, ^UpdateWhitelistParam{account:address,enable:bool}>}`
 
 ## CreateDecreaseLPPositionOrder
 TLB: `create_decrease_lp_position_order#bdbfce48 executionFee:coins liquidityDelta:int257 trxId:uint64 = CreateDecreaseLPPositionOrder`
@@ -157,6 +161,14 @@ Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = ConfigData`
 Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
+## WhitelistData
+TLB: `_ enableWhitelist:bool isInWhitelist:bool = WhitelistData`
+Signature: `WhitelistData{enableWhitelist:bool,isInWhitelist:bool}`
+
+## UpdateWhitelistParam
+TLB: `_ account:address enable:bool = UpdateWhitelistParam`
+Signature: `UpdateWhitelistParam{account:address,enable:bool}`
+
 ## LPPositionOrder
 TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = LPPositionOrder`
 Signature: `LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
@@ -178,10 +190,13 @@ TLB: `_ orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe 
 Signature: `Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}`
 
 # Get Methods
-Total Get Methods: 7
+Total Get Methods: 8
 
 ## configData
 Argument: executor
+
+## whitelistData
+Argument: account
 
 ## lpPositionOrder
 Argument: orderId

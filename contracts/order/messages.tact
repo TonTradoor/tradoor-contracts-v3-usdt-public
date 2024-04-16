@@ -35,6 +35,12 @@ message UpdateConfig {
     pool: Address;
 }
 
+message UpdateWhitelist {
+    enableWhitelist: Bool?;
+    whitelistLength: Int as uint64;
+    whitelist: map<Int, UpdateWhitelistParam>;
+}
+
 // ============================ LP ================================ //
 message CreateDecreaseLPPositionOrder {
     executionFee: Int as coins;
