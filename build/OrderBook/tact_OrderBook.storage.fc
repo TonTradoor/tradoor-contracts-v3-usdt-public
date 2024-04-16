@@ -229,13 +229,13 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 }
 
 ;;
-;; Type: CompensateOrder
-;; Header: 0x77a5b69b
-;; TLB: compensate_order#77a5b69b orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CompensateOrder
+;; Type: CreateCompensate
+;; Header: 0x854c95da
+;; TLB: create_compensate#854c95da orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate
 ;;
 
-(slice, ((int, int, int, slice, int, slice, int))) $CompensateOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 2007348891);
+(slice, ((int, int, int, slice, int, slice, int))) $CreateCompensate$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 2236388826);
     var v'orderType = sc_0~load_int(1) ? sc_0~load_int(257) : null();
     var v'orderId = sc_0~load_uint(64);
     var v'trxId = sc_0~load_uint(64);
@@ -245,6 +245,32 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
     var v'executionFeeReceiver = sc_1~__tact_load_address_opt();
     var v'executionFee = sc_1~load_coins();
     return (sc_0, (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee));
+}
+
+;;
+;; Type: CancelCompensate
+;; Header: 0x58def8ba
+;; TLB: cancel_compensate#58def8ba compensateId:uint64 trxId:uint64 = CancelCompensate
+;;
+
+(slice, ((int, int))) $CancelCompensate$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1491007674);
+    var v'compensateId = sc_0~load_uint(64);
+    var v'trxId = sc_0~load_uint(64);
+    return (sc_0, (v'compensateId, v'trxId));
+}
+
+;;
+;; Type: ExecuteCompensate
+;; Header: 0xcc1ca2f0
+;; TLB: execute_compensate#cc1ca2f0 compensateId:uint64 trxId:uint64 = ExecuteCompensate
+;;
+
+(slice, ((int, int))) $ExecuteCompensate$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3424428784);
+    var v'compensateId = sc_0~load_uint(64);
+    var v'trxId = sc_0~load_uint(64);
+    return (sc_0, (v'compensateId, v'trxId));
 }
 
 ;;
@@ -571,14 +597,15 @@ cell $PerpPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline {
 }
 
 ;;
-;; Type: CompensateOrderEvent
-;; Header: 0xeab23f26
-;; TLB: compensate_order_event#eab23f26 orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CompensateOrderEvent
+;; Type: CompensateCreatedEvent
+;; Header: 0x17e6cb93
+;; TLB: compensate_created_event#17e6cb93 compensateId:uint64 orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins unlockTime:int257 = CompensateCreatedEvent
 ;;
 
-builder $CompensateOrderEvent$_store(builder build_0, (int, int, int, slice, int, slice, int) v) inline_ref {
-    var (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee) = v;
-    build_0 = store_uint(build_0, 3937550118, 32);
+builder $CompensateCreatedEvent$_store(builder build_0, (int, int, int, int, slice, int, slice, int, int) v) inline_ref {
+    var (v'compensateId, v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee, v'unlockTime) = v;
+    build_0 = store_uint(build_0, 401001363, 32);
+    build_0 = build_0.store_uint(v'compensateId, 64);
     build_0 = ~ null?(v'orderType) ? build_0.store_int(true, 1).store_int(v'orderType, 257) : build_0.store_int(false, 1);
     build_0 = build_0.store_uint(v'orderId, 64);
     build_0 = build_0.store_uint(v'trxId, 64);
@@ -587,16 +614,61 @@ builder $CompensateOrderEvent$_store(builder build_0, (int, int, int, slice, int
     var build_1 = begin_cell();
     build_1 = __tact_store_address_opt(build_1, v'executionFeeReceiver);
     build_1 = build_1.store_coins(v'executionFee);
+    build_1 = build_1.store_int(v'unlockTime, 257);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $CompensateOrderEvent$_store_cell((int, int, int, slice, int, slice, int) v) inline {
-    return $CompensateOrderEvent$_store(begin_cell(), v).end_cell();
+cell $CompensateCreatedEvent$_store_cell((int, int, int, int, slice, int, slice, int, int) v) inline {
+    return $CompensateCreatedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int, slice, int, slice, int)) $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee) inline {
-    return (orderType, orderId, trxId, refundReceiver, refundAmount, executionFeeReceiver, executionFee);
+((int, int, int, int, slice, int, slice, int, int)) $CompensateCreatedEvent$_constructor_compensateId_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime(int compensateId, int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee, int unlockTime) inline {
+    return (compensateId, orderType, orderId, trxId, refundReceiver, refundAmount, executionFeeReceiver, executionFee, unlockTime);
+}
+
+;;
+;; Type: CompensateCancelledEvent
+;; Header: 0x4bc341d5
+;; TLB: compensate_cancelled_event#4bc341d5 compensateId:uint64 trxId:uint64 = CompensateCancelledEvent
+;;
+
+builder $CompensateCancelledEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'compensateId, v'trxId) = v;
+    build_0 = store_uint(build_0, 1271087573, 32);
+    build_0 = build_0.store_uint(v'compensateId, 64);
+    build_0 = build_0.store_uint(v'trxId, 64);
+    return build_0;
+}
+
+cell $CompensateCancelledEvent$_store_cell((int, int) v) inline {
+    return $CompensateCancelledEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $CompensateCancelledEvent$_constructor_compensateId_trxId(int compensateId, int trxId) inline {
+    return (compensateId, trxId);
+}
+
+;;
+;; Type: CompensateExecutedEvent
+;; Header: 0xdb45e438
+;; TLB: compensate_executed_event#db45e438 compensateId:uint64 trxId:uint64 = CompensateExecutedEvent
+;;
+
+builder $CompensateExecutedEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'compensateId, v'trxId) = v;
+    build_0 = store_uint(build_0, 3678790712, 32);
+    build_0 = build_0.store_uint(v'compensateId, 64);
+    build_0 = build_0.store_uint(v'trxId, 64);
+    return build_0;
+}
+
+cell $CompensateExecutedEvent$_store_cell((int, int) v) inline {
+    return $CompensateExecutedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $CompensateExecutedEvent$_constructor_compensateId_trxId(int compensateId, int trxId) inline {
+    return (compensateId, trxId);
 }
 
 ;;
@@ -863,11 +935,78 @@ tuple $PerpPositionOrderEx$_load_opt(cell cl) inline {
 }
 
 ;;
+;; Type: Compensate
+;; TLB: _ orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins unlockTime:int257 = Compensate
+;;
+
+builder $Compensate$_store(builder build_0, (int, int, int, slice, int, slice, int, int) v) inline_ref {
+    var (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee, v'unlockTime) = v;
+    build_0 = ~ null?(v'orderType) ? build_0.store_int(true, 1).store_int(v'orderType, 257) : build_0.store_int(false, 1);
+    build_0 = build_0.store_uint(v'orderId, 64);
+    build_0 = build_0.store_uint(v'trxId, 64);
+    build_0 = __tact_store_address_opt(build_0, v'refundReceiver);
+    build_0 = build_0.store_int(v'refundAmount, 257);
+    var build_1 = begin_cell();
+    build_1 = __tact_store_address_opt(build_1, v'executionFeeReceiver);
+    build_1 = build_1.store_coins(v'executionFee);
+    build_1 = build_1.store_int(v'unlockTime, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $Compensate$_store_cell((int, int, int, slice, int, slice, int, int) v) inline {
+    return $Compensate$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, int, slice, int, slice, int, int)) $Compensate$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'orderType, int vvv'orderId, int vvv'trxId, slice vvv'refundReceiver, int vvv'refundAmount, slice vvv'executionFeeReceiver, int vvv'executionFee, int vvv'unlockTime) = __tact_tuple_destroy_8(v);
+    return (vvv'orderType, vvv'orderId, vvv'trxId, vvv'refundReceiver, vvv'refundAmount, vvv'executionFeeReceiver, vvv'executionFee, vvv'unlockTime);
+}
+
+cell $Compensate$_store_opt(tuple v) inline {
+    if (null?(v)) {
+        return null();
+    }
+    return $Compensate$_store_cell($Compensate$_not_null(v));
+}
+
+(slice, ((int, int, int, slice, int, slice, int, int))) $Compensate$_load(slice sc_0) inline_ref {
+    var v'orderType = sc_0~load_int(1) ? sc_0~load_int(257) : null();
+    var v'orderId = sc_0~load_uint(64);
+    var v'trxId = sc_0~load_uint(64);
+    var v'refundReceiver = sc_0~__tact_load_address_opt();
+    var v'refundAmount = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'executionFeeReceiver = sc_1~__tact_load_address_opt();
+    var v'executionFee = sc_1~load_coins();
+    var v'unlockTime = sc_1~load_int(257);
+    return (sc_0, (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee, v'unlockTime));
+}
+
+tuple $Compensate$_as_optional((int, int, int, slice, int, slice, int, int) v) inline {
+    var (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee, v'unlockTime) = v;
+    return __tact_tuple_create_8(v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee, v'unlockTime);
+}
+
+tuple $Compensate$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $Compensate$_as_optional(sc~$Compensate$_load());
+}
+
+((int, int, int, slice, int, slice, int, int)) $Compensate$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee, int unlockTime) inline {
+    return (orderType, orderId, trxId, refundReceiver, refundAmount, executionFeeReceiver, executionFee, unlockTime);
+}
+
+;;
 ;; Type: OrderBook
 ;;
 
-builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) v) inline {
-    var (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext) = v;
+builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) v) inline {
+    var (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext) = v;
     build_0 = build_0.store_int(v'maxTimeDelayExecutor, 257);
     build_0 = build_0.store_int(v'minTimeDelayTrader, 257);
     build_0 = build_0.store_int(v'minExecutionFee, 257);
@@ -878,6 +1017,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     var build_2 = begin_cell();
     build_2 = __tact_store_address(build_2, v'pool);
     build_2 = __tact_store_address(build_2, v'owner);
+    build_2 = build_2.store_int(v'stopped, 1);
     build_2 = build_2.store_dict(v'executors);
     build_2 = build_2.store_dict(v'lpPositionOrders);
     build_2 = build_2.store_uint(v'lpPositionOrderIndexNext, 64);
@@ -885,13 +1025,15 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     var build_3 = begin_cell();
     build_3 = build_3.store_dict(v'perpPositionOrderExs);
     build_3 = build_3.store_uint(v'perpPositionOrderIndexNext, 64);
+    build_3 = build_3.store_dict(v'compensates);
+    build_3 = build_3.store_uint(v'compensateIndexNext, 64);
     build_2 = store_ref(build_2, build_3.end_cell());
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-(slice, ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int))) $OrderBook$_load(slice sc_0) inline {
+(slice, ((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int))) $OrderBook$_load(slice sc_0) inline {
     var v'maxTimeDelayExecutor = sc_0~load_int(257);
     var v'minTimeDelayTrader = sc_0~load_int(257);
     var v'minExecutionFee = sc_0~load_int(257);
@@ -902,6 +1044,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'pool = sc_2~__tact_load_address();
     var v'owner = sc_2~__tact_load_address();
+    var v'stopped = sc_2~load_int(1);
     var v'executors = sc_2~load_dict();
     var v'lpPositionOrders = sc_2~load_dict();
     var v'lpPositionOrderIndexNext = sc_2~load_uint(64);
@@ -909,7 +1052,9 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     slice sc_3 = sc_2~load_ref().begin_parse();
     var v'perpPositionOrderExs = sc_3~load_dict();
     var v'perpPositionOrderIndexNext = sc_3~load_uint(64);
-    return (sc_0, (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext));
+    var v'compensates = sc_3~load_dict();
+    var v'compensateIndexNext = sc_3~load_uint(64);
+    return (sc_0, (v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext));
 }
 
 (slice, ((int))) $OrderBook$init$_load(slice sc_0) inline {
@@ -917,7 +1062,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     return (sc_0, (v'deployId));
 }
 
-(int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $OrderBook$_contract_load() impure inline_ref {
+(int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $OrderBook$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -932,7 +1077,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slic
     }
 }
 
-() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) v) impure inline {
+() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

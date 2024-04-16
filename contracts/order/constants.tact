@@ -16,3 +16,5 @@ const ORDER_OP_TYPE_DECREASE_TP: Int = 13;
 const ORDER_OP_TYPE_DECREASE_SL: Int = 14;
 
 const GAS_TRANSFER_JETTON: Int = ton("0.1");
+
+const DAY: Int = 24 * 60 * 60;

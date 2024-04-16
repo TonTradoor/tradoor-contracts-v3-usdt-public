@@ -53,7 +53,8 @@ message PerpPositionOrderExecutedEvent {
 }
 
 // ============================ Compensate ================================ //
-message CompensateOrderEvent {
+message CompensateCreatedEvent {
+    compensateId: Int as uint64;
     orderType: Int?;
     orderId: Int as uint64;
     trxId: Int as uint64;
@@ -61,4 +62,15 @@ message CompensateOrderEvent {
     refundAmount: Int;
     executionFeeReceiver: Address?;
     executionFee: Int as coins;
+    unlockTime: Int;
+}
+
+message CompensateCancelledEvent {
+    compensateId: Int as uint64;
+    trxId: Int as uint64;
+}
+
+message CompensateExecutedEvent {
+    compensateId: Int as uint64;
+    trxId: Int as uint64;
 }

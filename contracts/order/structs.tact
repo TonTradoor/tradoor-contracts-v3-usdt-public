@@ -1,9 +1,4 @@
 // ============================ Config ================================ //
-// struct TokenConfig {
-//     name: String;
-//     enable: Bool;
-// }
-
 struct ConfigData {
     isExecutor: Bool?;
     maxTimeDelayExecutor: Int;
@@ -56,4 +51,16 @@ struct PerpPositionOrderEx {
 struct UpdatePrice {
     tokenId: Int as uint64;
     price: Int;
+}
+
+// ============================ Compensate ================================ //
+struct Compensate {
+    orderType: Int?;
+    orderId: Int as uint64;
+    trxId: Int as uint64;
+    refundReceiver: Address?;
+    refundAmount: Int;
+    executionFeeReceiver: Address?;
+    executionFee: Int as coins;
+    unlockTime: Int;
 }

@@ -1,11 +1,12 @@
 import "@stdlib/deploy";
 import "@stdlib/ownable";
+import "@stdlib/stoppable";
 import "./messages";
 import "./events";
 import "./structs";
 import "./constants";
 
-contract OrderBook with Deployable, Ownable {
+contract OrderBook with Deployable, Resumable {
     
     // config
     maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
@@ -19,13 +20,10 @@ contract OrderBook with Deployable, Ownable {
     usdtWallet: Address; // order book USDT jetton wallet address
     pool: Address; // pool address
 
-    // tokenConfigs: map<Int, TokenConfig>; // tokenIndex => tokenConfig
-    // tokenIndexNext: Int as uint64 = 1;
-
     // admin
     owner: Address;
+    stopped: Bool;
     executors: map<Address, Bool>; // account => enabled
-    // compensators: map<Address, Bool>; // account => enabled
 
     // LP
     lpPositionOrders: map<Int, LPPositionOrder>; // orderId => order
@@ -36,9 +34,14 @@ contract OrderBook with Deployable, Ownable {
     perpPositionOrderExs: map<Int, PerpPositionOrderEx>; // orderId => orderEx
     perpPositionOrderIndexNext: Int as uint64 = 1;
 
+    // Compensate
+    compensates: map<Int, Compensate>; // id => compensate
+    compensateIndexNext: Int as uint64 = 1;
+
+
     init(deployId: Int) {
         self.owner = sender();
-
+        self.stopped = false;
         self.executors.set(sender(), true);
 
         self.usdtWallet = newAddress(0, 0);
@@ -110,6 +113,19 @@ contract OrderBook with Deployable, Ownable {
                     forwardTonAmount: 0,
                     forwardPayload: beginCell().endCell().asSlice()
                 }.toCell()
+            });
+            return;
+        }
+
+        // stop
+        if (self.stopped) {
+            self.refundJetton(msg.queryId, msg.amount, msg.from, msg.from);
+            send(SendParameters{
+                to: msg.from,
+                bounce: true,
+                value: 0,
+                mode: SendIgnoreErrors + SendRemainingValue,
+                body: "create order stopped".asComment()
             });
             return;
         }
@@ -259,6 +275,8 @@ contract OrderBook with Deployable, Ownable {
 
     // Create Decrease
     receive(msg: CreateDecreaseLPPositionOrder) {
+        self.requireNotStopped();
+
         let ctx: Context = context();
         // check gas
         require(ctx.value - msg.executionFee >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
@@ -314,12 +332,8 @@ contract OrderBook with Deployable, Ownable {
         require(!order.isPending, "order is pending");
 
         // executor or trader
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
-        require(sender() == order.account || isExecutor, "invalid sender");
+        let isExecutor: Bool = self.isExecutor(sender());
+        require(isExecutor || sender() == order.account, "invalid sender");
 
         // trader cancel must after minTimeDelayTrader
         if (!isExecutor) {
@@ -384,14 +398,8 @@ contract OrderBook with Deployable, Ownable {
         // check order
         require(!order.isPending, "order is pending");
 
-        // executor
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
-
         // check sender
+        let isExecutor: Bool = self.isExecutor(sender());
         require(isExecutor, "invalid sender");
 
         // execute must before maxTimeDelayExecutor
@@ -557,6 +565,8 @@ contract OrderBook with Deployable, Ownable {
 
     // ============================ Create Decrease ================================ //
     receive(msg: CreateDecreasePerpPositionOrder) {
+        self.requireNotStopped();
+
         let ctx: Context = context();
         // check gas
         require(ctx.value - msg.executionFee >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
@@ -572,6 +582,8 @@ contract OrderBook with Deployable, Ownable {
     }
 
     receive(msg: CreateTpSlPerpPositionOrder) {
+        self.requireNotStopped();
+        
         let ctx: Context = context();
         // check gas
         require(ctx.value - msg.executionFee >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
@@ -696,12 +708,8 @@ contract OrderBook with Deployable, Ownable {
         require(!order.isPending, "order is pending");
 
         // executor or trader
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
-        require(sender() == order.account || isExecutor, "invalid sender");
+        let isExecutor: Bool = self.isExecutor(sender());
+        require(isExecutor || sender() == order.account, "invalid sender");
         
         // trader cancel market order must after minTimeDelayTrader
         if (!isExecutor && (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_DECREASE_MARKET)) {
@@ -768,14 +776,8 @@ contract OrderBook with Deployable, Ownable {
         // check order
         require(!order.isPending, "order is pending");
 
-        // executor or trader
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
-
         // check sender
+        let isExecutor: Bool = self.isExecutor(sender());
         require(isExecutor, "invalid sender");
 
         // execute market must before maxTimeDelayExecutor
@@ -914,11 +916,7 @@ contract OrderBook with Deployable, Ownable {
         require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
 
         // check sender
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
+        let isExecutor: Bool = self.isExecutor(sender());
         require(isExecutor, "invalid sender");
 
         // fee receiver
@@ -977,11 +975,7 @@ contract OrderBook with Deployable, Ownable {
         require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
 
         // check sender
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
+        let isExecutor: Bool = self.isExecutor(sender());
         require(isExecutor, "invalid sender");
 
         // add new order
@@ -1036,70 +1030,128 @@ contract OrderBook with Deployable, Ownable {
     }
 
     // ======================================================== Compensate ================================================================ //
-    receive(msg: CompensateOrder) {
-        let ctx: Context = context();
-
-        // executor or trader
-        let isExecutor: Bool = false;
-        let isExecutorOpt: Bool? = self.executors.get(sender());
-        if (isExecutorOpt != null) {
-            isExecutor = isExecutorOpt!!;
-        }
+    // Create compensate, lock one day
+    receive(msg: CreateCompensate) {
 
         // check sender
+        let isExecutor: Bool = self.isExecutor(sender());
         require(isExecutor, "invalid sender");
 
+        let ctx: Context = context();
         // check gas
-        if (msg.refundReceiver != null && msg.refundAmount > 0) {
-            require(ctx.value >= self.gasConsumption + self.minTonsForStorage + GAS_TRANSFER_JETTON, "gas not enough");
-        } else {
-            require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
-        }
+        require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
 
-        // get order
-        if(msg.orderType != null) {
-            let isPending: Bool = true;
-            if (msg.orderType == ORDER_TYPE_LP) {
-                let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(msg.orderId);
-                if (orderOpt != null) {
-                    isPending = (orderOpt!!).isPending;
-                }
-                self.lpPositionOrders.set(msg.orderId, null);
-            } else {
-                let orderOpt: PerpPositionOrder? = self.perpPositionOrders.get(msg.orderId);
-                if (orderOpt != null) {
-                    isPending = (orderOpt!!).isPending;
-                }
-                self.perpPositionOrders.set(msg.orderId, null);
-            }
-            require(isPending, "order not pending");
-        }
-
-        // refund
-        if (msg.refundReceiver != null && msg.refundAmount > 0) {
-            // transfer jetton
-            self.refundJetton(msg.trxId, msg.refundAmount, msg.refundReceiver!!, sender());
-        }
-
-        // transfer execution fee
-        // self.transferExecutionFee(msg.executionFeeReceiver, msg.executionFee);
-        if (msg.executionFeeReceiver != null && msg.executionFee > 0) {
-            send(SendParameters{
-                to: msg.executionFeeReceiver!!,
-                bounce: true,
-                value: msg.executionFee,
-                mode: SendIgnoreErrors
-            });
-        }
-
-        emit(CompensateOrderEvent{
+        // add new compensate
+        let compensateId: Int = self.compensateIndexNext;
+        self.compensateIndexNext += 1;
+        self.compensates.set(compensateId, Compensate{
             orderType: msg.orderType,
             orderId: msg.orderId,
             trxId: msg.trxId,
             refundReceiver: msg.refundReceiver,
             refundAmount: msg.refundAmount,
             executionFeeReceiver: msg.executionFeeReceiver,
-            executionFee: msg.executionFee
+            executionFee: msg.executionFee,
+            unlockTime: now() + DAY
+        });
+
+        // event
+        emit(CompensateCreatedEvent{
+            compensateId: compensateId,
+            orderType: msg.orderType,
+            orderId: msg.orderId,
+            trxId: msg.trxId,
+            refundReceiver: msg.refundReceiver,
+            refundAmount: msg.refundAmount,
+            executionFeeReceiver: msg.executionFeeReceiver,
+            executionFee: msg.executionFee,
+            unlockTime: now() + DAY
+        }.toCell());
+
+        // transfer execess gas
+        self.refundExecessTon(sender(), 0);
+    }
+
+    receive(msg: CancelCompensate) {
+        // check sender
+        let isExecutor: Bool = self.isExecutor(sender());
+        require(isExecutor, "invalid sender");
+
+        let ctx: Context = context();
+        // get compensate
+        require(self.compensates.get(msg.compensateId) != null, "compensate not exist");
+
+        // check gas
+        require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+
+        // delete compensate
+        self.compensates.set(msg.compensateId, null);
+
+        // event
+        emit(CompensateCancelledEvent{
+            compensateId: msg.compensateId,
+            trxId: msg.trxId
+        }.toCell());
+
+        // transfer execess gas
+        self.refundExecessTon(sender(), 0);
+    }
+
+    receive(msg: ExecuteCompensate) {
+        // check sender
+        let isExecutor: Bool = self.isExecutor(sender());
+        require(isExecutor, "invalid sender");
+
+        let ctx: Context = context();
+        // check gas
+        require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+
+        // check unlock time
+        let compensateOpt: Compensate? = self.compensates.get(msg.compensateId);
+        require(compensateOpt != null, "compensate not exist");
+        let compensate: Compensate = compensateOpt!!;
+
+        require(now() >= compensate.unlockTime, "not reach unlock time");        
+
+        // get order
+        if(compensate.orderType != null) {
+            let isPending: Bool = true;
+            if (compensate.orderType == ORDER_TYPE_LP) {
+                let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(compensate.orderId);
+                if (orderOpt != null) {
+                    isPending = (orderOpt!!).isPending;
+                }
+                self.lpPositionOrders.set(compensate.orderId, null);
+            } else {
+                let orderOpt: PerpPositionOrder? = self.perpPositionOrders.get(compensate.orderId);
+                if (orderOpt != null) {
+                    isPending = (orderOpt!!).isPending;
+                }
+                self.perpPositionOrders.set(compensate.orderId, null);
+            }
+            require(isPending, "order not pending");
+        }
+
+        // refund
+        if (compensate.refundReceiver != null && compensate.refundAmount > 0) {
+            // transfer jetton
+            self.refundJetton(compensate.trxId, compensate.refundAmount, compensate.refundReceiver!!, sender());
+        }
+
+        // transfer execution fee
+        // self.transferExecutionFee(msg.executionFeeReceiver, msg.executionFee);
+        if (compensate.executionFeeReceiver != null && compensate.executionFee > 0) {
+            send(SendParameters{
+                to: compensate.executionFeeReceiver!!,
+                bounce: true,
+                value: compensate.executionFee,
+                mode: SendIgnoreErrors
+            });
+        }
+
+        emit(CompensateExecutedEvent{
+            compensateId: msg.compensateId,
+            trxId: compensate.trxId
         }.toCell());
 
         // transfer execess gas
@@ -1109,13 +1161,13 @@ contract OrderBook with Deployable, Ownable {
 
     // ======================================================== private function ================================================================ //
 
-    // fun tokenEnabled(tokenIndex: Int): Bool {
-    //     let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenIndex);
-    //     if (tokenConfigOpt == null) {
-    //         return false;
-    //     }
-    //     return (tokenConfigOpt!!).enable;
-    // }
+    fun isExecutor(account: Address): Bool {
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt == null) {
+            return false;
+        }
+        return isExecutorOpt!!;
+    }
 
 
 }

@@ -534,7 +534,7 @@ contract Pool with Deployable, Ownable {
         globalPosition.longValue = globalPosition.longSize * indexPrice / PRICE_DECIMAL_FACTOR;
         globalPosition.shortValue = globalPosition.shortSize * indexPrice / PRICE_DECIMAL_FACTOR;
         self.globalPerpSingleValue += max(globalPosition.longValue, globalPosition.shortValue) - singleValueBefore;
-        require(self.globalPerpNetValue <= self.globalLPFund * self.lpLiquidityFactor / PERCENTAGE_BASIS_POINT, "insufficient liquidity for single value");
+        require(self.globalPerpSingleValue <= self.globalLPFund * self.lpLiquidityFactor / PERCENTAGE_BASIS_POINT, "insufficient liquidity for single value");
         
         self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
         require(self.globalPerpNetValue <= self.globalLPFund, "insufficient liquidity for net value");
@@ -709,7 +709,6 @@ contract Pool with Deployable, Ownable {
 
         let perpPosition: PerpPosition = isLong ? directionPerpPosition.longPosition : directionPerpPosition.shortPosition;
 
-        let isLiquidate: Bool = opType == ORDER_OP_TYPE_LIQUIDATION ? true : false;
         // clamp delta
         if (sizeDelta > perpPosition.size) {
             sizeDelta = perpPosition.size;
@@ -1299,9 +1298,7 @@ contract Pool with Deployable, Ownable {
 
         // average PR
         let premiumRateAvg: Int = cumulativePremiumRate / PREMIUM_RATE_AVG_DENOMINATOR;
-        if (cumulativePremiumRate < 0) {
-            premiumRateAvg = -premiumRateAvg;
-        }
+        
         // clamp (IR - avgPR) : -0.05% <= (IR - avgPR) <= 0.05%
         let rateDelta: Int = tokenConfig.interestRate - premiumRateAvg;
         let clampedRateDelta: Int = 0;

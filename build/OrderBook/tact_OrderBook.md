@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 10530 bytes
+BOC Size: 13084 bytes
 
 # Types
-Total Types: 38
+Total Types: 43
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -73,9 +73,17 @@ Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liqu
 TLB: `update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
 Signature: `UpdateLPPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
 
-## CompensateOrder
-TLB: `compensate_order#77a5b69b orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CompensateOrder`
-Signature: `CompensateOrder{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins}`
+## CreateCompensate
+TLB: `create_compensate#854c95da orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate`
+Signature: `CreateCompensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins}`
+
+## CancelCompensate
+TLB: `cancel_compensate#58def8ba compensateId:uint64 trxId:uint64 = CancelCompensate`
+Signature: `CancelCompensate{compensateId:uint64,trxId:uint64}`
+
+## ExecuteCompensate
+TLB: `execute_compensate#cc1ca2f0 compensateId:uint64 trxId:uint64 = ExecuteCompensate`
+Signature: `ExecuteCompensate{compensateId:uint64,trxId:uint64}`
 
 ## CreateDecreasePerpPositionOrder
 TLB: `create_decrease_perp_position_order#c02023bf executionFee:coins tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder`
@@ -133,9 +141,17 @@ Signature: `PerpPositionOrderCancelledEvent{opType:uint8,orderId:uint64,trxId:ui
 TLB: `perp_position_order_executed_event#a1bb0b3f opType:uint8 orderId:uint64 trxId:uint64 = PerpPositionOrderExecutedEvent`
 Signature: `PerpPositionOrderExecutedEvent{opType:uint8,orderId:uint64,trxId:uint64}`
 
-## CompensateOrderEvent
-TLB: `compensate_order_event#eab23f26 orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CompensateOrderEvent`
-Signature: `CompensateOrderEvent{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins}`
+## CompensateCreatedEvent
+TLB: `compensate_created_event#17e6cb93 compensateId:uint64 orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins unlockTime:int257 = CompensateCreatedEvent`
+Signature: `CompensateCreatedEvent{compensateId:uint64,orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}`
+
+## CompensateCancelledEvent
+TLB: `compensate_cancelled_event#4bc341d5 compensateId:uint64 trxId:uint64 = CompensateCancelledEvent`
+Signature: `CompensateCancelledEvent{compensateId:uint64,trxId:uint64}`
+
+## CompensateExecutedEvent
+TLB: `compensate_executed_event#db45e438 compensateId:uint64 trxId:uint64 = CompensateExecutedEvent`
+Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 
 ## ConfigData
 TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = ConfigData`
@@ -157,8 +173,12 @@ Signature: `PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPri
 TLB: `_ tokenId:uint64 price:int257 = UpdatePrice`
 Signature: `UpdatePrice{tokenId:uint64,price:int257}`
 
+## Compensate
+TLB: `_ orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins unlockTime:int257 = Compensate`
+Signature: `Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}`
+
 # Get Methods
-Total Get Methods: 6
+Total Get Methods: 7
 
 ## configData
 Argument: executor
@@ -172,6 +192,8 @@ Argument: orderId
 Argument: orderId
 
 ## perpPositionOrderIndexNext
+
+## stopped
 
 ## owner
 
@@ -200,11 +222,15 @@ Argument: orderId
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
+11120: compensate not exist
 16780: order expired
 19305: gas not enough
 24173: order is pending
 24562: execution fee not enough
+31425: not reach unlock time
 32637: order not exist
 39703: too early
+40368: Contract stopped
 41207: invalid sender
 42241: order not pending
+53296: Contract not stopped

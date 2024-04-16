@@ -2834,8 +2834,7 @@ PROGRAM{
     MUL
     1000000000 PUSHINT
     DIV
-    48 s() PUSH
-    SWAP
+    s2 s(-1) PUXC
     LEQ
     THROWANYIFNOT
     29 s() PUSH
@@ -3273,11 +3272,6 @@ PROGRAM{
     }>ELSE<{
       s4 s3 s2 PUSH3
       s4 s3 PUSH2
-    }>
-    28 s() PUSH
-    3 EQINT
-    IF:<{
-    }>ELSE<{
     }>
     22 s() PUSH
     s3 PUSH
@@ -4362,14 +4356,8 @@ PROGRAM{
       s0 s7 XCHG
     }>
     2 2 BLKDROP2
-    DUP
     2076480 PUSHINT
     DIV
-    SWAP
-    0 LESSINT
-    IF:<{
-      NEGATE
-    }>
     s3 s3 XCPU
     SUB
     DUP

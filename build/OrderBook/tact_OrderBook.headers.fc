@@ -108,8 +108,14 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 ;; $UpdateLPPositionSuccess$_load
 (slice, ((int, int, int))) $UpdateLPPositionSuccess$_load(slice sc_0) inline;
 
-;; $CompensateOrder$_load
-(slice, ((int, int, int, slice, int, slice, int))) $CompensateOrder$_load(slice sc_0) inline_ref;
+;; $CreateCompensate$_load
+(slice, ((int, int, int, slice, int, slice, int))) $CreateCompensate$_load(slice sc_0) inline_ref;
+
+;; $CancelCompensate$_load
+(slice, ((int, int))) $CancelCompensate$_load(slice sc_0) inline;
+
+;; $ExecuteCompensate$_load
+(slice, ((int, int))) $ExecuteCompensate$_load(slice sc_0) inline;
 
 ;; $CreateDecreasePerpPositionOrder$_load
 (slice, ((int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref;
@@ -177,11 +183,23 @@ builder $PerpPositionOrderExecutedEvent$_store(builder build_0, (int, int, int) 
 ;; $PerpPositionOrderExecutedEvent$_store_cell
 cell $PerpPositionOrderExecutedEvent$_store_cell((int, int, int) v) inline;
 
-;; $CompensateOrderEvent$_store
-builder $CompensateOrderEvent$_store(builder build_0, (int, int, int, slice, int, slice, int) v) inline_ref;
+;; $CompensateCreatedEvent$_store
+builder $CompensateCreatedEvent$_store(builder build_0, (int, int, int, int, slice, int, slice, int, int) v) inline_ref;
 
-;; $CompensateOrderEvent$_store_cell
-cell $CompensateOrderEvent$_store_cell((int, int, int, slice, int, slice, int) v) inline;
+;; $CompensateCreatedEvent$_store_cell
+cell $CompensateCreatedEvent$_store_cell((int, int, int, int, slice, int, slice, int, int) v) inline;
+
+;; $CompensateCancelledEvent$_store
+builder $CompensateCancelledEvent$_store(builder build_0, (int, int) v) inline;
+
+;; $CompensateCancelledEvent$_store_cell
+cell $CompensateCancelledEvent$_store_cell((int, int) v) inline;
+
+;; $CompensateExecutedEvent$_store
+builder $CompensateExecutedEvent$_store(builder build_0, (int, int) v) inline;
+
+;; $CompensateExecutedEvent$_store_cell
+cell $CompensateExecutedEvent$_store_cell((int, int) v) inline;
 
 ;; $LPPositionOrder$_store
 builder $LPPositionOrder$_store(builder build_0, (int, slice, int, int, int, int, slice, slice) v) inline_ref;
@@ -240,11 +258,32 @@ tuple $PerpPositionOrderEx$_as_optional((int, int, int, int, int) v) inline;
 ;; $PerpPositionOrderEx$_load_opt
 tuple $PerpPositionOrderEx$_load_opt(cell cl) inline;
 
+;; $Compensate$_store
+builder $Compensate$_store(builder build_0, (int, int, int, slice, int, slice, int, int) v) inline_ref;
+
+;; $Compensate$_store_cell
+cell $Compensate$_store_cell((int, int, int, slice, int, slice, int, int) v) inline;
+
+;; $Compensate$_not_null
+((int, int, int, slice, int, slice, int, int)) $Compensate$_not_null(tuple v) inline;
+
+;; $Compensate$_store_opt
+cell $Compensate$_store_opt(tuple v) inline;
+
+;; $Compensate$_load
+(slice, ((int, int, int, slice, int, slice, int, int))) $Compensate$_load(slice sc_0) inline_ref;
+
+;; $Compensate$_as_optional
+tuple $Compensate$_as_optional((int, int, int, slice, int, slice, int, int) v) inline;
+
+;; $Compensate$_load_opt
+tuple $Compensate$_load_opt(cell cl) inline;
+
 ;; $OrderBook$_store
-builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) v) inline;
+builder $OrderBook$_store(builder build_0, (int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) v) inline;
 
 ;; $OrderBook$_load
-(slice, ((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int))) $OrderBook$_load(slice sc_0) inline;
+(slice, ((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int))) $OrderBook$_load(slice sc_0) inline;
 
 ;; $StateInit$_not_null
 ((cell, cell)) $StateInit$_not_null(tuple v) inline;
@@ -286,13 +325,13 @@ tuple $PerpPositionOrder$_to_opt_external(tuple v) inline;
 (slice, ((int))) $OrderBook$init$_load(slice sc_0) inline;
 
 ;; $OrderBook$_contract_init
-(int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $OrderBook$_contract_init(int $deployId) impure inline_ref;
+(int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $OrderBook$_contract_init(int $deployId) impure inline_ref;
 
 ;; $OrderBook$_contract_load
-(int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $OrderBook$_contract_load() impure inline_ref;
+(int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $OrderBook$_contract_load() impure inline_ref;
 
 ;; $OrderBook$_contract_store
-() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) v) impure inline;
+() $OrderBook$_contract_store((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) v) impure inline;
 
 ;; $global_send
 () $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
@@ -313,7 +352,7 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, int, int, int, int, int, slice, slice)) $ConfigData$_constructor_isExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minExecutionFee_gasConsumption_minTonsForStorage_usdtWallet_pool(int isExecutor, int maxTimeDelayExecutor, int minTimeDelayTrader, int minExecutionFee, int gasConsumption, int minTonsForStorage, slice usdtWallet, slice pool) inline;
 
 ;; $OrderBook$_fun_configData
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), (int, int, int, int, int, int, slice, slice)) $OrderBook$_fun_configData((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, slice $executor) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), (int, int, int, int, int, int, slice, slice)) $OrderBook$_fun_configData((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, slice $executor) impure inline_ref;
 
 ;; $SendParameters$_constructor_to_value_mode_bounce_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice to, int value, int mode, int bounce, cell body) inline;
@@ -322,16 +361,16 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, int, slice, slice, cell, int, slice)) $TokenTransfer$_constructor_queryId_amount_receiver_responseDestination_customPayload_forwardTonAmount_forwardPayload(int queryId, int amount, slice receiver, slice responseDestination, cell customPayload, int forwardTonAmount, slice forwardPayload) inline;
 
 ;; $OrderBook$_fun_refundJetton
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_refundJetton((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $queryId, int $amount, slice $to, slice $destination) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_refundJetton((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, int $queryId, int $amount, slice $to, slice $destination) impure inline_ref;
 
 ;; $SendParameters$_constructor_to_bounce_value_mode
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice to, int bounce, int value, int mode) inline;
 
 ;; $OrderBook$_fun_refundExecessTon
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_refundExecessTon((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, slice $to, int $executionFee) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_refundExecessTon((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, slice $to, int $executionFee) impure inline_ref;
 
 ;; $OrderBook$_fun_getPoolGas
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), int) $OrderBook$_fun_getPoolGas((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), int) $OrderBook$_fun_getPoolGas((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self) impure inline_ref;
 
 ;; $SendParameters$_constructor_to_bounce_value_mode_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode_body(slice to, int bounce, int value, int mode, cell body) inline;
@@ -343,13 +382,13 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, slice, int, int, int, int)) $LPPositionOrderCreatedEvent$_constructor_opType_account_liquidityDelta_executionFee_orderId_trxId(int opType, slice account, int liquidityDelta, int executionFee, int orderId, int trxId) inline;
 
 ;; $OrderBook$_fun_handleCreateIncreaseLPPositionOrder
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_handleCreateIncreaseLPPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $liquidityDelta) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_handleCreateIncreaseLPPositionOrder((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $liquidityDelta) impure inline_ref;
 
 ;; $OrderBook$_fun_lpPositionOrder
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), tuple) $OrderBook$_fun_lpPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $orderId) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), tuple) $OrderBook$_fun_lpPositionOrder((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, int $orderId) impure inline_ref;
 
 ;; $OrderBook$_fun_lpPositionOrderIndexNext
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), int) $OrderBook$_fun_lpPositionOrderIndexNext((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), int) $OrderBook$_fun_lpPositionOrderIndexNext((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self) impure inline_ref;
 
 ;; $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee
 ((int, int, int, int, int)) $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee(int tpSize, int tpPrice, int slSize, int slPrice, int executionFee) inline;
@@ -361,31 +400,46 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice_trxId(int opType, int tokenId, slice account, int isLong, int marginDelta, int sizeDelta, int executionFee, int orderId, int triggerPrice, int triggerAbove, int tpSize, int tpPrice, int slSize, int slPrice, int trxId) inline;
 
 ;; $OrderBook$_fun_createPerpOrder
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), int) $OrderBook$_fun_createPerpOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $trxId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), int) $OrderBook$_fun_createPerpOrder((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, int $trxId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee) impure inline_ref;
 
 ;; $OrderBook$_fun_handleCreateIncreasePerpPositionOrder
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_handleCreateIncreasePerpPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_handleCreateIncreasePerpPositionOrder((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, int $queryId, int $jettonFromAmount, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice) impure inline_ref;
 
 ;; $OrderBook$_fun_perpPositionOrder
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), tuple) $OrderBook$_fun_perpPositionOrder((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, int $orderId) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), tuple) $OrderBook$_fun_perpPositionOrder((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, int $orderId) impure inline_ref;
 
 ;; $OrderBook$_fun_perpPositionOrderIndexNext
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), int) $OrderBook$_fun_perpPositionOrderIndexNext((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), int) $OrderBook$_fun_perpPositionOrderIndexNext((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self) impure inline_ref;
+
+;; $OrderBook$_fun_isExecutor
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), int) $OrderBook$_fun_isExecutor((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, slice $account) impure inline_ref;
 
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;
 
 ;; $OrderBook$_fun_forward
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_forward((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_forward((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
+
+;; $OrderBook$_fun_reply
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_reply((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, cell $body) impure inline;
 
 ;; $OrderBook$_fun_notify
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_notify((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self, cell $body) impure inline;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_notify((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, cell $body) impure inline;
+
+;; $OrderBook$_fun_requireNotStopped
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_requireNotStopped((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self) impure inline_ref;
+
+;; $OrderBook$_fun_requireStopped
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_requireStopped((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self) impure inline_ref;
+
+;; $OrderBook$_fun_stopped
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), int) $OrderBook$_fun_stopped((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self) impure inline_ref;
 
 ;; $OrderBook$_fun_requireOwner
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), ()) $OrderBook$_fun_requireOwner((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_requireOwner((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self) impure inline_ref;
 
 ;; $OrderBook$_fun_owner
-((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int), slice) $OrderBook$_fun_owner((int, int, int, int, int, slice, slice, slice, cell, cell, int, cell, cell, int) $self) impure inline_ref;
+((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), slice) $OrderBook$_fun_owner((int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self) impure inline_ref;
 
 ;; $LPPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $LPPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
@@ -408,8 +462,17 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
 ((int, int, int, slice, int, int, int, int, int, int, int, cell)) $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(int opType, int orderId, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int pricesLength, cell prices) inline;
 
-;; $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee
-((int, int, int, slice, int, slice, int)) $CompensateOrderEvent$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee) inline;
+;; $Compensate$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
+((int, int, int, slice, int, slice, int, int)) $Compensate$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee, int unlockTime) inline;
+
+;; $CompensateCreatedEvent$_constructor_compensateId_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
+((int, int, int, int, slice, int, slice, int, int)) $CompensateCreatedEvent$_constructor_compensateId_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime(int compensateId, int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee, int unlockTime) inline;
+
+;; $CompensateCancelledEvent$_constructor_compensateId_trxId
+((int, int)) $CompensateCancelledEvent$_constructor_compensateId_trxId(int compensateId, int trxId) inline;
+
+;; $CompensateExecutedEvent$_constructor_compensateId_trxId
+((int, int)) $CompensateExecutedEvent$_constructor_compensateId_trxId(int compensateId, int trxId) inline;
 
 ;; $DeployOk$_constructor_queryId
 ((int)) $DeployOk$_constructor_queryId(int queryId) inline;

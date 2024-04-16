@@ -72,7 +72,7 @@ message(0x1cf0cf81) UpdateLPPositionSuccess {
     trxId: Int as uint64;
 }
 
-message CompensateOrder {
+message CreateCompensate {
     orderType: Int?;
     orderId: Int as uint64;
     trxId: Int as uint64;
@@ -80,6 +80,16 @@ message CompensateOrder {
     refundAmount: Int;
     executionFeeReceiver: Address?;
     executionFee: Int as coins;
+}
+
+message CancelCompensate {
+    compensateId: Int as uint64;
+    trxId: Int as uint64;
+}
+
+message ExecuteCompensate {
+    compensateId: Int as uint64;
+    trxId: Int as uint64;
 }
 
 // ============================ Perp ================================ //
