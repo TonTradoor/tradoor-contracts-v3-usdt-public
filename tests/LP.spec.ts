@@ -1,12 +1,12 @@
 import { Blockchain, SandboxContract, TreasuryContract, prettyLogTransactions, printTransactionFees } from '@ton/sandbox';
-import { toNano, fromNano } from '@ton/core';
+import { toNano, fromNano, Dictionary } from '@ton/core';
 import { JettonDefaultWallet } from '../wrappers/JettonDefaultWallet';
 import { MockJetton } from '../wrappers/MockJetton';
 import { Pool } from '../wrappers/Pool';
 import { OrderBook } from '../wrappers/OrderBook';
 import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits } from './lib/TokenHelper';
-import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
+import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder, updateWhitelist } from './lib/LPHelper';
 import '@ton/test-utils';
 
 describe('LP', () => {
@@ -87,7 +87,57 @@ describe('LP', () => {
         console.log("orderBookTonBalanceAfter", await getFriendlyTonBalance(orderBook.address));
     });
 
+    it('auto refund -- not in whitelist', async () => {
+        // enable whitelist
+        const trxResult = await updateWhitelist(true, null, null);
+        expect(trxResult.transactions).toHaveTransaction({
+            from: deployer.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        let liquidity = 10;
+        let executionFee = 0.1;
+        
+        // get orderBook TON balance
+        console.log("orderBookTonBalance", await getFriendlyTonBalance(orderBook.address));
+
+        // create order
+        let createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        printTransactionFees(createResult.trxResult.transactions);
+        prettyLogTransactions(createResult.trxResult.transactions);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check index
+        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore);
+
+        // check order
+        expect(createResult.order).toBeNull();
+
+        // check orderBook jetton balance
+        expect(await getJettonBalance(orderBook.address)).toEqual(0n);
+
+        // check orderBook TON balance
+        console.log("orderBookTonBalanceAfter", await getFriendlyTonBalance(orderBook.address));
+    });
+
     it('should create increase LP order', async () => {
+        /// add whitelist
+        const trxResult = await updateWhitelist(true, user0.address, true);
+        expect(trxResult.transactions).toHaveTransaction({
+            from: deployer.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        let whitelistData = await orderBook.getWhitelistData(user0.address);
+        console.log('whitelist:', whitelistData);
+
+        /// create order
         let liquidity = 10;
         let executionFee = 0.1;
 

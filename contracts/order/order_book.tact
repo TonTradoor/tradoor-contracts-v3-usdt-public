@@ -122,9 +122,11 @@ contract OrderBook with Deployable, Resumable {
     }
 
     get fun whitelistData(account: Address?): WhitelistData {
-        let isInWhitelistOpt: Bool? = self.whitelist.get(sender());
-        let isInWhitelist: Bool = isInWhitelistOpt == null ? false : isInWhitelistOpt!!;
-        
+        let isInWhitelist: Bool = false;
+        if (account != null) {
+            isInWhitelist = self.isInWhitelist(account!!);
+        }
+
         return WhitelistData{
             enableWhitelist: self.enableWhitelist,
             isInWhitelist: isInWhitelist
@@ -173,6 +175,7 @@ contract OrderBook with Deployable, Resumable {
 
         // whitelist
         if (self.enableWhitelist && !self.isInWhitelist(msg.from)) {
+            dump("not in whitelist");
             self.refundJetton(msg.queryId, msg.amount, msg.from, msg.from);
             send(SendParameters{
                 to: msg.from,
@@ -1216,7 +1219,7 @@ contract OrderBook with Deployable, Resumable {
     // ======================================================== private function ================================================================ //
 
     fun isExecutor(account: Address): Bool {
-        let isExecutorOpt: Bool? = self.executors.get(sender());
+        let isExecutorOpt: Bool? = self.executors.get(account);
         if (isExecutorOpt == null) {
             return false;
         }
@@ -1224,7 +1227,7 @@ contract OrderBook with Deployable, Resumable {
     }
 
     fun isInWhitelist(account: Address): Bool {
-        let isInWhitelistOpt: Bool? = self.whitelist.get(sender());
+        let isInWhitelistOpt: Bool? = self.whitelist.get(account);
         if (isInWhitelistOpt == null) {
             return false;
         }
