@@ -23,7 +23,7 @@ export async function run(provider: NetworkProvider) {
     // create jetton contract
     const sampleJetton = provider.open(await MockJetton.fromInit(address, content));
 
-    console.log('deploying jetton to address:', sampleJetton.address);
+    console.log('deployId:', deployId, 'deploying jetton to address:', sampleJetton.address);
 
     // deploy
     await sampleJetton.send(
