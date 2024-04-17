@@ -2593,7 +2593,9 @@ PROGRAM{
     0 PUSHINT
     s7 s10 XCPU
     SUB
-    s6 s2 XCPU
+    s6 s2 PUSH2
+    MAX
+    s1 s7 XCHG
     SUB
     s6 PUSH
     0 GTINT

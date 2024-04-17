@@ -345,8 +345,8 @@ contract Pool with Deployable, Ownable {
 
         // update position
         lpPosition.realizedFundingFee = 0;
-        lpPosition.liquidity = lpPosition.liquidity - liquidityDelta;
-        lpPosition.bonus = lpPosition.bonus - bonus;
+        lpPosition.liquidity -= liquidityDelta;
+        lpPosition.bonus -= max(lpPosition.bonus, bonus);
 
         // set position
         if (lpPosition.liquidity > 0 || lpPosition.bonus > 0) {
