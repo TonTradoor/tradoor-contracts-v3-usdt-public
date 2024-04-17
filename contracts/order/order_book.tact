@@ -552,6 +552,14 @@ contract OrderBook with Deployable, Resumable {
         // update pending
         order.isPending = false;
         self.lpPositionOrders.set(src.orderId, order);
+
+        if (order.lastOperator != null) {
+            send(SendParameters{
+                to: order.lastOperator!!,
+                value: 0,
+                mode: SendRemainingValue
+            });
+        }
     }
 
     // ============================ Getter ================================ //

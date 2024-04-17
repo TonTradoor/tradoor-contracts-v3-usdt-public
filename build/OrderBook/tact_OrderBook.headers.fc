@@ -483,6 +483,9 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
+;; $SendParameters$_constructor_to_value_mode
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice to, int value, int mode) inline;
+
 ;; $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
@@ -491,9 +494,6 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 
 ;; $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
-
-;; $SendParameters$_constructor_to_value_mode
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice to, int value, int mode) inline;
 
 ;; $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
 ((int, int, int, slice, int, int, int, int, int, int, int, cell)) $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices(int opType, int orderId, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int pricesLength, cell prices) inline;

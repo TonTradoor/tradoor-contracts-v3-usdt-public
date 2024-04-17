@@ -159,10 +159,10 @@ PROGRAM{
   DECLPROC $LPPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
   DECLPROC $UpdateLPPosition$_constructor_isIncrease_orderId_trxId_account_liquidityDelta_pricesLength_prices
   DECLPROC $LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
+  DECLPROC $SendParameters$_constructor_to_value_mode
   DECLPROC $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
   DECLPROC $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
   DECLPROC $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
-  DECLPROC $SendParameters$_constructor_to_value_mode
   DECLPROC $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
   DECLPROC $Compensate$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
   DECLPROC $CompensateCreatedEvent$_constructor_compensateId_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
@@ -2519,6 +2519,13 @@ PROGRAM{
   }>
   $LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
+  $SendParameters$_constructor_to_value_mode PROCINLINE:<{
+    TRUE
+    3 -ROLL
+    PUSHNULL
+    PUSHNULL
+    PUSHNULL
+  }>
   $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
   $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices PROCINLINE:<{
@@ -2530,13 +2537,6 @@ PROGRAM{
     s2 s3 XCHG
   }>
   $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
-  }>
-  $SendParameters$_constructor_to_value_mode PROCINLINE:<{
-    TRUE
-    3 -ROLL
-    PUSHNULL
-    PUSHNULL
-    PUSHNULL
   }>
   $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices PROCINLINE:<{
     s10 s11 XCHG
@@ -3563,19 +3563,29 @@ PROGRAM{
     }>ELSE<{
       $LPPositionOrder$_not_null INLINECALLDICT
       s2 POP
-      s1 s6 XCHG
-      s1 s5 XCHG
-      s1 s4 XCHG
-      s3 s3 s0 XCHG3
+      s4 s6 XCHG
+      s3 s5 XCHG
+      s6 s5 s6 XCHG3
       FALSE
-      SWAP
       257 PUSHINT
-      s0 s8 XCHG
+      s8 s7 XCPU
       $LPPositionOrder$_store_cell INLINECALLDICT
-      s3 s9 XCHG
-      s1 s2 XCHG
+      s1 s10 XCHG
+      s1 s3 XCHG
       __tact_dict_set_int_cell INLINECALLDICT
-      s0 s6 XCHG
+      s7 PUSH
+      ISNULL
+      NOT
+      IF:<{
+        s0 s7 XCHG
+        __tact_not_null INLINECALLDICT
+        0 PUSHINT
+        64 PUSHINT
+        $SendParameters$_constructor_to_value_mode INLINECALLDICT
+        $global_send INLINECALLDICT
+      }>ELSE<{
+        s7 POP
+      }>
     }>
   }>
   $OrderBook$_internal_binary_CreateDecreasePerpPositionOrder PROCINLINE:<{
