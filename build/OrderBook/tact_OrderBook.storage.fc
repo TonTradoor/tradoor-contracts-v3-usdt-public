@@ -40,6 +40,10 @@ _ $Context$_get_value((int, slice, int, slice) v) inline {
     return (bounce, to, value, mode, body, code, data);
 }
 
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice to, int value, int mode) inline {
+    return (true, to, value, mode, null(), null(), null());
+}
+
 ;;
 ;; Type: Deploy
 ;; Header: 0x946a98b6

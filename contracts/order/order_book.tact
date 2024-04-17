@@ -963,6 +963,13 @@ contract OrderBook with Deployable, Resumable {
             order.isPending = false;
             self.perpPositionOrders.set(src.orderId, order);
         }
+        if (order.lastOperator != null) {
+            send(SendParameters{
+                to: order.lastOperator!!,
+                value: 0,
+                mode: SendRemainingValue
+            });
+        }
     }
 
     // ============================ Liquidation ================================ //

@@ -162,6 +162,7 @@ PROGRAM{
   DECLPROC $PerpPositionOrderCancelledEvent$_constructor_opType_orderId_trxId
   DECLPROC $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
   DECLPROC $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId
+  DECLPROC $SendParameters$_constructor_to_value_mode
   DECLPROC $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices
   DECLPROC $Compensate$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
   DECLPROC $CompensateCreatedEvent$_constructor_compensateId_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
@@ -2530,6 +2531,13 @@ PROGRAM{
   }>
   $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
+  $SendParameters$_constructor_to_value_mode PROCINLINE:<{
+    TRUE
+    3 -ROLL
+    PUSHNULL
+    PUSHNULL
+    PUSHNULL
+  }>
   $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_pricesLength_prices PROCINLINE:<{
     s10 s11 XCHG
     s7 s9 XCHG
@@ -4630,33 +4638,37 @@ PROGRAM{
       s11 PUSH
       3 EQINT
       IF:<{
-        12 BLKDROP
+        s1 s11 XCHG
+        11 BLKDROP
         257 PUSHINT
         PUSHNULL
         $PerpPositionOrder$_store_opt INLINECALLDICT
-        s3 s7 XCHG
-        s1 s2 XCHG
+        s3 s8 XCHG
+        s1 s8 s0 XCHG3
         __tact_dict_set_int_cell INLINECALLDICT
       }>ELSE<{
-        s10 s11 XCHG
-        s9 s11 XCHG
-        s1 s11 XCHG
-        s1 s8 XCHG
-        s1 s7 XCHG
-        s1 s6 XCHG
-        s1 s5 XCHG
-        s1 s4 XCHG
-        s3 s3 s0 XCHG3
+        10 2 BLKSWAP
         FALSE
-        SWAP
         257 PUSHINT
-        s0 s13 XCHG
+        s12 s13 XCPU
         $PerpPositionOrder$_store_cell INLINECALLDICT
-        s3 s7 XCHG
-        s1 s2 XCHG
+        s3 s8 XCHG
+        s1 s8 s0 XCHG3
         __tact_dict_set_int_cell INLINECALLDICT
       }>
-      s0 s4 XCHG
+      s5 PUSH
+      ISNULL
+      NOT
+      IF:<{
+        s0 s5 XCHG
+        __tact_not_null INLINECALLDICT
+        0 PUSHINT
+        64 PUSHINT
+        $SendParameters$_constructor_to_value_mode INLINECALLDICT
+        $global_send INLINECALLDICT
+      }>ELSE<{
+        s5 POP
+      }>
     }>
   }>
   $OrderBook$_internal_binary_LiquidatePerpPosition PROCINLINE:<{

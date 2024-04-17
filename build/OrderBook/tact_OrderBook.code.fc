@@ -592,6 +592,9 @@
         $order'isPending = false;
         $self'perpPositionOrders~__tact_dict_set_int_cell(257, $src'orderId, $PerpPositionOrder$_store_cell(($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending, $order'executionFeeReceiver, $order'lastOperator)));
     }
+    if ((~ null?($order'lastOperator))) {
+        $global_send($SendParameters$_constructor_to_value_mode(__tact_not_null($order'lastOperator), 0, 64));
+    }
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'enableWhitelist, $self'whitelist, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
 }
 
