@@ -304,30 +304,29 @@ cell $LPPositionDecreasedEvent$_store_cell((int, int, slice, int, int, int, int,
 
 ;;
 ;; Type: GlobalLPLiquidityChangedEvent
-;; Header: 0x0b12c192
-;; TLB: global_lp_liquidity_changed_event#0b12c192 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 realizedPnl:int257 trxId:uint64 = GlobalLPLiquidityChangedEvent
+;; Header: 0x433d8d04
+;; TLB: global_lp_liquidity_changed_event#433d8d04 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 realizedPnl:int257 trxId:uint64 = GlobalLPLiquidityChangedEvent
 ;;
 
-builder $GlobalLPLiquidityChangedEvent$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref {
-    var (v'lpFundAfter, v'liquidityAfter, v'tradingFee, v'fundingFee, v'realizedPnl, v'trxId) = v;
-    build_0 = store_uint(build_0, 185778578, 32);
+builder $GlobalLPLiquidityChangedEvent$_store(builder build_0, (int, int, int, int, int) v) inline {
+    var (v'lpFundAfter, v'liquidityAfter, v'tradingFee, v'realizedPnl, v'trxId) = v;
+    build_0 = store_uint(build_0, 1128107268, 32);
     build_0 = build_0.store_int(v'lpFundAfter, 257);
     build_0 = build_0.store_int(v'liquidityAfter, 257);
     build_0 = build_0.store_int(v'tradingFee, 257);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'fundingFee, 257);
     build_1 = build_1.store_int(v'realizedPnl, 257);
     build_1 = build_1.store_uint(v'trxId, 64);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $GlobalLPLiquidityChangedEvent$_store_cell((int, int, int, int, int, int) v) inline {
+cell $GlobalLPLiquidityChangedEvent$_store_cell((int, int, int, int, int) v) inline {
     return $GlobalLPLiquidityChangedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int, int, int, int)) $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId(int lpFundAfter, int liquidityAfter, int tradingFee, int fundingFee, int realizedPnl, int trxId) inline {
-    return (lpFundAfter, liquidityAfter, tradingFee, fundingFee, realizedPnl, trxId);
+((int, int, int, int, int)) $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId(int lpFundAfter, int liquidityAfter, int tradingFee, int realizedPnl, int trxId) inline {
+    return (lpFundAfter, liquidityAfter, tradingFee, realizedPnl, trxId);
 }
 
 ;;
@@ -488,6 +487,29 @@ cell $UpdatePriceEvent$_store_cell((int, cell) v) inline {
 
 ((int, cell)) $UpdatePriceEvent$_constructor_pricesLength_prices(int pricesLength, cell prices) inline {
     return (pricesLength, prices);
+}
+
+;;
+;; Type: PremiumRateChanged
+;; Header: 0xe07b0178
+;; TLB: premium_rate_changed#e07b0178 tokenId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateChanged
+;;
+
+builder $PremiumRateChanged$_store(builder build_0, (int, int, int) v) inline {
+    var (v'tokenId, v'deviationRate, v'premiumRate) = v;
+    build_0 = store_uint(build_0, 3766157688, 32);
+    build_0 = build_0.store_uint(v'tokenId, 64);
+    build_0 = build_0.store_int(v'deviationRate, 257);
+    build_0 = build_0.store_int(v'premiumRate, 257);
+    return build_0;
+}
+
+cell $PremiumRateChanged$_store_cell((int, int, int) v) inline {
+    return $PremiumRateChanged$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, int)) $PremiumRateChanged$_constructor_tokenId_deviationRate_premiumRate(int tokenId, int deviationRate, int premiumRate) inline {
+    return (tokenId, deviationRate, premiumRate);
 }
 
 ;;
@@ -1251,6 +1273,10 @@ builder $PremiumRateSampleData$_store(builder build_0, (int, int, int, int) v) i
     return build_0;
 }
 
+cell $PremiumRateSampleData$_store_cell((int, int, int, int) v) inline {
+    return $PremiumRateSampleData$_store(begin_cell(), v).end_cell();
+}
+
 (slice, ((int, int, int, int))) $PremiumRateSampleData$_load(slice sc_0) inline {
     var v'rangeId = sc_0~load_uint(64);
     var v'sampleId = sc_0~load_uint(64);
@@ -1259,15 +1285,23 @@ builder $PremiumRateSampleData$_store(builder build_0, (int, int, int, int) v) i
     return (sc_0, (v'rangeId, v'sampleId, v'deviationRate, v'premiumRate));
 }
 
+tuple $PremiumRateSampleData$_as_optional((int, int, int, int) v) inline {
+    var (v'rangeId, v'sampleId, v'deviationRate, v'premiumRate) = v;
+    return __tact_tuple_create_4(v'rangeId, v'sampleId, v'deviationRate, v'premiumRate);
+}
+
+tuple $PremiumRateSampleData$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $PremiumRateSampleData$_as_optional(sc~$PremiumRateSampleData$_load());
+}
+
 ((int, int, int, int)) $PremiumRateSampleData$_not_null(tuple v) inline {
     throw_if(128, null?(v));
     var (int vvv'rangeId, int vvv'sampleId, int vvv'deviationRate, int vvv'premiumRate) = __tact_tuple_destroy_4(v);
     return (vvv'rangeId, vvv'sampleId, vvv'deviationRate, vvv'premiumRate);
-}
-
-tuple $PremiumRateSampleData$_as_optional((int, int, int, int) v) inline {
-    var (v'rangeId, v'sampleId, v'deviationRate, v'premiumRate) = v;
-    return __tact_tuple_create_4(v'rangeId, v'sampleId, v'deviationRate, v'premiumRate);
 }
 
 ((int, int, int, int)) $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate(int rangeId, int sampleId, int deviationRate, int premiumRate) inline {
@@ -1278,8 +1312,8 @@ tuple $PremiumRateSampleData$_as_optional((int, int, int, int) v) inline {
 ;; Type: Pool
 ;;
 
-builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, (int, int, int, int)) v) inline {
-    var (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIdNext, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'owner, v'orderBook, v'protocolTradingFee, v'executors, v'lpPositions, v'lpPositionIndexNext, v'globalLPPositions, v'globalLPFund, v'globalLPLiquidity, v'globalLPFundingFeeGrowth, v'globalLPUnrealizedPnl, v'perpPositions, v'perpPositionIndexNext, v'globalPositions, v'globalPerpNetValue, v'globalPerpSingleValue, v'globalFundingRateSamples, v'prices, v'premiumRateSampleRanges, v'premiumRateSampleRangeLength, (v'prevPremiumRateSample'rangeId, v'prevPremiumRateSample'sampleId, v'prevPremiumRateSample'deviationRate, v'prevPremiumRateSample'premiumRate)) = v;
+builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell) v) inline {
+    var (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIdNext, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'owner, v'orderBook, v'protocolTradingFee, v'executors, v'lpPositions, v'lpPositionIndexNext, v'globalLPPositions, v'globalLPFund, v'globalLPLiquidity, v'globalLPFundingFeeGrowth, v'globalLPUnrealizedPnl, v'perpPositions, v'perpPositionIndexNext, v'globalPositions, v'globalPerpNetValue, v'globalPerpSingleValue, v'globalFundingRateSamples, v'prices, v'premiumRateSampleRanges, v'premiumRateSampleRangeLength, v'prevPremiumRateSamples) = v;
     build_0 = build_0.store_int(v'gasConsumption, 257);
     build_0 = build_0.store_int(v'minTonsForStorage, 257);
     build_0 = build_0.store_dict(v'tokenConfigs);
@@ -1312,7 +1346,7 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, slice
     build_4 = build_4.store_dict(v'premiumRateSampleRanges);
     build_4 = build_4.store_int(v'premiumRateSampleRangeLength, 257);
     var build_5 = begin_cell();
-    build_5 = $PremiumRateSampleData$_store(build_5, (v'prevPremiumRateSample'rangeId, v'prevPremiumRateSample'sampleId, v'prevPremiumRateSample'deviationRate, v'prevPremiumRateSample'premiumRate));
+    build_5 = build_5.store_dict(v'prevPremiumRateSamples);
     build_4 = store_ref(build_4, build_5.end_cell());
     build_3 = store_ref(build_3, build_4.end_cell());
     build_2 = store_ref(build_2, build_3.end_cell());
@@ -1321,7 +1355,7 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, slice
     return build_0;
 }
 
-(slice, ((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, (int, int, int, int)))) $Pool$_load(slice sc_0) inline {
+(slice, ((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell))) $Pool$_load(slice sc_0) inline {
     var v'gasConsumption = sc_0~load_int(257);
     var v'minTonsForStorage = sc_0~load_int(257);
     var v'tokenConfigs = sc_0~load_dict();
@@ -1354,8 +1388,8 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, slice
     var v'premiumRateSampleRanges = sc_4~load_dict();
     var v'premiumRateSampleRangeLength = sc_4~load_int(257);
     slice sc_5 = sc_4~load_ref().begin_parse();
-    var v'prevPremiumRateSample = sc_5~$PremiumRateSampleData$_load();
-    return (sc_0, (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIdNext, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'owner, v'orderBook, v'protocolTradingFee, v'executors, v'lpPositions, v'lpPositionIndexNext, v'globalLPPositions, v'globalLPFund, v'globalLPLiquidity, v'globalLPFundingFeeGrowth, v'globalLPUnrealizedPnl, v'perpPositions, v'perpPositionIndexNext, v'globalPositions, v'globalPerpNetValue, v'globalPerpSingleValue, v'globalFundingRateSamples, v'prices, v'premiumRateSampleRanges, v'premiumRateSampleRangeLength, v'prevPremiumRateSample));
+    var v'prevPremiumRateSamples = sc_5~load_dict();
+    return (sc_0, (v'gasConsumption, v'minTonsForStorage, v'tokenConfigs, v'tokenIdNext, v'lpLockTime, v'lpBonusFactor, v'lpLiquidityFactor, v'owner, v'orderBook, v'protocolTradingFee, v'executors, v'lpPositions, v'lpPositionIndexNext, v'globalLPPositions, v'globalLPFund, v'globalLPLiquidity, v'globalLPFundingFeeGrowth, v'globalLPUnrealizedPnl, v'perpPositions, v'perpPositionIndexNext, v'globalPositions, v'globalPerpNetValue, v'globalPerpSingleValue, v'globalFundingRateSamples, v'prices, v'premiumRateSampleRanges, v'premiumRateSampleRangeLength, v'prevPremiumRateSamples));
 }
 
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline {
@@ -1363,7 +1397,7 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, slice
     return (sc_0, (v'deployId));
 }
 
-(int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, (int, int, int, int)) $Pool$_contract_load() impure inline_ref {
+(int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell) $Pool$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1378,7 +1412,7 @@ builder $Pool$_store(builder build_0, (int, int, cell, int, int, int, int, slice
     }
 }
 
-() $Pool$_contract_store((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, (int, int, int, int)) v) impure inline {
+() $Pool$_contract_store((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

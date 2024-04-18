@@ -52,18 +52,12 @@ contract Pool with Deployable, Ownable {
 
     premiumRateSampleRanges: map<Int, PremiumRateSampleRange>; // index => range
     premiumRateSampleRangeLength: Int = 0;
-    prevPremiumRateSample: PremiumRateSampleData;
+    prevPremiumRateSamples: map<Int, PremiumRateSampleData>;
 
     init(deployId: Int) {
         self.owner = sender();
         self.orderBook = newAddress(0, 0);
         self.executors.set(sender(), true);
-        self.prevPremiumRateSample = PremiumRateSampleData{
-            rangeId: 0,
-            sampleId: 0,
-            deviationRate: 0,
-            premiumRate: 0
-        };
     }
 
     // ======================================================== Admin ================================================================ //
@@ -284,7 +278,6 @@ contract Pool with Deployable, Ownable {
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: 0,
-            fundingFee: 0,
             realizedPnl: 0,
             trxId: trxId
         }.toCell());
@@ -377,7 +370,6 @@ contract Pool with Deployable, Ownable {
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: 0,
-            fundingFee: 0,
             realizedPnl: 0,
             trxId: trxId
         }.toCell());
@@ -416,17 +408,32 @@ contract Pool with Deployable, Ownable {
         require(indexPrice > 0, "none available price");
 
         // update PR
-        let avgPremiumRate: Int = self.prevPremiumRateSample.premiumRate;
         let premiumRateSampleOpt: PremiumRateSampleData? = null;
         if (msg.opType == ORDER_OP_TYPE_INCREASE_MARKET || msg.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             premiumRateSampleOpt = self.calculatePremiumRate(msg.tokenId, msg.sizeDelta, msg.isLong);
         } else {
             premiumRateSampleOpt = self.calculatePremiumRate(msg.tokenId, msg.sizeDelta, !msg.isLong);
         }
+
+        let prevPremiumRateSampleOpt: PremiumRateSampleData? = self.prevPremiumRateSamples.get(msg.tokenId);
+        let prevPremiumRateSample: PremiumRateSampleData = prevPremiumRateSampleOpt != null ? prevPremiumRateSampleOpt!! : PremiumRateSampleData{
+            rangeId: 0,
+            sampleId: 0,
+            deviationRate: 0,
+            premiumRate: 0
+        };
+        let avgPremiumRate: Int = prevPremiumRateSample.premiumRate;
+        
         if (premiumRateSampleOpt != null) {
             let premiumRateSample: PremiumRateSampleData = premiumRateSampleOpt!!;
             avgPremiumRate = (premiumRateSample.premiumRate + avgPremiumRate) / 2;
-            self.prevPremiumRateSample = premiumRateSample;
+            prevPremiumRateSample = premiumRateSample;
+            self.prevPremiumRateSamples.set(msg.tokenId, prevPremiumRateSample);
+            emit(PremiumRateChanged{
+                tokenId: msg.tokenId,
+                deviationRate: prevPremiumRateSample.deviationRate,
+                premiumRate: prevPremiumRateSample.premiumRate
+            }.toCell());
         }
 
         // calculate trade price
@@ -669,7 +676,6 @@ contract Pool with Deployable, Ownable {
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,
-            fundingFee: 0,
             realizedPnl: lpRealizedPnl,
             trxId: trxId
         }.toCell());
@@ -897,7 +903,6 @@ contract Pool with Deployable, Ownable {
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,
-            fundingFee: 0,
             realizedPnl: lpRealizedPnl,
             trxId: trxId
         }.toCell());
@@ -1100,7 +1105,6 @@ contract Pool with Deployable, Ownable {
             lpFundAfter: self.globalLPFund,
             liquidityAfter: self.globalLPLiquidity,
             tradingFee: lpTradingFee,
-            fundingFee: 0,
             realizedPnl: lpRealizedPnl,
             trxId: trxId
         }.toCell());
@@ -1276,7 +1280,14 @@ contract Pool with Deployable, Ownable {
         }
 
         // get PR
-        let premiumRate: Int = self.prevPremiumRateSample.premiumRate;
+        let prevPremiumRateSampleOpt: PremiumRateSampleData? = self.prevPremiumRateSamples.get(tokenId);
+        let prevPremiumRateSample: PremiumRateSampleData = prevPremiumRateSampleOpt != null ? prevPremiumRateSampleOpt!! : PremiumRateSampleData{
+            rangeId: 0,
+            sampleId: 0,
+            deviationRate: 0,
+            premiumRate: 0
+        };
+        let premiumRate: Int = prevPremiumRateSample.premiumRate;
 
         // cumulative sample count
         let sampleCountDelta: Int = timeDelta / SAMPLE_PREMIUM_RATE_INTERVAL;
@@ -1410,7 +1421,7 @@ contract Pool with Deployable, Ownable {
         let tokenLiquidity: Int = (self.globalLPFund + self.globalLPUnrealizedPnl) * tokenConfig.liquidityProportion / PERCENTAGE_BASIS_POINT;
         let deviationRate: Int = globalLPNetSizeAfter * PERCENTAGE_BASIS_POINT / tokenLiquidity;
 
-        let premiumRateSample: PremiumRateSampleData = self.searchPremiumRate(deviationRate);
+        let premiumRateSample: PremiumRateSampleData = self.searchPremiumRate(tokenId, deviationRate);
         if (globalLPIsLongAfter) {
             premiumRateSample.deviationRate = -premiumRateSample.deviationRate;
             premiumRateSample.premiumRate = -premiumRateSample.premiumRate;
@@ -1429,7 +1440,7 @@ contract Pool with Deployable, Ownable {
     //     dump(result.premiumRate);
     // }
 
-    fun searchPremiumRate(deviationRate: Int): PremiumRateSampleData {
+    fun searchPremiumRate(tokenId: Int, deviationRate: Int): PremiumRateSampleData {
         let rangeId: Int = deviationRate / 10_000_000;
         if (rangeId >= 200) {
             rangeId = rangeId / 10 * 10;
@@ -1450,7 +1461,13 @@ contract Pool with Deployable, Ownable {
         let premiumRateSampleRange: PremiumRateSampleRange = premiumRateSampleRangeOpt!!;
         
         // search in range
-        let prevSample: PremiumRateSampleData = self.prevPremiumRateSample;
+        let prevPremiumRateSampleOpt: PremiumRateSampleData? = self.prevPremiumRateSamples.get(tokenId);
+        let prevSample: PremiumRateSampleData = prevPremiumRateSampleOpt != null ? prevPremiumRateSampleOpt!! : PremiumRateSampleData{
+            rangeId: 0,
+            sampleId: 0,
+            deviationRate: 0,
+            premiumRate: 0
+        };
         if (deviationRate == prevSample.deviationRate) {
             return prevSample;
         }

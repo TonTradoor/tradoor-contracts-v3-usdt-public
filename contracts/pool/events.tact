@@ -37,7 +37,6 @@ message GlobalLPLiquidityChangedEvent {
     lpFundAfter: Int;
     liquidityAfter: Int;
     tradingFee: Int;
-    fundingFee: Int;
     realizedPnl: Int;
     trxId: Int as uint64;
 }
@@ -103,4 +102,10 @@ message GlobalPositionChangedEvent {
 message UpdatePriceEvent {
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePriceParam>;
+}
+
+message PremiumRateChanged {
+    tokenId: Int as uint64;
+    deviationRate: Int;
+    premiumRate: Int;
 }

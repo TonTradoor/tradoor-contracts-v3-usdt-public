@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 15509 bytes
+BOC Size: 15335 bytes
 
 # Types
-Total Types: 42
+Total Types: 43
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -82,8 +82,8 @@ TLB: `lp_position_decreased_event#054bc1b9 opType:uint8 positionId:uint64 accoun
 Signature: `LPPositionDecreasedEvent{opType:uint8,positionId:uint64,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,fundingFeeDelta:int257,entryFundingFeeGrowthAfter:int257,receive:int257,trxId:uint64}`
 
 ## GlobalLPLiquidityChangedEvent
-TLB: `global_lp_liquidity_changed_event#0b12c192 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 fundingFee:int257 realizedPnl:int257 trxId:uint64 = GlobalLPLiquidityChangedEvent`
-Signature: `GlobalLPLiquidityChangedEvent{lpFundAfter:int257,liquidityAfter:int257,tradingFee:int257,fundingFee:int257,realizedPnl:int257,trxId:uint64}`
+TLB: `global_lp_liquidity_changed_event#433d8d04 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 realizedPnl:int257 trxId:uint64 = GlobalLPLiquidityChangedEvent`
+Signature: `GlobalLPLiquidityChangedEvent{lpFundAfter:int257,liquidityAfter:int257,tradingFee:int257,realizedPnl:int257,trxId:uint64}`
 
 ## GlobalLPPositionChangedEvent
 TLB: `global_lp_position_changed_event#f65a7093 tokenId:uint64 netSizeAfter:int257 isLong:bool entryPriceAfter:int257 trxId:uint64 = GlobalLPPositionChangedEvent`
@@ -104,6 +104,10 @@ Signature: `GlobalPositionChangedEvent{tokenId:uint64,longMarginAfter:int257,sho
 ## UpdatePriceEvent
 TLB: `update_price_event#60589463 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePriceEvent`
 Signature: `UpdatePriceEvent{pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
+
+## PremiumRateChanged
+TLB: `premium_rate_changed#e07b0178 tokenId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateChanged`
+Signature: `PremiumRateChanged{tokenId:uint64,deviationRate:int257,premiumRate:int257}`
 
 ## ConfigData
 TLB: `_ isExecutor:Maybe bool gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`

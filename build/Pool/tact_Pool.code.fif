@@ -47,6 +47,8 @@ PROGRAM{
   DECLPROC $GlobalPositionChangedEvent$_store_cell
   DECLPROC $UpdatePriceEvent$_store
   DECLPROC $UpdatePriceEvent$_store_cell
+  DECLPROC $PremiumRateChanged$_store
+  DECLPROC $PremiumRateChanged$_store_cell
   DECLPROC $TokenConfig$_store
   DECLPROC $TokenConfig$_store_cell
   DECLPROC $TokenConfig$_load
@@ -101,7 +103,10 @@ PROGRAM{
   DECLPROC $PremiumRateSample$_as_optional
   DECLPROC $PremiumRateSample$_load_opt
   DECLPROC $PremiumRateSampleData$_store
+  DECLPROC $PremiumRateSampleData$_store_cell
   DECLPROC $PremiumRateSampleData$_load
+  DECLPROC $PremiumRateSampleData$_as_optional
+  DECLPROC $PremiumRateSampleData$_load_opt
   DECLPROC $Pool$_store
   DECLPROC $Pool$_load
   DECLPROC $StateInit$_not_null
@@ -147,9 +152,7 @@ PROGRAM{
   DECLPROC $PremiumRateSample$_get_premiumRate
   DECLPROC $PremiumRateSample$_not_null
   DECLPROC $PremiumRateSampleData$_not_null
-  DECLPROC $PremiumRateSampleData$_as_optional
   DECLPROC $Pool$init$_load
-  DECLPROC $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate
   DECLPROC $Pool$_contract_init
   DECLPROC $Pool$_contract_load
   DECLPROC $Pool$_contract_store
@@ -162,7 +165,7 @@ PROGRAM{
   DECLPROC $Pool$_fun_tokenConfig
   DECLPROC $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime
   DECLPROC $LPPositionIncreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFeeDelta_realizedFundingFeeAfter_entryFundingFeeGrowthAfter_trxId
-  DECLPROC $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId
+  DECLPROC $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId
   DECLPROC $Pool$_fun_increaseLPPosition
   DECLPROC $LPPositionDecreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_fundingFeeDelta_entryFundingFeeGrowthAfter_receive_trxId
   DECLPROC $Pool$_fun_decreaseLPPosition
@@ -184,6 +187,7 @@ PROGRAM{
   DECLPROC $Pool$_fun_perpPosition
   DECLPROC $UpdatePriceEvent$_constructor_pricesLength_prices
   DECLPROC $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate
+  DECLPROC $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate
   DECLPROC $Pool$_fun_updateFundingRate
   DECLPROC $Pool$_fun_updatePriceAndFundingFee
   DECLPROC $PremiumRateSample$_constructor_deviationRate_premiumRate
@@ -198,6 +202,7 @@ PROGRAM{
   DECLPROC $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate
   DECLPROC $SendParameters$_constructor_to_value_bounce_mode_body
   DECLPROC $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId
+  DECLPROC $PremiumRateChanged$_constructor_tokenId_deviationRate_premiumRate
   DECLPROC $UpdatePerpPositionSuccess$_constructor_orderId_receive_trxId
   DECLPROC $PremiumRateSampleRange$_constructor_sampleLength_samples
   DECLPROC $SendParameters$_constructor_to_value_mode
@@ -799,23 +804,20 @@ PROGRAM{
     $LPPositionDecreasedEvent$_store INLINECALLDICT
     ENDC
   }>
-  $GlobalLPLiquidityChangedEvent$_store PROCREF:<{
-    185778578 PUSHINT
-    s0 s7 XCHG2
+  $GlobalLPLiquidityChangedEvent$_store PROCINLINE:<{
+    1128107268 PUSHINT
+    s0 s6 XCHG2
     32 STU
-    s1 s5 XCHG
+    s1 s4 XCHG
     257 PUSHINT
     STIX
-    s1 s3 XCHG
+    s1 s2 XCHG
     257 PUSHINT
     STIX
     257 PUSHINT
     STIX
     SWAP
     NEWC
-    257 PUSHINT
-    STIX
-    s1 s2 XCHG
     257 PUSHINT
     STIX
     s1 s2 XCHG
@@ -826,7 +828,7 @@ PROGRAM{
   }>
   $GlobalLPLiquidityChangedEvent$_store_cell PROCINLINE:<{
     NEWC
-    6 -ROLL
+    5 -ROLL
     $GlobalLPLiquidityChangedEvent$_store INLINECALLDICT
     ENDC
   }>
@@ -1027,6 +1029,23 @@ PROGRAM{
     NEWC
     -ROT
     $UpdatePriceEvent$_store INLINECALLDICT
+    ENDC
+  }>
+  $PremiumRateChanged$_store PROCINLINE:<{
+    3766157688 PUSHINT
+    s0 s4 XCHG2
+    32 STU
+    s1 s2 XCHG
+    64 STU
+    257 PUSHINT
+    STIX
+    257 PUSHINT
+    STIX
+  }>
+  $PremiumRateChanged$_store_cell PROCINLINE:<{
+    NEWC
+    3 -ROLL
+    $PremiumRateChanged$_store INLINECALLDICT
     ENDC
   }>
   $TokenConfig$_store PROCREF:<{
@@ -1595,6 +1614,12 @@ PROGRAM{
     257 PUSHINT
     STIX
   }>
+  $PremiumRateSampleData$_store_cell PROCINLINE:<{
+    NEWC
+    4 -ROLL
+    $PremiumRateSampleData$_store INLINECALLDICT
+    ENDC
+  }>
   $PremiumRateSampleData$_load PROCINLINE:<{
     64 LDU
     64 LDU
@@ -1604,96 +1629,108 @@ PROGRAM{
     LDIX
     4 -ROLL
   }>
+  $PremiumRateSampleData$_as_optional PROCINLINE:<{
+    4 TUPLE
+  }>
+  $PremiumRateSampleData$_load_opt PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+      CTOS
+      $PremiumRateSampleData$_load INLINECALLDICT
+      1 4 BLKDROP2
+      $PremiumRateSampleData$_as_optional INLINECALLDICT
+    }>
+  }>
   $Pool$_store PROCINLINE:<{
-    s1 30 s() XCHG
-    s0 31 s() XCHG
+    s1 27 s() XCHG
+    s0 28 s() XCHG
     257 PUSHINT
     STIX
-    s1 28 s() XCHG
+    s1 25 s() XCHG
     257 PUSHINT
     STIX
-    s1 26 s() XCHG
+    s1 23 s() XCHG
     STDICT
-    s1 24 s() XCHG
+    s1 21 s() XCHG
     64 STU
-    s1 22 s() XCHG
-    257 PUSHINT
-    STIX
-    s0 20 s() XCHG
-    NEWC
-    257 PUSHINT
-    STIX
     s1 19 s() XCHG
     257 PUSHINT
     STIX
-    SWAP
     s0 17 s() XCHG
+    NEWC
+    257 PUSHINT
+    STIX
+    s1 16 s() XCHG
+    257 PUSHINT
+    STIX
+    s0 s14 XCHG2
     __tact_store_address INLINECALLDICT
     NEWC
-    SWAP
-    s0 16 s() XCHG
+    s0 s13 XCHG2
     __tact_store_address INLINECALLDICT
-    s1 s14 XCHG
+    s1 s11 XCHG
     257 PUSHINT
     STIX
-    s1 s12 XCHG
+    s1 s9 XCHG
     STDICT
-    s1 s10 XCHG
+    s1 s7 XCHG
     STDICT
-    s1 s8 XCHG
+    s1 s5 XCHG
     64 STU
-    s1 s6 XCHG
-    STDICT
-    s1 s4 XCHG
-    257 PUSHINT
-    STIX
-    s0 s2 XCHG
-    NEWC
-    257 PUSHINT
-    STIX
-    257 PUSHINT
-    STIX
-    s1 s2 XCHG
-    257 PUSHINT
-    STIX
-    s1 s2 XCHG
-    STDICT
-    s1 s2 XCHG
-    64 STU
-    s1 s2 XCHG
-    STDICT
-    s0 s2 XCHG
-    NEWC
-    257 PUSHINT
-    STIX
     s1 s3 XCHG
+    STDICT
     257 PUSHINT
     STIX
-    s1 s4 XCHG
-    STDICT
-    s1 s4 XCHG
-    STDICT
-    s1 s5 XCHG
-    STDICT
-    s1 s5 XCHG
-    257 PUSHINT
-    STIX
+    SWAP
     NEWC
-    s0 s4 XCHG
-    s3 s6 XCHG
-    s7 s8 s9 XCHG3
-    $PremiumRateSampleData$_store INLINECALLDICT
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
+    STDICT
+    s1 s2 XCHG
+    64 STU
+    s1 s3 XCHG
+    STDICT
+    s0 s3 XCHG
+    NEWC
+    257 PUSHINT
+    STIX
+    s1 s5 XCHG
+    257 PUSHINT
+    STIX
+    s1 s5 XCHG
+    STDICT
+    s1 s5 XCHG
+    STDICT
+    s1 s5 XCHG
+    STDICT
+    s1 s5 XCHG
+    257 PUSHINT
+    STIX
+    s0 s5 XCHG
+    NEWC
+    STDICT
     ENDC
-    s0 s4 XCHG2
+    s0 s5 XCHG2
+    STREF
+    ENDC
+    SWAP
     STREF
     ENDC
     s0 s3 XCHG2
     STREF
     ENDC
     SWAP
-    STREF
-    ENDC
-    ROT
     STREF
     ENDC
     SWAP
@@ -1757,14 +1794,13 @@ PROGRAM{
     LDREF
     DROP
     CTOS
-    $PremiumRateSampleData$_load INLINECALLDICT
-    s4 POP
-    26 s() 31 s() XCHG
-    26 s() 30 s() XCHG
-    26 s() 29 s() XCHG
-    26 s() 28 s() XCHG
-    26 s() 27 s() XCHG
-    3 ROLL
+    LDDICT
+    DROP
+    23 s() 28 s() XCHG
+    23 s() 27 s() XCHG
+    23 s() 26 s() XCHG
+    23 s() 25 s() XCHG
+    23 s() 24 s() XCHG
   }>
   $StateInit$_not_null PROCINLINE:<{
     DUP
@@ -2030,15 +2066,10 @@ PROGRAM{
     128 THROWIF
     4 UNTUPLE
   }>
-  $PremiumRateSampleData$_as_optional PROCINLINE:<{
-    4 TUPLE
-  }>
   $Pool$init$_load PROCINLINE:<{
     257 PUSHINT
     LDIX
     SWAP
-  }>
-  $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate PROCINLINE:<{
   }>
   $Pool$_contract_init PROCREF:<{
     DROP
@@ -2064,34 +2095,22 @@ PROGRAM{
     PUSHNULL
     PUSHNULL
     s3 PUSH
+    PUSHNULL
     __tact_context_get_sender INLINECALLDICT
-    s1 s1 PUSH2
+    s2 s2 PUSH2
     __tact_create_address INLINECALLDICT
     267 PUSHINT
     __tact_context_get_sender INLINECALLDICT
     TRUE
-    s12 PUSH
-    s4 22 s() XCHG
+    s13 PUSH
+    s4 23 s() XCHG
     __tact_dict_set_slice_int INLINECALLDICT
-    s2 s2 s2 PUSH3
-    DUP
-    $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
-    s5 23 s() XCHG
-    s5 21 s() XCHG
-    s4 20 s() XCHG
-    s5 19 s() XCHG
-    s4 18 s() XCHG
-    s5 17 s() XCHG
-    s4 16 s() XCHG
-    s5 s15 XCHG
-    s4 s14 XCHG
-    s5 s13 XCHG
-    s4 s12 XCHG
-    s5 s11 XCHG
-    s4 s10 XCHG
-    s5 s9 XCHG
-    5 4 REVERSE
-    s4 s6 XCHG
+    s1 20 s() XCHG
+    s1 18 s() XCHG
+    s0 17 s() XCHG
+    s1 16 s() XCHG
+    s0 s15 XCHG
+    13 2 BLKSWAP
   }>
   $Pool$_contract_load PROCREF:<{
     c4 PUSH
@@ -2103,10 +2122,7 @@ PROGRAM{
     SWAP
     IFJMP:<{
       $Pool$_load INLINECALLDICT
-      31 s() POP
-      29 s() 30 s() XCHG
-      28 s() 29 s() XCHG
-      27 s() 28 s() XCHG
+      28 s() POP
       26 s() 27 s() XCHG
       25 s() 26 s() XCHG
       24 s() 25 s() XCHG
@@ -2139,9 +2155,6 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
-    s0 31 s() XCHG
-    s0 30 s() XCHG
-    s0 29 s() XCHG
     s0 28 s() XCHG
     s0 27 s() XCHG
     s0 26 s() XCHG
@@ -2299,30 +2312,30 @@ PROGRAM{
       267 PUSHINT
       SWAP
       __tact_not_null INLINECALLDICT
-      22 s() PUSH
+      19 s() PUSH
       -ROT
       1 PUSHINT
       __tact_dict_get_slice_int INLINECALLDICT
     }>ELSE<{
       NIP
     }>
-    31 s() PUSH
-    31 s() PUSH
-    29 s() PUSH
-    29 s() PUSH
-    29 s() PUSH
     28 s() PUSH
+    28 s() PUSH
+    26 s() PUSH
+    26 s() PUSH
+    26 s() PUSH
+    25 s() PUSH
     $ConfigData$_constructor_isExecutor_gasConsumption_minTonsForStorage_lpLockTime_lpBonusFactor_lpLiquidityFactor_orderBook INLINECALLDICT
   }>
   $TokenConfigData$_constructor_tokenIdNext_tokenConfig PROCINLINE:<{
   }>
   $Pool$_fun_tokenConfig PROCREF:<{
     257 PUSHINT
-    30 s() PUSH
+    27 s() PUSH
     s0 s2 XCHG
     __tact_dict_get_int_cell INLINECALLDICT
     $TokenConfig$_load_opt INLINECALLDICT
-    28 s() PUSH
+    25 s() PUSH
     SWAP
     $TokenConfigData$_constructor_tokenIdNext_tokenConfig INLINECALLDICT
   }>
@@ -2330,10 +2343,10 @@ PROGRAM{
   }>
   $LPPositionIncreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFeeDelta_realizedFundingFeeAfter_entryFundingFeeGrowthAfter_trxId PROCINLINE:<{
   }>
-  $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId PROCINLINE:<{
+  $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId PROCINLINE:<{
   }>
   $Pool$_fun_increaseLPPosition PROCREF:<{
-    22 s() PUSH
+    19 s() PUSH
     267 PUSHINT
     s4 PUSH
     __tact_dict_get_slice_cell INLINECALLDICT
@@ -2353,14 +2366,14 @@ PROGRAM{
       DROP
     }>ELSE<{
       s4 POP
-      25 s() PUSH
+      22 s() PUSH
       INC
-      s0 26 s() XCHG
+      s0 23 s() XCHG
       s1 s4 s4 XCHG3
       s0 s3 XCHG
     }>
-    24 s() PUSH
-    22 s() PUSH
+    21 s() PUSH
+    19 s() PUSH
     ADD
     DUP
     0 LESSINT
@@ -2370,19 +2383,19 @@ PROGRAM{
     }>
     0 PUSHINT
     OVER
-    26 s() PUSH
+    23 s() PUSH
     LESS
     IF:<{
       DROP
-      24 s() PUSH
+      21 s() PUSH
       SWAP
       SUB
-      34 s() PUSH
+      31 s() PUSH
       SWAP
       MUL
       s7 PUSH
       MUL
-      24 s() PUSH
+      21 s() PUSH
       1000000000 PUSHINT
       MUL
       DIV
@@ -2397,7 +2410,7 @@ PROGRAM{
     0 GTINT
     IF:<{
       DROP
-      23 s() PUSH
+      20 s() PUSH
       ROT
       SUB
       s4 PUSH
@@ -2412,21 +2425,21 @@ PROGRAM{
     ADD
     s2 s1 XCPU
     ADD
-    23 s() PUSH
+    20 s() PUSH
     NOW
-    37 s() PUSH
+    34 s() PUSH
     ADD
     267 PUSHINT
     s8 s5 s6 PUSH3
     s6 s5 s4 PUSH3
     $LPPosition$_store_cell INLINECALLDICT
-    s2 32 s() XCHG
+    s2 29 s() XCHG
     s12 s(-1) PUXC
     __tact_dict_set_slice_cell INLINECALLDICT
-    s0 27 s() XCHG
+    s0 24 s() XCHG
     s9 PUSH
     ADD
-    s0 26 s() XCHG
+    s0 23 s() XCHG
     s9 PUSH
     ADD
     1 PUSHINT
@@ -2437,29 +2450,28 @@ PROGRAM{
     s0 s5 XCHG
     s0 s6 XCHG
     s0 s4 XCHG
-    s3 31 s() XCHG
+    s3 28 s() XCHG
     s0 s2 XCHG
-    s1 31 s() XCHG
+    s1 28 s() XCHG
     s11 PUSH
     $LPPositionIncreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_unlockTimeAfter_realizedFundingFeeDelta_realizedFundingFeeAfter_entryFundingFeeGrowthAfter_trxId INLINECALLDICT
     $LPPositionIncreasedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     0 PUSHINT
-    s0 s0 PUSH2
-    19 s() PUSH
-    s0 s4 XCHG
-    24 s() PUSH
-    4 -ROLL
-    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId INLINECALLDICT
+    s0 s14 PUSH2
+    s0 s3 XCHG
+    20 s() PUSH
+    3 -ROLL
+    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId INLINECALLDICT
     $GlobalLPLiquidityChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    16 s() 19 s() XCHG
-    s15 16 s() XCHG
+    s13 16 s() XCHG
+    s12 s13 XCHG
   }>
   $LPPositionDecreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_fundingFeeDelta_entryFundingFeeGrowthAfter_receive_trxId PROCINLINE:<{
   }>
   $Pool$_fun_decreaseLPPosition PROCREF:<{
-    22 s() PUSH
+    19 s() PUSH
     267 PUSHINT
     s4 PUSH
     __tact_dict_get_slice_cell INLINECALLDICT
@@ -2482,8 +2494,8 @@ PROGRAM{
       s3 PUSH
       s0 s7 XCHG
     }>
-    22 s() PUSH
-    26 s() PUSH
+    19 s() PUSH
+    23 s() PUSH
     SWAP
     ADD
     39251 PUSHINT
@@ -2502,14 +2514,14 @@ PROGRAM{
     THROWANYIFNOT
     0 PUSHINT
     OVER
-    27 s() PUSH
+    24 s() PUSH
     GEQ
     IF:<{
       DROP
       NOW
       s2 PUSH
       SUB
-      37 s() PUSH
+      34 s() PUSH
       ADD
       86400 PUSHINT
       DIV
@@ -2517,10 +2529,10 @@ PROGRAM{
       0 EQINT
       IF:<{
         s9 PUSH
-        37 s() PUSH
+        34 s() PUSH
         MUL
         s2 PUSH
-        28 s() PUSH
+        25 s() PUSH
         SUB
         MUL
         SWAP
@@ -2535,17 +2547,17 @@ PROGRAM{
         DIV
       }>ELSE<{
         OVER
-        27 s() PUSH
+        24 s() PUSH
         SUB
         s10 s(-1) PUXC
         MUL
         s2 PUSH
         DIV
         s6 s10 PUSH2
-        39 s() PUSH
+        36 s() PUSH
         MUL
         s4 PUSH
-        30 s() PUSH
+        27 s() PUSH
         SUB
         MUL
         s0 s3 XCHG
@@ -2570,7 +2582,7 @@ PROGRAM{
     }>ELSE<{
       s9 s1 PUXC
       MUL
-      26 s() PUSH
+      23 s() PUSH
       DIV
     }>
     0 PUSHINT
@@ -2578,7 +2590,7 @@ PROGRAM{
     0 GTINT
     IF:<{
       DROP
-      25 s() PUSH
+      22 s() PUSH
       s4 PUSH
       SUB
       s7 PUSH
@@ -2612,7 +2624,7 @@ PROGRAM{
       s10 s7 s1 XCPU2
       s0 s8 XCHG
       $LPPosition$_store_cell INLINECALLDICT
-      s2 31 s() XCHG
+      s2 28 s() XCHG
       s7 s11 s(-1) XCPUXC
       __tact_dict_set_slice_cell INLINECALLDICT
     }>ELSE<{
@@ -2621,14 +2633,14 @@ PROGRAM{
       267 PUSHINT
       PUSHNULL
       $LPPosition$_store_opt INLINECALLDICT
-      s2 31 s() XCHG
+      s2 28 s() XCHG
       s11 s(-1) PUXC
       __tact_dict_set_slice_cell INLINECALLDICT
     }>
-    s0 26 s() XCHG
+    s0 23 s() XCHG
     s5 PUSH
     SUB
-    s0 25 s() XCHG
+    s0 22 s() XCHG
     s8 PUSH
     SUB
     2 PUSHINT
@@ -2636,23 +2648,22 @@ PROGRAM{
     s6 s10 XCHG
     s5 s9 XCHG
     s4 s9 XCHG
-    s0 30 s() XCHG
+    s0 27 s() XCHG
     s9 s3 s10 XC2PU
-    31 s() PUSH
+    28 s() PUSH
     $LPPositionDecreasedEvent$_constructor_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_fundingFeeDelta_entryFundingFeeGrowthAfter_receive_trxId INLINECALLDICT
     $LPPositionDecreasedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     0 PUSHINT
-    s0 s0 PUSH2
-    20 s() PUSH
-    s4 s0 XCPU
-    4 -ROLL
-    s0 26 s() XCHG
-    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId INLINECALLDICT
+    s0 s15 PUSH2
+    s3 s0 XCPU
+    3 -ROLL
+    s0 22 s() XCHG
+    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId INLINECALLDICT
     $GlobalLPLiquidityChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    17 s() 20 s() XCHG
-    16 s() 17 s() XCHG
+    s14 17 s() XCHG
+    s13 s14 XCHG
   }>
   $LPPositionData$_constructor_lpPosition_globalLPFund_globalLPLiquidity_globalLPFundingFeeGrowth_globalLPUnrealizedPnl PROCINLINE:<{
   }>
@@ -2666,17 +2677,15 @@ PROGRAM{
       267 PUSHINT
       SWAP
       __tact_not_null INLINECALLDICT
-      21 s() PUSH
+      18 s() PUSH
       -ROT
       __tact_dict_get_slice_cell INLINECALLDICT
       $LPPosition$_load_opt INLINECALLDICT
     }>ELSE<{
       NIP
     }>
-    17 s() PUSH
-    17 s() PUSH
-    17 s() PUSH
-    17 s() PUSH
+    s14 s13 s12 PUSH3
+    s14 PUSH
     $LPPositionData$_constructor_lpPosition_globalLPFund_globalLPLiquidity_globalLPFundingFeeGrowth_globalLPUnrealizedPnl INLINECALLDICT
     $LPPositionData$_as_optional INLINECALLDICT
   }>
@@ -2698,7 +2707,7 @@ PROGRAM{
   $GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId PROCINLINE:<{
   }>
   $Pool$_fun_increasePerpPosition PROCREF:<{
-    37 s() PUSH
+    34 s() PUSH
     257 PUSHINT
     s7 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -2715,7 +2724,7 @@ PROGRAM{
     36718 PUSHINT
     s0 s5 XCHG2
     THROWANYIFNOT
-    26 s() PUSH
+    23 s() PUSH
     257 PUSHINT
     s12 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -2770,15 +2779,15 @@ PROGRAM{
       GEQ
       s1 18 s() XCHG
       THROWANYIFNOT
-      39 s() PUSH
+      36 s() PUSH
       INC
-      s0 40 s() XCHG
+      s0 37 s() XCHG
       s0 s3 XCHG
       s0 17 s() XCHG
     }>ELSE<{
       18 s() POP
     }>
-    39 s() PUSH
+    36 s() PUSH
     257 PUSHINT
     27 s() PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -2828,11 +2837,11 @@ PROGRAM{
     MAX
     s0 s7 XCHG2
     SUB
-    s1 46 s() XCHG
+    s1 43 s() XCHG
     ADD
     23314 PUSHINT
-    54 s() PUSH
-    63 s() PUSH
+    51 s() PUSH
+    60 s() PUSH
     MUL
     1000000000 PUSHINT
     DIV
@@ -2844,16 +2853,16 @@ PROGRAM{
     SUB
     ABS
     SWAP
-    s0 46 s() XCHG
+    s0 43 s() XCHG
     SUB
-    s1 46 s() XCHG
+    s1 43 s() XCHG
     ADD
     55754 PUSHINT
     OVER
-    54 s() PUSH
+    51 s() PUSH
     LEQ
     THROWANYIFNOT
-    53 s() PUSH
+    50 s() PUSH
     257 PUSHINT
     34 s() PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -2958,15 +2967,15 @@ PROGRAM{
       31 s() PUSH
       OVER
       SUB
-      s1 64 s() XCHG
+      s1 61 s() XCHG
       ADD
       OVER
-      64 s() PUSH
+      61 s() PUSH
       ADD
-      s1 59 s() XCHG
+      s1 56 s() XCHG
       ADD
-      s0 58 s() XCHG
-      s0 63 s() XCHG
+      s0 55 s() XCHG
+      s0 60 s() XCHG
       s0 31 s() XCHG
     }>ELSE<{
       32 s() POP
@@ -3131,14 +3140,14 @@ PROGRAM{
     257 PUSHINT
     SWAP
     $AccountPerpPosition$_store_cell INLINECALLDICT
-    s2 43 s() XCHG
+    s2 40 s() XCHG
     27 s() PUSH
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
     257 PUSHINT
     s6 PUSH
     s6 s2 s(-1) PUXC2
-    41 s() PUSH
+    38 s() PUSH
     s11 s2 s(-1) PUXC2
     s11 PUSH
     s0 s2 XCHG
@@ -3147,7 +3156,7 @@ PROGRAM{
     s1 28 s() XCHG
     s0 s15 XCHG
     $GlobalPosition$_store_cell INLINECALLDICT
-    s2 39 s() XCHG
+    s2 36 s() XCHG
     s1 s8 XCHG
     25 s() PUSH
     SWAP
@@ -3156,25 +3165,25 @@ PROGRAM{
     257 PUSHINT
     s0 s12 XCHG
     $GlobalLPPosition$_store_cell INLINECALLDICT
-    s2 45 s() XCHG
+    s2 42 s() XCHG
     s1 s9 XCHG
     24 s() PUSH
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
     s12 25 s() XCHG
-    s11 43 s() XCHG
+    s11 40 s() XCHG
     s10 23 s() XCHG
     22 s() PUSH
     s0 s10 XCHG
     s9 22 s() XCHG
-    s8 39 s() XCHG
+    s8 36 s() XCHG
     s7 21 s() XCHG
     s6 20 s() XCHG
     s5 17 s() XCHG
     s4 18 s() XCHG
     s3 20 s() XCHG
     s2 s14 XCHG
-    s1 37 s() XCHG
+    s1 34 s() XCHG
     s0 s15 XCHG
     25 s() PUSH
     $PerpPositionIncreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_entryFundingFeeGrowthAfter_trxId INLINECALLDICT
@@ -3184,8 +3193,8 @@ PROGRAM{
     s0 s6 XCHG
     s5 s7 XCHG
     s1 s4 XCHG
-    s3 23 s() XCHG
-    s0 31 s() XCHG
+    s3 20 s() XCHG
+    s0 28 s() XCHG
     s1 s7 s0 XCHG3
     s12 PUSH
     $GlobalPositionChangedEvent$_constructor_tokenId_longMarginAfter_shortMarginAfter_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId INLINECALLDICT
@@ -3196,23 +3205,21 @@ PROGRAM{
     $GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId INLINECALLDICT
     $GlobalLPPositionChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    0 PUSHINT
-    20 s() PUSH
-    s0 s4 XCHG
-    20 s() PUSH
-    s15 s4 XCHG2
-    s1 s3 XCHG
-    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId INLINECALLDICT
+    16 s() PUSH
+    s0 s3 XCHG
+    16 s() PUSH
+    s11 s11 s3 XCHG3
+    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId INLINECALLDICT
     $GlobalLPLiquidityChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    s10 17 s() XCHG
-    s10 s12 XCHG
+    s7 s14 XCHG
+    s7 s9 XCHG
   }>
   $PerpPositionDecreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_entryFundingFeeGrowthAfter_receive_trxId PROCINLINE:<{
     s3 s4 XCHG
   }>
   $Pool$_fun_decreasePerpPosition PROCREF:<{
-    37 s() PUSH
+    34 s() PUSH
     257 PUSHINT
     s7 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -3230,7 +3237,7 @@ PROGRAM{
     36718 PUSHINT
     s0 s4 XCHG2
     THROWANYIFNOT
-    25 s() PUSH
+    22 s() PUSH
     257 PUSHINT
     s11 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -3283,7 +3290,7 @@ PROGRAM{
       OVER
       s0 22 s() XCHG
     }>
-    39 s() PUSH
+    36 s() PUSH
     257 PUSHINT
     27 s() PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -3328,7 +3335,7 @@ PROGRAM{
     }>ELSE<{
       s10 POP
     }>
-    55 s() PUSH
+    52 s() PUSH
     257 PUSHINT
     36 s() PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -3433,15 +3440,15 @@ PROGRAM{
       34 s() PUSH
       OVER
       SUB
-      s1 66 s() XCHG
+      s1 63 s() XCHG
       ADD
       OVER
-      66 s() PUSH
+      63 s() PUSH
       ADD
-      s1 61 s() XCHG
+      s1 58 s() XCHG
       ADD
-      s0 60 s() XCHG
-      s0 65 s() XCHG
+      s0 57 s() XCHG
+      s0 62 s() XCHG
       s0 34 s() XCHG
     }>ELSE<{
       35 s() POP
@@ -3633,19 +3640,19 @@ PROGRAM{
     MAX
     s0 s7 XCHG2
     SUB
-    s1 51 s() XCHG
+    s1 48 s() XCHG
     ADD
     34 s() PUSH
     s6 PUSH
     SUB
     ABS
     SWAP
-    s0 51 s() XCHG
+    s0 48 s() XCHG
     SUB
-    s1 51 s() XCHG
+    s1 48 s() XCHG
     ADD
     s8 16 s() XCHG
-    s7 50 s() XCHG
+    s7 47 s() XCHG
     s6 s11 XCHG
     s5 s13 XCHG
     s4 s15 XCHG
@@ -3664,7 +3671,7 @@ PROGRAM{
     257 PUSHINT
     SWAP
     $AccountPerpPosition$_store_cell INLINECALLDICT
-    s2 44 s() XCHG
+    s2 41 s() XCHG
     28 s() PUSH
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
@@ -3675,14 +3682,14 @@ PROGRAM{
     s5 s2 s(-1) PUXC2
     s9 PUSH
     s0 s2 XCHG
-    44 s() PUSH
+    41 s() PUSH
     s0 s2 XCHG
-    48 s() PUSH
+    45 s() PUSH
     s0 s2 XCHG
     s1 29 s() XCHG
     s0 s11 XCHG
     $GlobalPosition$_store_cell INLINECALLDICT
-    s2 40 s() XCHG
+    s2 37 s() XCHG
     s1 s4 XCHG
     26 s() PUSH
     SWAP
@@ -3691,7 +3698,7 @@ PROGRAM{
     257 PUSHINT
     s0 16 s() XCHG
     $GlobalLPPosition$_store_cell INLINECALLDICT
-    s2 46 s() XCHG
+    s2 43 s() XCHG
     s1 s13 XCHG
     25 s() PUSH
     SWAP
@@ -3703,7 +3710,7 @@ PROGRAM{
     s0 s10 XCHG
     s9 23 s() XCHG
     s8 17 s() XCHG
-    s7 45 s() XCHG
+    s7 42 s() XCHG
     s6 21 s() XCHG
     s5 16 s() XCHG
     s4 19 s() XCHG
@@ -3718,36 +3725,33 @@ PROGRAM{
     s10 PUSH
     s0 s6 XCHG
     s4 s5 XCHG2
-    s3 25 s() XCHG
-    s1 24 s() XCHG
-    s0 27 s() XCHG
+    s3 22 s() XCHG
+    s1 21 s() XCHG
+    s0 24 s() XCHG
     s13 PUSH
     $GlobalPositionChangedEvent$_constructor_tokenId_longMarginAfter_shortMarginAfter_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId INLINECALLDICT
     $GlobalPositionChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     s3 s4 XCHG
-    s2 25 s() XCHG
+    s2 22 s() XCHG
     s7 s6 XCPU
     $GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId INLINECALLDICT
     $GlobalLPPositionChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    0 PUSHINT
-    21 s() PUSH
-    s0 s4 XCHG
-    21 s() PUSH
-    s0 s4 XCHG
-    s3 19 s() XCHG
-    SWAP
-    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId INLINECALLDICT
+    17 s() PUSH
+    s0 s3 XCHG
+    17 s() PUSH
+    s15 s3 s3 XCHG3
+    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId INLINECALLDICT
     $GlobalLPLiquidityChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    s10 18 s() XCHG
-    s0 s13 XCHG
-    s0 s11 XCHG
+    s7 s15 XCHG
     s0 s10 XCHG
+    s0 s8 XCHG
+    s0 s7 XCHG
   }>
   $Pool$_fun_liquidatePerpPosition PROCREF:<{
-    34 s() PUSH
+    31 s() PUSH
     257 PUSHINT
     s5 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -3766,7 +3770,7 @@ PROGRAM{
     36718 PUSHINT
     s0 s3 XCHG2
     THROWANYIFNOT
-    21 s() PUSH
+    18 s() PUSH
     257 PUSHINT
     s8 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -3812,7 +3816,7 @@ PROGRAM{
       s4 s3 PUSH2
     }>
     2OVER
-    37 s() PUSH
+    34 s() PUSH
     257 PUSHINT
     26 s() PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -3933,7 +3937,7 @@ PROGRAM{
     }>
     s1 s11 XCHG
     THROWANYIFNOT
-    50 s() PUSH
+    47 s() PUSH
     257 PUSHINT
     32 s() PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -4027,12 +4031,12 @@ PROGRAM{
     29 s() PUSH
     OVER
     SUB
-    s1 60 s() XCHG
+    s1 57 s() XCHG
     ADD
     30 s() PUSH
-    60 s() PUSH
+    57 s() PUSH
     ADD
-    s1 55 s() XCHG
+    s1 52 s() XCHG
     ADD
     30 s() PUSH
     NEGATE
@@ -4097,19 +4101,19 @@ PROGRAM{
     SWAP
     s0 21 s() XCHG
     SUB
-    s1 50 s() XCHG
+    s1 47 s() XCHG
     ADD
     36 s() PUSH
     20 s() PUSH
     SUB
     ABS
     SWAP
-    s0 50 s() XCHG
+    s0 47 s() XCHG
     SUB
-    s1 50 s() XCHG
+    s1 47 s() XCHG
     ADD
     s8 29 s() XCHG
-    s7 49 s() XCHG
+    s7 46 s() XCHG
     s6 s12 XCHG
     s5 26 s() XCHG
     s4 25 s() XCHG
@@ -4128,25 +4132,25 @@ PROGRAM{
     257 PUSHINT
     SWAP
     $AccountPerpPosition$_store_cell INLINECALLDICT
-    s2 43 s() XCHG
+    s2 40 s() XCHG
     28 s() PUSH
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
     257 PUSHINT
     20 s() PUSH
     s0 s2 XCHG
-    43 s() PUSH
+    40 s() PUSH
     s9 s2 s(-1) PUXC2
     s13 PUSH
     s0 s2 XCHG
     23 s() PUSH
     s0 s2 XCHG
-    44 s() PUSH
+    41 s() PUSH
     s0 s2 XCHG
     s1 31 s() XCHG
     s0 s14 XCHG
     $GlobalPosition$_store_cell INLINECALLDICT
-    s2 39 s() XCHG
+    s2 36 s() XCHG
     s1 s7 XCHG
     26 s() PUSH
     SWAP
@@ -4155,7 +4159,7 @@ PROGRAM{
     257 PUSHINT
     s0 s15 XCHG
     $GlobalLPPosition$_store_cell INLINECALLDICT
-    s2 45 s() XCHG
+    s2 42 s() XCHG
     s1 s12 XCHG
     25 s() PUSH
     SWAP
@@ -4167,9 +4171,9 @@ PROGRAM{
     24 s() PUSH
     s0 s10 XCHG
     s9 24 s() XCHG
-    s8 45 s() XCHG
+    s8 42 s() XCHG
     s7 16 s() XCHG
-    s6 38 s() XCHG
+    s6 35 s() XCHG
     s5 s15 XCHG
     s0 s3 XCHG
     s2 19 s() XCHG
@@ -4181,38 +4185,35 @@ PROGRAM{
     $global_emit INLINECALLDICT
     s11 PUSH
     s0 s6 XCHG
-    s4 27 s() XCHG
+    s4 24 s() XCHG
     s2 s3 XCHG
-    s2 32 s() XCHG
-    s1 27 s() XCHG
-    s0 24 s() XCHG
+    s2 29 s() XCHG
+    s1 24 s() XCHG
+    s0 21 s() XCHG
     s14 PUSH
     $GlobalPositionChangedEvent$_constructor_tokenId_longMarginAfter_shortMarginAfter_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId INLINECALLDICT
     $GlobalPositionChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     s3 s5 XCHG
-    s2 18 s() XCHG
-    s1 20 s() XCHG
-    s0 18 s() XCHG
-    s7 PUSH
+    s2 s15 XCHG
+    s1 17 s() XCHG
+    s15 s7 XCPU
     $GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId INLINECALLDICT
     $GlobalLPPositionChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    0 PUSHINT
-    s3 PUSH
-    21 s() PUSH
-    s0 s4 XCHG
-    s3 28 s() XCHG
-    s1 17 s() XCHG
-    s0 s6 XCHG
-    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_fundingFee_realizedPnl_trxId INLINECALLDICT
+    s2 PUSH
+    17 s() PUSH
+    s0 s3 XCHG
+    s2 24 s() XCHG
+    s13 s5 XCHG2
+    $GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId INLINECALLDICT
     $GlobalLPLiquidityChangedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    17 s() 22 s() XCHG
-    s10 18 s() XCHG
-    s11 17 s() XCHG
-    s0 s13 XCHG
-    s10 s11 XCHG
+    s14 19 s() XCHG
+    s7 s15 XCHG
+    s8 s14 XCHG
+    s0 s10 XCHG
+    s7 s8 XCHG
   }>
   $PerpPositionData$_constructor_globalPerpNetValue_globalPerpSingleValue_perpPosition_globalLPPosition_globalPosition_globalFundingRateSample PROCINLINE:<{
   }>
@@ -4222,7 +4223,7 @@ PROGRAM{
     ISNULL
     NOT
     IF:<{
-      s15 PUSH
+      s12 PUSH
       257 PUSHINT
       s4 PUSH
       __tact_dict_get_int_cell INLINECALLDICT
@@ -4247,22 +4248,22 @@ PROGRAM{
     }>ELSE<{
       NIP
     }>
-    19 s() PUSH
+    16 s() PUSH
     257 PUSHINT
     s3 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
     $GlobalLPPosition$_load_opt INLINECALLDICT
-    s13 PUSH
+    s10 PUSH
     257 PUSHINT
     s4 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
     $GlobalPosition$_load_opt INLINECALLDICT
     257 PUSHINT
-    s12 s0 s4 PUXC2
+    s9 s0 s4 PUXC2
     __tact_dict_get_int_cell INLINECALLDICT
     $GlobalFundingRateSample$_load_opt INLINECALLDICT
-    s13 PUSH
-    s4 s13 XCPU
+    s10 PUSH
+    s4 s10 XCPU
     s0 s4 XCHG
     s3 s1 s3 XCHG3
     $PerpPositionData$_constructor_globalPerpNetValue_globalPerpSingleValue_perpPosition_globalLPPosition_globalPosition_globalFundingRateSample INLINECALLDICT
@@ -4272,8 +4273,10 @@ PROGRAM{
   }>
   $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate PROCINLINE:<{
   }>
+  $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate PROCINLINE:<{
+  }>
   $Pool$_fun_updateFundingRate PROCREF:<{
-    30 s() PUSH
+    27 s() PUSH
     257 PUSHINT
     s3 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -4285,7 +4288,7 @@ PROGRAM{
     THROWANYIFNOT
     $TokenConfig$_not_null INLINECALLDICT
     8 2 BLKDROP2
-    s11 PUSH
+    s8 PUSH
     257 PUSHINT
     s5 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -4327,7 +4330,25 @@ PROGRAM{
     IFJMP:<{
       9 BLKDROP
     }>
-    s9 s(-1) PUXC
+    s9 PUSH
+    257 PUSHINT
+    s10 PUSH
+    __tact_dict_get_int_cell INLINECALLDICT
+    $PremiumRateSampleData$_load_opt INLINECALLDICT
+    DUP
+    ISNULL
+    NOT
+    IF:<{
+      $PremiumRateSampleData$_not_null INLINECALLDICT
+      3 1 BLKDROP2
+    }>ELSE<{
+      DROP
+      0 PUSHINT
+      s0 s0 s0 PUSH3
+      $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
+      3 1 BLKDROP2
+    }>
+    SWAP
     5 PUSHINT
     DIV
     s4 s0 PUSH2
@@ -4352,10 +4373,10 @@ PROGRAM{
       257 PUSHINT
       s0 s3 XCHG
       $GlobalFundingRateSample$_store_cell INLINECALLDICT
-      s3 s10 XCHG
+      s3 s7 XCHG
       s1 s2 XCHG
       __tact_dict_set_int_cell INLINECALLDICT
-      s0 s7 XCHG
+      s0 s4 XCHG
     }>
     2 2 BLKDROP2
     2076480 PUSHINT
@@ -4385,28 +4406,28 @@ PROGRAM{
     257 PUSHINT
     s0 s5 XCHG
     $GlobalFundingRateSample$_store_cell INLINECALLDICT
-    s13 s3 s0 XCHG3
+    s10 s3 s0 XCHG3
     s5 s(-1) PUXC
     __tact_dict_set_int_cell INLINECALLDICT
-    s1 s11 PUSH2
+    s1 s8 PUSH2
     GREATER
     IF:<{
       NIP
     }>ELSE<{
-      s11 PUSH
+      s8 PUSH
       NEGATE
       s2 s(-1) PUXC
       LESS
       IF:<{
         NIP
-        s0 s10 XCHG
+        s0 s7 XCHG
         NEGATE
       }>ELSE<{
-        s11 POP
+        s8 POP
       }>
-      s0 s10 XCHG
+      s0 s7 XCHG
     }>
-    s13 PUSH
+    s10 PUSH
     257 PUSHINT
     s4 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -4416,10 +4437,10 @@ PROGRAM{
     IFJMP:<{
       s1 s3 XCHG
       3 BLKDROP
-      s8 POP
+      s5 POP
     }>
     $GlobalPosition$_not_null INLINECALLDICT
-    18 s() PUSH
+    s15 PUSH
     -1 GTINT
     IF:<{
       s5 s4 PUSH2
@@ -4427,7 +4448,7 @@ PROGRAM{
       s4 s5 PUSH2
     }>
     s0 s11 XCHG
-    20 s() PUSH
+    17 s() PUSH
     MUL
     1000000000 PUSHINT
     DIV
@@ -4444,53 +4465,51 @@ PROGRAM{
         SUB
         s1 s(-1) PUXC
         MUL
-        28 s() PUSH
+        25 s() PUSH
         DIV
-        s1 27 s() XCHG
+        s1 24 s() XCHG
         ADD
       }>ELSE<{
         s12 POP
         TUCK
         MUL
-        28 s() PUSH
+        25 s() PUSH
         DIV
-        s1 27 s() XCHG
+        s1 24 s() XCHG
         ADD
       }>
-      s0 26 s() XCHG
+      s0 23 s() XCHG
       s0 s10 XCHG
     }>ELSE<{
       s2 POP
       s11 POP
     }>
-    s0 19 s() XCHG
+    s0 16 s() XCHG
     -1 GTINT
     IF:<{
       s3 s9 XCHG2
       SUB
-      s0 17 s() XCHG
+      s0 s14 XCHG
       ADD
     }>ELSE<{
-      s0 18 s() XCHG
-      s1 s3 XCHG
+      s3 s15 XCHG2
       ADD
       s0 s8 XCHG
       SUB
-      s7 16 s() XCHG
+      s7 s13 XCHG
     }>
     s5 s6 XCHG
     s4 s5 XCHG
     s3 s4 XCHG
     s2 s3 XCHG
-    s2 16 s() XCHG
-    SWAP
+    s13 s0 s0 XCHG3
     257 PUSHINT
     s0 s8 XCHG
     $GlobalPosition$_store_cell INLINECALLDICT
-    s3 s13 XCHG
+    s3 s10 XCHG
     s1 s2 XCHG
     __tact_dict_set_int_cell INLINECALLDICT
-    s0 s10 XCHG
+    s0 s7 XCHG
   }>
   $Pool$_fun_updatePriceAndFundingFee PROCREF:<{
     OVER
@@ -4499,7 +4518,7 @@ PROGRAM{
       2DROP
     }>
     0 PUSHINT
-    16 s() PUSH
+    s13 PUSH
     WHILE:<{
       s1 s3 PUSH2
       LESS
@@ -4520,25 +4539,25 @@ PROGRAM{
         $UpdatePriceParam$_not_null INLINECALLDICT
         $UpdatePriceParam$_get_tokenId INLINECALLDICT
         257 PUSHINT
-        s13 s(-1) s(-1) PUXCPU
+        s10 s(-1) s(-1) PUXCPU
         s3 s(-1) PUXC
         __tact_dict_get_int_int INLINECALLDICT
         ISNULL
         NOT
         IF:<{
           257 PUSHINT
-          s13 s0 s0 XC2PU
-          s14 s3 s(-2) PU2XC
+          s10 s0 s0 XC2PU
+          s11 s3 s(-2) PU2XC
           __tact_dict_set_int_int INLINECALLDICT
         }>ELSE<{
           257 PUSHINT
-          s13 s0 s0 XC2PU
-          s14 s3 s(-2) PU2XC
+          s10 s0 s0 XC2PU
+          s11 s3 s(-2) PU2XC
           __tact_dict_set_int_int INLINECALLDICT
         }>
-        23 s() PUSH
+        20 s() PUSH
         257 PUSHINT
-        s14 PUSH
+        s11 PUSH
         __tact_dict_get_int_cell INLINECALLDICT
         $GlobalLPPosition$_load_opt INLINECALLDICT
         DUP
@@ -4570,16 +4589,16 @@ PROGRAM{
           257 PUSHINT
           s0 s7 XCHG
           $GlobalLPPosition$_store_cell INLINECALLDICT
-          s2 25 s() XCHG
-          s4 s14 s(-1) XCPUXC
+          s2 22 s() XCHG
+          s4 s11 s(-1) XCPUXC
           __tact_dict_set_int_cell INLINECALLDICT
-          s0 23 s() XCHG
+          s0 20 s() XCHG
         }>ELSE<{
           DROP
         }>
-        16 s() PUSH
+        s13 PUSH
         257 PUSHINT
-        s14 PUSH
+        s11 PUSH
         __tact_dict_get_int_cell INLINECALLDICT
         $GlobalPosition$_load_opt INLINECALLDICT
         DUP
@@ -4604,17 +4623,17 @@ PROGRAM{
           MAX
           s0 s4 XCHG2
           SUB
-          s1 24 s() XCHG
+          s1 21 s() XCHG
           ADD
-          23 s() PUSH
+          20 s() PUSH
           s3 PUSH
           SUB
           ABS
           ROT
           SUB
-          s1 24 s() XCHG
+          s1 21 s() XCHG
           ADD
-          s0 22 s() XCHG
+          s0 19 s() XCHG
           s1 s7 XCHG
           s1 s6 XCHG
           s1 s5 XCHG
@@ -4623,51 +4642,45 @@ PROGRAM{
           257 PUSHINT
           s0 s8 XCHG
           $GlobalPosition$_store_cell INLINECALLDICT
-          s2 18 s() XCHG
-          s14 s(-1) PUXC
+          s2 s15 XCHG
+          s11 s(-1) PUXC
           __tact_dict_set_int_cell INLINECALLDICT
-          s0 16 s() XCHG
-          s14 s15 XCHG
+          s0 s13 XCHG
+          s11 s12 XCHG
         }>ELSE<{
           DROP
         }>
-        32 s() 36 s() XCHG
-        31 s() 35 s() XCHG
-        30 s() 34 s() XCHG
-        29 s() 33 s() XCHG
-        28 s() 36 s() XCHG
-        27 s() 35 s() XCHG
-        26 s() 34 s() XCHG
-        25 s() 33 s() XCHG
-        24 s() 36 s() XCHG
-        23 s() 35 s() XCHG
-        22 s() 34 s() XCHG
-        21 s() 33 s() XCHG
-        20 s() 36 s() XCHG
-        19 s() 35 s() XCHG
-        18 s() 34 s() XCHG
-        17 s() 33 s() XCHG
-        16 s() 36 s() XCHG
-        s15 35 s() XCHG
-        s14 34 s() XCHG
-        s13 33 s() XCHG
-        s12 36 s() XCHG
-        s11 35 s() XCHG
-        s10 34 s() XCHG
-        s9 33 s() XCHG
-        s0 s8 XCHG
-        s7 35 s() XCHG
-        s6 34 s() XCHG
-        s5 33 s() XCHG
-        s0 s4 XCHG
-        s3 35 s() XCHG
-        s2 34 s() XCHG
-        s0 36 s() XCHG
-        SWAP
-        $Pool$_fun_updateFundingRate INLINECALLDICT
-        30 s() 34 s() XCHG
         29 s() 33 s() XCHG
         28 s() 32 s() XCHG
+        27 s() 31 s() XCHG
+        26 s() 30 s() XCHG
+        25 s() 33 s() XCHG
+        24 s() 32 s() XCHG
+        23 s() 31 s() XCHG
+        22 s() 30 s() XCHG
+        21 s() 33 s() XCHG
+        20 s() 32 s() XCHG
+        19 s() 31 s() XCHG
+        18 s() 30 s() XCHG
+        17 s() 33 s() XCHG
+        16 s() 32 s() XCHG
+        s15 31 s() XCHG
+        s14 30 s() XCHG
+        s13 33 s() XCHG
+        s12 32 s() XCHG
+        s11 31 s() XCHG
+        s10 30 s() XCHG
+        s9 33 s() XCHG
+        s8 32 s() XCHG
+        s7 31 s() XCHG
+        s6 30 s() XCHG
+        s0 s5 XCHG
+        s4 32 s() XCHG
+        s3 31 s() XCHG
+        s2 30 s() XCHG
+        s0 33 s() XCHG
+        SWAP
+        $Pool$_fun_updateFundingRate INLINECALLDICT
         27 s() 31 s() XCHG
         26 s() 30 s() XCHG
         25 s() 29 s() XCHG
@@ -4693,7 +4706,7 @@ PROGRAM{
       SWAP
     }>
     NIP
-    16 s() POP
+    s13 POP
     $UpdatePriceEvent$_constructor_pricesLength_prices INLINECALLDICT
     $UpdatePriceEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
@@ -4722,7 +4735,7 @@ PROGRAM{
         300 PUSHINT
       }>
     }>
-    s7 PUSH
+    s5 PUSH
     257 PUSHINT
     s2 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -4730,21 +4743,35 @@ PROGRAM{
     DUP
     ISNULL
     IFJMP:<{
-      DROP
-      NIP
+      s1 s3 XCHG
+      3 BLKDROP
       0 PUSHINT
       s0 s0 PUSH2
       $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
     }>
     $PremiumRateSampleRange$_not_null INLINECALLDICT
-    s7 s6 s5 PUSH3
-    s7 s6 s0 PUSH3
+    257 PUSHINT
+    s6 s0 s5 PUXC2
+    __tact_dict_get_int_cell INLINECALLDICT
+    $PremiumRateSampleData$_load_opt INLINECALLDICT
+    DUP
+    ISNULL
+    NOT
+    IF:<{
+      $PremiumRateSampleData$_not_null INLINECALLDICT
+    }>ELSE<{
+      DROP
+      0 PUSHINT
+      s0 s0 s0 PUSH3
+      $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
+    }>
+    s6 s1 PUSH2
     EQUAL
     IFJMP:<{
       4 4 BLKDROP2
     }>
     0 PUSHINT
-    s0 s8 s2 PUSH3
+    s0 s7 s2 PUSH3
     GREATER
     IF:<{
       TRUE
@@ -4753,21 +4780,21 @@ PROGRAM{
     }>
     s1 s1 PUSH2
     $PremiumRateSample$_constructor_deviationRate_premiumRate INLINECALLDICT
-    s11 s8 PUXC
+    s10 s8 PUXC
     EQUAL
     IF:<{
       DROP
       NIP
       s5 POP
-      s8 s2 PUSH2
+      s7 s2 PUSH2
       GREATER
       IF:<{
         DROP
         s2 PUSH
       }>ELSE<{
-        s6 POP
+        s5 POP
         s2 PUSH
-        s3 s6 XCHG
+        s3 s5 XCHG
       }>
     }>ELSE<{
       s4 POP
@@ -4775,7 +4802,7 @@ PROGRAM{
       s4 POP
       s2 PUSH
       IF:<{
-        s5 PUSH
+        s8 PUSH
         257 PUSHINT
         s2 PUSH
         __tact_dict_get_int_cell INLINECALLDICT
@@ -4798,9 +4825,9 @@ PROGRAM{
           DROP
         }>
       }>ELSE<{
-        s5 PUSH
-        257 PUSHINT
         s8 PUSH
+        257 PUSHINT
+        s7 PUSH
         __tact_dict_get_int_cell INLINECALLDICT
         $PremiumRateSample$_load_opt INLINECALLDICT
         DUP
@@ -4827,7 +4854,7 @@ PROGRAM{
       s0 s3 PUSH2
       GEQ
       IF:<{
-        s0 s6 PUSH2
+        s0 s5 PUSH2
         LEQ
       }>ELSE<{
         FALSE
@@ -4841,7 +4868,7 @@ PROGRAM{
         DUP
         DEC
       }>
-      s6 PUSH
+      s9 PUSH
       257 PUSHINT
       s2 PUSH
       __tact_dict_get_int_cell INLINECALLDICT
@@ -4851,44 +4878,42 @@ PROGRAM{
       IFJMP:<{
         2DROP
         3 3 BLKDROP2
-        s3 POP
-        1 4 BLKDROP2
+        s4 POP
+        s4 POP
+        s0 s3 XCHG2
         $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
         RETALT
       }>
       $PremiumRateSample$_not_null INLINECALLDICT
       s7 PUSH
       IF:<{
-        s11 s1 PUSH2
+        s10 s1 PUSH2
         LESS
         IFJMP:<{
           3 BLKDROP
           3 3 BLKDROP2
-          s3 POP
-          1 4 BLKDROP2
+          s4 POP
+          s4 POP
+          s0 s3 XCHG2
           $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
           RETALT
         }>
         3 3 BLKDROP2
-        s8 s1 PUSH2
+        s7 s1 PUSH2
         EQUAL
         IFJMP:<{
           3 3 BLKDROP2
-          s3 POP
-          s4 POP
-          s0 s3 s3 XCHG3
+          2 4 BLKDROP2
           $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
           RETALT
         }>
       }>ELSE<{
         3 3 BLKDROP2
-        s8 s1 PUSH2
+        s7 s1 PUSH2
         GEQ
         IFJMP:<{
           3 3 BLKDROP2
-          s3 POP
-          s4 POP
-          s0 s3 s3 XCHG3
+          2 4 BLKDROP2
           $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
           RETALT
         }>
@@ -4896,12 +4921,13 @@ PROGRAM{
       ROT
     }>
     3 3 BLKDROP2
-    s3 POP
-    1 4 BLKDROP2
+    s4 POP
+    s4 POP
+    s0 s3 XCHG2
     $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
   }>
   $Pool$_fun_calculatePremiumRate PROCREF:<{
-    31 s() PUSH
+    28 s() PUSH
     257 PUSHINT
     s4 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -4915,110 +4941,106 @@ PROGRAM{
     $TokenConfig$_not_null INLINECALLDICT
     s4 s9 XCHG
     9 BLKDROP
+    18 s() PUSH
     257 PUSHINT
-    22 s() PUSH
-    s0 s1 s5 XCHG3
+    s5 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
     $GlobalLPPosition$_load_opt INLINECALLDICT
     DUP
     ISNULL
     IFJMP:<{
-      4 BLKDROP
+      5 BLKDROP
       PUSHNULL
     }>
     $GlobalLPPosition$_not_null INLINECALLDICT
     2DROP
-    s1 s0 s3 PUSH3
+    s1 s0 s4 PUSH3
     s4 PUSH
     0 GTINT
     IF:<{
-      s5 s3 PUXC
+      s6 s3 PUXC
       EQUAL
     }>ELSE<{
       s3 POP
       FALSE
     }>
     IF:<{
-      s3 s5 XCHG2
+      s3 s6 XCHG2
       MIN
       TUCK
       SUB
       -ROT
       SUB
-      s3 s3 XCHG2
+      s4 s4 XCHG2
     }>ELSE<{
       s3 POP
-      s4 POP
+      s5 POP
     }>
     DUP
     0 GTINT
     IF:<{
       NIP
-      s1 s2 XCHG
+      s1 s3 XCHG
       ADD
       SWAP
       NOT
+      ROT
     }>ELSE<{
       DROP
-      NIP
+      s2 POP
     }>
-    19 s() PUSH
     17 s() PUSH
+    s15 PUSH
     ADD
-    s0 s3 XCHG2
+    SWAP
     MUL
     1000000000 PUSHINT
     DIV
-    SWAP
+    s0 s2 XCHG
     1000000000 PUSHINT
     MUL
-    SWAP
+    ROT
     DIV
-    31 s() 32 s() XCHG
-    30 s() 32 s() XCHG
-    29 s() 32 s() XCHG
-    28 s() 32 s() XCHG
-    27 s() 32 s() XCHG
-    26 s() 32 s() XCHG
-    25 s() 32 s() XCHG
-    24 s() 32 s() XCHG
-    23 s() 32 s() XCHG
-    22 s() 32 s() XCHG
-    21 s() 32 s() XCHG
-    20 s() 32 s() XCHG
-    19 s() 32 s() XCHG
-    18 s() 32 s() XCHG
-    17 s() 32 s() XCHG
-    16 s() 32 s() XCHG
-    s15 32 s() XCHG
-    s14 32 s() XCHG
-    s13 32 s() XCHG
-    s12 32 s() XCHG
-    s11 32 s() XCHG
-    s10 32 s() XCHG
-    s9 32 s() XCHG
-    s8 32 s() XCHG
-    s7 32 s() XCHG
-    s6 32 s() XCHG
-    s5 32 s() XCHG
-    s4 32 s() XCHG
-    s3 32 s() XCHG
-    s2 32 s() XCHG
-    s1 32 s() XCHG
+    29 s() 30 s() XCHG
+    28 s() 30 s() XCHG
+    27 s() 30 s() XCHG
+    26 s() 30 s() XCHG
+    25 s() 30 s() XCHG
+    24 s() 30 s() XCHG
+    23 s() 30 s() XCHG
+    22 s() 30 s() XCHG
+    21 s() 30 s() XCHG
+    20 s() 30 s() XCHG
+    19 s() 30 s() XCHG
+    18 s() 30 s() XCHG
+    17 s() 30 s() XCHG
+    16 s() 30 s() XCHG
+    s15 30 s() XCHG
+    s14 30 s() XCHG
+    s13 30 s() XCHG
+    s12 30 s() XCHG
+    s11 30 s() XCHG
+    s10 30 s() XCHG
+    s9 30 s() XCHG
+    s8 30 s() XCHG
+    s7 30 s() XCHG
+    s6 30 s() XCHG
+    s5 30 s() XCHG
+    s4 30 s() XCHG
+    s3 30 s() XCHG
+    s2 30 s() XCHG
+    s1 30 s() XCHG
     $Pool$_fun_searchPremiumRate INLINECALLDICT
-    s0 35 s() XCHG
+    s0 32 s() XCHG
     IF:<{
       NEGATE
-      s0 34 s() XCHG
+      s0 31 s() XCHG
       NEGATE
-      s0 34 s() XCHG
+      s0 31 s() XCHG
     }>
     3 ROLL
-    s0 34 s() XCHG
+    s0 31 s() XCHG
     $PremiumRateSampleData$_as_optional INLINECALLDICT
-    30 s() 31 s() XCHG
-    29 s() 30 s() XCHG
-    28 s() 29 s() XCHG
     27 s() 28 s() XCHG
     26 s() 27 s() XCHG
     25 s() 26 s() XCHG
@@ -5079,13 +5101,13 @@ PROGRAM{
   }>
   $Pool$_fun_requireOwner PROCREF:<{
     __tact_context_get_sender INLINECALLDICT
-    24 s() PUSH
+    21 s() PUSH
     SWAP
     __tact_slice_eq_bits INLINECALLDICT
     132 THROWIFNOT
   }>
   $Pool$_fun_owner PROCREF:<{
-    23 s() PUSH
+    20 s() PUSH
   }>
   $SendParameters$_constructor_to_bounce_value_mode PROCINLINE:<{
     s2 s3 XCHG
@@ -5105,6 +5127,8 @@ PROGRAM{
   }>
   $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId PROCINLINE:<{
   }>
+  $PremiumRateChanged$_constructor_tokenId_deviationRate_premiumRate PROCINLINE:<{
+  }>
   $UpdatePerpPositionSuccess$_constructor_orderId_receive_trxId PROCINLINE:<{
   }>
   $PremiumRateSampleRange$_constructor_sampleLength_samples PROCINLINE:<{
@@ -5119,33 +5143,30 @@ PROGRAM{
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
   $Pool$_internal_binary_UpdateConfig PROCINLINE:<{
-    30 s() 38 s() XCHG
-    29 s() 37 s() XCHG
-    28 s() 36 s() XCHG
     27 s() 35 s() XCHG
     26 s() 34 s() XCHG
     25 s() 33 s() XCHG
     24 s() 32 s() XCHG
     23 s() 31 s() XCHG
-    22 s() 38 s() XCHG
-    21 s() 37 s() XCHG
-    20 s() 36 s() XCHG
+    22 s() 30 s() XCHG
+    21 s() 29 s() XCHG
+    20 s() 28 s() XCHG
     19 s() 35 s() XCHG
     18 s() 34 s() XCHG
     17 s() 33 s() XCHG
     16 s() 32 s() XCHG
     s15 31 s() XCHG
-    s14 38 s() XCHG
-    s13 37 s() XCHG
-    s12 36 s() XCHG
+    s14 30 s() XCHG
+    s13 29 s() XCHG
+    s12 28 s() XCHG
     s11 35 s() XCHG
     s10 34 s() XCHG
     s9 33 s() XCHG
     s8 32 s() XCHG
     s7 31 s() XCHG
-    s6 38 s() XCHG
-    s5 37 s() XCHG
-    s4 36 s() XCHG
+    s6 30 s() XCHG
+    s5 29 s() XCHG
+    s4 28 s() XCHG
     s3 35 s() XCHG
     s2 34 s() XCHG
     s1 33 s() XCHG
@@ -5155,7 +5176,7 @@ PROGRAM{
     ISNULL
     NOT
     IF:<{
-      38 s() PUSH
+      30 s() PUSH
       ISNULL
       NOT
     }>ELSE<{
@@ -5165,75 +5186,26 @@ PROGRAM{
       267 PUSHINT
       s0 32 s() XCHG
       __tact_not_null INLINECALLDICT
-      s0 39 s() XCHG
+      s0 31 s() XCHG
       __tact_not_null INLINECALLDICT
-      s3 21 s() XCHG
+      s3 18 s() XCHG
       s2 32 s() XCHG
-      s1 39 s() XCHG
+      s1 31 s() XCHG
       1 PUSHINT
       __tact_dict_set_slice_int INLINECALLDICT
-      29 s() 36 s() XCHG
-      s0 18 s() XCHG
+      s0 s15 XCHG
     }>ELSE<{
-      31 s() POP
-      37 s() POP
-    }>
-    35 s() PUSH
-    ISNULL
-    NOT
-    IF:<{
-      28 s() POP
-      s0 34 s() XCHG
-      __tact_not_null INLINECALLDICT
-      s0 27 s() XCHG
-      s0 34 s() XCHG
-    }>ELSE<{
-      35 s() POP
-    }>
-    33 s() PUSH
-    ISNULL
-    NOT
-    IF:<{
-      26 s() POP
-      s0 32 s() XCHG
-      __tact_not_null INLINECALLDICT
-      s0 25 s() XCHG
-      s0 32 s() XCHG
-    }>ELSE<{
-      33 s() POP
-    }>
-    31 s() PUSH
-    ISNULL
-    NOT
-    IF:<{
-      22 s() POP
-      s0 30 s() XCHG
-      __tact_not_null INLINECALLDICT
-      s0 21 s() XCHG
-      s0 30 s() XCHG
-    }>ELSE<{
-      31 s() POP
-    }>
-    29 s() PUSH
-    ISNULL
-    NOT
-    IF:<{
-      20 s() POP
-      s0 28 s() XCHG
-      __tact_not_null INLINECALLDICT
-      s0 19 s() XCHG
-      s0 28 s() XCHG
-    }>ELSE<{
-      29 s() POP
+      30 s() POP
+      30 s() POP
     }>
     27 s() PUSH
     ISNULL
     NOT
     IF:<{
-      18 s() POP
+      25 s() POP
       s0 26 s() XCHG
       __tact_not_null INLINECALLDICT
-      s0 17 s() XCHG
+      s0 24 s() XCHG
       s0 26 s() XCHG
     }>ELSE<{
       27 s() POP
@@ -5242,10 +5214,58 @@ PROGRAM{
     ISNULL
     NOT
     IF:<{
-      s15 POP
+      23 s() POP
       s0 24 s() XCHG
       __tact_not_null INLINECALLDICT
+      s0 22 s() XCHG
+      s0 24 s() XCHG
+    }>ELSE<{
+      25 s() POP
+    }>
+    31 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      19 s() POP
+      s0 30 s() XCHG
+      __tact_not_null INLINECALLDICT
+      s0 18 s() XCHG
+      s0 30 s() XCHG
+    }>ELSE<{
+      31 s() POP
+    }>
+    29 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      17 s() POP
+      s0 28 s() XCHG
+      __tact_not_null INLINECALLDICT
+      s0 16 s() XCHG
+      s0 28 s() XCHG
+    }>ELSE<{
+      29 s() POP
+    }>
+    27 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s15 POP
+      s0 26 s() XCHG
+      __tact_not_null INLINECALLDICT
       s0 s14 XCHG
+      s0 26 s() XCHG
+    }>ELSE<{
+      27 s() POP
+    }>
+    25 s() PUSH
+    ISNULL
+    NOT
+    IF:<{
+      s12 POP
+      s0 24 s() XCHG
+      __tact_not_null INLINECALLDICT
+      s0 s11 XCHG
       s0 24 s() XCHG
     }>ELSE<{
       25 s() POP
@@ -5256,9 +5276,6 @@ PROGRAM{
     64 PUSHINT
     $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
     $global_send INLINECALLDICT
-    22 s() 30 s() XCHG
-    21 s() 29 s() XCHG
-    20 s() 28 s() XCHG
     19 s() 27 s() XCHG
     18 s() 26 s() XCHG
     17 s() 25 s() XCHG
@@ -5279,11 +5296,9 @@ PROGRAM{
     s10 s1 s8 XCHG3
     s9 s7 XCHG2
     6 1 REVERSE
+    SWAP
   }>
   $Pool$_internal_binary_UpdateTokenConfig PROCINLINE:<{
-    30 s() 40 s() XCHG
-    29 s() 39 s() XCHG
-    28 s() 38 s() XCHG
     27 s() 37 s() XCHG
     26 s() 36 s() XCHG
     25 s() 35 s() XCHG
@@ -5291,9 +5306,9 @@ PROGRAM{
     23 s() 33 s() XCHG
     22 s() 32 s() XCHG
     21 s() 31 s() XCHG
-    20 s() 40 s() XCHG
-    19 s() 39 s() XCHG
-    18 s() 38 s() XCHG
+    20 s() 30 s() XCHG
+    19 s() 29 s() XCHG
+    18 s() 28 s() XCHG
     17 s() 37 s() XCHG
     16 s() 36 s() XCHG
     s15 35 s() XCHG
@@ -5301,9 +5316,9 @@ PROGRAM{
     s13 33 s() XCHG
     s12 32 s() XCHG
     s11 31 s() XCHG
-    s10 40 s() XCHG
-    s9 39 s() XCHG
-    s8 38 s() XCHG
+    s10 30 s() XCHG
+    s9 29 s() XCHG
+    s8 28 s() XCHG
     s7 37 s() XCHG
     s6 36 s() XCHG
     s5 35 s() XCHG
@@ -5311,11 +5326,11 @@ PROGRAM{
     s3 33 s() XCHG
     s2 32 s() XCHG
     s1 31 s() XCHG
-    s0 40 s() XCHG
+    s0 30 s() XCHG
     $Pool$_fun_requireOwner INLINECALLDICT
-    28 s() PUSH
+    25 s() PUSH
     257 PUSHINT
-    41 s() PUSH
+    31 s() PUSH
     __tact_dict_get_int_cell INLINECALLDICT
     $TokenConfig$_load_opt INLINECALLDICT
     DUP
@@ -5337,17 +5352,17 @@ PROGRAM{
       DUP
       $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate INLINECALLDICT
     }>
-    48 s() PUSH
+    38 s() PUSH
     ISNULL
     NOT
     IF:<{
       s9 POP
-      s0 47 s() XCHG
+      s0 37 s() XCHG
       __tact_not_null INLINECALLDICT
       s0 s8 XCHG
-      s0 47 s() XCHG
+      s0 37 s() XCHG
     }>ELSE<{
-      48 s() POP
+      38 s() POP
     }>
     46 s() PUSH
     ISNULL
@@ -5431,29 +5446,29 @@ PROGRAM{
     }>ELSE<{
       35 s() POP
     }>
-    42 s() PUSH
+    32 s() PUSH
     ISNULL
     NOT
     IF:<{
-      40 s() POP
-      s0 41 s() XCHG
+      30 s() POP
+      s0 31 s() XCHG
       __tact_not_null INLINECALLDICT
-      s0 39 s() XCHG
-      s0 41 s() XCHG
+      s0 29 s() XCHG
+      s0 31 s() XCHG
     }>ELSE<{
-      42 s() POP
+      32 s() POP
     }>
-    40 s() PUSH
-    29 s() PUSH
+    30 s() PUSH
+    26 s() PUSH
     GEQ
     IF:<{
-      28 s() POP
-      39 s() PUSH
+      25 s() POP
+      29 s() PUSH
       INC
-      s0 28 s() XCHG
+      s0 25 s() XCHG
     }>
     s0 s8 XCHG
-    s7 41 s() XCHG
+    s7 31 s() XCHG
     s6 33 s() XCHG
     s5 34 s() XCHG
     s4 32 s() XCHG
@@ -5462,11 +5477,11 @@ PROGRAM{
     s1 37 s() XCHG
     s0 38 s() XCHG
     257 PUSHINT
-    s0 40 s() XCHG
+    s0 30 s() XCHG
     $TokenConfig$_store_cell INLINECALLDICT
-    s3 21 s() XCHG
-    s2 31 s() XCHG
-    s1 32 s() XCHG
+    s3 18 s() XCHG
+    s2 21 s() XCHG
+    s1 22 s() XCHG
     __tact_dict_set_int_cell INLINECALLDICT
     __tact_context_get_sender INLINECALLDICT
     FALSE
@@ -5474,12 +5489,9 @@ PROGRAM{
     64 PUSHINT
     $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
     $global_send INLINECALLDICT
-    20 s() 30 s() XCHG
-    19 s() 29 s() XCHG
-    s0 28 s() XCHG
     17 s() 27 s() XCHG
     16 s() 26 s() XCHG
-    s15 25 s() XCHG
+    s0 25 s() XCHG
     s14 24 s() XCHG
     s13 23 s() XCHG
     s12 22 s() XCHG
@@ -5493,57 +5505,51 @@ PROGRAM{
     s4 s14 XCHG
     s3 s13 XCHG
     s12 s11 s0 XCHG3
-    s8 s10 XCHG
-    s0 s9 XCHG
-    s0 s8 XCHG
-    s5 s3 s6 XCHG3
-    s4 s4 s0 XCHG3
+    s5 s10 XCHG
+    s8 s9 XCHG
+    s5 s6 XCHG
+    s5 s0 s3 XCHG3
+    s4 s1 s4 XCHG3
   }>
   $Pool$_internal_binary_UpdateLPPosition PROCINLINE:<{
     41207 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    31 s() PUSH
+    28 s() PUSH
     SWAP
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
-    32 s() 37 s() XCHG
-    31 s() 36 s() XCHG
-    30 s() 35 s() XCHG
     29 s() 34 s() XCHG
     28 s() 33 s() XCHG
-    27 s() 37 s() XCHG
-    26 s() 36 s() XCHG
-    25 s() 35 s() XCHG
+    27 s() 32 s() XCHG
+    26 s() 31 s() XCHG
+    25 s() 30 s() XCHG
     24 s() 34 s() XCHG
     23 s() 33 s() XCHG
-    22 s() 37 s() XCHG
-    21 s() 36 s() XCHG
-    20 s() 35 s() XCHG
+    22 s() 32 s() XCHG
+    21 s() 31 s() XCHG
+    20 s() 30 s() XCHG
     19 s() 34 s() XCHG
     18 s() 33 s() XCHG
-    17 s() 37 s() XCHG
-    16 s() 36 s() XCHG
-    s15 35 s() XCHG
+    17 s() 32 s() XCHG
+    16 s() 31 s() XCHG
+    s15 30 s() XCHG
     s14 34 s() XCHG
     s13 33 s() XCHG
-    s12 37 s() XCHG
-    s11 36 s() XCHG
-    s10 35 s() XCHG
+    s12 32 s() XCHG
+    s11 31 s() XCHG
+    s10 30 s() XCHG
     s9 34 s() XCHG
     s8 33 s() XCHG
-    s7 37 s() XCHG
-    s6 36 s() XCHG
-    s5 35 s() XCHG
+    s7 32 s() XCHG
+    s6 31 s() XCHG
+    s5 30 s() XCHG
     s4 34 s() XCHG
     s3 33 s() XCHG
-    s2 37 s() XCHG
+    s2 32 s() XCHG
     $Pool$_fun_updatePriceAndFundingFee INLINECALLDICT
     0 PUSHINT
-    s0 35 s() XCHG
+    s0 30 s() XCHG
     IF:<{
-      30 s() 32 s() XCHG
-      29 s() 31 s() XCHG
-      28 s() 30 s() XCHG
       27 s() 29 s() XCHG
       26 s() 28 s() XCHG
       25 s() 27 s() XCHG
@@ -5558,15 +5564,13 @@ PROGRAM{
       16 s() 18 s() XCHG
       s15 17 s() XCHG
       s14 16 s() XCHG
-      s13 s15 XCHG
-      2 13 BLKSWAP
-      35 s() PUSH
+      2 14 BLKSWAP
+      s1 32 s() XCHG
+      s0 31 s() XCHG
+      30 s() PUSH
       $Pool$_fun_increaseLPPosition INLINECALLDICT
     }>ELSE<{
-      34 s() POP
-      29 s() 32 s() XCHG
-      28 s() 31 s() XCHG
-      27 s() 30 s() XCHG
+      29 s() POP
       26 s() 29 s() XCHG
       25 s() 28 s() XCHG
       24 s() 27 s() XCHG
@@ -5583,13 +5587,12 @@ PROGRAM{
       s13 16 s() XCHG
       s12 s15 XCHG
       3 12 BLKSWAP
-      s2 33 s() XCHG
-      34 s() PUSH
-      $Pool$_fun_decreaseLPPosition INLINECALLDICT
-      s0 32 s() XCHG
-      s0 31 s() XCHG
+      s1 s2 XCHG
+      s1 31 s() XCHG
       s0 30 s() XCHG
-      s0 29 s() XCHG
+      31 s() PUSH
+      $Pool$_fun_decreaseLPPosition INLINECALLDICT
+      s0 30 s() XCHG
       s0 28 s() XCHG
       s0 27 s() XCHG
       s0 26 s() XCHG
@@ -5607,10 +5610,10 @@ PROGRAM{
     }>
     __tact_context_get INLINECALLDICT
     $Context$_get_value INLINECALLDICT
-    31 s() PUSH
+    28 s() PUSH
     1 LSHIFT#
     SUB
-    30 s() PUSH
+    27 s() PUSH
     SUB
     __tact_context_get INLINECALLDICT
     $Context$_fun_readForwardFee INLINECALLDICT
@@ -5619,24 +5622,21 @@ PROGRAM{
     OVER
     0 GTINT
     THROWANYIFNOT
-    s0 32 s() XCHG
+    s0 30 s() XCHG
     FALSE
-    s0 34 s() XCHG
+    s0 32 s() XCHG
     1 PUSHINT
-    s0 36 s() XCHG
+    s0 31 s() XCHG
     $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId INLINECALLDICT
     $UpdateLPPositionSuccess$_store_cell INLINECALLDICT
-    23 s() PUSH
+    20 s() PUSH
     s0 s4 XCHG
-    s3 33 s() XCHG
-    s2 34 s() XCHG
-    s0 35 s() XCHG
+    s3 31 s() XCHG
+    s2 32 s() XCHG
+    s0 30 s() XCHG
     SWAP
     $SendParameters$_constructor_to_value_bounce_mode_body INLINECALLDICT
     $global_send INLINECALLDICT
-    27 s() 30 s() XCHG
-    26 s() 29 s() XCHG
-    25 s() 28 s() XCHG
     24 s() 27 s() XCHG
     23 s() 26 s() XCHG
     22 s() 25 s() XCHG
@@ -5650,28 +5650,16 @@ PROGRAM{
     s14 17 s() XCHG
     s13 16 s() XCHG
     s12 s15 XCHG
-    s11 s14 XCHG
-    s10 s13 XCHG
-    s9 s12 XCHG
-    s8 s11 XCHG
-    s7 s10 XCHG
-    s6 s9 XCHG
-    s5 s8 XCHG
-    s4 s7 XCHG
-    s3 s6 XCHG
-    s5 s1 s3 XCHG3
-    s4 s2 XCHG2
+    3 12 BLKSWAP
+    s1 s2 XCHG
   }>
   $Pool$_internal_binary_UpdatePerpPosition PROCINLINE:<{
     41207 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    36 s() PUSH
+    33 s() PUSH
     SWAP
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
-    32 s() 42 s() XCHG
-    31 s() 41 s() XCHG
-    30 s() 40 s() XCHG
     29 s() 39 s() XCHG
     28 s() 38 s() XCHG
     27 s() 37 s() XCHG
@@ -5679,9 +5667,9 @@ PROGRAM{
     25 s() 35 s() XCHG
     24 s() 34 s() XCHG
     23 s() 33 s() XCHG
-    22 s() 42 s() XCHG
-    21 s() 41 s() XCHG
-    20 s() 40 s() XCHG
+    22 s() 32 s() XCHG
+    21 s() 31 s() XCHG
+    20 s() 30 s() XCHG
     19 s() 39 s() XCHG
     18 s() 38 s() XCHG
     17 s() 37 s() XCHG
@@ -5689,9 +5677,9 @@ PROGRAM{
     s15 35 s() XCHG
     s14 34 s() XCHG
     s13 33 s() XCHG
-    s12 42 s() XCHG
-    s11 41 s() XCHG
-    s10 40 s() XCHG
+    s12 32 s() XCHG
+    s11 31 s() XCHG
+    s10 30 s() XCHG
     s9 39 s() XCHG
     s8 38 s() XCHG
     s7 37 s() XCHG
@@ -5699,11 +5687,11 @@ PROGRAM{
     s5 35 s() XCHG
     s4 34 s() XCHG
     s3 33 s() XCHG
-    s2 42 s() XCHG
+    s2 32 s() XCHG
     $Pool$_fun_updatePriceAndFundingFee INLINECALLDICT
     0 PUSHINT
     257 PUSHINT
-    s8 s(-1) s(-1) PUXCPU
+    s5 s(-1) s(-1) PUXCPU
     41 s() PUSH
     SWAP
     __tact_dict_get_int_int INLINECALLDICT
@@ -5720,120 +5708,137 @@ PROGRAM{
     OVER
     0 GTINT
     THROWANYIFNOT
-    OVER
-    40 s() PUSH
+    29 s() PUSH
     10 EQINT
     IF:<{
       TRUE
     }>ELSE<{
-      40 s() PUSH
+      29 s() PUSH
       11 EQINT
     }>
     IF:<{
-      30 s() 32 s() XCHG
-      29 s() 31 s() XCHG
-      28 s() 32 s() XCHG
-      27 s() 31 s() XCHG
-      26 s() 32 s() XCHG
-      25 s() 31 s() XCHG
-      24 s() 32 s() XCHG
-      23 s() 31 s() XCHG
-      22 s() 32 s() XCHG
-      21 s() 31 s() XCHG
-      20 s() 32 s() XCHG
-      19 s() 31 s() XCHG
-      18 s() 32 s() XCHG
-      17 s() 31 s() XCHG
-      16 s() 32 s() XCHG
-      s15 31 s() XCHG
-      s14 32 s() XCHG
-      s13 31 s() XCHG
-      s12 32 s() XCHG
-      s11 31 s() XCHG
-      s10 32 s() XCHG
-      s9 31 s() XCHG
-      s8 32 s() XCHG
-      s7 31 s() XCHG
-      s6 32 s() XCHG
-      s5 31 s() XCHG
-      s4 32 s() XCHG
-      s3 31 s() XCHG
-      s2 32 s() XCHG
-      s1 31 s() XCHG
-      s0 32 s() XCHG
-      39 s() PUSH
-      36 s() PUSH
-      39 s() PUSH
+      27 s() 28 s() XCHG
+      26 s() 28 s() XCHG
+      25 s() 28 s() XCHG
+      24 s() 28 s() XCHG
+      23 s() 28 s() XCHG
+      22 s() 28 s() XCHG
+      21 s() 28 s() XCHG
+      20 s() 28 s() XCHG
+      19 s() 28 s() XCHG
+      18 s() 28 s() XCHG
+      17 s() 28 s() XCHG
+      16 s() 28 s() XCHG
+      s15 28 s() XCHG
+      s14 28 s() XCHG
+      s13 28 s() XCHG
+      s12 28 s() XCHG
+      s11 28 s() XCHG
+      s10 28 s() XCHG
+      s9 28 s() XCHG
+      s0 28 s() XCHG
+      s0 s8 XCHG
+      s0 s7 XCHG
+      s0 s6 XCHG
+      5 -ROLL
+      38 s() PUSH
+      35 s() PUSH
+      38 s() PUSH
       $Pool$_fun_calculatePremiumRate INLINECALLDICT
     }>ELSE<{
-      37 s() PUSH
+      36 s() PUSH
       NOT
-      31 s() 33 s() XCHG
-      30 s() 32 s() XCHG
-      29 s() 33 s() XCHG
-      28 s() 32 s() XCHG
-      27 s() 33 s() XCHG
-      26 s() 32 s() XCHG
-      25 s() 33 s() XCHG
-      24 s() 32 s() XCHG
-      23 s() 33 s() XCHG
-      22 s() 32 s() XCHG
-      21 s() 33 s() XCHG
-      20 s() 32 s() XCHG
-      19 s() 33 s() XCHG
-      18 s() 32 s() XCHG
-      17 s() 33 s() XCHG
-      16 s() 32 s() XCHG
-      s15 33 s() XCHG
-      s14 32 s() XCHG
-      s13 33 s() XCHG
-      s12 32 s() XCHG
-      s11 33 s() XCHG
-      s10 32 s() XCHG
-      s9 33 s() XCHG
-      s8 32 s() XCHG
-      s7 33 s() XCHG
-      s6 32 s() XCHG
-      s5 33 s() XCHG
-      s4 32 s() XCHG
-      s3 33 s() XCHG
-      s2 32 s() XCHG
-      s1 33 s() XCHG
-      40 s() PUSH
+      28 s() 29 s() XCHG
+      27 s() 29 s() XCHG
+      26 s() 29 s() XCHG
+      25 s() 29 s() XCHG
+      24 s() 29 s() XCHG
+      23 s() 29 s() XCHG
+      22 s() 29 s() XCHG
+      21 s() 29 s() XCHG
+      20 s() 29 s() XCHG
+      19 s() 29 s() XCHG
+      18 s() 29 s() XCHG
+      17 s() 29 s() XCHG
+      16 s() 29 s() XCHG
+      s15 29 s() XCHG
+      s14 29 s() XCHG
+      s13 29 s() XCHG
+      s12 29 s() XCHG
+      s11 29 s() XCHG
+      s10 29 s() XCHG
+      s9 29 s() XCHG
+      s8 29 s() XCHG
+      s7 29 s() XCHG
+      s6 29 s() XCHG
+      s5 29 s() XCHG
+      s4 29 s() XCHG
+      s3 29 s() XCHG
+      s2 29 s() XCHG
+      s1 29 s() XCHG
+      39 s() PUSH
       SWAP
-      37 s() PUSH
+      36 s() PUSH
       SWAP
       $Pool$_fun_calculatePremiumRate INLINECALLDICT
     }>
+    OVER
+    257 PUSHINT
+    41 s() PUSH
+    __tact_dict_get_int_cell INLINECALLDICT
+    $PremiumRateSampleData$_load_opt INLINECALLDICT
     DUP
     ISNULL
     NOT
     IF:<{
-      4 1 BLKDROP2
       $PremiumRateSampleData$_not_null INLINECALLDICT
-      DUP
-      s0 33 s() XCHG
-      ADD
-      1 RSHIFT#
-      s0 32 s() XCHG
+      3 1 BLKDROP2
     }>ELSE<{
       DROP
+      0 PUSHINT
+      s0 s0 s0 PUSH3
+      $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate INLINECALLDICT
+      3 1 BLKDROP2
+    }>
+    OVER
+    ISNULL
+    NOT
+    IF:<{
+      SWAP
+      $PremiumRateSampleData$_not_null INLINECALLDICT
+      s0 s4 PUXC
+      ADD
+      1 RSHIFT#
+      s0 s3 XCHG
+      257 PUSHINT
+      s3 s2 s5 XCPU2
+      $PremiumRateSampleData$_store_cell INLINECALLDICT
+      s5 s5 s0 XCHG3
+      43 s() PUSH
+      SWAP
+      __tact_dict_set_int_cell INLINECALLDICT
+      41 s() PUSH
+      s0 s4 s3 XCHG3
+      $PremiumRateChanged$_constructor_tokenId_deviationRate_premiumRate INLINECALLDICT
+      $PremiumRateChanged$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+    }>ELSE<{
+      NIP
     }>
     1000000000 PUSHINT
     SWAP
-    s0 33 s() XCHG
     ADD
-    31 s() PUSH
+    29 s() PUSH
     MUL
     1000000000 PUSHINT
     DIV
     0 PUSHINT
-    41 s() PUSH
+    31 s() PUSH
     10 EQINT
     IF:<{
       TRUE
     }>ELSE<{
-      41 s() PUSH
+      31 s() PUSH
       11 EQINT
     }>
     IF:<{
@@ -5849,123 +5854,118 @@ PROGRAM{
         LEQ
         1644 THROWIFNOT
       }>
-      29 s() 38 s() XCHG
-      28 s() 37 s() XCHG
-      27 s() 36 s() XCHG
-      26 s() 35 s() XCHG
-      25 s() 34 s() XCHG
-      24 s() 33 s() XCHG
-      23 s() 32 s() XCHG
-      22 s() 31 s() XCHG
-      21 s() 30 s() XCHG
-      20 s() 29 s() XCHG
-      19 s() 28 s() XCHG
-      18 s() 27 s() XCHG
-      17 s() 26 s() XCHG
-      16 s() 25 s() XCHG
-      s15 24 s() XCHG
-      s14 23 s() XCHG
-      s13 22 s() XCHG
-      s12 21 s() XCHG
-      s11 20 s() XCHG
-      s10 19 s() XCHG
-      s9 18 s() XCHG
-      s8 17 s() XCHG
-      s7 16 s() XCHG
-      s6 s15 XCHG
-      s5 s14 XCHG
-      s4 s13 XCHG
-      s3 s12 XCHG
-      s11 s10 s9 XCHG3
-      s4 s8 XCHG
-      s7 39 s() XCHG
-      41 s() PUSH
-      s6 s1 s7 XCHG3
-      s3 s5 XCHG
-      s1 s4 XCHG
-      s2 40 s() XCHG
+      27 s() 35 s() XCHG
+      26 s() 34 s() XCHG
+      25 s() 33 s() XCHG
+      24 s() 32 s() XCHG
+      23 s() 31 s() XCHG
+      22 s() 30 s() XCHG
+      21 s() 29 s() XCHG
+      20 s() 28 s() XCHG
+      19 s() 27 s() XCHG
+      18 s() 26 s() XCHG
+      17 s() 25 s() XCHG
+      16 s() 24 s() XCHG
+      s15 23 s() XCHG
+      s14 22 s() XCHG
+      s13 21 s() XCHG
+      s12 20 s() XCHG
+      s11 19 s() XCHG
+      s10 18 s() XCHG
+      s9 17 s() XCHG
+      s8 16 s() XCHG
+      8 8 BLKSWAP
+      s7 PUSH
+      s6 s8 XCHG
+      s0 s7 XCHG
+      s6 38 s() XCHG
+      s5 39 s() XCHG
+      s4 37 s() XCHG
+      s3 37 s() XCHG
+      s2 37 s() XCHG
+      s1 39 s() XCHG
+      s0 37 s() XCHG
       $Pool$_fun_increasePerpPosition INLINECALLDICT
     }>ELSE<{
       DROP
-      40 s() PUSH
+      30 s() PUSH
       3 EQINT
       IF:<{
-        33 s() POP
-        33 s() POP
-        33 s() POP
-        33 s() POP
-        36 s() POP
-        25 s() 35 s() XCHG
-        24 s() 34 s() XCHG
-        23 s() 33 s() XCHG
-        22 s() 32 s() XCHG
-        21 s() 31 s() XCHG
-        20 s() 30 s() XCHG
-        19 s() 29 s() XCHG
-        18 s() 28 s() XCHG
-        17 s() 27 s() XCHG
-        16 s() 26 s() XCHG
-        s15 25 s() XCHG
-        s14 24 s() XCHG
-        s13 23 s() XCHG
-        s12 22 s() XCHG
-        s11 21 s() XCHG
-        s10 20 s() XCHG
-        s9 19 s() XCHG
-        s8 18 s() XCHG
-        s7 17 s() XCHG
-        s6 16 s() XCHG
-        s5 s15 XCHG
-        s4 s14 XCHG
-        s3 s13 XCHG
-        s12 s11 s10 XCHG3
-        s5 s9 XCHG
-        s0 s7 XCHG
-        s0 s5 XCHG
-        s8 s6 XCHG2
-        37 s() PUSH
-        s0 s5 XCHG
-        s3 s1 s3 XCHG3
+        30 s() POP
+        32 s() POP
+        32 s() POP
+        32 s() POP
+        32 s() POP
+        23 s() 32 s() XCHG
+        22 s() 31 s() XCHG
+        21 s() 30 s() XCHG
+        20 s() 29 s() XCHG
+        19 s() 28 s() XCHG
+        18 s() 27 s() XCHG
+        17 s() 26 s() XCHG
+        16 s() 25 s() XCHG
+        s15 24 s() XCHG
+        s14 23 s() XCHG
+        s13 22 s() XCHG
+        s12 21 s() XCHG
+        s11 20 s() XCHG
+        s10 19 s() XCHG
+        s9 18 s() XCHG
+        s8 17 s() XCHG
+        s7 16 s() XCHG
+        s6 s15 XCHG
+        s5 s14 XCHG
+        s4 s13 XCHG
+        s3 s12 XCHG
+        s11 s10 s9 XCHG3
+        s4 s8 XCHG
+        s3 s7 XCHG
+        s6 s5 s0 XCHG3
+        s0 s4 PUXC
+        s4 34 s() XCHG
+        s3 35 s() XCHG
+        s1 35 s() XCHG
+        s0 34 s() XCHG
         $Pool$_fun_liquidatePerpPosition INLINECALLDICT
       }>ELSE<{
-        40 s() PUSH
+        30 s() PUSH
         4 EQINT
         IF:<{
           33 s() POP
           33 s() POP
-          28 s() 38 s() XCHG
-          27 s() 37 s() XCHG
-          26 s() 36 s() XCHG
-          25 s() 35 s() XCHG
-          24 s() 34 s() XCHG
-          23 s() 33 s() XCHG
-          22 s() 32 s() XCHG
-          21 s() 31 s() XCHG
-          20 s() 30 s() XCHG
-          19 s() 29 s() XCHG
-          18 s() 28 s() XCHG
-          17 s() 27 s() XCHG
-          16 s() 26 s() XCHG
-          s15 25 s() XCHG
-          s14 24 s() XCHG
-          s13 23 s() XCHG
-          s12 22 s() XCHG
-          s11 21 s() XCHG
-          s10 20 s() XCHG
-          s9 19 s() XCHG
-          s8 18 s() XCHG
-          s7 17 s() XCHG
-          s6 16 s() XCHG
-          s5 s15 XCHG
-          s4 s14 XCHG
-          s3 s13 XCHG
-          s12 s11 s10 XCHG3
-          s9 s1 s8 XCHG3
+          26 s() 35 s() XCHG
+          25 s() 34 s() XCHG
+          24 s() 33 s() XCHG
+          23 s() 32 s() XCHG
+          22 s() 31 s() XCHG
+          21 s() 30 s() XCHG
+          20 s() 29 s() XCHG
+          19 s() 28 s() XCHG
+          18 s() 27 s() XCHG
+          17 s() 26 s() XCHG
+          16 s() 25 s() XCHG
+          s15 24 s() XCHG
+          s14 23 s() XCHG
+          s13 22 s() XCHG
+          s12 21 s() XCHG
+          s11 20 s() XCHG
+          s10 19 s() XCHG
+          s9 18 s() XCHG
+          s8 17 s() XCHG
+          s7 16 s() XCHG
+          s6 s15 XCHG
+          s5 s14 XCHG
+          s4 s13 XCHG
+          s3 s12 XCHG
+          s11 s10 s9 XCHG3
+          s5 s8 XCHG
+          s7 s0 s3 XC2PU
           s0 s7 XCHG
-          40 s() PUSH
-          s0 s7 XCHG
-          s0 s6 XCHG
-          4 2 BLKSWAP
+          s6 37 s() XCHG
+          s5 38 s() XCHG
+          s4 37 s() XCHG
+          s0 s1 s3 XCHG3
+          s0 38 s() XCHG
           $Pool$_fun_decreasePerpPosition INLINECALLDICT
         }>ELSE<{
           s0 33 s() XCHG
@@ -5982,43 +5982,43 @@ PROGRAM{
             LEQ
             1644 THROWIFNOT
           }>
-          28 s() 38 s() XCHG
-          27 s() 37 s() XCHG
-          26 s() 36 s() XCHG
-          25 s() 35 s() XCHG
-          24 s() 34 s() XCHG
-          23 s() 33 s() XCHG
-          22 s() 32 s() XCHG
-          21 s() 31 s() XCHG
-          20 s() 30 s() XCHG
-          19 s() 29 s() XCHG
-          18 s() 28 s() XCHG
-          17 s() 27 s() XCHG
-          16 s() 26 s() XCHG
-          s15 25 s() XCHG
-          s14 24 s() XCHG
-          s13 23 s() XCHG
-          s12 22 s() XCHG
-          s11 21 s() XCHG
-          s10 20 s() XCHG
-          s9 19 s() XCHG
-          s8 18 s() XCHG
-          s7 17 s() XCHG
-          s6 16 s() XCHG
-          s5 s15 XCHG
-          s4 s14 XCHG
-          s3 s13 XCHG
-          s12 s11 s10 XCHG3
-          s9 s1 s8 XCHG3
+          26 s() 35 s() XCHG
+          25 s() 34 s() XCHG
+          24 s() 33 s() XCHG
+          23 s() 32 s() XCHG
+          22 s() 31 s() XCHG
+          21 s() 30 s() XCHG
+          20 s() 29 s() XCHG
+          19 s() 28 s() XCHG
+          18 s() 27 s() XCHG
+          17 s() 26 s() XCHG
+          16 s() 25 s() XCHG
+          s15 24 s() XCHG
+          s14 23 s() XCHG
+          s13 22 s() XCHG
+          s12 21 s() XCHG
+          s11 20 s() XCHG
+          s10 19 s() XCHG
+          s9 18 s() XCHG
+          s8 17 s() XCHG
+          s7 16 s() XCHG
+          s6 s15 XCHG
+          s5 s14 XCHG
+          s4 s13 XCHG
+          s3 s12 XCHG
+          s11 s10 s9 XCHG3
+          s5 s8 XCHG
+          s7 s0 s3 XC2PU
           s0 s7 XCHG
-          40 s() PUSH
-          s0 s7 XCHG
-          s0 s6 XCHG
-          4 2 BLKSWAP
+          s6 37 s() XCHG
+          s5 38 s() XCHG
+          s4 37 s() XCHG
+          s0 s1 s3 XCHG3
+          s0 38 s() XCHG
           $Pool$_fun_decreasePerpPosition INLINECALLDICT
         }>
+        29 s() 30 s() XCHG
       }>
-      s0 31 s() XCHG
       s0 30 s() XCHG
       s0 29 s() XCHG
       s0 28 s() XCHG
@@ -6038,10 +6038,10 @@ PROGRAM{
     }>
     __tact_context_get INLINECALLDICT
     $Context$_get_value INLINECALLDICT
-    31 s() PUSH
+    28 s() PUSH
     1 LSHIFT#
     SUB
-    30 s() PUSH
+    27 s() PUSH
     SUB
     __tact_context_get INLINECALLDICT
     $Context$_fun_readForwardFee INLINECALLDICT
@@ -6050,24 +6050,21 @@ PROGRAM{
     OVER
     0 GTINT
     THROWANYIFNOT
-    s0 33 s() XCHG
+    s0 29 s() XCHG
     FALSE
-    s0 33 s() XCHG
+    s0 32 s() XCHG
     1 PUSHINT
-    s0 36 s() XCHG
+    s0 32 s() XCHG
     $UpdatePerpPositionSuccess$_constructor_orderId_receive_trxId INLINECALLDICT
     $UpdatePerpPositionSuccess$_store_cell INLINECALLDICT
-    23 s() PUSH
+    20 s() PUSH
     s0 s4 XCHG
-    s3 34 s() XCHG
-    s2 33 s() XCHG
-    s0 35 s() XCHG
+    s3 30 s() XCHG
+    s2 32 s() XCHG
+    s0 31 s() XCHG
     SWAP
     $SendParameters$_constructor_to_value_bounce_mode_body INLINECALLDICT
     $global_send INLINECALLDICT
-    27 s() 30 s() XCHG
-    26 s() 29 s() XCHG
-    25 s() 28 s() XCHG
     24 s() 27 s() XCHG
     23 s() 26 s() XCHG
     22 s() 25 s() XCHG
@@ -6080,14 +6077,15 @@ PROGRAM{
     s15 18 s() XCHG
     s14 17 s() XCHG
     s13 16 s() XCHG
-    3 13 BLKSWAP
+    s12 s15 XCHG
+    3 12 BLKSWAP
   }>
   $Pool$_internal_binary_UpdatePrice PROCINLINE:<{
     s2 POP
     FALSE
     267 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    25 s() PUSH
+    22 s() PUSH
     -ROT
     1 PUSHINT
     __tact_dict_get_slice_int INLINECALLDICT
@@ -6110,7 +6108,7 @@ PROGRAM{
     FALSE
     267 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    25 s() PUSH
+    22 s() PUSH
     -ROT
     1 PUSHINT
     __tact_dict_get_slice_int INLINECALLDICT
@@ -6152,19 +6150,19 @@ PROGRAM{
           $PremiumRateSampleRange$_constructor_sampleLength_samples INLINECALLDICT
           $PremiumRateSampleRange$_store_cell INLINECALLDICT
           s2 PUSH
-          s3 s12 XCHG
+          s3 s9 XCHG
           SWAP
           __tact_dict_set_int_cell INLINECALLDICT
-          s9 s8 PUSH2
+          s6 s5 PUSH2
           GEQ
           IF:<{
-            s8 POP
-            s0 s8 XCHG
+            s5 POP
+            s0 s5 XCHG
             INC
-            s0 s7 XCHG
-            s0 s8 XCHG
+            s0 s4 XCHG
+            s0 s5 XCHG
           }>ELSE<{
-            s9 POP
+            s6 POP
           }>
         }>ELSE<{
           DROP
@@ -6194,9 +6192,6 @@ PROGRAM{
       __tact_verify_address INLINECALLDICT
     }>
     $Pool$_contract_load INLINECALLDICT
-    30 s() 31 s() XCHG
-    29 s() 30 s() XCHG
-    28 s() 29 s() XCHG
     27 s() 28 s() XCHG
     26 s() 27 s() XCHG
     25 s() 26 s() XCHG
@@ -6214,14 +6209,10 @@ PROGRAM{
     $Pool$_fun_configData INLINECALLDICT
     14 7 BLKDROP2
     14 7 BLKDROP2
-    3 7 BLKDROP2
     $ConfigData$_to_external INLINECALLDICT
   }>
   %tokenConfig PROC:<{
     $Pool$_contract_load INLINECALLDICT
-    30 s() 31 s() XCHG
-    29 s() 30 s() XCHG
-    28 s() 29 s() XCHG
     27 s() 28 s() XCHG
     26 s() 27 s() XCHG
     25 s() 26 s() XCHG
@@ -6240,8 +6231,8 @@ PROGRAM{
     18 s() POP
     16 s() POP
     15 BLKDROP
-    s14 s15 XCHG2
-    14 BLKDROP
+    s11 s12 XCHG2
+    11 BLKDROP
     $TokenConfigData$_to_external INLINECALLDICT
   }>
   %lpPosition PROC:<{
@@ -6254,9 +6245,6 @@ PROGRAM{
       __tact_verify_address INLINECALLDICT
     }>
     $Pool$_contract_load INLINECALLDICT
-    30 s() 31 s() XCHG
-    29 s() 30 s() XCHG
-    28 s() 29 s() XCHG
     27 s() 28 s() XCHG
     26 s() 27 s() XCHG
     25 s() 26 s() XCHG
@@ -6274,7 +6262,7 @@ PROGRAM{
     $Pool$_fun_lpPosition INLINECALLDICT
     16 s() POP
     15 BLKDROP
-    15 1 BLKDROP2
+    12 1 BLKDROP2
     $LPPositionData$_to_opt_external INLINECALLDICT
   }>
   %perpPosition PROC:<{
@@ -6287,9 +6275,6 @@ PROGRAM{
       __tact_verify_address INLINECALLDICT
     }>
     $Pool$_contract_load INLINECALLDICT
-    30 s() 32 s() XCHG
-    29 s() 31 s() XCHG
-    28 s() 30 s() XCHG
     27 s() 29 s() XCHG
     26 s() 28 s() XCHG
     25 s() 27 s() XCHG
@@ -6304,12 +6289,11 @@ PROGRAM{
     16 s() 18 s() XCHG
     s15 17 s() XCHG
     s14 16 s() XCHG
-    s13 s15 XCHG
-    2 13 BLKSWAP
+    2 14 BLKSWAP
     $Pool$_fun_perpPosition INLINECALLDICT
     16 s() POP
     15 BLKDROP
-    15 1 BLKDROP2
+    12 1 BLKDROP2
     $PerpPositionData$_to_opt_external INLINECALLDICT
   }>
   %owner PROC:<{
@@ -6317,7 +6301,7 @@ PROGRAM{
     $Pool$_fun_owner INLINECALLDICT
     16 s() POP
     15 BLKDROP
-    15 1 BLKDROP2
+    12 1 BLKDROP2
   }>
   supported_interfaces PROC:<{
     123515602279859691144772641439386770278 PUSHINT
@@ -6327,7 +6311,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d586171476366754a5836667a674d665353364d344561747a7a594e4779724b32506833333543436d41353334} PUSHSLICE
+    x{697066733a2f2f516d6554646b62414e344c4e314d37567473417252323676646378577962594c3935785173326a62686466386752} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -6440,9 +6424,6 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $Pool$_contract_load INLINECALLDICT
-    30 s() 32 s() XCHG
-    29 s() 31 s() XCHG
-    28 s() 30 s() XCHG
     27 s() 29 s() XCHG
     26 s() 28 s() XCHG
     25 s() 27 s() XCHG
@@ -6457,8 +6438,7 @@ PROGRAM{
     16 s() 18 s() XCHG
     s15 17 s() XCHG
     s14 16 s() XCHG
-    s13 s15 XCHG
-    2 13 BLKSWAP
+    2 14 BLKSWAP
     $Pool$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
     $Pool$_contract_store INLINECALLDICT
