@@ -1390,7 +1390,7 @@ contract Pool with Deployable, Ownable {
         globalPosition.longFundingFeeGrowth = longFundingFeeGrowthAfter;
         globalPosition.shortFundingFeeGrowth = shortFundingFeeGrowthAfter;
         self.globalPositions.set(tokenId, globalPosition);
-        return lpReceivedFundingFee;
+        return lpReceivedFundingFee / PRICE_DECIMAL_FACTOR;
     }
 
     fun calculatePremiumRate(tokenId: Int, sizeDelta: Int, isLong: Bool): PremiumRateSampleData? {
