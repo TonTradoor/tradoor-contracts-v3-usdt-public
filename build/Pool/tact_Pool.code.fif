@@ -2576,6 +2576,8 @@ PROGRAM{
         MIN
         SWAP
         MAX
+        s4 s(-1) PUXC
+        MAX
       }>
       s8 s0 PUSH2
       ADD
@@ -2605,9 +2607,7 @@ PROGRAM{
     0 PUSHINT
     s7 s10 XCPU
     SUB
-    s6 s2 PUSH2
-    MAX
-    s1 s7 XCHG
+    s6 s2 XCPU
     SUB
     s6 PUSH
     0 GTINT
