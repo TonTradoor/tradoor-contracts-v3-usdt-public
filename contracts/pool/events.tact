@@ -99,12 +99,17 @@ message GlobalPositionChangedEvent {
 }
 
 // ============================ Price ================================ //
+// message UpdatePriceAndFundingFeeEvent {
+//     dataLength: Int as uint64;
+//     datas: map<Int, UpdatePriceAndFundingFeeData>;
+// }
 message UpdatePriceEvent {
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePriceParam>;
+    tokenId: Int as uint64;
+    price: Int;
+    lpFundingFee: Int;
 }
 
-message PremiumRateChanged {
+message PremiumRateChangedEvent {
     tokenId: Int as uint64;
     deviationRate: Int;
     premiumRate: Int;

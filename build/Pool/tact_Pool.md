@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 15335 bytes
+BOC Size: 15357 bytes
 
 # Types
 Total Types: 43
@@ -102,12 +102,12 @@ TLB: `global_position_changed_event#82e5206c tokenId:uint64 longMarginAfter:int2
 Signature: `GlobalPositionChangedEvent{tokenId:uint64,longMarginAfter:int257,shortMarginAfter:int257,longSizeAfter:int257,shortSizeAfter:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257,trxId:uint64}`
 
 ## UpdatePriceEvent
-TLB: `update_price_event#60589463 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePriceEvent`
-Signature: `UpdatePriceEvent{pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
+TLB: `update_price_event#6271a1c7 tokenId:uint64 price:int257 lpFundingFee:int257 = UpdatePriceEvent`
+Signature: `UpdatePriceEvent{tokenId:uint64,price:int257,lpFundingFee:int257}`
 
-## PremiumRateChanged
-TLB: `premium_rate_changed#e07b0178 tokenId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateChanged`
-Signature: `PremiumRateChanged{tokenId:uint64,deviationRate:int257,premiumRate:int257}`
+## PremiumRateChangedEvent
+TLB: `premium_rate_changed_event#fc86b5fb tokenId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateChangedEvent`
+Signature: `PremiumRateChangedEvent{tokenId:uint64,deviationRate:int257,premiumRate:int257}`
 
 ## ConfigData
 TLB: `_ isExecutor:Maybe bool gasConsumption:coins minTonsForStorage:coins lpLockTime:int257 lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`

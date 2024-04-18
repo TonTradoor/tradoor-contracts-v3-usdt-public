@@ -429,7 +429,7 @@ contract Pool with Deployable, Ownable {
             avgPremiumRate = (premiumRateSample.premiumRate + avgPremiumRate) / 2;
             prevPremiumRateSample = premiumRateSample;
             self.prevPremiumRateSamples.set(msg.tokenId, prevPremiumRateSample);
-            emit(PremiumRateChanged{
+            emit(PremiumRateChangedEvent{
                 tokenId: msg.tokenId,
                 deviationRate: prevPremiumRateSample.deviationRate,
                 premiumRate: prevPremiumRateSample.premiumRate
@@ -1230,15 +1230,16 @@ contract Pool with Deployable, Ownable {
                 }
 
                 // update funding fee
-                self.updateFundingRate(tokenId, price);
+                let lpReceivedFundingFee: Int = self.updateFundingRate(tokenId, price);
+                emit(UpdatePriceEvent{
+                    tokenId: tokenId,
+                    price: price,
+                    lpFundingFee: lpReceivedFundingFee
+                }.toCell());
             }
             i = i + 1;
         }
         self.globalLPUnrealizedPnl = totalGlobalUnrealizedPnl;
-        emit(UpdatePriceEvent{
-            pricesLength: pricesLength,
-            prices: prices
-        }.toCell());
     }
 
     // fun getPrice(tokenId: Int): Int {
@@ -1250,7 +1251,7 @@ contract Pool with Deployable, Ownable {
     //     return price;
     // }
 
-    fun updateFundingRate(tokenId: Int, indexPrice: Int) {
+    fun updateFundingRate(tokenId: Int, indexPrice: Int): Int {
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "token config not exist");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
@@ -1276,7 +1277,7 @@ contract Pool with Deployable, Ownable {
         let timeDelta: Int = timestamp - lastSamplingTime;
         if (timeDelta < SAMPLE_PREMIUM_RATE_INTERVAL) {
             // no need to update
-            return;
+            return 0;
         }
 
         // get PR
@@ -1304,7 +1305,7 @@ contract Pool with Deployable, Ownable {
             sample.cumulativePremiumRate = cumulativePremiumRate;
             sample.sampleCount = sampleCountAfter;
             self.globalFundingRateSamples.set(tokenId, sample);
-            return;
+            return 0;
         }
 
         // average PR
@@ -1344,7 +1345,7 @@ contract Pool with Deployable, Ownable {
         // get paidSize and receivedSize
         let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
         if (globalPositionOpt == null) {
-            return;
+            return 0;
         }
 
         let globalPosition: GlobalPosition = globalPositionOpt!!;
@@ -1364,12 +1365,15 @@ contract Pool with Deployable, Ownable {
         let paidFundingFeeGrowthDelta: Int = indexPrice * clampedFundingRateDelta / PERCENTAGE_BASIS_POINT;
 
         let receivedFundingFeeGrowthDelta: Int = 0;
+        let lpReceivedFundingFee: Int = 0;
         if (paidFundingFeeGrowthDelta > 0) {
             if (receivedSize > 0) {
                 receivedFundingFeeGrowthDelta = paidFundingFeeGrowthDelta;
-                self.globalLPFundingFeeGrowth += paidFundingFeeGrowthDelta * (paidSize - receivedSize) / self.globalLPLiquidity;
+                lpReceivedFundingFee = paidFundingFeeGrowthDelta * (paidSize - receivedSize);
+                self.globalLPFundingFeeGrowth += lpReceivedFundingFee / self.globalLPLiquidity;
             } else {
-                self.globalLPFundingFeeGrowth += paidSize * paidFundingFeeGrowthDelta / self.globalLPLiquidity;
+                lpReceivedFundingFee = paidSize * paidFundingFeeGrowthDelta;
+                self.globalLPFundingFeeGrowth += lpReceivedFundingFee / self.globalLPLiquidity;
             }
         }
         let longFundingFeeGrowthAfter: Int = globalPosition.longFundingFeeGrowth;
@@ -1386,6 +1390,7 @@ contract Pool with Deployable, Ownable {
         globalPosition.longFundingFeeGrowth = longFundingFeeGrowthAfter;
         globalPosition.shortFundingFeeGrowth = shortFundingFeeGrowthAfter;
         self.globalPositions.set(tokenId, globalPosition);
+        return lpReceivedFundingFee;
     }
 
     fun calculatePremiumRate(tokenId: Int, sizeDelta: Int, isLong: Bool): PremiumRateSampleData? {

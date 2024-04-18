@@ -84,14 +84,16 @@ struct PerpPositionData {
 }
 
 // ============================ Price ================================ //
-// struct PriceData {
-//     price: Int;
-// }
-
 struct UpdatePriceParam {
     tokenId: Int as uint64;
     price: Int;
 }
+
+// struct UpdatePriceAndFundingFeeData {
+//     tokenId: Int as uint64;
+//     price: Int;
+//     lpFundingFee: Int;
+// }
 
 // ============================ Premium Rate ================================ //
 struct PremiumRateSampleRange {

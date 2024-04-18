@@ -142,16 +142,16 @@ builder $GlobalPositionChangedEvent$_store(builder build_0, (int, int, int, int,
 cell $GlobalPositionChangedEvent$_store_cell((int, int, int, int, int, int, int, int) v) inline;
 
 ;; $UpdatePriceEvent$_store
-builder $UpdatePriceEvent$_store(builder build_0, (int, cell) v) inline;
+builder $UpdatePriceEvent$_store(builder build_0, (int, int, int) v) inline;
 
 ;; $UpdatePriceEvent$_store_cell
-cell $UpdatePriceEvent$_store_cell((int, cell) v) inline;
+cell $UpdatePriceEvent$_store_cell((int, int, int) v) inline;
 
-;; $PremiumRateChanged$_store
-builder $PremiumRateChanged$_store(builder build_0, (int, int, int) v) inline;
+;; $PremiumRateChangedEvent$_store
+builder $PremiumRateChangedEvent$_store(builder build_0, (int, int, int) v) inline;
 
-;; $PremiumRateChanged$_store_cell
-cell $PremiumRateChanged$_store_cell((int, int, int) v) inline;
+;; $PremiumRateChangedEvent$_store_cell
+cell $PremiumRateChangedEvent$_store_cell((int, int, int) v) inline;
 
 ;; $TokenConfig$_store
 builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int) v) inline_ref;
@@ -561,8 +561,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_perpPosition
 ((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell), tuple) $Pool$_fun_perpPosition((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell) $self, int $tokenId, slice $account) impure inline_ref;
 
-;; $UpdatePriceEvent$_constructor_pricesLength_prices
-((int, cell)) $UpdatePriceEvent$_constructor_pricesLength_prices(int pricesLength, cell prices) inline;
+;; $UpdatePriceEvent$_constructor_tokenId_price_lpFundingFee
+((int, int, int)) $UpdatePriceEvent$_constructor_tokenId_price_lpFundingFee(int tokenId, int price, int lpFundingFee) inline;
 
 ;; $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate
 ((int, int, int)) $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate(int lastAdjustFundingRateTime, int sampleCount, int cumulativePremiumRate) inline;
@@ -571,7 +571,7 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, int, int, int)) $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate(int rangeId, int sampleId, int deviationRate, int premiumRate) inline;
 
 ;; $Pool$_fun_updateFundingRate
-((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell), ()) $Pool$_fun_updateFundingRate((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell) $self, int $tokenId, int $indexPrice) impure inline_ref;
+((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell), int) $Pool$_fun_updateFundingRate((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell) $self, int $tokenId, int $indexPrice) impure inline_ref;
 
 ;; $Pool$_fun_updatePriceAndFundingFee
 ((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell), ()) $Pool$_fun_updatePriceAndFundingFee((int, int, cell, int, int, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, int, cell) $self, int $pricesLength, cell $prices) impure inline_ref;
@@ -612,8 +612,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId
 ((int, int, int)) $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId(int orderId, int receive, int trxId) inline;
 
-;; $PremiumRateChanged$_constructor_tokenId_deviationRate_premiumRate
-((int, int, int)) $PremiumRateChanged$_constructor_tokenId_deviationRate_premiumRate(int tokenId, int deviationRate, int premiumRate) inline;
+;; $PremiumRateChangedEvent$_constructor_tokenId_deviationRate_premiumRate
+((int, int, int)) $PremiumRateChangedEvent$_constructor_tokenId_deviationRate_premiumRate(int tokenId, int deviationRate, int premiumRate) inline;
 
 ;; $UpdatePerpPositionSuccess$_constructor_orderId_receive_trxId
 ((int, int, int)) $UpdatePerpPositionSuccess$_constructor_orderId_receive_trxId(int orderId, int receive, int trxId) inline;

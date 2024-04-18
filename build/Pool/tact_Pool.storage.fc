@@ -469,46 +469,47 @@ cell $GlobalPositionChangedEvent$_store_cell((int, int, int, int, int, int, int,
 
 ;;
 ;; Type: UpdatePriceEvent
-;; Header: 0x60589463
-;; TLB: update_price_event#60589463 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePriceEvent
+;; Header: 0x6271a1c7
+;; TLB: update_price_event#6271a1c7 tokenId:uint64 price:int257 lpFundingFee:int257 = UpdatePriceEvent
 ;;
 
-builder $UpdatePriceEvent$_store(builder build_0, (int, cell) v) inline {
-    var (v'pricesLength, v'prices) = v;
-    build_0 = store_uint(build_0, 1616417891, 32);
-    build_0 = build_0.store_uint(v'pricesLength, 64);
-    build_0 = build_0.store_dict(v'prices);
+builder $UpdatePriceEvent$_store(builder build_0, (int, int, int) v) inline {
+    var (v'tokenId, v'price, v'lpFundingFee) = v;
+    build_0 = store_uint(build_0, 1651614151, 32);
+    build_0 = build_0.store_uint(v'tokenId, 64);
+    build_0 = build_0.store_int(v'price, 257);
+    build_0 = build_0.store_int(v'lpFundingFee, 257);
     return build_0;
 }
 
-cell $UpdatePriceEvent$_store_cell((int, cell) v) inline {
+cell $UpdatePriceEvent$_store_cell((int, int, int) v) inline {
     return $UpdatePriceEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, cell)) $UpdatePriceEvent$_constructor_pricesLength_prices(int pricesLength, cell prices) inline {
-    return (pricesLength, prices);
+((int, int, int)) $UpdatePriceEvent$_constructor_tokenId_price_lpFundingFee(int tokenId, int price, int lpFundingFee) inline {
+    return (tokenId, price, lpFundingFee);
 }
 
 ;;
-;; Type: PremiumRateChanged
-;; Header: 0xe07b0178
-;; TLB: premium_rate_changed#e07b0178 tokenId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateChanged
+;; Type: PremiumRateChangedEvent
+;; Header: 0xfc86b5fb
+;; TLB: premium_rate_changed_event#fc86b5fb tokenId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateChangedEvent
 ;;
 
-builder $PremiumRateChanged$_store(builder build_0, (int, int, int) v) inline {
+builder $PremiumRateChangedEvent$_store(builder build_0, (int, int, int) v) inline {
     var (v'tokenId, v'deviationRate, v'premiumRate) = v;
-    build_0 = store_uint(build_0, 3766157688, 32);
+    build_0 = store_uint(build_0, 4236686843, 32);
     build_0 = build_0.store_uint(v'tokenId, 64);
     build_0 = build_0.store_int(v'deviationRate, 257);
     build_0 = build_0.store_int(v'premiumRate, 257);
     return build_0;
 }
 
-cell $PremiumRateChanged$_store_cell((int, int, int) v) inline {
-    return $PremiumRateChanged$_store(begin_cell(), v).end_cell();
+cell $PremiumRateChangedEvent$_store_cell((int, int, int) v) inline {
+    return $PremiumRateChangedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int)) $PremiumRateChanged$_constructor_tokenId_deviationRate_premiumRate(int tokenId, int deviationRate, int premiumRate) inline {
+((int, int, int)) $PremiumRateChangedEvent$_constructor_tokenId_deviationRate_premiumRate(int tokenId, int deviationRate, int premiumRate) inline {
     return (tokenId, deviationRate, premiumRate);
 }
 
