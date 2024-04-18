@@ -323,7 +323,6 @@ contract Pool with Deployable, Ownable {
                 let bonus2: Int = lpPosition.bonus;
                 let bonus3: Int = liquidityDelta * self.lpBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 1000 * PERCENTAGE_BASIS_POINT);
                 bonus = max(min(bonus1, bonus2), bonus3);
-                bonus = max(lpPosition.bonus, bonus);
             }
             receive = liquidityDelta + bonus;
         } else {
@@ -340,7 +339,7 @@ contract Pool with Deployable, Ownable {
         // update position
         lpPosition.realizedFundingFee = 0;
         lpPosition.liquidity -= liquidityDelta;
-        lpPosition.bonus -= bonus;
+        lpPosition.bonus -= max(lpPosition.bonus, bonus);
 
         // set position
         if (lpPosition.liquidity > 0 || lpPosition.bonus > 0) {
