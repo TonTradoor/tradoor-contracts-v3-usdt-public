@@ -345,6 +345,10 @@
     $self'perpPositions~__tact_dict_set_int_cell(257, $tokenId, $AccountPerpPosition$_store_cell(($accountPerpPosition'positions)));
     $self'globalPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalPosition$_store_cell(($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $globalPosition'longValue, $globalPosition'shortValue)));
     $self'globalLPPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalLPPosition$_store_cell(($globalLPPosition'netSize, $globalLPPosition'isLong, $globalLPPosition'entryPrice, $globalLPPosition'unrealizedPnl)));
+    $global_emit($PerpPositionDecreasedEvent$_store_cell($PerpPositionDecreasedEvent$_constructor_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_realizedPnLDelta_tradingFee_fundingFee_entryFundingFeeGrowthAfter_receive_trxId($opType, $positionId, $account, $tokenId, $isLong, $marginDeltaAfter, $perpPosition'margin, $sizeDelta, $perpPosition'size, $tradePrice, $realizedPnl, $tradingFee, $fundingFee, $entryFundingFeeGrowthAfter, $receive, $trxId)));
+    $global_emit($GlobalPositionChangedEvent$_store_cell($GlobalPositionChangedEvent$_constructor_tokenId_longMarginAfter_shortMarginAfter_longSizeAfter_shortSizeAfter_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter_trxId($tokenId, $globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $trxId)));
+    $global_emit($GlobalLPPositionChangedEvent$_store_cell($GlobalLPPositionChangedEvent$_constructor_tokenId_netSizeAfter_isLong_entryPriceAfter_trxId($tokenId, $globalLPPosition'netSize, $globalLPPosition'isLong, $globalLPPosition'entryPrice, $trxId)));
+    $global_emit($GlobalLPLiquidityChangedEvent$_store_cell($GlobalLPLiquidityChangedEvent$_constructor_lpFundAfter_liquidityAfter_tradingFee_realizedPnl_trxId($self'globalLPFund, $self'globalLPLiquidity, $lpTradingFee, $lpRealizedPnl, $trxId)));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'tokenIdNext, $self'lpLockTime, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'premiumRateSampleRangeLength, $self'prevPremiumRateSamples), $receive);
 }
 
@@ -383,9 +387,6 @@
     int $maintenanceMargin = (((($perpPosition'size * $tradePrice) * $tokenConfig'tradingFeeRate) / (1000000000 * 100000000000000000000)) + $tokenConfig'liquidationFee);
     throw_unless(18995, ($maintenanceMargin >= ($perpPosition'margin + $unrealizedPnl)));
     int $liquidatePrice = ((((($perpPosition'margin + $fundingFee) - $tokenConfig'liquidationFee) * 100000000000000000000) + ($isLong ? ((- $perpPosition'entryPrice) * $perpPosition'size) : ($perpPosition'entryPrice * $perpPosition'size))) / (($perpPosition'size * ($tokenConfig'tradingFeeRate + ($isLong ? (- 1000000000) : 1000000000))) / 1000000000));
-    __tact_debug_str(__gen_slice_string_c7576b2f98dfec1a2d64cce6dc3304d481fc753af66ae6ce956797ac64df9d20());
-    __tact_debug_str(__tact_int_to_string($liquidatePrice));
-    __tact_debug_str(__tact_int_to_string($perpPosition'entryPrice));
     throw_unless(55429, ($isLong ? ($liquidatePrice < $perpPosition'entryPrice) : ($liquidatePrice > $perpPosition'entryPrice)));
     $tradePrice = $liquidatePrice;
     tuple $globalLPPositionOpt = $GlobalLPPosition$_load_opt(__tact_dict_get_int_cell($self'globalLPPositions, 257, $tokenId));
@@ -963,14 +964,13 @@ _ supported_interfaces() method_id {
         "org.ton.introspection.v0"H >> 128,
         "org.ton.abi.ipfs.v0"H >> 128,
         "org.ton.deploy.lazy.v0"H >> 128,
-        "org.ton.debug.v0"H >> 128,
         "org.ton.chain.workchain.v0"H >> 128,
         "org.ton.ownable"H >> 128
     );
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmTRPA7G1WvF4WrNGcYNvCmzisdEftiiT4DUqgMjBzwKni";
+    return "ipfs://QmPpYBqrP7c6ADwB9chRoEkc2ALx9BLYjM9u93TEeTf4Qa";
 }
 
 _ lazy_deployment_completed() method_id {

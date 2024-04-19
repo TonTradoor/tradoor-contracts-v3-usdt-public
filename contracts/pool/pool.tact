@@ -866,48 +866,48 @@ contract Pool with Deployable, Ownable {
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
         // event
-        // emit(PerpPositionDecreasedEvent{
-        //     opType: opType,
-        //     positionId: positionId,
-        //     account: account,
-        //     tokenId: tokenId,
-        //     isLong: isLong,
-        //     marginDelta: marginDeltaAfter,
-        //     marginAfter: perpPosition.margin,
-        //     sizeDelta: sizeDelta,
-        //     sizeAfter: perpPosition.size,
-        //     tradePrice: tradePrice,
-        //     realizedPnLDelta: realizedPnl,
-        //     tradingFee: tradingFee,
-        //     fundingFee: fundingFee,
-        //     entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
-        //     receive: receive,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalPositionChangedEvent{
-        //     tokenId: tokenId,
-        //     longMarginAfter: globalPosition.longMargin,
-        //     shortMarginAfter: globalPosition.shortMargin,
-        //     longSizeAfter: globalPosition.longSize,
-        //     shortSizeAfter: globalPosition.shortSize,
-        //     longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
-        //     shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalLPPositionChangedEvent{
-        //     tokenId: tokenId,
-        //     netSizeAfter: globalLPPosition.netSize,
-        //     isLong: globalLPPosition.isLong,
-        //     entryPriceAfter: globalLPPosition.entryPrice,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalLPLiquidityChangedEvent{
-        //     lpFundAfter: self.globalLPFund,
-        //     liquidityAfter: self.globalLPLiquidity,
-        //     tradingFee: lpTradingFee,
-        //     realizedPnl: lpRealizedPnl,
-        //     trxId: trxId
-        // }.toCell());
+        emit(PerpPositionDecreasedEvent{
+            opType: opType,
+            positionId: positionId,
+            account: account,
+            tokenId: tokenId,
+            isLong: isLong,
+            marginDelta: marginDeltaAfter,
+            marginAfter: perpPosition.margin,
+            sizeDelta: sizeDelta,
+            sizeAfter: perpPosition.size,
+            tradePrice: tradePrice,
+            realizedPnLDelta: realizedPnl,
+            tradingFee: tradingFee,
+            fundingFee: fundingFee,
+            entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
+            receive: receive,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalPositionChangedEvent{
+            tokenId: tokenId,
+            longMarginAfter: globalPosition.longMargin,
+            shortMarginAfter: globalPosition.shortMargin,
+            longSizeAfter: globalPosition.longSize,
+            shortSizeAfter: globalPosition.shortSize,
+            longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+            shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalLPPositionChangedEvent{
+            tokenId: tokenId,
+            netSizeAfter: globalLPPosition.netSize,
+            isLong: globalLPPosition.isLong,
+            entryPriceAfter: globalLPPosition.entryPrice,
+            trxId: trxId
+        }.toCell());
+        emit(GlobalLPLiquidityChangedEvent{
+            lpFundAfter: self.globalLPFund,
+            liquidityAfter: self.globalLPLiquidity,
+            tradingFee: lpTradingFee,
+            realizedPnl: lpRealizedPnl,
+            trxId: trxId
+        }.toCell());
         return receive;
     }
 
