@@ -156,14 +156,14 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 
 ;;
 ;; Type: CreateDecreaseLPPositionOrder
-;; Header: 0xbdbfce48
-;; TLB: create_decrease_lp_position_order#bdbfce48 executionFee:coins liquidityDelta:int257 trxId:uint64 = CreateDecreaseLPPositionOrder
+;; Header: 0x25b21724
+;; TLB: create_decrease_lp_position_order#25b21724 executionFee:coins liquidityDelta:uint128 trxId:uint64 = CreateDecreaseLPPositionOrder
 ;;
 
 (slice, ((int, int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 3183464008);
+    throw_unless(129, sc_0~load_uint(32) == 632428324);
     var v'executionFee = sc_0~load_coins();
-    var v'liquidityDelta = sc_0~load_int(257);
+    var v'liquidityDelta = sc_0~load_uint(128);
     var v'trxId = sc_0~load_uint(64);
     return (sc_0, (v'executionFee, v'liquidityDelta, v'trxId));
 }
@@ -248,20 +248,19 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 
 ;;
 ;; Type: CreateCompensate
-;; Header: 0x854c95da
-;; TLB: create_compensate#854c95da orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate
+;; Header: 0xaf93b5c8
+;; TLB: create_compensate#af93b5c8 orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:uint128 executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate
 ;;
 
 (slice, ((int, int, int, slice, int, slice, int))) $CreateCompensate$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 2236388826);
-    var v'orderType = sc_0~load_int(1) ? sc_0~load_int(257) : null();
+    throw_unless(129, sc_0~load_uint(32) == 2945693128);
+    var v'orderType = sc_0~load_int(1) ? sc_0~load_uint(8) : null();
     var v'orderId = sc_0~load_uint(64);
     var v'trxId = sc_0~load_uint(64);
     var v'refundReceiver = sc_0~__tact_load_address_opt();
-    var v'refundAmount = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'executionFeeReceiver = sc_1~__tact_load_address_opt();
-    var v'executionFee = sc_1~load_coins();
+    var v'refundAmount = sc_0~load_uint(128);
+    var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
+    var v'executionFee = sc_0~load_coins();
     return (sc_0, (v'orderType, v'orderId, v'trxId, v'refundReceiver, v'refundAmount, v'executionFeeReceiver, v'executionFee));
 }
 
@@ -293,40 +292,38 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 
 ;;
 ;; Type: CreateDecreasePerpPositionOrder
-;; Header: 0xc02023bf
-;; TLB: create_decrease_perp_position_order#c02023bf executionFee:coins tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder
+;; Header: 0x6a923ddb
+;; TLB: create_decrease_perp_position_order#6a923ddb executionFee:coins tokenId:uint64 isLong:bool marginDelta:uint128 sizeDelta:uint128 triggerPrice:uint128 trxId:uint64 = CreateDecreasePerpPositionOrder
 ;;
 
 (slice, ((int, int, int, int, int, int, int))) $CreateDecreasePerpPositionOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 3223331775);
+    throw_unless(129, sc_0~load_uint(32) == 1787968987);
     var v'executionFee = sc_0~load_coins();
     var v'tokenId = sc_0~load_uint(64);
     var v'isLong = sc_0~load_int(1);
-    var v'marginDelta = sc_0~load_int(257);
-    var v'sizeDelta = sc_0~load_int(257);
-    var v'triggerPrice = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'trxId = sc_1~load_uint(64);
+    var v'marginDelta = sc_0~load_uint(128);
+    var v'sizeDelta = sc_0~load_uint(128);
+    var v'triggerPrice = sc_0~load_uint(128);
+    var v'trxId = sc_0~load_uint(64);
     return (sc_0, (v'executionFee, v'tokenId, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'trxId));
 }
 
 ;;
 ;; Type: CreateTpSlPerpPositionOrder
-;; Header: 0xb983c909
-;; TLB: create_tp_sl_perp_position_order#b983c909 executionFee:coins tokenId:uint64 isLong:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 trxId:uint64 = CreateTpSlPerpPositionOrder
+;; Header: 0x23c72f58
+;; TLB: create_tp_sl_perp_position_order#23c72f58 executionFee:coins tokenId:uint64 isLong:bool tpSize:uint128 tpPrice:uint128 slSize:uint128 slPrice:uint128 trxId:uint64 = CreateTpSlPerpPositionOrder
 ;;
 
 (slice, ((int, int, int, int, int, int, int, int))) $CreateTpSlPerpPositionOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 3112421641);
+    throw_unless(129, sc_0~load_uint(32) == 600256344);
     var v'executionFee = sc_0~load_coins();
     var v'tokenId = sc_0~load_uint(64);
     var v'isLong = sc_0~load_int(1);
-    var v'tpSize = sc_0~load_int(257);
-    var v'tpPrice = sc_0~load_int(257);
-    var v'slSize = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'slPrice = sc_1~load_int(257);
-    var v'trxId = sc_1~load_uint(64);
+    var v'tpSize = sc_0~load_uint(128);
+    var v'tpPrice = sc_0~load_uint(128);
+    var v'slSize = sc_0~load_uint(128);
+    var v'slPrice = sc_0~load_uint(128);
+    var v'trxId = sc_0~load_uint(64);
     return (sc_0, (v'executionFee, v'tokenId, v'isLong, v'tpSize, v'tpPrice, v'slSize, v'slPrice, v'trxId));
 }
 
@@ -380,17 +377,17 @@ cell $UpdateLPPosition$_store_cell((int, int, slice, int, int, int, cell) v) inl
 
 ;;
 ;; Type: ADLPerpPosition
-;; Header: 0x06f46e3d
-;; TLB: adl_perp_position#06f46e3d tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition
+;; Header: 0xce7af89a
+;; TLB: adl_perp_position#ce7af89a tokenId:uint64 account:address isLong:bool marginDelta:uint128 sizeDelta:uint128 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition
 ;;
 
 (slice, ((int, slice, int, int, int, int, int, cell))) $ADLPerpPosition$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 116682301);
+    throw_unless(129, sc_0~load_uint(32) == 3464165530);
     var v'tokenId = sc_0~load_uint(64);
     var v'account = sc_0~__tact_load_address();
     var v'isLong = sc_0~load_int(1);
-    var v'marginDelta = sc_0~load_int(257);
-    var v'sizeDelta = sc_0~load_int(257);
+    var v'marginDelta = sc_0~load_uint(128);
+    var v'sizeDelta = sc_0~load_uint(128);
     var v'trxId = sc_0~load_uint(64);
     var v'pricesLength = sc_0~load_uint(64);
     var v'prices = sc_0~load_dict();

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 14840 bytes
+BOC Size: 14767 bytes
 
 # Types
 Total Types: 46
@@ -58,8 +58,8 @@ TLB: `update_whitelist#4f5c3f48 enableWhitelist:Maybe bool whitelistLength:uint6
 Signature: `UpdateWhitelist{enableWhitelist:Maybe bool,whitelistLength:uint64,whitelist:dict<int, ^UpdateWhitelistParam{account:address,enable:bool}>}`
 
 ## CreateDecreaseLPPositionOrder
-TLB: `create_decrease_lp_position_order#bdbfce48 executionFee:coins liquidityDelta:int257 trxId:uint64 = CreateDecreaseLPPositionOrder`
-Signature: `CreateDecreaseLPPositionOrder{executionFee:coins,liquidityDelta:int257,trxId:uint64}`
+TLB: `create_decrease_lp_position_order#25b21724 executionFee:coins liquidityDelta:uint128 trxId:uint64 = CreateDecreaseLPPositionOrder`
+Signature: `CreateDecreaseLPPositionOrder{executionFee:coins,liquidityDelta:uint128,trxId:uint64}`
 
 ## CancelLPPositionOrder
 TLB: `cancel_lp_position_order#7d91eb36 orderId:uint64 trxId:uint64 executionFeeReceiver:Maybe address = CancelLPPositionOrder`
@@ -78,8 +78,8 @@ TLB: `update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:ui
 Signature: `UpdateLPPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
 
 ## CreateCompensate
-TLB: `create_compensate#854c95da orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate`
-Signature: `CreateCompensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins}`
+TLB: `create_compensate#af93b5c8 orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:uint128 executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate`
+Signature: `CreateCompensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:uint128,executionFeeReceiver:Maybe address,executionFee:coins}`
 
 ## CancelCompensate
 TLB: `cancel_compensate#58def8ba compensateId:uint64 trxId:uint64 = CancelCompensate`
@@ -90,12 +90,12 @@ TLB: `execute_compensate#cc1ca2f0 compensateId:uint64 trxId:uint64 = ExecuteComp
 Signature: `ExecuteCompensate{compensateId:uint64,trxId:uint64}`
 
 ## CreateDecreasePerpPositionOrder
-TLB: `create_decrease_perp_position_order#c02023bf executionFee:coins tokenId:uint64 isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 trxId:uint64 = CreateDecreasePerpPositionOrder`
-Signature: `CreateDecreasePerpPositionOrder{executionFee:coins,tokenId:uint64,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,trxId:uint64}`
+TLB: `create_decrease_perp_position_order#6a923ddb executionFee:coins tokenId:uint64 isLong:bool marginDelta:uint128 sizeDelta:uint128 triggerPrice:uint128 trxId:uint64 = CreateDecreasePerpPositionOrder`
+Signature: `CreateDecreasePerpPositionOrder{executionFee:coins,tokenId:uint64,isLong:bool,marginDelta:uint128,sizeDelta:uint128,triggerPrice:uint128,trxId:uint64}`
 
 ## CreateTpSlPerpPositionOrder
-TLB: `create_tp_sl_perp_position_order#b983c909 executionFee:coins tokenId:uint64 isLong:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 trxId:uint64 = CreateTpSlPerpPositionOrder`
-Signature: `CreateTpSlPerpPositionOrder{executionFee:coins,tokenId:uint64,isLong:bool,tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,trxId:uint64}`
+TLB: `create_tp_sl_perp_position_order#23c72f58 executionFee:coins tokenId:uint64 isLong:bool tpSize:uint128 tpPrice:uint128 slSize:uint128 slPrice:uint128 trxId:uint64 = CreateTpSlPerpPositionOrder`
+Signature: `CreateTpSlPerpPositionOrder{executionFee:coins,tokenId:uint64,isLong:bool,tpSize:uint128,tpPrice:uint128,slSize:uint128,slPrice:uint128,trxId:uint64}`
 
 ## CancelPerpPositionOrder
 TLB: `cancel_perp_position_order#c1f953f2 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 = CancelPerpPositionOrder`
@@ -110,8 +110,8 @@ TLB: `liquidate_perp_position#bcd64691 liquidationFeeReceiver:Maybe address toke
 Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint64,account:address,isLong:bool,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
 ## ADLPerpPosition
-TLB: `adl_perp_position#06f46e3d tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition`
-Signature: `ADLPerpPosition{tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `adl_perp_position#ce7af89a tokenId:uint64 account:address isLong:bool marginDelta:uint128 sizeDelta:uint128 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition`
+Signature: `ADLPerpPosition{tokenId:uint64,account:address,isLong:bool,marginDelta:uint128,sizeDelta:uint128,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
 
 ## UpdatePerpPosition
 TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePerpPosition`

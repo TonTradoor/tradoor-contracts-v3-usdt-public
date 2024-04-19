@@ -581,12 +581,11 @@ PROGRAM{
   $CreateDecreaseLPPositionOrder$_load PROCINLINE:<{
     32 LDU
     SWAP
-    3183464008 PUSHINT
+    632428324 PUSHINT
     EQUAL
     129 THROWIFNOT
     LDGRAMS
-    257 PUSHINT
-    LDIX
+    128 LDU
     64 LDU
     3 -ROLL
   }>
@@ -662,14 +661,13 @@ PROGRAM{
   $CreateCompensate$_load PROCREF:<{
     32 LDU
     SWAP
-    2236388826 PUSHINT
+    2945693128 PUSHINT
     EQUAL
     129 THROWIFNOT
     1 LDI
     SWAP
     IF:<{
-      257 PUSHINT
-      LDIX
+      8 LDU
     }>ELSE<{
       PUSHNULL
       SWAP
@@ -678,20 +676,11 @@ PROGRAM{
     64 LDU
     __tact_load_address_opt INLINECALLDICT
     SWAP
-    257 PUSHINT
-    LDIX
-    LDREF
-    SWAP
-    CTOS
+    128 LDU
     __tact_load_address_opt INLINECALLDICT
     SWAP
     LDGRAMS
-    DROP
-    s2 s7 XCHG
-    s2 s6 XCHG
-    s2 s5 XCHG
-    s2 s4 XCHG
-    s2 s3 XCHG
+    7 -ROLL
   }>
   $CancelCompensate$_load PROCINLINE:<{
     32 LDU
@@ -716,57 +705,33 @@ PROGRAM{
   $CreateDecreasePerpPositionOrder$_load PROCREF:<{
     32 LDU
     SWAP
-    3223331775 PUSHINT
+    1787968987 PUSHINT
     EQUAL
     129 THROWIFNOT
     LDGRAMS
     64 LDU
     1 LDI
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
-    LDREF
-    SWAP
-    CTOS
+    128 LDU
+    128 LDU
+    128 LDU
     64 LDU
-    DROP
-    s1 s7 XCHG
-    s1 s6 XCHG
-    s1 s5 XCHG
-    s1 s4 XCHG
-    s3 s3 s0 XCHG3
+    7 -ROLL
   }>
   $CreateTpSlPerpPositionOrder$_load PROCREF:<{
     32 LDU
     SWAP
-    3112421641 PUSHINT
+    600256344 PUSHINT
     EQUAL
     129 THROWIFNOT
     LDGRAMS
     64 LDU
     1 LDI
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
-    LDREF
-    SWAP
-    CTOS
-    257 PUSHINT
-    LDIX
+    128 LDU
+    128 LDU
+    128 LDU
+    128 LDU
     64 LDU
-    DROP
-    s2 s8 XCHG
-    s2 s7 XCHG
-    s2 s6 XCHG
-    s2 s5 XCHG
-    s2 s4 XCHG
-    s2 s3 XCHG
+    8 -ROLL
   }>
   $CancelPerpPositionOrder$_load PROCINLINE:<{
     32 LDU
@@ -814,17 +779,15 @@ PROGRAM{
   $ADLPerpPosition$_load PROCREF:<{
     32 LDU
     SWAP
-    116682301 PUSHINT
+    3464165530 PUSHINT
     EQUAL
     129 THROWIFNOT
     64 LDU
     __tact_load_address INLINECALLDICT
     SWAP
     1 LDI
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
+    128 LDU
+    128 LDU
     64 LDU
     64 LDU
     LDDICT
@@ -5461,7 +5424,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d555334704e6147794b34724e7577755468683542777333797737695457696763747875536f6174534e734352} PUSHSLICE
+    x{697066733a2f2f516d4e61625a577374544b39626d6f4239576f62726b354e506477395869547a6832585338537935543235637977} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -5546,7 +5509,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    3183464008 PUSHINT
+    632428324 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -5586,7 +5549,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    3223331775 PUSHINT
+    1787968987 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -5596,7 +5559,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    3112421641 PUSHINT
+    600256344 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -5646,7 +5609,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    116682301 PUSHINT
+    3464165530 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -5656,7 +5619,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    2236388826 PUSHINT
+    2945693128 PUSHINT
     EQUAL
     IFJMP:<{
       DROP

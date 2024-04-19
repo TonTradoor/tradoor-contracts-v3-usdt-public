@@ -44,7 +44,7 @@ message UpdateWhitelist {
 // ============================ LP ================================ //
 message CreateDecreaseLPPositionOrder {
     executionFee: Int as coins;
-    liquidityDelta: Int;
+    liquidityDelta: Int as uint128;
     trxId: Int as uint64;
 }
 
@@ -79,11 +79,11 @@ message(0x1cf0cf81) UpdateLPPositionSuccess {
 }
 
 message CreateCompensate {
-    orderType: Int?;
+    orderType: Int? as uint8;
     orderId: Int as uint64;
     trxId: Int as uint64;
     refundReceiver: Address?;
-    refundAmount: Int;
+    refundAmount: Int as uint128;
     executionFeeReceiver: Address?;
     executionFee: Int as coins;
 }
@@ -103,9 +103,9 @@ message CreateDecreasePerpPositionOrder {
     executionFee: Int as coins;
     tokenId: Int as uint64;
     isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
+    marginDelta: Int as uint128;
+    sizeDelta: Int as uint128;
+    triggerPrice: Int as uint128;
     trxId: Int as uint64;
 }
 
@@ -113,10 +113,10 @@ message CreateTpSlPerpPositionOrder {
     executionFee: Int as coins;
     tokenId: Int as uint64;
     isLong: Bool;
-    tpSize: Int;
-    tpPrice: Int;
-    slSize: Int;
-    slPrice: Int;
+    tpSize: Int as uint128;
+    tpPrice: Int as uint128;
+    slSize: Int as uint128;
+    slPrice: Int as uint128;
     trxId: Int as uint64;
 }
 
@@ -148,8 +148,8 @@ message ADLPerpPosition {
     tokenId: Int as uint64;
     account: Address;
     isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
+    marginDelta: Int as uint128;
+    sizeDelta: Int as uint128;
     trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePrice>;

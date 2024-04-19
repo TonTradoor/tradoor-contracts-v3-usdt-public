@@ -392,7 +392,7 @@ contract Pool with Deployable, Ownable {
 
     // ============================ Perp ================================ //
     receive(msg: UpdatePerpPosition) {
-        dump("UpdatePerpPosition");
+        // dump("UpdatePerpPosition");
 
         require(sender() == self.orderBook, "invalid sender");
 
@@ -478,7 +478,7 @@ contract Pool with Deployable, Ownable {
     }
 
     fun increasePerpPosition(opType: Int, trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, indexPrice: Int, tradePrice: Int) {
-        dump("increasePerpPosition");
+        // dump("increasePerpPosition");
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -679,7 +679,7 @@ contract Pool with Deployable, Ownable {
             realizedPnl: lpRealizedPnl,
             trxId: trxId
         }.toCell());
-        dump("increasePerpPosition done");
+        // dump("increasePerpPosition done");
     }
 
     fun decreasePerpPosition(opType: Int, trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, indexPrice: Int, tradePrice: Int): Int {
@@ -760,7 +760,7 @@ contract Pool with Deployable, Ownable {
         let sizeRemaining: Int = sizeDelta;
         if (globalLPPosition.netSize > 0 && (isLong != globalLPPosition.isLong)) {
             let sizeUsed: Int = min(globalLPPosition.netSize, sizeDelta);
-            if (isLong) {
+            if (!isLong) {
                 lpRealizedPnl = sizeUsed * (tradePrice - globalLPPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
             } else {
                 lpRealizedPnl = sizeUsed * (globalLPPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
@@ -771,11 +771,13 @@ contract Pool with Deployable, Ownable {
                 globalLPPosition.entryPrice = 0;
             }
         }
+        // dump(sizeRemaining);
+        // dump(isLong);
         // lp entry price
         if (sizeRemaining > 0) {
             globalLPPosition.entryPrice = (globalLPPosition.netSize * globalLPPosition.entryPrice + sizeRemaining * tradePrice) / (globalLPPosition.netSize + sizeRemaining);
             globalLPPosition.netSize += sizeRemaining;
-            globalLPPosition.isLong = !isLong;
+            globalLPPosition.isLong = isLong;
         }
 
         // trading fee
@@ -864,48 +866,48 @@ contract Pool with Deployable, Ownable {
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
         // event
-        emit(PerpPositionDecreasedEvent{
-            opType: opType,
-            positionId: positionId,
-            account: account,
-            tokenId: tokenId,
-            isLong: isLong,
-            marginDelta: marginDeltaAfter,
-            marginAfter: perpPosition.margin,
-            sizeDelta: sizeDelta,
-            sizeAfter: perpPosition.size,
-            tradePrice: tradePrice,
-            realizedPnLDelta: realizedPnl,
-            tradingFee: tradingFee,
-            fundingFee: fundingFee,
-            entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
-            receive: receive,
-            trxId: trxId
-        }.toCell());
-        emit(GlobalPositionChangedEvent{
-            tokenId: tokenId,
-            longMarginAfter: globalPosition.longMargin,
-            shortMarginAfter: globalPosition.shortMargin,
-            longSizeAfter: globalPosition.longSize,
-            shortSizeAfter: globalPosition.shortSize,
-            longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
-            shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
-            trxId: trxId
-        }.toCell());
-        emit(GlobalLPPositionChangedEvent{
-            tokenId: tokenId,
-            netSizeAfter: globalLPPosition.netSize,
-            isLong: globalLPPosition.isLong,
-            entryPriceAfter: globalLPPosition.entryPrice,
-            trxId: trxId
-        }.toCell());
-        emit(GlobalLPLiquidityChangedEvent{
-            lpFundAfter: self.globalLPFund,
-            liquidityAfter: self.globalLPLiquidity,
-            tradingFee: lpTradingFee,
-            realizedPnl: lpRealizedPnl,
-            trxId: trxId
-        }.toCell());
+        // emit(PerpPositionDecreasedEvent{
+        //     opType: opType,
+        //     positionId: positionId,
+        //     account: account,
+        //     tokenId: tokenId,
+        //     isLong: isLong,
+        //     marginDelta: marginDeltaAfter,
+        //     marginAfter: perpPosition.margin,
+        //     sizeDelta: sizeDelta,
+        //     sizeAfter: perpPosition.size,
+        //     tradePrice: tradePrice,
+        //     realizedPnLDelta: realizedPnl,
+        //     tradingFee: tradingFee,
+        //     fundingFee: fundingFee,
+        //     entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
+        //     receive: receive,
+        //     trxId: trxId
+        // }.toCell());
+        // emit(GlobalPositionChangedEvent{
+        //     tokenId: tokenId,
+        //     longMarginAfter: globalPosition.longMargin,
+        //     shortMarginAfter: globalPosition.shortMargin,
+        //     longSizeAfter: globalPosition.longSize,
+        //     shortSizeAfter: globalPosition.shortSize,
+        //     longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+        //     shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
+        //     trxId: trxId
+        // }.toCell());
+        // emit(GlobalLPPositionChangedEvent{
+        //     tokenId: tokenId,
+        //     netSizeAfter: globalLPPosition.netSize,
+        //     isLong: globalLPPosition.isLong,
+        //     entryPriceAfter: globalLPPosition.entryPrice,
+        //     trxId: trxId
+        // }.toCell());
+        // emit(GlobalLPLiquidityChangedEvent{
+        //     lpFundAfter: self.globalLPFund,
+        //     liquidityAfter: self.globalLPLiquidity,
+        //     tradingFee: lpTradingFee,
+        //     realizedPnl: lpRealizedPnl,
+        //     trxId: trxId
+        // }.toCell());
         return receive;
     }
 
@@ -1002,7 +1004,7 @@ contract Pool with Deployable, Ownable {
         let sizeRemaining: Int = sizeDelta;
         if (globalLPPosition.netSize > 0 && (isLong != globalLPPosition.isLong)) {
             let sizeUsed: Int = min(globalLPPosition.netSize, sizeDelta);
-            if (isLong) {
+            if (!isLong) {
                 lpRealizedPnl = sizeUsed * (tradePrice - globalLPPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
             } else {
                 lpRealizedPnl = sizeUsed * (globalLPPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
@@ -1017,7 +1019,7 @@ contract Pool with Deployable, Ownable {
         if (sizeRemaining > 0) {
             globalLPPosition.entryPrice = (globalLPPosition.netSize * globalLPPosition.entryPrice + sizeRemaining * tradePrice) / (globalLPPosition.netSize + sizeRemaining);
             globalLPPosition.netSize += sizeRemaining;
-            globalLPPosition.isLong = !isLong;
+            globalLPPosition.isLong = isLong;
         }
 
         // trading fee
@@ -1298,7 +1300,7 @@ contract Pool with Deployable, Ownable {
         let cumulativePremiumRate: Int = premiumRate * ((sample.sampleCount + 1 + sampleCountAfter) * sampleCountDelta / 2 );
         cumulativePremiumRate = sample.cumulativePremiumRate + cumulativePremiumRate;
 
-        dump(sampleCountAfter);
+        // dump(sampleCountAfter);
 
         // sample count < 720, no need update funding rate
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
@@ -1340,7 +1342,7 @@ contract Pool with Deployable, Ownable {
             clampedFundingRateDelta = fundingRateDelta;
         }
 
-        dump(clampedFundingRateDelta);
+        // dump(clampedFundingRateDelta);
 
         // get paidSize and receivedSize
         let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
@@ -1452,7 +1454,7 @@ contract Pool with Deployable, Ownable {
         } else if (rangeId >= 300) {
             rangeId = 300;
         }
-        dump(rangeId);
+        // dump(rangeId);
 
         let premiumRateSampleRangeOpt: PremiumRateSampleRange? = self.premiumRateSampleRanges.get(rangeId);
         if (premiumRateSampleRangeOpt == null) {

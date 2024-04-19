@@ -796,7 +796,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmUS4pNaGyK4rNuwuThh5Bws3yw7iTWigctxuSoatSNsCR";
+    return "ipfs://QmNabZWstTK9bmoB9Wobrk5NPdw9XiTzh2XS8Sy5T25cyw";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -866,7 +866,7 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive CreateDecreaseLPPositionOrder message
-    if (op == 3183464008) {
+    if (op == 632428324) {
         var msg = in_msg~$CreateDecreaseLPPositionOrder$_load();
         self~$OrderBook$_internal_binary_CreateDecreaseLPPositionOrder(msg);
         return (self, true);
@@ -894,14 +894,14 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive CreateDecreasePerpPositionOrder message
-    if (op == 3223331775) {
+    if (op == 1787968987) {
         var msg = in_msg~$CreateDecreasePerpPositionOrder$_load();
         self~$OrderBook$_internal_binary_CreateDecreasePerpPositionOrder(msg);
         return (self, true);
     }
     
     ;; Receive CreateTpSlPerpPositionOrder message
-    if (op == 3112421641) {
+    if (op == 600256344) {
         var msg = in_msg~$CreateTpSlPerpPositionOrder$_load();
         self~$OrderBook$_internal_binary_CreateTpSlPerpPositionOrder(msg);
         return (self, true);
@@ -936,14 +936,14 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive ADLPerpPosition message
-    if (op == 116682301) {
+    if (op == 3464165530) {
         var msg = in_msg~$ADLPerpPosition$_load();
         self~$OrderBook$_internal_binary_ADLPerpPosition(msg);
         return (self, true);
     }
     
     ;; Receive CreateCompensate message
-    if (op == 2236388826) {
+    if (op == 2945693128) {
         var msg = in_msg~$CreateCompensate$_load();
         self~$OrderBook$_internal_binary_CreateCompensate(msg);
         return (self, true);

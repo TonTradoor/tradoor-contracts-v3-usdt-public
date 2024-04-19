@@ -625,6 +625,9 @@ describe('LP', () => {
         expect(perpPositionAfterDecrease?.margin).toEqual(perpPositionAfterIncrease?.margin + toJettonUnits(realizedPnl) - toJettonUnits(tradingFee));
         expect(perpPositionAfterDecrease?.size).toEqual(perpPositionAfterIncrease?.size - toJettonUnits(tpSize));
 
+        expect(executeDecreaseResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size - tpSize));
+        expect(executeDecreaseResult.globalLPPositionAfter?.isLong).toBeFalsy();
+
     });
 
     it('should liquidate perp', async () => {
@@ -694,6 +697,8 @@ describe('LP', () => {
         // check position
         expect(liquidateResult.positionAfter.size).toEqual(0n);
         expect(liquidateResult.positionAfter.margin).toEqual(0n);
+
+        expect(liquidateResult.globalLPPositionAfter?.netSize).toEqual(0n);
 
     });
 
@@ -767,6 +772,8 @@ describe('LP', () => {
 
         // check position
         expect(adlPosition?.size).toEqual(perpPositionAfterIncrease?.size - toJettonUnits(adlSize));
+        expect(adlResult.globalLPPositionAfter?.netSize).toEqual(perpPositionAfterIncrease?.size - toJettonUnits(adlSize));
+        expect(adlResult.globalLPPositionAfter?.isLong).toBeFalsy();
 
     });
 
@@ -784,32 +791,118 @@ describe('LP', () => {
 
     });
 
+    it('should execute two direction perp', async () => {
+        /* =========================== increase LP ================================ */
+        /// create order
+        let lpLiquidity = 1000;
+        let executionFee = 0.1;
 
-    // it("should search premium rate", async() => {
-    //     const trxResult = await TestEnv.pool.send(
-    //         executor.getSender(),
-    //         {
-    //             value: toNano('0.3'),
-    //         },
-    //         {
-    //             $$type: 'DeviationRate',
-    //             deviationRate: toUnits(0.307, 9)
-    //         }
-    //     );
-    //     printTransactionFees(trxResult.transactions);
+        // create order
+        const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
+
+        /// executor order
+        const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
+        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check order
+        expect(executeIncreaseResult.orderAfter).toBeNull();
+
+        // check position
+        let position = executeIncreaseResult.positionAfter;
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
-    //     const trxResult0 = await TestEnv.pool.send(
-    //         executor.getSender(),
-    //         {
-    //             value: toNano('0.3'),
-    //         },
-    //         {
-    //             $$type: 'DeviationRate',
-    //             deviationRate: toUnits(0.309, 9)
-    //         }
-    //     );
-    //     printTransactionFees(trxResult0.transactions);
-    // });
+        /* =========================== increase long perp ================================ */
+        let isMarket = true;
+        let tokenId = 1;
+        let isLong = true;
+        let margin = 50;
+        let size = 0.01; // 1000u
+        let triggerPrice = 51000;
+        let increasePrice = 50000;
 
+        // create order
+        const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // executor order
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        expect(executeResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('global position after increase short:', executeResult.globalPositionAfter);
+        console.log('global lp position after increase short:', executeResult.globalLPPositionAfter);
+
+        expect(executeResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
+        expect(executeResult.globalLPPositionAfter?.isLong).toBeFalsy();
+
+        /* =========================== increase short perp ================================ */
+        let increaseShortMargin = 100;
+        let increaseShortSize = 0.02;
+        let increaseShortTriggerPrice = 50000;
+        let increaseShortIncreasePrice = 51000;
+
+        // create order
+        const createIncreaseShortResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, false, increaseShortMargin, increaseShortSize, increaseShortTriggerPrice, 0, 0, 0, 0);
+        expect(createIncreaseShortResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // executor order
+        const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice);
+        expect(executeIncreaseShortResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        console.log('global position after increase short:', executeIncreaseShortResult.globalPositionAfter);
+        console.log('global lp position after increase short:', executeIncreaseShortResult.globalLPPositionAfter);
+
+        expect(executeIncreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
+        expect(executeIncreaseShortResult.globalLPPositionAfter?.isLong).toBeTruthy();
+
+        /* =========================== decrease short perp ================================ */
+        let decreaseShortMargin = 100;
+        let decreaseShortSize = 0.02;
+        let decreaseShortTriggerPrice = 51000;
+        let decreaseShortIncreasePrice = 50000;
+
+        // create order
+        const createDecreaseShortResult = await createDecreasePerpOrder(user1, executionFee, tokenId, false, decreaseShortMargin, decreaseShortSize, decreaseShortTriggerPrice);
+        expect(createDecreaseShortResult.trxResult.transactions).toHaveTransaction({
+            from: user1.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('decrease short order:', createDecreaseShortResult.order);
+
+        // executor order
+        const executeDecreaseShortResult = await executePerpOrder(executor, createDecreaseShortResult.orderIdBefore, decreaseShortIncreasePrice);
+        expect(executeDecreaseShortResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+
+        console.log('global position after decrease short:', executeDecreaseShortResult.globalPositionAfter);
+        console.log('global lp position after decrease short:', executeDecreaseShortResult.globalLPPositionAfter);
+
+        expect(executeDecreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
+        expect(executeDecreaseShortResult.globalLPPositionAfter?.isLong).toBeFalsy();
+
+    });
 
 });
