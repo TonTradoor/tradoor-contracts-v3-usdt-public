@@ -23,7 +23,6 @@ export async function run(provider: NetworkProvider) {
             enableExecutor: true,
             gasConsumption: toNano(0.05),
             minTonsForStorage: toNano(0.03),
-            lpLockTime: 24n * 60n * 60n,
             lpBonusFactor: 10n**9n,
             lpLiquidityFactor: 2n * 10n**9n,
             orderBook: orderBook.address

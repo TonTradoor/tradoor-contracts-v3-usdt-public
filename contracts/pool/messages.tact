@@ -6,7 +6,6 @@ message UpdateConfig {
     enableExecutor: Bool?;
     gasConsumption: Int? as coins;
     minTonsForStorage: Int? as coins;
-    lpLockTime: Int?;
     lpBonusFactor: Int?;
     lpLiquidityFactor: Int?;
     orderBook: Address?;
@@ -23,6 +22,10 @@ message UpdateTokenConfig {
     lpTradingFeeRate: Int?;
     interestRate: Int?;
     maxFundingRate: Int?;
+}
+
+message ClaimProtocolFee {
+    feeReceiver: Address;
 }
 
 // ============================ LP ================================ //

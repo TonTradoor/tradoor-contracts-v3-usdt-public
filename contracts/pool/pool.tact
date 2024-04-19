@@ -12,10 +12,7 @@ contract Pool with Deployable, Ownable {
     minTonsForStorage: Int = ton("0.03");
 
     tokenConfigs: map<Int, TokenConfig>; // tokenId => tokenConfig
-    tokenIdNext: Int as uint64 = 1;
 
-    // lpLockTime: Int = 10 * 24 * 60 * 60; // lock 10 days
-    lpLockTime: Int = 10 * 60; // TODO lock 10 min for test
     lpBonusFactor: Int = pow(10, 9);
     lpLiquidityFactor: Int = pow(10, 9);
 
@@ -51,8 +48,7 @@ contract Pool with Deployable, Ownable {
     prices: map<Int, Int>; // tokenId => priceData
 
     premiumRateSampleRanges: map<Int, PremiumRateSampleRange>; // index => range
-    premiumRateSampleRangeLength: Int = 0;
-    prevPremiumRateSamples: map<Int, PremiumRateSampleData>;
+    prevPremiumRateSamples: map<Int, PremiumRateSampleData>; // tokenId => prev sample
 
     init(deployId: Int) {
         self.owner = sender();
@@ -72,9 +68,6 @@ contract Pool with Deployable, Ownable {
         }
         if (msg.minTonsForStorage != null) {
             self.minTonsForStorage = msg.minTonsForStorage!!;
-        }
-        if (msg.lpLockTime != null) {
-            self.lpLockTime = msg.lpLockTime!!;
         }
         if (msg.lpBonusFactor != null) {
             self.lpBonusFactor = msg.lpBonusFactor!!;
@@ -137,9 +130,6 @@ contract Pool with Deployable, Ownable {
         if (msg.maxFundingRate != null){
             tokenConfig.maxFundingRate = msg.maxFundingRate!!;
         }
-        if (msg.tokenId >= self.tokenIdNext) {
-            self.tokenIdNext = msg.tokenId + 1;
-        }
 
         self.tokenConfigs.set(msg.tokenId, tokenConfig);
         
@@ -148,6 +138,32 @@ contract Pool with Deployable, Ownable {
             bounce: false,
             value: 0,
             mode: SendRemainingValue
+        });
+    }
+
+    receive(msg: ClaimProtocolFee) {
+        let isExecutor: Bool = false;
+        let isExecutorOpt: Bool? = self.executors.get(sender());
+        if (isExecutorOpt != null) {
+            isExecutor = isExecutorOpt!!;
+        }
+        require(isExecutor, "invalid sender");
+
+        if (self.protocolTradingFee > 0) {
+            send(SendParameters{
+                to: msg.feeReceiver,
+                bounce: true,
+                value: self.protocolTradingFee,
+                mode: SendIgnoreErrors
+            });
+            self.protocolTradingFee = 0;
+        }
+        
+        send(SendParameters{
+            to: sender(),
+            bounce: false,
+            value: 0,
+            mode: SendRemainingValue + SendIgnoreErrors
         });
     }
 
@@ -160,18 +176,14 @@ contract Pool with Deployable, Ownable {
             isExecutor: isExecutor,
             gasConsumption: self.gasConsumption,
             minTonsForStorage: self.minTonsForStorage,
-            lpLockTime: self.lpLockTime,
             lpBonusFactor: self.lpBonusFactor,
             lpLiquidityFactor: self.lpLiquidityFactor,
             orderBook: self.orderBook
         };
     }
 
-    get fun tokenConfig(tokenId: Int): TokenConfigData {
-        return TokenConfigData{
-            tokenIdNext: self.tokenIdNext,
-            tokenConfig: self.tokenConfigs.get(tokenId)
-        };
+    get fun tokenConfig(tokenId: Int): TokenConfig? {
+        return self.tokenConfigs.get(tokenId);
     }
 
     // get fun priceData(tokenId: Int): PriceData? {
@@ -251,7 +263,7 @@ contract Pool with Deployable, Ownable {
         lpPosition.liquidity = lpPosition.liquidity + liquidityDelta;
         lpPosition.realizedFundingFee += realizedFundingFee;
         lpPosition.entryFundingFeeGrowth = self.globalLPFundingFeeGrowth;
-        lpPosition.unlockTime = now() + self.lpLockTime;
+        lpPosition.unlockTime = now() + DAY;
 
         // set position
         self.lpPositions.set(account, lpPosition);
@@ -299,8 +311,7 @@ contract Pool with Deployable, Ownable {
         }
 
         // calculate LP global unrealized pnl
-        let totalGlobalUnrealizedPnl: Int = self.globalLPUnrealizedPnl;
-        let globalNetLP: Int = self.globalLPFund + totalGlobalUnrealizedPnl;
+        let globalNetLP: Int = self.globalLPFund + self.globalLPUnrealizedPnl;
         require(globalNetLP > 0, "insufficient global LP");
 
         // calculate receive amount
@@ -313,7 +324,7 @@ contract Pool with Deployable, Ownable {
         let bonus: Int = 0;
 
         if (globalNetLP >= self.globalLPLiquidity) {
-            let n: Int = ((now() - lpPosition.unlockTime)  + self.lpLockTime) / DAY;
+            let n: Int = ((now() - lpPosition.unlockTime) + DAY) / DAY;
 
             if (lpPosition.bonus == 0) {
                 // bonus = liquidity * r（x-1）* min(n，100）* 0.1%
@@ -540,11 +551,14 @@ contract Pool with Deployable, Ownable {
         let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
         globalPosition.longValue = globalPosition.longSize * indexPrice / PRICE_DECIMAL_FACTOR;
         globalPosition.shortValue = globalPosition.shortSize * indexPrice / PRICE_DECIMAL_FACTOR;
+
+        let globalNetLP: Int = self.globalLPFund + self.globalLPUnrealizedPnl;
+
         self.globalPerpSingleValue += max(globalPosition.longValue, globalPosition.shortValue) - singleValueBefore;
-        require(self.globalPerpSingleValue <= self.globalLPFund * self.lpLiquidityFactor / PERCENTAGE_BASIS_POINT, "insufficient liquidity for single value");
+        require(self.globalPerpSingleValue <= globalNetLP * self.lpLiquidityFactor / PERCENTAGE_BASIS_POINT, "insufficient liquidity for single value");
         
         self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
-        require(self.globalPerpNetValue <= self.globalLPFund, "insufficient liquidity for net value");
+        require(self.globalPerpNetValue <= globalNetLP, "insufficient liquidity for net value");
 
         // get global lp position
         let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(tokenId);
@@ -1171,9 +1185,6 @@ contract Pool with Deployable, Ownable {
                     sampleLength: premiumRateSampleRangeParam.sampleLength,
                     samples: premiumRateSampleRangeParam.samples
                 });
-                if (premiumRateSampleRangeParam.sampleId >= self.premiumRateSampleRangeLength) {
-                    self.premiumRateSampleRangeLength = premiumRateSampleRangeParam.sampleId + 1;
-                }
             }
 
             i += 1;
@@ -1579,5 +1590,11 @@ contract Pool with Deployable, Ownable {
         };
     }
 
-
+    fun isExecutor(account: Address): Bool {
+        let isExecutorOpt: Bool? = self.executors.get(account);
+        if (isExecutorOpt == null) {
+            return false;
+        }
+        return isExecutorOpt!!;
+    }
 }
