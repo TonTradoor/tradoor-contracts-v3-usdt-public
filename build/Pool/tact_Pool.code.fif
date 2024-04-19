@@ -18,6 +18,7 @@ PROGRAM{
   DECLPROC __tact_dict_set_slice_cell
   DECLPROC __tact_dict_get_slice_cell
   DECLPROC __tact_slice_eq_bits
+  DECLPROC __tact_int_to_string
   DECLPROC $Deploy$_load
   DECLPROC $DeployOk$_store
   DECLPROC $DeployOk$_store_cell
@@ -407,6 +408,84 @@ PROGRAM{
   }>
   __tact_slice_eq_bits PROCINLINE:<{
     SDEQ
+  }>
+  __tact_int_to_string PROCREF:<{
+    NEWC
+    OVER
+    0 LESSINT
+    IF:<{
+      45 PUSHINT
+      SWAP
+      8 STU
+      SWAP
+      NEGATE
+      SWAP
+    }>
+    OVER
+    1000000000000000000000000000000 PUSHINTX
+    LESS
+    IF:<{
+      0 PUSHINT
+      DUP
+      1 PUSHINT
+      UNTIL:<{
+        s0 s4 XCHG
+        10 PUSHINT
+        DIVMOD
+        48 ADDCONST
+        s5 PUSH
+        MUL
+        s1 s2 XCHG
+        ADD
+        s0 s4 XCHG
+        8 LSHIFT#
+        s0 s2 XCHG
+        INC
+        OVER
+        0 EQINT
+        s5 s3 s0 XCHG3
+      }>
+      DROP
+      s3 POP
+      3 LSHIFT#
+      STUX
+    }>ELSE<{
+      NIL
+      0 PUSHINT
+      UNTIL:<{
+        s3 PUSH
+        10 PUSHINT
+        MOD
+        s1 s2 XCHG
+        TPUSH
+        SWAP
+        INC
+        s0 s3 XCHG
+        10 PUSHINT
+        DIV
+        DUP
+        0 EQINT
+        s1 s4 XCHG
+      }>
+      s3 POP
+      s2 PUSH
+      DEC
+      s0 s3 XCHG
+      REPEAT:<{
+        s0 s2 PUSH2
+        INDEXVAR
+        48 ADDCONST
+        ROT
+        8 STU
+        s0 s2 XCHG
+        DEC
+        -ROT
+      }>
+      DROP
+      NIP
+    }>
+    ENDC
+    CTOS
   }>
   $Deploy$_load PROCINLINE:<{
     32 LDU
@@ -3862,8 +3941,21 @@ PROGRAM{
     ADD
     s1 s13 XCHG
     MUL
+    1000000000 PUSHINT
+    DIV
     s1 s12 XCHG
     DIV
+    B{b5ee9c7241010101001000001c6c69717569646174655072696365063483ea} B>boc <s PUSHSLICE
+    STRDUMP
+    DROP
+    DUP
+    __tact_int_to_string INLINECALLDICT
+    STRDUMP
+    DROP
+    s10 PUSH
+    __tact_int_to_string INLINECALLDICT
+    STRDUMP
+    DROP
     55429 PUSHINT
     31 s() PUSH
     IF:<{

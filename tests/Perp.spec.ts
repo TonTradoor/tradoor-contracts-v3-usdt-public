@@ -630,7 +630,7 @@ describe('LP', () => {
 
     });
 
-    it('should liquidate perp', async () => {
+    it('should liquidate long perp', async () => {
         /* =========================== increase LP ================================ */
         /// create order
         let lpLiquidity = 1000;
@@ -686,6 +686,78 @@ describe('LP', () => {
 
         /* =========================== liquidate perp ================================ */
         let liquidatePrice = 45000;
+        const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice);
+        expect(liquidateResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('global position after liquidate:', liquidateResult.globalPositionAfter);
+
+        // check position
+        expect(liquidateResult.positionAfter.size).toEqual(0n);
+        expect(liquidateResult.positionAfter.margin).toEqual(0n);
+
+        expect(liquidateResult.globalLPPositionAfter?.netSize).toEqual(0n);
+
+    });
+
+    it('should liquidate short perp', async () => {
+        /* =========================== increase LP ================================ */
+        /// create order
+        let lpLiquidity = 1000;
+        let executionFee = 0.1;
+
+        // create order
+        const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
+
+        /// executor order
+        const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
+        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check order
+        expect(executeIncreaseResult.orderAfter).toBeNull();
+
+        // check position
+        let position = executeIncreaseResult.positionAfter;
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
+        
+        /* =========================== increase perp ================================ */
+        let isMarket = true;
+        let tokenId = 1;
+        let isLong = false;
+        let margin = 100;
+        let size = 0.02; // 1000u
+        let triggerPrice = 50000;
+        let increasePrice = 50000;
+
+        // create order
+        const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // executor order
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        expect(executeResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        let perpPositionAfterIncrease = executeResult.positionAfter;
+        console.log('position after increase:', perpPositionAfterIncrease);
+        console.log('global position after increase:', executeResult.globalPositionAfter);
+
+        /* =========================== liquidate perp ================================ */
+        let liquidatePrice = 55000;
         const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice);
         expect(liquidateResult.trxResult.transactions).toHaveTransaction({
             from: pool.address,
