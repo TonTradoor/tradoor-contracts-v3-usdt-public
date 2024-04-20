@@ -3528,6 +3528,10 @@ PROGRAM{
       s0 35 s() XCHG
       MUL
       35 s() PUSH
+      20 s() PUSH
+      MUL
+      100000000000000000000 PUSHINT
+      DIV
       GEQ
       s1 34 s() XCHG
       THROWANYIFNOT

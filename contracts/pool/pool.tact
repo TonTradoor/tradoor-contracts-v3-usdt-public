@@ -839,7 +839,8 @@ contract Pool with Deployable, Ownable {
             require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
 
             // check leverage
-            require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size, "legerage too high");
+            require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size * perpPosition.entryPrice / PRICE_DECIMAL_FACTOR, "legerage too high");
+
             receive = marginDelta;
         } else {
             // close position

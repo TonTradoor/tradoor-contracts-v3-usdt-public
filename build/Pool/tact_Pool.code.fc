@@ -319,7 +319,7 @@
         }
         int $maintenanceMargin = (((($perpPosition'size * $tradePrice) * $tokenConfig'tradingFeeRate) / (1000000000 * 100000000000000000000)) + $tokenConfig'liquidationFee);
         throw_unless(28603, ($maintenanceMargin < ($perpPosition'margin + $unrealizedPnl)));
-        throw_unless(42634, (($perpPosition'margin * $tokenConfig'maxLeverage) >= $perpPosition'size));
+        throw_unless(42634, (($perpPosition'margin * $tokenConfig'maxLeverage) >= (($perpPosition'size * $perpPosition'entryPrice) / 100000000000000000000)));
         $receive = $marginDelta;
     } else {
         $marginDeltaAfter = $marginDeltaAfter + $perpPosition'margin;
