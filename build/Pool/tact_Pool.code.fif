@@ -2073,8 +2073,8 @@ PROGRAM{
     50000000 PUSHINT
     30000000 PUSHINT
     PUSHNULL
+    10000000000 PUSHINT
     1000000000 PUSHINT
-    DUP
     0 PUSHINT
     PUSHNULL
     PUSHNULL
@@ -2519,7 +2519,7 @@ PROGRAM{
         MIN
         MUL
         SWAP
-        1000 PUSHINT
+        10000 PUSHINT
         MUL
         1000000000 PUSHINT
         MUL
@@ -2545,7 +2545,7 @@ PROGRAM{
         s1 s3 XCHG
         MUL
         s0 s3 XCHG
-        1000 PUSHINT
+        10000 PUSHINT
         MUL
         1000000000 PUSHINT
         MUL

@@ -13,7 +13,7 @@ contract Pool with Deployable, Ownable {
 
     tokenConfigs: map<Int, TokenConfig>; // tokenId => tokenConfig
 
-    lpBonusFactor: Int = pow(10, 9);
+    lpBonusFactor: Int = 10 * pow(10, 9);
     lpLiquidityFactor: Int = pow(10, 9);
 
     // admin
@@ -328,11 +328,11 @@ contract Pool with Deployable, Ownable {
 
             if (lpPosition.bonus == 0) {
                 // bonus = liquidity * r（x-1）* min(n，100）* 0.1%
-                bonus = liquidityDelta * self.lpBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 1000 * PERCENTAGE_BASIS_POINT);
+                bonus = liquidityDelta * self.lpBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 10000 * PERCENTAGE_BASIS_POINT);
             } else {
                 let bonus1: Int = liquidityDelta * (globalNetLP - self.globalLPLiquidity) / globalNetLP;
                 let bonus2: Int = lpPosition.bonus;
-                let bonus3: Int = liquidityDelta * self.lpBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 1000 * PERCENTAGE_BASIS_POINT);
+                let bonus3: Int = liquidityDelta * self.lpBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 10000 * PERCENTAGE_BASIS_POINT);
                 bonus = max(min(bonus1, bonus2), bonus3);
             }
             receive = liquidityDelta + bonus;

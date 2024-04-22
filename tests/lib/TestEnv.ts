@@ -152,7 +152,7 @@ export class TestEnv {
                 enableExecutor: true,
                 gasConsumption: toNano(0.05),
                 minTonsForStorage: toNano(0.01),
-                lpBonusFactor: 10n**9n,
+                lpBonusFactor: 10n * 10n**9n,
                 lpLiquidityFactor: 2n * 10n**9n,
                 orderBook: TestEnv.orderBook.address
             }
