@@ -165,7 +165,7 @@ export class TestEnv {
         });
 
         // set BTC config to pool
-        const setPoolTokenConfigResult = await TestEnv.pool.send(
+        const setBTCPoolTokenConfigResult = await TestEnv.pool.send(
             TestEnv.deployer.getSender(),
             {
                 value: toNano('0.1'),
@@ -178,14 +178,45 @@ export class TestEnv {
                 minMargin: toJettonUnits(10), // 10U
                 maxLeverage: 100n,
                 liquidationFee: toJettonUnits(0.2), // 0.2U
+                liquidityProportion: BigInt(0.5 * PERCENTAGE_BASIS_POINT), // 100%
                 tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
                 lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
                 interestRate: 0n,
-                maxFundingRate: 0n
+                maxFundingRate: 0n,
+                premuimRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
             }
         );
 
-        expect(setPoolTokenConfigResult.transactions).toHaveTransaction({
+        expect(setBTCPoolTokenConfigResult.transactions).toHaveTransaction({
+            from: TestEnv.deployer.address,
+            to: TestEnv.pool.address,
+            success: true,
+        });
+
+        // set ETH config to pool
+        const setETHPoolTokenConfigResult = await TestEnv.pool.send(
+            TestEnv.deployer.getSender(),
+            {
+                value: toNano('0.1'),
+            },
+            {
+                $$type: 'UpdateTokenConfig',
+                tokenId: 1n,
+                name: "BTC",
+                enable: true,
+                minMargin: toJettonUnits(10), // 10U
+                maxLeverage: 100n,
+                liquidationFee: toJettonUnits(0.2), // 0.2U
+                liquidityProportion: BigInt(0.5 * PERCENTAGE_BASIS_POINT), // 100%
+                tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
+                lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
+                interestRate: 0n,
+                maxFundingRate: 0n,
+                premuimRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
+            }
+        );
+
+        expect(setETHPoolTokenConfigResult.transactions).toHaveTransaction({
             from: TestEnv.deployer.address,
             to: TestEnv.pool.address,
             success: true,

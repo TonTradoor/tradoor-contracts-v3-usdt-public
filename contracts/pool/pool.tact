@@ -104,32 +104,38 @@ contract Pool with Deployable, Ownable {
             premuimRateCap: 100_000_000 // 10%
         };
 
-        if (msg.name != null){
+        if (msg.name != null) {
             tokenConfig.name = msg.name!!;
         }
-        if (msg.enable != null){
+        if (msg.enable != null) {
             tokenConfig.enable = msg.enable!!;
         }
-        if (msg.minMargin != null){
+        if (msg.minMargin != null) {
             tokenConfig.minMargin = msg.minMargin!!;
         }
-        if (msg.maxLeverage != null){
+        if (msg.maxLeverage != null) {
             tokenConfig.maxLeverage = msg.maxLeverage!!;
         }
-        if (msg.liquidationFee != null){
+        if (msg.liquidationFee != null) {
             tokenConfig.liquidationFee = msg.liquidationFee!!;
         }
-        if (msg.interestRate != null){
+        if (msg.liquidityProportion != null) {
+            tokenConfig.liquidityProportion = msg.liquidityProportion!!;
+        }
+        if (msg.interestRate != null) {
             tokenConfig.interestRate = msg.interestRate!!;
         }
-        if (msg.tradingFeeRate != null){
+        if (msg.tradingFeeRate != null) {
             tokenConfig.tradingFeeRate = msg.tradingFeeRate!!;
         }
-        if (msg.lpTradingFeeRate != null){
+        if (msg.lpTradingFeeRate != null) {
             tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate!!;
         }
-        if (msg.maxFundingRate != null){
+        if (msg.maxFundingRate != null) {
             tokenConfig.maxFundingRate = msg.maxFundingRate!!;
+        }
+        if (msg.premuimRateCap != null) {
+            tokenConfig.premuimRateCap = msg.premuimRateCap!!;
         }
 
         self.tokenConfigs.set(msg.tokenId, tokenConfig);
@@ -422,9 +428,9 @@ contract Pool with Deployable, Ownable {
         // update PR
         let premiumRateSampleOpt: PremiumRateSampleData? = null;
         if (msg.opType == ORDER_OP_TYPE_INCREASE_MARKET || msg.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            premiumRateSampleOpt = self.calculatePremiumRate(msg.tokenId, msg.sizeDelta, msg.isLong);
+            premiumRateSampleOpt = self.calculatePremiumRate(msg.tokenId, indexPrice, msg.sizeDelta, msg.isLong);
         } else {
-            premiumRateSampleOpt = self.calculatePremiumRate(msg.tokenId, msg.sizeDelta, !msg.isLong);
+            premiumRateSampleOpt = self.calculatePremiumRate(msg.tokenId, indexPrice, msg.sizeDelta, !msg.isLong);
         }
 
         let prevPremiumRateSampleOpt: PremiumRateSampleData? = self.prevPremiumRateSamples.get(msg.tokenId);
@@ -636,7 +642,7 @@ contract Pool with Deployable, Ownable {
         require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
 
         // check leverage
-        require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size * perpPosition.entryPrice / PRICE_DECIMAL_FACTOR, "legerage too high");
+        require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size * perpPosition.entryPrice / PRICE_DECIMAL_FACTOR, "leverage too high");
 
         // update position
         if (isLong) {
@@ -840,7 +846,7 @@ contract Pool with Deployable, Ownable {
             require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
 
             // check leverage
-            require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size * perpPosition.entryPrice / PRICE_DECIMAL_FACTOR, "legerage too high");
+            require(perpPosition.margin * tokenConfig.maxLeverage >= perpPosition.size * perpPosition.entryPrice / PRICE_DECIMAL_FACTOR, "leverage too high");
 
             receive = marginDelta;
         } else {
@@ -1412,7 +1418,7 @@ contract Pool with Deployable, Ownable {
         return lpReceivedFundingFee / PRICE_DECIMAL_FACTOR;
     }
 
-    fun calculatePremiumRate(tokenId: Int, sizeDelta: Int, isLong: Bool): PremiumRateSampleData? {
+    fun calculatePremiumRate(tokenId: Int, indexPrice: Int, sizeDelta: Int, isLong: Bool): PremiumRateSampleData? {
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         if (tokenConfigOpt == null) {
@@ -1443,7 +1449,7 @@ contract Pool with Deployable, Ownable {
 
         // calculate DR
         let tokenLiquidity: Int = (self.globalLPFund + self.globalLPUnrealizedPnl) * tokenConfig.liquidityProportion / PERCENTAGE_BASIS_POINT;
-        let deviationRate: Int = globalLPNetSizeAfter * PERCENTAGE_BASIS_POINT / tokenLiquidity;
+        let deviationRate: Int = globalLPNetSizeAfter * indexPrice / PRICE_DECIMAL_FACTOR * PERCENTAGE_BASIS_POINT / tokenLiquidity;
 
         let premiumRateSample: PremiumRateSampleData = self.searchPremiumRate(tokenId, deviationRate * PERCENTAGE_BASIS_POINT / tokenConfig.premuimRateCap);
         if (globalLPIsLongAfter) {

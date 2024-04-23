@@ -94,12 +94,12 @@ cell $DeployOk$_store_cell((int) v) inline {
 
 ;;
 ;; Type: UpdateTokenConfig
-;; Header: 0x69d44870
-;; TLB: update_token_config#69d44870 tokenId:uint64 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 = UpdateTokenConfig
+;; Header: 0xe00739a9
+;; TLB: update_token_config#e00739a9 tokenId:uint64 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 liquidityProportion:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 premuimRateCap:Maybe int257 = UpdateTokenConfig
 ;;
 
-(slice, ((int, slice, int, int, int, int, int, int, int, int))) $UpdateTokenConfig$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 1775519856);
+(slice, ((int, slice, int, int, int, int, int, int, int, int, int, int))) $UpdateTokenConfig$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 3758569897);
     var v'tokenId = sc_0~load_uint(64);
     var v'name = sc_0~load_int(1) ? sc_0~load_ref().begin_parse() : null();
     var v'enable = sc_0~load_int(1) ? sc_0~load_int(1) : null();
@@ -107,12 +107,14 @@ cell $DeployOk$_store_cell((int) v) inline {
     var v'maxLeverage = sc_0~load_int(1) ? sc_0~load_int(257) : null();
     var v'liquidationFee = sc_0~load_int(1) ? sc_0~load_int(257) : null();
     slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'liquidityProportion = sc_1~load_int(1) ? sc_1~load_int(257) : null();
     var v'tradingFeeRate = sc_1~load_int(1) ? sc_1~load_int(257) : null();
     var v'lpTradingFeeRate = sc_1~load_int(1) ? sc_1~load_int(257) : null();
-    var v'interestRate = sc_1~load_int(1) ? sc_1~load_int(257) : null();
     slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'interestRate = sc_2~load_int(1) ? sc_2~load_int(257) : null();
     var v'maxFundingRate = sc_2~load_int(1) ? sc_2~load_int(257) : null();
-    return (sc_0, (v'tokenId, v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate));
+    var v'premuimRateCap = sc_2~load_int(1) ? sc_2~load_int(257) : null();
+    return (sc_0, (v'tokenId, v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate, v'premuimRateCap));
 }
 
 ;;

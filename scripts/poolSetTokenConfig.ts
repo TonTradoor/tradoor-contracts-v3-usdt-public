@@ -12,31 +12,38 @@ export async function run(provider: NetworkProvider) {
 
     const lastTrx = await getLastTransaction(provider, pool.address);
 
-    await pool.send(
-        provider.sender(),
-        {
-            value: toNano('0.1'),
-        },
-        {
-            $$type: 'UpdateTokenConfig',
-            tokenId: 1n,
-            name: "BTC",
-            enable: true,
-            minMargin: toUnits(10, jettonDecimal), // 10U
-            maxLeverage: 100n,
-            liquidationFee: toUnits(0.2, jettonDecimal), // 0.2U
-            tradingFeeRate: BigInt(0.001 * PERCENTAGE_BASIS_POINT), // 0.1%
-            lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
-            interestRate: 0n,
-            maxFundingRate: 0n
-        }
-    );
+    const tokens = ['BTC', 'ETH'];
 
-    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
-    if (transDone) {
-        console.log(`set token config success`);
-    } else {
-        console.error(`set token config failed`);
+    for (let index = 0; index < tokens.length; index++) {
+        const name = tokens[index];
+        await pool.send(
+            provider.sender(),
+            {
+                value: toNano('0.1'),
+            },
+            {
+                $$type: 'UpdateTokenConfig',
+                tokenId: 1n,
+                name: name,
+                enable: true,
+                minMargin: toUnits(10, jettonDecimal), // 10U
+                maxLeverage: 105n,
+                liquidationFee: toUnits(0.2, jettonDecimal), // 0.2U
+                liquidityProportion: BigInt(PERCENTAGE_BASIS_POINT / tokens.length), // 100% / n
+                tradingFeeRate: BigInt(0.001 * PERCENTAGE_BASIS_POINT), // 0.1%
+                lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
+                interestRate: 0n,
+                maxFundingRate: 0n,
+                premuimRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
+            }
+        );
+
+        const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
+        if (transDone) {
+            console.log(`set ${name} token config success`);
+        } else {
+            console.error(`set ${name} token config failed`);
+        }
     }
 
 }

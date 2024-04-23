@@ -73,7 +73,7 @@ cell $DeployOk$_store_cell((int) v) inline;
 (slice, ((slice, int, int, int, int, int, slice))) $UpdateConfig$_load(slice sc_0) inline_ref;
 
 ;; $UpdateTokenConfig$_load
-(slice, ((int, slice, int, int, int, int, int, int, int, int))) $UpdateTokenConfig$_load(slice sc_0) inline_ref;
+(slice, ((int, slice, int, int, int, int, int, int, int, int, int, int))) $UpdateTokenConfig$_load(slice sc_0) inline_ref;
 
 ;; $ClaimProtocolFee$_load
 (slice, ((slice))) $ClaimProtocolFee$_load(slice sc_0) inline;
@@ -583,7 +583,7 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), (int, int, int, int, int)) $Pool$_fun_searchPremiumRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $x) impure inline_ref;
 
 ;; $Pool$_fun_calculatePremiumRate
-((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), tuple) $Pool$_fun_calculatePremiumRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $sizeDelta, int $isLong) impure inline_ref;
+((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), tuple) $Pool$_fun_calculatePremiumRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $indexPrice, int $sizeDelta, int $isLong) impure inline_ref;
 
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;

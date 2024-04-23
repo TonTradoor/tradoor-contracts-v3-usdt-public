@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 15038 bytes
+BOC Size: 15132 bytes
 
 # Types
 Total Types: 44
@@ -42,8 +42,8 @@ TLB: `update_config#4317981e executor:Maybe address enableExecutor:Maybe bool ga
 Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,gasConsumption:Maybe coins,minTonsForStorage:Maybe coins,lpBonusFactor:Maybe int257,lpLiquidityFactor:Maybe int257,orderBook:Maybe address}`
 
 ## UpdateTokenConfig
-TLB: `update_token_config#69d44870 tokenId:uint64 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 = UpdateTokenConfig`
-Signature: `UpdateTokenConfig{tokenId:uint64,name:Maybe ^string,enable:Maybe bool,minMargin:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257}`
+TLB: `update_token_config#e00739a9 tokenId:uint64 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 liquidityProportion:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 premuimRateCap:Maybe int257 = UpdateTokenConfig`
+Signature: `UpdateTokenConfig{tokenId:uint64,name:Maybe ^string,enable:Maybe bool,minMargin:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,liquidityProportion:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257,premuimRateCap:Maybe int257}`
 
 ## ClaimProtocolFee
 TLB: `claim_protocol_fee#b58e3465 feeReceiver:address = ClaimProtocolFee`

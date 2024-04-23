@@ -18,10 +18,12 @@ message UpdateTokenConfig {
     minMargin: Int?;
     maxLeverage: Int?;
     liquidationFee: Int?;
+    liquidityProportion: Int?;
     tradingFeeRate: Int?;
     lpTradingFeeRate: Int?;
     interestRate: Int?;
     maxFundingRate: Int?;
+    premuimRateCap: Int?;
 }
 
 message ClaimProtocolFee {
