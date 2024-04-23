@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 15132 bytes
+BOC Size: 15094 bytes
 
 # Types
-Total Types: 44
+Total Types: 43
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -42,8 +42,8 @@ TLB: `update_config#4317981e executor:Maybe address enableExecutor:Maybe bool ga
 Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,gasConsumption:Maybe coins,minTonsForStorage:Maybe coins,lpBonusFactor:Maybe int257,lpLiquidityFactor:Maybe int257,orderBook:Maybe address}`
 
 ## UpdateTokenConfig
-TLB: `update_token_config#e00739a9 tokenId:uint64 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 liquidityProportion:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 premuimRateCap:Maybe int257 = UpdateTokenConfig`
-Signature: `UpdateTokenConfig{tokenId:uint64,name:Maybe ^string,enable:Maybe bool,minMargin:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,liquidityProportion:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257,premuimRateCap:Maybe int257}`
+TLB: `update_token_config#23dfb5e4 tokenId:uint64 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 liquidityProportion:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 premuimRateCap:Maybe int257 = UpdateTokenConfig`
+Signature: `UpdateTokenConfig{tokenId:uint64,name:Maybe ^string,enable:Maybe bool,minMargin:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,liquidityProportion:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,interestRate:Maybe int257,premuimRateCap:Maybe int257}`
 
 ## ClaimProtocolFee
 TLB: `claim_protocol_fee#b58e3465 feeReceiver:address = ClaimProtocolFee`
@@ -118,12 +118,8 @@ TLB: `_ isExecutor:Maybe bool gasConsumption:coins minTonsForStorage:coins lpBon
 Signature: `ConfigData{isExecutor:Maybe bool,gasConsumption:coins,minTonsForStorage:coins,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
 
 ## TokenConfig
-TLB: `_ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 premuimRateCap:int257 = TokenConfig`
-Signature: `TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257,premuimRateCap:int257}`
-
-## TokenConfigData
-TLB: `_ tokenIdNext:uint64 tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257,premuimRateCap:int257} = TokenConfigData`
-Signature: `TokenConfigData{tokenIdNext:uint64,tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257,premuimRateCap:int257}}`
+TLB: `_ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 premuimRateCap:int257 = TokenConfig`
+Signature: `TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,premuimRateCap:int257}`
 
 ## LPPosition
 TLB: `_ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition`
@@ -150,8 +146,8 @@ TLB: `_ netSize:int257 isLong:bool entryPrice:int257 unrealizedPnl:int257 = Glob
 Signature: `GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257}`
 
 ## PerpPositionData
-TLB: `_ globalPerpNetValue:int257 globalPerpSingleValue:int257 perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257} globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257} = PerpPositionData`
-Signature: `PerpPositionData{globalPerpNetValue:int257,globalPerpSingleValue:int257,perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257},globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257},globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257}}`
+TLB: `_ globalPerpNetValue:int257 globalPerpSingleValue:int257 perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257} globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257} prevPremiumRateSample:Maybe PremiumRateSampleData{rangeId:uint64,sampleId:uint64,sampleX:int257,sampleY:int257,premiumRate:int257} = PerpPositionData`
+Signature: `PerpPositionData{globalPerpNetValue:int257,globalPerpSingleValue:int257,perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257},globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257},globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257},prevPremiumRateSample:Maybe PremiumRateSampleData{rangeId:uint64,sampleId:uint64,sampleX:int257,sampleY:int257,premiumRate:int257}}`
 
 ## UpdatePriceParam
 TLB: `_ tokenId:uint64 price:int257 = UpdatePriceParam`
@@ -228,6 +224,7 @@ Argument: account
 4996: none available price
 5238: position not exist
 9429: send gas not enough
+17312: leverage too high
 18995: margin rate too low
 23314: insufficient liquidity for single value
 27798: invalid token
@@ -236,7 +233,6 @@ Argument: account
 36718: disabled token
 39251: insufficient global LP
 41207: invalid sender
-42634: legerage too high
 54040: insufficient global net LP
 55429: not reach liquidate price
 55754: insufficient liquidity for net value

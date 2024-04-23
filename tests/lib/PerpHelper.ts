@@ -104,7 +104,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.3'),
+            value: toNano('0.5'),
         },
         {
             $$type: 'ExecutePerpPositionOrder',
@@ -131,6 +131,8 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     let globalLPPositionAfter = positionDataAfter?.globalLPPosition;
     let globalPositionAfter = positionDataAfter?.globalPosition;
     let globalLPLiquidityAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
+    let globalFundingRateSampleAfter = positionDataAfter.globalFundingRateSample;
+    let prevPremiumRateSampleAfter = positionDataAfter.prevPremiumRateSample;
 
     return {
         trxResult,
@@ -146,6 +148,8 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
         globalPositionAfter,
         globalLPLiquidityBefore,
         globalLPLiquidityAfter,
+        globalFundingRateSampleAfter,
+        prevPremiumRateSampleAfter
     };
 }
 
@@ -252,7 +256,7 @@ export async function liquidatePerpPosition(executor: SandboxContract<TreasuryCo
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.3'),
+            value: toNano('0.5'),
         },
         {
             $$type: 'LiquidatePerpPosition',
@@ -307,7 +311,7 @@ export async function adlPerpPosition(executor: SandboxContract<TreasuryContract
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.3'),
+            value: toNano('0.5'),
         },
         {
             $$type: 'ADLPerpPosition',

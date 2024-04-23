@@ -22,7 +22,6 @@ message UpdateTokenConfig {
     tradingFeeRate: Int?;
     lpTradingFeeRate: Int?;
     interestRate: Int?;
-    maxFundingRate: Int?;
     premuimRateCap: Int?;
 }
 

@@ -21,13 +21,7 @@ struct TokenConfig {
     lpTradingFeeRate: Int;
     // ==================== Other Configuration ==========================
     interestRate: Int;
-    maxFundingRate: Int;
     premuimRateCap: Int;
-}
-
-struct TokenConfigData {
-    tokenIdNext: Int as uint64;
-    tokenConfig: TokenConfig?;
 }
 
 // ============================ LP ================================ //
@@ -81,6 +75,7 @@ struct PerpPositionData {
     globalLPPosition: GlobalLPPosition?;
     globalPosition: GlobalPosition?;
     globalFundingRateSample: GlobalFundingRateSample?;
+    prevPremiumRateSample: PremiumRateSampleData?;
 }
 
 // ============================ Price ================================ //
@@ -88,12 +83,6 @@ struct UpdatePriceParam {
     tokenId: Int as uint64;
     price: Int;
 }
-
-// struct UpdatePriceAndFundingFeeData {
-//     tokenId: Int as uint64;
-//     price: Int;
-//     lpFundingFee: Int;
-// }
 
 // ============================ Premium Rate ================================ //
 struct PremiumRateSampleRange {
