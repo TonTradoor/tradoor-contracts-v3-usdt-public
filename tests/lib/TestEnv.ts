@@ -127,8 +127,8 @@ export class TestEnv {
                 maxTimeDelayExecutor: 30n * 60n,
                 minTimeDelayTrader: 3n * 60n,
                 minExecutionFee: toNano(0.1),
-                gasConsumption: toNano(0.03),
-                minTonsForStorage: toNano(0.01),
+                gasConsumption: toNano(0.06),
+                minTonsForStorage: toNano(0),
                 usdtWallet: TestEnv.orderBookJettonWallet.address,
                 pool: TestEnv.pool.address
             }
@@ -150,8 +150,8 @@ export class TestEnv {
                 $$type: 'UpdateConfig',
                 executor: TestEnv.executor.address,
                 enableExecutor: true,
-                gasConsumption: toNano(0.07),
-                minTonsForStorage: toNano(0.01),
+                gasConsumption: toNano(0.06),
+                minTonsForStorage: toNano(0),
                 lpBonusFactor: 10n * 10n**9n,
                 lpLiquidityFactor: 2n * 10n**9n,
                 orderBook: TestEnv.orderBook.address

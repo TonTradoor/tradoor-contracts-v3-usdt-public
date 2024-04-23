@@ -104,7 +104,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano('0.4'),
         },
         {
             $$type: 'ExecutePerpPositionOrder',

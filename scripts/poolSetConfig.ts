@@ -21,8 +21,8 @@ export async function run(provider: NetworkProvider) {
             $$type: 'UpdateConfig',
             executor: executor,
             enableExecutor: true,
-            gasConsumption: toNano(0.05),
-            minTonsForStorage: toNano(0.03),
+            gasConsumption: toNano(0.06),
+            minTonsForStorage: toNano(0),
             lpBonusFactor: 10n * 10n**9n,
             lpLiquidityFactor: 2n * 10n**9n,
             orderBook: orderBook.address
