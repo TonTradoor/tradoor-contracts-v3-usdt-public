@@ -46,7 +46,7 @@ async function setPremiumRateSampleRange(
 
     let PremiumRateSampleValue: DictionaryValue<PremiumRateSample> = {
         serialize(src, builder) {
-            builder.storeInt(src.deviationRate, 257).storeInt(src.premiumRate, 257)
+            builder.storeInt(src.sampleX, 257).storeInt(src.sampleY, 257)
         },
         parse(src) {
             throw '';
@@ -72,8 +72,8 @@ async function setPremiumRateSampleRange(
         for (let j = 0; j < samples.length; j++) {
             sampleValues.set(BigInt(j), {
                 $$type: 'PremiumRateSample',
-                deviationRate: toUnits(samples[j].x, 9),
-                premiumRate: toUnits(samples[j].y, 9)
+                sampleX: toUnits(samples[j].x, 9),
+                sampleY: toUnits(samples[j].y, 9)
             })
         }
 

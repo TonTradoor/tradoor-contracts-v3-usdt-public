@@ -111,6 +111,5 @@ message UpdatePriceEvent {
 
 message PremiumRateChangedEvent {
     tokenId: Int as uint64;
-    deviationRate: Int;
     premiumRate: Int;
 }

@@ -231,12 +231,12 @@ cell $UpdatePerpPositionSuccess$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: SetPremiumRateSampleRange
-;; Header: 0x0176e0c9
-;; TLB: set_premium_rate_sample_range#0176e0c9 sampleRangeLength:uint64 sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}> = SetPremiumRateSampleRange
+;; Header: 0x8c47f3f2
+;; TLB: set_premium_rate_sample_range#8c47f3f2 sampleRangeLength:uint64 sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}>}> = SetPremiumRateSampleRange
 ;;
 
 (slice, ((int, cell))) $SetPremiumRateSampleRange$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 24568009);
+    throw_unless(129, sc_0~load_uint(32) == 2353525746);
     var v'sampleRangeLength = sc_0~load_uint(64);
     var v'sampleRanges = sc_0~load_dict();
     return (sc_0, (v'sampleRangeLength, v'sampleRanges));
@@ -503,25 +503,24 @@ cell $UpdatePriceEvent$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: PremiumRateChangedEvent
-;; Header: 0xfc86b5fb
-;; TLB: premium_rate_changed_event#fc86b5fb tokenId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateChangedEvent
+;; Header: 0x58e041f4
+;; TLB: premium_rate_changed_event#58e041f4 tokenId:uint64 premiumRate:int257 = PremiumRateChangedEvent
 ;;
 
-builder $PremiumRateChangedEvent$_store(builder build_0, (int, int, int) v) inline {
-    var (v'tokenId, v'deviationRate, v'premiumRate) = v;
-    build_0 = store_uint(build_0, 4236686843, 32);
+builder $PremiumRateChangedEvent$_store(builder build_0, (int, int) v) inline {
+    var (v'tokenId, v'premiumRate) = v;
+    build_0 = store_uint(build_0, 1491091956, 32);
     build_0 = build_0.store_uint(v'tokenId, 64);
-    build_0 = build_0.store_int(v'deviationRate, 257);
     build_0 = build_0.store_int(v'premiumRate, 257);
     return build_0;
 }
 
-cell $PremiumRateChangedEvent$_store_cell((int, int, int) v) inline {
+cell $PremiumRateChangedEvent$_store_cell((int, int) v) inline {
     return $PremiumRateChangedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int)) $PremiumRateChangedEvent$_constructor_tokenId_deviationRate_premiumRate(int tokenId, int deviationRate, int premiumRate) inline {
-    return (tokenId, deviationRate, premiumRate);
+((int, int)) $PremiumRateChangedEvent$_constructor_tokenId_premiumRate(int tokenId, int premiumRate) inline {
+    return (tokenId, premiumRate);
 }
 
 ;;
@@ -540,11 +539,11 @@ cell $PremiumRateChangedEvent$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: TokenConfig
-;; TLB: _ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig
+;; TLB: _ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 premuimRateCap:int257 = TokenConfig
 ;;
 
-builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int) v) inline_ref {
-    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
+builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate, v'premuimRateCap) = v;
     build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
     build_0 = build_0.store_int(v'enable, 1);
     build_0 = build_0.store_int(v'minMargin, 257);
@@ -557,16 +556,17 @@ builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, in
     var build_2 = begin_cell();
     build_2 = build_2.store_int(v'interestRate, 257);
     build_2 = build_2.store_int(v'maxFundingRate, 257);
+    build_2 = build_2.store_int(v'premuimRateCap, 257);
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int) v) inline {
+cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int, int) v) inline {
     return $TokenConfig$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((slice, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref {
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref {
     var v'name = sc_0~load_ref().begin_parse();
     var v'enable = sc_0~load_int(1);
     var v'minMargin = sc_0~load_int(257);
@@ -579,12 +579,13 @@ cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, in
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'interestRate = sc_2~load_int(257);
     var v'maxFundingRate = sc_2~load_int(257);
-    return (sc_0, (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate));
+    var v'premuimRateCap = sc_2~load_int(257);
+    return (sc_0, (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate, v'premuimRateCap));
 }
 
-tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
-    return __tact_tuple_create_10(v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
+tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate, v'premuimRateCap) = v;
+    return __tact_tuple_create_11(v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate, v'premuimRateCap);
 }
 
 tuple $TokenConfig$_load_opt(cell cl) inline {
@@ -595,15 +596,15 @@ tuple $TokenConfig$_load_opt(cell cl) inline {
     return $TokenConfig$_as_optional(sc~$TokenConfig$_load());
 }
 
-((slice, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline {
+((slice, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (slice vvv'name, int vvv'enable, int vvv'minMargin, int vvv'maxLeverage, int vvv'liquidationFee, int vvv'liquidityProportion, int vvv'tradingFeeRate, int vvv'lpTradingFeeRate, int vvv'interestRate, int vvv'maxFundingRate) = __tact_tuple_destroy_10(v);
-    return (vvv'name, vvv'enable, vvv'minMargin, vvv'maxLeverage, vvv'liquidationFee, vvv'liquidityProportion, vvv'tradingFeeRate, vvv'lpTradingFeeRate, vvv'interestRate, vvv'maxFundingRate);
+    var (slice vvv'name, int vvv'enable, int vvv'minMargin, int vvv'maxLeverage, int vvv'liquidationFee, int vvv'liquidityProportion, int vvv'tradingFeeRate, int vvv'lpTradingFeeRate, int vvv'interestRate, int vvv'maxFundingRate, int vvv'premuimRateCap) = __tact_tuple_destroy_11(v);
+    return (vvv'name, vvv'enable, vvv'minMargin, vvv'maxLeverage, vvv'liquidationFee, vvv'liquidityProportion, vvv'tradingFeeRate, vvv'lpTradingFeeRate, vvv'interestRate, vvv'maxFundingRate, vvv'premuimRateCap);
 }
 
-tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int)) v) inline {
-    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
-    return __tact_tuple_create_10(v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
+tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int, int)) v) inline {
+    var (v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate, v'premuimRateCap) = v;
+    return __tact_tuple_create_11(v'name, v'enable, v'minMargin, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate, v'premuimRateCap);
 }
 
 tuple $TokenConfig$_to_opt_tuple(tuple v) inline {
@@ -620,8 +621,8 @@ tuple $TokenConfig$_to_opt_external(tuple v) inline {
     }
 }
 
-((slice, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate(slice name, int enable, int minMargin, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int liquidityProportion, int interestRate, int maxFundingRate) inline {
-    return (name, enable, minMargin, maxLeverage, liquidationFee, liquidityProportion, tradingFeeRate, lpTradingFeeRate, interestRate, maxFundingRate);
+((slice, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate_premuimRateCap(slice name, int enable, int minMargin, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int liquidityProportion, int interestRate, int maxFundingRate, int premuimRateCap) inline {
+    return (name, enable, minMargin, maxLeverage, liquidationFee, liquidityProportion, tradingFeeRate, lpTradingFeeRate, interestRate, maxFundingRate, premuimRateCap);
 }
 
 ;;
@@ -1148,7 +1149,7 @@ _ $UpdatePriceParam$_get_price((int, int) v) inline {
 
 ;;
 ;; Type: PremiumRateSampleRange
-;; TLB: _ sampleLength:uint64 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRange
+;; TLB: _ sampleLength:uint64 samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}> = PremiumRateSampleRange
 ;;
 
 builder $PremiumRateSampleRange$_store(builder build_0, (int, cell) v) inline {
@@ -1193,7 +1194,7 @@ tuple $PremiumRateSampleRange$_load_opt(cell cl) inline {
 
 ;;
 ;; Type: PremiumRateSampleRangeParam
-;; TLB: _ sampleId:uint64 sampleLength:uint64 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRangeParam
+;; TLB: _ sampleId:uint64 sampleLength:uint64 samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}> = PremiumRateSampleRangeParam
 ;;
 
 (slice, ((int, int, cell))) $PremiumRateSampleRangeParam$_load(slice sc_0) inline {
@@ -1224,18 +1225,18 @@ tuple $PremiumRateSampleRangeParam$_load_opt(cell cl) inline {
 
 ;;
 ;; Type: PremiumRateSample
-;; TLB: _ deviationRate:int257 premiumRate:int257 = PremiumRateSample
+;; TLB: _ sampleX:int257 sampleY:int257 = PremiumRateSample
 ;;
 
 (slice, ((int, int))) $PremiumRateSample$_load(slice sc_0) inline {
-    var v'deviationRate = sc_0~load_int(257);
-    var v'premiumRate = sc_0~load_int(257);
-    return (sc_0, (v'deviationRate, v'premiumRate));
+    var v'sampleX = sc_0~load_int(257);
+    var v'sampleY = sc_0~load_int(257);
+    return (sc_0, (v'sampleX, v'sampleY));
 }
 
 tuple $PremiumRateSample$_as_optional((int, int) v) inline {
-    var (v'deviationRate, v'premiumRate) = v;
-    return __tact_tuple_create_2(v'deviationRate, v'premiumRate);
+    var (v'sampleX, v'sampleY) = v;
+    return __tact_tuple_create_2(v'sampleX, v'sampleY);
 }
 
 tuple $PremiumRateSample$_load_opt(cell cl) inline {
@@ -1246,55 +1247,57 @@ tuple $PremiumRateSample$_load_opt(cell cl) inline {
     return $PremiumRateSample$_as_optional(sc~$PremiumRateSample$_load());
 }
 
-_ $PremiumRateSample$_get_deviationRate((int, int) v) inline {
-    var (v'deviationRate, v'premiumRate) = v;
-    return v'deviationRate;
+_ $PremiumRateSample$_get_sampleX((int, int) v) inline {
+    var (v'sampleX, v'sampleY) = v;
+    return v'sampleX;
 }
 
-_ $PremiumRateSample$_get_premiumRate((int, int) v) inline {
-    var (v'deviationRate, v'premiumRate) = v;
-    return v'premiumRate;
+_ $PremiumRateSample$_get_sampleY((int, int) v) inline {
+    var (v'sampleX, v'sampleY) = v;
+    return v'sampleY;
 }
 
 ((int, int)) $PremiumRateSample$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'deviationRate, int vvv'premiumRate) = __tact_tuple_destroy_2(v);
-    return (vvv'deviationRate, vvv'premiumRate);
+    var (int vvv'sampleX, int vvv'sampleY) = __tact_tuple_destroy_2(v);
+    return (vvv'sampleX, vvv'sampleY);
 }
 
-((int, int)) $PremiumRateSample$_constructor_deviationRate_premiumRate(int deviationRate, int premiumRate) inline {
-    return (deviationRate, premiumRate);
+((int, int)) $PremiumRateSample$_constructor_sampleX_sampleY(int sampleX, int sampleY) inline {
+    return (sampleX, sampleY);
 }
 
 ;;
 ;; Type: PremiumRateSampleData
-;; TLB: _ rangeId:uint64 sampleId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateSampleData
+;; TLB: _ rangeId:uint64 sampleId:uint64 sampleX:int257 sampleY:int257 premiumRate:int257 = PremiumRateSampleData
 ;;
 
-builder $PremiumRateSampleData$_store(builder build_0, (int, int, int, int) v) inline {
-    var (v'rangeId, v'sampleId, v'deviationRate, v'premiumRate) = v;
+builder $PremiumRateSampleData$_store(builder build_0, (int, int, int, int, int) v) inline {
+    var (v'rangeId, v'sampleId, v'sampleX, v'sampleY, v'premiumRate) = v;
     build_0 = build_0.store_uint(v'rangeId, 64);
     build_0 = build_0.store_uint(v'sampleId, 64);
-    build_0 = build_0.store_int(v'deviationRate, 257);
+    build_0 = build_0.store_int(v'sampleX, 257);
+    build_0 = build_0.store_int(v'sampleY, 257);
     build_0 = build_0.store_int(v'premiumRate, 257);
     return build_0;
 }
 
-cell $PremiumRateSampleData$_store_cell((int, int, int, int) v) inline {
+cell $PremiumRateSampleData$_store_cell((int, int, int, int, int) v) inline {
     return $PremiumRateSampleData$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((int, int, int, int))) $PremiumRateSampleData$_load(slice sc_0) inline {
+(slice, ((int, int, int, int, int))) $PremiumRateSampleData$_load(slice sc_0) inline {
     var v'rangeId = sc_0~load_uint(64);
     var v'sampleId = sc_0~load_uint(64);
-    var v'deviationRate = sc_0~load_int(257);
+    var v'sampleX = sc_0~load_int(257);
+    var v'sampleY = sc_0~load_int(257);
     var v'premiumRate = sc_0~load_int(257);
-    return (sc_0, (v'rangeId, v'sampleId, v'deviationRate, v'premiumRate));
+    return (sc_0, (v'rangeId, v'sampleId, v'sampleX, v'sampleY, v'premiumRate));
 }
 
-tuple $PremiumRateSampleData$_as_optional((int, int, int, int) v) inline {
-    var (v'rangeId, v'sampleId, v'deviationRate, v'premiumRate) = v;
-    return __tact_tuple_create_4(v'rangeId, v'sampleId, v'deviationRate, v'premiumRate);
+tuple $PremiumRateSampleData$_as_optional((int, int, int, int, int) v) inline {
+    var (v'rangeId, v'sampleId, v'sampleX, v'sampleY, v'premiumRate) = v;
+    return __tact_tuple_create_5(v'rangeId, v'sampleId, v'sampleX, v'sampleY, v'premiumRate);
 }
 
 tuple $PremiumRateSampleData$_load_opt(cell cl) inline {
@@ -1305,14 +1308,14 @@ tuple $PremiumRateSampleData$_load_opt(cell cl) inline {
     return $PremiumRateSampleData$_as_optional(sc~$PremiumRateSampleData$_load());
 }
 
-((int, int, int, int)) $PremiumRateSampleData$_not_null(tuple v) inline {
+((int, int, int, int, int)) $PremiumRateSampleData$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'rangeId, int vvv'sampleId, int vvv'deviationRate, int vvv'premiumRate) = __tact_tuple_destroy_4(v);
-    return (vvv'rangeId, vvv'sampleId, vvv'deviationRate, vvv'premiumRate);
+    var (int vvv'rangeId, int vvv'sampleId, int vvv'sampleX, int vvv'sampleY, int vvv'premiumRate) = __tact_tuple_destroy_5(v);
+    return (vvv'rangeId, vvv'sampleId, vvv'sampleX, vvv'sampleY, vvv'premiumRate);
 }
 
-((int, int, int, int)) $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate(int rangeId, int sampleId, int deviationRate, int premiumRate) inline {
-    return (rangeId, sampleId, deviationRate, premiumRate);
+((int, int, int, int, int)) $PremiumRateSampleData$_constructor_rangeId_sampleId_sampleX_sampleY_premiumRate(int rangeId, int sampleId, int sampleX, int sampleY, int premiumRate) inline {
+    return (rangeId, sampleId, sampleX, sampleY, premiumRate);
 }
 
 ;;

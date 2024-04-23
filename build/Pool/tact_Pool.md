@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 14952 bytes
+BOC Size: 15038 bytes
 
 # Types
 Total Types: 44
@@ -70,8 +70,8 @@ TLB: `update_price#1dc8958c trxId:uint64 pricesLength:uint64 prices:dict<int, ^U
 Signature: `UpdatePrice{trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
 
 ## SetPremiumRateSampleRange
-TLB: `set_premium_rate_sample_range#0176e0c9 sampleRangeLength:uint64 sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}> = SetPremiumRateSampleRange`
-Signature: `SetPremiumRateSampleRange{sampleRangeLength:uint64,sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}>}`
+TLB: `set_premium_rate_sample_range#8c47f3f2 sampleRangeLength:uint64 sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}>}> = SetPremiumRateSampleRange`
+Signature: `SetPremiumRateSampleRange{sampleRangeLength:uint64,sampleRanges:dict<int, ^PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}>}>}`
 
 ## DeviationRate
 TLB: `deviation_rate#2dd61a98 deviationRate:int257 = DeviationRate`
@@ -110,20 +110,20 @@ TLB: `update_price_event#6271a1c7 tokenId:uint64 price:int257 lpFundingFee:int25
 Signature: `UpdatePriceEvent{tokenId:uint64,price:int257,lpFundingFee:int257}`
 
 ## PremiumRateChangedEvent
-TLB: `premium_rate_changed_event#fc86b5fb tokenId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateChangedEvent`
-Signature: `PremiumRateChangedEvent{tokenId:uint64,deviationRate:int257,premiumRate:int257}`
+TLB: `premium_rate_changed_event#58e041f4 tokenId:uint64 premiumRate:int257 = PremiumRateChangedEvent`
+Signature: `PremiumRateChangedEvent{tokenId:uint64,premiumRate:int257}`
 
 ## ConfigData
 TLB: `_ isExecutor:Maybe bool gasConsumption:coins minTonsForStorage:coins lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
 Signature: `ConfigData{isExecutor:Maybe bool,gasConsumption:coins,minTonsForStorage:coins,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
 
 ## TokenConfig
-TLB: `_ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
-Signature: `TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
+TLB: `_ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 premuimRateCap:int257 = TokenConfig`
+Signature: `TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257,premuimRateCap:int257}`
 
 ## TokenConfigData
-TLB: `_ tokenIdNext:uint64 tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257} = TokenConfigData`
-Signature: `TokenConfigData{tokenIdNext:uint64,tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}}`
+TLB: `_ tokenIdNext:uint64 tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257,premuimRateCap:int257} = TokenConfigData`
+Signature: `TokenConfigData{tokenIdNext:uint64,tokenConfig:Maybe TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257,premuimRateCap:int257}}`
 
 ## LPPosition
 TLB: `_ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition`
@@ -158,20 +158,20 @@ TLB: `_ tokenId:uint64 price:int257 = UpdatePriceParam`
 Signature: `UpdatePriceParam{tokenId:uint64,price:int257}`
 
 ## PremiumRateSampleRange
-TLB: `_ sampleLength:uint64 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRange`
-Signature: `PremiumRateSampleRange{sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}`
+TLB: `_ sampleLength:uint64 samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}> = PremiumRateSampleRange`
+Signature: `PremiumRateSampleRange{sampleLength:uint64,samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}>}`
 
 ## PremiumRateSampleRangeParam
-TLB: `_ sampleId:uint64 sampleLength:uint64 samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}> = PremiumRateSampleRangeParam`
-Signature: `PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{deviationRate:int257,premiumRate:int257}>}`
+TLB: `_ sampleId:uint64 sampleLength:uint64 samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}> = PremiumRateSampleRangeParam`
+Signature: `PremiumRateSampleRangeParam{sampleId:uint64,sampleLength:uint64,samples:dict<int, ^PremiumRateSample{sampleX:int257,sampleY:int257}>}`
 
 ## PremiumRateSample
-TLB: `_ deviationRate:int257 premiumRate:int257 = PremiumRateSample`
-Signature: `PremiumRateSample{deviationRate:int257,premiumRate:int257}`
+TLB: `_ sampleX:int257 sampleY:int257 = PremiumRateSample`
+Signature: `PremiumRateSample{sampleX:int257,sampleY:int257}`
 
 ## PremiumRateSampleData
-TLB: `_ rangeId:uint64 sampleId:uint64 deviationRate:int257 premiumRate:int257 = PremiumRateSampleData`
-Signature: `PremiumRateSampleData{rangeId:uint64,sampleId:uint64,deviationRate:int257,premiumRate:int257}`
+TLB: `_ rangeId:uint64 sampleId:uint64 sampleX:int257 sampleY:int257 premiumRate:int257 = PremiumRateSampleData`
+Signature: `PremiumRateSampleData{rangeId:uint64,sampleId:uint64,sampleX:int257,sampleY:int257,premiumRate:int257}`
 
 ## GlobalPosition
 TLB: `_ longMargin:int257 shortMargin:int257 longSize:int257 shortSize:int257 longFundingFeeGrowth:int257 shortFundingFeeGrowth:int257 longValue:int257 shortValue:int257 = GlobalPosition`

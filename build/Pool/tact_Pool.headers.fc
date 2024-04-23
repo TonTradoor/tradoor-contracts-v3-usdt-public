@@ -151,22 +151,22 @@ builder $UpdatePriceEvent$_store(builder build_0, (int, int, int) v) inline;
 cell $UpdatePriceEvent$_store_cell((int, int, int) v) inline;
 
 ;; $PremiumRateChangedEvent$_store
-builder $PremiumRateChangedEvent$_store(builder build_0, (int, int, int) v) inline;
+builder $PremiumRateChangedEvent$_store(builder build_0, (int, int) v) inline;
 
 ;; $PremiumRateChangedEvent$_store_cell
-cell $PremiumRateChangedEvent$_store_cell((int, int, int) v) inline;
+cell $PremiumRateChangedEvent$_store_cell((int, int) v) inline;
 
 ;; $TokenConfig$_store
-builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int) v) inline_ref;
+builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $TokenConfig$_store_cell
-cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int) v) inline;
+cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $TokenConfig$_load
-(slice, ((slice, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref;
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref;
 
 ;; $TokenConfig$_as_optional
-tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int) v) inline;
+tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $TokenConfig$_load_opt
 tuple $TokenConfig$_load_opt(cell cl) inline;
@@ -316,16 +316,16 @@ tuple $PremiumRateSample$_as_optional((int, int) v) inline;
 tuple $PremiumRateSample$_load_opt(cell cl) inline;
 
 ;; $PremiumRateSampleData$_store
-builder $PremiumRateSampleData$_store(builder build_0, (int, int, int, int) v) inline;
+builder $PremiumRateSampleData$_store(builder build_0, (int, int, int, int, int) v) inline;
 
 ;; $PremiumRateSampleData$_store_cell
-cell $PremiumRateSampleData$_store_cell((int, int, int, int) v) inline;
+cell $PremiumRateSampleData$_store_cell((int, int, int, int, int) v) inline;
 
 ;; $PremiumRateSampleData$_load
-(slice, ((int, int, int, int))) $PremiumRateSampleData$_load(slice sc_0) inline;
+(slice, ((int, int, int, int, int))) $PremiumRateSampleData$_load(slice sc_0) inline;
 
 ;; $PremiumRateSampleData$_as_optional
-tuple $PremiumRateSampleData$_as_optional((int, int, int, int) v) inline;
+tuple $PremiumRateSampleData$_as_optional((int, int, int, int, int) v) inline;
 
 ;; $PremiumRateSampleData$_load_opt
 tuple $PremiumRateSampleData$_load_opt(cell cl) inline;
@@ -346,10 +346,10 @@ _ $Context$_get_value((int, slice, int, slice) v) inline;
 (int, int, int, int, int, slice) $ConfigData$_to_external(((int, int, int, int, int, slice)) v) inline;
 
 ;; $TokenConfig$_not_null
-((slice, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline;
+((slice, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline;
 
 ;; $TokenConfig$_to_tuple
-tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int)) v) inline;
+tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int, int)) v) inline;
 
 ;; $TokenConfig$_to_opt_tuple
 tuple $TokenConfig$_to_opt_tuple(tuple v) inline;
@@ -453,17 +453,17 @@ _ $UpdatePriceParam$_get_price((int, int) v) inline;
 ;; $PremiumRateSampleRangeParam$_not_null
 ((int, int, cell)) $PremiumRateSampleRangeParam$_not_null(tuple v) inline;
 
-;; $PremiumRateSample$_get_deviationRate
-_ $PremiumRateSample$_get_deviationRate((int, int) v) inline;
+;; $PremiumRateSample$_get_sampleX
+_ $PremiumRateSample$_get_sampleX((int, int) v) inline;
 
-;; $PremiumRateSample$_get_premiumRate
-_ $PremiumRateSample$_get_premiumRate((int, int) v) inline;
+;; $PremiumRateSample$_get_sampleY
+_ $PremiumRateSample$_get_sampleY((int, int) v) inline;
 
 ;; $PremiumRateSample$_not_null
 ((int, int)) $PremiumRateSample$_not_null(tuple v) inline;
 
 ;; $PremiumRateSampleData$_not_null
-((int, int, int, int)) $PremiumRateSampleData$_not_null(tuple v) inline;
+((int, int, int, int, int)) $PremiumRateSampleData$_not_null(tuple v) inline;
 
 ;; $Pool$init$_load
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline;
@@ -567,8 +567,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate
 ((int, int, int)) $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate(int lastAdjustFundingRateTime, int sampleCount, int cumulativePremiumRate) inline;
 
-;; $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate
-((int, int, int, int)) $PremiumRateSampleData$_constructor_rangeId_sampleId_deviationRate_premiumRate(int rangeId, int sampleId, int deviationRate, int premiumRate) inline;
+;; $PremiumRateSampleData$_constructor_rangeId_sampleId_sampleX_sampleY_premiumRate
+((int, int, int, int, int)) $PremiumRateSampleData$_constructor_rangeId_sampleId_sampleX_sampleY_premiumRate(int rangeId, int sampleId, int sampleX, int sampleY, int premiumRate) inline;
 
 ;; $Pool$_fun_updateFundingRate
 ((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), int) $Pool$_fun_updateFundingRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $indexPrice) impure inline_ref;
@@ -576,11 +576,11 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_updatePriceAndFundingFee
 ((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), ()) $Pool$_fun_updatePriceAndFundingFee((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $pricesLength, cell $prices) impure inline_ref;
 
-;; $PremiumRateSample$_constructor_deviationRate_premiumRate
-((int, int)) $PremiumRateSample$_constructor_deviationRate_premiumRate(int deviationRate, int premiumRate) inline;
+;; $PremiumRateSample$_constructor_sampleX_sampleY
+((int, int)) $PremiumRateSample$_constructor_sampleX_sampleY(int sampleX, int sampleY) inline;
 
 ;; $Pool$_fun_searchPremiumRate
-((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), (int, int, int, int)) $Pool$_fun_searchPremiumRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $deviationRate) impure inline_ref;
+((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), (int, int, int, int, int)) $Pool$_fun_searchPremiumRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $x) impure inline_ref;
 
 ;; $Pool$_fun_calculatePremiumRate
 ((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), tuple) $Pool$_fun_calculatePremiumRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $sizeDelta, int $isLong) impure inline_ref;
@@ -603,8 +603,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $SendParameters$_constructor_to_bounce_value_mode
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice to, int bounce, int value, int mode) inline;
 
-;; $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate
-((slice, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate(slice name, int enable, int minMargin, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int liquidityProportion, int interestRate, int maxFundingRate) inline;
+;; $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate_premuimRateCap
+((slice, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minMargin_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_liquidityProportion_interestRate_maxFundingRate_premuimRateCap(slice name, int enable, int minMargin, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int liquidityProportion, int interestRate, int maxFundingRate, int premuimRateCap) inline;
 
 ;; $SendParameters$_constructor_to_value_bounce_mode_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body(slice to, int value, int bounce, int mode, cell body) inline;
@@ -612,8 +612,8 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId
 ((int, int, int)) $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId(int orderId, int receive, int trxId) inline;
 
-;; $PremiumRateChangedEvent$_constructor_tokenId_deviationRate_premiumRate
-((int, int, int)) $PremiumRateChangedEvent$_constructor_tokenId_deviationRate_premiumRate(int tokenId, int deviationRate, int premiumRate) inline;
+;; $PremiumRateChangedEvent$_constructor_tokenId_premiumRate
+((int, int)) $PremiumRateChangedEvent$_constructor_tokenId_premiumRate(int tokenId, int premiumRate) inline;
 
 ;; $UpdatePerpPositionSuccess$_constructor_orderId_receive_trxId
 ((int, int, int)) $UpdatePerpPositionSuccess$_constructor_orderId_receive_trxId(int orderId, int receive, int trxId) inline;

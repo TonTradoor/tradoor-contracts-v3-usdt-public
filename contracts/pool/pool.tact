@@ -100,7 +100,8 @@ contract Pool with Deployable, Ownable {
             lpTradingFeeRate: 600_000_000, // 60%
             liquidityProportion: 100_000_000, // 10%
             interestRate: 0,
-            maxFundingRate: 0
+            maxFundingRate: 0,
+            premuimRateCap: 100_000_000 // 10%
         };
 
         if (msg.name != null){
@@ -430,7 +431,8 @@ contract Pool with Deployable, Ownable {
         let prevPremiumRateSample: PremiumRateSampleData = prevPremiumRateSampleOpt != null ? prevPremiumRateSampleOpt!! : PremiumRateSampleData{
             rangeId: 0,
             sampleId: 0,
-            deviationRate: 0,
+            sampleX: 0,
+            sampleY: 0,
             premiumRate: 0
         };
         let avgPremiumRate: Int = prevPremiumRateSample.premiumRate;
@@ -442,7 +444,6 @@ contract Pool with Deployable, Ownable {
             self.prevPremiumRateSamples.set(msg.tokenId, prevPremiumRateSample);
             emit(PremiumRateChangedEvent{
                 tokenId: msg.tokenId,
-                deviationRate: prevPremiumRateSample.deviationRate,
                 premiumRate: prevPremiumRateSample.premiumRate
             }.toCell());
         }
@@ -1302,7 +1303,8 @@ contract Pool with Deployable, Ownable {
         let prevPremiumRateSample: PremiumRateSampleData = prevPremiumRateSampleOpt != null ? prevPremiumRateSampleOpt!! : PremiumRateSampleData{
             rangeId: 0,
             sampleId: 0,
-            deviationRate: 0,
+            sampleX: 0,
+            sampleY: 0,
             premiumRate: 0
         };
         let premiumRate: Int = prevPremiumRateSample.premiumRate;
@@ -1443,11 +1445,13 @@ contract Pool with Deployable, Ownable {
         let tokenLiquidity: Int = (self.globalLPFund + self.globalLPUnrealizedPnl) * tokenConfig.liquidityProportion / PERCENTAGE_BASIS_POINT;
         let deviationRate: Int = globalLPNetSizeAfter * PERCENTAGE_BASIS_POINT / tokenLiquidity;
 
-        let premiumRateSample: PremiumRateSampleData = self.searchPremiumRate(tokenId, deviationRate);
+        let premiumRateSample: PremiumRateSampleData = self.searchPremiumRate(tokenId, deviationRate * PERCENTAGE_BASIS_POINT / tokenConfig.premuimRateCap);
         if (globalLPIsLongAfter) {
-            premiumRateSample.deviationRate = -premiumRateSample.deviationRate;
-            premiumRateSample.premiumRate = -premiumRateSample.premiumRate;
+            premiumRateSample.sampleX = -premiumRateSample.sampleX;
+            premiumRateSample.sampleY = -premiumRateSample.sampleY;
         }
+
+        premiumRateSample.premiumRate = premiumRateSample.sampleY * 2 * tokenConfig.premuimRateCap / PERCENTAGE_BASIS_POINT;
 
         return premiumRateSample;
     }
@@ -1462,8 +1466,8 @@ contract Pool with Deployable, Ownable {
     //     dump(result.premiumRate);
     // }
 
-    fun searchPremiumRate(tokenId: Int, deviationRate: Int): PremiumRateSampleData {
-        let rangeId: Int = deviationRate / 10_000_000;
+    fun searchPremiumRate(tokenId: Int, x: Int): PremiumRateSampleData {
+        let rangeId: Int = x / 10_000_000;
         if (rangeId >= 200) {
             rangeId = rangeId / 10 * 10;
         } else if (rangeId >= 300) {
@@ -1476,7 +1480,8 @@ contract Pool with Deployable, Ownable {
             return PremiumRateSampleData {
                 rangeId: rangeId,
                 sampleId: 0,
-                deviationRate: 0,
+                sampleX: 0,
+                sampleY: 0,
                 premiumRate: 0
             };
         }
@@ -1487,25 +1492,26 @@ contract Pool with Deployable, Ownable {
         let prevSample: PremiumRateSampleData = prevPremiumRateSampleOpt != null ? prevPremiumRateSampleOpt!! : PremiumRateSampleData{
             rangeId: 0,
             sampleId: 0,
-            deviationRate: 0,
+            sampleX: 0,
+            sampleY: 0,
             premiumRate: 0
         };
-        if (deviationRate == prevSample.deviationRate) {
+        if (x == prevSample.sampleX) {
             return prevSample;
         }
         let start: Int = 0;
         let end: Int = premiumRateSampleRange.sampleLength;
         let cur: Int = 0;
-        let forward: Bool = (deviationRate > prevSample.deviationRate) ? true : false;
+        let forward: Bool = (x > prevSample.sampleX) ? true : false;
         let curSample: PremiumRateSample = PremiumRateSample{
-            deviationRate: 0,
-            premiumRate: 0
+            sampleX: 0,
+            sampleY: 0
         };
         if (rangeId == prevSample.rangeId) {
             cur = prevSample.sampleId;
-            curSample.deviationRate = prevSample.deviationRate;
-            curSample.premiumRate = prevSample.premiumRate;
-            if (deviationRate > prevSample.deviationRate) {
+            curSample.sampleX = prevSample.sampleX;
+            curSample.sampleY = prevSample.sampleY;
+            if (x > prevSample.sampleX) {
                 start = prevSample.sampleId;
                 cur = start;
             } else {
@@ -1517,16 +1523,16 @@ contract Pool with Deployable, Ownable {
                 let startSampleOpt: PremiumRateSample? = premiumRateSampleRange.samples.get(start);
                 if (startSampleOpt != null) {
                     curSample = PremiumRateSample{
-                        deviationRate: (startSampleOpt!!).deviationRate,
-                        premiumRate: (startSampleOpt!!).premiumRate
+                        sampleX: (startSampleOpt!!).sampleX,
+                        sampleY: (startSampleOpt!!).sampleY
                     };
                 }
             } else {
                 let endSampleOpt: PremiumRateSample? = premiumRateSampleRange.samples.get(end);
                 if (endSampleOpt != null) {
                     curSample = PremiumRateSample{
-                        deviationRate: (endSampleOpt!!).deviationRate,
-                        premiumRate: (endSampleOpt!!).premiumRate
+                        sampleX: (endSampleOpt!!).sampleX,
+                        sampleY: (endSampleOpt!!).sampleY
                     };
                 }
 
@@ -1542,38 +1548,42 @@ contract Pool with Deployable, Ownable {
                 return PremiumRateSampleData{
                     rangeId: rangeId,
                     sampleId: cur,
-                    deviationRate: curSample.deviationRate,
-                    premiumRate: curSample.premiumRate
+                    sampleX: curSample.sampleX,
+                    sampleY: curSample.sampleY,
+                    premiumRate: 0
                 };
             }
             let nextSample: PremiumRateSample = nextSampleOpt!!;
 
             if (forward) {
-                if (deviationRate < nextSample.deviationRate) {
+                if (x < nextSample.sampleX) {
                     return PremiumRateSampleData{
                         rangeId: rangeId,
                         sampleId: cur,
-                        deviationRate: curSample.deviationRate,
-                        premiumRate: curSample.premiumRate
+                        sampleX: curSample.sampleX,
+                        sampleY: curSample.sampleY,
+                        premiumRate: 0
                     };
-                } else if (deviationRate == nextSample.deviationRate) {
+                } else if (x == nextSample.sampleX) {
                     return PremiumRateSampleData{
                         rangeId: rangeId,
                         sampleId: next,
-                        deviationRate: nextSample.deviationRate,
-                        premiumRate: nextSample.premiumRate
+                        sampleX: nextSample.sampleX,
+                        sampleY: nextSample.sampleY,
+                        premiumRate: 0
                     };
                 } else {
                     curSample = nextSample;
                     cur = next;
                 }
             } else {
-                if (deviationRate >= nextSample.deviationRate) {
+                if (x >= nextSample.sampleX) {
                     return PremiumRateSampleData{
                         rangeId: rangeId,
                         sampleId: next,
-                        deviationRate: nextSample.deviationRate,
-                        premiumRate: nextSample.premiumRate
+                        sampleX: nextSample.sampleX,
+                        sampleY: nextSample.sampleY,
+                        premiumRate: 0
                     };
                 } else {
                     curSample = nextSample;
@@ -1586,8 +1596,9 @@ contract Pool with Deployable, Ownable {
         return PremiumRateSampleData{
             rangeId: rangeId,
             sampleId: cur,
-            deviationRate: curSample.deviationRate,
-            premiumRate: curSample.premiumRate
+            sampleX: curSample.sampleX,
+            sampleY: curSample.sampleY,
+            premiumRate: 0
         };
     }
 

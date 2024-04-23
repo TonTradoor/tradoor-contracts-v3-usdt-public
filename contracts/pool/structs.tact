@@ -22,6 +22,7 @@ struct TokenConfig {
     // ==================== Other Configuration ==========================
     interestRate: Int;
     maxFundingRate: Int;
+    premuimRateCap: Int;
 }
 
 struct TokenConfigData {
@@ -107,14 +108,15 @@ struct PremiumRateSampleRangeParam {
 }
 
 struct PremiumRateSample {
-    deviationRate: Int;
-    premiumRate: Int;
+    sampleX: Int;
+    sampleY: Int;
 }
 
 struct PremiumRateSampleData {
     rangeId: Int as uint64;
     sampleId: Int as uint64;
-    deviationRate: Int;
+    sampleX: Int;
+    sampleY: Int;
     premiumRate: Int;
 }
 
