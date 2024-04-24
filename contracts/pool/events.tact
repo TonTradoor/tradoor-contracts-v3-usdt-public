@@ -106,7 +106,9 @@ message GlobalPositionChangedEvent {
 message UpdatePriceEvent {
     tokenId: Int as uint64;
     price: Int;
-    lpFundingFee: Int;
+    lpReceivedFundingFeeDelta: Int;
+    longFundingFeeGrowthAfter: Int;
+    shortFundingFeeGrowthAfter: Int;
 }
 
 message PremiumRateChangedEvent {

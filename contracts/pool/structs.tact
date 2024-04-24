@@ -126,3 +126,9 @@ struct GlobalFundingRateSample {
     sampleCount: Int;
     cumulativePremiumRate: Int;
 }
+
+struct UpdateFundingRateResult {
+    lpReceivedFundingFeeDelta: Int;
+    longFundingFeeGrowthAfter: Int;
+    shortFundingFeeGrowthAfter: Int;
+}

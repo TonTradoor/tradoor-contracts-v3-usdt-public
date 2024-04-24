@@ -60,9 +60,6 @@ cell __tact_dict_get_slice_cell(cell d, int kl, slice k) inline;
 ;; __tact_slice_eq_bits
 int __tact_slice_eq_bits(slice a, slice b) inline;
 
-;; __tact_int_to_string
-slice __tact_int_to_string(int src) inline_ref;
-
 ;; $Deploy$_load
 (slice, ((int))) $Deploy$_load(slice sc_0) inline;
 
@@ -148,10 +145,10 @@ builder $GlobalPositionChangedEvent$_store(builder build_0, (int, int, int, int,
 cell $GlobalPositionChangedEvent$_store_cell((int, int, int, int, int, int, int, int) v) inline;
 
 ;; $UpdatePriceEvent$_store
-builder $UpdatePriceEvent$_store(builder build_0, (int, int, int) v) inline;
+builder $UpdatePriceEvent$_store(builder build_0, (int, int, int, int, int) v) inline;
 
 ;; $UpdatePriceEvent$_store_cell
-cell $UpdatePriceEvent$_store_cell((int, int, int) v) inline;
+cell $UpdatePriceEvent$_store_cell((int, int, int, int, int) v) inline;
 
 ;; $PremiumRateChangedEvent$_store
 builder $PremiumRateChangedEvent$_store(builder build_0, (int, int) v) inline;
@@ -546,17 +543,20 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $Pool$_fun_perpPosition
 ((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), (int, int, tuple, tuple, tuple, tuple, tuple)) $Pool$_fun_perpPosition((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, slice $account) impure inline_ref;
 
-;; $UpdatePriceEvent$_constructor_tokenId_price_lpFundingFee
-((int, int, int)) $UpdatePriceEvent$_constructor_tokenId_price_lpFundingFee(int tokenId, int price, int lpFundingFee) inline;
+;; $UpdatePriceEvent$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter
+((int, int, int, int, int)) $UpdatePriceEvent$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(int tokenId, int price, int lpReceivedFundingFeeDelta, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter) inline;
 
 ;; $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate
 ((int, int, int)) $GlobalFundingRateSample$_constructor_lastAdjustFundingRateTime_sampleCount_cumulativePremiumRate(int lastAdjustFundingRateTime, int sampleCount, int cumulativePremiumRate) inline;
+
+;; $UpdateFundingRateResult$_constructor_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter
+((int, int, int)) $UpdateFundingRateResult$_constructor_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(int lpReceivedFundingFeeDelta, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter) inline;
 
 ;; $PremiumRateSampleData$_constructor_rangeId_sampleId_sampleX_sampleY_premiumRate
 ((int, int, int, int, int)) $PremiumRateSampleData$_constructor_rangeId_sampleId_sampleX_sampleY_premiumRate(int rangeId, int sampleId, int sampleX, int sampleY, int premiumRate) inline;
 
 ;; $Pool$_fun_updateFundingRate
-((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), int) $Pool$_fun_updateFundingRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $indexPrice) impure inline_ref;
+((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), (int, int, int)) $Pool$_fun_updateFundingRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $indexPrice, int $globalLongSize, int $globalShortSize, int $globalLongFundingFeeGrowth, int $globalShortFundingFeeGrowth) impure inline_ref;
 
 ;; $Pool$_fun_updatePriceAndFundingFee
 ((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), ()) $Pool$_fun_updatePriceAndFundingFee((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $pricesLength, cell $prices) impure inline_ref;

@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 15243 bytes
+BOC Size: 15103 bytes
 
 # Types
-Total Types: 43
+Total Types: 44
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -106,8 +106,8 @@ TLB: `global_position_changed_event#82e5206c tokenId:uint64 longMarginAfter:int2
 Signature: `GlobalPositionChangedEvent{tokenId:uint64,longMarginAfter:int257,shortMarginAfter:int257,longSizeAfter:int257,shortSizeAfter:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257,trxId:uint64}`
 
 ## UpdatePriceEvent
-TLB: `update_price_event#6271a1c7 tokenId:uint64 price:int257 lpFundingFee:int257 = UpdatePriceEvent`
-Signature: `UpdatePriceEvent{tokenId:uint64,price:int257,lpFundingFee:int257}`
+TLB: `update_price_event#d01f2d33 tokenId:uint64 price:int257 lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = UpdatePriceEvent`
+Signature: `UpdatePriceEvent{tokenId:uint64,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
 
 ## PremiumRateChangedEvent
 TLB: `premium_rate_changed_event#58e041f4 tokenId:uint64 premiumRate:int257 = PremiumRateChangedEvent`
@@ -176,6 +176,10 @@ Signature: `GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,
 ## GlobalFundingRateSample
 TLB: `_ lastAdjustFundingRateTime:int257 sampleCount:int257 cumulativePremiumRate:int257 = GlobalFundingRateSample`
 Signature: `GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257}`
+
+## UpdateFundingRateResult
+TLB: `_ lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = UpdateFundingRateResult`
+Signature: `UpdateFundingRateResult{lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
 
 # Get Methods
 Total Get Methods: 5

@@ -1,0 +1,243 @@
+import { Blockchain, SandboxContract, TreasuryContract, prettyLogTransactions, printTransactionFees } from '@ton/sandbox';
+import { toNano, fromNano } from '@ton/core';
+import { JettonDefaultWallet } from '../wrappers/JettonDefaultWallet';
+import { MockJetton } from '../wrappers/MockJetton';
+import { Pool } from '../wrappers/Pool';
+import { OrderBook } from '../wrappers/OrderBook';
+import { TestEnv } from './lib/TestEnv';
+import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
+import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
+import '@ton/test-utils';
+import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, setPremiumRateSampleRange, updatePrice,  } from './lib/PerpHelper';
+import { ORDER_OP_TYPE_DECREASE_MARKET, ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
+import { readPRSample, toUnits } from '../utils/util';
+
+describe('LP', () => {
+    let blockchain: Blockchain;
+    let deployer: SandboxContract<TreasuryContract>;
+    let orderBook: SandboxContract<OrderBook>;
+    let pool: SandboxContract<Pool>;
+    let jetton: SandboxContract<MockJetton>;
+    let executor: SandboxContract<TreasuryContract>;
+    let compensator: SandboxContract<TreasuryContract>;
+    let user0: SandboxContract<TreasuryContract>;
+    let user1: SandboxContract<TreasuryContract>;
+    let user0JettonWallet: SandboxContract<JettonDefaultWallet>;
+    let orderBookJettonWallet: SandboxContract<JettonDefaultWallet>;
+
+    beforeEach(async () => {
+        await TestEnv.resetEnv();
+
+        blockchain = TestEnv.blockchain;
+        deployer = TestEnv.deployer;
+        orderBook = TestEnv.orderBook;
+        pool = TestEnv.pool;
+        jetton = TestEnv.jetton;
+        executor = TestEnv.executor;
+        compensator = TestEnv.compensator;
+        user0 = TestEnv.user0;
+        user1 = TestEnv.user1;
+        user0JettonWallet = TestEnv.user0JettonWallet;
+        orderBookJettonWallet = TestEnv.orderBookJettonWallet;
+
+        // mint
+        await mint(user0.address, '100000');
+        expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('100000'));
+
+        await mint(user1.address, '100000');
+        expect(await getJettonBalance(user1.address)).toEqual(toJettonUnits('100000'));
+
+        // check config
+        let orderBookConfigData = await orderBook.getConfigData(executor.address);
+        expect(orderBookConfigData.pool).toEqualAddress(pool.address);
+        expect(orderBookConfigData.usdtWallet).toEqualAddress(orderBookJettonWallet.address);
+        expect(orderBookConfigData.isExecutor).toBeTruthy();
+
+        let poolConfigData = await pool.getConfigData(null);
+        expect(poolConfigData.orderBook).toEqualAddress(orderBook.address);
+    });
+
+    it('should deploy', async () => {
+        // the check is done inside beforeEach
+        // blockchain and pool are ready to use
+    });
+
+    it("should update price", async() => {
+        // set block time
+        blockchain.now = Math.floor(Date.now() / 1000);
+
+        const executeResult =  await updatePrice(executor, 1, 50000);
+        printTransactionFees(executeResult.trxResult.transactions);
+
+        blockchain.now = Math.floor(Date.now() / 1000) + 60 * 60;
+
+        const executeResult0 =  await updatePrice(executor, 1, 50000);
+        printTransactionFees(executeResult0.trxResult.transactions);
+
+    });
+
+    it('should execute two direction perp', async () => {
+        // set block time
+        blockchain.now = Math.floor(Date.now() / 1000);
+        blockchain.now = blockchain.now - blockchain.now % 3600 + 10 * 60; // HH:10
+        /* =========================== increase LP ================================ */
+        /// create order
+        let lpLiquidity = 100000;
+        let executionFee = 0.1;
+
+        // create order
+        const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
+
+        /// executor order
+        const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
+        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+
+        // check order
+        expect(executeIncreaseResult.orderAfter).toBeNull();
+
+        // check position
+        let position = executeIncreaseResult.positionAfter;
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
+        
+        /* =========================== increase long perp ================================ */
+        let isMarket = true;
+        let tokenId = 1;
+        let isLong = true;
+        let margin = 50;
+        let size = 0.01; // 500u
+        let triggerPrice = 51000;
+        let increasePrice = 50000;
+
+        // create order
+        const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // executor order
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        printTransactionFees(executeResult.trxResult.transactions);
+        expect(executeResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+        console.log('global position after increase long:', executeResult.globalPositionAfter);
+        console.log('global lp position after increase long:', executeResult.globalLPPositionAfter);
+        console.log('global funding rate after increase long:', executeResult.globalFundingRateSampleAfter);
+        console.log('prev PR after increase long:', executeResult.prevPremiumRateSampleAfter);
+
+        expect(executeResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
+        expect(executeResult.globalLPPositionAfter?.isLong).toBeFalsy();
+
+        /* =========================== increase short perp ================================ */
+        blockchain.now = blockchain.now + 30 * 60; // HH:40
+
+        let increaseShortMargin = 100;
+        let increaseShortSize = 0.02;
+        let increaseShortTriggerPrice = 49000;
+        let increaseShortIncreasePrice = 50000;
+
+        // create order
+        const createIncreaseShortResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, false, increaseShortMargin, increaseShortSize, increaseShortTriggerPrice, 0, 0, 0, 0);
+        expect(createIncreaseShortResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // executor order
+        const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice);
+        printTransactionFees(executeIncreaseShortResult.trxResult.transactions);
+        expect(executeIncreaseShortResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+
+        console.log('global position after increase short:', executeIncreaseShortResult.globalPositionAfter);
+        console.log('global lp position after increase short:', executeIncreaseShortResult.globalLPPositionAfter);
+        console.log('global funding rate after increase short:', executeResult.globalFundingRateSampleAfter);
+        console.log('prev PR after increase short:', executeResult.prevPremiumRateSampleAfter);
+
+        expect(executeIncreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
+        expect(executeIncreaseShortResult.globalLPPositionAfter?.isLong).toBeTruthy();
+
+        /* =========================== decrease short perp ================================ */
+        blockchain.now = blockchain.now + 30 * 60; // HH+1:10
+
+        let decreaseShortMargin = 100;
+        let decreaseShortSize = 0.02;
+        let decreaseShortTriggerPrice = 52000;
+        let decreaseShortIncreasePrice = 51000;
+
+        // create order
+        const createDecreaseShortResult = await createDecreasePerpOrder(user1, executionFee, tokenId, false, decreaseShortMargin, decreaseShortSize, decreaseShortTriggerPrice);
+        expect(createDecreaseShortResult.trxResult.transactions).toHaveTransaction({
+            from: user1.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('decrease short order:', createDecreaseShortResult.order);
+
+        // executor order
+        const executeDecreaseShortResult = await executePerpOrder(executor, createDecreaseShortResult.orderIdBefore, decreaseShortIncreasePrice);
+        printTransactionFees(executeDecreaseShortResult.trxResult.transactions);
+        expect(executeDecreaseShortResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+
+        console.log('global position after decrease short:', executeDecreaseShortResult.globalPositionAfter);
+        console.log('global lp position after decrease short:', executeDecreaseShortResult.globalLPPositionAfter);
+        console.log('global funding rate after decrease short:', executeResult.globalFundingRateSampleAfter);
+        console.log('prev PR after decrease short:', executeResult.prevPremiumRateSampleAfter);
+
+        expect(executeDecreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
+        expect(executeDecreaseShortResult.globalLPPositionAfter?.isLong).toBeFalsy();
+
+        /* =========================== decrease long perp ================================ */
+        blockchain.now = blockchain.now + 30 * 60; // HH+1:40
+
+        let decreaseLongMargin = 50;
+        let decreaseLongSize = 0.01;
+        let decreaseLongTriggerPrice = 50000;
+        let decreaseLongIncreasePrice = 51000;
+
+        // create order
+        const createDecreaseLongResult = await createDecreasePerpOrder(user1, executionFee, tokenId, true, decreaseLongMargin, decreaseLongSize, decreaseLongTriggerPrice);
+        expect(createDecreaseLongResult.trxResult.transactions).toHaveTransaction({
+            from: user1.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('decrease long order:', createDecreaseLongResult.order);
+
+        // executor order
+        const executeDecreaseLongResult = await executePerpOrder(executor, createDecreaseLongResult.orderIdBefore, decreaseLongIncreasePrice);
+        printTransactionFees(executeDecreaseLongResult.trxResult.transactions);
+        expect(executeDecreaseLongResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+
+        console.log('global position after decrease long:', executeDecreaseLongResult.globalPositionAfter);
+        console.log('global lp position after decrease long:', executeDecreaseLongResult.globalLPPositionAfter);
+        console.log('global funding rate after decrease long:', executeResult.globalFundingRateSampleAfter);
+        console.log('prev PR after decrease long:', executeResult.prevPremiumRateSampleAfter);
+
+        expect(executeDecreaseLongResult.globalLPPositionAfter?.netSize).toEqual(0n);
+        expect(executeDecreaseLongResult.globalLPPositionAfter?.isLong).toBeFalsy();
+
+    });
+
+});

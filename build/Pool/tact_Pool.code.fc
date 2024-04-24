@@ -458,9 +458,8 @@
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), $PerpPositionData$_constructor_globalPerpNetValue_globalPerpSingleValue_perpPosition_globalLPPosition_globalPosition_globalFundingRateSample_prevPremiumRateSample($self'globalPerpNetValue, $self'globalPerpSingleValue, $perpPosition, $GlobalLPPosition$_load_opt(__tact_dict_get_int_cell($self'globalLPPositions, 257, $tokenId)), $GlobalPosition$_load_opt(__tact_dict_get_int_cell($self'globalPositions, 257, $tokenId)), $GlobalFundingRateSample$_load_opt(__tact_dict_get_int_cell($self'globalFundingRateSamples, 257, $tokenId)), $PremiumRateSampleData$_load_opt(__tact_dict_get_int_cell($self'prevPremiumRateSamples, 257, $tokenId))));
 }
 
-((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), int) $Pool$_fun_updateFundingRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $indexPrice) impure inline_ref {
+((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), (int, int, int)) $Pool$_fun_updateFundingRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $indexPrice, int $globalLongSize, int $globalShortSize, int $globalLongFundingFeeGrowth, int $globalShortFundingFeeGrowth) impure inline_ref {
     var (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples)) = $self;
-    __tact_debug_str(__gen_slice_string_92b1113846a66509c9a166fe789bff82b700c1e97d423610c6fb8cc381619e66());
     tuple $tokenConfigOpt = $TokenConfig$_load_opt(__tact_dict_get_int_cell($self'tokenConfigs, 257, $tokenId));
     throw_unless(59588, (~ null?($tokenConfigOpt)));
     var ($tokenConfig'name, $tokenConfig'enable, $tokenConfig'minMargin, $tokenConfig'maxLeverage, $tokenConfig'liquidationFee, $tokenConfig'liquidityProportion, $tokenConfig'tradingFeeRate, $tokenConfig'lpTradingFeeRate, $tokenConfig'interestRate, $tokenConfig'premuimRateCap) = $TokenConfig$_not_null($tokenConfigOpt);
@@ -472,12 +471,10 @@
     if (($maxSamplingTime < $timestamp)) {
         $timestamp = $maxSamplingTime;
     }
-    __tact_debug_str(__tact_int_to_string($timestamp));
     int $lastSamplingTime = ($lastAdjustFundingRateTime + ($sample'sampleCount * 5));
     int $timeDelta = ($timestamp - $lastSamplingTime);
-    __tact_debug_str(__tact_int_to_string($timeDelta));
     if (($timeDelta < 5)) {
-        return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), 0);
+        return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), $UpdateFundingRateResult$_constructor_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(0, $globalLongFundingFeeGrowth, $globalShortFundingFeeGrowth));
     }
     tuple $prevPremiumRateSampleOpt = $PremiumRateSampleData$_load_opt(__tact_dict_get_int_cell($self'prevPremiumRateSamples, 257, $tokenId));
     var ($prevPremiumRateSample'rangeId, $prevPremiumRateSample'sampleId, $prevPremiumRateSample'sampleX, $prevPremiumRateSample'sampleY, $prevPremiumRateSample'premiumRate) = ((~ null?($prevPremiumRateSampleOpt)) ? $PremiumRateSampleData$_not_null($prevPremiumRateSampleOpt) : $PremiumRateSampleData$_constructor_rangeId_sampleId_sampleX_sampleY_premiumRate(0, 0, 0, 0, 0));
@@ -490,7 +487,7 @@
         $sample'cumulativePremiumRate = $cumulativePremiumRate;
         $sample'sampleCount = $sampleCountAfter;
         $self'globalFundingRateSamples~__tact_dict_set_int_cell(257, $tokenId, $GlobalFundingRateSample$_store_cell(($sample'lastAdjustFundingRateTime, $sample'sampleCount, $sample'cumulativePremiumRate)));
-        return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), 0);
+        return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), $UpdateFundingRateResult$_constructor_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(0, $globalLongFundingFeeGrowth, $globalShortFundingFeeGrowth));
     }
     int $premiumRateAvg = ($cumulativePremiumRate / 2076480);
     int $rateDelta = ($tokenConfig'interestRate - $premiumRateAvg);
@@ -515,19 +512,14 @@
     } else {
         $clampedFundingRateDelta = $fundingRateDelta;
     }
-    tuple $globalPositionOpt = $GlobalPosition$_load_opt(__tact_dict_get_int_cell($self'globalPositions, 257, $tokenId));
-    if (null?($globalPositionOpt)) {
-        return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), 0);
-    }
-    var ($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $globalPosition'longValue, $globalPosition'shortValue) = $GlobalPosition$_not_null($globalPositionOpt);
     int $paidSize = 0;
     int $receivedSize = 0;
     if (($clampedFundingRateDelta >= 0)) {
-        $paidSize = $globalPosition'longSize;
-        $receivedSize = $globalPosition'shortSize;
+        $paidSize = $globalLongSize;
+        $receivedSize = $globalShortSize;
     } else {
-        $paidSize = $globalPosition'shortSize;
-        $receivedSize = $globalPosition'longSize;
+        $paidSize = $globalShortSize;
+        $receivedSize = $globalLongSize;
     }
     int $paidFundingFeeGrowthDelta = (($indexPrice * abs($clampedFundingRateDelta)) / 1000000000);
     int $receivedFundingFeeGrowthDelta = 0;
@@ -542,8 +534,8 @@
             $self'globalLPFundingFeeGrowth = $self'globalLPFundingFeeGrowth + ($lpReceivedFundingFee / $self'globalLPLiquidity);
         }
     }
-    int $longFundingFeeGrowthAfter = $globalPosition'longFundingFeeGrowth;
-    int $shortFundingFeeGrowthAfter = $globalPosition'shortFundingFeeGrowth;
+    int $longFundingFeeGrowthAfter = $globalLongFundingFeeGrowth;
+    int $shortFundingFeeGrowthAfter = $globalShortFundingFeeGrowth;
     if (($clampedFundingRateDelta >= 0)) {
         $longFundingFeeGrowthAfter = ($longFundingFeeGrowthAfter - $paidFundingFeeGrowthDelta);
         $shortFundingFeeGrowthAfter = ($shortFundingFeeGrowthAfter + $receivedFundingFeeGrowthDelta);
@@ -551,10 +543,7 @@
         $longFundingFeeGrowthAfter = ($longFundingFeeGrowthAfter + $receivedFundingFeeGrowthDelta);
         $shortFundingFeeGrowthAfter = ($shortFundingFeeGrowthAfter - $paidFundingFeeGrowthDelta);
     }
-    $globalPosition'longFundingFeeGrowth = $longFundingFeeGrowthAfter;
-    $globalPosition'shortFundingFeeGrowth = $shortFundingFeeGrowthAfter;
-    $self'globalPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalPosition$_store_cell(($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $globalPosition'longValue, $globalPosition'shortValue)));
-    return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), ($lpReceivedFundingFee / 100000000000000000000));
+    return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), $UpdateFundingRateResult$_constructor_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(($lpReceivedFundingFee / 100000000000000000000), $longFundingFeeGrowthAfter, $shortFundingFeeGrowthAfter));
 }
 
 ((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), ()) $Pool$_fun_updatePriceAndFundingFee((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $pricesLength, cell $prices) impure inline_ref {
@@ -588,18 +577,18 @@
                 $self'globalLPPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalLPPosition$_store_cell(($globalLPPosition'netSize, $globalLPPosition'isLong, $globalLPPosition'entryPrice, $globalLPPosition'unrealizedPnl)));
             }
             tuple $globalPositionOpt = $GlobalPosition$_load_opt(__tact_dict_get_int_cell($self'globalPositions, 257, $tokenId));
-            if ((~ null?($globalPositionOpt))) {
-                var ($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $globalPosition'longValue, $globalPosition'shortValue) = $GlobalPosition$_not_null($globalPositionOpt);
-                int $singleValueBefore = max($globalPosition'longValue, $globalPosition'shortValue);
-                int $netValueBefore = abs(($globalPosition'longValue - $globalPosition'shortValue));
-                $globalPosition'longValue = (($globalPosition'longSize * $price) / 100000000000000000000);
-                $globalPosition'shortValue = (($globalPosition'shortSize * $price) / 100000000000000000000);
-                $self'globalPerpSingleValue = $self'globalPerpSingleValue + (max($globalPosition'longValue, $globalPosition'shortValue) - $singleValueBefore);
-                $self'globalPerpNetValue = $self'globalPerpNetValue + (abs(($globalPosition'longValue - $globalPosition'shortValue)) - $netValueBefore);
-                $self'globalPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalPosition$_store_cell(($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $globalPosition'longValue, $globalPosition'shortValue)));
-            }
-            int $lpReceivedFundingFee = ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples)~$Pool$_fun_updateFundingRate($tokenId, $price);
-            $global_emit($UpdatePriceEvent$_store_cell($UpdatePriceEvent$_constructor_tokenId_price_lpFundingFee($tokenId, $price, $lpReceivedFundingFee)));
+            var ($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $globalPosition'longValue, $globalPosition'shortValue) = ((~ null?($globalPositionOpt)) ? $GlobalPosition$_not_null($globalPositionOpt) : $GlobalPosition$_constructor_longMargin_shortMargin_longSize_shortSize_longFundingFeeGrowth_shortFundingFeeGrowth_longValue_shortValue(0, 0, 0, 0, 0, 0, 0, 0));
+            int $singleValueBefore = max($globalPosition'longValue, $globalPosition'shortValue);
+            int $netValueBefore = abs(($globalPosition'longValue - $globalPosition'shortValue));
+            $globalPosition'longValue = (($globalPosition'longSize * $price) / 100000000000000000000);
+            $globalPosition'shortValue = (($globalPosition'shortSize * $price) / 100000000000000000000);
+            $self'globalPerpSingleValue = $self'globalPerpSingleValue + (max($globalPosition'longValue, $globalPosition'shortValue) - $singleValueBefore);
+            $self'globalPerpNetValue = $self'globalPerpNetValue + (abs(($globalPosition'longValue - $globalPosition'shortValue)) - $netValueBefore);
+            var ($updateFundingRateResult'lpReceivedFundingFeeDelta, $updateFundingRateResult'longFundingFeeGrowthAfter, $updateFundingRateResult'shortFundingFeeGrowthAfter) = ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples)~$Pool$_fun_updateFundingRate($tokenId, $price, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth);
+            $globalPosition'longFundingFeeGrowth = $updateFundingRateResult'longFundingFeeGrowthAfter;
+            $globalPosition'shortFundingFeeGrowth = $updateFundingRateResult'shortFundingFeeGrowthAfter;
+            $self'globalPositions~__tact_dict_set_int_cell(257, $tokenId, $GlobalPosition$_store_cell(($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longFundingFeeGrowth, $globalPosition'shortFundingFeeGrowth, $globalPosition'longValue, $globalPosition'shortValue)));
+            $global_emit($UpdatePriceEvent$_store_cell($UpdatePriceEvent$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter($tokenId, $price, $updateFundingRateResult'lpReceivedFundingFeeDelta, $updateFundingRateResult'longFundingFeeGrowthAfter, $updateFundingRateResult'shortFundingFeeGrowthAfter)));
         }
         $i = ($i + 1);
     }
@@ -894,6 +883,8 @@
     }
     throw_unless(41207, $isExecutor);
     ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples)~$Pool$_fun_updatePriceAndFundingFee($msg'pricesLength, $msg'prices);
+    int $msgValue = (($Context$_get_value(__tact_context_get()) - $self'gasConsumption) - $self'minTonsForStorage);
+    $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_context_get_sender(), true, $msgValue, 2));
     return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), ());
 }
 
@@ -980,7 +971,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmNg9VZKd7cPbnJMuC6qtLxbCpdMhcAKP8kNe5nv1RmpLF";
+    return "ipfs://QmSrUaQ57YD65WwGpTTmX19JLZEYEMXqMuvvrhzp64qnk8";
 }
 
 _ lazy_deployment_completed() method_id {

@@ -1171,6 +1171,13 @@ contract Pool with Deployable, Ownable {
 
         // update price
         self.updatePriceAndFundingFee(msg.pricesLength, msg.prices);
+        let msgValue: Int = context().value - self.gasConsumption - self.minTonsForStorage;
+        send(SendParameters{
+            to: sender(),
+            bounce: true,
+            value: msgValue,
+            mode: SendIgnoreErrors
+        });
     }
 
     receive(msg: SetPremiumRateSampleRange) {
@@ -1244,23 +1251,38 @@ contract Pool with Deployable, Ownable {
 
                 // update global value
                 let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
-                if (globalPositionOpt != null) {
-                    let globalPosition: GlobalPosition = globalPositionOpt!!;
-                    let singleValueBefore: Int = max(globalPosition.longValue, globalPosition.shortValue);
-                    let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
-                    globalPosition.longValue = globalPosition.longSize * price / PRICE_DECIMAL_FACTOR;
-                    globalPosition.shortValue = globalPosition.shortSize * price / PRICE_DECIMAL_FACTOR;
-                    self.globalPerpSingleValue += max(globalPosition.longValue, globalPosition.shortValue) - singleValueBefore;
-                    self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
-                    self.globalPositions.set(tokenId, globalPosition);
-                }
+                let globalPosition: GlobalPosition = globalPositionOpt != null ? globalPositionOpt!! : GlobalPosition{
+                    longMargin: 0,
+                    shortMargin: 0,
+                    longSize: 0,
+                    shortSize: 0,
+                    longFundingFeeGrowth: 0,
+                    shortFundingFeeGrowth: 0,
+                    longValue: 0,
+                    shortValue: 0
+                };
+
+                let singleValueBefore: Int = max(globalPosition.longValue, globalPosition.shortValue);
+                let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
+                globalPosition.longValue = globalPosition.longSize * price / PRICE_DECIMAL_FACTOR;
+                globalPosition.shortValue = globalPosition.shortSize * price / PRICE_DECIMAL_FACTOR;
+                self.globalPerpSingleValue += max(globalPosition.longValue, globalPosition.shortValue) - singleValueBefore;
+                self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
 
                 // update funding fee
-                let lpReceivedFundingFee: Int = self.updateFundingRate(tokenId, price);
+                let updateFundingRateResult: UpdateFundingRateResult = self.updateFundingRate(tokenId, price, 
+                    globalPosition.longSize, globalPosition.shortSize, globalPosition.longFundingFeeGrowth, globalPosition.shortFundingFeeGrowth);
+                globalPosition.longFundingFeeGrowth = updateFundingRateResult.longFundingFeeGrowthAfter;
+                globalPosition.shortFundingFeeGrowth = updateFundingRateResult.shortFundingFeeGrowthAfter;
+
+                self.globalPositions.set(tokenId, globalPosition);
+
                 emit(UpdatePriceEvent{
                     tokenId: tokenId,
                     price: price,
-                    lpFundingFee: lpReceivedFundingFee
+                    lpReceivedFundingFeeDelta: updateFundingRateResult.lpReceivedFundingFeeDelta,
+                    longFundingFeeGrowthAfter: updateFundingRateResult.longFundingFeeGrowthAfter,
+                    shortFundingFeeGrowthAfter: updateFundingRateResult.shortFundingFeeGrowthAfter
                 }.toCell());
             }
             i = i + 1;
@@ -1277,8 +1299,9 @@ contract Pool with Deployable, Ownable {
     //     return price;
     // }
 
-    fun updateFundingRate(tokenId: Int, indexPrice: Int): Int {
-        dump("updateFundingRate");
+    fun updateFundingRate(tokenId: Int, indexPrice: Int, globalLongSize: Int, globalShortSize: Int, 
+        globalLongFundingFeeGrowth: Int, globalShortFundingFeeGrowth: Int): UpdateFundingRateResult {
+        // dump("updateFundingRate");
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "token config not exist");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
@@ -1303,10 +1326,14 @@ contract Pool with Deployable, Ownable {
 
         let lastSamplingTime: Int = lastAdjustFundingRateTime + sample.sampleCount * SAMPLE_PREMIUM_RATE_INTERVAL;
         let timeDelta: Int = timestamp - lastSamplingTime;
-        dump(timeDelta);
+        // dump(timeDelta);
         if (timeDelta < SAMPLE_PREMIUM_RATE_INTERVAL) {
             // no need to update
-            return 0;
+            return UpdateFundingRateResult{
+                lpReceivedFundingFeeDelta: 0,
+                longFundingFeeGrowthAfter: globalLongFundingFeeGrowth,
+                shortFundingFeeGrowthAfter: globalShortFundingFeeGrowth
+            };
         }
 
         // get PR
@@ -1336,7 +1363,11 @@ contract Pool with Deployable, Ownable {
             sample.cumulativePremiumRate = cumulativePremiumRate;
             sample.sampleCount = sampleCountAfter;
             self.globalFundingRateSamples.set(tokenId, sample);
-            return 0;
+            return UpdateFundingRateResult{
+                lpReceivedFundingFeeDelta: 0,
+                longFundingFeeGrowthAfter: globalLongFundingFeeGrowth,
+                shortFundingFeeGrowthAfter: globalShortFundingFeeGrowth
+            };
         }
 
         // average PR
@@ -1375,21 +1406,14 @@ contract Pool with Deployable, Ownable {
         // dump(clampedFundingRateDelta);
 
         // get paidSize and receivedSize
-        let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
-        if (globalPositionOpt == null) {
-            return 0;
-        }
-
-        let globalPosition: GlobalPosition = globalPositionOpt!!;
-
         let paidSize: Int = 0;
         let receivedSize: Int = 0;
         if (clampedFundingRateDelta >= 0) {
-            paidSize = globalPosition.longSize;
-            receivedSize = globalPosition.shortSize;
+            paidSize = globalLongSize;
+            receivedSize = globalShortSize;
         } else {
-            paidSize = globalPosition.shortSize;
-            receivedSize = globalPosition.longSize;
+            paidSize = globalShortSize;
+            receivedSize = globalLongSize;
         }
         
         // calculate funding rate growth
@@ -1411,8 +1435,8 @@ contract Pool with Deployable, Ownable {
         }
         // dump(lpReceivedFundingFee);
 
-        let longFundingFeeGrowthAfter: Int = globalPosition.longFundingFeeGrowth;
-        let shortFundingFeeGrowthAfter: Int = globalPosition.shortFundingFeeGrowth;
+        let longFundingFeeGrowthAfter: Int = globalLongFundingFeeGrowth;
+        let shortFundingFeeGrowthAfter: Int = globalShortFundingFeeGrowth;
         
         // funding rate > 0, long pay for short and LP
         if (clampedFundingRateDelta >= 0) {
@@ -1422,14 +1446,15 @@ contract Pool with Deployable, Ownable {
             longFundingFeeGrowthAfter = longFundingFeeGrowthAfter + receivedFundingFeeGrowthDelta;
             shortFundingFeeGrowthAfter = shortFundingFeeGrowthAfter - paidFundingFeeGrowthDelta;
         }
-        globalPosition.longFundingFeeGrowth = longFundingFeeGrowthAfter;
-        globalPosition.shortFundingFeeGrowth = shortFundingFeeGrowthAfter;
         // dump("FundingFeeGrowth");
         // dump(globalPosition.longFundingFeeGrowth);
         // dump(globalPosition.shortFundingFeeGrowth);
         // dump(self.globalLPFundingFeeGrowth);
-        self.globalPositions.set(tokenId, globalPosition);
-        return lpReceivedFundingFee / PRICE_DECIMAL_FACTOR;
+        return UpdateFundingRateResult{
+            lpReceivedFundingFeeDelta: lpReceivedFundingFee / PRICE_DECIMAL_FACTOR,
+            longFundingFeeGrowthAfter: longFundingFeeGrowthAfter,
+            shortFundingFeeGrowthAfter: shortFundingFeeGrowthAfter
+        };
     }
 
     fun calculatePremiumRate(tokenId: Int, indexPrice: Int, sizeDelta: Int, isLong: Bool): PremiumRateSampleData? {

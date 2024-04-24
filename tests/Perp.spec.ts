@@ -852,20 +852,6 @@ describe('LP', () => {
 
     });
 
-    it("should update price", async() => {
-        // set block time
-        blockchain.now = Math.floor(Date.now() / 1000);
-
-        const executeResult =  await updatePrice(executor, 1, 50000);
-        printTransactionFees(executeResult.trxResult.transactions);
-
-        blockchain.now = Math.floor(Date.now() / 1000) + 60 * 60;
-
-        const executeResult0 =  await updatePrice(executor, 1, 50000);
-        printTransactionFees(executeResult0.trxResult.transactions);
-
-    });
-
     it('should execute two direction perp', async () => {
         // set block time
         blockchain.now = Math.floor(Date.now() / 1000);
@@ -918,11 +904,6 @@ describe('LP', () => {
             to: pool.address,
             success: true,
         });
-        console.log('global position after increase long:', executeResult.globalPositionAfter);
-        console.log('global lp position after increase long:', executeResult.globalLPPositionAfter);
-        console.log('global funding rate after increase long:', executeResult.globalFundingRateSampleAfter);
-        console.log('prev PR after increase long:', executeResult.prevPremiumRateSampleAfter);
-
         expect(executeResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
         expect(executeResult.globalLPPositionAfter?.isLong).toBeFalsy();
 
@@ -948,12 +929,6 @@ describe('LP', () => {
             to: pool.address,
             success: true,
         });
-
-        console.log('global position after increase short:', executeIncreaseShortResult.globalPositionAfter);
-        console.log('global lp position after increase short:', executeIncreaseShortResult.globalLPPositionAfter);
-        console.log('global funding rate after increase short:', executeResult.globalFundingRateSampleAfter);
-        console.log('prev PR after increase short:', executeResult.prevPremiumRateSampleAfter);
-
         expect(executeIncreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
         expect(executeIncreaseShortResult.globalLPPositionAfter?.isLong).toBeTruthy();
 
@@ -981,12 +956,6 @@ describe('LP', () => {
             to: pool.address,
             success: true,
         });
-
-        console.log('global position after decrease short:', executeDecreaseShortResult.globalPositionAfter);
-        console.log('global lp position after decrease short:', executeDecreaseShortResult.globalLPPositionAfter);
-        console.log('global funding rate after decrease short:', executeResult.globalFundingRateSampleAfter);
-        console.log('prev PR after decrease short:', executeResult.prevPremiumRateSampleAfter);
-
         expect(executeDecreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
         expect(executeDecreaseShortResult.globalLPPositionAfter?.isLong).toBeFalsy();
     });
