@@ -1278,7 +1278,7 @@ contract Pool with Deployable, Ownable {
     // }
 
     fun updateFundingRate(tokenId: Int, indexPrice: Int): Int {
-        // dump("updateFundingRate");
+        dump("updateFundingRate");
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "token config not exist");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
@@ -1299,10 +1299,11 @@ contract Pool with Deployable, Ownable {
         if (maxSamplingTime < timestamp) {
             timestamp = maxSamplingTime;
         }
+        dump(timestamp);
 
         let lastSamplingTime: Int = lastAdjustFundingRateTime + sample.sampleCount * SAMPLE_PREMIUM_RATE_INTERVAL;
         let timeDelta: Int = timestamp - lastSamplingTime;
-        // dump(timeDelta);
+        dump(timeDelta);
         if (timeDelta < SAMPLE_PREMIUM_RATE_INTERVAL) {
             // no need to update
             return 0;
@@ -1465,8 +1466,8 @@ contract Pool with Deployable, Ownable {
         // calculate DR
         let tokenLiquidity: Int = (self.globalLPFund + self.globalLPUnrealizedPnl) * tokenConfig.liquidityProportion / PERCENTAGE_BASIS_POINT;
         let deviationRate: Int = globalLPNetSizeAfter * indexPrice / PRICE_DECIMAL_FACTOR * PERCENTAGE_BASIS_POINT / tokenLiquidity;
-
-        let premiumRateSample: PremiumRateSampleData = self.searchPremiumRate(tokenId, deviationRate * PERCENTAGE_BASIS_POINT / tokenConfig.premuimRateCap);
+        // PR = 2 * cap * f(3.3 * DR)
+        let premiumRateSample: PremiumRateSampleData = self.searchPremiumRate(tokenId, deviationRate * 33 / 10);
         if (globalLPIsLongAfter) {
             premiumRateSample.sampleX = -premiumRateSample.sampleX;
             premiumRateSample.sampleY = -premiumRateSample.sampleY;

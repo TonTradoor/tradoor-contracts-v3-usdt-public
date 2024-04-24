@@ -958,7 +958,7 @@ describe('LP', () => {
         expect(executeIncreaseShortResult.globalLPPositionAfter?.isLong).toBeTruthy();
 
         /* =========================== decrease short perp ================================ */
-        blockchain.now = blockchain.now + 60 * 60; // 1 hour
+        blockchain.now = blockchain.now + 10 * 60; // 1 hour
 
         let decreaseShortMargin = 100;
         let decreaseShortSize = 0.02;

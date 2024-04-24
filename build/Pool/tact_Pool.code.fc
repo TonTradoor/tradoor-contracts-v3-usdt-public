@@ -460,6 +460,7 @@
 
 ((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell), int) $Pool$_fun_updateFundingRate((int, int, cell, int, int, slice, slice, int, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell, cell) $self, int $tokenId, int $indexPrice) impure inline_ref {
     var (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples)) = $self;
+    __tact_debug_str(__gen_slice_string_92b1113846a66509c9a166fe789bff82b700c1e97d423610c6fb8cc381619e66());
     tuple $tokenConfigOpt = $TokenConfig$_load_opt(__tact_dict_get_int_cell($self'tokenConfigs, 257, $tokenId));
     throw_unless(59588, (~ null?($tokenConfigOpt)));
     var ($tokenConfig'name, $tokenConfig'enable, $tokenConfig'minMargin, $tokenConfig'maxLeverage, $tokenConfig'liquidationFee, $tokenConfig'liquidityProportion, $tokenConfig'tradingFeeRate, $tokenConfig'lpTradingFeeRate, $tokenConfig'interestRate, $tokenConfig'premuimRateCap) = $TokenConfig$_not_null($tokenConfigOpt);
@@ -471,8 +472,10 @@
     if (($maxSamplingTime < $timestamp)) {
         $timestamp = $maxSamplingTime;
     }
+    __tact_debug_str(__tact_int_to_string($timestamp));
     int $lastSamplingTime = ($lastAdjustFundingRateTime + ($sample'sampleCount * 5));
     int $timeDelta = ($timestamp - $lastSamplingTime);
+    __tact_debug_str(__tact_int_to_string($timeDelta));
     if (($timeDelta < 5)) {
         return (($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples), 0);
     }
@@ -702,7 +705,7 @@
     }
     int $tokenLiquidity = ((($self'globalLPFund + $self'globalLPUnrealizedPnl) * $tokenConfig'liquidityProportion) / 1000000000);
     int $deviationRate = (((($globalLPNetSizeAfter * $indexPrice) / 100000000000000000000) * 1000000000) / $tokenLiquidity);
-    var ($premiumRateSample'rangeId, $premiumRateSample'sampleId, $premiumRateSample'sampleX, $premiumRateSample'sampleY, $premiumRateSample'premiumRate) = ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples)~$Pool$_fun_searchPremiumRate($tokenId, (($deviationRate * 1000000000) / $tokenConfig'premuimRateCap));
+    var ($premiumRateSample'rangeId, $premiumRateSample'sampleId, $premiumRateSample'sampleX, $premiumRateSample'sampleY, $premiumRateSample'premiumRate) = ($self'gasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'premiumRateSampleRanges, $self'prevPremiumRateSamples)~$Pool$_fun_searchPremiumRate($tokenId, (($deviationRate * 33) / 10));
     if ($globalLPIsLongAfter) {
         $premiumRateSample'sampleX = (- $premiumRateSample'sampleX);
         $premiumRateSample'sampleY = (- $premiumRateSample'sampleY);

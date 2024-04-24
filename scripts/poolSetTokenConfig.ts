@@ -33,7 +33,7 @@ export async function run(provider: NetworkProvider) {
                 tradingFeeRate: BigInt(0.001 * PERCENTAGE_BASIS_POINT), // 0.1%
                 lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
                 interestRate: 0n,
-                premuimRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
+                premuimRateCap: BigInt(0.01 * PERCENTAGE_BASIS_POINT) // 1%
             }
         );
 
