@@ -4376,29 +4376,12 @@ PROGRAM{
     s1 s8 XCHG
     __tact_dict_set_int_cell INLINECALLDICT
     s5 PUSH
-    500000 PUSHINT
-    GREATER
-    IF:<{
-      s5 POP
-      500000 PUSHINT
-    }>ELSE<{
-      s5 PUSH
-      -500000 PUSHINT
-      LESS
-      IF:<{
-        s5 POP
-        -500000 PUSHINT
-      }>ELSE<{
-        s0 s5 XCHG
-      }>
-    }>
-    DUP
     -1 GTINT
     IF:<{
     }>ELSE<{
       s2 s3 XCHG
     }>
-    DUP
+    s5 PUSH
     ABS
     s1 s5 XCHG
     MUL
@@ -4408,30 +4391,58 @@ PROGRAM{
     s0 s1 PUSH2
     0 GTINT
     IF:<{
-      DROP
-      s3 PUSH
-      0 GTINT
+      s5 s4 PUSH2
+      GREATER
       IF:<{
         DROP
-        s0 s2 PUXC
-        s1 s4 XCHG
-        SUB
-        s3 s(-1) PUXC
-        MUL
-        DUP
-        18 s() PUSH
-        DIV
-        s1 17 s() XCHG
-        ADD
+        s3 PUSH
+        0 GTINT
+        IF:<{
+          DROP
+          s0 s2 PUXC
+          s1 s4 XCHG
+          SUB
+          s2 s(-1) PUXC
+          MUL
+          DUP
+          18 s() PUSH
+          DIV
+          s1 17 s() XCHG
+          ADD
+        }>ELSE<{
+          s3 POP
+          s0 s3 PUXC
+          MUL
+          DUP
+          18 s() PUSH
+          DIV
+          s1 17 s() XCHG
+          ADD
+        }>
       }>ELSE<{
-        s3 POP
-        s3 s3 XCPU
-        MUL
-        DUP
-        18 s() PUSH
-        DIV
-        s1 17 s() XCHG
-        ADD
+        s4 PUSH
+        0 GTINT
+        IF:<{
+          NIP
+          s1 s4 PUXC
+          MUL
+          s0 s3 XCHG2
+          DIV
+        }>ELSE<{
+          DROP
+          s3 POP
+          s0 s3 PUXC
+          MUL
+          DUP
+          18 s() PUSH
+          DIV
+          s1 17 s() XCHG
+          ADD
+          s0 16 s() XCHG
+          s3 s1 s3 XCHG3
+        }>
+        s3 16 s() XCHG
+        s0 s1 s3 XCHG3
       }>
       s0 16 s() XCHG
       s0 s1 s3 XCHG3
@@ -4439,24 +4450,24 @@ PROGRAM{
       s4 POP
       s4 POP
     }>
-    s0 s4 XCHG
+    s0 s5 XCHG
     -1 GTINT
     IF:<{
-      s0 s3 XCHG2
+      s0 s4 XCHG2
       SUB
       s7 s7 XCHG2
       ADD
     }>ELSE<{
       ROT
       ADD
-      s7 s2 XCHG2
+      s7 s3 XCHG2
       SUB
-      s1 s6 XCHG
+      s2 s6 XCHG
     }>
-    SWAP
+    s0 s2 XCHG
     100000000000000000000 PUSHINT
     DIV
-    s0 s6 s6 XCHG3
+    s6 s2 XCHG2
     $UpdateFundingRateResult$_constructor_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter INLINECALLDICT
   }>
   $Pool$_fun_updatePriceAndFundingFee PROCREF:<{
@@ -6274,12 +6285,11 @@ PROGRAM{
     123515602279859691144772641439386770278 PUSHINT
     209801025412363888721030803524359905849 PUSHINT
     42980537499636128163026532310500881091 PUSHINT
-    36993126140238121407019133875791708966 PUSHINT
     209474421377847335869795010607481022628 PUSHINT
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d53725561513537594436355777477054546d5831394a4c5a4559454d58714d75767672687a703634716e6b38} PUSHSLICE
+    x{697066733a2f2f516d5062455a347351656778317372347976664e6766456d336a634846424e795238713558774470373778644363} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

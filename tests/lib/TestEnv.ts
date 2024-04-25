@@ -150,7 +150,7 @@ export class TestEnv {
                 $$type: 'UpdateConfig',
                 executor: TestEnv.executor.address,
                 enableExecutor: true,
-                gasConsumption: toNano(0.06),
+                gasConsumption: toNano(0.07),
                 minTonsForStorage: toNano(0),
                 lpBonusFactor: 10n * 10n**9n,
                 lpLiquidityFactor: 2n * 10n**9n,
@@ -209,7 +209,7 @@ export class TestEnv {
                 liquidityProportion: BigInt(0.5 * PERCENTAGE_BASIS_POINT), // 100%
                 tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
                 lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
-                interestRate: 0n,
+                interestRate: 1250n,
                 premuimRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
             }
         );

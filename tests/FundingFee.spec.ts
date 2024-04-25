@@ -62,24 +62,25 @@ describe('LP', () => {
         // blockchain and pool are ready to use
     });
 
-    it("should update price", async() => {
-        // set block time
-        blockchain.now = Math.floor(Date.now() / 1000);
+    // it("should update price", async() => {
+    //     // set block time
+    //     blockchain.now = Math.floor(Date.now() / 1000);
 
-        const executeResult =  await updatePrice(executor, 1, 50000);
-        printTransactionFees(executeResult.trxResult.transactions);
+    //     const executeResult =  await updatePrice(executor, 1, 50000);
+    //     printTransactionFees(executeResult.trxResult.transactions);
 
-        blockchain.now = Math.floor(Date.now() / 1000) + 60 * 60;
+    //     blockchain.now = Math.floor(Date.now() / 1000) + 60 * 60;
 
-        const executeResult0 =  await updatePrice(executor, 1, 50000);
-        printTransactionFees(executeResult0.trxResult.transactions);
+    //     const executeResult0 =  await updatePrice(executor, 1, 50000);
+    //     printTransactionFees(executeResult0.trxResult.transactions);
 
-    });
+    // });
 
     it('should execute two direction perp', async () => {
+        console.log("should execute two direction perp")
         // set block time
         blockchain.now = Math.floor(Date.now() / 1000);
-        blockchain.now = blockchain.now - blockchain.now % 3600 + 10 * 60; // HH:10
+        blockchain.now = blockchain.now - blockchain.now % 3600 + 70 * 60; // HH+1:10
         /* =========================== increase LP ================================ */
         /// create order
         let lpLiquidity = 100000;
@@ -164,8 +165,8 @@ describe('LP', () => {
 
         console.log('global position after increase short:', executeIncreaseShortResult.globalPositionAfter);
         console.log('global lp position after increase short:', executeIncreaseShortResult.globalLPPositionAfter);
-        console.log('global funding rate after increase short:', executeResult.globalFundingRateSampleAfter);
-        console.log('prev PR after increase short:', executeResult.prevPremiumRateSampleAfter);
+        console.log('global funding rate after increase short:', executeIncreaseShortResult.globalFundingRateSampleAfter);
+        console.log('prev PR after increase short:', executeIncreaseShortResult.prevPremiumRateSampleAfter);
 
         expect(executeIncreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
         expect(executeIncreaseShortResult.globalLPPositionAfter?.isLong).toBeTruthy();
@@ -198,8 +199,8 @@ describe('LP', () => {
 
         console.log('global position after decrease short:', executeDecreaseShortResult.globalPositionAfter);
         console.log('global lp position after decrease short:', executeDecreaseShortResult.globalLPPositionAfter);
-        console.log('global funding rate after decrease short:', executeResult.globalFundingRateSampleAfter);
-        console.log('prev PR after decrease short:', executeResult.prevPremiumRateSampleAfter);
+        console.log('global funding rate after decrease short:', executeDecreaseShortResult.globalFundingRateSampleAfter);
+        console.log('prev PR after decrease short:', executeDecreaseShortResult.prevPremiumRateSampleAfter);
 
         expect(executeDecreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
         expect(executeDecreaseShortResult.globalLPPositionAfter?.isLong).toBeFalsy();
@@ -232,8 +233,8 @@ describe('LP', () => {
 
         console.log('global position after decrease long:', executeDecreaseLongResult.globalPositionAfter);
         console.log('global lp position after decrease long:', executeDecreaseLongResult.globalLPPositionAfter);
-        console.log('global funding rate after decrease long:', executeResult.globalFundingRateSampleAfter);
-        console.log('prev PR after decrease long:', executeResult.prevPremiumRateSampleAfter);
+        console.log('global funding rate after decrease long:', executeDecreaseLongResult.globalFundingRateSampleAfter);
+        console.log('prev PR after decrease long:', executeDecreaseLongResult.prevPremiumRateSampleAfter);
 
         expect(executeDecreaseLongResult.globalLPPositionAfter?.netSize).toEqual(0n);
         expect(executeDecreaseLongResult.globalLPPositionAfter?.isLong).toBeFalsy();

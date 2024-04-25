@@ -764,6 +764,10 @@ contract Pool with Deployable, Ownable {
             fundingFee = (globalPosition.shortFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
             entryFundingFeeGrowthAfter = globalPosition.shortFundingFeeGrowth;
         }
+        // dump("fundingFee");
+        // dump(globalPosition.longFundingFeeGrowth);
+        // dump(globalPosition.shortFundingFeeGrowth);
+        // dump(perpPosition.entryFundingFeeGrowth);
         // dump(fundingFee);
 
         // get global position
@@ -1322,7 +1326,7 @@ contract Pool with Deployable, Ownable {
         if (maxSamplingTime < timestamp) {
             timestamp = maxSamplingTime;
         }
-        dump(timestamp);
+        // dump(timestamp);
 
         let lastSamplingTime: Int = lastAdjustFundingRateTime + sample.sampleCount * SAMPLE_PREMIUM_RATE_INTERVAL;
         let timeDelta: Int = timestamp - lastSamplingTime;
@@ -1360,6 +1364,7 @@ contract Pool with Deployable, Ownable {
 
         // sample count < 720, no need update funding rate
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
+            dump("update funding fee sample");
             sample.cumulativePremiumRate = cumulativePremiumRate;
             sample.sampleCount = sampleCountAfter;
             self.globalFundingRateSamples.set(tokenId, sample);
@@ -1374,7 +1379,7 @@ contract Pool with Deployable, Ownable {
         let premiumRateAvg: Int = cumulativePremiumRate / PREMIUM_RATE_AVG_DENOMINATOR;
         // dump(premiumRateAvg);
 
-        // clamp (IR - avgPR) : -0.05% <= (IR - avgPR) <= 0.05%
+        // clamp (IR - avgPR) : -0.05%/8 <= (IR - avgPR) <= 0.05%/8
         let rateDelta: Int = tokenConfig.interestRate - premiumRateAvg;
         let clampedRateDelta: Int = 0;
         if (rateDelta > PREMIUM_RATE_CLAMP_BOUNDARY) {
@@ -1384,6 +1389,7 @@ contract Pool with Deployable, Ownable {
         } else {
             clampedRateDelta = rateDelta;
         }
+        // dump(clampedRateDelta);
         let fundingRateDelta: Int = premiumRateAvg + clampedRateDelta;
         // dump(fundingRateDelta);
 
@@ -1394,21 +1400,21 @@ contract Pool with Deployable, Ownable {
 
         // =========== update funding rate =========== //
         // clamp fundingRateDelta: -maxFundingRate <= fundingRateDelta <= maxFundingRate
-        let clampedFundingRateDelta: Int = 0;
-        if (fundingRateDelta > MAX_FUNDING_RATE) {
-            clampedFundingRateDelta = MAX_FUNDING_RATE;
-        } else if (fundingRateDelta < -MAX_FUNDING_RATE) {
-            clampedFundingRateDelta = -MAX_FUNDING_RATE;
-        } else {
-            clampedFundingRateDelta = fundingRateDelta;
-        }
+        // let clampedFundingRateDelta: Int = 0;
+        // if (fundingRateDelta > MAX_FUNDING_RATE) {
+        //     clampedFundingRateDelta = MAX_FUNDING_RATE;
+        // } else if (fundingRateDelta < -MAX_FUNDING_RATE) {
+        //     clampedFundingRateDelta = -MAX_FUNDING_RATE;
+        // } else {
+        //     clampedFundingRateDelta = fundingRateDelta;
+        // }
 
         // dump(clampedFundingRateDelta);
 
         // get paidSize and receivedSize
         let paidSize: Int = 0;
         let receivedSize: Int = 0;
-        if (clampedFundingRateDelta >= 0) {
+        if (fundingRateDelta >= 0) {
             paidSize = globalLongSize;
             receivedSize = globalShortSize;
         } else {
@@ -1418,19 +1424,28 @@ contract Pool with Deployable, Ownable {
         
         // calculate funding rate growth
         // paidFundingFeeGrowthDelta = (paidSize * price * fundingRate) / paidSize = price * fundingRate
-        let paidFundingFeeGrowthDelta: Int = indexPrice * abs(clampedFundingRateDelta) / PERCENTAGE_BASIS_POINT;
+        let paidFundingFeeGrowthDelta: Int = indexPrice * abs(fundingRateDelta) / PERCENTAGE_BASIS_POINT;
         // dump(paidFundingFeeGrowthDelta);
 
         let receivedFundingFeeGrowthDelta: Int = 0;
         let lpReceivedFundingFee: Int = 0;
         if (paidFundingFeeGrowthDelta > 0) {
-            if (receivedSize > 0) {
-                receivedFundingFeeGrowthDelta = paidFundingFeeGrowthDelta;
-                lpReceivedFundingFee = paidFundingFeeGrowthDelta * (paidSize - receivedSize);
-                self.globalLPFundingFeeGrowth += lpReceivedFundingFee / self.globalLPLiquidity;
+            if (paidSize > receivedSize) {
+                if (receivedSize > 0) {
+                    receivedFundingFeeGrowthDelta = paidFundingFeeGrowthDelta;
+                    lpReceivedFundingFee = receivedFundingFeeGrowthDelta * (paidSize - receivedSize);
+                    self.globalLPFundingFeeGrowth += lpReceivedFundingFee / self.globalLPLiquidity;
+                } else {
+                    lpReceivedFundingFee = paidFundingFeeGrowthDelta * paidSize;
+                    self.globalLPFundingFeeGrowth += lpReceivedFundingFee / self.globalLPLiquidity;
+                }
             } else {
-                lpReceivedFundingFee = paidSize * paidFundingFeeGrowthDelta;
-                self.globalLPFundingFeeGrowth += lpReceivedFundingFee / self.globalLPLiquidity;
+                if (receivedSize > 0) {
+                    receivedFundingFeeGrowthDelta = paidFundingFeeGrowthDelta * paidSize / receivedSize;
+                } else {
+                    lpReceivedFundingFee = paidFundingFeeGrowthDelta * paidSize;
+                    self.globalLPFundingFeeGrowth += lpReceivedFundingFee / self.globalLPLiquidity;
+                }
             }
         }
         // dump(lpReceivedFundingFee);
@@ -1439,7 +1454,7 @@ contract Pool with Deployable, Ownable {
         let shortFundingFeeGrowthAfter: Int = globalShortFundingFeeGrowth;
         
         // funding rate > 0, long pay for short and LP
-        if (clampedFundingRateDelta >= 0) {
+        if (fundingRateDelta >= 0) {
             longFundingFeeGrowthAfter = longFundingFeeGrowthAfter - paidFundingFeeGrowthDelta;
             shortFundingFeeGrowthAfter = shortFundingFeeGrowthAfter + receivedFundingFeeGrowthDelta;
         } else {
@@ -1447,8 +1462,8 @@ contract Pool with Deployable, Ownable {
             shortFundingFeeGrowthAfter = shortFundingFeeGrowthAfter - paidFundingFeeGrowthDelta;
         }
         // dump("FundingFeeGrowth");
-        // dump(globalPosition.longFundingFeeGrowth);
-        // dump(globalPosition.shortFundingFeeGrowth);
+        // dump(longFundingFeeGrowthAfter);
+        // dump(shortFundingFeeGrowthAfter);
         // dump(self.globalLPFundingFeeGrowth);
         return UpdateFundingRateResult{
             lpReceivedFundingFeeDelta: lpReceivedFundingFee / PRICE_DECIMAL_FACTOR,
