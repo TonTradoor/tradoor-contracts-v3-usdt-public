@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 12598 bytes
+BOC Size: 12781 bytes
 
 # Types
-Total Types: 41
+Total Types: 36
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -81,26 +81,6 @@ Signature: `LPPositionIncreasedEvent{trxId:uint64,orderId:uint64,opType:uint8,po
 TLB: `lp_position_decreased_event#f9eaa610 trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 fundingFeeDelta:int257 entryFundingFeeGrowthAfter:int257 receive:int257 lpFundAfter:int257 lpLiquidityAfter:int257 = LPPositionDecreasedEvent`
 Signature: `LPPositionDecreasedEvent{trxId:uint64,orderId:uint64,opType:uint8,positionId:uint64,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,fundingFeeDelta:int257,entryFundingFeeGrowthAfter:int257,receive:int257,lpFundAfter:int257,lpLiquidityAfter:int257}`
 
-## GlobalLPLiquidityChangedEvent
-TLB: `global_lp_liquidity_changed_event#433d8d04 lpFundAfter:int257 liquidityAfter:int257 tradingFee:int257 realizedPnl:int257 trxId:uint64 = GlobalLPLiquidityChangedEvent`
-Signature: `GlobalLPLiquidityChangedEvent{lpFundAfter:int257,liquidityAfter:int257,tradingFee:int257,realizedPnl:int257,trxId:uint64}`
-
-## GlobalLPPositionChangedEvent
-TLB: `global_lp_position_changed_event#f65a7093 tokenId:uint64 netSizeAfter:int257 isLong:bool entryPriceAfter:int257 trxId:uint64 = GlobalLPPositionChangedEvent`
-Signature: `GlobalLPPositionChangedEvent{tokenId:uint64,netSizeAfter:int257,isLong:bool,entryPriceAfter:int257,trxId:uint64}`
-
-## GlobalPositionChangedEvent
-TLB: `global_position_changed_event#82e5206c tokenId:uint64 longMarginAfter:int257 shortMarginAfter:int257 longSizeAfter:int257 shortSizeAfter:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 trxId:uint64 = GlobalPositionChangedEvent`
-Signature: `GlobalPositionChangedEvent{tokenId:uint64,longMarginAfter:int257,shortMarginAfter:int257,longSizeAfter:int257,shortSizeAfter:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257,trxId:uint64}`
-
-## UpdatePriceEvent
-TLB: `update_price_event#d01f2d33 tokenId:uint64 price:int257 lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = UpdatePriceEvent`
-Signature: `UpdatePriceEvent{tokenId:uint64,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
-
-## PremiumRateChangedEvent
-TLB: `premium_rate_changed_event#58e041f4 tokenId:uint64 premiumRate:int257 = PremiumRateChangedEvent`
-Signature: `PremiumRateChangedEvent{tokenId:uint64,premiumRate:int257}`
-
 ## PerpPositionIncreasedEvent
 TLB: `perp_position_increased_event#4998f843 trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint64 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 entryPrice:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 globalLongMarginAfter:int257 globalShortMarginAfter:int257 globalLongSizeAfter:int257 globalShortSizeAfter:int257 globalLongFundingFeeGrowthAfter:int257 globalShortFundingFeeGrowthAfter:int257 lpNetSizeAfter:int257 lpIsLong:bool lpEntryPriceAfter:int257 lpFundAfter:int257 lpLiquidityAfter:int257 lpTradingFee:int257 lpRealizedPnl:int257 lpReceivedFundingFee:int257 = PerpPositionIncreasedEvent`
 Signature: `PerpPositionIncreasedEvent{trxId:uint64,orderId:uint64,opType:uint8,positionId:uint64,account:address,tokenId:uint64,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,entryPrice:int257,fundingFee:int257,tradingFee:int257,entryFundingFeeGrowthAfter:int257,globalLongMarginAfter:int257,globalShortMarginAfter:int257,globalLongSizeAfter:int257,globalShortSizeAfter:int257,globalLongFundingFeeGrowthAfter:int257,globalShortFundingFeeGrowthAfter:int257,lpNetSizeAfter:int257,lpIsLong:bool,lpEntryPriceAfter:int257,lpFundAfter:int257,lpLiquidityAfter:int257,lpTradingFee:int257,lpRealizedPnl:int257,lpReceivedFundingFee:int257}`
@@ -170,12 +150,15 @@ TLB: `_ tokenId:int257 lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfte
 Signature: `UpdateFundingRateEventData{tokenId:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
 
 # Get Methods
-Total Get Methods: 5
+Total Get Methods: 6
 
 ## configData
 Argument: executor
 
 ## tokenConfig
+Argument: tokenId
+
+## priceData
 Argument: tokenId
 
 ## lpPosition

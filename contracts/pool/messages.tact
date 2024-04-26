@@ -2,8 +2,7 @@ import "./structs";
 
 // ============================ admin ================================ //
 message UpdateConfig {
-    executor: Address?;
-    enableExecutor: Bool?;
+    claimExecutor: Address?;
     gasConsumption: Int? as coins;
     minTonsForStorage: Int? as coins;
     lpBonusFactor: Int?;
@@ -36,8 +35,6 @@ message(0xe89cd45f) UpdateLPPosition {
     account: Address;
     liquidityDelta: Int;
     trxId: Int as uint64;
-    // tokenId: Int as uint64;
-    // price: Int;
 }
 
 message(0x1cf0cf81) UpdateLPPositionSuccess {
@@ -73,9 +70,4 @@ message UpdatePrice {
     trxId: Int as uint64;
     pricesLength: Int as uint64;
     prices: map<Int, UpdatePriceParam>;
-}
-
-// for test
-message DeviationRate {
-    deviationRate: Int;
 }

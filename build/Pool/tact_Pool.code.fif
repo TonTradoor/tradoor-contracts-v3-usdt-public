@@ -125,6 +125,7 @@ PROGRAM{
   DECLPROC $ConfigData$_constructor_isExecutor_gasConsumption_minTonsForStorage_lpBonusFactor_lpLiquidityFactor_orderBook
   DECLPROC $Pool$_fun_configData
   DECLPROC $Pool$_fun_tokenConfig
+  DECLPROC $Pool$_fun_priceData
   DECLPROC $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime
   DECLPROC $SendParameters$_constructor_to_value_bounce_mode_body
   DECLPROC $UpdateLPPositionSuccess$_constructor_orderId_receive_trxId
@@ -169,6 +170,7 @@ PROGRAM{
   DECLPROC $Pool$_internal_binary_Deploy
   82657 DECLMETHOD %configData
   124956 DECLMETHOD %tokenConfig
+  71672 DECLMETHOD %priceData
   120059 DECLMETHOD %lpPosition
   105096 DECLMETHOD %perpPosition
   83229 DECLMETHOD %owner
@@ -2128,6 +2130,12 @@ PROGRAM{
     __tact_dict_get_int_cell INLINECALLDICT
     $TokenConfig$_load_opt INLINECALLDICT
   }>
+  $Pool$_fun_priceData PROCREF:<{
+    257 PUSHINT
+    s0 s3 PUSH2
+    s3 s3 XCHG2
+    __tact_dict_get_int_int INLINECALLDICT
+  }>
   $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime PROCINLINE:<{
   }>
   $SendParameters$_constructor_to_value_bounce_mode_body PROCINLINE:<{
@@ -4030,6 +4038,37 @@ PROGRAM{
     26 s() PUSH
     SWAP
     __tact_dict_set_int_cell INLINECALLDICT
+    0 PUSHINT
+    __tact_my_balance INLINECALLDICT
+    __tact_context_get INLINECALLDICT
+    $Context$_get_value INLINECALLDICT
+    SUB
+    52 s() PUSH
+    SUB
+    MAX
+    __tact_context_get INLINECALLDICT
+    $Context$_get_value INLINECALLDICT
+    52 s() PUSH
+    54 s() PUSH
+    ADD
+    SUB
+    SWAP
+    ADD
+    9429 PUSHINT
+    OVER
+    0 GTINT
+    THROWANYIFNOT
+    FALSE
+    1 PUSHINT
+    29 s() PUSH
+    23 s() PUSH
+    32 s() PUSH
+    $UpdatePerpPositionSuccess$_constructor_orderId_receive_trxId INLINECALLDICT
+    $UpdatePerpPositionSuccess$_store_cell INLINECALLDICT
+    49 s() PUSH
+    4 -ROLL
+    $SendParameters$_constructor_to_value_bounce_mode_body INLINECALLDICT
+    $global_send INLINECALLDICT
     3 PUSHINT
     s0 26 s() XCHG
     s6 25 s() XCHG
@@ -4967,13 +5006,10 @@ PROGRAM{
     33 s() PUSH
     26 s() PUSH
     $Pool$_fun_updatePriceAndFundingFee INLINECALLDICT
-    2DROP
-    25 s() PUSH
-    ROT
-    ADD
-    1 RSHIFT#
+    s2 s3 XCHG
+    3 BLKDROP
     1000000000 PUSHINT
-    SWAP
+    25 s() PUSH
     ADD
     26 s() PUSH
     MUL
@@ -5338,6 +5374,23 @@ PROGRAM{
     8 1 BLKDROP2
     $TokenConfig$_to_opt_external INLINECALLDICT
   }>
+  %priceData PROC:<{
+    $Pool$_contract_load INLINECALLDICT
+    23 s() 24 s() XCHG
+    22 s() 23 s() XCHG
+    21 s() 22 s() XCHG
+    20 s() 21 s() XCHG
+    19 s() 20 s() XCHG
+    18 s() 19 s() XCHG
+    17 s() 18 s() XCHG
+    16 s() 17 s() XCHG
+    s15 16 s() XCHG
+    15 ROLL
+    $Pool$_fun_priceData INLINECALLDICT
+    16 s() POP
+    15 BLKDROP
+    8 1 BLKDROP2
+  }>
   %lpPosition PROC:<{
     DUP
     ISNULL
@@ -5404,7 +5457,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d516d4a3563487245313936366e5645615647374a696f53627a674c4b4d7752615943436444486b314364746b} PUSHSLICE
+    x{697066733a2f2f516d50344a7a704268794c78774e6e584a52547634376642366b6f557253703347316351344b6d52596432383352} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

@@ -38,53 +38,7 @@ message LPPositionDecreasedEvent {
     lpLiquidityAfter: Int;
 }
 
-// global LP
-message GlobalLPLiquidityChangedEvent {
-    lpFundAfter: Int;
-    liquidityAfter: Int;
-    tradingFee: Int;
-    realizedPnl: Int;
-    trxId: Int as uint64;
-}
-
-message GlobalLPPositionChangedEvent {
-    tokenId: Int as uint64;
-    netSizeAfter: Int;
-    isLong: Bool;
-    entryPriceAfter: Int;
-    trxId: Int as uint64;
-}
-
 // ============================ Perp ================================ //
-message GlobalPositionChangedEvent {
-    tokenId: Int as uint64;
-    longMarginAfter: Int;
-    shortMarginAfter: Int;
-    longSizeAfter: Int;
-    shortSizeAfter: Int;
-    longFundingFeeGrowthAfter: Int;
-    shortFundingFeeGrowthAfter: Int;
-    trxId: Int as uint64;
-}
-
-// ============================ Price ================================ //
-// message UpdatePriceAndFundingFeeEvent {
-//     dataLength: Int as uint64;
-//     datas: map<Int, UpdatePriceAndFundingFeeData>;
-// }
-message UpdatePriceEvent {
-    tokenId: Int as uint64;
-    price: Int;
-    lpReceivedFundingFeeDelta: Int;
-    longFundingFeeGrowthAfter: Int;
-    shortFundingFeeGrowthAfter: Int;
-}
-
-message PremiumRateChangedEvent {
-    tokenId: Int as uint64;
-    premiumRate: Int;
-}
-
 message PerpPositionIncreasedEvent {
     // perp position
     trxId: Int as uint64;
@@ -160,6 +114,7 @@ message PerpPositionDecreasedEvent {
     lpReceivedFundingFee: Int;
 }
 
+// ============================ Funding Fee ================================ //
 message UpdateFundingFeeEvent {
     length: Int;
     datas: map<Int, UpdateFundingRateEventData>;

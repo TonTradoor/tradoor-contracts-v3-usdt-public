@@ -26,10 +26,6 @@ contract OrderBook with Deployable, Resumable {
     stopped: Bool;
     executors: map<Address, Bool>; // account => enabled
 
-    // whitelist
-    enableWhitelist: Bool;
-    whitelist: map<Address, Bool>;
-
     // LP
     lpPositionOrders: map<Int, LPPositionOrder>; // orderId => order
     lpPositionOrderIndexNext: Int as uint64 = 1;
@@ -48,7 +44,6 @@ contract OrderBook with Deployable, Resumable {
         self.owner = sender();
         self.stopped = false;
         self.executors.set(sender(), true);
-        self.enableWhitelist = false;
 
         self.usdtWallet = newAddress(0, 0);
         self.pool = newAddress(0, 0);
@@ -98,44 +93,6 @@ contract OrderBook with Deployable, Resumable {
         };
     }
 
-    receive(msg: UpdateWhitelist) {
-        self.requireOwner();
-
-        if (msg.enableWhitelist != null) {
-            self.enableWhitelist = msg.enableWhitelist!!;
-        }
-
-        if (msg.whitelistLength > 0) {
-            let i: Int = 0;
-            while(i < msg.whitelistLength) {
-                let updateWhitelist: UpdateWhitelistParam? = msg.whitelist.get(i);
-                if (updateWhitelist != null) {
-                    self.whitelist.set((updateWhitelist!!).account, (updateWhitelist!!).enable);
-                }
-                i += 1;
-            }
-        }
-        
-        send(SendParameters{
-            to: sender(),
-            bounce: false,
-            value: 0,
-            mode: SendRemainingValue
-        });
-    }
-
-    get fun whitelistData(account: Address?): WhitelistData {
-        let isInWhitelist: Bool = false;
-        if (account != null) {
-            isInWhitelist = self.isInWhitelist(account!!);
-        }
-
-        return WhitelistData{
-            enableWhitelist: self.enableWhitelist,
-            isInWhitelist: isInWhitelist
-        };
-    }
-
     // ======================================================== Token ================================================================ //
     /**
     * @dev This function is called when the contract receives a TokenNotification message.
@@ -172,20 +129,6 @@ contract OrderBook with Deployable, Resumable {
                 value: 0,
                 mode: SendIgnoreErrors + SendRemainingValue,
                 body: "create order stopped".asComment()
-            });
-            return;
-        }
-
-        // whitelist
-        if (self.enableWhitelist && !self.isInWhitelist(msg.from)) {
-            dump("not in whitelist");
-            self.refundJetton(msg.queryId, msg.amount, msg.from, msg.from);
-            send(SendParameters{
-                to: msg.from,
-                bounce: true,
-                value: 0,
-                mode: SendIgnoreErrors + SendRemainingValue,
-                body: "not in whitelist".asComment()
             });
             return;
         }
@@ -1106,6 +1049,10 @@ contract OrderBook with Deployable, Resumable {
         return self.perpPositionOrderIndexNext;
     }
 
+    // ======================================================== Claim ================================================================ //
+    
+
+
     // ======================================================== Compensate ================================================================ //
     // Create compensate, lock one day
     receive(msg: CreateCompensate) {
@@ -1244,14 +1191,6 @@ contract OrderBook with Deployable, Resumable {
             return false;
         }
         return isExecutorOpt!!;
-    }
-
-    fun isInWhitelist(account: Address): Bool {
-        let isInWhitelistOpt: Bool? = self.whitelist.get(account);
-        if (isInWhitelistOpt == null) {
-            return false;
-        }
-        return isInWhitelistOpt!!;
     }
 
 

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 15339 bytes
+BOC Size: 13593 bytes
 
 # Types
 Total Types: 46
@@ -190,13 +190,10 @@ TLB: `_ orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe 
 Signature: `Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}`
 
 # Get Methods
-Total Get Methods: 8
+Total Get Methods: 7
 
 ## configData
 Argument: executor
-
-## whitelistData
-Argument: account
 
 ## lpPositionOrder
 Argument: orderId
