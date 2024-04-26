@@ -5,6 +5,7 @@ struct ConfigData {
     minTimeDelayTrader: Int;
     minExecutionFee: Int as coins;
     gasConsumption: Int as coins;
+    lpGasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
     usdtWallet: Address;
     pool: Address;

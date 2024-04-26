@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 15099 bytes
+BOC Size: 13349 bytes
 
 # Types
-Total Types: 44
+Total Types: 46
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -50,16 +50,16 @@ TLB: `claim_protocol_fee#b58e3465 feeReceiver:address = ClaimProtocolFee`
 Signature: `ClaimProtocolFee{feeReceiver:address}`
 
 ## UpdateLPPosition
-TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdateLPPosition`
-Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
+TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 = UpdateLPPosition`
+Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64}`
 
 ## UpdateLPPositionSuccess
 TLB: `update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
 Signature: `UpdateLPPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 price:int257 premiumRate:int257 = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,price:int257,premiumRate:int257}`
 
 ## UpdatePerpPositionSuccess
 TLB: `update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
@@ -113,6 +113,14 @@ Signature: `UpdatePriceEvent{tokenId:uint64,price:int257,lpReceivedFundingFeeDel
 TLB: `premium_rate_changed_event#58e041f4 tokenId:uint64 premiumRate:int257 = PremiumRateChangedEvent`
 Signature: `PremiumRateChangedEvent{tokenId:uint64,premiumRate:int257}`
 
+## TestPerpPositionIncreasedEvent
+TLB: `test_perp_position_increased_event#c8f36406 trxId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint64 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 entryPrice:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 globalLongMarginAfter:int257 globalShortMarginAfter:int257 globalLongSizeAfter:int257 globalShortSizeAfter:int257 globalLongFundingFeeGrowthAfter:int257 globalShortFundingFeeGrowthAfter:int257 lpNetSizeAfter:int257 lpIsLong:bool lpEntryPriceAfter:int257 lpFundAfter:int257 lpLiquidityAfter:int257 lpTradingFee:int257 lpRealizedPnl:int257 = TestPerpPositionIncreasedEvent`
+Signature: `TestPerpPositionIncreasedEvent{trxId:uint64,opType:uint8,positionId:uint64,account:address,tokenId:uint64,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,entryPrice:int257,fundingFee:int257,tradingFee:int257,entryFundingFeeGrowthAfter:int257,globalLongMarginAfter:int257,globalShortMarginAfter:int257,globalLongSizeAfter:int257,globalShortSizeAfter:int257,globalLongFundingFeeGrowthAfter:int257,globalShortFundingFeeGrowthAfter:int257,lpNetSizeAfter:int257,lpIsLong:bool,lpEntryPriceAfter:int257,lpFundAfter:int257,lpLiquidityAfter:int257,lpTradingFee:int257,lpRealizedPnl:int257}`
+
+## TestPerpPositionDecreasedEvent
+TLB: `test_perp_position_decreased_event#8d0d099c trxId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint64 isLong:bool marginDelta:int257 marginAfter:int257 sizeDelta:int257 sizeAfter:int257 tradePrice:int257 realizedPnLDelta:int257 fundingFee:int257 tradingFee:int257 entryFundingFeeGrowthAfter:int257 receive:int257 globalLongMarginAfter:int257 globalShortMarginAfter:int257 globalLongSizeAfter:int257 globalShortSizeAfter:int257 globalLongFundingFeeGrowthAfter:int257 globalShortFundingFeeGrowthAfter:int257 lpNetSizeAfter:int257 lpIsLong:bool lpEntryPriceAfter:int257 lpFundAfter:int257 lpLiquidityAfter:int257 lpTradingFee:int257 lpRealizedPnl:int257 = TestPerpPositionDecreasedEvent`
+Signature: `TestPerpPositionDecreasedEvent{trxId:uint64,opType:uint8,positionId:uint64,account:address,tokenId:uint64,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257,entryFundingFeeGrowthAfter:int257,receive:int257,globalLongMarginAfter:int257,globalShortMarginAfter:int257,globalLongSizeAfter:int257,globalShortSizeAfter:int257,globalLongFundingFeeGrowthAfter:int257,globalShortFundingFeeGrowthAfter:int257,lpNetSizeAfter:int257,lpIsLong:bool,lpEntryPriceAfter:int257,lpFundAfter:int257,lpLiquidityAfter:int257,lpTradingFee:int257,lpRealizedPnl:int257}`
+
 ## ConfigData
 TLB: `_ isExecutor:Maybe bool gasConsumption:coins minTonsForStorage:coins lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
 Signature: `ConfigData{isExecutor:Maybe bool,gasConsumption:coins,minTonsForStorage:coins,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
@@ -146,8 +154,8 @@ TLB: `_ netSize:int257 isLong:bool entryPrice:int257 unrealizedPnl:int257 = Glob
 Signature: `GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257}`
 
 ## PerpPositionData
-TLB: `_ globalPerpNetValue:int257 globalPerpSingleValue:int257 perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257} globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257} prevPremiumRateSample:Maybe PremiumRateSampleData{rangeId:uint64,sampleId:uint64,sampleX:int257,sampleY:int257,premiumRate:int257} = PerpPositionData`
-Signature: `PerpPositionData{globalPerpNetValue:int257,globalPerpSingleValue:int257,perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257},globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257},globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257},prevPremiumRateSample:Maybe PremiumRateSampleData{rangeId:uint64,sampleId:uint64,sampleX:int257,sampleY:int257,premiumRate:int257}}`
+TLB: `_ globalPerpNetValue:int257 globalPerpSingleValue:int257 perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}} globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257} globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257} globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257} prevPremiumRate:int257 = PerpPositionData`
+Signature: `PerpPositionData{globalPerpNetValue:int257,globalPerpSingleValue:int257,perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}},globalLPPosition:Maybe GlobalLPPosition{netSize:int257,isLong:bool,entryPrice:int257,unrealizedPnl:int257},globalPosition:Maybe GlobalPosition{longMargin:int257,shortMargin:int257,longSize:int257,shortSize:int257,longFundingFeeGrowth:int257,shortFundingFeeGrowth:int257,longValue:int257,shortValue:int257},globalFundingRateSample:Maybe GlobalFundingRateSample{lastAdjustFundingRateTime:int257,sampleCount:int257,cumulativePremiumRate:int257},prevPremiumRate:int257}`
 
 ## UpdatePriceParam
 TLB: `_ tokenId:uint64 price:int257 = UpdatePriceParam`
@@ -225,7 +233,6 @@ Argument: account
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 1644: not reach trigger price
-4996: none available price
 5238: position not exist
 9429: send gas not enough
 17312: leverage too high

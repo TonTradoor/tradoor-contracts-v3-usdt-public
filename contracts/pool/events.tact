@@ -50,42 +50,42 @@ message GlobalLPPositionChangedEvent {
 }
 
 // ============================ Perp ================================ //
-message PerpPositionIncreasedEvent {
-    opType: Int as uint8;
-    positionId: Int as uint64;
-    account: Address;
-    tokenId: Int as uint64;
-    isLong: Bool;
-    marginDelta: Int;
-    marginAfter: Int;
-    sizeDelta: Int;
-    sizeAfter: Int;
-    tradePrice: Int;
-    entryPrice: Int;
-    fundingFee: Int;
-    tradingFee: Int;
-    entryFundingFeeGrowthAfter: Int;
-    trxId: Int as uint64;
-}
+// message PerpPositionIncreasedEvent {
+//     opType: Int as uint8;
+//     positionId: Int as uint64;
+//     account: Address;
+//     tokenId: Int as uint64;
+//     isLong: Bool;
+//     marginDelta: Int;
+//     marginAfter: Int;
+//     sizeDelta: Int;
+//     sizeAfter: Int;
+//     tradePrice: Int;
+//     entryPrice: Int;
+//     fundingFee: Int;
+//     tradingFee: Int;
+//     entryFundingFeeGrowthAfter: Int;
+//     trxId: Int as uint64;
+// }
 
-message PerpPositionDecreasedEvent {
-    opType: Int as uint8;
-    positionId: Int as uint64;
-    account: Address;
-    tokenId: Int as uint64;
-    isLong: Bool;
-    marginDelta: Int;
-    marginAfter: Int;
-    sizeDelta: Int;
-    sizeAfter: Int;
-    tradePrice: Int;
-    realizedPnLDelta: Int;
-    fundingFee: Int;
-    tradingFee: Int;
-    entryFundingFeeGrowthAfter: Int;
-    receive: Int;
-    trxId: Int as uint64;
-}
+// message PerpPositionDecreasedEvent {
+//     opType: Int as uint8;
+//     positionId: Int as uint64;
+//     account: Address;
+//     tokenId: Int as uint64;
+//     isLong: Bool;
+//     marginDelta: Int;
+//     marginAfter: Int;
+//     sizeDelta: Int;
+//     sizeAfter: Int;
+//     tradePrice: Int;
+//     realizedPnLDelta: Int;
+//     fundingFee: Int;
+//     tradingFee: Int;
+//     entryFundingFeeGrowthAfter: Int;
+//     receive: Int;
+//     trxId: Int as uint64;
+// }
 
 message GlobalPositionChangedEvent {
     tokenId: Int as uint64;
@@ -114,4 +114,75 @@ message UpdatePriceEvent {
 message PremiumRateChangedEvent {
     tokenId: Int as uint64;
     premiumRate: Int;
+}
+
+message TestPerpPositionIncreasedEvent {
+    // perp position
+    trxId: Int as uint64;
+    opType: Int as uint8;
+    positionId: Int as uint64;
+    account: Address;
+    tokenId: Int as uint64;
+    isLong: Bool;
+    marginDelta: Int;
+    marginAfter: Int;
+    sizeDelta: Int;
+    sizeAfter: Int;
+    tradePrice: Int;
+    entryPrice: Int;
+    fundingFee: Int;
+    tradingFee: Int;
+    entryFundingFeeGrowthAfter: Int;
+    // global position
+    globalLongMarginAfter: Int;
+    globalShortMarginAfter: Int;
+    globalLongSizeAfter: Int;
+    globalShortSizeAfter: Int;
+    globalLongFundingFeeGrowthAfter: Int;
+    globalShortFundingFeeGrowthAfter: Int;
+    // lp position
+    lpNetSizeAfter: Int;
+    lpIsLong: Bool;
+    lpEntryPriceAfter: Int;
+    // lp liquidity
+    lpFundAfter: Int;
+    lpLiquidityAfter: Int;
+    lpTradingFee: Int;
+    lpRealizedPnl: Int;
+}
+
+message TestPerpPositionDecreasedEvent {
+    // perp position
+    trxId: Int as uint64;
+    opType: Int as uint8;
+    positionId: Int as uint64;
+    account: Address;
+    tokenId: Int as uint64;
+    isLong: Bool;
+    marginDelta: Int;
+    marginAfter: Int;
+    sizeDelta: Int;
+    sizeAfter: Int;
+    tradePrice: Int;
+    realizedPnLDelta: Int;
+    fundingFee: Int;
+    tradingFee: Int;
+    entryFundingFeeGrowthAfter: Int;
+    receive: Int;
+    // global position
+    globalLongMarginAfter: Int;
+    globalShortMarginAfter: Int;
+    globalLongSizeAfter: Int;
+    globalShortSizeAfter: Int;
+    globalLongFundingFeeGrowthAfter: Int;
+    globalShortFundingFeeGrowthAfter: Int;
+    // lp position
+    lpNetSizeAfter: Int;
+    lpIsLong: Bool;
+    lpEntryPriceAfter: Int;
+    // lp liquidity
+    lpFundAfter: Int;
+    lpLiquidityAfter: Int;
+    lpTradingFee: Int;
+    lpRealizedPnl: Int;
 }

@@ -95,8 +95,6 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
             orderId: orderId,
             trxId: 2n,
             executionFeeReceiver: executor.address,
-            pricesLength: 0n,
-            prices: Dictionary.empty()
         }
     );
 

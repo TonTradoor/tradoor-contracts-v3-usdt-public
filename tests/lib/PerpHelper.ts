@@ -92,7 +92,7 @@ export async function cancelPerpOrder(executor: SandboxContract<TreasuryContract
 }
 
 
-export async function executePerpOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint, price: number) {
+export async function executePerpOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint, price: number, premiumRate: number) {
     let balanceBefore = await getAllBalance();
     let orderBefore = await TestEnv.orderBook.getPerpPositionOrder(orderId);
     let positionDataBefore = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
@@ -111,15 +111,9 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
             orderId: orderId,
             trxId: 2n,
             executionFeeReceiver: executor.address,
-            pricesLength: 1n,
-            prices: Dictionary.empty(Dictionary.Keys.BigInt(32), UpdatePriceValue).set(
-                0n, 
-                {
-                    $$type: 'UpdatePrice',
-                    tokenId: orderBefore?.tokenId!!,
-                    price: toPriceUnits(price)
-                }
-            )
+            tokenId: 1n,
+            price: toPriceUnits(price),
+            premiumRate: toUnits(premiumRate, 9)
         }
     );
 
@@ -132,7 +126,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     let globalPositionAfter = positionDataAfter?.globalPosition;
     let globalLPLiquidityAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
     let globalFundingRateSampleAfter = positionDataAfter.globalFundingRateSample;
-    let prevPremiumRateSampleAfter = positionDataAfter.prevPremiumRateSample;
+    let prevPremiumRateAfter = positionDataAfter.prevPremiumRate;
 
     return {
         trxResult,
@@ -149,7 +143,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
         globalLPLiquidityBefore,
         globalLPLiquidityAfter,
         globalFundingRateSampleAfter,
-        prevPremiumRateSampleAfter
+        prevPremiumRateAfter
     };
 }
 
@@ -245,7 +239,7 @@ export async function createTpSlPerpOrder(user: SandboxContract<TreasuryContract
 }
 
 
-export async function liquidatePerpPosition(executor: SandboxContract<TreasuryContract>, tokenId: number, account: Address, isLong: boolean, price: number) {
+export async function liquidatePerpPosition(executor: SandboxContract<TreasuryContract>, tokenId: number, account: Address, isLong: boolean, price: number, premiumRate: number) {
     let balanceBefore = await getAllBalance();
     let positionDataBefore = await TestEnv.pool.getPerpPosition(BigInt(tokenId), account);
     let positionBefore = isLong ? positionDataBefore?.perpPosition?.longPosition!! : positionDataBefore?.perpPosition?.shortPosition!!;
@@ -265,15 +259,8 @@ export async function liquidatePerpPosition(executor: SandboxContract<TreasuryCo
             isLong: isLong,
             trxId: 2n,
             liquidationFeeReceiver: executor.address,
-            pricesLength: 1n,
-            prices: Dictionary.empty(Dictionary.Keys.BigInt(32), UpdatePriceValue).set(
-                0n,
-                {
-                    $$type: 'UpdatePrice',
-                    tokenId: BigInt(tokenId),
-                    price: toPriceUnits(price)
-                }
-            )
+            price: toPriceUnits(price),
+            premiumRate: toUnits(premiumRate, 9)
         }
     );
 
@@ -300,7 +287,7 @@ export async function liquidatePerpPosition(executor: SandboxContract<TreasuryCo
     };
 }
 
-export async function adlPerpPosition(executor: SandboxContract<TreasuryContract>, tokenId: number, account: Address, isLong: boolean, margin: number, size: number, price: number) {
+export async function adlPerpPosition(executor: SandboxContract<TreasuryContract>, tokenId: number, account: Address, isLong: boolean, margin: number, size: number, price: number, premiumRate: number) {
     let balanceBefore = await getAllBalance();
     let positionDataBefore = await TestEnv.pool.getPerpPosition(BigInt(tokenId), account);
     let positionBefore = isLong ? positionDataBefore?.perpPosition?.longPosition!! : positionDataBefore?.perpPosition?.shortPosition!!;
@@ -321,15 +308,8 @@ export async function adlPerpPosition(executor: SandboxContract<TreasuryContract
             marginDelta: toJettonUnits(margin),
             sizeDelta: toJettonUnits(size),
             trxId: 1n,
-            pricesLength: 1n,
-            prices: Dictionary.empty(Dictionary.Keys.BigInt(32), UpdatePriceValue).set(
-                0n,
-                {
-                    $$type: 'UpdatePrice',
-                    tokenId: BigInt(tokenId),
-                    price: toPriceUnits(price)
-                }
-            )
+            price: toPriceUnits(price),
+            premiumRate: toUnits(premiumRate, 9)
         }
     );
 
@@ -491,16 +471,15 @@ export async function setPremiumRateSampleRange(
         )
     }
     
-    const trxResult = await TestEnv.pool.send(
-        executor.getSender(),
-        {
-            value: toNano('1'),
-        },
-        {
-            $$type: 'SetPremiumRateSampleRange',
-            sampleRangeLength: BigInt(sampleRanges.length),
-            sampleRanges: sampleRangeValues
-        }
-    );
-    return trxResult
+    // const trxResult = await TestEnv.pool.send(
+    //     executor.getSender(),
+    //     {
+    //         value: toNano('1'),
+    //     },
+    //     {
+    //         $$type: 'SetPremiumRateSampleRange',
+    //         sampleRangeLength: BigInt(sampleRanges.length),
+    //         sampleRanges: sampleRangeValues
+    //     }
+    // );
 }

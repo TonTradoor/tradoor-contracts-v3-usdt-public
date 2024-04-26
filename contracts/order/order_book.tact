@@ -15,6 +15,7 @@ contract OrderBook with Deployable, Resumable {
     // TODO gas
     minExecutionFee: Int = ton("0.1"); // fee for every operation
     gasConsumption: Int = ton("0.05"); // min consumption gas
+    lpGasConsumption: Int = ton("0.05"); // min consumption gas
     minTonsForStorage: Int = ton("0.03"); // min storage gas
 
     usdtWallet: Address; // order book USDT jetton wallet address
@@ -66,6 +67,7 @@ contract OrderBook with Deployable, Resumable {
         self.minTimeDelayTrader = msg.minTimeDelayTrader;
         self.minExecutionFee = msg.minExecutionFee;
         self.gasConsumption = msg.gasConsumption;
+        self.lpGasConsumption = msg.lpGasConsumption;
         self.minTonsForStorage = msg.minTonsForStorage;
         self.usdtWallet = msg.usdtWallet;
         self.pool = msg.pool;
@@ -89,6 +91,7 @@ contract OrderBook with Deployable, Resumable {
             minTimeDelayTrader: self.minTimeDelayTrader,
             minExecutionFee: self.minExecutionFee,
             gasConsumption: self.gasConsumption,
+            lpGasConsumption: self.lpGasConsumption,
             minTonsForStorage: self.minTonsForStorage,
             usdtWallet: self.usdtWallet,
             pool: self.pool
@@ -265,9 +268,8 @@ contract OrderBook with Deployable, Resumable {
     }
 
     fun getPoolGas(): Int {
-        return context().readForwardFee() * 2 + self.gasConsumption * 2 + self.minTonsForStorage;
+        return context().readForwardFee() + self.lpGasConsumption + self.minTonsForStorage;
     }
-
     // ======================================================== LP ================================================================ //
     // Create Increase
     fun handleCreateIncreaseLPPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, liquidityDelta: Int) {
@@ -483,9 +485,7 @@ contract OrderBook with Deployable, Resumable {
                 orderId: msg.orderId,
                 trxId: msg.trxId,
                 account: order.account,
-                liquidityDelta: order.liquidityDelta,
-                pricesLength: msg.pricesLength,
-                prices: msg.prices
+                liquidityDelta: order.liquidityDelta
             }.toCell()
         });
     }
@@ -516,6 +516,8 @@ contract OrderBook with Deployable, Resumable {
             self.refundJetton(msg.trxId, msg.receive, order.account, order.lastOperator);
         }
 
+        dump(myBalance());
+
         // transfer execution fee
         if (order.executionFee > 0) {
             send(SendParameters{
@@ -525,6 +527,8 @@ contract OrderBook with Deployable, Resumable {
                 mode: SendIgnoreErrors
             });
         }
+
+        dump(myBalance());
 
         // event
         emit(LPPositionOrderExecutedEvent{
@@ -840,6 +844,7 @@ contract OrderBook with Deployable, Resumable {
 
         // check order
         require(!order.isPending, "order is pending");
+        require(msg.tokenId == order.tokenId, "token not match");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -877,8 +882,8 @@ contract OrderBook with Deployable, Resumable {
                 sizeDelta: order.sizeDelta,
                 triggerPrice: order.triggerPrice,
                 triggerAbove: order.triggerAbove,
-                pricesLength: msg.pricesLength,
-                prices: msg.prices
+                price: msg.price,
+                premiumRate: msg.premiumRate
             }.toCell()
         });
     }
@@ -1033,8 +1038,8 @@ contract OrderBook with Deployable, Resumable {
                 sizeDelta: 0,
                 triggerPrice: 0,
                 triggerAbove: false,
-                pricesLength: msg.pricesLength,
-                prices: msg.prices
+                price: msg.price,
+                premiumRate: msg.premiumRate
             }.toCell()
         });
     }
@@ -1086,8 +1091,8 @@ contract OrderBook with Deployable, Resumable {
                 sizeDelta: msg.sizeDelta,
                 triggerPrice: 0,
                 triggerAbove: false,
-                pricesLength: msg.pricesLength,
-                prices: msg.prices
+                price: msg.price,
+                premiumRate: msg.premiumRate
             }.toCell()
         });
     }

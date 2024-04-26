@@ -127,7 +127,8 @@ export class TestEnv {
                 maxTimeDelayExecutor: 30n * 60n,
                 minTimeDelayTrader: 3n * 60n,
                 minExecutionFee: toNano(0.1),
-                gasConsumption: toNano(0.06),
+                gasConsumption: toNano(0.03),
+                lpGasConsumption: toNano(0.09),
                 minTonsForStorage: toNano(0),
                 usdtWallet: TestEnv.orderBookJettonWallet.address,
                 pool: TestEnv.pool.address
@@ -150,8 +151,8 @@ export class TestEnv {
                 $$type: 'UpdateConfig',
                 executor: TestEnv.executor.address,
                 enableExecutor: true,
-                gasConsumption: toNano(0.07),
-                minTonsForStorage: toNano(0),
+                gasConsumption: toNano(0.09),
+                minTonsForStorage: toNano(0.01),
                 lpBonusFactor: 10n * 10n**9n,
                 lpLiquidityFactor: 2n * 10n**9n,
                 orderBook: TestEnv.orderBook.address
@@ -220,18 +221,18 @@ export class TestEnv {
             success: true,
         });
 
-        // set PR samples to pool
-        let samples = await readPRSample();
+        // // set PR samples to pool
+        // let samples = await readPRSample();
         
-        let subLength = 100;
-        let start = 0, end = subLength;
-        while (end <= samples.length) {
-            // console.log('start:', start, 'end:', end);
-            await setPremiumRateSampleRange(TestEnv.deployer, samples.slice(start, end));
+        // let subLength = 100;
+        // let start = 0, end = subLength;
+        // while (end <= samples.length) {
+        //     // console.log('start:', start, 'end:', end);
+        //     await setPremiumRateSampleRange(TestEnv.deployer, samples.slice(start, end));
 
-            start += subLength;
-            end += subLength;
-        }
+        //     start += subLength;
+        //     end += subLength;
+        // }
 
     }
 

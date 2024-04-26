@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 14767 bytes
+BOC Size: 15339 bytes
 
 # Types
 Total Types: 46
@@ -50,8 +50,8 @@ TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
 Signature: `TokenExcesses{queryId:uint64}`
 
 ## UpdateConfig
-TLB: `update_config#408e9f7c executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig`
-Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
+TLB: `update_config#02f28069 executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig`
+Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
 ## UpdateWhitelist
 TLB: `update_whitelist#4f5c3f48 enableWhitelist:Maybe bool whitelistLength:uint64 whitelist:dict<int, ^UpdateWhitelistParam{account:address,enable:bool}> = UpdateWhitelist`
@@ -66,12 +66,12 @@ TLB: `cancel_lp_position_order#7d91eb36 orderId:uint64 trxId:uint64 executionFee
 Signature: `CancelLPPositionOrder{orderId:uint64,trxId:uint64,executionFeeReceiver:Maybe address}`
 
 ## ExecuteLPPositionOrder
-TLB: `execute_lp_position_order#554a0851 orderId:uint64 trxId:uint64 executionFeeReceiver:Maybe address pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ExecuteLPPositionOrder`
-Signature: `ExecuteLPPositionOrder{orderId:uint64,trxId:uint64,executionFeeReceiver:Maybe address,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `execute_lp_position_order#1286b98b orderId:uint64 trxId:uint64 executionFeeReceiver:Maybe address = ExecuteLPPositionOrder`
+Signature: `ExecuteLPPositionOrder{orderId:uint64,trxId:uint64,executionFeeReceiver:Maybe address}`
 
 ## UpdateLPPosition
-TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdateLPPosition`
-Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 = UpdateLPPosition`
+Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64}`
 
 ## UpdateLPPositionSuccess
 TLB: `update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
@@ -102,20 +102,20 @@ TLB: `cancel_perp_position_order#c1f953f2 executionFeeReceiver:Maybe address ord
 Signature: `CancelPerpPositionOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64}`
 
 ## ExecutePerpPositionOrder
-TLB: `execute_perp_position_order#f9a72561 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ExecutePerpPositionOrder`
-Signature: `ExecutePerpPositionOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `execute_perp_position_order#9dfa0ed8 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint64 price:int257 premiumRate:int257 = ExecutePerpPositionOrder`
+Signature: `ExecutePerpPositionOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint64,price:int257,premiumRate:int257}`
 
 ## LiquidatePerpPosition
-TLB: `liquidate_perp_position#bcd64691 liquidationFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = LiquidatePerpPosition`
-Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint64,account:address,isLong:bool,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `liquidate_perp_position#23343bb4 liquidationFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:uint64 price:int257 premiumRate:int257 = LiquidatePerpPosition`
+Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint64,account:address,isLong:bool,trxId:uint64,price:int257,premiumRate:int257}`
 
 ## ADLPerpPosition
-TLB: `adl_perp_position#ce7af89a tokenId:uint64 account:address isLong:bool marginDelta:uint128 sizeDelta:uint128 trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = ADLPerpPosition`
-Signature: `ADLPerpPosition{tokenId:uint64,account:address,isLong:bool,marginDelta:uint128,sizeDelta:uint128,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `adl_perp_position#ec33cc52 tokenId:uint64 account:address isLong:bool marginDelta:uint128 sizeDelta:uint128 trxId:uint64 price:int257 premiumRate:int257 = ADLPerpPosition`
+Signature: `ADLPerpPosition{tokenId:uint64,account:address,isLong:bool,marginDelta:uint128,sizeDelta:uint128,trxId:uint64,price:int257,premiumRate:int257}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}> = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePrice{tokenId:uint64,price:int257}>}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 price:int257 premiumRate:int257 = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,price:int257,premiumRate:int257}`
 
 ## UpdatePerpPositionSuccess
 TLB: `update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
@@ -158,8 +158,8 @@ TLB: `compensate_executed_event#db45e438 compensateId:uint64 trxId:uint64 = Comp
 Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 
 ## ConfigData
-TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = ConfigData`
-Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
+TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
 ## WhitelistData
 TLB: `_ enableWhitelist:bool isInWhitelist:bool = WhitelistData`
@@ -248,4 +248,5 @@ Argument: orderId
 40368: Contract stopped
 41207: invalid sender
 42241: order not pending
+51911: token not match
 53296: Contract not stopped

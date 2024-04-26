@@ -75,7 +75,7 @@ struct PerpPositionData {
     globalLPPosition: GlobalLPPosition?;
     globalPosition: GlobalPosition?;
     globalFundingRateSample: GlobalFundingRateSample?;
-    prevPremiumRateSample: PremiumRateSampleData?;
+    prevPremiumRate: Int;
 }
 
 // ============================ Price ================================ //

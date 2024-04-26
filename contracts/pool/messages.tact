@@ -36,8 +36,8 @@ message(0xe89cd45f) UpdateLPPosition {
     account: Address;
     liquidityDelta: Int;
     trxId: Int as uint64;
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePriceParam>;
+    // tokenId: Int as uint64;
+    // price: Int;
 }
 
 message(0x1cf0cf81) UpdateLPPositionSuccess {
@@ -58,8 +58,8 @@ message(0xff57e557) UpdatePerpPosition {
     triggerPrice: Int;
     triggerAbove: Bool;
     trxId: Int as uint64;
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePriceParam>;
+    price: Int;
+    premiumRate: Int;
 }
 
 message(0xef01c2b4) UpdatePerpPositionSuccess {

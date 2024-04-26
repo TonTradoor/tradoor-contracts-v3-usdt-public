@@ -30,6 +30,7 @@ message UpdateConfig {
     minTimeDelayTrader: Int;
     minExecutionFee: Int as coins;
     gasConsumption: Int as coins;
+    lpGasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
     usdtWallet: Address;
     pool: Address;
@@ -58,8 +59,6 @@ message ExecuteLPPositionOrder {
     orderId: Int as uint64;
     trxId: Int as uint64;
     executionFeeReceiver: Address?;
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
 }
 
 message(0xe89cd45f) UpdateLPPosition {
@@ -68,8 +67,6 @@ message(0xe89cd45f) UpdateLPPosition {
     account: Address;
     liquidityDelta: Int;
     trxId: Int as uint64;
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
 }
 
 message(0x1cf0cf81) UpdateLPPositionSuccess {
@@ -130,8 +127,9 @@ message ExecutePerpPositionOrder {
     executionFeeReceiver: Address?;
     orderId: Int as uint64;
     trxId: Int as uint64;
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
+    tokenId: Int as uint64;
+    price: Int;
+    premiumRate: Int;
 }
 
 message LiquidatePerpPosition {
@@ -140,8 +138,8 @@ message LiquidatePerpPosition {
     account: Address;
     isLong: Bool;
     trxId: Int as uint64;
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
+    price: Int;
+    premiumRate: Int;
 }
 
 message ADLPerpPosition {
@@ -151,8 +149,8 @@ message ADLPerpPosition {
     marginDelta: Int as uint128;
     sizeDelta: Int as uint128;
     trxId: Int as uint64;
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
+    price: Int;
+    premiumRate: Int;
 }
 
 message(0xff57e557) UpdatePerpPosition {
@@ -166,8 +164,8 @@ message(0xff57e557) UpdatePerpPosition {
     triggerPrice: Int;
     triggerAbove: Bool;
     trxId: Int as uint64;
-    pricesLength: Int as uint64;
-    prices: map<Int, UpdatePrice>;
+    price: Int;
+    premiumRate: Int;
 }
 
 message(0xef01c2b4) UpdatePerpPositionSuccess {
