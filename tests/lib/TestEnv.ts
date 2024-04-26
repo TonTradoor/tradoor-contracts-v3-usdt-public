@@ -7,8 +7,6 @@ import { buildOnchainMetadata } from '../../contracts/mock/utils/jetton-helpers'
 import { JettonDefaultWallet } from '../../wrappers/JettonDefaultWallet';
 import { toJettonUnits } from './TokenHelper';
 import { PERCENTAGE_BASIS_POINT } from '../../utils/constants';
-import { readPRSample } from '../../utils/util';
-import { setPremiumRateSampleRange } from './PerpHelper';
 
 export class TestEnv {
 

@@ -4,7 +4,7 @@ import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits, toPriceUnits } from "./TokenHelper";
 import { UpdatePrice } from "../../wrappers/OrderBook";
-import { PremiumRateSample, PremiumRateSampleRangeParam, UpdatePriceParam } from "../../wrappers/Pool";
+import { UpdatePriceParam } from "../../wrappers/Pool";
 
 export async function createIncreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, isMarket: boolean, 
     tokenId: number, isLong: boolean, margin: number, size: number, triggerPrice: number, tpSize: number, tpPrice: number, slSize: number, slPrice: number) {
@@ -419,57 +419,57 @@ export async function updatePrice(executor: SandboxContract<TreasuryContract>, t
 //     return trxResult
 // }
 
-export async function setPremiumRateSampleRange(
-        executor: SandboxContract<TreasuryContract>, 
-        sampleRanges: {
-            id: number,
-            samples: {x: number, y: number}[]
-        }[]
-    ) {
+// export async function setPremiumRateSampleRange(
+//         executor: SandboxContract<TreasuryContract>, 
+//         sampleRanges: {
+//             id: number,
+//             samples: {x: number, y: number}[]
+//         }[]
+//     ) {
 
-    let PremiumRateSampleValue: DictionaryValue<PremiumRateSample> = {
-        serialize(src, builder) {
-            builder.storeInt(src.sampleX, 257).storeInt(src.sampleY, 257)
-        },
-        parse(src) {
-            throw '';
-        },
-    }
+//     let PremiumRateSampleValue: DictionaryValue<PremiumRateSample> = {
+//         serialize(src, builder) {
+//             builder.storeInt(src.sampleX, 257).storeInt(src.sampleY, 257)
+//         },
+//         parse(src) {
+//             throw '';
+//         },
+//     }
     
-    let PremiumRateSampleRangeValue: DictionaryValue<PremiumRateSampleRangeParam> = {
-        serialize(src, builder) {
-            builder.storeInt(src.sampleId, 257).storeInt(src.sampleLength, 257).storeDict(src.samples)
-        },
-        parse(src) {
-            throw '';
-        },
-    }
+//     let PremiumRateSampleRangeValue: DictionaryValue<PremiumRateSampleRangeParam> = {
+//         serialize(src, builder) {
+//             builder.storeInt(src.sampleId, 257).storeInt(src.sampleLength, 257).storeDict(src.samples)
+//         },
+//         parse(src) {
+//             throw '';
+//         },
+//     }
 
-    let sampleRangeValues = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleRangeValue);
+//     let sampleRangeValues = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleRangeValue);
 
-    for (let index = 0; index < sampleRanges.length; index++) {
-        const sampleRange = sampleRanges[index];
+//     for (let index = 0; index < sampleRanges.length; index++) {
+//         const sampleRange = sampleRanges[index];
 
-        let sampleValues = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleValue);
-        let samples = sampleRange.samples;
-        for (let j = 0; j < samples.length; j++) {
-            sampleValues.set(BigInt(j), {
-                $$type: 'PremiumRateSample',
-                sampleX: toUnits(samples[j].x, 9),
-                sampleY: toUnits(samples[j].y, 9)
-            })
-        }
+//         let sampleValues = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleValue);
+//         let samples = sampleRange.samples;
+//         for (let j = 0; j < samples.length; j++) {
+//             sampleValues.set(BigInt(j), {
+//                 $$type: 'PremiumRateSample',
+//                 sampleX: toUnits(samples[j].x, 9),
+//                 sampleY: toUnits(samples[j].y, 9)
+//             })
+//         }
 
-        sampleRangeValues.set(
-            BigInt(index),
-            {
-                $$type: 'PremiumRateSampleRangeParam',
-                sampleId: BigInt(sampleRange.id),
-                sampleLength: BigInt(samples.length),
-                samples: sampleValues
-            }
-        )
-    }
+//         sampleRangeValues.set(
+//             BigInt(index),
+//             {
+//                 $$type: 'PremiumRateSampleRangeParam',
+//                 sampleId: BigInt(sampleRange.id),
+//                 sampleLength: BigInt(samples.length),
+//                 samples: sampleValues
+//             }
+//         )
+//     }
     
     // const trxResult = await TestEnv.pool.send(
     //     executor.getSender(),
@@ -482,4 +482,4 @@ export async function setPremiumRateSampleRange(
     //         sampleRanges: sampleRangeValues
     //     }
     // );
-}
+// }

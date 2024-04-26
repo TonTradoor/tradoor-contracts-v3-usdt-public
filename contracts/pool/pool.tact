@@ -199,36 +199,15 @@ contract Pool with Deployable, Ownable {
     receive(msg: UpdateLPPosition) {
         require(sender() == self.orderBook, "invalid sender");
 
-        // update price
-        // self.updatePriceAndFundingFee(msg.tokenId, msg.price);
-
         // update position
-        let receive: Int = 0;
         if (msg.isIncrease) {
-            self.increaseLPPosition(msg.account, msg.liquidityDelta, msg.trxId);
+            self.increaseLPPosition(msg.trxId, msg.orderId, msg.account, msg.liquidityDelta);
         } else {
-            receive = self.decreaseLPPosition(msg.account, msg.liquidityDelta, msg.trxId);
+            self.decreaseLPPosition(msg.trxId, msg.orderId, msg.account, msg.liquidityDelta);
         }
-
-        // leave minTonsForStorage
-        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
-        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
-
-        // send update success msg
-        send(SendParameters{
-            to: self.orderBook,
-            value: msgValue,
-            bounce: false,
-            mode: SendPayGasSeparately,
-            body: UpdateLPPositionSuccess {
-                orderId: msg.orderId,
-                receive: receive,
-                trxId: msg.trxId
-            }.toCell()
-        });
     }
 
-    fun increaseLPPosition(account: Address, liquidityDelta: Int, trxId: Int) {
+    fun increaseLPPosition(trxId: Int, orderId: Int, account: Address, liquidityDelta: Int) {
         // get position
         let lpPositionOpt: LPPosition? = self.lpPositions.get(account);
         // init position if not exist
@@ -279,7 +258,26 @@ contract Pool with Deployable, Ownable {
         self.globalLPFund = self.globalLPFund + liquidityDelta;
         self.globalLPLiquidity = self.globalLPLiquidity + liquidityDelta;
 
+        // leave minTonsForStorage
+        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
+        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+
+        // send update success msg
+        send(SendParameters{
+            to: self.orderBook,
+            value: msgValue,
+            bounce: false,
+            mode: SendPayGasSeparately,
+            body: UpdateLPPositionSuccess {
+                orderId: orderId,
+                receive: 0,
+                trxId: trxId
+            }.toCell()
+        });
+
         emit(LPPositionIncreasedEvent{
+            trxId: trxId,
+            orderId: orderId,
             opType: ORDER_OP_TYPE_INCREASE,
             positionId: lpPosition.positionId,
             account: account,
@@ -291,18 +289,12 @@ contract Pool with Deployable, Ownable {
             realizedFundingFeeDelta: realizedFundingFee,
             realizedFundingFeeAfter: lpPosition.realizedFundingFee,
             entryFundingFeeGrowthAfter: lpPosition.entryFundingFeeGrowth,
-            trxId: trxId
-        }.toCell());
-        emit(GlobalLPLiquidityChangedEvent{
             lpFundAfter: self.globalLPFund,
-            liquidityAfter: self.globalLPLiquidity,
-            tradingFee: 0,
-            realizedPnl: 0,
-            trxId: trxId
+            lpLiquidityAfter: self.globalLPLiquidity
         }.toCell());
     }
 
-    fun decreaseLPPosition(account: Address, liquidityDelta: Int, trxId: Int): Int {
+    fun decreaseLPPosition(trxId: Int, orderId: Int, account: Address, liquidityDelta: Int) {
         // get position
         let lpPositionOpt: LPPosition? = self.lpPositions.get(account);
         // check position
@@ -370,8 +362,27 @@ contract Pool with Deployable, Ownable {
         self.globalLPFund = self.globalLPFund - receive;
         self.globalLPLiquidity = self.globalLPLiquidity - liquidityDelta;
 
+        // leave minTonsForStorage
+        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
+        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+
+        // send update success msg
+        send(SendParameters{
+            to: self.orderBook,
+            value: msgValue,
+            bounce: false,
+            mode: SendPayGasSeparately,
+            body: UpdateLPPositionSuccess {
+                orderId: orderId,
+                receive: receive,
+                trxId: trxId
+            }.toCell()
+        });
+
         // event
         emit(LPPositionDecreasedEvent{
+            trxId: trxId,
+            orderId: orderId,
             opType: ORDER_OP_TYPE_DECREASE,
             positionId: lpPosition.positionId,
             account: account,
@@ -382,16 +393,9 @@ contract Pool with Deployable, Ownable {
             fundingFeeDelta: realizedFundingFee,
             entryFundingFeeGrowthAfter: lpPosition.entryFundingFeeGrowth,
             receive: receive,
-            trxId: trxId
-        }.toCell());
-        emit(GlobalLPLiquidityChangedEvent{
             lpFundAfter: self.globalLPFund,
-            liquidityAfter: self.globalLPLiquidity,
-            tradingFee: 0,
-            realizedPnl: 0,
-            trxId: trxId
+            lpLiquidityAfter: self.globalLPLiquidity
         }.toCell());
-        return receive;
     }
 
     get fun lpPosition(account: Address?): LPPositionData {
@@ -415,7 +419,7 @@ contract Pool with Deployable, Ownable {
         require(sender() == self.orderBook, "invalid sender");
 
         // update price
-        self.updatePriceAndFundingFee(msg.tokenId, msg.price);
+        let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(msg.tokenId, msg.price);
 
         // get index price
         let indexPrice: Int = msg.price;
@@ -424,52 +428,31 @@ contract Pool with Deployable, Ownable {
         let avgPremiumRate: Int = (msg.premiumRate + self.prevPremiumRate) / 2;
         self.prevPremiumRate = msg.premiumRate;
         let tradePrice: Int = (PERCENTAGE_BASIS_POINT + avgPremiumRate) * indexPrice / PERCENTAGE_BASIS_POINT;
-        // dump("tradePrice");
-        // dump(tradePrice);
 
         // update position
-        let receive: Int = 0;
         if (msg.opType == ORDER_OP_TYPE_INCREASE_MARKET || msg.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             if (msg.triggerAbove) {
                 require(tradePrice >= msg.triggerPrice, "not reach trigger price");
             } else {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
-            self.increasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
+            self.increasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice, result.lpReceivedFundingFeeDelta);
         } else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION) {
-            receive = self.liquidatePerpPosition(msg.trxId, msg.account, msg.tokenId, msg.isLong, indexPrice, tradePrice);
+            self.liquidatePerpPosition(msg.trxId, msg.orderId, msg.account, msg.tokenId, msg.isLong, indexPrice, tradePrice, result.lpReceivedFundingFeeDelta);
         } else if (msg.opType == ORDER_OP_TYPE_ADL) {
-            receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
+            self.decreasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice, result.lpReceivedFundingFeeDelta);
         } else {
             if (msg.triggerAbove) {
                 require(tradePrice >= msg.triggerPrice, "not reach trigger price");
             } else {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
-            receive = self.decreasePerpPosition(msg.opType, msg.trxId, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice);
+            self.decreasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, indexPrice, tradePrice, result.lpReceivedFundingFeeDelta);
         } 
-
-        // leave minTonsForStorage
-        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
-        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
-
-        // dump(msgValue);
-        require(msgValue > 0, "send gas not enough");
-        // send update success msg
-        send(SendParameters{
-            to: self.orderBook,
-            value: msgValue,
-            bounce: false,
-            mode: SendPayGasSeparately,
-            body: UpdatePerpPositionSuccess {
-                orderId: msg.orderId,
-                receive: receive,
-                trxId: msg.trxId
-            }.toCell()
-        });
     }
 
-    fun increasePerpPosition(opType: Int, trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, indexPrice: Int, tradePrice: Int) {
+    fun increasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, 
+        indexPrice: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
         // dump("increasePerpPosition");
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
@@ -632,50 +615,30 @@ contract Pool with Deployable, Ownable {
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
+
+        // leave minTonsForStorage
+        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
+        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+
+        // dump(msgValue);
+        require(msgValue > 0, "send gas not enough");
+        // send update success msg
+        send(SendParameters{
+            to: self.orderBook,
+            value: msgValue,
+            bounce: false,
+            mode: SendPayGasSeparately,
+            body: UpdatePerpPositionSuccess {
+                orderId: orderId,
+                receive: 0,
+                trxId: trxId
+            }.toCell()
+        });
+
         // event
-        // emit(PerpPositionIncreasedEvent{
-        //     opType: opType,
-        //     positionId: perpPosition.positionId,
-        //     account: account,
-        //     tokenId: tokenId,
-        //     isLong: isLong,
-        //     marginDelta: marginDeltaAfter,
-        //     marginAfter: perpPosition.margin,
-        //     sizeDelta: sizeDelta,
-        //     sizeAfter: perpPosition.size,
-        //     tradePrice: tradePrice,
-        //     entryPrice: perpPosition.entryPrice,
-        //     tradingFee: tradingFee,
-        //     fundingFee: fundingFee,
-        //     entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalPositionChangedEvent{
-        //     tokenId: tokenId,
-        //     longMarginAfter: globalPosition.longMargin,
-        //     shortMarginAfter: globalPosition.shortMargin,
-        //     longSizeAfter: globalPosition.longSize,
-        //     shortSizeAfter: globalPosition.shortSize,
-        //     longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
-        //     shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalLPPositionChangedEvent{
-        //     tokenId: tokenId,
-        //     netSizeAfter: globalLPPosition.netSize,
-        //     isLong: globalLPPosition.isLong,
-        //     entryPriceAfter: globalLPPosition.entryPrice,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalLPLiquidityChangedEvent{
-        //     lpFundAfter: self.globalLPFund,
-        //     liquidityAfter: self.globalLPLiquidity,
-        //     tradingFee: lpTradingFee,
-        //     realizedPnl: lpRealizedPnl,
-        //     trxId: trxId
-        // }.toCell());
-        emit(TestPerpPositionIncreasedEvent{
+        emit(PerpPositionIncreasedEvent{
             trxId: trxId,
+            orderId: orderId,
             opType: opType,
             positionId: perpPosition.positionId,
             account: account,
@@ -690,6 +653,7 @@ contract Pool with Deployable, Ownable {
             tradingFee: tradingFee,
             fundingFee: fundingFee,
             entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
+
             globalLongMarginAfter: globalPosition.longMargin,
             globalShortMarginAfter: globalPosition.shortMargin,
             globalLongSizeAfter: globalPosition.longSize,
@@ -702,12 +666,14 @@ contract Pool with Deployable, Ownable {
             lpFundAfter: self.globalLPFund,
             lpLiquidityAfter: self.globalLPLiquidity,
             lpTradingFee: lpTradingFee,
-            lpRealizedPnl: lpRealizedPnl
+            lpRealizedPnl: lpRealizedPnl,
+            lpReceivedFundingFee: lpReceivedFundingFee
         }.toCell());
         // dump("increasePerpPosition done");
     }
 
-    fun decreasePerpPosition(opType: Int, trxId: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, indexPrice: Int, tradePrice: Int): Int {
+    fun decreasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, 
+        indexPrice: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -769,11 +735,6 @@ contract Pool with Deployable, Ownable {
             fundingFee = (globalPosition.shortFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
             entryFundingFeeGrowthAfter = globalPosition.shortFundingFeeGrowth;
         }
-        // dump("fundingFee");
-        // dump(globalPosition.longFundingFeeGrowth);
-        // dump(globalPosition.shortFundingFeeGrowth);
-        // dump(perpPosition.entryFundingFeeGrowth);
-        // dump(fundingFee);
 
         // get global position
         let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(tokenId);
@@ -895,51 +856,29 @@ contract Pool with Deployable, Ownable {
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
+        // leave minTonsForStorage
+        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
+        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+
+        // dump(msgValue);
+        require(msgValue > 0, "send gas not enough");
+        // send update success msg
+        send(SendParameters{
+            to: self.orderBook,
+            value: msgValue,
+            bounce: false,
+            mode: SendPayGasSeparately,
+            body: UpdatePerpPositionSuccess {
+                orderId: orderId,
+                receive: receive,
+                trxId: trxId
+            }.toCell()
+        });
+
         // event
-        // emit(PerpPositionDecreasedEvent{
-        //     opType: opType,
-        //     positionId: positionId,
-        //     account: account,
-        //     tokenId: tokenId,
-        //     isLong: isLong,
-        //     marginDelta: marginDeltaAfter,
-        //     marginAfter: perpPosition.margin,
-        //     sizeDelta: sizeDelta,
-        //     sizeAfter: perpPosition.size,
-        //     tradePrice: tradePrice,
-        //     realizedPnLDelta: realizedPnl,
-        //     tradingFee: tradingFee,
-        //     fundingFee: fundingFee,
-        //     entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
-        //     receive: receive,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalPositionChangedEvent{
-        //     tokenId: tokenId,
-        //     longMarginAfter: globalPosition.longMargin,
-        //     shortMarginAfter: globalPosition.shortMargin,
-        //     longSizeAfter: globalPosition.longSize,
-        //     shortSizeAfter: globalPosition.shortSize,
-        //     longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
-        //     shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalLPPositionChangedEvent{
-        //     tokenId: tokenId,
-        //     netSizeAfter: globalLPPosition.netSize,
-        //     isLong: globalLPPosition.isLong,
-        //     entryPriceAfter: globalLPPosition.entryPrice,
-        //     trxId: trxId
-        // }.toCell());
-        // emit(GlobalLPLiquidityChangedEvent{
-        //     lpFundAfter: self.globalLPFund,
-        //     liquidityAfter: self.globalLPLiquidity,
-        //     tradingFee: lpTradingFee,
-        //     realizedPnl: lpRealizedPnl,
-        //     trxId: trxId
-        // }.toCell());
-        emit(TestPerpPositionDecreasedEvent{
+        emit(PerpPositionDecreasedEvent{
             trxId: trxId,
+            orderId: orderId,
             opType: opType,
             positionId: positionId,
             account: account,
@@ -955,6 +894,7 @@ contract Pool with Deployable, Ownable {
             fundingFee: fundingFee,
             entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
             receive: receive,
+
             globalLongMarginAfter: globalPosition.longMargin,
             globalShortMarginAfter: globalPosition.shortMargin,
             globalLongSizeAfter: globalPosition.longSize,
@@ -967,12 +907,12 @@ contract Pool with Deployable, Ownable {
             lpFundAfter: self.globalLPFund,
             lpLiquidityAfter: self.globalLPLiquidity,
             lpTradingFee: lpTradingFee,
-            lpRealizedPnl: lpRealizedPnl
+            lpRealizedPnl: lpRealizedPnl,
+            lpReceivedFundingFee: lpReceivedFundingFee
         }.toCell());
-        return receive;
     }
 
-    fun liquidatePerpPosition(trxId: Int, account: Address, tokenId: Int, isLong: Bool, indexPrice: Int, tradePrice: Int): Int {
+    fun liquidatePerpPosition(trxId: Int, orderId: Int, account: Address, tokenId: Int, isLong: Bool, indexPrice: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
         // dump("liquidatePerpPosition");
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
@@ -1046,13 +986,8 @@ contract Pool with Deployable, Ownable {
         require(maintenanceMargin >= perpPosition.margin + unrealizedPnl, "margin rate too low");
 
         // liquidate price
-        // dump(perpPosition.size);
-        // dump(perpPosition.size * (tokenConfig.tradingFeeRate + (isLong ? - PERCENTAGE_BASIS_POINT : PERCENTAGE_BASIS_POINT)) / PERCENTAGE_BASIS_POINT);
         let liquidatePrice: Int = ((perpPosition.margin + fundingFee - tokenConfig.liquidationFee) * PRICE_DECIMAL_FACTOR + (isLong ? -perpPosition.entryPrice * perpPosition.size : perpPosition.entryPrice * perpPosition.size)) 
             / (perpPosition.size * (tokenConfig.tradingFeeRate + (isLong ? - PERCENTAGE_BASIS_POINT : PERCENTAGE_BASIS_POINT)) / PERCENTAGE_BASIS_POINT);
-        // dump("liquidatePrice");
-        // dump(liquidatePrice);
-        // dump(perpPosition.entryPrice);
         require(isLong ? liquidatePrice < perpPosition.entryPrice : liquidatePrice > perpPosition.entryPrice, "not reach liquidate price");
         tradePrice = liquidatePrice;
 
@@ -1135,6 +1070,8 @@ contract Pool with Deployable, Ownable {
 
         // event
         emit(PerpPositionDecreasedEvent{
+            trxId: trxId,
+            orderId: orderId,
             opType: ORDER_OP_TYPE_LIQUIDATION,
             positionId: positionId,
             account: account,
@@ -1150,33 +1087,22 @@ contract Pool with Deployable, Ownable {
             fundingFee: fundingFee,
             entryFundingFeeGrowthAfter: entryFundingFeeGrowthAfter,
             receive: receive,
-            trxId: trxId
-        }.toCell());
-        emit(GlobalPositionChangedEvent{
-            tokenId: tokenId,
-            longMarginAfter: globalPosition.longMargin,
-            shortMarginAfter: globalPosition.shortMargin,
-            longSizeAfter: globalPosition.longSize,
-            shortSizeAfter: globalPosition.shortSize,
-            longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
-            shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
-            trxId: trxId
-        }.toCell());
-        emit(GlobalLPPositionChangedEvent{
-            tokenId: tokenId,
-            netSizeAfter: globalLPPosition.netSize,
-            isLong: globalLPPosition.isLong,
-            entryPriceAfter: globalLPPosition.entryPrice,
-            trxId: trxId
-        }.toCell());
-        emit(GlobalLPLiquidityChangedEvent{
+
+            globalLongMarginAfter: globalPosition.longMargin,
+            globalShortMarginAfter: globalPosition.shortMargin,
+            globalLongSizeAfter: globalPosition.longSize,
+            globalShortSizeAfter: globalPosition.shortSize,
+            globalLongFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+            globalShortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
+            lpNetSizeAfter: globalLPPosition.netSize,
+            lpIsLong: globalLPPosition.isLong,
+            lpEntryPriceAfter: globalLPPosition.entryPrice,
             lpFundAfter: self.globalLPFund,
-            liquidityAfter: self.globalLPLiquidity,
-            tradingFee: lpTradingFee,
-            realizedPnl: lpRealizedPnl,
-            trxId: trxId
+            lpLiquidityAfter: self.globalLPLiquidity,
+            lpTradingFee: lpTradingFee,
+            lpRealizedPnl: lpRealizedPnl,
+            lpReceivedFundingFee: lpReceivedFundingFee
         }.toCell());
-        return receive;
     }
 
     get fun perpPosition(tokenId: Int, account: Address?): PerpPositionData {
@@ -1214,14 +1140,29 @@ contract Pool with Deployable, Ownable {
         }
         let i: Int = 0;
         let totalGlobalUnrealizedPnl: Int = self.globalLPUnrealizedPnl;
+
+        let resultDatas: map<Int, UpdateFundingRateEventData> = emptyMap();
         while(i < msg.pricesLength) {
             let updatePrice: UpdatePriceParam? = msg.prices.get(i);
             if (updatePrice != null) {
                 // update price
-                self.updatePriceAndFundingFee((updatePrice!!).tokenId, (updatePrice!!).price);
+                let tokenId: Int = (updatePrice!!).tokenId;
+                let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(tokenId, (updatePrice!!).price);
+                resultDatas.set(i, UpdateFundingRateEventData{
+                    tokenId: tokenId,
+                    lpReceivedFundingFeeDelta: result.lpReceivedFundingFeeDelta,
+                    longFundingFeeGrowthAfter: result.longFundingFeeGrowthAfter,
+                    shortFundingFeeGrowthAfter: result.shortFundingFeeGrowthAfter
+                });
             }
             i += 1;
         }
+
+        emit(UpdateFundingFeeEvent{
+            length: msg.pricesLength,
+            datas: resultDatas
+        }.toCell());
+
         let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
         let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
         send(SendParameters{
@@ -1232,41 +1173,8 @@ contract Pool with Deployable, Ownable {
         });
     }
 
-    // receive(msg: SetPremiumRateSampleRange) {
-    //     // check sender
-    //     let isExecutor: Bool = false;
-    //     let isExecutorOpt: Bool? = self.executors.get(sender());
-    //     if (isExecutorOpt != null) {
-    //         isExecutor = isExecutorOpt!!;
-    //     }
-    //     require(isExecutor, "invalid sender");
-
-    //     if (msg.sampleRangeLength <= 0) {
-    //         return;
-    //     }
-    //     let i: Int = 0;
-    //     while(i < msg.sampleRangeLength) {
-    //         let premiumRateSampleRangeParamOpt: PremiumRateSampleRangeParam? = msg.sampleRanges.get(i);
-
-    //         if (premiumRateSampleRangeParamOpt != null) {
-    //             let premiumRateSampleRangeParam: PremiumRateSampleRangeParam = premiumRateSampleRangeParamOpt!!;
-    //             self.premiumRateSampleRanges.set(premiumRateSampleRangeParam.sampleId, PremiumRateSampleRange{
-    //                 sampleLength: premiumRateSampleRangeParam.sampleLength,
-    //                 samples: premiumRateSampleRangeParam.samples
-    //             });
-    //         }
-
-    //         i += 1;
-    //     }
-    //     send(SendParameters{
-    //         to: sender(),
-    //         value: 0,
-    //         mode: SendRemainingValue
-    //     });
-    // }
-
     // ============================ private function ================================ //
-    fun updatePriceAndFundingFee(tokenId: Int, price: Int) {
+    fun updatePriceAndFundingFee(tokenId: Int, price: Int): UpdateFundingRateResult {
         // TODO check price offset
         let priceOpt: Int? = self.prices.get(tokenId);
         if (priceOpt != null) {
@@ -1311,9 +1219,6 @@ contract Pool with Deployable, Ownable {
         self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
 
         // update funding fee
-        let updateFundingRateResult: UpdateFundingRateResult = self.updateFundingRate(tokenId, price, 
-            globalPosition.longSize, globalPosition.shortSize, globalPosition.longFundingFeeGrowth, globalPosition.shortFundingFeeGrowth);
-
         // ===>
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "token config not exist");
@@ -1344,24 +1249,18 @@ contract Pool with Deployable, Ownable {
             // no need to update
             return UpdateFundingRateResult{
                 lpReceivedFundingFeeDelta: 0,
-                longFundingFeeGrowthAfter: globalLongFundingFeeGrowth,
-                shortFundingFeeGrowthAfter: globalShortFundingFeeGrowth
+                longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+                shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth
             };
         }
-
-        // get PR
-        let premiumRate: Int = self.prevPremiumRate;
 
         // cumulative sample count
         let sampleCountDelta: Int = timeDelta / SAMPLE_PREMIUM_RATE_INTERVAL;
         let sampleCountAfter: Int = sample.sampleCount + sampleCountDelta;
 
         // cumulative PR
-        let cumulativePremiumRate: Int = premiumRate * ((sample.sampleCount + 1 + sampleCountAfter) * sampleCountDelta / 2 );
+        let cumulativePremiumRate: Int = self.prevPremiumRate * ((sample.sampleCount + 1 + sampleCountAfter) * sampleCountDelta / 2 );
         cumulativePremiumRate = sample.cumulativePremiumRate + cumulativePremiumRate;
-
-        // dump(cumulativePremiumRate);
-        // dump(sampleCountAfter);
 
         // sample count < 720, no need update funding rate
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
@@ -1371,14 +1270,13 @@ contract Pool with Deployable, Ownable {
             self.globalFundingRateSamples.set(tokenId, sample);
             return UpdateFundingRateResult{
                 lpReceivedFundingFeeDelta: 0,
-                longFundingFeeGrowthAfter: globalLongFundingFeeGrowth,
-                shortFundingFeeGrowthAfter: globalShortFundingFeeGrowth
+                longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+                shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth
             };
         }
 
         // average PR
         let premiumRateAvg: Int = cumulativePremiumRate / PREMIUM_RATE_AVG_DENOMINATOR;
-        // dump(premiumRateAvg);
 
         // clamp (IR - avgPR) : -0.05%/8 <= (IR - avgPR) <= 0.05%/8
         let rateDelta: Int = tokenConfig.interestRate - premiumRateAvg;
@@ -1400,32 +1298,20 @@ contract Pool with Deployable, Ownable {
         self.globalFundingRateSamples.set(tokenId, sample);
 
         // =========== update funding rate =========== //
-        // clamp fundingRateDelta: -maxFundingRate <= fundingRateDelta <= maxFundingRate
-        // let clampedFundingRateDelta: Int = 0;
-        // if (fundingRateDelta > MAX_FUNDING_RATE) {
-        //     clampedFundingRateDelta = MAX_FUNDING_RATE;
-        // } else if (fundingRateDelta < -MAX_FUNDING_RATE) {
-        //     clampedFundingRateDelta = -MAX_FUNDING_RATE;
-        // } else {
-        //     clampedFundingRateDelta = fundingRateDelta;
-        // }
-
-        // dump(clampedFundingRateDelta);
-
         // get paidSize and receivedSize
         let paidSize: Int = 0;
         let receivedSize: Int = 0;
         if (fundingRateDelta >= 0) {
-            paidSize = globalLongSize;
-            receivedSize = globalShortSize;
+            paidSize = globalPosition.longSize;
+            receivedSize = globalPosition.shortSize;
         } else {
-            paidSize = globalShortSize;
-            receivedSize = globalLongSize;
+            paidSize = globalPosition.shortSize;
+            receivedSize = globalPosition.longSize;
         }
         
         // calculate funding rate growth
         // paidFundingFeeGrowthDelta = (paidSize * price * fundingRate) / paidSize = price * fundingRate
-        let paidFundingFeeGrowthDelta: Int = indexPrice * abs(fundingRateDelta) / PERCENTAGE_BASIS_POINT;
+        let paidFundingFeeGrowthDelta: Int = price * abs(fundingRateDelta) / PERCENTAGE_BASIS_POINT;
         // dump(paidFundingFeeGrowthDelta);
 
         let receivedFundingFeeGrowthDelta: Int = 0;
@@ -1449,43 +1335,22 @@ contract Pool with Deployable, Ownable {
                 }
             }
         }
-        // dump(lpReceivedFundingFee);
 
-        let longFundingFeeGrowthAfter: Int = globalLongFundingFeeGrowth;
-        let shortFundingFeeGrowthAfter: Int = globalShortFundingFeeGrowth;
-        
         // funding rate > 0, long pay for short and LP
         if (fundingRateDelta >= 0) {
-            longFundingFeeGrowthAfter = longFundingFeeGrowthAfter - paidFundingFeeGrowthDelta;
-            shortFundingFeeGrowthAfter = shortFundingFeeGrowthAfter + receivedFundingFeeGrowthDelta;
+            globalPosition.longFundingFeeGrowth -= paidFundingFeeGrowthDelta;
+            globalPosition.shortFundingFeeGrowth += receivedFundingFeeGrowthDelta;
         } else {
-            longFundingFeeGrowthAfter = longFundingFeeGrowthAfter + receivedFundingFeeGrowthDelta;
-            shortFundingFeeGrowthAfter = shortFundingFeeGrowthAfter - paidFundingFeeGrowthDelta;
+            globalPosition.longFundingFeeGrowth += receivedFundingFeeGrowthDelta;
+            globalPosition.shortFundingFeeGrowth -= paidFundingFeeGrowthDelta;
         }
-        // dump("FundingFeeGrowth");
-        // dump(longFundingFeeGrowthAfter);
-        // dump(shortFundingFeeGrowthAfter);
-        // dump(self.globalLPFundingFeeGrowth);
-        return UpdateFundingRateResult{
-            lpReceivedFundingFeeDelta: lpReceivedFundingFee / PRICE_DECIMAL_FACTOR,
-            longFundingFeeGrowthAfter: longFundingFeeGrowthAfter,
-            shortFundingFeeGrowthAfter: shortFundingFeeGrowthAfter
-        };
-
-        // ===
-
-        globalPosition.longFundingFeeGrowth = updateFundingRateResult.longFundingFeeGrowthAfter;
-        globalPosition.shortFundingFeeGrowth = updateFundingRateResult.shortFundingFeeGrowthAfter;
 
         self.globalPositions.set(tokenId, globalPosition);
-
-        emit(UpdatePriceEvent{
-            tokenId: tokenId,
-            price: price,
-            lpReceivedFundingFeeDelta: updateFundingRateResult.lpReceivedFundingFeeDelta,
-            longFundingFeeGrowthAfter: updateFundingRateResult.longFundingFeeGrowthAfter,
-            shortFundingFeeGrowthAfter: updateFundingRateResult.shortFundingFeeGrowthAfter
-        }.toCell());
+        return UpdateFundingRateResult{
+            lpReceivedFundingFeeDelta: lpReceivedFundingFee / PRICE_DECIMAL_FACTOR,
+            longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
+            shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth
+        };
     }
 
     // fun getPrice(tokenId: Int): Int {

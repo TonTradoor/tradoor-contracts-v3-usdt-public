@@ -75,11 +75,6 @@ message UpdatePrice {
     prices: map<Int, UpdatePriceParam>;
 }
 
-message SetPremiumRateSampleRange {
-    sampleRangeLength: Int as uint64;
-    sampleRanges: map<Int, PremiumRateSampleRangeParam>;
-}
-
 // for test
 message DeviationRate {
     deviationRate: Int;

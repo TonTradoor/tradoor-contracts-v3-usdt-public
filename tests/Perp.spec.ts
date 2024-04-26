@@ -8,9 +8,8 @@ import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
-import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, setPremiumRateSampleRange, updatePrice,  } from './lib/PerpHelper';
+import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, } from './lib/PerpHelper';
 import { ORDER_OP_TYPE_DECREASE_MARKET, ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
-import { readPRSample, toUnits } from '../utils/util';
 
 describe('LP', () => {
     let blockchain: Blockchain;
@@ -204,7 +203,7 @@ describe('LP', () => {
         });
 
         /// executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice, 0);
         printTransactionFees(executeResult.trxResult.transactions);
         prettyLogTransactions(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
@@ -325,7 +324,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, 0);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
@@ -356,7 +355,7 @@ describe('LP', () => {
         });
 
         /// executor order
-        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice);
+        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice, 0);
         printTransactionFees(executeDecreaseResult.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
         expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
@@ -399,7 +398,7 @@ describe('LP', () => {
         });
 
         /// executor order
-        const executeDecreaseResult1 = await executePerpOrder(executor, createDecreaseResult1.orderIdBefore, decreasePrice);
+        const executeDecreaseResult1 = await executePerpOrder(executor, createDecreaseResult1.orderIdBefore, decreasePrice, 0);
         printTransactionFees(executeDecreaseResult1.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult1.trxResult.transactions);
         expect(executeDecreaseResult1.trxResult.transactions).toHaveTransaction({
@@ -479,7 +478,7 @@ describe('LP', () => {
         });
 
         /// executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice, 0);
         printTransactionFees(executeResult.trxResult.transactions);
         prettyLogTransactions(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
@@ -563,7 +562,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, 0);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
@@ -606,7 +605,7 @@ describe('LP', () => {
         expect(slOrder?.triggerAbove).toBeFalsy();
 
         /// executor order
-        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice);
+        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice, 0);
         printTransactionFees(executeDecreaseResult.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
         expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
@@ -673,7 +672,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, 0);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
@@ -686,7 +685,7 @@ describe('LP', () => {
 
         /* =========================== liquidate perp ================================ */
         let liquidatePrice = 45000;
-        const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice);
+        const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice, 0);
         expect(liquidateResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
@@ -745,7 +744,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, 0);
         printTransactionFees(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
@@ -759,7 +758,7 @@ describe('LP', () => {
 
         /* =========================== liquidate perp ================================ */
         let liquidatePrice = 56000;
-        const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice);
+        const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice, 0);
         printTransactionFees(liquidateResult.trxResult.transactions);
         expect(liquidateResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
@@ -820,7 +819,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, 0);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
@@ -836,7 +835,7 @@ describe('LP', () => {
         let adlSize = 0.01;
         let adlPrice = 48000;
 
-        const adlResult = await adlPerpPosition(executor, tokenId, user1.address, isLong, adlMargin, adlSize, adlPrice);
+        const adlResult = await adlPerpPosition(executor, tokenId, user1.address, isLong, adlMargin, adlSize, adlPrice, 0);
         expect(adlResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
@@ -897,7 +896,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, 0);
         printTransactionFees(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
@@ -922,7 +921,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice);
+        const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice, 0);
         printTransactionFees(executeIncreaseShortResult.trxResult.transactions);
         expect(executeIncreaseShortResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
@@ -950,7 +949,7 @@ describe('LP', () => {
         console.log('decrease short order:', createDecreaseShortResult.order);
 
         // executor order
-        const executeDecreaseShortResult = await executePerpOrder(executor, createDecreaseShortResult.orderIdBefore, decreaseShortIncreasePrice);
+        const executeDecreaseShortResult = await executePerpOrder(executor, createDecreaseShortResult.orderIdBefore, decreaseShortIncreasePrice, 0);
         expect(executeDecreaseShortResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,

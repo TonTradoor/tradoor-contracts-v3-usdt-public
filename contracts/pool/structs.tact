@@ -84,31 +84,6 @@ struct UpdatePriceParam {
     price: Int;
 }
 
-// ============================ Premium Rate ================================ //
-struct PremiumRateSampleRange {
-    sampleLength: Int as uint64;
-    samples: map<Int, PremiumRateSample>;
-}
-
-struct PremiumRateSampleRangeParam {
-    sampleId: Int as uint64;
-    sampleLength: Int as uint64;
-    samples: map<Int, PremiumRateSample>;
-}
-
-struct PremiumRateSample {
-    sampleX: Int;
-    sampleY: Int;
-}
-
-struct PremiumRateSampleData {
-    rangeId: Int as uint64;
-    sampleId: Int as uint64;
-    sampleX: Int;
-    sampleY: Int;
-    premiumRate: Int;
-}
-
 // ============================ Funding Rate ================================ //
 struct GlobalPosition {
     longMargin: Int;
@@ -128,6 +103,13 @@ struct GlobalFundingRateSample {
 }
 
 struct UpdateFundingRateResult {
+    lpReceivedFundingFeeDelta: Int;
+    longFundingFeeGrowthAfter: Int;
+    shortFundingFeeGrowthAfter: Int;
+}
+
+struct UpdateFundingRateEventData {
+    tokenId: Int;
     lpReceivedFundingFeeDelta: Int;
     longFundingFeeGrowthAfter: Int;
     shortFundingFeeGrowthAfter: Int;
