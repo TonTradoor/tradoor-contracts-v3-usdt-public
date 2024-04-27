@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 12781 bytes
+BOC Size: 13091 bytes
 
 # Types
 Total Types: 36
@@ -38,12 +38,12 @@ TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
 ## UpdateConfig
-TLB: `update_config#4317981e executor:Maybe address enableExecutor:Maybe bool gasConsumption:Maybe coins minTonsForStorage:Maybe coins lpBonusFactor:Maybe int257 lpLiquidityFactor:Maybe int257 orderBook:Maybe address = UpdateConfig`
-Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,gasConsumption:Maybe coins,minTonsForStorage:Maybe coins,lpBonusFactor:Maybe int257,lpLiquidityFactor:Maybe int257,orderBook:Maybe address}`
+TLB: `update_config#65d11761 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> claimExecutor:Maybe address gasConsumption:Maybe coins minTonsForStorage:Maybe coins lpBonusFactor:Maybe int257 lpLiquidityFactor:Maybe int257 orderBook:Maybe address = UpdateConfig`
+Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,claimExecutor:Maybe address,gasConsumption:Maybe coins,minTonsForStorage:Maybe coins,lpBonusFactor:Maybe int257,lpLiquidityFactor:Maybe int257,orderBook:Maybe address}`
 
 ## UpdateTokenConfig
-TLB: `update_token_config#23dfb5e4 tokenId:uint64 name:Maybe ^string enable:Maybe bool minMargin:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 liquidityProportion:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 premuimRateCap:Maybe int257 = UpdateTokenConfig`
-Signature: `UpdateTokenConfig{tokenId:uint64,name:Maybe ^string,enable:Maybe bool,minMargin:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,liquidityProportion:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,interestRate:Maybe int257,premuimRateCap:Maybe int257}`
+TLB: `update_token_config#fedfb0ef tokenId:uint64 name:Maybe ^string enable:Maybe bool minValue:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 liquidityProportion:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 = UpdateTokenConfig`
+Signature: `UpdateTokenConfig{tokenId:uint64,name:Maybe ^string,enable:Maybe bool,minValue:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,liquidityProportion:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257}`
 
 ## ClaimProtocolFee
 TLB: `claim_protocol_fee#b58e3465 feeReceiver:address = ClaimProtocolFee`
@@ -69,10 +69,6 @@ Signature: `UpdatePerpPositionSuccess{orderId:uint64,receive:int257,trxId:uint64
 TLB: `update_price#1dc8958c trxId:uint64 pricesLength:uint64 prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}> = UpdatePrice`
 Signature: `UpdatePrice{trxId:uint64,pricesLength:uint64,prices:dict<int, ^UpdatePriceParam{tokenId:uint64,price:int257}>}`
 
-## DeviationRate
-TLB: `deviation_rate#2dd61a98 deviationRate:int257 = DeviationRate`
-Signature: `DeviationRate{deviationRate:int257}`
-
 ## LPPositionIncreasedEvent
 TLB: `lp_position_increased_event#339ed2e7 trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address liquidityDelta:int257 liquidityAfter:int257 bonusDelta:int257 bonusAfter:int257 unlockTimeAfter:int257 realizedFundingFeeDelta:int257 realizedFundingFeeAfter:int257 entryFundingFeeGrowthAfter:int257 lpFundAfter:int257 lpLiquidityAfter:int257 = LPPositionIncreasedEvent`
 Signature: `LPPositionIncreasedEvent{trxId:uint64,orderId:uint64,opType:uint8,positionId:uint64,account:address,liquidityDelta:int257,liquidityAfter:int257,bonusDelta:int257,bonusAfter:int257,unlockTimeAfter:int257,realizedFundingFeeDelta:int257,realizedFundingFeeAfter:int257,entryFundingFeeGrowthAfter:int257,lpFundAfter:int257,lpLiquidityAfter:int257}`
@@ -97,9 +93,13 @@ Signature: `UpdateFundingFeeEvent{length:int257,datas:dict<int, ^UpdateFundingRa
 TLB: `_ isExecutor:Maybe bool gasConsumption:coins minTonsForStorage:coins lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
 Signature: `ConfigData{isExecutor:Maybe bool,gasConsumption:coins,minTonsForStorage:coins,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
 
+## ExecutorParam
+TLB: `_ executor:address enable:bool = ExecutorParam`
+Signature: `ExecutorParam{executor:address,enable:bool}`
+
 ## TokenConfig
-TLB: `_ name:^string enable:bool minMargin:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 premuimRateCap:int257 = TokenConfig`
-Signature: `TokenConfig{name:^string,enable:bool,minMargin:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,premuimRateCap:int257}`
+TLB: `_ name:^string enable:bool minValue:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
+Signature: `TokenConfig{name:^string,enable:bool,minValue:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
 
 ## LPPosition
 TLB: `_ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition`
@@ -203,6 +203,7 @@ Argument: account
 23314: insufficient liquidity for single value
 27798: invalid token
 28603: margin rate too high
+31332: less than min value
 31425: not reach unlock time
 36718: disabled token
 39251: insufficient global LP
@@ -211,4 +212,5 @@ Argument: account
 55429: not reach liquidate price
 55754: insufficient liquidity for net value
 59588: token config not exist
+62172: not executor
 62409: insufficient margin

@@ -2,6 +2,8 @@ import "./structs";
 
 // ============================ admin ================================ //
 message UpdateConfig {
+    executorLength: Int;
+    executors: map<Int, ExecutorParam>;
     claimExecutor: Address?;
     gasConsumption: Int? as coins;
     minTonsForStorage: Int? as coins;
@@ -14,14 +16,14 @@ message UpdateTokenConfig {
     tokenId: Int as uint64;
     name: String?;
     enable: Bool?;
-    minMargin: Int?;
+    minValue: Int?;
     maxLeverage: Int?;
     liquidationFee: Int?;
     liquidityProportion: Int?;
     tradingFeeRate: Int?;
     lpTradingFeeRate: Int?;
     interestRate: Int?;
-    premuimRateCap: Int?;
+    maxFundingRate: Int?;
 }
 
 message ClaimProtocolFee {

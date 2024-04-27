@@ -121,14 +121,14 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 
 ;;
 ;; Type: UpdateConfig
-;; Header: 0x02f28069
-;; TLB: update_config#02f28069 executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig
+;; Header: 0xfea2f1a3
+;; TLB: update_config#fea2f1a3 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig
 ;;
 
-(slice, ((slice, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 49447017);
-    var v'executor = sc_0~__tact_load_address_opt();
-    var v'enableExecutor = sc_0~load_int(1) ? sc_0~load_int(1) : null();
+(slice, ((int, cell, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 4272091555);
+    var v'executorLength = sc_0~load_int(257);
+    var v'executors = sc_0~load_dict();
     var v'maxTimeDelayExecutor = sc_0~load_int(257);
     var v'minTimeDelayTrader = sc_0~load_int(257);
     var v'minExecutionFee = sc_0~load_coins();
@@ -138,7 +138,7 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
     var v'minTonsForStorage = sc_1~load_coins();
     var v'usdtWallet = sc_1~__tact_load_address();
     var v'pool = sc_1~__tact_load_address();
-    return (sc_0, (v'executor, v'enableExecutor, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'lpGasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool));
+    return (sc_0, (v'executorLength, v'executors, v'maxTimeDelayExecutor, v'minTimeDelayTrader, v'minExecutionFee, v'gasConsumption, v'lpGasConsumption, v'minTonsForStorage, v'usdtWallet, v'pool));
 }
 
 ;;
@@ -684,6 +684,46 @@ cell $CompensateExecutedEvent$_store_cell((int, int) v) inline {
 
 ((int, int, int, int, int, int, int, slice, slice)) $ConfigData$_constructor_isExecutor_maxTimeDelayExecutor_minTimeDelayTrader_minExecutionFee_gasConsumption_lpGasConsumption_minTonsForStorage_usdtWallet_pool(int isExecutor, int maxTimeDelayExecutor, int minTimeDelayTrader, int minExecutionFee, int gasConsumption, int lpGasConsumption, int minTonsForStorage, slice usdtWallet, slice pool) inline {
     return (isExecutor, maxTimeDelayExecutor, minTimeDelayTrader, minExecutionFee, gasConsumption, lpGasConsumption, minTonsForStorage, usdtWallet, pool);
+}
+
+;;
+;; Type: ExecutorParam
+;; TLB: _ executor:address enable:bool = ExecutorParam
+;;
+
+(slice, ((slice, int))) $ExecutorParam$_load(slice sc_0) inline {
+    var v'executor = sc_0~__tact_load_address();
+    var v'enable = sc_0~load_int(1);
+    return (sc_0, (v'executor, v'enable));
+}
+
+tuple $ExecutorParam$_as_optional((slice, int) v) inline {
+    var (v'executor, v'enable) = v;
+    return __tact_tuple_create_2(v'executor, v'enable);
+}
+
+tuple $ExecutorParam$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $ExecutorParam$_as_optional(sc~$ExecutorParam$_load());
+}
+
+_ $ExecutorParam$_get_executor((slice, int) v) inline {
+    var (v'executor, v'enable) = v;
+    return v'executor;
+}
+
+_ $ExecutorParam$_get_enable((slice, int) v) inline {
+    var (v'executor, v'enable) = v;
+    return v'enable;
+}
+
+((slice, int)) $ExecutorParam$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'executor, int vvv'enable) = __tact_tuple_destroy_2(v);
+    return (vvv'executor, vvv'enable);
 }
 
 ;;

@@ -11,13 +11,8 @@ struct ConfigData {
     pool: Address;
 }
 
-struct WhitelistData {
-    enableWhitelist: Bool;
-    isInWhitelist: Bool;
-}
-
-struct UpdateWhitelistParam {
-    account: Address;
+struct ExecutorParam {
+    executor: Address;
     enable: Bool;
 }
 

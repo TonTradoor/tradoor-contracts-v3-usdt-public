@@ -214,12 +214,17 @@
 ;; Receivers of a Contract OrderBook
 ;;
 
-(((int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int)), ()) $OrderBook$_internal_binary_UpdateConfig((int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, (slice, int, int, int, int, int, int, int, slice, slice) $msg) impure inline {
+(((int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int)), ()) $OrderBook$_internal_binary_UpdateConfig((int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, (int, cell, int, int, int, int, int, int, slice, slice) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext) = $self;
-    var ($msg'executor, $msg'enableExecutor, $msg'maxTimeDelayExecutor, $msg'minTimeDelayTrader, $msg'minExecutionFee, $msg'gasConsumption, $msg'lpGasConsumption, $msg'minTonsForStorage, $msg'usdtWallet, $msg'pool) = $msg;
+    var ($msg'executorLength, $msg'executors, $msg'maxTimeDelayExecutor, $msg'minTimeDelayTrader, $msg'minExecutionFee, $msg'gasConsumption, $msg'lpGasConsumption, $msg'minTonsForStorage, $msg'usdtWallet, $msg'pool) = $msg;
     ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_requireOwner();
-    if (( ((~ null?($msg'executor))) ? ((~ null?($msg'enableExecutor))) : (false) )) {
-        $self'executors~__tact_dict_set_slice_int(267, __tact_not_null($msg'executor), __tact_not_null($msg'enableExecutor), 1);
+    int $i = 0;
+    while (($i < $msg'executorLength)) {
+        tuple $executor = $ExecutorParam$_load_opt(__tact_dict_get_int_cell($msg'executors, 257, $i));
+        if ((~ null?($executor))) {
+            $self'executors~__tact_dict_set_slice_int(267, $ExecutorParam$_get_executor($ExecutorParam$_not_null($executor)), $ExecutorParam$_get_enable($ExecutorParam$_not_null($executor)), 1);
+        }
+        $i = $i + 1;
     }
     $self'maxTimeDelayExecutor = $msg'maxTimeDelayExecutor;
     $self'minTimeDelayTrader = $msg'minTimeDelayTrader;
@@ -747,7 +752,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmWHjYpp1oxj6SXqieCXQ5c4Y42cGQDo9pxpC2awNH5ysD";
+    return "ipfs://QmXDvNdzD1ecRgzJ4pMcHHa9a389hfxjwyLBRieq7ph1ak";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -796,7 +801,7 @@ _ lazy_deployment_completed() method_id {
     
     
     ;; Receive UpdateConfig message
-    if (op == 49447017) {
+    if (op == 4272091555) {
         var msg = in_msg~$UpdateConfig$_load();
         self~$OrderBook$_internal_binary_UpdateConfig(msg);
         return (self, true);

@@ -24,8 +24,8 @@ message(0xd53276db) TokenExcesses {
 
 // ============================ admin ================================ //
 message UpdateConfig {
-    executor: Address?;
-    enableExecutor: Bool?;
+    executorLength: Int;
+    executors: map<Int, ExecutorParam>;
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
     minExecutionFee: Int as coins;

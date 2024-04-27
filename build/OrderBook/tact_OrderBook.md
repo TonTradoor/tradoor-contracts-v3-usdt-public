@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 13593 bytes
+BOC Size: 13616 bytes
 
 # Types
-Total Types: 46
+Total Types: 45
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -50,12 +50,12 @@ TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
 Signature: `TokenExcesses{queryId:uint64}`
 
 ## UpdateConfig
-TLB: `update_config#02f28069 executor:Maybe address enableExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig`
-Signature: `UpdateConfig{executor:Maybe address,enableExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
+TLB: `update_config#fea2f1a3 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig`
+Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
-## UpdateWhitelist
-TLB: `update_whitelist#4f5c3f48 enableWhitelist:Maybe bool whitelistLength:uint64 whitelist:dict<int, ^UpdateWhitelistParam{account:address,enable:bool}> = UpdateWhitelist`
-Signature: `UpdateWhitelist{enableWhitelist:Maybe bool,whitelistLength:uint64,whitelist:dict<int, ^UpdateWhitelistParam{account:address,enable:bool}>}`
+## ClaimProtocolFee
+TLB: `claim_protocol_fee#f38ffb31  = ClaimProtocolFee`
+Signature: `ClaimProtocolFee{}`
 
 ## CreateDecreaseLPPositionOrder
 TLB: `create_decrease_lp_position_order#25b21724 executionFee:coins liquidityDelta:uint128 trxId:uint64 = CreateDecreaseLPPositionOrder`
@@ -161,13 +161,9 @@ Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = ConfigData`
 Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
-## WhitelistData
-TLB: `_ enableWhitelist:bool isInWhitelist:bool = WhitelistData`
-Signature: `WhitelistData{enableWhitelist:bool,isInWhitelist:bool}`
-
-## UpdateWhitelistParam
-TLB: `_ account:address enable:bool = UpdateWhitelistParam`
-Signature: `UpdateWhitelistParam{account:address,enable:bool}`
+## ExecutorParam
+TLB: `_ executor:address enable:bool = ExecutorParam`
+Signature: `ExecutorParam{executor:address,enable:bool}`
 
 ## LPPositionOrder
 TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = LPPositionOrder`

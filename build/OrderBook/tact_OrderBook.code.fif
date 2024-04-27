@@ -66,6 +66,9 @@ PROGRAM{
   DECLPROC $CompensateCancelledEvent$_store_cell
   DECLPROC $CompensateExecutedEvent$_store
   DECLPROC $CompensateExecutedEvent$_store_cell
+  DECLPROC $ExecutorParam$_load
+  DECLPROC $ExecutorParam$_as_optional
+  DECLPROC $ExecutorParam$_load_opt
   DECLPROC $LPPositionOrder$_store
   DECLPROC $LPPositionOrder$_store_cell
   DECLPROC $LPPositionOrder$_not_null
@@ -97,6 +100,9 @@ PROGRAM{
   DECLPROC $StateInit$_not_null
   DECLPROC $Context$_get_value
   DECLPROC $ConfigData$_to_external
+  DECLPROC $ExecutorParam$_get_executor
+  DECLPROC $ExecutorParam$_get_enable
+  DECLPROC $ExecutorParam$_not_null
   DECLPROC $LPPositionOrder$_get_isPending
   DECLPROC $LPPositionOrder$_to_tuple
   DECLPROC $LPPositionOrder$_to_opt_tuple
@@ -593,19 +599,12 @@ PROGRAM{
   $UpdateConfig$_load PROCREF:<{
     32 LDU
     SWAP
-    49447017 PUSHINT
+    4272091555 PUSHINT
     EQUAL
     129 THROWIFNOT
-    __tact_load_address_opt INLINECALLDICT
-    SWAP
-    1 LDI
-    SWAP
-    IF:<{
-      1 LDI
-    }>ELSE<{
-      PUSHNULL
-      SWAP
-    }>
+    257 PUSHINT
+    LDIX
+    LDDICT
     257 PUSHINT
     LDIX
     257 PUSHINT
@@ -1139,6 +1138,28 @@ PROGRAM{
     $CompensateExecutedEvent$_store INLINECALLDICT
     ENDC
   }>
+  $ExecutorParam$_load PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+    SWAP
+    1 LDI
+    -ROT
+  }>
+  $ExecutorParam$_as_optional PROCINLINE:<{
+    2 TUPLE
+  }>
+  $ExecutorParam$_load_opt PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+      CTOS
+      $ExecutorParam$_load INLINECALLDICT
+      1 2 BLKDROP2
+      $ExecutorParam$_as_optional INLINECALLDICT
+    }>
+  }>
   $LPPositionOrder$_store PROCREF:<{
     s7 s8 XCHG2
     1 STI
@@ -1613,6 +1634,18 @@ PROGRAM{
     3 BLKDROP
   }>
   $ConfigData$_to_external PROCINLINE:<{
+  }>
+  $ExecutorParam$_get_executor PROCINLINE:<{
+    DROP
+  }>
+  $ExecutorParam$_get_enable PROCINLINE:<{
+    NIP
+  }>
+  $ExecutorParam$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+    2 UNTUPLE
   }>
   $LPPositionOrder$_get_isPending PROCINLINE:<{
     s2 s7 XCHG
@@ -2536,31 +2569,40 @@ PROGRAM{
     s10 POP
     s10 POP
     s10 POP
-    s11 PUSH
-    ISNULL
-    NOT
-    IF:<{
-      s10 PUSH
+    0 PUSHINT
+    WHILE:<{
+      s0 s12 PUSH2
+      LESS
+    }>DO<{
+      s11 PUSH
+      257 PUSHINT
+      s2 PUSH
+      __tact_dict_get_int_cell INLINECALLDICT
+      $ExecutorParam$_load_opt INLINECALLDICT
+      DUP
       ISNULL
       NOT
-    }>ELSE<{
-      FALSE
+      IF:<{
+        267 PUSHINT
+        OVER
+        $ExecutorParam$_not_null INLINECALLDICT
+        $ExecutorParam$_get_executor INLINECALLDICT
+        s0 s2 XCHG
+        $ExecutorParam$_not_null INLINECALLDICT
+        $ExecutorParam$_get_enable INLINECALLDICT
+        s3 s13 XCHG
+        s1 s2 XCHG
+        1 PUSHINT
+        __tact_dict_set_slice_int INLINECALLDICT
+        s0 s10 XCHG
+      }>ELSE<{
+        DROP
+      }>
+      INC
     }>
-    IF:<{
-      267 PUSHINT
-      s0 s12 XCHG
-      __tact_not_null INLINECALLDICT
-      s0 s11 XCHG
-      __tact_not_null INLINECALLDICT
-      s3 s10 XCHG
-      s12 s11 s0 XCHG3
-      1 PUSHINT
-      __tact_dict_set_slice_int INLINECALLDICT
-      s0 s7 XCHG
-    }>ELSE<{
-      s10 POP
-      s10 POP
-    }>
+    DROP
+    s10 POP
+    s10 POP
     __tact_context_get_sender INLINECALLDICT
     FALSE
     0 PUSHINT
@@ -5134,7 +5176,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d57486a597070316f786a365358716965435851356334593432634751446f39707870433261774e4835797344} PUSHSLICE
+    x{697066733a2f2f516d5844764e647a4431656352677a4a34704d6348486139613338396866786a77794c425269657137706831616b} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -5189,7 +5231,7 @@ PROGRAM{
       32 PLDU
     }>
     DUP
-    49447017 PUSHINT
+    4272091555 PUSHINT
     EQUAL
     IFJMP:<{
       DROP

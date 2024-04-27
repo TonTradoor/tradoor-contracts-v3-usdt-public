@@ -88,7 +88,7 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 (slice, ((int, int, slice, slice))) $TokenNotification$_load(slice sc_0) inline;
 
 ;; $UpdateConfig$_load
-(slice, ((slice, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref;
+(slice, ((int, cell, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref;
 
 ;; $CreateDecreaseLPPositionOrder$_load
 (slice, ((int, int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline;
@@ -204,6 +204,15 @@ builder $CompensateExecutedEvent$_store(builder build_0, (int, int) v) inline;
 ;; $CompensateExecutedEvent$_store_cell
 cell $CompensateExecutedEvent$_store_cell((int, int) v) inline;
 
+;; $ExecutorParam$_load
+(slice, ((slice, int))) $ExecutorParam$_load(slice sc_0) inline;
+
+;; $ExecutorParam$_as_optional
+tuple $ExecutorParam$_as_optional((slice, int) v) inline;
+
+;; $ExecutorParam$_load_opt
+tuple $ExecutorParam$_load_opt(cell cl) inline;
+
 ;; $LPPositionOrder$_store
 builder $LPPositionOrder$_store(builder build_0, (int, slice, int, int, int, int, slice, slice) v) inline_ref;
 
@@ -296,6 +305,15 @@ _ $Context$_get_value((int, slice, int, slice) v) inline;
 
 ;; $ConfigData$_to_external
 (int, int, int, int, int, int, int, slice, slice) $ConfigData$_to_external(((int, int, int, int, int, int, int, slice, slice)) v) inline;
+
+;; $ExecutorParam$_get_executor
+_ $ExecutorParam$_get_executor((slice, int) v) inline;
+
+;; $ExecutorParam$_get_enable
+_ $ExecutorParam$_get_enable((slice, int) v) inline;
+
+;; $ExecutorParam$_not_null
+((slice, int)) $ExecutorParam$_not_null(tuple v) inline;
 
 ;; $LPPositionOrder$_get_isPending
 _ $LPPositionOrder$_get_isPending((int, slice, int, int, int, int, slice, slice) v) inline;

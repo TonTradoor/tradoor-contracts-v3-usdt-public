@@ -53,8 +53,13 @@ contract OrderBook with Deployable, Resumable {
     receive(msg: UpdateConfig) {
         self.requireOwner();
         // auth
-        if (msg.executor != null && msg.enableExecutor != null) {
-            self.executors.set(msg.executor!!, msg.enableExecutor!!);
+        let i: Int = 0;
+        while (i < msg.executorLength) {
+            let executor: ExecutorParam? = msg.executors.get(i);
+            if (executor != null) {
+                self.executors.set((executor!!).executor, (executor!!).enable);
+            }
+            i += 1;
         }
 
         // config

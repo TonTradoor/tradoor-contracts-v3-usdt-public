@@ -8,20 +8,25 @@ struct ConfigData {
     orderBook: Address;
 }
 
+struct ExecutorParam {
+    executor: Address;
+    enable: Bool;
+}
+
 struct TokenConfig {
     name: String;
     enable: Bool;
-    // ==================== Trader Position Configuration ==================
-    minMargin: Int;
+    // ==================== Trader Position Config ==================
+    minValue: Int;
     maxLeverage: Int;
     liquidationFee: Int;
     liquidityProportion: Int;
-    // ==================== Trading Fee Configuration ==================
+    // ==================== Trading Fee Config ==================
     tradingFeeRate: Int;
     lpTradingFeeRate: Int;
-    // ==================== Other Configuration ==========================
+    // ==================== Funding Fee Config ==========================
     interestRate: Int;
-    premuimRateCap: Int;
+    maxFundingRate: Int;
 }
 
 // ============================ LP ================================ //

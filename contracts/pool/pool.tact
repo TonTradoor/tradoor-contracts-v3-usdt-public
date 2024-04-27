@@ -21,6 +21,7 @@ contract Pool with Deployable, Ownable {
     orderBook: Address;
     protocolTradingFee: Int = 0;
     claimExecutor: Address;
+    executors: map<Address, Bool>; // account => enabled
 
     // LP
     lpPositions: map<Address, LPPosition>; // trader => LP
@@ -52,14 +53,24 @@ contract Pool with Deployable, Ownable {
         self.owner = sender();
         self.orderBook = newAddress(0, 0);
         self.claimExecutor = newAddress(0, 0);
+        self.executors.set(sender(), true);
     }
 
     // ======================================================== Admin ================================================================ //
     receive(msg: UpdateConfig) {
         self.requireOwner();
 
+        let i: Int = 0;
+        while (i < msg.executorLength) {
+            let executor: ExecutorParam? = msg.executors.get(i);
+            if (executor != null) {
+                self.executors.set((executor!!).executor, (executor!!).enable);
+            }
+            i += 1;
+        }
+
         if (msg.claimExecutor != null) {
-            self.claimExecutor = msg.claimExecutor;
+            self.claimExecutor = msg.claimExecutor!!;
         }
         if (msg.gasConsumption != null) {
             self.gasConsumption = msg.gasConsumption!!;
@@ -91,14 +102,14 @@ contract Pool with Deployable, Ownable {
         let tokenConfig: TokenConfig = tokenConfigOpt != null ? tokenConfigOpt!! : TokenConfig{
             name: "",
             enable: false,
-            minMargin: 10 * pow(10, 6), // 10U
-            maxLeverage: 100,
-            liquidationFee: 2 * pow(10, 5), // 0.2U
+            minValue: 100 * pow(10, 6), // 100U
+            maxLeverage: 105,
+            liquidationFee: 5 * pow(10, 5), // 0.5U
             tradingFeeRate: 1_000_000, // 0.1%
             lpTradingFeeRate: 600_000_000, // 60%
             liquidityProportion: 100_000_000, // 10%
             interestRate: 0,
-            premuimRateCap: 100_000_000 // 10%
+            maxFundingRate: 62_500 // 0.00625%
         };
 
         if (msg.name != null) {
@@ -107,8 +118,8 @@ contract Pool with Deployable, Ownable {
         if (msg.enable != null) {
             tokenConfig.enable = msg.enable!!;
         }
-        if (msg.minMargin != null) {
-            tokenConfig.minMargin = msg.minMargin!!;
+        if (msg.minValue != null) {
+            tokenConfig.minValue = msg.minValue!!;
         }
         if (msg.maxLeverage != null) {
             tokenConfig.maxLeverage = msg.maxLeverage!!;
@@ -119,17 +130,17 @@ contract Pool with Deployable, Ownable {
         if (msg.liquidityProportion != null) {
             tokenConfig.liquidityProportion = msg.liquidityProportion!!;
         }
-        if (msg.interestRate != null) {
-            tokenConfig.interestRate = msg.interestRate!!;
-        }
         if (msg.tradingFeeRate != null) {
             tokenConfig.tradingFeeRate = msg.tradingFeeRate!!;
         }
         if (msg.lpTradingFeeRate != null) {
             tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate!!;
         }
-        if (msg.premuimRateCap != null) {
-            tokenConfig.premuimRateCap = msg.premuimRateCap!!;
+        if (msg.interestRate != null) {
+            tokenConfig.interestRate = msg.interestRate!!;
+        }
+        if (msg.maxFundingRate != null) {
+            tokenConfig.maxFundingRate = msg.maxFundingRate!!;
         }
 
         self.tokenConfigs.set(msg.tokenId, tokenConfig);
@@ -449,6 +460,9 @@ contract Pool with Deployable, Ownable {
         require(tokenConfigOpt != null, "invalid token");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
         require(tokenConfig.enable, "disabled token");
+
+        // check value
+        require(sizeDelta * tradePrice / PRICE_DECIMAL_FACTOR >= tokenConfig.minValue, "less than min value");
         
         // get position
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
@@ -478,7 +492,6 @@ contract Pool with Deployable, Ownable {
         
         // check margin
         if (perpPosition.size == 0) {
-            require(marginDelta >= tokenConfig.minMargin, "insufficient margin");
             perpPosition.positionId = self.perpPositionIndexNext;
             self.perpPositionIndexNext += 1;
         }
@@ -1298,6 +1311,16 @@ contract Pool with Deployable, Ownable {
             clampedRateDelta = rateDelta;
         }
         let fundingRateDelta: Int = premiumRateAvg + clampedRateDelta;
+
+        // clamp fundingRate: -maxFundingRate <= fundingRate <= maxFundingRate
+        let clampedFundingRateDelta: Int = 0;
+        if (fundingRateDelta > tokenConfig.maxFundingRate) {
+            clampedFundingRateDelta = tokenConfig.maxFundingRate;
+        } else if (fundingRateDelta < -tokenConfig.maxFundingRate) {
+            clampedFundingRateDelta = -tokenConfig.maxFundingRate;
+        } else {
+            clampedFundingRateDelta = fundingRateDelta;
+        }
 
         sample.lastAdjustFundingRateTime = maxSamplingTime;
         sample.cumulativePremiumRate = 0;

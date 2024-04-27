@@ -44,7 +44,7 @@ export class TestEnv {
         const orderBookDeployResult = await TestEnv.orderBook.send(
             TestEnv.deployer.getSender(),
             {
-                value: toNano('0.5'),
+                value: toNano('0.1'),
             },
             {
                 $$type: 'Deploy',
@@ -63,7 +63,7 @@ export class TestEnv {
         const poolDeployResult = await TestEnv.pool.send(
             TestEnv.deployer.getSender(),
             {
-                value: toNano('0.5'),
+                value: toNano('0.1'),
             },
             {
                 $$type: 'Deploy',
@@ -181,7 +181,7 @@ export class TestEnv {
                 tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
                 lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
                 interestRate: 0n,
-                premuimRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
+                premiumRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
             }
         );
 
@@ -209,7 +209,7 @@ export class TestEnv {
                 tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
                 lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
                 interestRate: 1250n,
-                premuimRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
+                premiumRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
             }
         );
 
