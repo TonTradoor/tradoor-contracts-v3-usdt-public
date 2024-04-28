@@ -27,7 +27,14 @@ message UpdateTokenConfig {
 }
 
 message ClaimProtocolFee {
+    trxId: Int as uint64;
     feeReceiver: Address;
+}
+
+message SendProtocolFee {
+    trxId: Int as uint64;
+    feeReceiver: Address;
+    amount: Int;
 }
 
 // ============================ LP ================================ //

@@ -75,6 +75,7 @@ export const waitForTransaction = async (provider:NetworkProvider, address:Addre
 
 export function toUnits(src: number | string | bigint, decimal: number) {
     let factor = BigInt(Math.pow(10, decimal));
+
     if (typeof src === 'bigint') {
         return src * factor;
     }
@@ -83,7 +84,7 @@ export function toUnits(src: number | string | bigint, decimal: number) {
             if (!Number.isFinite(src)) {
                 throw Error('Invalid number');
             }
-            if (Math.log10(src) <= 6) {
+            if (Math.log10(Math.abs(src)) <= 6) {
                 src = src.toLocaleString('en', { minimumFractionDigits: decimal, useGrouping: false });
             }
             else if (src - Math.trunc(src) === 0) {

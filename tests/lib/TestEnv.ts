@@ -1,8 +1,8 @@
 import { Blockchain, SandboxContract, TreasuryContract } from '@ton/sandbox';
-import { OrderBook } from '../../wrappers/OrderBook';
+import { ExecutorParamValue, OrderBook } from '../../wrappers/OrderBook';
 import { Pool } from '../../wrappers/Pool';
 import { MockJetton } from '../../wrappers/MockJetton';
-import { toNano } from '@ton/core';
+import { Dictionary, DictionaryKey, toNano } from '@ton/core';
 import { buildOnchainMetadata } from '../../contracts/mock/utils/jetton-helpers';
 import { JettonDefaultWallet } from '../../wrappers/JettonDefaultWallet';
 import { toJettonUnits } from './TokenHelper';
@@ -13,7 +13,9 @@ export class TestEnv {
     static blockchain: Blockchain;
     static deployer: SandboxContract<TreasuryContract>;
     static executor: SandboxContract<TreasuryContract>;
+    static executor1: SandboxContract<TreasuryContract>;
     static compensator: SandboxContract<TreasuryContract>;
+    static claimExecutor: SandboxContract<TreasuryContract>;
     static user0: SandboxContract<TreasuryContract>;
     static user1: SandboxContract<TreasuryContract>;
     static orderBook: SandboxContract<OrderBook>;
@@ -35,7 +37,9 @@ export class TestEnv {
 
         TestEnv.deployer = await TestEnv.blockchain.treasury('deployer');
         TestEnv.executor = await TestEnv.blockchain.treasury('executor');
+        TestEnv.executor1 = await TestEnv.blockchain.treasury('executor1');
         TestEnv.compensator = await TestEnv.blockchain.treasury('compensator');
+        TestEnv.claimExecutor = await TestEnv.blockchain.treasury('claimExecutor');
 
         TestEnv.user0 = await TestEnv.blockchain.treasury('user0');
         TestEnv.user1 = await TestEnv.blockchain.treasury('user1');
@@ -111,6 +115,18 @@ export class TestEnv {
 
         TestEnv.user0JettonWallet = TestEnv.blockchain.openContract(await JettonDefaultWallet.fromInit(TestEnv.user0.address, TestEnv.jetton.address));
         TestEnv.orderBookJettonWallet = TestEnv.blockchain.openContract(await JettonDefaultWallet.fromInit(TestEnv.orderBook.address, TestEnv.jetton.address));
+        
+        let executors =  Dictionary.empty(Dictionary.Keys.BigInt(32), ExecutorParamValue)
+            .set(0n, {
+                $$type: 'ExecutorParam',
+                executor: this.executor.address,
+                enable: true
+            })
+            .set(1n, {
+                $$type: 'ExecutorParam',
+                executor: this.executor1.address,
+                enable: true
+            });
 
         // set config to orderBook
         const setOderBookConfigResult = await TestEnv.orderBook.send(
@@ -120,8 +136,8 @@ export class TestEnv {
             },
             {
                 $$type: 'UpdateConfig',
-                executor: TestEnv.executor.address,
-                enableExecutor: true,
+                executorLength: BigInt(executors.size),
+                executors: executors,
                 maxTimeDelayExecutor: 30n * 60n,
                 minTimeDelayTrader: 3n * 60n,
                 minExecutionFee: toNano(0.1),
@@ -147,8 +163,9 @@ export class TestEnv {
             },
             {
                 $$type: 'UpdateConfig',
-                executor: TestEnv.executor.address,
-                enableExecutor: true,
+                executorLength: 2n,
+                executors: executors,
+                claimExecutor: this.claimExecutor.address,
                 gasConsumption: toNano(0.09),
                 minTonsForStorage: toNano(0.01),
                 lpBonusFactor: 10n * 10n**9n,
@@ -163,74 +180,39 @@ export class TestEnv {
             success: true,
         });
 
-        // set BTC config to pool
-        const setBTCPoolTokenConfigResult = await TestEnv.pool.send(
-            TestEnv.deployer.getSender(),
-            {
-                value: toNano('0.1'),
-            },
-            {
-                $$type: 'UpdateTokenConfig',
-                tokenId: 1n,
-                name: "BTC",
-                enable: true,
-                minMargin: toJettonUnits(10), // 10U
-                maxLeverage: 105n,
-                liquidationFee: toJettonUnits(0.2), // 0.2U
-                liquidityProportion: BigInt(0.5 * PERCENTAGE_BASIS_POINT), // 100%
-                tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
-                lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
-                interestRate: 0n,
-                premiumRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
-            }
-        );
+        // set token config to pool
+        const tokens = ['BTC', 'ETH'];
 
-        expect(setBTCPoolTokenConfigResult.transactions).toHaveTransaction({
-            from: TestEnv.deployer.address,
-            to: TestEnv.pool.address,
-            success: true,
-        });
+        for (let index = 0; index < tokens.length; index++) {
+            const name = tokens[index];
 
-        // set ETH config to pool
-        const setETHPoolTokenConfigResult = await TestEnv.pool.send(
-            TestEnv.deployer.getSender(),
-            {
-                value: toNano('0.1'),
-            },
-            {
-                $$type: 'UpdateTokenConfig',
-                tokenId: 1n,
-                name: "BTC",
-                enable: true,
-                minMargin: toJettonUnits(10), // 10U
-                maxLeverage: 100n,
-                liquidationFee: toJettonUnits(0.2), // 0.2U
-                liquidityProportion: BigInt(0.5 * PERCENTAGE_BASIS_POINT), // 100%
-                tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
-                lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
-                interestRate: 1250n,
-                premiumRateCap: BigInt(0.1 * PERCENTAGE_BASIS_POINT) // 10%
-            }
-        );
-
-        expect(setETHPoolTokenConfigResult.transactions).toHaveTransaction({
-            from: TestEnv.deployer.address,
-            to: TestEnv.pool.address,
-            success: true,
-        });
-
-        // // set PR samples to pool
-        // let samples = await readPRSample();
-        
-        // let subLength = 100;
-        // let start = 0, end = subLength;
-        // while (end <= samples.length) {
-        //     // console.log('start:', start, 'end:', end);
-        //     await setPremiumRateSampleRange(TestEnv.deployer, samples.slice(start, end));
-
-        //     start += subLength;
-        //     end += subLength;
-        // }
+            const setPoolTokenConfigResult = await TestEnv.pool.send(
+                TestEnv.deployer.getSender(),
+                {
+                    value: toNano('0.1'),
+                },
+                {
+                    $$type: 'UpdateTokenConfig',
+                    tokenId: 1n,
+                    name: name,
+                    enable: true,
+                    minValue: toJettonUnits(100), // 100U
+                    maxLeverage: 105n,
+                    liquidationFee: toJettonUnits(0.2), // 0.2U
+                    liquidityProportion: BigInt(PERCENTAGE_BASIS_POINT / tokens.length), // 100% / n
+                    tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
+                    lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
+                    interestRate: 0n,
+                    maxFundingRate: BigInt(62500) // 0.00625%
+                }
+            );
+    
+            expect(setPoolTokenConfigResult.transactions).toHaveTransaction({
+                from: TestEnv.deployer.address,
+                to: TestEnv.pool.address,
+                success: true,
+            });
+        }
 
     }
 

@@ -28,6 +28,7 @@ PROGRAM{
   DECLPROC $TokenTransfer$_store_cell
   DECLPROC $TokenNotification$_load
   DECLPROC $UpdateConfig$_load
+  DECLPROC $SendProtocolFee$_load
   DECLPROC $CreateDecreaseLPPositionOrder$_load
   DECLPROC $CancelLPPositionOrder$_load
   DECLPROC $ExecuteLPPositionOrder$_load
@@ -180,6 +181,7 @@ PROGRAM{
   DECLPROC $OrderBook$_receive_binary_bounce_UpdatePerpPosition
   DECLPROC $OrderBook$_internal_binary_LiquidatePerpPosition
   DECLPROC $OrderBook$_internal_binary_ADLPerpPosition
+  DECLPROC $OrderBook$_internal_binary_SendProtocolFee
   DECLPROC $OrderBook$_internal_binary_CreateCompensate
   DECLPROC $OrderBook$_internal_binary_CancelCompensate
   DECLPROC $OrderBook$_internal_binary_ExecuteCompensate
@@ -625,6 +627,19 @@ PROGRAM{
     s5 s8 XCHG
     s5 s7 XCHG
     s5 s6 XCHG
+  }>
+  $SendProtocolFee$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    1574274145 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    64 LDU
+    __tact_load_address INLINECALLDICT
+    SWAP
+    257 PUSHINT
+    LDIX
+    3 -ROLL
   }>
   $CreateDecreaseLPPositionOrder$_load PROCINLINE:<{
     32 LDU
@@ -4697,6 +4712,21 @@ PROGRAM{
     s4 s1 s3 XCHG3
     -ROT
   }>
+  $OrderBook$_internal_binary_SendProtocolFee PROCINLINE:<{
+    41207 PUSHINT
+    __tact_context_get_sender INLINECALLDICT
+    s15 s(-1) PUXC
+    __tact_slice_eq_bits INLINECALLDICT
+    THROWANYIFNOT
+    DUP
+    0 GTINT
+    IF:<{
+      s1 s0 XCPU
+      $OrderBook$_fun_refundJetton INLINECALLDICT
+    }>ELSE<{
+      3 BLKDROP
+    }>
+  }>
   $OrderBook$_internal_binary_CreateCompensate PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
     18 s() 25 s() XCHG
@@ -5176,7 +5206,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5844764e647a4431656352677a4a34704d6348486139613338396866786a77794c425269657137706831616b} PUSHSLICE
+    x{697066733a2f2f516d647a694c434e465a715768673869795a546b7572776545484e43446d5156714a536a4b523533677067706663} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -5358,6 +5388,16 @@ PROGRAM{
       $ADLPerpPosition$_load INLINECALLDICT
       1 8 BLKDROP2
       $OrderBook$_internal_binary_ADLPerpPosition INLINECALLDICT
+      TRUE
+    }>
+    DUP
+    1574274145 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $SendProtocolFee$_load INLINECALLDICT
+      1 3 BLKDROP2
+      $OrderBook$_internal_binary_SendProtocolFee INLINECALLDICT
       TRUE
     }>
     DUP

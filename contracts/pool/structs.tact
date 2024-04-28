@@ -16,15 +16,16 @@ struct ExecutorParam {
 struct TokenConfig {
     name: String;
     enable: Bool;
-    // ==================== Trader Position Config ==================
+    // ==================== Trader Position Config ====================
     minValue: Int;
     maxLeverage: Int;
     liquidationFee: Int;
+    maintenanceRate: Int;
     liquidityProportion: Int;
-    // ==================== Trading Fee Config ==================
+    // ==================== Trading Fee Config ====================
     tradingFeeRate: Int;
     lpTradingFeeRate: Int;
-    // ==================== Funding Fee Config ==========================
+    // ==================== Funding Fee Config ====================
     interestRate: Int;
     maxFundingRate: Int;
 }

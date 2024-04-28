@@ -107,6 +107,7 @@ contract Pool with Deployable, Ownable {
             liquidationFee: 5 * pow(10, 5), // 0.5U
             tradingFeeRate: 1_000_000, // 0.1%
             lpTradingFeeRate: 600_000_000, // 60%
+            maintenanceRate: 10_000_000, // 1%
             liquidityProportion: 100_000_000, // 10%
             interestRate: 0,
             maxFundingRate: 62_500 // 0.00625%
@@ -154,24 +155,22 @@ contract Pool with Deployable, Ownable {
     }
 
     receive(msg: ClaimProtocolFee) {
-        require(sender() == self.claimExecutor, "not executor");
+        require(sender() == self.claimExecutor, "invalid sender");
 
         if (self.protocolTradingFee > 0) {
-            send(SendParameters{
-                to: msg.feeReceiver,
-                bounce: true,
-                value: self.protocolTradingFee,
-                mode: SendIgnoreErrors
-            });
             self.protocolTradingFee = 0;
+            send(SendParameters{
+                to: self.orderBook,
+                value: 0,
+                bounce: false,
+                mode: SendRemainingValue,
+                body: SendProtocolFee {
+                    trxId: msg.trxId,
+                    feeReceiver: msg.feeReceiver,
+                    amount: self.protocolTradingFee
+                }.toCell()
+            });
         }
-        
-        send(SendParameters{
-            to: sender(),
-            bounce: false,
-            value: 0,
-            mode: SendRemainingValue + SendIgnoreErrors
-        });
     }
 
     get fun configData(executor: Address?): ConfigData {
@@ -598,7 +597,7 @@ contract Pool with Deployable, Ownable {
         } else {
             unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
         }
-        let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
+        let maintenanceMargin: Int = perpPosition.size * tradePrice * (tokenConfig.tradingFeeRate + tokenConfig.maintenanceRate) / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
         require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
 
         // check leverage
@@ -814,7 +813,7 @@ contract Pool with Deployable, Ownable {
             } else {
                 unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
             }
-            let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
+            let maintenanceMargin: Int = perpPosition.size * tradePrice * (tokenConfig.tradingFeeRate + tokenConfig.maintenanceRate) / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
             require(maintenanceMargin < perpPosition.margin + unrealizedPnl, "margin rate too high");
 
             // check leverage
@@ -985,7 +984,7 @@ contract Pool with Deployable, Ownable {
         } else {
             unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
         }
-        let maintenanceMargin: Int = perpPosition.size * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
+        let maintenanceMargin: Int = perpPosition.size * tradePrice * (tokenConfig.tradingFeeRate + tokenConfig.maintenanceRate) / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
         require(maintenanceMargin >= perpPosition.margin + unrealizedPnl, "margin rate too low");
 
         // liquidate price

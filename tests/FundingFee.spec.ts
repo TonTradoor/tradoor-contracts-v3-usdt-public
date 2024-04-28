@@ -9,8 +9,6 @@ import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits, toPriceUn
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
 import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, updatePrice,  } from './lib/PerpHelper';
-import { ORDER_OP_TYPE_DECREASE_MARKET, ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
-import { readPRSample, toUnits } from '../utils/util';
 
 describe('LP', () => {
     let blockchain: Blockchain;
@@ -171,7 +169,7 @@ describe('LP', () => {
         console.log('create increase short perp order gas used:', fromNano(createIncreaseShortResult.balanceBefore.user1TonBalance - createIncreaseShortResult.balanceAfter.user1TonBalance - toNano(executionFee)));
 
         // executor order
-        const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice, premiumRate);
+        const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice, -premiumRate);
         printTransactionFees(executeIncreaseShortResult.trxResult.transactions);
         expect(executeIncreaseShortResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
@@ -243,7 +241,7 @@ describe('LP', () => {
         console.log('create decrease long perp order gas used:', fromNano(createDecreaseLongResult.balanceBefore.user1TonBalance - createDecreaseLongResult.balanceAfter.user1TonBalance - toNano(executionFee)));
 
         // executor order
-        const executeDecreaseLongResult = await executePerpOrder(executor, createDecreaseLongResult.orderIdBefore, decreaseLongIncreasePrice, premiumRate);
+        const executeDecreaseLongResult = await executePerpOrder(executor, createDecreaseLongResult.orderIdBefore, decreaseLongIncreasePrice, 0);
         printTransactionFees(executeDecreaseLongResult.trxResult.transactions);
         expect(executeDecreaseLongResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,

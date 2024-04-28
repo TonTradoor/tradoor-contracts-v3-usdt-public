@@ -3,7 +3,6 @@ import { Address, beginCell, Dictionary, DictionaryValue, toNano } from "@ton/co
 import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits } from "./TokenHelper";
-import { UpdateWhitelistParam } from "../../wrappers/OrderBook";
 
 export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
@@ -148,43 +147,4 @@ export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContra
         orderIdAfter,
         order
     };
-}
-
-export async function updateWhitelist(enableWhitelist: boolean, account: Address | null, enable: boolean | null) {
-    let UpdateWhitelistValue: DictionaryValue<UpdateWhitelistParam> = {
-        serialize(src, builder) {
-            builder.storeAddress(src.account).storeBit(src.enable)
-        },
-        parse(src) {
-            throw '';
-        },
-    }
-
-    let whitelistLength = 0n;
-    let whitelist = Dictionary.empty(Dictionary.Keys.BigInt(32), UpdateWhitelistValue);
-    if (account != null && enable != null) {
-        whitelistLength = 1n;
-        whitelist.set(
-            0n,
-            {
-                $$type: 'UpdateWhitelistParam',
-                account: account,
-                enable: enable
-            }
-        );
-    }
-
-    const trxResult = await TestEnv.orderBook.send(
-        TestEnv.deployer.getSender(),
-        {
-            value: toNano('0.1'),
-        },
-        {
-            $$type: 'UpdateWhitelist',
-            enableWhitelist: enableWhitelist,
-            whitelistLength: whitelistLength,
-            whitelist: whitelist
-        }
-    );
-    return trxResult;
 }

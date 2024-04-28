@@ -193,6 +193,7 @@ describe('LP', () => {
         let size = 0.02; // 1000u
         let triggerPrice = 51000;
         let indexPrice = 50000;
+        let pr = 0.001; // 0.1%
 
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
@@ -203,7 +204,7 @@ describe('LP', () => {
         });
 
         /// executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice, 0);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice, pr);
         printTransactionFees(executeResult.trxResult.transactions);
         prettyLogTransactions(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
@@ -314,6 +315,7 @@ describe('LP', () => {
         let size = 0.02; // 1000u
         let triggerPrice = 51000;
         let increasePrice = 50000;
+        let pr = 0.001;
 
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
@@ -324,7 +326,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, 0);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, pr);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
@@ -355,7 +357,7 @@ describe('LP', () => {
         });
 
         /// executor order
-        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice, 0);
+        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice, -pr);
         printTransactionFees(executeDecreaseResult.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
         expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
@@ -463,6 +465,7 @@ describe('LP', () => {
         let size = 0.02; // 1000u
         let triggerPrice = 51000;
         let indexPrice = 50000;
+        let pr = 0.001;
 
         let tpSize = 0.01;
         let tpPrice = 51000;
@@ -478,7 +481,7 @@ describe('LP', () => {
         });
 
         /// executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice, 0);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice, pr);
         printTransactionFees(executeResult.trxResult.transactions);
         prettyLogTransactions(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
@@ -552,6 +555,7 @@ describe('LP', () => {
         let size = 0.02; // 1000u
         let triggerPrice = 51000;
         let increasePrice = 50000;
+        let pr = 0.001;
 
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
@@ -562,7 +566,7 @@ describe('LP', () => {
         });
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, 0);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, pr);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
@@ -605,7 +609,7 @@ describe('LP', () => {
         expect(slOrder?.triggerAbove).toBeFalsy();
 
         /// executor order
-        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice, 0);
+        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice, -pr);
         printTransactionFees(executeDecreaseResult.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
         expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({

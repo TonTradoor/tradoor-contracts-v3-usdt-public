@@ -6,7 +6,7 @@ import { Pool } from '../wrappers/Pool';
 import { OrderBook } from '../wrappers/OrderBook';
 import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits } from './lib/TokenHelper';
-import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder, updateWhitelist } from './lib/LPHelper';
+import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
 
 describe('LP', () => {
@@ -88,14 +88,6 @@ describe('LP', () => {
     });
 
     it('auto refund -- not in whitelist', async () => {
-        // enable whitelist
-        const trxResult = await updateWhitelist(true, null, null);
-        expect(trxResult.transactions).toHaveTransaction({
-            from: deployer.address,
-            to: orderBook.address,
-            success: true,
-        });
-
         let liquidity = 10;
         let executionFee = 0.1;
         
@@ -126,17 +118,6 @@ describe('LP', () => {
     });
 
     it('should create increase LP order', async () => {
-        /// add whitelist
-        const trxResult = await updateWhitelist(true, user0.address, true);
-        expect(trxResult.transactions).toHaveTransaction({
-            from: deployer.address,
-            to: orderBook.address,
-            success: true,
-        });
-
-        let whitelistData = await orderBook.getWhitelistData(user0.address);
-        console.log('whitelist:', whitelistData);
-
         /// create order
         let liquidity = 10;
         let executionFee = 0.1;

@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 13091 bytes
+BOC Size: 13262 bytes
 
 # Types
-Total Types: 36
+Total Types: 37
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -46,8 +46,12 @@ TLB: `update_token_config#fedfb0ef tokenId:uint64 name:Maybe ^string enable:Mayb
 Signature: `UpdateTokenConfig{tokenId:uint64,name:Maybe ^string,enable:Maybe bool,minValue:Maybe int257,maxLeverage:Maybe int257,liquidationFee:Maybe int257,liquidityProportion:Maybe int257,tradingFeeRate:Maybe int257,lpTradingFeeRate:Maybe int257,interestRate:Maybe int257,maxFundingRate:Maybe int257}`
 
 ## ClaimProtocolFee
-TLB: `claim_protocol_fee#b58e3465 feeReceiver:address = ClaimProtocolFee`
-Signature: `ClaimProtocolFee{feeReceiver:address}`
+TLB: `claim_protocol_fee#feb2a766 trxId:uint64 feeReceiver:address = ClaimProtocolFee`
+Signature: `ClaimProtocolFee{trxId:uint64,feeReceiver:address}`
+
+## SendProtocolFee
+TLB: `send_protocol_fee#5dd58461 trxId:uint64 feeReceiver:address amount:int257 = SendProtocolFee`
+Signature: `SendProtocolFee{trxId:uint64,feeReceiver:address,amount:int257}`
 
 ## UpdateLPPosition
 TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 = UpdateLPPosition`
@@ -98,8 +102,8 @@ TLB: `_ executor:address enable:bool = ExecutorParam`
 Signature: `ExecutorParam{executor:address,enable:bool}`
 
 ## TokenConfig
-TLB: `_ name:^string enable:bool minValue:int257 maxLeverage:int257 liquidationFee:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
-Signature: `TokenConfig{name:^string,enable:bool,minValue:int257,maxLeverage:int257,liquidationFee:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
+TLB: `_ name:^string enable:bool minValue:int257 maxLeverage:int257 liquidationFee:int257 maintenanceRate:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig`
+Signature: `TokenConfig{name:^string,enable:bool,minValue:int257,maxLeverage:int257,liquidationFee:int257,maintenanceRate:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
 
 ## LPPosition
 TLB: `_ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition`
@@ -212,5 +216,4 @@ Argument: account
 55429: not reach liquidate price
 55754: insufficient liquidity for net value
 59588: token config not exist
-62172: not executor
 62409: insufficient margin

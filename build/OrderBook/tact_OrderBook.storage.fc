@@ -142,6 +142,20 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 }
 
 ;;
+;; Type: SendProtocolFee
+;; Header: 0x5dd58461
+;; TLB: send_protocol_fee#5dd58461 trxId:uint64 feeReceiver:address amount:int257 = SendProtocolFee
+;;
+
+(slice, ((int, slice, int))) $SendProtocolFee$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1574274145);
+    var v'trxId = sc_0~load_uint(64);
+    var v'feeReceiver = sc_0~__tact_load_address();
+    var v'amount = sc_0~load_int(257);
+    return (sc_0, (v'trxId, v'feeReceiver, v'amount));
+}
+
+;;
 ;; Type: CreateDecreaseLPPositionOrder
 ;; Header: 0x25b21724
 ;; TLB: create_decrease_lp_position_order#25b21724 executionFee:coins liquidityDelta:uint128 trxId:uint64 = CreateDecreaseLPPositionOrder

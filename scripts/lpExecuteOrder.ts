@@ -31,8 +31,6 @@ export async function run(provider: NetworkProvider) {
             orderId: orderId,
             trxId: 2n,
             executionFeeReceiver: provider.sender().address!!,
-            pricesLength: 0n,
-            prices: Dictionary.empty()
         }
     );
     // wait for trx

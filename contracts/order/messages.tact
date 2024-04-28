@@ -36,8 +36,10 @@ message UpdateConfig {
     pool: Address;
 }
 
-message ClaimProtocolFee {
-    
+message SendProtocolFee {
+    trxId: Int as uint64;
+    feeReceiver: Address;
+    amount: Int;
 }
 
 // ============================ LP ================================ //

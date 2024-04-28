@@ -596,6 +596,16 @@
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
 }
 
+(((int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int)), ()) $OrderBook$_internal_binary_SendProtocolFee((int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, (int, slice, int) $msg) impure inline {
+    var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext) = $self;
+    var ($msg'trxId, $msg'feeReceiver, $msg'amount) = $msg;
+    throw_unless(41207, ( __tact_slice_eq_bits($self'pool, __tact_context_get_sender()) ));
+    if (($msg'amount > 0)) {
+        ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_refundJetton($msg'trxId, $msg'amount, $msg'feeReceiver, $msg'feeReceiver);
+    }
+    return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
+}
+
 (((int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int)), ()) $OrderBook$_internal_binary_CreateCompensate((int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, (int, int, int, slice, int, slice, int) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'minTonsForStorage, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext) = $self;
     var ($msg'orderType, $msg'orderId, $msg'trxId, $msg'refundReceiver, $msg'refundAmount, $msg'executionFeeReceiver, $msg'executionFee) = $msg;
@@ -752,7 +762,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmXDvNdzD1ecRgzJ4pMcHHa9a389hfxjwyLBRieq7ph1ak";
+    return "ipfs://QmdziLCNFZqWhg8iyZTkurweEHNCDmQVqJSjKR53gpgpfc";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -888,6 +898,13 @@ _ lazy_deployment_completed() method_id {
     if (op == 3962817618) {
         var msg = in_msg~$ADLPerpPosition$_load();
         self~$OrderBook$_internal_binary_ADLPerpPosition(msg);
+        return (self, true);
+    }
+    
+    ;; Receive SendProtocolFee message
+    if (op == 1574274145) {
+        var msg = in_msg~$SendProtocolFee$_load();
+        self~$OrderBook$_internal_binary_SendProtocolFee(msg);
         return (self, true);
     }
     

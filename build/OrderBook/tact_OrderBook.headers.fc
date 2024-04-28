@@ -90,6 +90,9 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 ;; $UpdateConfig$_load
 (slice, ((int, cell, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref;
 
+;; $SendProtocolFee$_load
+(slice, ((int, slice, int))) $SendProtocolFee$_load(slice sc_0) inline;
+
 ;; $CreateDecreaseLPPositionOrder$_load
 (slice, ((int, int, int))) $CreateDecreaseLPPositionOrder$_load(slice sc_0) inline;
 

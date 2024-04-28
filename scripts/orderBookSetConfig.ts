@@ -1,6 +1,7 @@
-import { Address, toNano } from '@ton/core';
+import { Address, Dictionary, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { attachMockJetton, attachOrderBook, attachPool, getConfig, getLastTransaction, waitForTransaction } from '../utils/util';
+import { ExecutorParamValue } from '../wrappers/OrderBook';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
@@ -11,9 +12,21 @@ export async function run(provider: NetworkProvider) {
 
     // const executor = Address.parse(await provider.ui().input('executor address:'));
     const executor = Address.parse(getConfig(provider, "executor"));
+    const executor1 = Address.parse(getConfig(provider, "executor1"));
     
-
     const orderBookJettonWallet = await jetton.getGetWalletAddress(orderBook.address!!);
+
+    let executors =  Dictionary.empty(Dictionary.Keys.BigInt(32), ExecutorParamValue)
+            .set(0n, {
+                $$type: 'ExecutorParam',
+                executor: executor,
+                enable: true
+            })
+            .set(1n, {
+                $$type: 'ExecutorParam',
+                executor: executor1,
+                enable: true
+            });
 
     await orderBook.send(
         provider.sender(),
@@ -22,12 +35,13 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'UpdateConfig',
-            executor: executor,
-            enableExecutor: true,
+            executorLength: BigInt(executors.size),
+            executors: executors,
             maxTimeDelayExecutor: 30n * 60n,
             minTimeDelayTrader: 3n * 60n,
             minExecutionFee: toNano(0.1),
-            gasConsumption: toNano(0.06),
+            gasConsumption: toNano(0.03),
+            lpGasConsumption: toNano(0.06),
             minTonsForStorage: toNano(0),
             usdtWallet: orderBookJettonWallet,
             pool: pool.address

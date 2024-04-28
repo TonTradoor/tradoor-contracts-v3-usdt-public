@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 13616 bytes
+BOC Size: 13712 bytes
 
 # Types
 Total Types: 45
@@ -53,9 +53,9 @@ Signature: `TokenExcesses{queryId:uint64}`
 TLB: `update_config#fea2f1a3 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig`
 Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
 
-## ClaimProtocolFee
-TLB: `claim_protocol_fee#f38ffb31  = ClaimProtocolFee`
-Signature: `ClaimProtocolFee{}`
+## SendProtocolFee
+TLB: `send_protocol_fee#5dd58461 trxId:uint64 feeReceiver:address amount:int257 = SendProtocolFee`
+Signature: `SendProtocolFee{trxId:uint64,feeReceiver:address,amount:int257}`
 
 ## CreateDecreaseLPPositionOrder
 TLB: `create_decrease_lp_position_order#25b21724 executionFee:coins liquidityDelta:uint128 trxId:uint64 = CreateDecreaseLPPositionOrder`

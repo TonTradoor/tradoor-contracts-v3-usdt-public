@@ -1055,8 +1055,13 @@ contract OrderBook with Deployable, Resumable {
     }
 
     // ======================================================== Claim ================================================================ //
-    
+    receive(msg: SendProtocolFee) {
+        require(sender() == self.pool, "invalid sender");
 
+        if (msg.amount > 0) {
+            self.refundJetton(msg.trxId, msg.amount, msg.feeReceiver, msg.feeReceiver);
+        }
+    }
 
     // ======================================================== Compensate ================================================================ //
     // Create compensate, lock one day
