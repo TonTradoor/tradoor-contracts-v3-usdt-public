@@ -1,7 +1,8 @@
 // ============================ Config ================================ //
 struct ConfigData {
     isExecutor: Bool?;
-    gasConsumption: Int as coins;
+    lpGasConsumption: Int as coins;
+    perpGasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
     lpBonusFactor: Int;
     lpLiquidityFactor: Int;

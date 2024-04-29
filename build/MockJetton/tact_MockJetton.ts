@@ -534,8 +534,8 @@ export type TokenTransfer = {
     $$type: 'TokenTransfer';
     query_id: bigint;
     amount: bigint;
-    destination: Address;
-    response_destination: Address;
+    sender: Address;
+    response_destination: Address | null;
     custom_payload: Cell | null;
     forward_ton_amount: bigint;
     forward_payload: Cell;
@@ -547,7 +547,7 @@ export function storeTokenTransfer(src: TokenTransfer) {
         b_0.storeUint(260734629, 32);
         b_0.storeUint(src.query_id, 64);
         b_0.storeCoins(src.amount);
-        b_0.storeAddress(src.destination);
+        b_0.storeAddress(src.sender);
         b_0.storeAddress(src.response_destination);
         if (src.custom_payload !== null && src.custom_payload !== undefined) { b_0.storeBit(true).storeRef(src.custom_payload); } else { b_0.storeBit(false); }
         b_0.storeCoins(src.forward_ton_amount);
@@ -560,30 +560,30 @@ export function loadTokenTransfer(slice: Slice) {
     if (sc_0.loadUint(32) !== 260734629) { throw Error('Invalid prefix'); }
     let _query_id = sc_0.loadUintBig(64);
     let _amount = sc_0.loadCoins();
-    let _destination = sc_0.loadAddress();
-    let _response_destination = sc_0.loadAddress();
+    let _sender = sc_0.loadAddress();
+    let _response_destination = sc_0.loadMaybeAddress();
     let _custom_payload = sc_0.loadBit() ? sc_0.loadRef() : null;
     let _forward_ton_amount = sc_0.loadCoins();
     let _forward_payload = sc_0.asCell();
-    return { $$type: 'TokenTransfer' as const, query_id: _query_id, amount: _amount, destination: _destination, response_destination: _response_destination, custom_payload: _custom_payload, forward_ton_amount: _forward_ton_amount, forward_payload: _forward_payload };
+    return { $$type: 'TokenTransfer' as const, query_id: _query_id, amount: _amount, sender: _sender, response_destination: _response_destination, custom_payload: _custom_payload, forward_ton_amount: _forward_ton_amount, forward_payload: _forward_payload };
 }
 
 function loadTupleTokenTransfer(source: TupleReader) {
     let _query_id = source.readBigNumber();
     let _amount = source.readBigNumber();
-    let _destination = source.readAddress();
-    let _response_destination = source.readAddress();
+    let _sender = source.readAddress();
+    let _response_destination = source.readAddressOpt();
     let _custom_payload = source.readCellOpt();
     let _forward_ton_amount = source.readBigNumber();
     let _forward_payload = source.readCell();
-    return { $$type: 'TokenTransfer' as const, query_id: _query_id, amount: _amount, destination: _destination, response_destination: _response_destination, custom_payload: _custom_payload, forward_ton_amount: _forward_ton_amount, forward_payload: _forward_payload };
+    return { $$type: 'TokenTransfer' as const, query_id: _query_id, amount: _amount, sender: _sender, response_destination: _response_destination, custom_payload: _custom_payload, forward_ton_amount: _forward_ton_amount, forward_payload: _forward_payload };
 }
 
 function storeTupleTokenTransfer(source: TokenTransfer) {
     let builder = new TupleBuilder();
     builder.writeNumber(source.query_id);
     builder.writeNumber(source.amount);
-    builder.writeAddress(source.destination);
+    builder.writeAddress(source.sender);
     builder.writeAddress(source.response_destination);
     builder.writeCell(source.custom_payload);
     builder.writeNumber(source.forward_ton_amount);
@@ -607,7 +607,7 @@ export type TokenTransferInternal = {
     query_id: bigint;
     amount: bigint;
     from: Address;
-    response_destination: Address;
+    response_destination: Address | null;
     forward_ton_amount: bigint;
     forward_payload: Cell;
 }
@@ -631,7 +631,7 @@ export function loadTokenTransferInternal(slice: Slice) {
     let _query_id = sc_0.loadUintBig(64);
     let _amount = sc_0.loadCoins();
     let _from = sc_0.loadAddress();
-    let _response_destination = sc_0.loadAddress();
+    let _response_destination = sc_0.loadMaybeAddress();
     let _forward_ton_amount = sc_0.loadCoins();
     let _forward_payload = sc_0.asCell();
     return { $$type: 'TokenTransferInternal' as const, query_id: _query_id, amount: _amount, from: _from, response_destination: _response_destination, forward_ton_amount: _forward_ton_amount, forward_payload: _forward_payload };
@@ -641,7 +641,7 @@ function loadTupleTokenTransferInternal(source: TupleReader) {
     let _query_id = source.readBigNumber();
     let _amount = source.readBigNumber();
     let _from = source.readAddress();
-    let _response_destination = source.readAddress();
+    let _response_destination = source.readAddressOpt();
     let _forward_ton_amount = source.readBigNumber();
     let _forward_payload = source.readCell();
     return { $$type: 'TokenTransferInternal' as const, query_id: _query_id, amount: _amount, from: _from, response_destination: _response_destination, forward_ton_amount: _forward_ton_amount, forward_payload: _forward_payload };
@@ -730,7 +730,7 @@ export type TokenBurn = {
     $$type: 'TokenBurn';
     query_id: bigint;
     amount: bigint;
-    response_destination: Address;
+    response_destination: Address | null;
     custom_payload: Cell | null;
 }
 
@@ -750,7 +750,7 @@ export function loadTokenBurn(slice: Slice) {
     if (sc_0.loadUint(32) !== 1499400124) { throw Error('Invalid prefix'); }
     let _query_id = sc_0.loadUintBig(64);
     let _amount = sc_0.loadCoins();
-    let _response_destination = sc_0.loadAddress();
+    let _response_destination = sc_0.loadMaybeAddress();
     let _custom_payload = sc_0.loadBit() ? sc_0.loadRef() : null;
     return { $$type: 'TokenBurn' as const, query_id: _query_id, amount: _amount, response_destination: _response_destination, custom_payload: _custom_payload };
 }
@@ -758,7 +758,7 @@ export function loadTokenBurn(slice: Slice) {
 function loadTupleTokenBurn(source: TupleReader) {
     let _query_id = source.readBigNumber();
     let _amount = source.readBigNumber();
-    let _response_destination = source.readAddress();
+    let _response_destination = source.readAddressOpt();
     let _custom_payload = source.readCellOpt();
     return { $$type: 'TokenBurn' as const, query_id: _query_id, amount: _amount, response_destination: _response_destination, custom_payload: _custom_payload };
 }
@@ -788,7 +788,7 @@ export type TokenBurnNotification = {
     query_id: bigint;
     amount: bigint;
     sender: Address;
-    response_destination: Address;
+    response_destination: Address | null;
 }
 
 export function storeTokenBurnNotification(src: TokenBurnNotification) {
@@ -808,7 +808,7 @@ export function loadTokenBurnNotification(slice: Slice) {
     let _query_id = sc_0.loadUintBig(64);
     let _amount = sc_0.loadCoins();
     let _sender = sc_0.loadAddress();
-    let _response_destination = sc_0.loadAddress();
+    let _response_destination = sc_0.loadMaybeAddress();
     return { $$type: 'TokenBurnNotification' as const, query_id: _query_id, amount: _amount, sender: _sender, response_destination: _response_destination };
 }
 
@@ -816,7 +816,7 @@ function loadTupleTokenBurnNotification(source: TupleReader) {
     let _query_id = source.readBigNumber();
     let _amount = source.readBigNumber();
     let _sender = source.readAddress();
-    let _response_destination = source.readAddress();
+    let _response_destination = source.readAddressOpt();
     return { $$type: 'TokenBurnNotification' as const, query_id: _query_id, amount: _amount, sender: _sender, response_destination: _response_destination };
 }
 
@@ -980,7 +980,7 @@ export type TakeWalletAddress = {
     $$type: 'TakeWalletAddress';
     query_id: bigint;
     wallet_address: Address;
-    owner_address: Address | null;
+    owner_address: Cell;
 }
 
 export function storeTakeWalletAddress(src: TakeWalletAddress) {
@@ -989,7 +989,7 @@ export function storeTakeWalletAddress(src: TakeWalletAddress) {
         b_0.storeUint(3513996288, 32);
         b_0.storeUint(src.query_id, 64);
         b_0.storeAddress(src.wallet_address);
-        b_0.storeAddress(src.owner_address);
+        b_0.storeBuilder(src.owner_address.asBuilder());
     };
 }
 
@@ -998,14 +998,14 @@ export function loadTakeWalletAddress(slice: Slice) {
     if (sc_0.loadUint(32) !== 3513996288) { throw Error('Invalid prefix'); }
     let _query_id = sc_0.loadUintBig(64);
     let _wallet_address = sc_0.loadAddress();
-    let _owner_address = sc_0.loadMaybeAddress();
+    let _owner_address = sc_0.asCell();
     return { $$type: 'TakeWalletAddress' as const, query_id: _query_id, wallet_address: _wallet_address, owner_address: _owner_address };
 }
 
 function loadTupleTakeWalletAddress(source: TupleReader) {
     let _query_id = source.readBigNumber();
     let _wallet_address = source.readAddress();
-    let _owner_address = source.readAddressOpt();
+    let _owner_address = source.readCell();
     return { $$type: 'TakeWalletAddress' as const, query_id: _query_id, wallet_address: _wallet_address, owner_address: _owner_address };
 }
 
@@ -1013,7 +1013,7 @@ function storeTupleTakeWalletAddress(source: TakeWalletAddress) {
     let builder = new TupleBuilder();
     builder.writeNumber(source.query_id);
     builder.writeAddress(source.wallet_address);
-    builder.writeAddress(source.owner_address);
+    builder.writeSlice(source.owner_address);
     return builder.build();
 }
 
@@ -1090,8 +1090,8 @@ function initMockJetton_init_args(src: MockJetton_init_args) {
 }
 
 async function MockJetton_init(owner: Address, content: Cell) {
-    const __code = Cell.fromBase64('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');
-    const __system = Cell.fromBase64('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');
+    const __code = Cell.fromBase64('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');
+    const __system = Cell.fromBase64('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');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
@@ -1126,9 +1126,9 @@ const MockJetton_errors: { [key: number]: { message: string } } = {
     136: { message: `Invalid address` },
     137: { message: `Masterchain support is not enabled for this contract` },
     3688: { message: `Not mintable` },
-    4159: { message: `Invalid value!!` },
     4429: { message: `Invalid sender` },
     14534: { message: `Not owner` },
+    16059: { message: `Invalid value` },
     18668: { message: `Can't Mint Anymore` },
     23951: { message: `Insufficient gas` },
     42708: { message: `Invalid sender!` },
@@ -1147,15 +1147,15 @@ const MockJetton_types: ABIType[] = [
     {"name":"ChangeOwnerOk","header":846932810,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"JettonData","header":null,"fields":[{"name":"total_supply","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"mintable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"content","type":{"kind":"simple","type":"cell","optional":false}},{"name":"wallet_code","type":{"kind":"simple","type":"cell","optional":false}}]},
     {"name":"JettonWalletData","header":null,"fields":[{"name":"balance","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"master","type":{"kind":"simple","type":"address","optional":false}},{"name":"code","type":{"kind":"simple","type":"cell","optional":false}}]},
-    {"name":"TokenTransfer","header":260734629,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"destination","type":{"kind":"simple","type":"address","optional":false}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":false}},{"name":"custom_payload","type":{"kind":"simple","type":"cell","optional":true}},{"name":"forward_ton_amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
-    {"name":"TokenTransferInternal","header":395134233,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"from","type":{"kind":"simple","type":"address","optional":false}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":false}},{"name":"forward_ton_amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
+    {"name":"TokenTransfer","header":260734629,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":true}},{"name":"custom_payload","type":{"kind":"simple","type":"cell","optional":true}},{"name":"forward_ton_amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
+    {"name":"TokenTransferInternal","header":395134233,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"from","type":{"kind":"simple","type":"address","optional":false}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":true}},{"name":"forward_ton_amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
     {"name":"TokenNotification","header":1935855772,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"from","type":{"kind":"simple","type":"address","optional":false}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
-    {"name":"TokenBurn","header":1499400124,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":false}},{"name":"custom_payload","type":{"kind":"simple","type":"cell","optional":true}}]},
-    {"name":"TokenBurnNotification","header":2078119902,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"TokenBurn","header":1499400124,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":true}},{"name":"custom_payload","type":{"kind":"simple","type":"cell","optional":true}}]},
+    {"name":"TokenBurnNotification","header":2078119902,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":true}}]},
     {"name":"TokenExcesses","header":3576854235,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"TokenUpdateContent","header":2937889386,"fields":[{"name":"content","type":{"kind":"simple","type":"cell","optional":false}}]},
     {"name":"ProvideWalletAddress","header":745978227,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"owner_address","type":{"kind":"simple","type":"address","optional":false}},{"name":"include_address","type":{"kind":"simple","type":"bool","optional":false}}]},
-    {"name":"TakeWalletAddress","header":3513996288,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"wallet_address","type":{"kind":"simple","type":"address","optional":false}},{"name":"owner_address","type":{"kind":"simple","type":"address","optional":true}}]},
+    {"name":"TakeWalletAddress","header":3513996288,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"wallet_address","type":{"kind":"simple","type":"address","optional":false}},{"name":"owner_address","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
     {"name":"Mint","header":4235234258,"fields":[{"name":"amount","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"receiver","type":{"kind":"simple","type":"address","optional":false}}]},
 ]
 

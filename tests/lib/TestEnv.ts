@@ -142,8 +142,9 @@ export class TestEnv {
                 minTimeDelayTrader: 3n * 60n,
                 minExecutionFee: toNano(0.1),
                 gasConsumption: toNano(0.03),
-                lpGasConsumption: toNano(0.09),
-                minTonsForStorage: toNano(0),
+                lpGasConsumption: toNano(0.035),
+                perpGasConsumption: toNano(0.09),
+                minTonsForStorage: toNano(0.01),
                 usdtWallet: TestEnv.orderBookJettonWallet.address,
                 pool: TestEnv.pool.address
             }
@@ -166,7 +167,8 @@ export class TestEnv {
                 executorLength: 2n,
                 executors: executors,
                 claimExecutor: this.claimExecutor.address,
-                gasConsumption: toNano(0.09),
+                lpGasConsumption: toNano(0.035),
+                perpGasConsumption: toNano(0.09),
                 minTonsForStorage: toNano(0.01),
                 lpBonusFactor: 10n * 10n**9n,
                 lpLiquidityFactor: 2n * 10n**9n,

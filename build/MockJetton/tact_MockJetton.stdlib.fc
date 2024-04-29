@@ -16,6 +16,15 @@ slice __tact_verify_address(slice address) inline {
     return (cs, __tact_verify_address(raw));
 }
 
+(slice, slice) __tact_load_address_opt(slice cs) inline {
+    slice raw = cs~load_msg_addr();
+    if (raw.preload_uint(2) != 0) {
+        return (cs, __tact_verify_address(raw));
+    } else {
+        return (cs, null());
+    }
+}
+
 builder __tact_store_address(builder b, slice address) inline {
     return b.store_slice(__tact_verify_address(address));
 }
@@ -86,19 +95,6 @@ cell __tact_dict_get_code(cell dict, int id) inline {
 
 forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
 
-cell $global_emptyCell() impure inline {
-    return end_cell(begin_cell());
-}
-
-slice $Cell$_fun_asSlice(cell $self) impure inline {
-    var ($self) = $self;
-    return begin_parse($self);
-}
-
-slice $global_emptySlice() impure inline {
-    return $Cell$_fun_asSlice($global_emptyCell());
-}
-
 slice $global_contractAddress((cell, cell) $s) impure inline {
     var (($s'code, $s'data)) = $s;
     return __tact_compute_contract_address(0, $s'code, $s'data);
@@ -145,6 +141,11 @@ slice $global_contractAddress((cell, cell) $s) impure inline {
     }
     cell $c = end_cell($b);
     send_raw_message($c, $params'mode);
+}
+
+slice $Cell$_fun_asSlice(cell $self) impure inline {
+    var ($self) = $self;
+    return begin_parse($self);
 }
 
 ((int, slice, cell, int), ()) $MockJetton$_fun_forward((int, slice, cell, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {

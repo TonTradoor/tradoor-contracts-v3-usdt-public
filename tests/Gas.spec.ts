@@ -125,6 +125,7 @@ describe('LP', () => {
 
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        printTransactionFees(createResult.trxResult.transactions);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
             to: orderBook.address,
@@ -161,6 +162,7 @@ describe('LP', () => {
 
         // create order
         const createIncreaseShortResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, false, increaseShortMargin, increaseShortSize, increaseShortTriggerPrice, 0, 0, 0, 0);
+        printTransactionFees(createIncreaseShortResult.trxResult.transactions);
         expect(createIncreaseShortResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
             to: orderBook.address,
@@ -196,6 +198,7 @@ describe('LP', () => {
 
         // create order
         const createDecreaseShortResult = await createDecreasePerpOrder(user1, executionFee, tokenId, false, decreaseShortMargin, decreaseShortSize, decreaseShortTriggerPrice);
+        printTransactionFees(createDecreaseShortResult.trxResult.transactions);
         expect(createDecreaseShortResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,
             to: orderBook.address,
@@ -232,6 +235,7 @@ describe('LP', () => {
 
         // create order
         const createDecreaseLongResult = await createDecreasePerpOrder(user1, executionFee, tokenId, true, decreaseLongMargin, decreaseLongSize, decreaseLongTriggerPrice);
+        printTransactionFees(createDecreaseLongResult.trxResult.transactions);
         expect(createDecreaseLongResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,
             to: orderBook.address,

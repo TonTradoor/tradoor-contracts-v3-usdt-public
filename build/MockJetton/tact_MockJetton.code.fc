@@ -29,7 +29,7 @@
     throw_unless(18668, $self'mintable);
     $self'total_supply = ($self'total_supply + $amount);
     var ($winit'code, $winit'data) = ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_getJettonWalletInit($to);
-    $global_send($SendParameters$_constructor_to_value_bounce_mode_body_code_data($global_contractAddress(($winit'code, $winit'data)), 0, true, 64, $TokenTransferInternal$_store_cell($TokenTransferInternal$_constructor_query_id_amount_from_response_destination_forward_ton_amount_forward_payload(0, $amount, my_address(), $response_destination, 0, $global_emptySlice())), $winit'code, $winit'data));
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body_code_data($global_contractAddress(($winit'code, $winit'data)), 0, true, 64, $TokenTransferInternal$_store_cell($TokenTransferInternal$_constructor_query_id_amount_from_response_destination_forward_ton_amount_forward_payload(0, $amount, my_address(), $response_destination, 0, $Cell$_fun_asSlice(end_cell(begin_cell())))), $winit'code, $winit'data));
     return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
@@ -71,7 +71,7 @@
     var ($msg'amount, $msg'receiver) = $msg;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(3688, $self'mintable);
-    ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_mint($msg'receiver, $msg'amount, $self'owner);
+    ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_mint($msg'receiver, $msg'amount, __tact_context_get_sender());
     return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
@@ -94,10 +94,10 @@
 (((int, slice, cell, int)), ()) $MockJetton$_internal_binary_TokenBurnNotification((int, slice, cell, int) $self, (int, int, slice, slice) $msg) impure inline {
     var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($msg'query_id, $msg'amount, $msg'sender, $msg'response_destination) = $msg;
-    ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_requireSenderAsWalletOwner($msg'response_destination);
+    ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_requireSenderAsWalletOwner(__tact_not_null($msg'response_destination));
     $self'total_supply = ($self'total_supply - $msg'amount);
     if ((~ null?($msg'response_destination))) {
-        $global_send($SendParameters$_constructor_to_value_bounce_mode_body($msg'response_destination, 0, false, (64 + 2), $TokenExcesses$_store_cell($TokenExcesses$_constructor_query_id($msg'query_id))));
+        $global_send($SendParameters$_constructor_to_value_bounce_mode_body(__tact_not_null($msg'response_destination), 0, false, 64, $TokenExcesses$_store_cell($TokenExcesses$_constructor_query_id($msg'query_id))));
     }
     return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
@@ -106,13 +106,12 @@
     var ($self'total_supply, $self'owner, $self'content, $self'mintable) = $self;
     var ($msg'query_id, $msg'owner_address, $msg'include_address) = $msg;
     throw_unless(23951, ($Context$_get_value(__tact_context_get()) >= 6100000));
-    var ($init'code, $init'data) = $JettonDefaultWallet$_init_child(__tact_context_sys, $msg'owner_address, $self'owner);
-    slice $wallet_address = $global_contractAddress(($init'code, $init'data));
-    var ($response_body'query_id, $response_body'wallet_address, $response_body'owner_address) = $TakeWalletAddress$_constructor_query_id_wallet_address_owner_address($msg'query_id, $wallet_address, null());
+    var ($init'code, $init'data) = $JettonDefaultWallet$_init_child(__tact_context_sys, $msg'owner_address, my_address());
     if ($msg'include_address) {
-        $response_body'owner_address = $msg'owner_address;
+        $global_send($SendParameters$_constructor_to_value_mode_body(__tact_context_get_sender(), 0, 64, $TakeWalletAddress$_store_cell($TakeWalletAddress$_constructor_query_id_wallet_address_owner_address($msg'query_id, $global_contractAddress(($init'code, $init'data)), $Cell$_fun_asSlice(end_cell(__tact_store_address(__tact_store_bool(begin_cell(), true), $msg'owner_address)))))));
+    } else {
+        $global_send($SendParameters$_constructor_to_value_mode_body(__tact_context_get_sender(), 0, 64, $TakeWalletAddress$_store_cell($TakeWalletAddress$_constructor_query_id_wallet_address_owner_address($msg'query_id, $global_contractAddress(($init'code, $init'data)), $Cell$_fun_asSlice(end_cell(__tact_store_bool(begin_cell(), false)))))));
     }
-    $global_send($SendParameters$_constructor_to_value_mode_bounce_body(__tact_context_get_sender(), 0, 64, true, $TakeWalletAddress$_store_cell(($response_body'query_id, $response_body'wallet_address, $response_body'owner_address))));
     return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
@@ -159,7 +158,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmSJHjJbfB9cJUzTGwTzvpgLqV9eyUT1hGzT4sRHFF9Xy2";
+    return "ipfs://QmTwQMjfgSRqiVDMe1LQ8dknZE4KMxd5rqwcVSgymyqxAE";
 }
 
 _ lazy_deployment_completed() method_id {

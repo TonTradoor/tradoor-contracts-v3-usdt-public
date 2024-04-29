@@ -37,7 +37,7 @@ export async function run(provider: NetworkProvider) {
             $$type: 'TokenTransfer',
             query_id: 0n,
             amount: toUnits(margin, jettonDecimal),
-            destination: orderBook.address,
+            sender: orderBook.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
             forward_ton_amount: toNano(executionFee + 0.2),

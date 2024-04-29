@@ -12,16 +12,16 @@ export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContra
     const trxResult = await jettonWallet.send(
         user.getSender(),
         {
-            value: toNano(executionFee + 0.3),
+            value: toNano(executionFee + 0.2),
         },
         {
             $$type: 'TokenTransfer',
             query_id: 0n,
             amount: toUnits(liquidity, TestEnv.jettonDecimal),
-            destination: TestEnv.orderBook.address,
+            sender: TestEnv.orderBook.address,
             response_destination: user.address,
             custom_payload: null,
-            forward_ton_amount: toNano(executionFee + 0.2),
+            forward_ton_amount: toNano(executionFee + 0.1),
             forward_payload: 
                 beginCell()
                 .storeRef(
@@ -54,7 +54,7 @@ export async function cancelLPOrder(executor: SandboxContract<TreasuryContract>,
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano('0.2'),
         },
         {
             $$type: 'CancelLPPositionOrder',
@@ -87,7 +87,7 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano('0.3'),
         },
         {
             $$type: 'ExecuteLPPositionOrder',
@@ -125,7 +125,7 @@ export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContra
     const trxResult = await TestEnv.orderBook.send(
         user.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano('0.2'),
         },
         {
             $$type: 'CreateDecreaseLPPositionOrder',

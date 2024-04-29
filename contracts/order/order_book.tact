@@ -14,9 +14,10 @@ contract OrderBook with Deployable, Resumable {
 
     // TODO gas
     minExecutionFee: Int = ton("0.1"); // fee for every operation
-    gasConsumption: Int = ton("0.05"); // min consumption gas
-    lpGasConsumption: Int = ton("0.05"); // min consumption gas
-    minTonsForStorage: Int = ton("0.03"); // min storage gas
+    gasConsumption: Int = ton("0.04"); // min orderbook consumption gas
+    lpGasConsumption: Int = ton("0.04"); // min lp consumption gas
+    perpGasConsumption: Int = ton("0.09"); // min perp consumption gas
+    minTonsForStorage: Int = ton("0.01"); // min pool storage gas
 
     usdtWallet: Address; // order book USDT jetton wallet address
     pool: Address; // pool address
@@ -68,6 +69,7 @@ contract OrderBook with Deployable, Resumable {
         self.minExecutionFee = msg.minExecutionFee;
         self.gasConsumption = msg.gasConsumption;
         self.lpGasConsumption = msg.lpGasConsumption;
+        self.perpGasConsumption = msg.perpGasConsumption;
         self.minTonsForStorage = msg.minTonsForStorage;
         self.usdtWallet = msg.usdtWallet;
         self.pool = msg.pool;
@@ -92,6 +94,7 @@ contract OrderBook with Deployable, Resumable {
             minExecutionFee: self.minExecutionFee,
             gasConsumption: self.gasConsumption,
             lpGasConsumption: self.lpGasConsumption,
+            perpGasConsumption: self.perpGasConsumption,
             minTonsForStorage: self.minTonsForStorage,
             usdtWallet: self.usdtWallet,
             pool: self.pool
@@ -204,7 +207,7 @@ contract OrderBook with Deployable, Resumable {
 
     // transfer execess ton
     fun refundExecessTon(to: Address, executionFee: Int) {
-        let refundValue: Int = context().value - executionFee - self.gasConsumption - self.minTonsForStorage;
+        let refundValue: Int = context().value - executionFee - self.gasConsumption;
         if (refundValue > 0) {
             send(SendParameters{
                 to: to,
@@ -215,9 +218,11 @@ contract OrderBook with Deployable, Resumable {
         }
     }
 
-    fun getPoolGas(): Int {
-        return context().readForwardFee() + self.lpGasConsumption + self.minTonsForStorage;
+    fun getPoolGas(orderType: Int): Int {
+        let gasConsumption: Int = orderType == ORDER_TYPE_LP ? self.lpGasConsumption : self.perpGasConsumption;
+        return context().readForwardFee() + gasConsumption + self.minTonsForStorage;
     }
+
     // ======================================================== LP ================================================================ //
     // Create Increase
     fun handleCreateIncreaseLPPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, liquidityDelta: Int) {
@@ -225,7 +230,7 @@ contract OrderBook with Deployable, Resumable {
 
         let refundComment: String = "";
         let refund: Bool = false;
-        if (ctx.value < executionFee + self.gasConsumption + self.minTonsForStorage) {
+        if (ctx.value < executionFee + self.gasConsumption) {
             refund = true;
             refundComment = "gas not enough";
         }
@@ -286,7 +291,7 @@ contract OrderBook with Deployable, Resumable {
 
         let ctx: Context = context();
         // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
         // check execution fee
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
@@ -330,9 +335,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= self.gasConsumption + self.minTonsForStorage + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption + GAS_TRANSFER_JETTON, "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+            require(ctx.value >= self.gasConsumption, "gas not enough");
         }
         
         // check order
@@ -397,9 +402,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
+            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP), "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP) + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
         // check order
@@ -785,9 +790,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(), "gas not enough");
+            require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(ORDER_TYPE_PERP), "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(ORDER_TYPE_PERP) + GAS_TRANSFER_JETTON, "gas not enough");
         }
 
         // check order
@@ -938,7 +943,7 @@ contract OrderBook with Deployable, Resumable {
         let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
+        require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(ORDER_TYPE_PERP) + GAS_TRANSFER_JETTON, "gas not enough");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -997,7 +1002,7 @@ contract OrderBook with Deployable, Resumable {
         let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas() + GAS_TRANSFER_JETTON, "gas not enough");
+        require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(ORDER_TYPE_PERP) + GAS_TRANSFER_JETTON, "gas not enough");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());

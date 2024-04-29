@@ -6,6 +6,7 @@ struct ConfigData {
     minExecutionFee: Int as coins;
     gasConsumption: Int as coins;
     lpGasConsumption: Int as coins;
+    perpGasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
     usdtWallet: Address;
     pool: Address;

@@ -21,7 +21,7 @@ export async function createIncreasePerpOrder(user: SandboxContract<TreasuryCont
             $$type: 'TokenTransfer',
             query_id: 0n,
             amount: toJettonUnits(margin),
-            destination: TestEnv.orderBook.address,
+            sender: TestEnv.orderBook.address,
             response_destination: user.address,
             custom_payload: null,
             forward_ton_amount: toNano(executionFee + 0.1),
@@ -104,7 +104,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.4'),
+            value: toNano('0.3'),
         },
         {
             $$type: 'ExecutePerpPositionOrder',
@@ -250,7 +250,7 @@ export async function liquidatePerpPosition(executor: SandboxContract<TreasuryCo
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano('0.3'),
         },
         {
             $$type: 'LiquidatePerpPosition',
@@ -298,7 +298,7 @@ export async function adlPerpPosition(executor: SandboxContract<TreasuryContract
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
         {
-            value: toNano('0.5'),
+            value: toNano('0.3'),
         },
         {
             $$type: 'ADLPerpPosition',

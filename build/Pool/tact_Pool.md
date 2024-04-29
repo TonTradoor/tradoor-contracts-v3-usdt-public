@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 13262 bytes
+BOC Size: 14348 bytes
 
 # Types
 Total Types: 37
@@ -38,8 +38,8 @@ TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
 ## UpdateConfig
-TLB: `update_config#65d11761 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> claimExecutor:Maybe address gasConsumption:Maybe coins minTonsForStorage:Maybe coins lpBonusFactor:Maybe int257 lpLiquidityFactor:Maybe int257 orderBook:Maybe address = UpdateConfig`
-Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,claimExecutor:Maybe address,gasConsumption:Maybe coins,minTonsForStorage:Maybe coins,lpBonusFactor:Maybe int257,lpLiquidityFactor:Maybe int257,orderBook:Maybe address}`
+TLB: `update_config#fcd617e8 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> claimExecutor:Maybe address lpGasConsumption:Maybe coins perpGasConsumption:Maybe coins minTonsForStorage:Maybe coins lpBonusFactor:Maybe int257 lpLiquidityFactor:Maybe int257 orderBook:Maybe address = UpdateConfig`
+Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,claimExecutor:Maybe address,lpGasConsumption:Maybe coins,perpGasConsumption:Maybe coins,minTonsForStorage:Maybe coins,lpBonusFactor:Maybe int257,lpLiquidityFactor:Maybe int257,orderBook:Maybe address}`
 
 ## UpdateTokenConfig
 TLB: `update_token_config#fedfb0ef tokenId:uint64 name:Maybe ^string enable:Maybe bool minValue:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 liquidityProportion:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 = UpdateTokenConfig`
@@ -94,8 +94,8 @@ TLB: `update_funding_fee_event#e8781e8d length:int257 datas:dict<int, ^UpdateFun
 Signature: `UpdateFundingFeeEvent{length:int257,datas:dict<int, ^UpdateFundingRateEventData{tokenId:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}>}`
 
 ## ConfigData
-TLB: `_ isExecutor:Maybe bool gasConsumption:coins minTonsForStorage:coins lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
-Signature: `ConfigData{isExecutor:Maybe bool,gasConsumption:coins,minTonsForStorage:coins,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
+TLB: `_ isExecutor:Maybe bool lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,lpBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
 
 ## ExecutorParam
 TLB: `_ executor:address enable:bool = ExecutorParam`

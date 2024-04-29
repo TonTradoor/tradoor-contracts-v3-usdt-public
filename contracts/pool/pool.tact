@@ -8,8 +8,9 @@ import "./constants";
 contract Pool with Deployable, Ownable {
 
     // config
-    gasConsumption: Int = ton("0.05");
-    minTonsForStorage: Int = ton("0.03");
+    lpGasConsumption: Int = ton("0.04");
+    perpGasConsumption: Int = ton("0.09");
+    minTonsForStorage: Int = ton("0.01");
 
     tokenConfigs: map<Int, TokenConfig>; // tokenId => tokenConfig
 
@@ -72,8 +73,11 @@ contract Pool with Deployable, Ownable {
         if (msg.claimExecutor != null) {
             self.claimExecutor = msg.claimExecutor!!;
         }
-        if (msg.gasConsumption != null) {
-            self.gasConsumption = msg.gasConsumption!!;
+        if (msg.lpGasConsumption != null) {
+            self.lpGasConsumption = msg.lpGasConsumption!!;
+        }
+        if (msg.perpGasConsumption != null) {
+            self.perpGasConsumption = msg.perpGasConsumption!!;
         }
         if (msg.minTonsForStorage != null) {
             self.minTonsForStorage = msg.minTonsForStorage!!;
@@ -180,7 +184,8 @@ contract Pool with Deployable, Ownable {
         }
         return ConfigData{
             isExecutor: isExecutor,
-            gasConsumption: self.gasConsumption,
+            lpGasConsumption: self.lpGasConsumption,
+            perpGasConsumption: self.perpGasConsumption,
             minTonsForStorage: self.minTonsForStorage,
             lpBonusFactor: self.lpBonusFactor,
             lpLiquidityFactor: self.lpLiquidityFactor,
@@ -194,6 +199,14 @@ contract Pool with Deployable, Ownable {
 
     get fun priceData(tokenId: Int): Int? {
         return self.prices.get(tokenId);
+    }
+
+    fun execeedGas(orderType: Int): Int {
+        let tonBalanceBeforeMsg: Int = myBalance() - context().value;
+        let storageFee: Int = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
+        let extraValue: Int = max(0, tonBalanceBeforeMsg - self.minTonsForStorage);
+        let gasConsumption: Int = orderType == ORDER_TYPE_LP ? self.lpGasConsumption : self.perpGasConsumption;
+        return context().value - storageFee - gasConsumption + extraValue;
     }
 
     // ======================================================== LP ================================================================ //
@@ -260,8 +273,7 @@ contract Pool with Deployable, Ownable {
         self.globalLPLiquidity = self.globalLPLiquidity + liquidityDelta;
 
         // leave minTonsForStorage
-        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
-        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+        let msgValue: Int = self.execeedGas(ORDER_TYPE_LP);
 
         // send update success msg
         send(SendParameters{
@@ -363,9 +375,8 @@ contract Pool with Deployable, Ownable {
         self.globalLPFund = self.globalLPFund - receive;
         self.globalLPLiquidity = self.globalLPLiquidity - liquidityDelta;
 
-        // leave minTonsForStorage
-        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
-        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+        // execeed gas
+        let msgValue: Int = self.execeedGas(ORDER_TYPE_LP);
 
         // send update success msg
         send(SendParameters{
@@ -618,9 +629,8 @@ contract Pool with Deployable, Ownable {
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
 
-        // leave minTonsForStorage
-        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
-        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+        // execeed gas
+        let msgValue: Int = self.execeedGas(ORDER_TYPE_PERP);
 
         // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
@@ -858,9 +868,8 @@ contract Pool with Deployable, Ownable {
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
-        // leave minTonsForStorage
-        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
-        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+        // execeed gas
+        let msgValue: Int = self.execeedGas(ORDER_TYPE_PERP);
 
         // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
@@ -1070,9 +1079,8 @@ contract Pool with Deployable, Ownable {
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
-        // leave minTonsForStorage
-        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
-        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+        // execeed gas
+        let msgValue: Int = self.execeedGas(ORDER_TYPE_PERP);
 
         // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
@@ -1184,8 +1192,9 @@ contract Pool with Deployable, Ownable {
             datas: resultDatas
         }.toCell());
 
-        let extraValue: Int = max(0, myBalance() - context().value - self.minTonsForStorage);
-        let msgValue: Int = context().value - (self.minTonsForStorage + self.gasConsumption) + extraValue;
+        // execeed gas
+        let msgValue: Int = self.execeedGas(ORDER_TYPE_PERP);
+
         send(SendParameters{
             to: sender(),
             bounce: true,
