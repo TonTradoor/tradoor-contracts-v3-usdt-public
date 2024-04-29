@@ -23,7 +23,7 @@ export async function run(provider: NetworkProvider) {
             },
             {
                 $$type: 'UpdateTokenConfig',
-                tokenId: 1n,
+                tokenId: BigInt(index + 1),
                 name: name,
                 enable: true,
                 minValue: toUnits(100, jettonDecimal), // 100U

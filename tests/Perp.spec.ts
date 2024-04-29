@@ -427,6 +427,7 @@ describe('LP', () => {
     });
 
     it('should execute increase perp market order with tp/sl', async () => {
+        console.log("should execute increase perp market order with tp/sl");
         /* =========================== increase LP ================================ */
         /// create order
         let lpLiquidity = 100000;

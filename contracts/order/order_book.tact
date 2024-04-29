@@ -612,10 +612,6 @@ contract OrderBook with Deployable, Resumable {
         self.requireNotStopped();
         
         let ctx: Context = context();
-        // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
-        // check execution fee TODO tp/sl
-        require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
         let executionFeeMultiple: Int = 0;
         if (msg.tpSize > 0 && msg.tpPrice > 0) {
@@ -624,6 +620,11 @@ contract OrderBook with Deployable, Resumable {
         if (msg.slSize > 0 && msg.slPrice > 0) {
             executionFeeMultiple += 1;
         }
+
+        // check gas
+        require(ctx.value - msg.executionFee >= self.gasConsumption * executionFeeMultiple, "gas not enough");
+        // check execution fee
+        require(msg.executionFee >= self.minExecutionFee * executionFeeMultiple, "execution fee not enough");
 
         // create tp/sl
         if (msg.tpSize > 0 && msg.tpPrice > 0) {
@@ -637,7 +638,15 @@ contract OrderBook with Deployable, Resumable {
         }
 
         // transfer execess gas
-        self.refundExecessTon(sender(), msg.executionFee);
+        let refundValue: Int = context().value - msg.executionFee - self.gasConsumption * executionFeeMultiple;
+        if (refundValue > 0) {
+            send(SendParameters{
+                to: to,
+                bounce: false,
+                value: refundValue,
+                mode: SendIgnoreErrors
+            });
+        }
     }
 
     fun createPerpOrder(trxId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, 
