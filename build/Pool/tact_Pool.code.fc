@@ -717,6 +717,7 @@
     throw_unless(41207, ( __tact_slice_eq_bits($self'orderBook, __tact_context_get_sender()) ));
     var ($result'lpReceivedFundingFeeDelta, $result'longFundingFeeGrowthAfter, $result'shortFundingFeeGrowthAfter) = ($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRate)~$Pool$_fun_updatePriceAndFundingFee($msg'tokenId, $msg'price);
     int $indexPrice = $msg'price;
+    throw_unless(19114, (abs($msg'premiumRate) < 1000000000));
     int $tradePrice = (((1000000000 + $msg'premiumRate) * $indexPrice) / 1000000000);
     $self'prevPremiumRate = $msg'premiumRate;
     if (( (($msg'opType == 10)) ? (true) : (($msg'opType == 11)) )) {
@@ -836,7 +837,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmS4U8VYhpD7PTZRDK6kdx1V4Md7cQ4S5qXhNmfwDxiCJL";
+    return "ipfs://QmUkjqGCX7MzuFJzLDnqZdtfshduAYM2sGQ9uPNafFk8LA";
 }
 
 _ lazy_deployment_completed() method_id {

@@ -437,6 +437,7 @@ contract Pool with Deployable, Ownable {
         let indexPrice: Int = msg.price;
         
         // trade price
+        require(abs(msg.premiumRate) < PERCENTAGE_BASIS_POINT, "invalid premium rate");
         let tradePrice: Int = (PERCENTAGE_BASIS_POINT + msg.premiumRate) * indexPrice / PERCENTAGE_BASIS_POINT;
         self.prevPremiumRate = msg.premiumRate;
 

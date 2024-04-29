@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 14348 bytes
+BOC Size: 14364 bytes
 
 # Types
 Total Types: 37
@@ -204,6 +204,7 @@ Argument: account
 9429: send gas not enough
 17312: leverage too high
 18995: margin rate too low
+19114: invalid premium rate
 23314: insufficient liquidity for single value
 27798: invalid token
 28603: margin rate too high
