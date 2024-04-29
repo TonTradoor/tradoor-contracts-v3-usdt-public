@@ -12,12 +12,13 @@ contract OrderBook with Deployable, Resumable {
     maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
     minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
 
-    // TODO gas
+    // gas
     minExecutionFee: Int = ton("0.1"); // fee for every operation
     gasConsumption: Int = ton("0.04"); // min orderbook consumption gas
     lpGasConsumption: Int = ton("0.04"); // min lp consumption gas
     perpGasConsumption: Int = ton("0.09"); // min perp consumption gas
     minTonsForStorage: Int = ton("0.01"); // min pool storage gas
+    gasTransferJetton: Int = ton("0.08"); // min pool storage gas
 
     usdtWallet: Address; // order book USDT jetton wallet address
     pool: Address; // pool address
@@ -67,10 +68,13 @@ contract OrderBook with Deployable, Resumable {
         self.maxTimeDelayExecutor = msg.maxTimeDelayExecutor;
         self.minTimeDelayTrader = msg.minTimeDelayTrader;
         self.minExecutionFee = msg.minExecutionFee;
+
         self.gasConsumption = msg.gasConsumption;
         self.lpGasConsumption = msg.lpGasConsumption;
         self.perpGasConsumption = msg.perpGasConsumption;
         self.minTonsForStorage = msg.minTonsForStorage;
+        self.gasTransferJetton = msg.gasTransferJetton;
+
         self.usdtWallet = msg.usdtWallet;
         self.pool = msg.pool;
         send(SendParameters{
@@ -96,6 +100,7 @@ contract OrderBook with Deployable, Resumable {
             lpGasConsumption: self.lpGasConsumption,
             perpGasConsumption: self.perpGasConsumption,
             minTonsForStorage: self.minTonsForStorage,
+            gasTransferJetton: self.gasTransferJetton,
             usdtWallet: self.usdtWallet,
             pool: self.pool
         };
@@ -189,7 +194,7 @@ contract OrderBook with Deployable, Resumable {
         if (amount > 0) {
             send(SendParameters{
                 to: self.usdtWallet, 
-                value: GAS_TRANSFER_JETTON,
+                value: self.gasTransferJetton,
                 mode: SendIgnoreErrors, 
                 bounce: false,
                 body: TokenTransfer{
@@ -335,7 +340,7 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= self.gasConsumption + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
         } else {
             require(ctx.value >= self.gasConsumption, "gas not enough");
         }
@@ -404,7 +409,7 @@ contract OrderBook with Deployable, Resumable {
         if (order.isIncrease) {
             require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP), "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP) + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP) + self.gasTransferJetton, "gas not enough");
         }
 
         // check order
@@ -458,7 +463,7 @@ contract OrderBook with Deployable, Resumable {
         if (order.isIncrease) {
             require(ctx.value >= self.gasConsumption, "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
         }
 
         // delete order
@@ -536,7 +541,7 @@ contract OrderBook with Deployable, Resumable {
 
         let refundComment: String = "";
         let refund: Bool = false;
-        if (ctx.value < executionFee + self.gasConsumption + self.minTonsForStorage) {
+        if (ctx.value < executionFee + self.gasConsumption) {
             refund = true;
             refundComment = "gas not enough";
         }
@@ -591,7 +596,7 @@ contract OrderBook with Deployable, Resumable {
 
         let ctx: Context = context();
         // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
         // check execution fee
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
@@ -608,7 +613,7 @@ contract OrderBook with Deployable, Resumable {
         
         let ctx: Context = context();
         // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
         // check execution fee TODO tp/sl
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
@@ -721,9 +726,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            require(ctx.value >= self.gasConsumption + self.minTonsForStorage + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+            require(ctx.value >= self.gasConsumption, "gas not enough");
         }
 
         // check order
@@ -790,9 +795,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(ORDER_TYPE_PERP), "gas not enough");
+            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP), "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(ORDER_TYPE_PERP) + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
         }
 
         // check order
@@ -875,7 +880,7 @@ contract OrderBook with Deployable, Resumable {
                 }
             }
         } else {
-            require(ctx.value >= self.gasConsumption + GAS_TRANSFER_JETTON, "gas not enough");
+            require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
         }
 
         // delete order
@@ -943,7 +948,7 @@ contract OrderBook with Deployable, Resumable {
         let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(ORDER_TYPE_PERP) + GAS_TRANSFER_JETTON, "gas not enough");
+        require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -1002,7 +1007,7 @@ contract OrderBook with Deployable, Resumable {
         let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= self.gasConsumption * 2 + self.minTonsForStorage + self.getPoolGas(ORDER_TYPE_PERP) + GAS_TRANSFER_JETTON, "gas not enough");
+        require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -1078,7 +1083,7 @@ contract OrderBook with Deployable, Resumable {
 
         let ctx: Context = context();
         // check gas
-        require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        require(ctx.value >= self.gasConsumption, "gas not enough");
 
         // add new compensate
         let compensateId: Int = self.compensateIndexNext;
@@ -1121,7 +1126,7 @@ contract OrderBook with Deployable, Resumable {
         require(self.compensates.get(msg.compensateId) != null, "compensate not exist");
 
         // check gas
-        require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
 
         // delete compensate
         self.compensates.set(msg.compensateId, null);
@@ -1143,7 +1148,7 @@ contract OrderBook with Deployable, Resumable {
 
         let ctx: Context = context();
         // check gas
-        require(ctx.value >= self.gasConsumption + self.minTonsForStorage, "gas not enough");
+        require(ctx.value >= self.gasConsumption, "gas not enough");
 
         // check unlock time
         let compensateOpt: Compensate? = self.compensates.get(msg.compensateId);

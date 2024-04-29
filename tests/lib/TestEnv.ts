@@ -145,6 +145,7 @@ export class TestEnv {
                 lpGasConsumption: toNano(0.035),
                 perpGasConsumption: toNano(0.09),
                 minTonsForStorage: toNano(0.01),
+                gasTransferJetton: toNano(0.08),
                 usdtWallet: TestEnv.orderBookJettonWallet.address,
                 pool: TestEnv.pool.address
             }

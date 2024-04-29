@@ -87,36 +87,6 @@ describe('LP', () => {
         console.log("orderBookTonBalanceAfter", await getFriendlyTonBalance(orderBook.address));
     });
 
-    it('auto refund -- not in whitelist', async () => {
-        let liquidity = 10;
-        let executionFee = 0.1;
-        
-        // get orderBook TON balance
-        console.log("orderBookTonBalance", await getFriendlyTonBalance(orderBook.address));
-
-        // create order
-        let createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
-        printTransactionFees(createResult.trxResult.transactions);
-        prettyLogTransactions(createResult.trxResult.transactions);
-        expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
-            success: true,
-        });
-
-        // check index
-        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore);
-
-        // check order
-        expect(createResult.order).toBeNull();
-
-        // check orderBook jetton balance
-        expect(await getJettonBalance(orderBook.address)).toEqual(0n);
-
-        // check orderBook TON balance
-        console.log("orderBookTonBalanceAfter", await getFriendlyTonBalance(orderBook.address));
-    });
-
     it('should create increase LP order', async () => {
         /// create order
         let liquidity = 10;

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 14131 bytes
+BOC Size: 14403 bytes
 
 # Types
 Total Types: 45
@@ -50,8 +50,8 @@ TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
 Signature: `TokenExcesses{queryId:uint64}`
 
 ## UpdateConfig
-TLB: `update_config#13e658e4 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = UpdateConfig`
-Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
+TLB: `update_config#fa44abf2 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = UpdateConfig`
+Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,usdtWallet:address,pool:address}`
 
 ## SendProtocolFee
 TLB: `send_protocol_fee#5dd58461 trxId:uint64 feeReceiver:address amount:int257 = SendProtocolFee`
@@ -158,8 +158,8 @@ TLB: `compensate_executed_event#db45e438 compensateId:uint64 trxId:uint64 = Comp
 Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 
 ## ConfigData
-TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins usdtWallet:address pool:address = ConfigData`
-Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,usdtWallet:address,pool:address}`
+TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 minExecutionFee:coins gasConsumption:coins lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,minExecutionFee:coins,gasConsumption:coins,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,usdtWallet:address,pool:address}`
 
 ## ExecutorParam
 TLB: `_ executor:address enable:bool = ExecutorParam`
