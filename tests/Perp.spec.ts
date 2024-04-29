@@ -591,7 +591,7 @@ describe('LP', () => {
         blockchain.now = time1;
 
         // create order
-        const createDecreaseResult = await createTpSlPerpOrder(user1, executionFee, tokenId, isLong, tpSize, tpPrice, slSize, slPrice);
+        const createDecreaseResult = await createTpSlPerpOrder(user1, executionFee * 2, tokenId, isLong, tpSize, tpPrice, slSize, slPrice);
         printTransactionFees(createDecreaseResult.trxResult.transactions);
         expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,

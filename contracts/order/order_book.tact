@@ -118,7 +118,7 @@ contract OrderBook with Deployable, Resumable {
             send(SendParameters{
                 to: sender(), 
                 value: 0,
-                mode: SendRemainingValue, 
+                mode: SendIgnoreErrors + SendRemainingValue, 
                 bounce: false,
                 body: TokenTransfer{
                     queryId: msg.queryId,
@@ -175,7 +175,7 @@ contract OrderBook with Deployable, Resumable {
             send(SendParameters{
                 to: self.usdtWallet, 
                 value: 0,
-                mode: SendRemainingValue, 
+                mode: SendIgnoreErrors + SendRemainingValue, 
                 bounce: false,
                 body: TokenTransfer{
                     queryId: msg.queryId,
@@ -519,7 +519,7 @@ contract OrderBook with Deployable, Resumable {
             send(SendParameters{
                 to: order.lastOperator!!,
                 value: 0,
-                mode: SendRemainingValue
+                mode: SendIgnoreErrors + SendRemainingValue
             });
         }
     }
@@ -956,7 +956,7 @@ contract OrderBook with Deployable, Resumable {
             send(SendParameters{
                 to: order.lastOperator!!,
                 value: 0,
-                mode: SendRemainingValue
+                mode: SendIgnoreErrors + SendRemainingValue
             });
         }
     }

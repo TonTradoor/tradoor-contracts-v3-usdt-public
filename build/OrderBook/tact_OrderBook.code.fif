@@ -2684,7 +2684,7 @@ PROGRAM{
       DROP
       __tact_context_get_sender INLINECALLDICT
       0 PUSHINT
-      64 PUSHINT
+      66 PUSHINT
       FALSE
       PUSHNULL
       s3 PUSH
@@ -2783,7 +2783,7 @@ PROGRAM{
         }>ELSE<{
           DROP
           0 PUSHINT
-          64 PUSHINT
+          66 PUSHINT
           FALSE
           PUSHNULL
           s3 PUSH
@@ -3432,7 +3432,7 @@ PROGRAM{
         s0 s7 XCHG
         __tact_not_null INLINECALLDICT
         0 PUSHINT
-        64 PUSHINT
+        66 PUSHINT
         $SendParameters$_constructor_to_value_mode INLINECALLDICT
         $global_send INLINECALLDICT
       }>ELSE<{
@@ -4589,7 +4589,7 @@ PROGRAM{
         s0 s5 XCHG
         __tact_not_null INLINECALLDICT
         0 PUSHINT
-        64 PUSHINT
+        66 PUSHINT
         $SendParameters$_constructor_to_value_mode INLINECALLDICT
         $global_send INLINECALLDICT
       }>ELSE<{
