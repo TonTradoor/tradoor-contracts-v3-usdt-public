@@ -641,7 +641,7 @@ contract OrderBook with Deployable, Resumable {
         let refundValue: Int = context().value - msg.executionFee - self.gasConsumption * executionFeeMultiple;
         if (refundValue > 0) {
             send(SendParameters{
-                to: to,
+                to: sender(),
                 bounce: false,
                 value: refundValue,
                 mode: SendIgnoreErrors
@@ -870,6 +870,7 @@ contract OrderBook with Deployable, Resumable {
         }
         let order: PerpPositionOrder = orderOpt!!;
 
+        let executionFeeMultiple: Int = 0;
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             require(ctx.value >= self.gasConsumption, "gas not enough");
@@ -879,11 +880,13 @@ contract OrderBook with Deployable, Resumable {
                 let orderEx: PerpPositionOrderEx = orderExOpt!!;
                 // create tp/sl
                 if (orderEx.tpSize > 0 && orderEx.tpPrice > 0) {
+                    executionFeeMultiple += 1;
                     self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_TP, sender(), order.tokenId, order.isLong, 0, orderEx.tpSize, orderEx.tpPrice, 
                         0, 0, 0, 0, orderEx.executionFee);
                 }
 
                 if (orderEx.slSize > 0 && orderEx.slPrice > 0) {
+                    executionFeeMultiple += 1;
                     self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_SL, sender(), order.tokenId, order.isLong, 0, orderEx.slSize, orderEx.slPrice, 
                         0, 0, 0, 0, orderEx.executionFee);
                 }
@@ -922,8 +925,14 @@ contract OrderBook with Deployable, Resumable {
         }
 
         // transfer execess gas
-        if (order.lastOperator != null) {
-            self.refundExecessTon(order.lastOperator!!, 0);
+        let refundValue: Int = context().value - order.executionFee - self.gasConsumption * (1 + executionFeeMultiple);
+        if (refundValue > 0) {
+            send(SendParameters{
+                to: order.lastOperator!!,
+                bounce: false,
+                value: refundValue,
+                mode: SendIgnoreErrors
+            });
         }
     }
 

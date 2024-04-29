@@ -3542,25 +3542,13 @@ PROGRAM{
     s0 24 s() XCHG
     $OrderBook$_fun_requireNotStopped INLINECALLDICT
     __tact_context_get INLINECALLDICT
-    DROP
-    NIP
-    19305 PUSHINT
-    s2 POP
-    25 s() PUSH
-    SUB
-    18 s() PUSH
-    GEQ
-    THROWANYIFNOT
-    24562 PUSHINT
-    24 s() PUSH
-    19 s() PUSH
-    GEQ
-    THROWANYIFNOT
+    s1 s3 XCHG
+    3 BLKDROP
     0 PUSHINT
-    21 s() PUSH
+    22 s() PUSH
     0 GTINT
     IF:<{
-      28 s() PUSH
+      29 s() PUSH
       0 GTINT
     }>ELSE<{
       FALSE
@@ -3569,10 +3557,10 @@ PROGRAM{
       DROP
       1 PUSHINT
     }>
-    27 s() PUSH
+    28 s() PUSH
     0 GTINT
     IF:<{
-      26 s() PUSH
+      27 s() PUSH
       0 GTINT
     }>ELSE<{
       FALSE
@@ -3580,6 +3568,24 @@ PROGRAM{
     IF:<{
       INC
     }>
+    19305 PUSHINT
+    s0 s2 XCHG
+    26 s() PUSH
+    SUB
+    19 s() PUSH
+    s2 PUSH
+    MUL
+    GEQ
+    s1 s2 XCHG
+    THROWANYIFNOT
+    24562 PUSHINT
+    19 s() PUSH
+    s2 PUSH
+    MUL
+    26 s() PUSH
+    SWAP
+    GEQ
+    THROWANYIFNOT
     21 s() PUSH
     0 GTINT
     IF:<{
@@ -3658,84 +3664,92 @@ PROGRAM{
       s0 s0 s0 PUSH3
       DUP
       29 s() PUSH
-      SWAP
-      s0 27 s() XCHG
+      27 s() PUSH
       DIV
-      25 s() 32 s() XCHG
-      24 s() 31 s() XCHG
-      23 s() 30 s() XCHG
-      22 s() 29 s() XCHG
-      21 s() 28 s() XCHG
-      20 s() 27 s() XCHG
-      19 s() 26 s() XCHG
-      18 s() 25 s() XCHG
-      17 s() 24 s() XCHG
-      16 s() 23 s() XCHG
-      s15 22 s() XCHG
-      s14 21 s() XCHG
-      s13 20 s() XCHG
-      s12 19 s() XCHG
-      s11 18 s() XCHG
-      s10 17 s() XCHG
-      s9 16 s() XCHG
-      s8 s15 XCHG
-      s7 s14 XCHG
-      s13 33 s() XCHG
-      s9 s12 XCHG
-      s6 s11 XCHG
-      s5 s10 XCHG
-      s7 s9 XCHG
-      s8 33 s() XCHG
-      s4 s7 XCHG
-      s3 s4 XCHG
-      s1 s3 s0 XCHG3
+      26 s() 32 s() XCHG
+      25 s() 31 s() XCHG
+      24 s() 30 s() XCHG
+      23 s() 29 s() XCHG
+      22 s() 28 s() XCHG
+      21 s() 27 s() XCHG
+      20 s() 26 s() XCHG
+      19 s() 25 s() XCHG
+      18 s() 24 s() XCHG
+      17 s() 23 s() XCHG
+      16 s() 22 s() XCHG
+      s15 21 s() XCHG
+      s14 20 s() XCHG
+      s13 19 s() XCHG
+      s12 18 s() XCHG
+      s11 17 s() XCHG
+      s10 16 s() XCHG
+      s9 s15 XCHG
+      s8 s14 XCHG
+      s13 34 s() XCHG
+      s12 34 s() XCHG
+      s7 s11 XCHG
+      5 6 REVERSE
+      s6 s8 XCHG
+      s5 s7 XCHG
+      s6 33 s() XCHG
+      s5 33 s() XCHG
       $OrderBook$_fun_createPerpOrder INLINECALLDICT
       DROP
-      s0 20 s() XCHG
-      s6 19 s() XCHG
-      s5 18 s() XCHG
-      s4 17 s() XCHG
-      s0 16 s() XCHG
-      s3 s15 XCHG
-      s14 s13 s0 XCHG3
-      s6 s12 XCHG
-      s5 s11 XCHG
-      s4 s10 XCHG
-      s0 s9 XCHG
-      s3 s8 XCHG
-      s0 s6 s7 XCHG3
-      s1 s5 XCHG
-      s1 s4 XCHG
-      s1 s3 XCHG
+      s0 21 s() XCHG
+      s5 20 s() XCHG
+      s4 19 s() XCHG
+      s3 18 s() XCHG
+      s0 17 s() XCHG
+      s2 16 s() XCHG
+      s1 s15 XCHG
+      s5 s14 XCHG
+      s4 s13 XCHG
+      s3 s12 XCHG
+      s10 s9 s11 XCHG3
+      s5 s8 XCHG
+      s4 s7 XCHG
+      s3 s6 XCHG
+      s5 s1 s5 XCHG3
+      s4 s4 XCHG2
+      s0 s3 XCHG
     }>ELSE<{
-      s5 25 s() XCHG
-      s4 24 s() XCHG
-      s3 23 s() XCHG
-      s2 21 s() XCHG
-      19 s() POP
-      19 s() POP
-      4 BLKDROP
+      s4 25 s() XCHG
+      s3 24 s() XCHG
+      s2 23 s() XCHG
+      20 s() POP
+      20 s() POP
+      3 BLKDROP
     }>
-    __tact_context_get_sender INLINECALLDICT
-    s13 21 s() XCHG
-    s12 20 s() XCHG
+    __tact_context_get INLINECALLDICT
+    $Context$_get_value INLINECALLDICT
+    SWAP
+    s0 18 s() XCHG
+    SUB
+    s10 s14 PUXC
+    MUL
+    s1 s14 XCHG
+    SUB
+    DUP
+    0 GTINT
+    IF:<{
+      __tact_context_get_sender INLINECALLDICT
+      FALSE
+      ROT
+      2 PUSHINT
+      $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
+      $global_send INLINECALLDICT
+    }>ELSE<{
+      DROP
+    }>
     s11 19 s() XCHG
     s10 18 s() XCHG
     s9 17 s() XCHG
     s8 16 s() XCHG
-    s7 s15 XCHG
-    s6 s14 XCHG
-    s5 s13 XCHG
-    s4 s12 XCHG
-    s3 s11 XCHG
-    s10 s9 s0 XCHG3
-    s4 s8 XCHG
-    s3 s7 XCHG
-    s2 s6 XCHG
-    s4 s5 XCHG
-    s3 s4 XCHG
-    s3 s0 s0 XCHG3
-    $OrderBook$_fun_refundExecessTon INLINECALLDICT
+    8 8 BLKSWAP
+    s4 s7 XCHG
+    s4 s6 XCHG
+    3 3 BLKSWAP
+    s1 s2 XCHG
   }>
   $OrderBook$_internal_binary_CancelPerpPositionOrder PROCINLINE:<{
     __tact_context_get INLINECALLDICT
@@ -4207,24 +4221,25 @@ PROGRAM{
       2DROP
       s3 POP
       s3 POP
-      s6 PUSH
+      0 PUSHINT
+      s7 PUSH
       10 EQINT
       IF:<{
         TRUE
       }>ELSE<{
-        s6 PUSH
+        s7 PUSH
         11 EQINT
       }>
       IF:<{
         19305 PUSHINT
-        s0 s8 XCHG
-        28 s() PUSH
+        s0 s9 XCHG
+        29 s() PUSH
         GEQ
-        s1 s8 XCHG
+        s1 s9 XCHG
         THROWANYIFNOT
-        s13 PUSH
+        s14 PUSH
         257 PUSHINT
-        s11 PUSH
+        s12 PUSH
         __tact_dict_get_int_cell INLINECALLDICT
         $PerpPositionOrderEx$_load_opt INLINECALLDICT
         DUP
@@ -4241,66 +4256,70 @@ PROGRAM{
             FALSE
           }>
           IF:<{
+            s12 POP
+            1 PUSHINT
             13 PUSHINT
             __tact_context_get_sender INLINECALLDICT
             0 PUSHINT
             s0 s0 s0 PUSH3
             DUP
-            28 s() 41 s() XCHG
-            27 s() 40 s() XCHG
-            26 s() 39 s() XCHG
-            25 s() 38 s() XCHG
-            24 s() 37 s() XCHG
-            23 s() 36 s() XCHG
-            22 s() 35 s() XCHG
-            21 s() 34 s() XCHG
-            20 s() 33 s() XCHG
-            19 s() 32 s() XCHG
-            18 s() 31 s() XCHG
-            17 s() 30 s() XCHG
-            16 s() 29 s() XCHG
-            s15 41 s() XCHG
-            s14 40 s() XCHG
-            s13 39 s() XCHG
-            s12 38 s() XCHG
-            s11 37 s() XCHG
-            s10 36 s() XCHG
-            s9 35 s() XCHG
-            32 s() PUSH
+            28 s() 42 s() XCHG
+            27 s() 41 s() XCHG
+            26 s() 40 s() XCHG
+            25 s() 39 s() XCHG
+            24 s() 38 s() XCHG
+            23 s() 37 s() XCHG
+            22 s() 36 s() XCHG
+            21 s() 35 s() XCHG
+            20 s() 34 s() XCHG
+            19 s() 33 s() XCHG
+            18 s() 32 s() XCHG
+            17 s() 31 s() XCHG
+            16 s() 30 s() XCHG
+            s15 29 s() XCHG
+            s14 42 s() XCHG
+            s13 41 s() XCHG
+            s12 40 s() XCHG
+            s11 39 s() XCHG
+            s10 38 s() XCHG
+            s9 37 s() XCHG
+            34 s() PUSH
             s0 s9 XCHG
             s7 s8 XCHG
             s6 s7 XCHG
-            30 s() PUSH
+            32 s() PUSH
             s0 s7 XCHG
-            42 s() PUSH
+            31 s() PUSH
             s0 s7 XCHG
             s0 s6 XCHG
-            s5 40 s() XCHG
-            s4 39 s() XCHG
+            s5 42 s() XCHG
+            s4 41 s() XCHG
             s0 s3 XCHG
-            s2 40 s() XCHG
-            s1 39 s() XCHG
-            39 s() PUSH
+            s2 42 s() XCHG
+            s1 41 s() XCHG
+            36 s() PUSH
             $OrderBook$_fun_createPerpOrder INLINECALLDICT
             DROP
-            19 s() 32 s() XCHG
-            18 s() 31 s() XCHG
-            17 s() 30 s() XCHG
-            16 s() 29 s() XCHG
-            s15 28 s() XCHG
-            s14 27 s() XCHG
-            s13 26 s() XCHG
-            s12 25 s() XCHG
-            s11 24 s() XCHG
-            s10 23 s() XCHG
-            s9 22 s() XCHG
-            s8 21 s() XCHG
-            s7 20 s() XCHG
-            s6 19 s() XCHG
-            s5 18 s() XCHG
-            s4 17 s() XCHG
-            s3 16 s() XCHG
-            s15 s14 s13 XCHG3
+            19 s() 33 s() XCHG
+            18 s() 32 s() XCHG
+            17 s() 31 s() XCHG
+            16 s() 30 s() XCHG
+            s15 29 s() XCHG
+            s14 28 s() XCHG
+            s13 27 s() XCHG
+            s12 26 s() XCHG
+            s11 25 s() XCHG
+            s10 24 s() XCHG
+            s9 23 s() XCHG
+            s8 22 s() XCHG
+            s7 21 s() XCHG
+            s6 20 s() XCHG
+            s5 19 s() XCHG
+            s4 18 s() XCHG
+            s3 17 s() XCHG
+            s2 16 s() XCHG
+            s15 s14 XCHG2
+            s1 s10 XCHG
           }>ELSE<{
             s3 POP
             s3 POP
@@ -4314,192 +4333,217 @@ PROGRAM{
             FALSE
           }>
           IF:<{
+            s0 s10 XCHG
+            INC
             14 PUSHINT
             __tact_context_get_sender INLINECALLDICT
             0 PUSHINT
             s0 s0 s0 PUSH3
             DUP
-            31 s() 39 s() XCHG
-            30 s() 38 s() XCHG
-            29 s() 37 s() XCHG
-            28 s() 36 s() XCHG
-            27 s() 35 s() XCHG
-            26 s() 34 s() XCHG
-            25 s() 33 s() XCHG
-            24 s() 32 s() XCHG
-            23 s() 39 s() XCHG
-            22 s() 38 s() XCHG
-            21 s() 37 s() XCHG
-            20 s() 36 s() XCHG
-            19 s() 35 s() XCHG
-            18 s() 34 s() XCHG
-            17 s() 33 s() XCHG
-            16 s() 32 s() XCHG
-            s15 39 s() XCHG
-            s14 38 s() XCHG
-            s13 37 s() XCHG
-            s12 36 s() XCHG
-            33 s() PUSH
+            31 s() 40 s() XCHG
+            30 s() 39 s() XCHG
+            29 s() 38 s() XCHG
+            28 s() 37 s() XCHG
+            27 s() 36 s() XCHG
+            26 s() 35 s() XCHG
+            25 s() 34 s() XCHG
+            24 s() 33 s() XCHG
+            23 s() 32 s() XCHG
+            22 s() 40 s() XCHG
+            21 s() 39 s() XCHG
+            20 s() 38 s() XCHG
+            19 s() 37 s() XCHG
+            18 s() 36 s() XCHG
+            17 s() 35 s() XCHG
+            16 s() 34 s() XCHG
+            s15 33 s() XCHG
+            s14 32 s() XCHG
+            s13 40 s() XCHG
+            s12 39 s() XCHG
+            36 s() PUSH
             s0 s12 XCHG
             s7 s11 XCHG
             s6 s10 XCHG
-            s9 39 s() XCHG
-            s8 37 s() XCHG
+            s9 34 s() XCHG
+            s8 41 s() XCHG
             s5 s7 XCHG
-            s6 37 s() XCHG
-            s5 37 s() XCHG
-            s0 39 s() XCHG
+            s6 36 s() XCHG
+            s5 36 s() XCHG
+            s0 34 s() XCHG
             $OrderBook$_fun_createPerpOrder INLINECALLDICT
             DROP
-            19 s() 27 s() XCHG
-            18 s() 26 s() XCHG
-            17 s() 25 s() XCHG
-            16 s() 24 s() XCHG
-            s15 23 s() XCHG
-            s14 22 s() XCHG
-            s13 21 s() XCHG
-            s12 20 s() XCHG
-            s11 19 s() XCHG
-            s10 18 s() XCHG
-            s9 17 s() XCHG
-            s8 16 s() XCHG
-            8 8 BLKSWAP
+            19 s() 28 s() XCHG
+            18 s() 27 s() XCHG
+            17 s() 26 s() XCHG
+            16 s() 25 s() XCHG
+            s15 24 s() XCHG
+            s14 23 s() XCHG
+            s13 22 s() XCHG
+            s12 21 s() XCHG
+            s11 20 s() XCHG
+            s10 19 s() XCHG
+            s9 18 s() XCHG
+            s8 17 s() XCHG
+            s7 16 s() XCHG
+            s6 s15 XCHG
+            s5 s14 XCHG
+            s4 s13 XCHG
+            s3 s12 XCHG
+            s11 s10 s9 XCHG3
+            s1 s5 XCHG
           }>ELSE<{
             3 BLKDROP
-            s2 POP
             s3 POP
+            s4 POP
           }>
         }>ELSE<{
           DROP
-          s2 POP
           s3 POP
+          s4 POP
         }>
       }>ELSE<{
-        s3 POP
         s4 POP
+        s5 POP
         19305 PUSHINT
-        26 s() PUSH
-        23 s() PUSH
+        27 s() PUSH
+        24 s() PUSH
         ADD
-        s1 s7 XCHG
+        s1 s8 XCHG
         GEQ
-        s1 s6 XCHG
+        s1 s7 XCHG
         THROWANYIFNOT
-        s4 s1 s4 XCHG3
+        s1 s5 XCHG
+        s1 s3 XCHG
       }>
       257 PUSHINT
       PUSHNULL
       $PerpPositionOrder$_store_opt INLINECALLDICT
-      s9 PUSH
-      s3 s15 XCHG
-      SWAP
+      s2 s15 XCHG
+      s10 s(-1) PUXC
       __tact_dict_set_int_cell INLINECALLDICT
-      s6 PUSH
-      0 GTINT
-      IF:<{
-        s3 PUSH
-        3 EQINT
-        IF:<{
-          NIP
-          20 s() 26 s() XCHG
-          19 s() 25 s() XCHG
-          18 s() 24 s() XCHG
-          17 s() 23 s() XCHG
-          16 s() 22 s() XCHG
-          s15 21 s() XCHG
-          s14 26 s() XCHG
-          s13 25 s() XCHG
-          s12 24 s() XCHG
-          s11 23 s() XCHG
-          s10 22 s() XCHG
-          s9 21 s() XCHG
-          s8 26 s() XCHG
-          s7 25 s() XCHG
-          s6 24 s() XCHG
-          s0 s5 XCHG
-          s4 22 s() XCHG
-          s3 21 s() XCHG
-          s2 26 s() XCHG
-          s1 25 s() XCHG
-          22 s() PUSH
-          SWAP
-          22 s() PUSH
-          27 s() PUSH
-          $OrderBook$_fun_refundJetton INLINECALLDICT
-        }>ELSE<{
-          21 s() 27 s() XCHG
-          20 s() 26 s() XCHG
-          19 s() 25 s() XCHG
-          18 s() 24 s() XCHG
-          17 s() 23 s() XCHG
-          16 s() 22 s() XCHG
-          s15 27 s() XCHG
-          s14 26 s() XCHG
-          s13 25 s() XCHG
-          s12 24 s() XCHG
-          s11 23 s() XCHG
-          s10 22 s() XCHG
-          s9 27 s() XCHG
-          s8 26 s() XCHG
-          s7 25 s() XCHG
-          s0 s6 XCHG
-          s5 23 s() XCHG
-          s4 22 s() XCHG
-          s3 27 s() XCHG
-          s2 26 s() XCHG
-          23 s() PUSH
-          s0 s2 XCHG
-          27 s() PUSH
-          $OrderBook$_fun_refundJetton INLINECALLDICT
-        }>
-        19 s() 25 s() XCHG
-        18 s() 24 s() XCHG
-        17 s() 23 s() XCHG
-        16 s() 22 s() XCHG
-        s15 21 s() XCHG
-        s14 20 s() XCHG
-        s13 19 s() XCHG
-        s12 18 s() XCHG
-        s11 17 s() XCHG
-        s10 16 s() XCHG
-        s9 s15 XCHG
-        s8 s14 XCHG
-        s7 s13 XCHG
-        s6 s12 XCHG
-        s5 s11 XCHG
-        s3 s9 XCHG
-        s8 s7 s6 XCHG3
-      }>ELSE<{
-        s6 POP
-        DROP
-      }>
-      s1 s5 s3 XCHG3
-      $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId INLINECALLDICT
-      $PerpPositionOrderExecutedEvent$_store_cell INLINECALLDICT
-      $global_emit INLINECALLDICT
       s7 PUSH
       0 GTINT
       IF:<{
-        s1 s2 XCHG
-        TRUE
-        s0 s8 XCHG2
-        2 PUSHINT
-        $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
-        $global_send INLINECALLDICT
-        s0 s5 XCHG
+        s4 PUSH
+        3 EQINT
+        IF:<{
+          s2 POP
+          20 s() 27 s() XCHG
+          19 s() 26 s() XCHG
+          18 s() 25 s() XCHG
+          17 s() 24 s() XCHG
+          16 s() 23 s() XCHG
+          s15 22 s() XCHG
+          s14 21 s() XCHG
+          s13 27 s() XCHG
+          s12 26 s() XCHG
+          s11 25 s() XCHG
+          s10 24 s() XCHG
+          s9 23 s() XCHG
+          s8 22 s() XCHG
+          s7 21 s() XCHG
+          s6 27 s() XCHG
+          s1 s5 XCHG
+          s4 25 s() XCHG
+          s3 24 s() XCHG
+          s2 23 s() XCHG
+          s1 22 s() XCHG
+          22 s() PUSH
+          SWAP
+          s0 28 s() XCHG
+          28 s() PUSH
+          28 s() PUSH
+          $OrderBook$_fun_refundJetton INLINECALLDICT
+        }>ELSE<{
+          21 s() 28 s() XCHG
+          20 s() 27 s() XCHG
+          19 s() 26 s() XCHG
+          18 s() 25 s() XCHG
+          17 s() 24 s() XCHG
+          16 s() 23 s() XCHG
+          s15 22 s() XCHG
+          s14 28 s() XCHG
+          s13 27 s() XCHG
+          s12 26 s() XCHG
+          s11 25 s() XCHG
+          s10 24 s() XCHG
+          s9 23 s() XCHG
+          s8 22 s() XCHG
+          s7 28 s() XCHG
+          s0 s6 XCHG
+          s5 26 s() XCHG
+          s4 25 s() XCHG
+          s3 24 s() XCHG
+          s2 23 s() XCHG
+          s0 s1 PUXC
+          s1 29 s() XCHG
+          s0 24 s() XCHG
+          28 s() PUSH
+          $OrderBook$_fun_refundJetton INLINECALLDICT
+          21 s() 26 s() XCHG
+        }>
+        19 s() 26 s() XCHG
+        18 s() 25 s() XCHG
+        17 s() 24 s() XCHG
+        16 s() 23 s() XCHG
+        s15 22 s() XCHG
+        s14 21 s() XCHG
+        s13 20 s() XCHG
+        s12 19 s() XCHG
+        s11 18 s() XCHG
+        s10 17 s() XCHG
+        s9 16 s() XCHG
+        s8 s15 XCHG
+        s7 s14 XCHG
+        s6 s13 XCHG
+        s5 s12 XCHG
+        s3 s10 XCHG
+        s9 s1 s7 XCHG3
+        s8 s4 XCHG2
       }>ELSE<{
         s2 POP
         s6 POP
       }>
-      DUP
-      ISNULL
-      NOT
+      s6 s4 XCHG2
+      $PerpPositionOrderExecutedEvent$_constructor_opType_orderId_trxId INLINECALLDICT
+      $PerpPositionOrderExecutedEvent$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+      s3 PUSH
+      0 GTINT
       IF:<{
+        s0 s2 XCHG
+        TRUE
+        s4 PUSH
+        2 PUSHINT
+        $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
+        $global_send INLINECALLDICT
+      }>ELSE<{
+        s2 POP
+      }>
+      __tact_context_get INLINECALLDICT
+      $Context$_get_value INLINECALLDICT
+      s0 s3 XCHG2
+      SUB
+      SWAP
+      INC
+      19 s() PUSH
+      SWAP
+      MUL
+      SUB
+      DUP
+      0 GTINT
+      IF:<{
+        s0 s6 XCHG
         __tact_not_null INLINECALLDICT
-        0 PUSHINT
-        $OrderBook$_fun_refundExecessTon INLINECALLDICT
+        FALSE
+        ROT
+        s0 s7 XCHG
+        2 PUSHINT
+        $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
+        $global_send INLINECALLDICT
       }>ELSE<{
         DROP
+        s5 POP
       }>
     }>
   }>

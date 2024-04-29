@@ -592,6 +592,7 @@ describe('LP', () => {
 
         // create order
         const createDecreaseResult = await createTpSlPerpOrder(user1, executionFee, tokenId, isLong, tpSize, tpPrice, slSize, slPrice);
+        printTransactionFees(createDecreaseResult.trxResult.transactions);
         expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,
             to: orderBook.address,

@@ -418,8 +418,6 @@
     var ($msg'executionFee, $msg'tokenId, $msg'isLong, $msg'tpSize, $msg'tpPrice, $msg'slSize, $msg'slPrice, $msg'trxId) = $msg;
     ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_requireNotStopped();
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
-    throw_unless(19305, (($ctx'value - $msg'executionFee) >= $self'gasConsumption));
-    throw_unless(24562, ($msg'executionFee >= $self'minExecutionFee));
     int $executionFeeMultiple = 0;
     if (( (($msg'tpSize > 0)) ? (($msg'tpPrice > 0)) : (false) )) {
         $executionFeeMultiple = $executionFeeMultiple + 1;
@@ -427,13 +425,18 @@
     if (( (($msg'slSize > 0)) ? (($msg'slPrice > 0)) : (false) )) {
         $executionFeeMultiple = $executionFeeMultiple + 1;
     }
+    throw_unless(19305, (($ctx'value - $msg'executionFee) >= ($self'gasConsumption * $executionFeeMultiple)));
+    throw_unless(24562, ($msg'executionFee >= ($self'minExecutionFee * $executionFeeMultiple)));
     if (( (($msg'tpSize > 0)) ? (($msg'tpPrice > 0)) : (false) )) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_createPerpOrder($msg'trxId, 13, __tact_context_get_sender(), $msg'tokenId, $msg'isLong, 0, $msg'tpSize, $msg'tpPrice, 0, 0, 0, 0, ($msg'executionFee / $executionFeeMultiple));
     }
     if (( (($msg'slSize > 0)) ? (($msg'slPrice > 0)) : (false) )) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_createPerpOrder($msg'trxId, 14, __tact_context_get_sender(), $msg'tokenId, $msg'isLong, 0, $msg'slSize, $msg'slPrice, 0, 0, 0, 0, ($msg'executionFee / $executionFeeMultiple));
     }
-    ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_refundExecessTon(__tact_context_get_sender(), $msg'executionFee);
+    int $refundValue = (($Context$_get_value(__tact_context_get()) - $msg'executionFee) - ($self'gasConsumption * $executionFeeMultiple));
+    if (($refundValue > 0)) {
+        $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_context_get_sender(), false, $refundValue, 2));
+    }
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
 }
 
@@ -514,15 +517,18 @@
         return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
     }
     var ($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending, $order'executionFeeReceiver, $order'lastOperator) = $PerpPositionOrder$_not_null($orderOpt);
+    int $executionFeeMultiple = 0;
     if (( (($order'opType == 10)) ? (true) : (($order'opType == 11)) )) {
         throw_unless(19305, ($ctx'value >= $self'gasConsumption));
         tuple $orderExOpt = $PerpPositionOrderEx$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrderExs, 257, $msg'orderId));
         if ((~ null?($orderExOpt))) {
             var ($orderEx'tpSize, $orderEx'tpPrice, $orderEx'slSize, $orderEx'slPrice, $orderEx'executionFee) = $PerpPositionOrderEx$_not_null($orderExOpt);
             if (( (($orderEx'tpSize > 0)) ? (($orderEx'tpPrice > 0)) : (false) )) {
+                $executionFeeMultiple = $executionFeeMultiple + 1;
                 ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_createPerpOrder($msg'trxId, 13, __tact_context_get_sender(), $order'tokenId, $order'isLong, 0, $orderEx'tpSize, $orderEx'tpPrice, 0, 0, 0, 0, $orderEx'executionFee);
             }
             if (( (($orderEx'slSize > 0)) ? (($orderEx'slPrice > 0)) : (false) )) {
+                $executionFeeMultiple = $executionFeeMultiple + 1;
                 ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_createPerpOrder($msg'trxId, 14, __tact_context_get_sender(), $order'tokenId, $order'isLong, 0, $orderEx'slSize, $orderEx'slPrice, 0, 0, 0, 0, $orderEx'executionFee);
             }
         }
@@ -541,8 +547,9 @@
     if (($order'executionFee > 0)) {
         $global_send($SendParameters$_constructor_to_bounce_value_mode($order'executionFeeReceiver, true, $order'executionFee, 2));
     }
-    if ((~ null?($order'lastOperator))) {
-        ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_refundExecessTon(__tact_not_null($order'lastOperator), 0);
+    int $refundValue = (($Context$_get_value(__tact_context_get()) - $order'executionFee) - ($self'gasConsumption * (1 + $executionFeeMultiple)));
+    if (($refundValue > 0)) {
+        $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($order'lastOperator), false, $refundValue, 2));
     }
     return (($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
 }
