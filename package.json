@@ -6,9 +6,10 @@
         "build": "blueprint build --all",
         "test": "jest --verbose --maxWorkers=1",
         "test-build": "yarn build && yarn test",
+        "runmain": "blueprint run --mainnet --mnemonic",
         "rundev": "blueprint run --testnet --mnemonic",
-        "rundev-build": "yarn build && blueprint run --testnet --mnemonic",
         "deploy": "sh scripts/deploy.sh",
+        "deploymain": "sh scripts/deployMain.sh",
         "deploy-build": "yarn build && yarn deploy"
     },
     "devDependencies": {
