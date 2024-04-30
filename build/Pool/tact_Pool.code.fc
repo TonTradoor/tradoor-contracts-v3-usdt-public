@@ -403,8 +403,7 @@
     }
     int $maintenanceMargin = (((($perpPosition'size * $tradePrice) * ($tokenConfig'tradingFeeRate + $tokenConfig'maintenanceRate)) / (1000000000 * 100000000000000000000)) + $tokenConfig'liquidationFee);
     throw_unless(18995, ($maintenanceMargin >= ($perpPosition'margin + $unrealizedPnl)));
-    int $liquidatePrice = ((((($perpPosition'margin + $fundingFee) - $tokenConfig'liquidationFee) * 100000000000000000000) + ($isLong ? ((- $perpPosition'entryPrice) * $perpPosition'size) : ($perpPosition'entryPrice * $perpPosition'size))) / (($perpPosition'size * ($tokenConfig'tradingFeeRate + ($isLong ? (- 1000000000) : 1000000000))) / 1000000000));
-    throw_unless(55429, ($isLong ? ($liquidatePrice < $perpPosition'entryPrice) : ($liquidatePrice > $perpPosition'entryPrice)));
+    int $liquidatePrice = ((((($perpPosition'margin + $fundingFee) - $tokenConfig'liquidationFee) * 100000000000000000000) + ($isLong ? ((- $perpPosition'entryPrice) * $perpPosition'size) : ($perpPosition'entryPrice * $perpPosition'size))) / (($perpPosition'size * (($tokenConfig'tradingFeeRate + $tokenConfig'maintenanceRate) + ($isLong ? (- 1000000000) : 1000000000))) / 1000000000));
     $tradePrice = $liquidatePrice;
     tuple $globalLPPositionOpt = $GlobalLPPosition$_load_opt(__tact_dict_get_int_cell($self'globalLPPositions, 257, $tokenId));
     var ($globalLPPosition'netSize, $globalLPPosition'isLong, $globalLPPosition'entryPrice, $globalLPPosition'unrealizedPnl) = ((~ null?($globalLPPositionOpt)) ? $GlobalLPPosition$_not_null($globalLPPositionOpt) : $GlobalLPPosition$_constructor_netSize_isLong_entryPrice_unrealizedPnl(0, false, 0, 0));
@@ -807,7 +806,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmaVUszPZ7Ygv29zkyACLqFQjeCSmuf67Ltp6imSBsnvYx";
+    return "ipfs://QmUTjdfhdHHDFKtz5btxV6qn1Fsdca8D9zb6CQzxcEeF8q";
 }
 
 _ lazy_deployment_completed() method_id {

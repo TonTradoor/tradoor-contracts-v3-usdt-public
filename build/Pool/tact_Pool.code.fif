@@ -3936,39 +3936,41 @@ PROGRAM{
     s0 34 s() XCHG
     MUL
     30 s() PUSH
-    SWAP
-    s0 30 s() XCHG
+    30 s() PUSH
     ADD
-    s1 29 s() XCHG
     MUL
     100000000000000000000000000000 PUSHINTX
     DIV
-    30 s() PUSH
+    31 s() PUSH
     ADD
-    s14 PUSH
+    s15 PUSH
     18995 PUSHINT
-    s0 34 s() XCHG
+    s0 35 s() XCHG
     ADD
     GEQ
-    s1 32 s() XCHG
+    s1 33 s() XCHG
     THROWANYIFNOT
-    s0 s12 XCHG
-    30 s() PUSH
+    s13 s13 XCPU
     ADD
-    28 s() PUSH
+    29 s() PUSH
     SUB
     100000000000000000000 PUSHINT
     MUL
-    32 s() PUSH
+    33 s() PUSH
     IF:<{
-      s10 PUSH
+      s0 s11 XCHG
       NEGATE
       s12 PUSH
       MUL
     }>ELSE<{
-      s10 s11 PUSH2
+      s11 s12 XCPU
       MUL
     }>
+    s1 s11 XCHG
+    ADD
+    27 s() PUSH
+    SWAP
+    s0 27 s() XCHG
     ADD
     32 s() PUSH
     IF:<{
@@ -3976,26 +3978,13 @@ PROGRAM{
     }>ELSE<{
       1000000000 PUSHINT
     }>
-    28 s() PUSH
-    SWAP
     ADD
-    s1 s12 XCHG
+    s1 s11 XCHG
     MUL
     1000000000 PUSHINT
     DIV
-    s1 s11 XCHG
+    s1 25 s() XCHG
     DIV
-    55429 PUSHINT
-    32 s() PUSH
-    IF:<{
-      s1 s10 PUXC
-      LESS
-    }>ELSE<{
-      s1 s10 PUXC
-      GREATER
-    }>
-    s1 s10 XCHG
-    THROWANYIFNOT
     47 s() PUSH
     257 PUSHINT
     33 s() PUSH
@@ -4030,14 +4019,14 @@ PROGRAM{
       36 s() PUSH
       NOT
       IF:<{
-        s14 s3 PUSH2
+        s6 s3 PUSH2
         SUB
         s1 s(-1) PUXC
         MUL
         100000000000000000000 PUSHINT
         DIV
       }>ELSE<{
-        s3 s14 PUSH2
+        s3 s6 PUSH2
         SUB
         s1 s(-1) PUXC
         MUL
@@ -4062,7 +4051,7 @@ PROGRAM{
       s4 POP
       s4 s2 PUXC
       MUL
-      s3 s13 PUSH2
+      s3 s5 PUSH2
       MUL
       ADD
       s4 s3 PUSH2
@@ -4075,7 +4064,7 @@ PROGRAM{
     }>ELSE<{
       DROP
     }>
-    s10 s13 PUSH2
+    s10 s5 PUSH2
     MUL
     SWAP
     s0 31 s() XCHG
@@ -4137,14 +4126,14 @@ PROGRAM{
       s0 s11 XCHG
       s0 s10 XCHG
     }>
-    18 s() PUSH
+    16 s() PUSH
     16 s() PUSH
     MAX
-    s1 19 s() XCHG
+    s1 17 s() XCHG
     s0 16 s() XCHG
     SUB
     ABS
-    18 s() PUSH
+    16 s() PUSH
     38 s() PUSH
     MUL
     100000000000000000000 PUSHINT
@@ -4199,10 +4188,10 @@ PROGRAM{
     s9 PUSH
     s0 s2 XCHG
     20 s() PUSH
-    s9 s2 s(-1) PUXC2
+    s7 s2 s(-1) PUXC2
     21 s() PUSH
     s0 s2 XCHG
-    40 s() PUSH
+    25 s() PUSH
     s11 s2 s(-1) PUXC2
     s1 32 s() XCHG
     s0 s10 XCHG
@@ -4275,17 +4264,17 @@ PROGRAM{
     20 s() 42 s() XCHG
     19 s() 41 s() XCHG
     18 s() 29 s() XCHG
-    17 s() 30 s() XCHG
+    17 s() 33 s() XCHG
     16 s() 51 s() XCHG
     s15 45 s() XCHG
-    s14 50 s() XCHG
-    s13 40 s() XCHG
+    s14 32 s() XCHG
+    s13 50 s() XCHG
     s12 48 s() XCHG
     s11 38 s() XCHG
     s10 44 s() XCHG
-    s9 32 s() XCHG
+    s9 30 s() XCHG
     s8 43 s() XCHG
-    s7 33 s() XCHG
+    s7 40 s() XCHG
     s6 31 s() XCHG
     s5 36 s() XCHG
     s4 37 s() XCHG
@@ -4309,17 +4298,18 @@ PROGRAM{
     s13 19 s() XCHG
     s12 18 s() XCHG
     s0 17 s() XCHG
-    s1 16 s() XCHG
+    s4 16 s() XCHG
     s6 s15 XCHG
-    s0 s13 XCHG
-    s0 s11 XCHG
-    s14 s12 XCHG2
+    s4 s14 XCHG
+    s3 s13 XCHG
+    s0 s12 XCHG
+    s3 s11 XCHG
     s9 s10 XCHG
     s6 s9 XCHG
-    s3 s8 XCHG
-    s1 s7 XCHG
-    s4 s6 XCHG
-    s5 s0 s4 XCHG3
+    s1 s8 XCHG
+    s4 s7 XCHG
+    s3 s6 XCHG
+    s5 s0 s3 XCHG3
     s0 s2 XCHG
   }>
   $PerpPositionData$_constructor_globalPerpNetValue_globalPerpSingleValue_perpPosition_globalLPPosition_globalPosition_globalFundingRateSample_prevPremiumRate PROCINLINE:<{
@@ -5535,7 +5525,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d615655737a505a3759677632397a6b7941434c7146516a6543536d756636374c747036696d5342736e765978} PUSHSLICE
+    x{697066733a2f2f516d55546a64666864484844464b747a356274785636716e3146736463613844397a623643517a78634565463871} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
