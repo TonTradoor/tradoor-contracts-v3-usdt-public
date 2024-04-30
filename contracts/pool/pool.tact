@@ -70,27 +70,14 @@ contract Pool with Deployable, Ownable {
             i += 1;
         }
 
-        if (msg.claimExecutor != null) {
-            self.claimExecutor = msg.claimExecutor!!;
-        }
-        if (msg.lpGasConsumption != null) {
-            self.lpGasConsumption = msg.lpGasConsumption!!;
-        }
-        if (msg.perpGasConsumption != null) {
-            self.perpGasConsumption = msg.perpGasConsumption!!;
-        }
-        if (msg.minTonsForStorage != null) {
-            self.minTonsForStorage = msg.minTonsForStorage!!;
-        }
-        if (msg.lpBonusFactor != null) {
-            self.lpBonusFactor = msg.lpBonusFactor!!;
-        }
-        if (msg.lpLiquidityFactor != null) {
-            self.lpLiquidityFactor = msg.lpLiquidityFactor!!;
-        }
-        if (msg.orderBook != null) {
-            self.orderBook = msg.orderBook!!;
-        }
+        self.claimExecutor = msg.claimExecutor;
+        self.lpGasConsumption = msg.lpGasConsumption;
+        self.perpGasConsumption = msg.perpGasConsumption;
+        self.minTonsForStorage = msg.minTonsForStorage;
+        self.lpBonusFactor = msg.lpBonusFactor;
+        self.lpLiquidityFactor = msg.lpLiquidityFactor;
+        self.orderBook = msg.orderBook;
+        
         send(SendParameters{
             to: sender(),
             bounce: false,
@@ -107,6 +94,7 @@ contract Pool with Deployable, Ownable {
             name: "",
             enable: false,
             minValue: 100 * pow(10, 6), // 100U
+            maxValue: 10_000_000 * pow(10, 6), // 10_000_000U
             maxLeverage: 105,
             liquidationFee: 5 * pow(10, 5), // 0.5U
             tradingFeeRate: 1_000_000, // 0.1%
@@ -117,36 +105,21 @@ contract Pool with Deployable, Ownable {
             maxFundingRate: 62_500 // 0.00625%
         };
 
-        if (msg.name != null) {
-            tokenConfig.name = msg.name!!;
-        }
-        if (msg.enable != null) {
-            tokenConfig.enable = msg.enable!!;
-        }
-        if (msg.minValue != null) {
-            tokenConfig.minValue = msg.minValue!!;
-        }
-        if (msg.maxLeverage != null) {
-            tokenConfig.maxLeverage = msg.maxLeverage!!;
-        }
-        if (msg.liquidationFee != null) {
-            tokenConfig.liquidationFee = msg.liquidationFee!!;
-        }
-        if (msg.liquidityProportion != null) {
-            tokenConfig.liquidityProportion = msg.liquidityProportion!!;
-        }
-        if (msg.tradingFeeRate != null) {
-            tokenConfig.tradingFeeRate = msg.tradingFeeRate!!;
-        }
-        if (msg.lpTradingFeeRate != null) {
-            tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate!!;
-        }
-        if (msg.interestRate != null) {
-            tokenConfig.interestRate = msg.interestRate!!;
-        }
-        if (msg.maxFundingRate != null) {
-            tokenConfig.maxFundingRate = msg.maxFundingRate!!;
-        }
+        tokenConfig.name = msg.name;
+        tokenConfig.enable = msg.enable;
+
+        tokenConfig.minValue = msg.minValue;
+        tokenConfig.maxValue = msg.maxValue;
+        tokenConfig.maxLeverage = msg.maxLeverage;
+        tokenConfig.liquidationFee = msg.liquidationFee;
+        tokenConfig.maintenanceRate = msg.maintenanceRate;
+
+        tokenConfig.tradingFeeRate = msg.tradingFeeRate;
+        tokenConfig.lpTradingFeeRate = msg.lpTradingFeeRate;
+
+        tokenConfig.interestRate = msg.interestRate;
+        tokenConfig.maxFundingRate = msg.maxFundingRate;
+        tokenConfig.liquidityProportion = msg.liquidityProportion;
 
         self.tokenConfigs.set(msg.tokenId, tokenConfig);
         
@@ -473,7 +446,9 @@ contract Pool with Deployable, Ownable {
         require(tokenConfig.enable, "disabled token");
 
         // check value
-        require(sizeDelta * tradePrice / PRICE_DECIMAL_FACTOR >= tokenConfig.minValue, "less than min value");
+        let valueDelta: Int = sizeDelta * tradePrice / PRICE_DECIMAL_FACTOR;
+        require(valueDelta >= tokenConfig.minValue, "less than min value");
+        require(valueDelta <= tokenConfig.maxValue, "greater than max value");
         
         // get position
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);

@@ -19,6 +19,7 @@ struct TokenConfig {
     enable: Bool;
     // ==================== Trader Position Config ====================
     minValue: Int;
+    maxValue: Int;
     maxLeverage: Int;
     liquidationFee: Int;
     maintenanceRate: Int;

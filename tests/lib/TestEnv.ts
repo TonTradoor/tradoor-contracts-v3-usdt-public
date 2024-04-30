@@ -200,13 +200,15 @@ export class TestEnv {
                     name: name,
                     enable: true,
                     minValue: toJettonUnits(100), // 100U
+                    maxValue: toJettonUnits(10_000_000), // 10M U
                     maxLeverage: 105n,
                     liquidationFee: toJettonUnits(0.2), // 0.2U
-                    liquidityProportion: BigInt(PERCENTAGE_BASIS_POINT / tokens.length), // 100% / n
+                    maintenanceRate: BigInt(0.01 * PERCENTAGE_BASIS_POINT), // 1%
                     tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
                     lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
                     interestRate: 0n,
-                    maxFundingRate: BigInt(62500) // 0.00625%
+                    maxFundingRate: BigInt(62500), // 0.00625%
+                    liquidityProportion: BigInt(PERCENTAGE_BASIS_POINT / tokens.length), // 100% / n
                 }
             );
     

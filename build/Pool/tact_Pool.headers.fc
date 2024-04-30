@@ -9,9 +9,6 @@ slice __tact_verify_address(slice address) inline;
 ;; __tact_load_address
 (slice, slice) __tact_load_address(slice cs) inline;
 
-;; __tact_load_address_opt
-(slice, slice) __tact_load_address_opt(slice cs) inline;
-
 ;; __tact_store_address
 builder __tact_store_address(builder b, slice address) inline;
 
@@ -73,7 +70,7 @@ cell $DeployOk$_store_cell((int) v) inline;
 (slice, ((int, cell, slice, int, int, int, int, int, slice))) $UpdateConfig$_load(slice sc_0) inline_ref;
 
 ;; $UpdateTokenConfig$_load
-(slice, ((int, slice, int, int, int, int, int, int, int, int, int))) $UpdateTokenConfig$_load(slice sc_0) inline_ref;
+(slice, ((int, slice, int, int, int, int, int, int, int, int, int, int, int))) $UpdateTokenConfig$_load(slice sc_0) inline_ref;
 
 ;; $ClaimProtocolFee$_load
 (slice, ((int, slice))) $ClaimProtocolFee$_load(slice sc_0) inline;
@@ -145,16 +142,16 @@ tuple $ExecutorParam$_as_optional((slice, int) v) inline;
 tuple $ExecutorParam$_load_opt(cell cl) inline;
 
 ;; $TokenConfig$_store
-builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
+builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $TokenConfig$_store_cell
-cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int, int) v) inline;
+cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $TokenConfig$_load
-(slice, ((slice, int, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref;
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref;
 
 ;; $TokenConfig$_as_optional
-tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int, int) v) inline;
+tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $TokenConfig$_load_opt
 tuple $TokenConfig$_load_opt(cell cl) inline;
@@ -301,10 +298,10 @@ _ $ExecutorParam$_get_enable((slice, int) v) inline;
 ((slice, int)) $ExecutorParam$_not_null(tuple v) inline;
 
 ;; $TokenConfig$_not_null
-((slice, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline;
+((slice, int, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline;
 
 ;; $TokenConfig$_to_tuple
-tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int, int)) v) inline;
+tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int, int, int)) v) inline;
 
 ;; $TokenConfig$_to_opt_tuple
 tuple $TokenConfig$_to_opt_tuple(tuple v) inline;
@@ -504,8 +501,8 @@ _ $UpdatePriceParam$_get_price((int, int) v) inline;
 ;; $SendParameters$_constructor_to_bounce_value_mode
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice to, int bounce, int value, int mode) inline;
 
-;; $TokenConfig$_constructor_name_enable_minValue_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_maintenanceRate_liquidityProportion_interestRate_maxFundingRate
-((slice, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minValue_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_maintenanceRate_liquidityProportion_interestRate_maxFundingRate(slice name, int enable, int minValue, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int maintenanceRate, int liquidityProportion, int interestRate, int maxFundingRate) inline;
+;; $TokenConfig$_constructor_name_enable_minValue_maxValue_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_maintenanceRate_liquidityProportion_interestRate_maxFundingRate
+((slice, int, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minValue_maxValue_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_maintenanceRate_liquidityProportion_interestRate_maxFundingRate(slice name, int enable, int minValue, int maxValue, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int maintenanceRate, int liquidityProportion, int interestRate, int maxFundingRate) inline;
 
 ;; $SendProtocolFee$_constructor_trxId_feeReceiver_amount
 ((int, slice, int)) $SendProtocolFee$_constructor_trxId_feeReceiver_amount(int trxId, slice feeReceiver, int amount) inline;

@@ -71,47 +71,50 @@ cell $DeployOk$_store_cell((int) v) inline {
 
 ;;
 ;; Type: UpdateConfig
-;; Header: 0xfcd617e8
-;; TLB: update_config#fcd617e8 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> claimExecutor:Maybe address lpGasConsumption:Maybe coins perpGasConsumption:Maybe coins minTonsForStorage:Maybe coins lpBonusFactor:Maybe int257 lpLiquidityFactor:Maybe int257 orderBook:Maybe address = UpdateConfig
+;; Header: 0x63c70c8d
+;; TLB: update_config#63c70c8d executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> claimExecutor:address lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins lpBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = UpdateConfig
 ;;
 
 (slice, ((int, cell, slice, int, int, int, int, int, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 4241889256);
+    throw_unless(129, sc_0~load_uint(32) == 1673989261);
     var v'executorLength = sc_0~load_int(257);
     var v'executors = sc_0~load_dict();
-    var v'claimExecutor = sc_0~__tact_load_address_opt();
-    var v'lpGasConsumption = sc_0~load_int(1) ? sc_0~load_coins() : null();
-    var v'perpGasConsumption = sc_0~load_int(1) ? sc_0~load_coins() : null();
-    var v'minTonsForStorage = sc_0~load_int(1) ? sc_0~load_coins() : null();
+    var v'claimExecutor = sc_0~__tact_load_address();
+    var v'lpGasConsumption = sc_0~load_coins();
+    var v'perpGasConsumption = sc_0~load_coins();
+    var v'minTonsForStorage = sc_0~load_coins();
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'lpBonusFactor = sc_1~load_int(1) ? sc_1~load_int(257) : null();
-    var v'lpLiquidityFactor = sc_1~load_int(1) ? sc_1~load_int(257) : null();
-    var v'orderBook = sc_1~__tact_load_address_opt();
+    var v'lpBonusFactor = sc_1~load_int(257);
+    var v'lpLiquidityFactor = sc_1~load_int(257);
+    var v'orderBook = sc_1~__tact_load_address();
     return (sc_0, (v'executorLength, v'executors, v'claimExecutor, v'lpGasConsumption, v'perpGasConsumption, v'minTonsForStorage, v'lpBonusFactor, v'lpLiquidityFactor, v'orderBook));
 }
 
 ;;
 ;; Type: UpdateTokenConfig
-;; Header: 0xfedfb0ef
-;; TLB: update_token_config#fedfb0ef tokenId:uint64 name:Maybe ^string enable:Maybe bool minValue:Maybe int257 maxLeverage:Maybe int257 liquidationFee:Maybe int257 liquidityProportion:Maybe int257 tradingFeeRate:Maybe int257 lpTradingFeeRate:Maybe int257 interestRate:Maybe int257 maxFundingRate:Maybe int257 = UpdateTokenConfig
+;; Header: 0xcb2ee6a2
+;; TLB: update_token_config#cb2ee6a2 tokenId:uint64 name:^string enable:bool minValue:int257 maxValue:int257 maxLeverage:int257 liquidationFee:int257 maintenanceRate:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 liquidityProportion:int257 = UpdateTokenConfig
 ;;
 
-(slice, ((int, slice, int, int, int, int, int, int, int, int, int))) $UpdateTokenConfig$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 4276072687);
+(slice, ((int, slice, int, int, int, int, int, int, int, int, int, int, int))) $UpdateTokenConfig$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 3408848546);
     var v'tokenId = sc_0~load_uint(64);
-    var v'name = sc_0~load_int(1) ? sc_0~load_ref().begin_parse() : null();
-    var v'enable = sc_0~load_int(1) ? sc_0~load_int(1) : null();
-    var v'minValue = sc_0~load_int(1) ? sc_0~load_int(257) : null();
-    var v'maxLeverage = sc_0~load_int(1) ? sc_0~load_int(257) : null();
-    var v'liquidationFee = sc_0~load_int(1) ? sc_0~load_int(257) : null();
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'enable = sc_0~load_int(1);
+    var v'minValue = sc_0~load_int(257);
+    var v'maxValue = sc_0~load_int(257);
+    var v'maxLeverage = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'liquidityProportion = sc_1~load_int(1) ? sc_1~load_int(257) : null();
-    var v'tradingFeeRate = sc_1~load_int(1) ? sc_1~load_int(257) : null();
-    var v'lpTradingFeeRate = sc_1~load_int(1) ? sc_1~load_int(257) : null();
+    var v'liquidationFee = sc_1~load_int(257);
+    var v'maintenanceRate = sc_1~load_int(257);
+    var v'tradingFeeRate = sc_1~load_int(257);
     slice sc_2 = sc_1~load_ref().begin_parse();
-    var v'interestRate = sc_2~load_int(1) ? sc_2~load_int(257) : null();
-    var v'maxFundingRate = sc_2~load_int(1) ? sc_2~load_int(257) : null();
-    return (sc_0, (v'tokenId, v'name, v'enable, v'minValue, v'maxLeverage, v'liquidationFee, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate));
+    var v'lpTradingFeeRate = sc_2~load_int(257);
+    var v'interestRate = sc_2~load_int(257);
+    var v'maxFundingRate = sc_2~load_int(257);
+    slice sc_3 = sc_2~load_ref().begin_parse();
+    var v'liquidityProportion = sc_3~load_int(257);
+    return (sc_0, (v'tokenId, v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate, v'liquidityProportion));
 }
 
 ;;
@@ -540,53 +543,58 @@ _ $ExecutorParam$_get_enable((slice, int) v) inline {
 
 ;;
 ;; Type: TokenConfig
-;; TLB: _ name:^string enable:bool minValue:int257 maxLeverage:int257 liquidationFee:int257 maintenanceRate:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig
+;; TLB: _ name:^string enable:bool minValue:int257 maxValue:int257 maxLeverage:int257 liquidationFee:int257 maintenanceRate:int257 liquidityProportion:int257 tradingFeeRate:int257 lpTradingFeeRate:int257 interestRate:int257 maxFundingRate:int257 = TokenConfig
 ;;
 
-builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
-    var (v'name, v'enable, v'minValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
+builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
     build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
     build_0 = build_0.store_int(v'enable, 1);
     build_0 = build_0.store_int(v'minValue, 257);
+    build_0 = build_0.store_int(v'maxValue, 257);
     build_0 = build_0.store_int(v'maxLeverage, 257);
-    build_0 = build_0.store_int(v'liquidationFee, 257);
     var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'liquidationFee, 257);
     build_1 = build_1.store_int(v'maintenanceRate, 257);
     build_1 = build_1.store_int(v'liquidityProportion, 257);
-    build_1 = build_1.store_int(v'tradingFeeRate, 257);
     var build_2 = begin_cell();
+    build_2 = build_2.store_int(v'tradingFeeRate, 257);
     build_2 = build_2.store_int(v'lpTradingFeeRate, 257);
     build_2 = build_2.store_int(v'interestRate, 257);
-    build_2 = build_2.store_int(v'maxFundingRate, 257);
+    var build_3 = begin_cell();
+    build_3 = build_3.store_int(v'maxFundingRate, 257);
+    build_2 = store_ref(build_2, build_3.end_cell());
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int, int) v) inline {
+cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int, int, int, int) v) inline {
     return $TokenConfig$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((slice, int, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref {
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref {
     var v'name = sc_0~load_ref().begin_parse();
     var v'enable = sc_0~load_int(1);
     var v'minValue = sc_0~load_int(257);
+    var v'maxValue = sc_0~load_int(257);
     var v'maxLeverage = sc_0~load_int(257);
-    var v'liquidationFee = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'liquidationFee = sc_1~load_int(257);
     var v'maintenanceRate = sc_1~load_int(257);
     var v'liquidityProportion = sc_1~load_int(257);
-    var v'tradingFeeRate = sc_1~load_int(257);
     slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'tradingFeeRate = sc_2~load_int(257);
     var v'lpTradingFeeRate = sc_2~load_int(257);
     var v'interestRate = sc_2~load_int(257);
-    var v'maxFundingRate = sc_2~load_int(257);
-    return (sc_0, (v'name, v'enable, v'minValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate));
+    slice sc_3 = sc_2~load_ref().begin_parse();
+    var v'maxFundingRate = sc_3~load_int(257);
+    return (sc_0, (v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate));
 }
 
-tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'name, v'enable, v'minValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
-    return __tact_tuple_create_11(v'name, v'enable, v'minValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
+tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
+    return __tact_tuple_create_12(v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
 }
 
 tuple $TokenConfig$_load_opt(cell cl) inline {
@@ -597,15 +605,15 @@ tuple $TokenConfig$_load_opt(cell cl) inline {
     return $TokenConfig$_as_optional(sc~$TokenConfig$_load());
 }
 
-((slice, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline {
+((slice, int, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (slice vvv'name, int vvv'enable, int vvv'minValue, int vvv'maxLeverage, int vvv'liquidationFee, int vvv'maintenanceRate, int vvv'liquidityProportion, int vvv'tradingFeeRate, int vvv'lpTradingFeeRate, int vvv'interestRate, int vvv'maxFundingRate) = __tact_tuple_destroy_11(v);
-    return (vvv'name, vvv'enable, vvv'minValue, vvv'maxLeverage, vvv'liquidationFee, vvv'maintenanceRate, vvv'liquidityProportion, vvv'tradingFeeRate, vvv'lpTradingFeeRate, vvv'interestRate, vvv'maxFundingRate);
+    var (slice vvv'name, int vvv'enable, int vvv'minValue, int vvv'maxValue, int vvv'maxLeverage, int vvv'liquidationFee, int vvv'maintenanceRate, int vvv'liquidityProportion, int vvv'tradingFeeRate, int vvv'lpTradingFeeRate, int vvv'interestRate, int vvv'maxFundingRate) = __tact_tuple_destroy_12(v);
+    return (vvv'name, vvv'enable, vvv'minValue, vvv'maxValue, vvv'maxLeverage, vvv'liquidationFee, vvv'maintenanceRate, vvv'liquidityProportion, vvv'tradingFeeRate, vvv'lpTradingFeeRate, vvv'interestRate, vvv'maxFundingRate);
 }
 
-tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int, int)) v) inline {
-    var (v'name, v'enable, v'minValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
-    return __tact_tuple_create_11(v'name, v'enable, v'minValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
+tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int, int, int, int)) v) inline {
+    var (v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate) = v;
+    return __tact_tuple_create_12(v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'liquidityProportion, v'tradingFeeRate, v'lpTradingFeeRate, v'interestRate, v'maxFundingRate);
 }
 
 tuple $TokenConfig$_to_opt_tuple(tuple v) inline {
@@ -622,8 +630,8 @@ tuple $TokenConfig$_to_opt_external(tuple v) inline {
     }
 }
 
-((slice, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minValue_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_maintenanceRate_liquidityProportion_interestRate_maxFundingRate(slice name, int enable, int minValue, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int maintenanceRate, int liquidityProportion, int interestRate, int maxFundingRate) inline {
-    return (name, enable, minValue, maxLeverage, liquidationFee, maintenanceRate, liquidityProportion, tradingFeeRate, lpTradingFeeRate, interestRate, maxFundingRate);
+((slice, int, int, int, int, int, int, int, int, int, int, int)) $TokenConfig$_constructor_name_enable_minValue_maxValue_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_maintenanceRate_liquidityProportion_interestRate_maxFundingRate(slice name, int enable, int minValue, int maxValue, int maxLeverage, int liquidationFee, int tradingFeeRate, int lpTradingFeeRate, int maintenanceRate, int liquidityProportion, int interestRate, int maxFundingRate) inline {
+    return (name, enable, minValue, maxValue, maxLeverage, liquidationFee, maintenanceRate, liquidityProportion, tradingFeeRate, lpTradingFeeRate, interestRate, maxFundingRate);
 }
 
 ;;

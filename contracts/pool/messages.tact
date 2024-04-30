@@ -4,27 +4,32 @@ import "./structs";
 message UpdateConfig {
     executorLength: Int;
     executors: map<Int, ExecutorParam>;
-    claimExecutor: Address?;
-    lpGasConsumption: Int? as coins;
-    perpGasConsumption: Int? as coins;
-    minTonsForStorage: Int? as coins;
-    lpBonusFactor: Int?;
-    lpLiquidityFactor: Int?;
-    orderBook: Address?;
+    claimExecutor: Address;
+    lpGasConsumption: Int as coins;
+    perpGasConsumption: Int as coins;
+    minTonsForStorage: Int as coins;
+    lpBonusFactor: Int;
+    lpLiquidityFactor: Int;
+    orderBook: Address;
 }
 
 message UpdateTokenConfig {
     tokenId: Int as uint64;
-    name: String?;
-    enable: Bool?;
-    minValue: Int?;
-    maxLeverage: Int?;
-    liquidationFee: Int?;
-    liquidityProportion: Int?;
-    tradingFeeRate: Int?;
-    lpTradingFeeRate: Int?;
-    interestRate: Int?;
-    maxFundingRate: Int?;
+    name: String;
+    enable: Bool;
+    // ==================== Trader Position Config ====================
+    minValue: Int;
+    maxValue: Int;
+    maxLeverage: Int;
+    liquidationFee: Int;
+    maintenanceRate: Int;
+    // ==================== Trading Fee Config ====================
+    tradingFeeRate: Int;
+    lpTradingFeeRate: Int;
+    // ==================== Funding Fee Config ====================
+    interestRate: Int;
+    maxFundingRate: Int;
+    liquidityProportion: Int;
 }
 
 message ClaimProtocolFee {
