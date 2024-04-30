@@ -395,6 +395,7 @@
         $fundingFee = ((($globalPosition'shortFundingFeeGrowth - $perpPosition'entryFundingFeeGrowth) * $perpPosition'size) / 100000000000000000000);
         $entryFundingFeeGrowthAfter = $globalPosition'shortFundingFeeGrowth;
     }
+    $tradePrice = $indexPrice;
     int $unrealizedPnl = 0;
     if ($isLong) {
         $unrealizedPnl = (($perpPosition'size * ($tradePrice - $perpPosition'entryPrice)) / 100000000000000000000);

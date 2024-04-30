@@ -963,6 +963,7 @@ contract Pool with Deployable, Ownable {
         }
 
         // check maintain margin
+        tradePrice = indexPrice;
         let unrealizedPnl: Int = 0;
         if (isLong) {
             unrealizedPnl = perpPosition.size * (tradePrice - perpPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
