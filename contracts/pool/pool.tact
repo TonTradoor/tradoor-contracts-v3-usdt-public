@@ -14,6 +14,7 @@ contract Pool with Deployable, Ownable {
 
     tokenConfigs: map<Int, TokenConfig>; // tokenId => tokenConfig
 
+    lpLockTime: Int = 24 * 60 * 60;
     lpBonusFactor: Int = 10 * pow(10, 9);
     lpLiquidityFactor: Int = pow(10, 9);
 
@@ -74,6 +75,7 @@ contract Pool with Deployable, Ownable {
         self.lpGasConsumption = msg.lpGasConsumption;
         self.perpGasConsumption = msg.perpGasConsumption;
         self.minTonsForStorage = msg.minTonsForStorage;
+        self.lpLockTime = msg.lpLockTime;
         self.lpBonusFactor = msg.lpBonusFactor;
         self.lpLiquidityFactor = msg.lpLiquidityFactor;
         self.orderBook = msg.orderBook;
@@ -236,7 +238,7 @@ contract Pool with Deployable, Ownable {
         lpPosition.liquidity = lpPosition.liquidity + liquidityDelta;
         lpPosition.realizedFundingFee += realizedFundingFee;
         lpPosition.entryFundingFeeGrowth = self.globalLPFundingFeeGrowth;
-        lpPosition.unlockTime = now() + DAY;
+        lpPosition.unlockTime = now() + self.lpLockTime;
 
         // set position
         self.lpPositions.set(account, lpPosition);
