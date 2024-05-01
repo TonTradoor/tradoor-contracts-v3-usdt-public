@@ -558,14 +558,12 @@ contract Pool with Deployable, Ownable {
         // funding fee
         let fundingFee: Int = 0;
         let entryFundingFeeGrowthAfter: Int = 0;
-        if (perpPosition.size > 0) {
-            if (isLong) {
-                fundingFee = (globalPosition.longFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
-                entryFundingFeeGrowthAfter = globalPosition.longFundingFeeGrowth;
-            } else {
-                fundingFee = (globalPosition.shortFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
-                entryFundingFeeGrowthAfter = globalPosition.shortFundingFeeGrowth;
-            }
+        if (isLong) {
+            fundingFee = (globalPosition.longFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
+            entryFundingFeeGrowthAfter = globalPosition.longFundingFeeGrowth;
+        } else {
+            fundingFee = (globalPosition.shortFundingFeeGrowth - perpPosition.entryFundingFeeGrowth) * perpPosition.size / PRICE_DECIMAL_FACTOR;
+            entryFundingFeeGrowthAfter = globalPosition.shortFundingFeeGrowth;
         }
 
         // update position
