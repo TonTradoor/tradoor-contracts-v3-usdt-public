@@ -224,6 +224,11 @@ contract Pool with Deployable, Ownable {
         if (globalNetLP < 0) {
             globalNetLP = 0;
         }
+        // dump("globalNetLP");
+        // dump(self.globalLPFund);
+        // dump(self.globalLPUnrealizedPnl);
+        // dump(globalNetLP);
+        // dump(self.globalLPLiquidity);
         let bonus: Int = 0;
         if (globalNetLP < self.globalLPLiquidity) {
             // bonus = b + s (1 - x) * liquidity

@@ -389,6 +389,8 @@ describe('LP', () => {
         const updatePriceResult = await updatePrice(executor, tokenId, indexPrice);
         printTransactionFees(updatePriceResult.trxResult.transactions);
 
+        expect(updatePriceResult.lpPositionDataAfter.globalLPUnrealizedPnl).toEqual(toJettonUnits((increasePrice - indexPrice) * size));
+
         console.log('lp position data after update price:', updatePriceResult.lpPositionDataAfter);
         console.log('position data after update price:', updatePriceResult.positionDataAfter);
 
