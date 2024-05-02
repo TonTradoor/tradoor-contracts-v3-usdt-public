@@ -109,7 +109,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
@@ -143,13 +143,11 @@ describe('LP', () => {
         });
         console.log('execute increase long perp order gas used:', fromNano(executeResult.balanceBefore.executorTonBalance - executeResult.balanceAfter.executorTonBalance + toNano(executionFee)));
 
-        console.log('global position after increase long:', executeResult.globalPositionAfter);
-        console.log('global lp position after increase long:', executeResult.globalLPPositionAfter);
-        console.log('global funding rate after increase long:', executeResult.globalFundingRateSampleAfter);
-        console.log('prev PR after increase long:', executeResult.prevPremiumRateAfter);
+        console.log('position data after increase long:', executeResult.positionDataAfter);
+        console.log('lp data after increase long:', executeResult.lpPositionDataAfter);
 
-        expect(executeResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
-        expect(executeResult.globalLPPositionAfter?.isLong).toBeFalsy();
+        expect(executeResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
+        expect(executeResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
 
 
         /* =========================== increase short perp ================================ */
@@ -180,13 +178,11 @@ describe('LP', () => {
         });
         console.log('execute increase short perp order gas used:', fromNano(executeIncreaseShortResult.balanceBefore.executorTonBalance - executeIncreaseShortResult.balanceAfter.executorTonBalance + toNano(executionFee)));
 
-        console.log('global position after increase short:', executeIncreaseShortResult.globalPositionAfter);
-        console.log('global lp position after increase short:', executeIncreaseShortResult.globalLPPositionAfter);
-        console.log('global funding rate after increase short:', executeIncreaseShortResult.globalFundingRateSampleAfter);
-        console.log('prev PR after increase short:', executeIncreaseShortResult.prevPremiumRateAfter);
+        console.log('position data after increase short:', executeIncreaseShortResult.positionDataAfter);
+        console.log('lp data after increase short:', executeIncreaseShortResult.lpPositionDataAfter);
 
-        expect(executeIncreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
-        expect(executeIncreaseShortResult.globalLPPositionAfter?.isLong).toBeTruthy();
+        expect(executeIncreaseShortResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
+        expect(executeIncreaseShortResult.positionDataAfter.globalLPPosition?.isLong).toBeTruthy();
 
         /* =========================== decrease short perp ================================ */
         blockchain.now = blockchain.now + 30 * 60; // HH+1:10
@@ -217,13 +213,11 @@ describe('LP', () => {
         });
         console.log('execute decrease short perp order gas used:', fromNano(executeDecreaseShortResult.balanceBefore.executorTonBalance - executeDecreaseShortResult.balanceAfter.executorTonBalance + toNano(executionFee)));
 
-        console.log('global position after decrease short:', executeDecreaseShortResult.globalPositionAfter);
-        console.log('global lp position after decrease short:', executeDecreaseShortResult.globalLPPositionAfter);
-        console.log('global funding rate after decrease short:', executeDecreaseShortResult.globalFundingRateSampleAfter);
-        console.log('prev PR after decrease short:', executeDecreaseShortResult.prevPremiumRateAfter);
+        console.log('position data after decrease short:', executeDecreaseShortResult.positionDataAfter);
+        console.log('lp data after decrease short:', executeDecreaseShortResult.lpPositionDataAfter);
 
-        expect(executeDecreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
-        expect(executeDecreaseShortResult.globalLPPositionAfter?.isLong).toBeFalsy();
+        expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
+        expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
 
         /* =========================== decrease long perp ================================ */
         blockchain.now = blockchain.now + 30 * 60; // HH+1:40
@@ -254,13 +248,11 @@ describe('LP', () => {
         });
         console.log('execute decrease long perp order gas used:', fromNano(executeDecreaseLongResult.balanceBefore.executorTonBalance - executeDecreaseLongResult.balanceAfter.executorTonBalance + toNano(executionFee)));
 
-        console.log('global position after decrease long:', executeDecreaseLongResult.globalPositionAfter);
-        console.log('global lp position after decrease long:', executeDecreaseLongResult.globalLPPositionAfter);
-        console.log('global funding rate after decrease long:', executeDecreaseLongResult.globalFundingRateSampleAfter);
-        console.log('prev PR after decrease long:', executeDecreaseLongResult.prevPremiumRateAfter);
+        console.log('position data after decrease long:', executeDecreaseLongResult.positionDataAfter);
+        console.log('lp data after decrease long:', executeDecreaseLongResult.lpPositionDataAfter);
 
-        expect(executeDecreaseLongResult.globalLPPositionAfter?.netSize).toEqual(0n);
-        expect(executeDecreaseLongResult.globalLPPositionAfter?.isLong).toBeFalsy();
+        expect(executeDecreaseLongResult.positionDataAfter.globalLPPosition?.netSize).toEqual(0n);
+        expect(executeDecreaseLongResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
 
     });
 

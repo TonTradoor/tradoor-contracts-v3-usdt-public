@@ -1185,7 +1185,7 @@ contract Pool with Deployable, Ownable {
 
     // ============================ private function ================================ //
     fun updatePriceAndFundingFee(tokenId: Int, price: Int): UpdateFundingRateResult {
-        dump("updatePriceAndFundingFee");
+        // dump("updatePriceAndFundingFee");
         // TODO check price offset
         self.prices.set(tokenId, price);
 
@@ -1201,8 +1201,8 @@ contract Pool with Deployable, Ownable {
             } else {
                 unrealizedPnl = globalLPPosition.netSize * (globalLPPosition.entryPrice - price) / PRICE_DECIMAL_FACTOR;
             }
-            dump("update unrealized pnl");
-            dump(unrealizedPnl);
+            // dump("update unrealized pnl");
+            // dump(unrealizedPnl);
             self.globalLPUnrealizedPnl = self.globalLPUnrealizedPnl - globalLPPosition.unrealizedPnl + unrealizedPnl;
             globalLPPosition.unrealizedPnl = unrealizedPnl;
             self.globalLPPositions.set(tokenId, globalLPPosition);
@@ -1274,7 +1274,7 @@ contract Pool with Deployable, Ownable {
 
         // sample count < 720, no need update funding rate
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
-            dump("update funding fee sample");
+            // dump("update funding fee sample");
             sample.cumulativePremiumRate = cumulativePremiumRate;
             sample.sampleCount = sampleCountAfter;
             self.globalFundingRateSamples.set(tokenId, sample);

@@ -455,7 +455,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
 
@@ -545,7 +545,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
@@ -576,8 +576,8 @@ describe('LP', () => {
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
-        console.log('position after increase:', perpPositionAfterIncrease);
-        console.log('global position after increase:', executeResult.globalPositionAfter);
+        console.log('position data after increase:', executeResult.positionDataAfter);
+        console.log('lp data after increase:', executeResult.lpPositionDataAfter);
 
         /* =========================== decrease perp ================================ */
         /// create order
@@ -621,8 +621,8 @@ describe('LP', () => {
             success: true,
         });
         let perpPositionAfterDecrease = executeDecreaseResult.positionAfter;
-        console.log('position after decrease:', perpPositionAfterDecrease);
-        console.log('global position after decrease:', executeDecreaseResult.globalPositionAfter);
+        console.log('position data after decrease:', executeDecreaseResult.positionDataAfter);
+        console.log('lp data after decrease:', executeDecreaseResult.lpPositionDataAfter);
 
         // check position
         // let tradingFee = tpSize * decreasePrice * TestEnv.tradingFeeRate;
@@ -631,8 +631,8 @@ describe('LP', () => {
         // expect(perpPositionAfterDecrease?.margin).toEqual(perpPositionAfterIncrease?.margin + toJettonUnits(realizedPnl) - toJettonUnits(tradingFee));
         expect(perpPositionAfterDecrease?.size).toEqual(perpPositionAfterIncrease?.size - toJettonUnits(tpSize));
 
-        expect(executeDecreaseResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size - tpSize));
-        expect(executeDecreaseResult.globalLPPositionAfter?.isLong).toBeFalsy();
+        expect(executeDecreaseResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size - tpSize));
+        expect(executeDecreaseResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
 
     });
 
@@ -657,7 +657,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
@@ -687,8 +687,8 @@ describe('LP', () => {
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
-        console.log('position after increase:', perpPositionAfterIncrease);
-        console.log('global position after increase:', executeResult.globalPositionAfter);
+        console.log('position data after increase:', executeResult.positionDataAfter);
+        console.log('lp data after increase:', executeResult.lpPositionDataAfter);
 
         /* =========================== liquidate perp ================================ */
         let liquidatePrice = 45000;
@@ -729,7 +729,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
@@ -760,8 +760,9 @@ describe('LP', () => {
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
-        console.log('position after increase:', perpPositionAfterIncrease);
-        console.log('global position after increase:', executeResult.globalPositionAfter);
+        console.log('position data after increase:', executeResult.positionDataAfter);
+        console.log('lp data after increase:', executeResult.lpPositionDataAfter);
+
 
         /* =========================== liquidate perp ================================ */
         let liquidatePrice = 56000;
@@ -804,7 +805,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
@@ -834,8 +835,8 @@ describe('LP', () => {
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
-        console.log('position after increase:', perpPositionAfterIncrease);
-        console.log('global position after increase:', executeResult.globalPositionAfter);
+        console.log('position data after increase:', executeResult.positionDataAfter);
+        console.log('lp data after increase:', executeResult.lpPositionDataAfter);
 
         /* =========================== adl perp ================================ */
         let adlMargin = 50;
@@ -881,7 +882,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
@@ -910,8 +911,8 @@ describe('LP', () => {
             to: pool.address,
             success: true,
         });
-        expect(executeResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
-        expect(executeResult.globalLPPositionAfter?.isLong).toBeFalsy();
+        expect(executeResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
+        expect(executeResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
 
         /* =========================== increase short perp ================================ */
         let increaseShortMargin = 100;
@@ -935,8 +936,8 @@ describe('LP', () => {
             to: pool.address,
             success: true,
         });
-        expect(executeIncreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
-        expect(executeIncreaseShortResult.globalLPPositionAfter?.isLong).toBeTruthy();
+        expect(executeIncreaseShortResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
+        expect(executeIncreaseShortResult.positionDataAfter.globalLPPosition?.isLong).toBeTruthy();
 
         /* =========================== decrease short perp ================================ */
         blockchain.now = blockchain.now + 10 * 60; // 1 hour
@@ -957,13 +958,14 @@ describe('LP', () => {
 
         // executor order
         const executeDecreaseShortResult = await executePerpOrder(executor, createDecreaseShortResult.orderIdBefore, decreaseShortIncreasePrice, 0);
+        printTransactionFees(executeDecreaseShortResult.trxResult.transactions);
         expect(executeDecreaseShortResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
             success: true,
         });
-        expect(executeDecreaseShortResult.globalLPPositionAfter?.netSize).toEqual(toJettonUnits(size));
-        expect(executeDecreaseShortResult.globalLPPositionAfter?.isLong).toBeFalsy();
+        expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
+        expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
     });
 
 });

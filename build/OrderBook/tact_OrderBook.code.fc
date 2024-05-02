@@ -373,11 +373,9 @@
     if (($msg'receive > 0)) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_refundJetton($msg'trxId, $msg'receive, $order'account, $order'lastOperator);
     }
-    __tact_debug_str(__tact_int_to_string(__tact_my_balance()));
     if (($order'executionFee > 0)) {
         $global_send($SendParameters$_constructor_to_bounce_value_mode($order'executionFeeReceiver, true, $order'executionFee, 2));
     }
-    __tact_debug_str(__tact_int_to_string(__tact_my_balance()));
     $global_emit($LPPositionOrderExecutedEvent$_store_cell($LPPositionOrderExecutedEvent$_constructor_opType_orderId_trxId(($order'isIncrease ? 1 : 2), $msg'orderId, $msg'trxId)));
     if ((~ null?($order'lastOperator))) {
         ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_refundExecessTon(__tact_not_null($order'lastOperator), 0);
@@ -477,7 +475,6 @@
 (((int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int)), ()) $OrderBook$_internal_binary_ExecutePerpPositionOrder((int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, (slice, int, int, int, int, int) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext) = $self;
     var ($msg'executionFeeReceiver, $msg'orderId, $msg'trxId, $msg'tokenId, $msg'price, $msg'premiumRate) = $msg;
-    __tact_debug_str(__gen_slice_string_01f1c93cb867a4fe4c33fd803533f527d78ca88e2969c311f06ce34cd265f1c4());
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     tuple $orderOpt = $PerpPositionOrder$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrders, 257, $msg'orderId));
     throw_unless(32637, (~ null?($orderOpt)));
@@ -509,7 +506,6 @@
 (((int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int)), ()) $OrderBook$_internal_binary_UpdatePerpPositionSuccess((int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, (int, int, int) $msg) impure inline {
     var ($self'maxTimeDelayExecutor, $self'minTimeDelayTrader, $self'minExecutionFee, $self'gasConsumption, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext) = $self;
     var ($msg'orderId, $msg'receive, $msg'trxId) = $msg;
-    __tact_debug_str(__gen_slice_string_5cb78f382776d69c89dd576c45e0626f9bbe3163a24184ad8873588adbd7678a());
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(41207, ( __tact_slice_eq_bits($self'pool, __tact_context_get_sender()) ));
     tuple $orderOpt = $PerpPositionOrder$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrders, 257, $msg'orderId));
