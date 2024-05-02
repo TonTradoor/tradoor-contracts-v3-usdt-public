@@ -181,7 +181,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
 
@@ -226,12 +226,12 @@ describe('LP', () => {
         expect(perpPosition?.entryPrice).toBeGreaterThanOrEqual(toPriceUnits(indexPrice));
 
         // check global position
-        let globalPosition = executeResult.globalPositionAfter;
+        let globalPosition = executeResult.positionDataAfter.globalPosition;
         console.log('globalPosition:', globalPosition);
         expect(globalPosition?.longMargin).toEqual(perpPosition?.margin);
         expect(globalPosition?.longSize).toEqual(perpPosition?.size);
 
-        let globalLPPosition = executeResult.globalLPPositionAfter;
+        let globalLPPosition = executeResult.positionDataAfter.globalLPPosition;
         console.log('globalLPPosition:', globalLPPosition);
         expect(globalLPPosition?.netSize).toEqual(perpPosition?.size);
         expect(globalLPPosition?.isLong).toBeFalsy();
@@ -303,7 +303,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
         
@@ -334,8 +334,8 @@ describe('LP', () => {
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
-        console.log('position after increase:', perpPositionAfterIncrease);
-        console.log('global position after increase:', executeResult.globalPositionAfter);
+        console.log('position after increase:', executeResult.positionDataAfter);
+        console.log('lp after increase:', executeResult.lpPositionDataAfter);
 
         /* =========================== decrease perp ================================ */
         /// create order
@@ -366,8 +366,8 @@ describe('LP', () => {
             success: true,
         });
         let perpPositionAfterDecrease = executeDecreaseResult.positionAfter;
-        console.log('position after decrease:', perpPositionAfterDecrease);
-        console.log('global position after decrease:', executeDecreaseResult.globalPositionAfter);
+        console.log('position after decrease:', executeDecreaseResult.positionDataAfter);
+        console.log('lp after decrease:', executeResult.lpPositionDataAfter);
 
         // check position
         // let tradingFee = decreaseSize * decreasePrice * TestEnv.tradingFeeRate;
@@ -377,12 +377,12 @@ describe('LP', () => {
         expect(perpPositionAfterDecrease?.size).toEqual(perpPositionAfterIncrease?.size - toJettonUnits(decreaseSize));
 
         // check global position
-        let globalPosition = executeDecreaseResult.globalPositionAfter;
+        let globalPosition = executeDecreaseResult.positionDataAfter.globalPosition;
         console.log('globalPosition:', globalPosition);
         expect(globalPosition?.longMargin).toEqual(perpPositionAfterDecrease?.margin);
         expect(globalPosition?.longSize).toEqual(perpPositionAfterDecrease?.size);
 
-        let globalLPPosition = executeDecreaseResult.globalLPPositionAfter;
+        let globalLPPosition = executeDecreaseResult.positionDataAfter.globalLPPosition;
         console.log('globalLPPosition:', globalLPPosition);
         expect(globalLPPosition?.netSize).toEqual(perpPositionAfterDecrease?.size);
         expect(globalLPPosition?.isLong).toBeFalsy();
@@ -408,19 +408,20 @@ describe('LP', () => {
             to: pool.address,
             success: true,
         });
-        console.log('global position after decrease:', executeDecreaseResult1.globalPositionAfter);
+        console.log('position after close:', executeDecreaseResult1.positionDataAfter);
+        console.log('lp after close:', executeDecreaseResult1.lpPositionDataAfter);
 
         // check position
         expect(executeDecreaseResult1.positionAfter.size).toEqual(0n);
         expect(executeDecreaseResult1.positionAfter.margin).toEqual(0n);
 
         // check global position
-        let globalPositionAfterClose = executeDecreaseResult1.globalPositionAfter;
+        let globalPositionAfterClose = executeDecreaseResult1.positionDataAfter.globalPosition;
         console.log('globalPositionAfterClose:', globalPositionAfterClose);
         expect(globalPositionAfterClose?.longMargin).toEqual(0n);
         expect(globalPositionAfterClose?.longSize).toEqual(0n);
 
-        let globalLPPositionAfterClose = executeDecreaseResult1.globalLPPositionAfter;
+        let globalLPPositionAfterClose = executeDecreaseResult1.positionDataAfter.globalLPPosition;
         console.log('globalLPPositionAfterClose:', globalLPPositionAfterClose);
         expect(globalLPPositionAfterClose?.netSize).toEqual(0n);
         expect(globalLPPositionAfterClose?.isLong).toBeFalsy();   

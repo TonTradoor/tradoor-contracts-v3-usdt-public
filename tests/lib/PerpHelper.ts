@@ -97,9 +97,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     let orderBefore = await TestEnv.orderBook.getPerpPositionOrder(orderId);
     let positionDataBefore = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
     let positionBefore = orderBefore?.isLong!! ? positionDataBefore?.perpPosition?.longPosition!! : positionDataBefore?.perpPosition?.shortPosition!!;
-    let globalLPPositionBefore = positionDataBefore?.globalLPPosition;
-    let globalPositionBefore = positionDataBefore?.globalPosition;
-    let globalLPLiquidityBefore = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
+    let lpPositionDataBefore = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
     
     const trxResult = await TestEnv.orderBook.send(
         executor.getSender(),
@@ -122,11 +120,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     let orderAfter = await TestEnv.orderBook.getPerpPositionOrder(orderId);
     let positionDataAfter = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
     let positionAfter = orderBefore?.isLong!! ? positionDataAfter?.perpPosition?.longPosition!! : positionDataAfter?.perpPosition?.shortPosition!!;
-    let globalLPPositionAfter = positionDataAfter?.globalLPPosition;
-    let globalPositionAfter = positionDataAfter?.globalPosition;
-    let globalLPLiquidityAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
-    let globalFundingRateSampleAfter = positionDataAfter.globalFundingRateSample;
-    let prevPremiumRateAfter = positionDataAfter.prevPremiumRate;
+    let lpPositionDataAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
 
     return {
         trxResult,
@@ -134,16 +128,12 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
         balanceAfter,
         orderBefore,
         orderAfter,
+        positionDataBefore,
         positionBefore,
+        lpPositionDataBefore,
+        positionDataAfter,
         positionAfter,
-        globalLPPositionBefore,
-        globalLPPositionAfter,
-        globalPositionBefore,
-        globalPositionAfter,
-        globalLPLiquidityBefore,
-        globalLPLiquidityAfter,
-        globalFundingRateSampleAfter,
-        prevPremiumRateAfter
+        lpPositionDataAfter
     };
 }
 
@@ -367,8 +357,14 @@ export async function updatePrice(executor: SandboxContract<TreasuryContract>, t
             )
         }
     );
+
+
+    let lpPositionDataAfter = await TestEnv.pool.getLpPosition(executor.address);
+    let positionDataAfter = await TestEnv.pool.getPerpPosition(BigInt(tokenId), executor.address);
     return {
-        trxResult
+        trxResult,
+        lpPositionDataAfter,
+        positionDataAfter
     }
 }
 

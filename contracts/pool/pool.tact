@@ -15,7 +15,8 @@ contract Pool with Deployable, Ownable {
     tokenConfigs: map<Int, TokenConfig>; // tokenId => tokenConfig
 
     lpLockTime: Int = 24 * 60 * 60;
-    lpBonusFactor: Int = 10 * pow(10, 9);
+    lpAddBonusFactor: Int = 1 * pow(10, 9);
+    lpRemoveBonusFactor: Int = 10 * pow(10, 9);
     lpLiquidityFactor: Int = pow(10, 9);
 
     // admin
@@ -76,7 +77,8 @@ contract Pool with Deployable, Ownable {
         self.perpGasConsumption = msg.perpGasConsumption;
         self.minTonsForStorage = msg.minTonsForStorage;
         self.lpLockTime = msg.lpLockTime;
-        self.lpBonusFactor = msg.lpBonusFactor;
+        self.lpAddBonusFactor = msg.lpAddBonusFactor;
+        self.lpRemoveBonusFactor = msg.lpRemoveBonusFactor;
         self.lpLiquidityFactor = msg.lpLiquidityFactor;
         self.orderBook = msg.orderBook;
         
@@ -162,7 +164,8 @@ contract Pool with Deployable, Ownable {
             lpGasConsumption: self.lpGasConsumption,
             perpGasConsumption: self.perpGasConsumption,
             minTonsForStorage: self.minTonsForStorage,
-            lpBonusFactor: self.lpBonusFactor,
+            lpAddBonusFactor: self.lpAddBonusFactor,
+            lpRemoveBonusFactor: self.lpRemoveBonusFactor,
             lpLiquidityFactor: self.lpLiquidityFactor,
             orderBook: self.orderBook
         };
@@ -176,7 +179,7 @@ contract Pool with Deployable, Ownable {
         return self.prices.get(tokenId);
     }
 
-    fun execeedGas(orderType: Int): Int {
+    fun exceedGas(orderType: Int): Int {
         let tonBalanceBeforeMsg: Int = myBalance() - context().value;
         let storageFee: Int = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
         let extraValue: Int = max(0, tonBalanceBeforeMsg - self.minTonsForStorage);
@@ -224,8 +227,7 @@ contract Pool with Deployable, Ownable {
         let bonus: Int = 0;
         if (globalNetLP < self.globalLPLiquidity) {
             // bonus = b + s (1 - x) * liquidity
-            bonus = self.lpBonusFactor * (self.globalLPLiquidity - globalNetLP)
-                 * liquidityDelta / (self.globalLPLiquidity * PERCENTAGE_BASIS_POINT);
+            bonus = self.lpAddBonusFactor * (self.globalLPLiquidity - globalNetLP) * liquidityDelta / (self.globalLPLiquidity * PERCENTAGE_BASIS_POINT);
             lpPosition.bonus = lpPosition.bonus + bonus;
         }
         // funding fee
@@ -248,7 +250,7 @@ contract Pool with Deployable, Ownable {
         self.globalLPLiquidity = self.globalLPLiquidity + liquidityDelta;
 
         // leave minTonsForStorage
-        let msgValue: Int = self.execeedGas(ORDER_TYPE_LP);
+        let msgValue: Int = self.exceedGas(ORDER_TYPE_LP);
 
         // send update success msg
         send(SendParameters{
@@ -315,11 +317,11 @@ contract Pool with Deployable, Ownable {
 
             if (lpPosition.bonus == 0) {
                 // bonus = liquidity * r（x-1）* min(n，100）* 0.1%
-                bonus = liquidityDelta * self.lpBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 10000 * PERCENTAGE_BASIS_POINT);
+                bonus = liquidityDelta * self.lpRemoveBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 10000 * PERCENTAGE_BASIS_POINT);
             } else {
                 let bonus1: Int = liquidityDelta * (globalNetLP - self.globalLPLiquidity) / globalNetLP;
                 let bonus2: Int = lpPosition.bonus;
-                let bonus3: Int = liquidityDelta * self.lpBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 10000 * PERCENTAGE_BASIS_POINT);
+                let bonus3: Int = liquidityDelta * self.lpRemoveBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (globalNetLP * 10000 * PERCENTAGE_BASIS_POINT);
                 bonus = max(min(bonus1, bonus2), bonus3);
             }
             receive = liquidityDelta + bonus;
@@ -350,8 +352,8 @@ contract Pool with Deployable, Ownable {
         self.globalLPFund = self.globalLPFund - receive;
         self.globalLPLiquidity = self.globalLPLiquidity - liquidityDelta;
 
-        // execeed gas
-        let msgValue: Int = self.execeedGas(ORDER_TYPE_LP);
+        // exceed gas
+        let msgValue: Int = self.exceedGas(ORDER_TYPE_LP);
 
         // send update success msg
         send(SendParameters{
@@ -449,7 +451,6 @@ contract Pool with Deployable, Ownable {
 
         // check value
         let valueDelta: Int = sizeDelta * tradePrice / PRICE_DECIMAL_FACTOR;
-        require(valueDelta >= tokenConfig.minValue, "less than min value");
         require(valueDelta <= tokenConfig.maxValue, "greater than max value");
         
         // get position
@@ -480,6 +481,8 @@ contract Pool with Deployable, Ownable {
         
         // check margin
         if (perpPosition.size == 0) {
+            // first position, check min value
+            require(valueDelta >= tokenConfig.minValue, "less than min value");
             perpPosition.positionId = self.perpPositionIndexNext;
             self.perpPositionIndexNext += 1;
         }
@@ -605,8 +608,8 @@ contract Pool with Deployable, Ownable {
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
 
-        // execeed gas
-        let msgValue: Int = self.execeedGas(ORDER_TYPE_PERP);
+        // exceed gas
+        let msgValue: Int = self.exceedGas(ORDER_TYPE_PERP);
 
         // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
@@ -844,8 +847,8 @@ contract Pool with Deployable, Ownable {
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
-        // execeed gas
-        let msgValue: Int = self.execeedGas(ORDER_TYPE_PERP);
+        // exceed gas
+        let msgValue: Int = self.exceedGas(ORDER_TYPE_PERP);
 
         // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
@@ -1055,8 +1058,8 @@ contract Pool with Deployable, Ownable {
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
-        // execeed gas
-        let msgValue: Int = self.execeedGas(ORDER_TYPE_PERP);
+        // exceed gas
+        let msgValue: Int = self.exceedGas(ORDER_TYPE_PERP);
 
         // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
@@ -1132,6 +1135,7 @@ contract Pool with Deployable, Ownable {
 
     // ============================ price ================================ //
     receive(msg: UpdatePrice) {
+        dump("update price");
         // check sender
         let isExecutor: Bool = false;
         let isExecutorOpt: Bool? = self.executors.get(sender());
@@ -1168,8 +1172,8 @@ contract Pool with Deployable, Ownable {
             datas: resultDatas
         }.toCell());
 
-        // execeed gas
-        let msgValue: Int = self.execeedGas(ORDER_TYPE_PERP);
+        // exceed gas
+        let msgValue: Int = self.exceedGas(ORDER_TYPE_PERP);
 
         send(SendParameters{
             to: sender(),
@@ -1181,16 +1185,13 @@ contract Pool with Deployable, Ownable {
 
     // ============================ private function ================================ //
     fun updatePriceAndFundingFee(tokenId: Int, price: Int): UpdateFundingRateResult {
+        dump("updatePriceAndFundingFee");
         // TODO check price offset
-        let priceOpt: Int? = self.prices.get(tokenId);
-        if (priceOpt != null) {
-            self.prices.set(tokenId, price);
-        } else {
-            self.prices.set(tokenId, price);
-        }
+        self.prices.set(tokenId, price);
 
         // update lp pnl
         let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(tokenId);
+        dump(globalLPPositionOpt == null);
         if (globalLPPositionOpt != null) {
             let globalLPPosition: GlobalLPPosition = globalLPPositionOpt!!;
             // unrealized pnl
@@ -1200,7 +1201,10 @@ contract Pool with Deployable, Ownable {
             } else {
                 unrealizedPnl = globalLPPosition.netSize * (globalLPPosition.entryPrice - price) / PRICE_DECIMAL_FACTOR;
             }
-            self.globalLPUnrealizedPnl -= globalLPPosition.unrealizedPnl + unrealizedPnl;
+            dump("update unrealized pnl");
+            dump(unrealizedPnl);
+            self.globalLPUnrealizedPnl = self.globalLPUnrealizedPnl - globalLPPosition.unrealizedPnl + unrealizedPnl;
+            globalLPPosition.unrealizedPnl = unrealizedPnl;
             self.globalLPPositions.set(tokenId, globalLPPosition);
         }
 

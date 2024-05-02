@@ -4,7 +4,8 @@ struct ConfigData {
     lpGasConsumption: Int as coins;
     perpGasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
-    lpBonusFactor: Int;
+    lpAddBonusFactor: Int;
+    lpRemoveBonusFactor: Int;
     lpLiquidityFactor: Int;
     orderBook: Address;
 }

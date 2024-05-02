@@ -41,7 +41,8 @@ export async function run(provider: NetworkProvider) {
             perpGasConsumption: toNano(0.09),
             minTonsForStorage: toNano(0),
             lpLockTime: 60n * 60n, // 1hour
-            lpBonusFactor: 10n * 10n**9n,
+            lpAddBonusFactor: 1n * 10n**9n,
+            lpRemoveBonusFactor: 10n * 10n**9n,
             lpLiquidityFactor: 2n * 10n**9n,
             orderBook: orderBook.address
         }

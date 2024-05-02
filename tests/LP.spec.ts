@@ -8,6 +8,7 @@ import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
+import {createIncreasePerpOrder, executePerpOrder, updatePrice} from "./lib/PerpHelper";
 
 describe('LP', () => {
     let blockchain: Blockchain;
@@ -37,10 +38,12 @@ describe('LP', () => {
         user0JettonWallet = TestEnv.user0JettonWallet;
         orderBookJettonWallet = TestEnv.orderBookJettonWallet;
 
-        // mint to user0
-        await mint(user0.address, '100');
+        // mint to user
+        await mint(user0.address, '100000');
+        await mint(user1.address, '100000');
         // get user jetton balance
-        expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('100'));
+        expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('100000'));
+        expect(await getJettonBalance(user1.address)).toEqual(toJettonUnits('100000'));
 
         // check config
         let orderBookConfigData = await orderBook.getConfigData(executor.address);
@@ -175,7 +178,7 @@ describe('LP', () => {
         expect(executeResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeResult.positionAfter;
+        let position = executeResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(liquidity));
     });
@@ -266,7 +269,7 @@ describe('LP', () => {
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
         // check position
-        let position = executeIncreaseResult.positionAfter;
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(liquidity));
 
@@ -307,9 +310,116 @@ describe('LP', () => {
         expect(executeDecreaseResult.orderAfter).toBeNull();
 
         // check position
-        position = executeDecreaseResult.positionAfter;
+        position = executeDecreaseResult.positionDataAfter.lpPosition;
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(liquidity - decreaseLiquidity));
+    });
+
+    it('should increase LP with bonus', async () => {
+        /* =========================== increase LP ================================ */
+        /// create order
+        let lpLiquidity = 10000;
+        let executionFee = 0.1;
+
+        // create order
+        const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
+        printTransactionFees(createIncreaseResult.trxResult.transactions);
+
+        console.log('create increase LP order gas used:', fromNano(createIncreaseResult.balanceBefore.user0TonBalance - createIncreaseResult.balanceAfter.user0TonBalance - toNano(executionFee)));
+
+        /// executor order
+        const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
+        printTransactionFees(executeIncreaseResult.trxResult.transactions);
+        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+        console.log('execute increase LP order gas used:', fromNano(executeIncreaseResult.balanceBefore.executorTonBalance - executeIncreaseResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+
+        // check order
+        expect(executeIncreaseResult.orderAfter).toBeNull();
+
+        // check position
+        let position = executeIncreaseResult.positionDataAfter.lpPosition;
+        console.log('lp position after update price:', position);
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
+
+
+        /* =========================== increase long perp ================================ */
+        let isMarket = true;
+        let tokenId = 1;
+        let isLong = true;
+        let margin = 50;
+        let size = 0.01; // 500u
+        let triggerPrice = 51000;
+        let increasePrice = 50000;
+        let premiumRate = 0;
+
+        // create order
+        const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        printTransactionFees(createResult.trxResult.transactions);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('create increase long perp order gas used:', fromNano(createResult.balanceBefore.user1TonBalance - createResult.balanceAfter.user1TonBalance - toNano(executionFee)));
+
+        // executor order
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, premiumRate);
+        printTransactionFees(executeResult.trxResult.transactions);
+        expect(executeResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+        console.log('execute increase long perp order gas used:', fromNano(executeResult.balanceBefore.executorTonBalance - executeResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+
+        console.log('position after increase long:', executeResult.positionDataAfter);
+        console.log('lp position after increase long:', executeResult.lpPositionDataAfter);
+
+        expect(executeResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
+        expect(executeResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
+
+        /* =========================== update price ================================ */
+        let indexPrice = 51000;
+
+        const updatePriceResult = await updatePrice(executor, tokenId, indexPrice);
+        printTransactionFees(updatePriceResult.trxResult.transactions);
+
+        console.log('lp position data after update price:', updatePriceResult.lpPositionDataAfter);
+        console.log('position data after update price:', updatePriceResult.positionDataAfter);
+
+        /* =========================== increase LP ================================ */
+        /// create order
+        const createIncreaseResult1 = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
+        printTransactionFees(createIncreaseResult1.trxResult.transactions);
+
+        console.log('create increase LP order gas used:', fromNano(createIncreaseResult1.balanceBefore.user0TonBalance - createIncreaseResult1.balanceAfter.user0TonBalance - toNano(executionFee)));
+
+        /// executor order
+        const executeIncreaseResult1 = await executeLPOrder(executor, createIncreaseResult1.orderIdBefore);
+        printTransactionFees(executeIncreaseResult1.trxResult.transactions);
+        expect(executeIncreaseResult1.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+
+        console.log('execute increase LP order gas used:', fromNano(executeIncreaseResult1.balanceBefore.executorTonBalance - executeIncreaseResult1.balanceAfter.executorTonBalance + toNano(executionFee)));
+
+        // check order
+        expect(executeIncreaseResult1.orderAfter).toBeNull();
+
+        // check position
+        let position1 = executeIncreaseResult1.positionDataAfter.lpPosition;
+        console.log('lp position after update price:', position1);
+
+        expect(position1).not.toBeNull();
+        expect(position1?.liquidity).toEqual(toJettonUnits(lpLiquidity + lpLiquidity));
+
     });
 
 });
