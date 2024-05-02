@@ -88,8 +88,6 @@ describe('LP', () => {
         const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
         printTransactionFees(createIncreaseResult.trxResult.transactions);
 
-        console.log('user0 balance before:', fromNano(createIncreaseResult.balanceBefore.user0TonBalance));
-        console.log('user0 balance after:', fromNano(createIncreaseResult.balanceAfter.user0TonBalance));
         console.log('create increase LP order gas used:', fromNano(createIncreaseResult.balanceBefore.user0TonBalance - createIncreaseResult.balanceAfter.user0TonBalance - toNano(executionFee)));
 
         /// executor order
@@ -100,9 +98,7 @@ describe('LP', () => {
             to: pool.address,
             success: true,
         });
-        console.log('executor balance before:', fromNano(executeIncreaseResult.balanceBefore.executorTonBalance));
-        console.log('executor balance after:', fromNano(executeIncreaseResult.balanceAfter.executorTonBalance));
-        
+
         console.log('execute increase LP order gas used:', fromNano(executeIncreaseResult.balanceBefore.executorTonBalance - executeIncreaseResult.balanceAfter.executorTonBalance + toNano(executionFee)));
 
         // check order
@@ -253,6 +249,33 @@ describe('LP', () => {
 
         expect(executeDecreaseLongResult.positionDataAfter.globalLPPosition?.netSize).toEqual(0n);
         expect(executeDecreaseLongResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
+
+        /* =========================== decrease LP ================================ */
+        /// create order
+        const createDecreaseLPResult = await createDecreaseLPOrder(user0, lpLiquidity, executionFee);
+        printTransactionFees(createDecreaseLPResult.trxResult.transactions);
+
+        console.log('create increase LP order gas used:', fromNano(createDecreaseLPResult.balanceBefore.user0TonBalance - createDecreaseLPResult.balanceAfter.user0TonBalance - toNano(executionFee)));
+
+        /// executor order
+        const executeDecreaseLPResult= await executeLPOrder(executor, createDecreaseLPResult.orderIdBefore);
+        printTransactionFees(executeDecreaseLPResult.trxResult.transactions);
+        expect(executeDecreaseLPResult.trxResult.transactions).toHaveTransaction({
+            from: orderBook.address,
+            to: pool.address,
+            success: true,
+        });
+
+        console.log('execute increase LP order gas used:', fromNano(executeDecreaseLPResult.balanceBefore.executorTonBalance - executeDecreaseLPResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+        console.log('lp data after decrease lp:', executeDecreaseLPResult.positionDataAfter);
+
+        // check order
+        expect(executeIncreaseResult.orderAfter).toBeNull();
+
+        // check position
+        // let lpPosition = executeDecreaseLPResult.positionDataAfter.lpPosition;
+        // expect(lpPosition).not.toBeNull();
+        // expect(lpPosition?.liquidity).toEqual(0);
 
     });
 

@@ -84,7 +84,7 @@ struct PerpPositionData {
     globalLPPosition: GlobalLPPosition?;
     globalPosition: GlobalPosition?;
     globalFundingRateSample: GlobalFundingRateSample?;
-    prevPremiumRate: Int;
+    prevPremiumRate: Int?;
 }
 
 // ============================ Price ================================ //
@@ -119,6 +119,7 @@ struct UpdateFundingRateResult {
 
 struct UpdateFundingRateEventData {
     tokenId: Int;
+    price: Int;
     lpReceivedFundingFeeDelta: Int;
     longFundingFeeGrowthAfter: Int;
     shortFundingFeeGrowthAfter: Int;
