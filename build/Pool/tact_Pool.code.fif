@@ -4281,7 +4281,11 @@ PROGRAM{
     ADD
     s1 51 s() XCHG
     ADD
-    30 s() PUSH
+    s11 PUSH
+    29 s() PUSH
+    SUB
+    16 s() PUSH
+    ADD
     NEGATE
     0 PUSHINT
     s0 s0 s0 PUSH3

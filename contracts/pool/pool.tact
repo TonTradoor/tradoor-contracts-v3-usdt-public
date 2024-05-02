@@ -81,7 +81,7 @@ contract Pool with Deployable, Ownable {
         self.lpRemoveBonusFactor = msg.lpRemoveBonusFactor;
         self.lpLiquidityFactor = msg.lpLiquidityFactor;
         self.orderBook = msg.orderBook;
-        
+
         send(SendParameters{
             to: sender(),
             bounce: false,
@@ -126,7 +126,7 @@ contract Pool with Deployable, Ownable {
         tokenConfig.liquidityProportion = msg.liquidityProportion;
 
         self.tokenConfigs.set(msg.tokenId, tokenConfig);
-        
+
         send(SendParameters{
             to: sender(),
             bounce: false,
@@ -393,7 +393,7 @@ contract Pool with Deployable, Ownable {
     }
 
     get fun lpPosition(account: Address?): LPPositionData {
-        let lpPosition: LPPosition? = null; 
+        let lpPosition: LPPosition? = null;
         if (account != null) {
             lpPosition = self.lpPositions.get(account!!);
         }
@@ -417,7 +417,7 @@ contract Pool with Deployable, Ownable {
 
         // get index price
         let indexPrice: Int = msg.price;
-        
+
         // trade price
         require(abs(msg.premiumRate) < PERCENTAGE_BASIS_POINT, "invalid premium rate");
         let tradePrice: Int = (PERCENTAGE_BASIS_POINT + msg.premiumRate) * indexPrice / PERCENTAGE_BASIS_POINT;
@@ -442,7 +442,7 @@ contract Pool with Deployable, Ownable {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
             self.decreasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice, result.lpReceivedFundingFeeDelta);
-        } 
+        }
     }
 
     fun increasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
@@ -459,7 +459,7 @@ contract Pool with Deployable, Ownable {
             require(valueDelta >= tokenConfig.minValue, "less than min value");
             require(valueDelta <= tokenConfig.maxValue, "greater than max value");
         }
-        
+
         // get position
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
         let accountPerpPosition: AccountPerpPosition = accountPerpPositionOpt != null ? accountPerpPositionOpt!! : AccountPerpPosition{
@@ -485,7 +485,7 @@ contract Pool with Deployable, Ownable {
         };
 
         let perpPosition: PerpPosition = isLong ? directionPerpPosition.longPosition : directionPerpPosition.shortPosition;
-        
+
         // check margin
         if (perpPosition.size == 0) {
             perpPosition.positionId = self.perpPositionIndexNext;
@@ -688,7 +688,7 @@ contract Pool with Deployable, Ownable {
         require(tokenConfigOpt != null, "invalid token");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
         require(tokenConfig.enable, "disabled token");
-        
+
         // get position
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
         let accountPerpPosition: AccountPerpPosition = accountPerpPositionOpt != null ? accountPerpPositionOpt!! : AccountPerpPosition{
@@ -802,7 +802,7 @@ contract Pool with Deployable, Ownable {
         // margin
         let marginBefore: Int = perpPosition.margin;
         perpPosition.margin += realizedPnl + fundingFee - tradingFee;
-        
+
         require(perpPosition.margin >= 0, "insufficient margin");
         if (marginDelta > perpPosition.margin) {
             marginDelta = perpPosition.margin;
@@ -937,7 +937,7 @@ contract Pool with Deployable, Ownable {
         require(tokenConfigOpt != null, "invalid token");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
         require(tokenConfig.enable, "disabled token");
-        
+
         // get position
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
         let accountPerpPosition: AccountPerpPosition = accountPerpPositionOpt != null ? accountPerpPositionOpt!! : AccountPerpPosition{
@@ -1004,7 +1004,7 @@ contract Pool with Deployable, Ownable {
         require(maintenanceMargin >= perpPosition.margin + unrealizedPnl, "margin rate too low");
 
         // liquidate price
-        let liquidatePrice: Int = ((perpPosition.margin + fundingFee - tokenConfig.liquidationFee) * PRICE_DECIMAL_FACTOR + (isLong ? -perpPosition.entryPrice * perpPosition.size : perpPosition.entryPrice * perpPosition.size)) 
+        let liquidatePrice: Int = ((perpPosition.margin + fundingFee - tokenConfig.liquidationFee) * PRICE_DECIMAL_FACTOR + (isLong ? -perpPosition.entryPrice * perpPosition.size : perpPosition.entryPrice * perpPosition.size))
             / (perpPosition.size * (tokenConfig.tradingFeeRate + tokenConfig.maintenanceRate + (isLong ? - PERCENTAGE_BASIS_POINT : PERCENTAGE_BASIS_POINT)) / PERCENTAGE_BASIS_POINT);
         // require(isLong ? liquidatePrice < perpPosition.entryPrice : liquidatePrice > perpPosition.entryPrice, "not reach liquidate price");
         tradePrice = liquidatePrice;
@@ -1050,11 +1050,10 @@ contract Pool with Deployable, Ownable {
         self.globalLPFund += lpRealizedPnl + lpTradingFee;
 
         let positionId: Int = perpPosition.positionId;
-        let receive: Int = 0;
-        let realizedPnl: Int = 0;
+        let receive: Int = tokenConfig.liquidationFee;
+        let realizedPnl: Int = -(marginDelta - tradingFee + fundingFee);
+
         // close position
-        receive = tokenConfig.liquidationFee;
-        realizedPnl = -lpRealizedPnl;
         perpPosition = PerpPosition {
             positionId: 0,
             margin: 0,
@@ -1370,7 +1369,7 @@ contract Pool with Deployable, Ownable {
             paidSize = globalPosition.shortSize;
             receivedSize = globalPosition.longSize;
         }
-        
+
         // calculate funding rate growth
         // paidFundingFeeGrowthDelta = (paidSize * price * fundingRate) / paidSize = price * fundingRate
         let paidFundingFeeGrowthDelta: Int = price * abs(fundingRateDelta) / PERCENTAGE_BASIS_POINT;
