@@ -30,7 +30,7 @@ export async function run(provider: NetworkProvider) {
                 maxValue: toUnits(10_000_000, jettonDecimal), // 1000w U
                 maxLeverage: 105n,
                 liquidationFee: toUnits(0.5, jettonDecimal), // 0.5U
-                maintenanceRate: BigInt(0.01 * PERCENTAGE_BASIS_POINT), // 1%
+                maintenanceRate: BigInt(0.005 * PERCENTAGE_BASIS_POINT), // 0.5%
                 liquidityProportion: BigInt(PERCENTAGE_BASIS_POINT / tokens.length), // 100% / n
                 tradingFeeRate: BigInt(0.001 * PERCENTAGE_BASIS_POINT), // 0.1%
                 lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
