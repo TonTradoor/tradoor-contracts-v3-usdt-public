@@ -90,6 +90,7 @@ message PerpPositionDecreasedEvent {
     sizeDelta: Int;
     sizeAfter: Int;
     tradePrice: Int;
+    entryPrice: Int;
     realizedPnLDelta: Int;
     fundingFee: Int;
     tradingFee: Int;
