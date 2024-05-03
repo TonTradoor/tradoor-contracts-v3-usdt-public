@@ -123,7 +123,7 @@
     $receive = $receive + $realizedFundingFee;
     $lpPosition'realizedFundingFee = 0;
     $lpPosition'liquidity = $lpPosition'liquidity - $liquidityDelta;
-    $lpPosition'bonus = $lpPosition'bonus - max($lpPosition'bonus, $bonus);
+    $lpPosition'bonus = $lpPosition'bonus - min($lpPosition'bonus, $bonus);
     if (( (($lpPosition'liquidity > 0)) ? (true) : (($lpPosition'bonus > 0)) )) {
         $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_cell(($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'unlockTime)));
     } else {

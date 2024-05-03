@@ -316,6 +316,10 @@ describe('LP', () => {
     });
 
     it('should increase LP with bonus', async () => {
+        // set block time
+        const time1 = Math.floor(Date.now() / 1000); 
+        blockchain.now = time1;
+
         /* =========================== increase LP ================================ */
         /// create order
         let lpLiquidity = 10000;
@@ -342,7 +346,7 @@ describe('LP', () => {
 
         // check position
         let position = executeIncreaseResult.positionDataAfter.lpPosition;
-        console.log('lp position after update price:', position);
+        console.log('lp position after increase:', executeIncreaseResult.positionDataAfter);
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
 
@@ -417,11 +421,62 @@ describe('LP', () => {
 
         // check position
         let position1 = executeIncreaseResult1.positionDataAfter.lpPosition;
-        console.log('lp position after update price:', position1);
+        console.log('lp position data after increase position:', executeIncreaseResult1.positionDataAfter);
 
         expect(position1).not.toBeNull();
         expect(position1?.liquidity).toEqual(toJettonUnits(lpLiquidity + lpLiquidity));
 
+        /* =========================== update price ================================ */
+        let indexPrice1 = 49000;
+
+        const updatePriceResult1 = await updatePrice(executor, tokenId, indexPrice1);
+        printTransactionFees(updatePriceResult1.trxResult.transactions);
+
+        expect(updatePriceResult1.lpPositionDataAfter.globalLPUnrealizedPnl).toEqual(toJettonUnits((increasePrice - indexPrice1) * size));
+
+        console.log('lp position data after update price:', updatePriceResult1.lpPositionDataAfter);
+        console.log('position data after update price:', updatePriceResult1.positionDataAfter);
+
+        /* =========================== decrease LP ================================ */
+        // after 1 days
+        blockchain.now = blockchain.now + 10 * 24 * 60 * 60;
+        let decreaseLiquidity = 5000;
+
+        // create order
+        const createDecreaseResult = await createDecreaseLPOrder(user0, decreaseLiquidity, executionFee);
+        console.log('order:', createDecreaseResult.order);
+
+        expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
+            from: user0.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        console.log('create order gas used:', fromNano(createDecreaseResult.balanceBefore.user0TonBalance - createDecreaseResult.balanceAfter.user0TonBalance - toNano(executionFee)));
+
+        // check order
+        expect(createDecreaseResult.orderIdAfter).toEqual(createDecreaseResult.orderIdBefore + 1n);
+        expect(createDecreaseResult.order).not.toBeNull();
+        expect(createDecreaseResult.order?.liquidityDelta).toEqual(toJettonUnits(decreaseLiquidity));
+
+        blockchain.now = blockchain.now + 10;
+        /// executor order
+        const executeDecreaseResult = await executeLPOrder(executor, createDecreaseResult.orderIdBefore);
+        printTransactionFees(executeDecreaseResult.trxResult.transactions);
+        prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
+        expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+        
+        console.log('lp position data after decrease lp:', executeDecreaseResult.positionDataAfter);
+
+        // check position
+        position = executeDecreaseResult.positionDataAfter.lpPosition;
+        expect(position).not.toBeNull();
+        expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity + lpLiquidity - decreaseLiquidity));
+        
     });
 
 });
