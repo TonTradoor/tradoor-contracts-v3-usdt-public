@@ -1002,7 +1002,7 @@ contract Pool with Deployable, Ownable {
             unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
         }
         let maintenanceMargin: Int = perpPosition.size * tradePrice * (tokenConfig.tradingFeeRate + tokenConfig.maintenanceRate) / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
-        require(maintenanceMargin >= perpPosition.margin + unrealizedPnl, "margin rate too low");
+        require(maintenanceMargin >= perpPosition.margin + fundingFee + unrealizedPnl, "margin rate too low");
 
         // liquidate price
         let liquidatePrice: Int = ((perpPosition.margin + fundingFee - tokenConfig.liquidationFee) * PRICE_DECIMAL_FACTOR + (isLong ? -perpPosition.entryPrice * perpPosition.size : perpPosition.entryPrice * perpPosition.size))
@@ -1197,6 +1197,7 @@ contract Pool with Deployable, Ownable {
                 let tokenId: Int = (updatePrice!!).tokenId;
                 let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(tokenId, (updatePrice!!).price, true);
                 resultDatas.set(i, UpdateFundingRateEventData{
+                    trxId: msg.trxId,
                     tokenId: tokenId,
                     price: (updatePrice!!).price,
                     lpReceivedFundingFeeDelta: result.lpReceivedFundingFeeDelta,

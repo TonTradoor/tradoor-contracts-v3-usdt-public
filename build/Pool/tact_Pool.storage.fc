@@ -471,13 +471,13 @@ cell $PerpPositionDecreasedEvent$_store_cell((int, int, int, int, slice, int, in
 
 ;;
 ;; Type: UpdateFundingFeeEvent
-;; Header: 0xfa46be91
-;; TLB: update_funding_fee_event#fa46be91 length:int257 datas:dict<int, ^UpdateFundingRateEventData{tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}> = UpdateFundingFeeEvent
+;; Header: 0xea469d6b
+;; TLB: update_funding_fee_event#ea469d6b length:int257 datas:dict<int, ^UpdateFundingRateEventData{trxId:int257,tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}> = UpdateFundingFeeEvent
 ;;
 
 builder $UpdateFundingFeeEvent$_store(builder build_0, (int, cell) v) inline {
     var (v'length, v'datas) = v;
-    build_0 = store_uint(build_0, 4198940305, 32);
+    build_0 = store_uint(build_0, 3930496363, 32);
     build_0 = build_0.store_int(v'length, 257);
     build_0 = build_0.store_dict(v'datas);
     return build_0;
@@ -1121,27 +1121,28 @@ _ $UpdatePriceParam$_get_price((int, int) v) inline {
 
 ;;
 ;; Type: UpdateFundingRateEventData
-;; TLB: _ tokenId:int257 price:int257 lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = UpdateFundingRateEventData
+;; TLB: _ trxId:int257 tokenId:int257 price:int257 lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = UpdateFundingRateEventData
 ;;
 
-builder $UpdateFundingRateEventData$_store(builder build_0, (int, int, int, int, int) v) inline {
-    var (v'tokenId, v'price, v'lpReceivedFundingFeeDelta, v'longFundingFeeGrowthAfter, v'shortFundingFeeGrowthAfter) = v;
+builder $UpdateFundingRateEventData$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref {
+    var (v'trxId, v'tokenId, v'price, v'lpReceivedFundingFeeDelta, v'longFundingFeeGrowthAfter, v'shortFundingFeeGrowthAfter) = v;
+    build_0 = build_0.store_int(v'trxId, 257);
     build_0 = build_0.store_int(v'tokenId, 257);
     build_0 = build_0.store_int(v'price, 257);
-    build_0 = build_0.store_int(v'lpReceivedFundingFeeDelta, 257);
     var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'lpReceivedFundingFeeDelta, 257);
     build_1 = build_1.store_int(v'longFundingFeeGrowthAfter, 257);
     build_1 = build_1.store_int(v'shortFundingFeeGrowthAfter, 257);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $UpdateFundingRateEventData$_store_cell((int, int, int, int, int) v) inline {
+cell $UpdateFundingRateEventData$_store_cell((int, int, int, int, int, int) v) inline {
     return $UpdateFundingRateEventData$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int, int, int)) $UpdateFundingRateEventData$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(int tokenId, int price, int lpReceivedFundingFeeDelta, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter) inline {
-    return (tokenId, price, lpReceivedFundingFeeDelta, longFundingFeeGrowthAfter, shortFundingFeeGrowthAfter);
+((int, int, int, int, int, int)) $UpdateFundingRateEventData$_constructor_trxId_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(int trxId, int tokenId, int price, int lpReceivedFundingFeeDelta, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter) inline {
+    return (trxId, tokenId, price, lpReceivedFundingFeeDelta, longFundingFeeGrowthAfter, shortFundingFeeGrowthAfter);
 }
 
 ;;

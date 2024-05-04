@@ -118,6 +118,7 @@ struct UpdateFundingRateResult {
 }
 
 struct UpdateFundingRateEventData {
+    trxId: Int;
     tokenId: Int;
     price: Int;
     lpReceivedFundingFeeDelta: Int;

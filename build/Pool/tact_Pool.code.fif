@@ -169,7 +169,7 @@ PROGRAM{
   DECLPROC $SendParameters$_constructor_to_bounce_value_mode
   DECLPROC $TokenConfig$_constructor_name_enable_minValue_maxValue_maxLeverage_liquidationFee_tradingFeeRate_lpTradingFeeRate_maintenanceRate_liquidityProportion_interestRate_maxFundingRate
   DECLPROC $SendProtocolFee$_constructor_trxId_feeReceiver_amount
-  DECLPROC $UpdateFundingRateEventData$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter
+  DECLPROC $UpdateFundingRateEventData$_constructor_trxId_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter
   DECLPROC $UpdateFundingFeeEvent$_constructor_length_datas
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $Pool$_internal_binary_UpdateConfig
@@ -1089,7 +1089,7 @@ PROGRAM{
     ENDC
   }>
   $UpdateFundingFeeEvent$_store PROCINLINE:<{
-    4198940305 PUSHINT
+    3930496363 PUSHINT
     s0 s3 XCHG2
     32 STU
     257 PUSHINT
@@ -1622,17 +1622,20 @@ PROGRAM{
       $UpdatePriceParam$_as_optional INLINECALLDICT
     }>
   }>
-  $UpdateFundingRateEventData$_store PROCINLINE:<{
-    s4 s5 XCHG2
+  $UpdateFundingRateEventData$_store PROCREF:<{
+    s5 s6 XCHG2
     257 PUSHINT
     STIX
-    s1 s2 XCHG
+    s1 s3 XCHG
     257 PUSHINT
     STIX
     257 PUSHINT
     STIX
     SWAP
     NEWC
+    257 PUSHINT
+    STIX
+    s1 s2 XCHG
     257 PUSHINT
     STIX
     s1 s2 XCHG
@@ -1644,7 +1647,7 @@ PROGRAM{
   }>
   $UpdateFundingRateEventData$_store_cell PROCINLINE:<{
     NEWC
-    5 -ROLL
+    6 -ROLL
     $UpdateFundingRateEventData$_store INLINECALLDICT
     ENDC
   }>
@@ -4145,8 +4148,11 @@ PROGRAM{
     DIV
     31 s() PUSH
     ADD
-    s15 PUSH
     18995 PUSHINT
+    16 s() PUSH
+    s4 PUSH
+    ADD
+    SWAP
     s0 35 s() XCHG
     ADD
     GEQ
@@ -5036,7 +5042,7 @@ PROGRAM{
   }>
   $SendProtocolFee$_constructor_trxId_feeReceiver_amount PROCINLINE:<{
   }>
-  $UpdateFundingRateEventData$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter PROCINLINE:<{
+  $UpdateFundingRateEventData$_constructor_trxId_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter PROCINLINE:<{
   }>
   $UpdateFundingFeeEvent$_constructor_length_datas PROCINLINE:<{
   }>
@@ -5517,14 +5523,13 @@ PROGRAM{
     }>
   }>
   $Pool$_internal_binary_UpdatePrice PROCINLINE:<{
-    s2 POP
     B{b5ee9c7241010101000e000018757064617465207072696365f881f162} B>boc <s PUSHSLICE
     STRDUMP
     DROP
     FALSE
     267 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    20 s() PUSH
+    21 s() PUSH
     -ROT
     1 PUSHINT
     __tact_dict_get_slice_int INLINECALLDICT
@@ -5540,18 +5545,18 @@ PROGRAM{
     41207 PUSHINT
     SWAP
     THROWANYIFNOT
-    DUP
+    OVER
     1 LESSINT
     IF:<{
-      2DROP
+      3 BLKDROP
     }>ELSE<{
       0 PUSHINT
       PUSHNULL
       WHILE:<{
-        s1 s2 PUSH2
+        s1 s3 PUSH2
         LESS
       }>DO<{
-        s3 PUSH
+        s2 PUSH
         257 PUSHINT
         s3 PUSH
         __tact_dict_get_int_cell INLINECALLDICT
@@ -5566,75 +5571,77 @@ PROGRAM{
           OVER
           $UpdatePriceParam$_not_null INLINECALLDICT
           $UpdatePriceParam$_get_price INLINECALLDICT
-          28 s() 34 s() XCHG
-          27 s() 33 s() XCHG
-          26 s() 32 s() XCHG
-          25 s() 31 s() XCHG
-          24 s() 30 s() XCHG
-          23 s() 29 s() XCHG
-          22 s() 34 s() XCHG
-          21 s() 33 s() XCHG
-          20 s() 32 s() XCHG
-          19 s() 31 s() XCHG
-          18 s() 30 s() XCHG
-          17 s() 29 s() XCHG
-          16 s() 34 s() XCHG
-          s15 33 s() XCHG
-          s14 32 s() XCHG
-          s13 31 s() XCHG
-          s12 30 s() XCHG
-          s11 29 s() XCHG
-          s10 34 s() XCHG
-          s9 33 s() XCHG
-          s8 32 s() XCHG
-          s7 31 s() XCHG
-          s6 30 s() XCHG
-          s5 29 s() XCHG
-          s4 34 s() XCHG
-          s3 33 s() XCHG
-          s2 32 s() XCHG
-          s1 31 s() XCHG
-          31 s() PUSH
+          28 s() 35 s() XCHG
+          27 s() 34 s() XCHG
+          26 s() 33 s() XCHG
+          25 s() 32 s() XCHG
+          24 s() 31 s() XCHG
+          23 s() 30 s() XCHG
+          22 s() 29 s() XCHG
+          21 s() 35 s() XCHG
+          20 s() 34 s() XCHG
+          19 s() 33 s() XCHG
+          18 s() 32 s() XCHG
+          17 s() 31 s() XCHG
+          16 s() 30 s() XCHG
+          s15 29 s() XCHG
+          s14 35 s() XCHG
+          s13 34 s() XCHG
+          s12 33 s() XCHG
+          s11 32 s() XCHG
+          s10 31 s() XCHG
+          s9 30 s() XCHG
+          s8 29 s() XCHG
+          s7 35 s() XCHG
+          s6 34 s() XCHG
+          s5 33 s() XCHG
+          s4 32 s() XCHG
+          s3 31 s() XCHG
+          s2 30 s() XCHG
+          s1 29 s() XCHG
+          29 s() PUSH
           SWAP
           TRUE
           $Pool$_fun_updatePriceAndFundingFee INLINECALLDICT
           257 PUSHINT
-          s0 35 s() XCHG
+          s0 33 s() XCHG
           $UpdatePriceParam$_not_null INLINECALLDICT
           $UpdatePriceParam$_get_price INLINECALLDICT
-          s4 34 s() XCHG
-          3 -ROLL
-          $UpdateFundingRateEventData$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter INLINECALLDICT
+          38 s() PUSH
+          s0 s5 XCHG
+          s0 33 s() XCHG
+          s4 s3 s4 XCHG3
+          $UpdateFundingRateEventData$_constructor_trxId_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter INLINECALLDICT
           $UpdateFundingRateEventData$_store_cell INLINECALLDICT
-          s2 32 s() XCHG
-          s1 31 s() XCHG
-          33 s() PUSH
+          s2 30 s() XCHG
+          s1 29 s() XCHG
+          31 s() PUSH
           SWAP
           __tact_dict_set_int_cell INLINECALLDICT
-          25 s() 31 s() XCHG
-          24 s() 30 s() XCHG
-          23 s() 29 s() XCHG
-          22 s() 28 s() XCHG
-          21 s() 27 s() XCHG
-          20 s() 26 s() XCHG
-          19 s() 25 s() XCHG
-          18 s() 24 s() XCHG
-          17 s() 23 s() XCHG
-          16 s() 22 s() XCHG
-          s15 21 s() XCHG
-          s14 20 s() XCHG
-          s13 19 s() XCHG
-          s12 18 s() XCHG
-          s11 17 s() XCHG
-          s10 16 s() XCHG
-          s9 s15 XCHG
-          s8 s14 XCHG
-          s7 s13 XCHG
-          s6 s12 XCHG
-          s5 s11 XCHG
-          s4 s10 XCHG
-          s3 s9 XCHG
-          s8 s7 s0 XCHG3
+          25 s() 32 s() XCHG
+          24 s() 31 s() XCHG
+          23 s() 30 s() XCHG
+          22 s() 29 s() XCHG
+          21 s() 28 s() XCHG
+          20 s() 27 s() XCHG
+          19 s() 26 s() XCHG
+          18 s() 25 s() XCHG
+          17 s() 24 s() XCHG
+          16 s() 23 s() XCHG
+          s15 22 s() XCHG
+          s14 21 s() XCHG
+          s13 20 s() XCHG
+          s12 19 s() XCHG
+          s11 18 s() XCHG
+          s10 17 s() XCHG
+          s9 16 s() XCHG
+          s8 s15 XCHG
+          s7 s14 XCHG
+          s6 s13 XCHG
+          s5 s12 XCHG
+          s4 s11 XCHG
+          s3 s10 XCHG
+          s9 s8 s0 XCHG3
         }>ELSE<{
           DROP
         }>
@@ -5642,8 +5649,9 @@ PROGRAM{
         INC
         SWAP
       }>
-      NIP
-      1 2 BLKDROP2
+      s4 POP
+      2DROP
+      SWAP
       $UpdateFundingFeeEvent$_constructor_length_datas INLINECALLDICT
       $UpdateFundingFeeEvent$_store_cell INLINECALLDICT
       $global_emit INLINECALLDICT
@@ -5810,7 +5818,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d6461345a4a76485639394d77697277795272656e426965764d4741417257787156787a727874534446575535} PUSHSLICE
+    x{697066733a2f2f516d646d61545a697546463354597448364679796435735050777a453553504472753436314242774b7571434b50} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

@@ -423,7 +423,7 @@
         $unrealizedPnl = (($perpPosition'size * ($perpPosition'entryPrice - $tradePrice)) / 100000000000000000000);
     }
     int $maintenanceMargin = (((($perpPosition'size * $tradePrice) * ($tokenConfig'tradingFeeRate + $tokenConfig'maintenanceRate)) / (1000000000 * 100000000000000000000)) + $tokenConfig'liquidationFee);
-    throw_unless(18995, ($maintenanceMargin >= ($perpPosition'margin + $unrealizedPnl)));
+    throw_unless(18995, ($maintenanceMargin >= (($perpPosition'margin + $fundingFee) + $unrealizedPnl)));
     int $liquidatePrice = ((((($perpPosition'margin + $fundingFee) - $tokenConfig'liquidationFee) * 100000000000000000000) + ($isLong ? ((- $perpPosition'entryPrice) * $perpPosition'size) : ($perpPosition'entryPrice * $perpPosition'size))) / (($perpPosition'size * (($tokenConfig'tradingFeeRate + $tokenConfig'maintenanceRate) + ($isLong ? (- 1000000000) : 1000000000))) / 1000000000));
     $tradePrice = $liquidatePrice;
     tuple $globalLPPositionOpt = $GlobalLPPosition$_load_opt(__tact_dict_get_int_cell($self'globalLPPositions, 257, $tokenId));
@@ -761,7 +761,7 @@
         if ((~ null?($updatePrice))) {
             int $tokenId = $UpdatePriceParam$_get_tokenId($UpdatePriceParam$_not_null($updatePrice));
             var ($result'lpReceivedFundingFeeDelta, $result'longFundingFeeGrowthAfter, $result'shortFundingFeeGrowthAfter) = ($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates)~$Pool$_fun_updatePriceAndFundingFee($tokenId, $UpdatePriceParam$_get_price($UpdatePriceParam$_not_null($updatePrice)), true);
-            $resultDatas~__tact_dict_set_int_cell(257, $i, $UpdateFundingRateEventData$_store_cell($UpdateFundingRateEventData$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter($tokenId, $UpdatePriceParam$_get_price($UpdatePriceParam$_not_null($updatePrice)), $result'lpReceivedFundingFeeDelta, $result'longFundingFeeGrowthAfter, $result'shortFundingFeeGrowthAfter)));
+            $resultDatas~__tact_dict_set_int_cell(257, $i, $UpdateFundingRateEventData$_store_cell($UpdateFundingRateEventData$_constructor_trxId_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter($msg'trxId, $tokenId, $UpdatePriceParam$_get_price($UpdatePriceParam$_not_null($updatePrice)), $result'lpReceivedFundingFeeDelta, $result'longFundingFeeGrowthAfter, $result'shortFundingFeeGrowthAfter)));
         }
         $i = $i + 1;
     }
@@ -836,7 +836,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://Qmda4ZJvHV99MwirwyRrenBievMGAArWxqVxzrxtSDFWU5";
+    return "ipfs://QmdmaTZiuFF3TYtH6Fyyd5sPPwzE5SPDru461BBwKuqCKP";
 }
 
 _ lazy_deployment_completed() method_id {

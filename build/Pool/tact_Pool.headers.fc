@@ -274,10 +274,10 @@ tuple $UpdatePriceParam$_as_optional((int, int) v) inline;
 tuple $UpdatePriceParam$_load_opt(cell cl) inline;
 
 ;; $UpdateFundingRateEventData$_store
-builder $UpdateFundingRateEventData$_store(builder build_0, (int, int, int, int, int) v) inline;
+builder $UpdateFundingRateEventData$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref;
 
 ;; $UpdateFundingRateEventData$_store_cell
-cell $UpdateFundingRateEventData$_store_cell((int, int, int, int, int) v) inline;
+cell $UpdateFundingRateEventData$_store_cell((int, int, int, int, int, int) v) inline;
 
 ;; $Pool$_store
 builder $Pool$_store(builder build_0, (int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell) v) inline;
@@ -513,8 +513,8 @@ _ $UpdatePriceParam$_get_price((int, int) v) inline;
 ;; $SendProtocolFee$_constructor_trxId_feeReceiver_amount
 ((int, slice, int)) $SendProtocolFee$_constructor_trxId_feeReceiver_amount(int trxId, slice feeReceiver, int amount) inline;
 
-;; $UpdateFundingRateEventData$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter
-((int, int, int, int, int)) $UpdateFundingRateEventData$_constructor_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(int tokenId, int price, int lpReceivedFundingFeeDelta, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter) inline;
+;; $UpdateFundingRateEventData$_constructor_trxId_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter
+((int, int, int, int, int, int)) $UpdateFundingRateEventData$_constructor_trxId_tokenId_price_lpReceivedFundingFeeDelta_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter(int trxId, int tokenId, int price, int lpReceivedFundingFeeDelta, int longFundingFeeGrowthAfter, int shortFundingFeeGrowthAfter) inline;
 
 ;; $UpdateFundingFeeEvent$_constructor_length_datas
 ((int, cell)) $UpdateFundingFeeEvent$_constructor_length_datas(int length, cell datas) inline;

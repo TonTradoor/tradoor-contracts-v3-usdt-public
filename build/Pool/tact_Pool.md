@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 14664 bytes
+BOC Size: 14682 bytes
 
 # Types
 Total Types: 37
@@ -90,8 +90,8 @@ TLB: `perp_position_decreased_event#cbb59911 trxId:uint64 orderId:uint64 opType:
 Signature: `PerpPositionDecreasedEvent{trxId:uint64,orderId:uint64,opType:uint8,positionId:uint64,account:address,tokenId:uint64,isLong:bool,marginDelta:int257,marginAfter:int257,sizeDelta:int257,sizeAfter:int257,tradePrice:int257,entryPrice:int257,realizedPnLDelta:int257,fundingFee:int257,tradingFee:int257,entryFundingFeeGrowthAfter:int257,receive:int257,globalLongMarginAfter:int257,globalShortMarginAfter:int257,globalLongSizeAfter:int257,globalShortSizeAfter:int257,globalLongFundingFeeGrowthAfter:int257,globalShortFundingFeeGrowthAfter:int257,lpNetSizeAfter:int257,lpIsLong:bool,lpEntryPriceAfter:int257,lpFundAfter:int257,lpLiquidityAfter:int257,lpTradingFee:int257,lpRealizedPnl:int257,lpReceivedFundingFee:int257}`
 
 ## UpdateFundingFeeEvent
-TLB: `update_funding_fee_event#fa46be91 length:int257 datas:dict<int, ^UpdateFundingRateEventData{tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}> = UpdateFundingFeeEvent`
-Signature: `UpdateFundingFeeEvent{length:int257,datas:dict<int, ^UpdateFundingRateEventData{tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}>}`
+TLB: `update_funding_fee_event#ea469d6b length:int257 datas:dict<int, ^UpdateFundingRateEventData{trxId:int257,tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}> = UpdateFundingFeeEvent`
+Signature: `UpdateFundingFeeEvent{length:int257,datas:dict<int, ^UpdateFundingRateEventData{trxId:int257,tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}>}`
 
 ## ConfigData
 TLB: `_ isExecutor:Maybe bool lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins lpAddBonusFactor:int257 lpRemoveBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
@@ -150,8 +150,8 @@ TLB: `_ lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfter:int257 shortF
 Signature: `UpdateFundingRateResult{lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
 
 ## UpdateFundingRateEventData
-TLB: `_ tokenId:int257 price:int257 lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = UpdateFundingRateEventData`
-Signature: `UpdateFundingRateEventData{tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
+TLB: `_ trxId:int257 tokenId:int257 price:int257 lpReceivedFundingFeeDelta:int257 longFundingFeeGrowthAfter:int257 shortFundingFeeGrowthAfter:int257 = UpdateFundingRateEventData`
+Signature: `UpdateFundingRateEventData{trxId:int257,tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}`
 
 # Get Methods
 Total Get Methods: 6
