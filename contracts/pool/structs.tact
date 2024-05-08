@@ -115,6 +115,7 @@ struct GlobalFundingRateSample {
 
 struct UpdateFundingRateResult {
     lpReceivedFundingFeeDelta: Int;
+    globalLPFundingFeeGrowth: Int;
     longFundingFeeGrowthAfter: Int;
     shortFundingFeeGrowthAfter: Int;
 }
@@ -124,6 +125,7 @@ struct UpdateFundingRateEventData {
     tokenId: Int;
     price: Int;
     lpReceivedFundingFeeDelta: Int;
+    globalLPFundingFeeGrowth: Int;
     longFundingFeeGrowthAfter: Int;
     shortFundingFeeGrowthAfter: Int;
 }

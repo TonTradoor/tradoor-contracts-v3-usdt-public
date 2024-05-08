@@ -672,6 +672,8 @@ contract Pool with Deployable, Ownable {
             globalShortSizeAfter: globalPosition.shortSize,
             globalLongFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
             globalShortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
+            globalLPFundingFeeGrowthAfter: self.globalLPFundingFeeGrowth,
+
             lpNetSizeAfter: globalLPPosition.netSize,
             lpIsLong: globalLPPosition.isLong,
             lpEntryPriceAfter: globalLPPosition.entryPrice,
@@ -922,6 +924,8 @@ contract Pool with Deployable, Ownable {
             globalShortSizeAfter: globalPosition.shortSize,
             globalLongFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
             globalShortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
+            globalLPFundingFeeGrowthAfter: self.globalLPFundingFeeGrowth,
+
             lpNetSizeAfter: globalLPPosition.netSize,
             lpIsLong: globalLPPosition.isLong,
             lpEntryPriceAfter: globalLPPosition.entryPrice,
@@ -1143,6 +1147,8 @@ contract Pool with Deployable, Ownable {
             globalShortSizeAfter: globalPosition.shortSize,
             globalLongFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
             globalShortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth,
+            globalLPFundingFeeGrowthAfter: self.globalLPFundingFeeGrowth,
+
             lpNetSizeAfter: globalLPPosition.netSize,
             lpIsLong: globalLPPosition.isLong,
             lpEntryPriceAfter: globalLPPosition.entryPrice,
@@ -1203,6 +1209,7 @@ contract Pool with Deployable, Ownable {
                     tokenId: tokenId,
                     price: (updatePrice!!).price,
                     lpReceivedFundingFeeDelta: result.lpReceivedFundingFeeDelta,
+                    globalLPFundingFeeGrowth: result.globalLPFundingFeeGrowth,
                     longFundingFeeGrowthAfter: result.longFundingFeeGrowthAfter,
                     shortFundingFeeGrowthAfter: result.shortFundingFeeGrowthAfter
                 });
@@ -1306,6 +1313,7 @@ contract Pool with Deployable, Ownable {
             // no need to update
             return UpdateFundingRateResult{
                 lpReceivedFundingFeeDelta: 0,
+                globalLPFundingFeeGrowth: self.globalLPFundingFeeGrowth,
                 longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
                 shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth
             };
@@ -1328,6 +1336,7 @@ contract Pool with Deployable, Ownable {
             self.globalFundingRateSamples.set(tokenId, sample);
             return UpdateFundingRateResult{
                 lpReceivedFundingFeeDelta: 0,
+                globalLPFundingFeeGrowth: self.globalLPFundingFeeGrowth,
                 longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
                 shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth
             };
@@ -1413,6 +1422,7 @@ contract Pool with Deployable, Ownable {
         self.globalPositions.set(tokenId, globalPosition);
         return UpdateFundingRateResult{
             lpReceivedFundingFeeDelta: lpReceivedFundingFee / PRICE_DECIMAL_FACTOR,
+            globalLPFundingFeeGrowth: self.globalLPFundingFeeGrowth,
             longFundingFeeGrowthAfter: globalPosition.longFundingFeeGrowth,
             shortFundingFeeGrowthAfter: globalPosition.shortFundingFeeGrowth
         };

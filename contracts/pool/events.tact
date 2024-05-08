@@ -64,6 +64,7 @@ message PerpPositionIncreasedEvent {
     globalShortSizeAfter: Int;
     globalLongFundingFeeGrowthAfter: Int;
     globalShortFundingFeeGrowthAfter: Int;
+    globalLPFundingFeeGrowthAfter: Int;
     // lp position
     lpNetSizeAfter: Int;
     lpIsLong: Bool;
@@ -103,6 +104,7 @@ message PerpPositionDecreasedEvent {
     globalShortSizeAfter: Int;
     globalLongFundingFeeGrowthAfter: Int;
     globalShortFundingFeeGrowthAfter: Int;
+    globalLPFundingFeeGrowthAfter: Int;
     // lp position
     lpNetSizeAfter: Int;
     lpIsLong: Bool;
