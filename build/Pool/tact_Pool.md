@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 14682 bytes
+BOC Size: 14683 bytes
 
 # Types
 Total Types: 37
@@ -94,8 +94,8 @@ TLB: `update_funding_fee_event#ea469d6b length:int257 datas:dict<int, ^UpdateFun
 Signature: `UpdateFundingFeeEvent{length:int257,datas:dict<int, ^UpdateFundingRateEventData{trxId:int257,tokenId:int257,price:int257,lpReceivedFundingFeeDelta:int257,longFundingFeeGrowthAfter:int257,shortFundingFeeGrowthAfter:int257}>}`
 
 ## ConfigData
-TLB: `_ isExecutor:Maybe bool lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins lpAddBonusFactor:int257 lpRemoveBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData`
-Signature: `ConfigData{isExecutor:Maybe bool,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,lpAddBonusFactor:int257,lpRemoveBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address}`
+TLB: `_ isExecutor:Maybe bool lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins lpAddBonusFactor:int257 lpRemoveBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address claimExecutor:address protocolTradingFee:int257 = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,lpAddBonusFactor:int257,lpRemoveBonusFactor:int257,lpLiquidityFactor:int257,orderBook:address,claimExecutor:address,protocolTradingFee:int257}`
 
 ## ExecutorParam
 TLB: `_ executor:address enable:bool = ExecutorParam`

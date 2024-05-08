@@ -8,6 +8,8 @@ struct ConfigData {
     lpRemoveBonusFactor: Int;
     lpLiquidityFactor: Int;
     orderBook: Address;
+    claimExecutor: Address;
+    protocolTradingFee: Int;
 }
 
 struct ExecutorParam {

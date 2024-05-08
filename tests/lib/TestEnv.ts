@@ -1,4 +1,4 @@
-import { Blockchain, SandboxContract, TreasuryContract } from '@ton/sandbox';
+import { Blockchain, RemoteBlockchainStorage, SandboxContract, TreasuryContract, wrapTonClient4ForRemote } from '@ton/sandbox';
 import { ExecutorParamValue, OrderBook } from '../../wrappers/OrderBook';
 import { Pool } from '../../wrappers/Pool';
 import { MockJetton } from '../../wrappers/MockJetton';
@@ -7,6 +7,8 @@ import { buildOnchainMetadata } from '../../contracts/mock/utils/jetton-helpers'
 import { JettonDefaultWallet } from '../../wrappers/JettonDefaultWallet';
 import { toJettonUnits } from './TokenHelper';
 import { PERCENTAGE_BASIS_POINT } from '../../utils/constants';
+import { TonClient4 } from '@ton/ton';
+import { getHttpV4Endpoint } from '@orbs-network/ton-access'
 
 export class TestEnv {
 
@@ -31,7 +33,11 @@ export class TestEnv {
     static tradingFeeRate: number = 0.001;
 
     static async resetEnv() {
-        TestEnv.blockchain = await Blockchain.create();
+        TestEnv.blockchain = await Blockchain.create({
+            // storage: new RemoteBlockchainStorage(wrapTonClient4ForRemote(new TonClient4({
+            //     endpoint: "https://testnet.toncenter.com/api/v2",
+            // })))
+        });
         TestEnv.orderBook = TestEnv.blockchain.openContract(await OrderBook.fromInit(0n));
         TestEnv.pool = TestEnv.blockchain.openContract(await Pool.fromInit(0n));
 

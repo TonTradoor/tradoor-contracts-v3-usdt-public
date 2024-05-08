@@ -368,114 +368,27 @@ export async function updatePrice(executor: SandboxContract<TreasuryContract>, t
     }
 }
 
-
-// export async function setPremiumRateSample(
-//         executor: SandboxContract<TreasuryContract>, 
-//         samples: {
-//             id: number,
-//             x: string;
-//             y: string;
-//         }[]
-//     ) {
-
-//     let PremiumRateSampleDataValue: DictionaryValue<PremiumRateSampleData> = {
-//         serialize(src, builder) {
-//             builder.storeUint(src.sampleId, 64).storeUint(src.deviationRate, 256).storeUint(src.premiumRate, 256)
-//         },
-//         parse(src) {
-//             throw '';
-//         },
-//     }
-
-//     let sampleDatas = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleDataValue);
-//     for (let index = 0; index < samples.length; index++) {
-//         const element = samples[index];
-//         sampleDatas.set(
-//                 BigInt(index),
-//                 {
-//                     $$type: 'PremiumRateSampleData',
-//                     sampleId: BigInt(element.id),
-//                     deviationRate: toUnits(element.x, 9),
-//                     premiumRate: toUnits(element.y, 9)
-//                 }
-//             )
-//     }
+export async function claimProtocolFee(executor: SandboxContract<TreasuryContract>) {
+    let balanceBefore = await getAllBalance();
     
-//     const trxResult = await TestEnv.pool.send(
-//         executor.getSender(),
-//         {
-//             value: toNano('1'),
-//         },
-//         {
-//             $$type: 'SetPremiumRateSample',
-//             sampleLength: BigInt(samples.length),
-//             samples: sampleDatas
-//         }
-//     );
-//     return trxResult
-// }
+    const trxResult = await TestEnv.pool.send(
+        executor.getSender(),
+        {
+            value: toNano(0.2),
+        },
+        {
+            $$type: 'ClaimProtocolFee',
+            trxId: 0n,
+            feeReceiver: executor.address
+        }
+    );
 
-// export async function setPremiumRateSampleRange(
-//         executor: SandboxContract<TreasuryContract>, 
-//         sampleRanges: {
-//             id: number,
-//             samples: {x: number, y: number}[]
-//         }[]
-//     ) {
+    // after trx
+    let balanceAfter = await getAllBalance();
 
-//     let PremiumRateSampleValue: DictionaryValue<PremiumRateSample> = {
-//         serialize(src, builder) {
-//             builder.storeInt(src.sampleX, 257).storeInt(src.sampleY, 257)
-//         },
-//         parse(src) {
-//             throw '';
-//         },
-//     }
-    
-//     let PremiumRateSampleRangeValue: DictionaryValue<PremiumRateSampleRangeParam> = {
-//         serialize(src, builder) {
-//             builder.storeInt(src.sampleId, 257).storeInt(src.sampleLength, 257).storeDict(src.samples)
-//         },
-//         parse(src) {
-//             throw '';
-//         },
-//     }
-
-//     let sampleRangeValues = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleRangeValue);
-
-//     for (let index = 0; index < sampleRanges.length; index++) {
-//         const sampleRange = sampleRanges[index];
-
-//         let sampleValues = Dictionary.empty(Dictionary.Keys.BigInt(32), PremiumRateSampleValue);
-//         let samples = sampleRange.samples;
-//         for (let j = 0; j < samples.length; j++) {
-//             sampleValues.set(BigInt(j), {
-//                 $$type: 'PremiumRateSample',
-//                 sampleX: toUnits(samples[j].x, 9),
-//                 sampleY: toUnits(samples[j].y, 9)
-//             })
-//         }
-
-//         sampleRangeValues.set(
-//             BigInt(index),
-//             {
-//                 $$type: 'PremiumRateSampleRangeParam',
-//                 sampleId: BigInt(sampleRange.id),
-//                 sampleLength: BigInt(samples.length),
-//                 samples: sampleValues
-//             }
-//         )
-//     }
-    
-    // const trxResult = await TestEnv.pool.send(
-    //     executor.getSender(),
-    //     {
-    //         value: toNano('1'),
-    //     },
-    //     {
-    //         $$type: 'SetPremiumRateSampleRange',
-    //         sampleRangeLength: BigInt(sampleRanges.length),
-    //         sampleRanges: sampleRangeValues
-    //     }
-    // );
-// }
+    return {
+        trxResult,
+        balanceBefore,
+        balanceAfter,
+    };
+}

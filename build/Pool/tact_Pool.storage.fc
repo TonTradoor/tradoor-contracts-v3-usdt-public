@@ -493,16 +493,16 @@ cell $UpdateFundingFeeEvent$_store_cell((int, cell) v) inline {
 
 ;;
 ;; Type: ConfigData
-;; TLB: _ isExecutor:Maybe bool lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins lpAddBonusFactor:int257 lpRemoveBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address = ConfigData
+;; TLB: _ isExecutor:Maybe bool lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins lpAddBonusFactor:int257 lpRemoveBonusFactor:int257 lpLiquidityFactor:int257 orderBook:address claimExecutor:address protocolTradingFee:int257 = ConfigData
 ;;
 
-(int, int, int, int, int, int, int, slice) $ConfigData$_to_external(((int, int, int, int, int, int, int, slice)) v) inline {
-    var (v'isExecutor, v'lpGasConsumption, v'perpGasConsumption, v'minTonsForStorage, v'lpAddBonusFactor, v'lpRemoveBonusFactor, v'lpLiquidityFactor, v'orderBook) = v; 
-    return (v'isExecutor, v'lpGasConsumption, v'perpGasConsumption, v'minTonsForStorage, v'lpAddBonusFactor, v'lpRemoveBonusFactor, v'lpLiquidityFactor, v'orderBook);
+(int, int, int, int, int, int, int, slice, slice, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, slice, slice, int)) v) inline {
+    var (v'isExecutor, v'lpGasConsumption, v'perpGasConsumption, v'minTonsForStorage, v'lpAddBonusFactor, v'lpRemoveBonusFactor, v'lpLiquidityFactor, v'orderBook, v'claimExecutor, v'protocolTradingFee) = v; 
+    return (v'isExecutor, v'lpGasConsumption, v'perpGasConsumption, v'minTonsForStorage, v'lpAddBonusFactor, v'lpRemoveBonusFactor, v'lpLiquidityFactor, v'orderBook, v'claimExecutor, v'protocolTradingFee);
 }
 
-((int, int, int, int, int, int, int, slice)) $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook(int isExecutor, int lpGasConsumption, int perpGasConsumption, int minTonsForStorage, int lpAddBonusFactor, int lpRemoveBonusFactor, int lpLiquidityFactor, slice orderBook) inline {
-    return (isExecutor, lpGasConsumption, perpGasConsumption, minTonsForStorage, lpAddBonusFactor, lpRemoveBonusFactor, lpLiquidityFactor, orderBook);
+((int, int, int, int, int, int, int, slice, slice, int)) $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook_claimExecutor_protocolTradingFee(int isExecutor, int lpGasConsumption, int perpGasConsumption, int minTonsForStorage, int lpAddBonusFactor, int lpRemoveBonusFactor, int lpLiquidityFactor, slice orderBook, slice claimExecutor, int protocolTradingFee) inline {
+    return (isExecutor, lpGasConsumption, perpGasConsumption, minTonsForStorage, lpAddBonusFactor, lpRemoveBonusFactor, lpLiquidityFactor, orderBook, claimExecutor, protocolTradingFee);
 }
 
 ;;

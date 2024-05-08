@@ -131,7 +131,7 @@ PROGRAM{
   DECLPROC $Pool$_contract_store
   DECLPROC $global_send
   DECLPROC $global_emit
-  DECLPROC $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook
+  DECLPROC $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook_claimExecutor_protocolTradingFee
   DECLPROC $Pool$_fun_configData
   DECLPROC $Pool$_fun_tokenConfig
   DECLPROC $Pool$_fun_priceData
@@ -2223,7 +2223,7 @@ PROGRAM{
     0 PUSHINT
     SENDRAWMSG
   }>
-  $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook PROCINLINE:<{
+  $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook_claimExecutor_protocolTradingFee PROCINLINE:<{
   }>
   $Pool$_fun_configData PROCREF:<{
     PUSHNULL
@@ -2249,7 +2249,9 @@ PROGRAM{
     26 s() PUSH
     26 s() PUSH
     25 s() PUSH
-    $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook INLINECALLDICT
+    24 s() PUSH
+    26 s() PUSH
+    $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook_claimExecutor_protocolTradingFee INLINECALLDICT
   }>
   $Pool$_fun_tokenConfig PROCREF:<{
     257 PUSHINT
@@ -5249,23 +5251,21 @@ PROGRAM{
     19 s() PUSH
     0 GTINT
     IF:<{
-      19 s() POP
       0 PUSHINT
-      DUP
       FALSE
-      s0 s3 XCHG
+      2SWAP
       64 PUSHINT
       s0 22 s() XCHG
-      s3 PUSH
       $SendProtocolFee$_constructor_trxId_feeReceiver_amount INLINECALLDICT
       $SendProtocolFee$_store_cell INLINECALLDICT
-      22 s() PUSH
-      s4 s1 s4 XCHG3
-      s0 s3 XCHG
-      s0 22 s() XCHG
+      21 s() PUSH
+      s0 s4 XCHG
+      s0 21 s() XCHG
       SWAP
       $SendParameters$_constructor_to_value_bounce_mode_body INLINECALLDICT
       $global_send INLINECALLDICT
+      0 PUSHINT
+      s0 17 s() XCHG
     }>ELSE<{
       2DROP
     }>
@@ -5695,9 +5695,9 @@ PROGRAM{
     s15 16 s() XCHG
     15 ROLL
     $Pool$_fun_configData INLINECALLDICT
-    8 8 BLKDROP2
-    8 8 BLKDROP2
-    12 8 BLKDROP2
+    10 10 BLKDROP2
+    10 10 BLKDROP2
+    8 10 BLKDROP2
     $ConfigData$_to_external INLINECALLDICT
   }>
   %tokenConfig PROC:<{
@@ -5818,7 +5818,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d646d61545a697546463354597448364679796435735050777a453553504472753436314242774b7571434b50} PUSHSLICE
+    x{697066733a2f2f516d654162423837714b666653666b50533258534a77386a59444d53587934514771734277584e5a354c66676934} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

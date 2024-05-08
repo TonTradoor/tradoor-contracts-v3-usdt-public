@@ -8,7 +8,7 @@ import { TestEnv } from './lib/TestEnv';
 import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
-import { adlPerpPosition, cancelPerpOrder, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, } from './lib/PerpHelper';
+import { adlPerpPosition, cancelPerpOrder, claimProtocolFee, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, } from './lib/PerpHelper';
 import { ORDER_OP_TYPE_DECREASE_MARKET, ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
 
 describe('LP', () => {
@@ -23,6 +23,7 @@ describe('LP', () => {
     let user1: SandboxContract<TreasuryContract>;
     let user0JettonWallet: SandboxContract<JettonDefaultWallet>;
     let orderBookJettonWallet: SandboxContract<JettonDefaultWallet>;
+    let claimExecutor: SandboxContract<TreasuryContract>;
 
     beforeEach(async () => {
         await TestEnv.resetEnv();
@@ -38,6 +39,7 @@ describe('LP', () => {
         user1 = TestEnv.user1;
         user0JettonWallet = TestEnv.user0JettonWallet;
         orderBookJettonWallet = TestEnv.orderBookJettonWallet;
+        claimExecutor = TestEnv.claimExecutor;
 
         // mint
         await mint(user0.address, '100000');
@@ -966,6 +968,20 @@ describe('LP', () => {
         });
         expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
         expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
+
+        /* =========================== claim protocol fee ================================ */
+        console.log('config', await pool.getConfigData(null));
+
+        const claimResult = await claimProtocolFee(claimExecutor);
+        printTransactionFees(claimResult.trxResult.transactions);
+        expect(claimResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('jetton balance of claim executor', claimResult.balanceAfter.claimExecutorJettonBalance);
+        console.log('config', await pool.getConfigData(null));
+
     });
 
 });

@@ -292,7 +292,7 @@ builder $Pool$_store(builder build_0, (int, int, int, cell, int, int, int, int, 
 _ $Context$_get_value((int, slice, int, slice) v) inline;
 
 ;; $ConfigData$_to_external
-(int, int, int, int, int, int, int, slice) $ConfigData$_to_external(((int, int, int, int, int, int, int, slice)) v) inline;
+(int, int, int, int, int, int, int, slice, slice, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, slice, slice, int)) v) inline;
 
 ;; $ExecutorParam$_get_executor
 _ $ExecutorParam$_get_executor((slice, int) v) inline;
@@ -399,11 +399,11 @@ _ $UpdatePriceParam$_get_price((int, int) v) inline;
 ;; $global_emit
 () $global_emit(cell $body) impure inline;
 
-;; $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook
-((int, int, int, int, int, int, int, slice)) $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook(int isExecutor, int lpGasConsumption, int perpGasConsumption, int minTonsForStorage, int lpAddBonusFactor, int lpRemoveBonusFactor, int lpLiquidityFactor, slice orderBook) inline;
+;; $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook_claimExecutor_protocolTradingFee
+((int, int, int, int, int, int, int, slice, slice, int)) $ConfigData$_constructor_isExecutor_lpGasConsumption_perpGasConsumption_minTonsForStorage_lpAddBonusFactor_lpRemoveBonusFactor_lpLiquidityFactor_orderBook_claimExecutor_protocolTradingFee(int isExecutor, int lpGasConsumption, int perpGasConsumption, int minTonsForStorage, int lpAddBonusFactor, int lpRemoveBonusFactor, int lpLiquidityFactor, slice orderBook, slice claimExecutor, int protocolTradingFee) inline;
 
 ;; $Pool$_fun_configData
-((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell), (int, int, int, int, int, int, int, slice)) $Pool$_fun_configData((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell) $self, slice $executor) impure inline_ref;
+((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell), (int, int, int, int, int, int, int, slice, slice, int)) $Pool$_fun_configData((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell) $self, slice $executor) impure inline_ref;
 
 ;; $Pool$_fun_tokenConfig
 ((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell), tuple) $Pool$_fun_tokenConfig((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell) $self, int $tokenId) impure inline_ref;

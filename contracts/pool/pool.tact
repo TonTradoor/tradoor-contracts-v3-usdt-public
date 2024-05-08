@@ -139,7 +139,6 @@ contract Pool with Deployable, Ownable {
         require(sender() == self.claimExecutor, "invalid sender");
 
         if (self.protocolTradingFee > 0) {
-            self.protocolTradingFee = 0;
             send(SendParameters{
                 to: self.orderBook,
                 value: 0,
@@ -151,6 +150,7 @@ contract Pool with Deployable, Ownable {
                     amount: self.protocolTradingFee
                 }.toCell()
             });
+            self.protocolTradingFee = 0;
         }
     }
 
@@ -167,7 +167,9 @@ contract Pool with Deployable, Ownable {
             lpAddBonusFactor: self.lpAddBonusFactor,
             lpRemoveBonusFactor: self.lpRemoveBonusFactor,
             lpLiquidityFactor: self.lpLiquidityFactor,
-            orderBook: self.orderBook
+            orderBook: self.orderBook,
+            claimExecutor: self.claimExecutor,
+            protocolTradingFee: self.protocolTradingFee
         };
     }
 

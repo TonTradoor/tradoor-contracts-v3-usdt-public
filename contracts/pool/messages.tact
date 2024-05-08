@@ -39,7 +39,7 @@ message ClaimProtocolFee {
     feeReceiver: Address;
 }
 
-message SendProtocolFee {
+message(0x5dd58461) SendProtocolFee {
     trxId: Int as uint64;
     feeReceiver: Address;
     amount: Int;

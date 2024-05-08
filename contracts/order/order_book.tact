@@ -1087,7 +1087,21 @@ contract OrderBook with Deployable, Resumable {
         require(sender() == self.pool, "invalid sender");
 
         if (msg.amount > 0) {
-            self.refundJetton(msg.trxId, msg.amount, msg.feeReceiver, msg.feeReceiver);
+            send(SendParameters{
+                to: self.usdtWallet, 
+                value: self.gasTransferJetton,
+                mode: SendRemainingValue + SendIgnoreErrors, 
+                bounce: false,
+                body: TokenTransfer{
+                    queryId: msg.trxId,
+                    amount: msg.amount,
+                    receiver: msg.feeReceiver,
+                    responseDestination: msg.feeReceiver,
+                    customPayload: null,
+                    forwardTonAmount: 0,
+                    forwardPayload: beginCell().endCell().asSlice()
+                }.toCell()
+            });
         }
     }
 

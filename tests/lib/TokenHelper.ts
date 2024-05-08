@@ -75,6 +75,7 @@ export async function getAllBalance() {
         poolJettonBalance: await getJettonBalance(TestEnv.pool.address),
         user0JettonBalance: await getJettonBalance(TestEnv.user0.address),
         user1JettonBalance: await getJettonBalance(TestEnv.user1.address),
+        claimExecutorJettonBalance: await getJettonBalance(TestEnv.claimExecutor.address),
     }
 }
 
