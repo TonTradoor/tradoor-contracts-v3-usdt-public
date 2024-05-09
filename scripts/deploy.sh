@@ -1,4 +1,4 @@
-# yarn rundev deployMockJetton
+yarn rundev deployMockJetton
 yarn rundev deployOrderBook
 yarn rundev deployPool
 yarn rundev orderBookSetConfig
