@@ -114,8 +114,10 @@ trait Jetton with Ownable {
 // ============================================================ //
 @interface("org.ton.jetton.wallet")
 contract JettonDefaultWallet {
-    const minTonsForStorage: Int = ton("0.019");
-    const gasConsumption: Int = ton("0.013");
+    // const minTonsForStorage: Int = ton("0.019");
+    // const gasConsumption: Int = ton("0.013");
+    const minTonsForStorage: Int = ton("0.001");
+    const gasConsumption: Int = ton("0.01");
 
     balance: Int as coins = 0;
     owner: Address;

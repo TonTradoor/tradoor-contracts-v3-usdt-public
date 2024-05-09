@@ -40,11 +40,11 @@ export async function run(provider: NetworkProvider) {
             maxTimeDelayExecutor: 30n * 60n,
             minTimeDelayTrader: 3n * 60n,
             minExecutionFee: toNano(0.1),
-            gasConsumption: toNano(0.03),
-            lpGasConsumption: toNano(0.035),
-            perpGasConsumption: toNano(0.09),
+            gasConsumption: toNano(0.015),
+            lpGasConsumption: toNano(0.016),
+            perpGasConsumption: toNano(0.035),
             minTonsForStorage: toNano(0.01),
-            gasTransferJetton: toNano(0.08),
+            gasTransferJetton: toNano(0.025),
             usdtWallet: orderBookJettonWallet,
             pool: pool.address
         }
