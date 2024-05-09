@@ -483,16 +483,40 @@ describe('LP', () => {
             to: orderBook.address,
             success: true,
         });
+        console.log('orderbook ton balance after create order', fromNano(createResult.balanceAfter.orderBookTonBalance));
+        console.log('total execution fee after create order with tp/sl', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
+        /// cancel order
+        const cancelResult = await cancelPerpOrder(executor, createResult.orderIdBefore);
+        prettyLogTransactions(cancelResult.trxResult.transactions);
+
+        expect(cancelResult.trxResult.transactions).toHaveTransaction({
+            from: executor.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('orderbook ton balance after cancel order', fromNano(cancelResult.balanceAfter.orderBookTonBalance));
+        console.log('total execution fee after cancel order with tp/sl', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+        console.log('receive execution fee', fromNano(cancelResult.balanceAfter.user1TonBalance - cancelResult.balanceBefore.user1TonBalance));
+
+        // create order
+        const createResult1 = await createIncreasePerpOrder(user1, executionFee * 3, isMarket, tokenId, isLong, margin, size, triggerPrice, tpSize, tpPrice, slSize, slPrice);
+        expect(createResult1.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('total execution fee after create order with tp/sl', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
 
         /// executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, indexPrice, pr);
+        const executeResult = await executePerpOrder(executor, createResult1.orderIdBefore, indexPrice, pr);
         printTransactionFees(executeResult.trxResult.transactions);
-        prettyLogTransactions(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
             to: pool.address,
             success: true,
         });
+        console.log('total execution fee after execute order', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
 
         // check order
         expect(executeResult.orderAfter).toBeNull();
@@ -508,7 +532,7 @@ describe('LP', () => {
         expect(perpPosition?.entryPrice).toBeGreaterThanOrEqual(toPriceUnits(indexPrice));
 
         // check tp order
-        let tpOrder = await TestEnv.orderBook.getPerpPositionOrder(createResult.orderIdBefore + 1n);
+        let tpOrder = await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 1n);
         console.log('tpOrder after increase:', tpOrder);
 
         expect(tpOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_TP);
@@ -517,7 +541,7 @@ describe('LP', () => {
         expect(tpOrder?.triggerAbove).toEqual(true);
 
         // check sl order
-        let slOrder = await TestEnv.orderBook.getPerpPositionOrder(createResult.orderIdBefore + 2n);
+        let slOrder = await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 2n);
         console.log('slOrder after increase:', slOrder);
 
         expect(slOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_SL);
@@ -601,6 +625,9 @@ describe('LP', () => {
             to: orderBook.address,
             success: true,
         });
+        console.log('orderbook ton balance', fromNano(createDecreaseResult.balanceAfter.orderBookTonBalance));
+        console.log('total execution fee after create order', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
         let tpOrder = createDecreaseResult.order0;
         expect(tpOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_TP);
         expect(tpOrder?.sizeDelta).toEqual(toJettonUnits(tpSize));
@@ -625,6 +652,9 @@ describe('LP', () => {
         let perpPositionAfterDecrease = executeDecreaseResult.positionAfter;
         console.log('position data after decrease:', executeDecreaseResult.positionDataAfter);
         console.log('lp data after decrease:', executeDecreaseResult.lpPositionDataAfter);
+
+        console.log('orderbook ton balance', fromNano(executeDecreaseResult.balanceAfter.orderBookTonBalance));
+        console.log('total execution fee after execute order', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
 
         // check position
         // let tradingFee = tpSize * decreasePrice * TestEnv.tradingFeeRate;

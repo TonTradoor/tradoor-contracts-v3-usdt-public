@@ -29,9 +29,10 @@ message UpdateConfig {
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
     minExecutionFee: Int as coins;
-    gasConsumption: Int as coins;
     lpGasConsumption: Int as coins;
     perpGasConsumption: Int as coins;
+    poolLpGasConsumption: Int as coins;
+    poolPerpGasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
     gasTransferJetton: Int as coins;
     usdtWallet: Address;

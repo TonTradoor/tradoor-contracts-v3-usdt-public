@@ -13,13 +13,21 @@ contract OrderBook with Deployable, Resumable {
     minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
 
     // gas
-    minExecutionFee: Int = ton("0.1"); // fee for every operation
-    gasConsumption: Int = ton("0.04"); // min orderbook consumption gas
+    // order gas
     lpGasConsumption: Int = ton("0.04"); // min lp consumption gas
     perpGasConsumption: Int = ton("0.09"); // min perp consumption gas
+    // pool gas
+    poolLpGasConsumption: Int = ton("0.04"); // min orderbook consumption gas
+    poolPerpGasConsumption: Int = ton("0.09"); // min perp consumption gas
+    // storage gas
     minTonsForStorage: Int = ton("0.01"); // min pool storage gas
+    // jetton gas
     gasTransferJetton: Int = ton("0.08"); // min pool storage gas
+    // total gas
+    minExecutionFee: Int = ton("0.1"); // fee for every operation
+    totalExecutionFee: Int = 0;
 
+    // address
     usdtWallet: Address; // order book USDT jetton wallet address
     pool: Address; // pool address
 
@@ -69,9 +77,10 @@ contract OrderBook with Deployable, Resumable {
         self.minTimeDelayTrader = msg.minTimeDelayTrader;
         self.minExecutionFee = msg.minExecutionFee;
 
-        self.gasConsumption = msg.gasConsumption;
         self.lpGasConsumption = msg.lpGasConsumption;
         self.perpGasConsumption = msg.perpGasConsumption;
+        self.poolLpGasConsumption = msg.poolLpGasConsumption;
+        self.poolPerpGasConsumption = msg.poolPerpGasConsumption;
         self.minTonsForStorage = msg.minTonsForStorage;
         self.gasTransferJetton = msg.gasTransferJetton;
 
@@ -96,11 +105,13 @@ contract OrderBook with Deployable, Resumable {
             maxTimeDelayExecutor: self.maxTimeDelayExecutor,
             minTimeDelayTrader: self.minTimeDelayTrader,
             minExecutionFee: self.minExecutionFee,
-            gasConsumption: self.gasConsumption,
             lpGasConsumption: self.lpGasConsumption,
             perpGasConsumption: self.perpGasConsumption,
+            poolLpGasConsumption: self.poolLpGasConsumption,
+            poolPerpGasConsumption: self.poolPerpGasConsumption,
             minTonsForStorage: self.minTonsForStorage,
             gasTransferJetton: self.gasTransferJetton,
+            totalExecutionFee: self.totalExecutionFee,
             usdtWallet: self.usdtWallet,
             pool: self.pool
         };
@@ -210,21 +221,38 @@ contract OrderBook with Deployable, Resumable {
         }
     }
 
-    // transfer execess ton
-    fun refundExecessTon(to: Address, executionFee: Int) {
-        let refundValue: Int = context().value - executionFee - self.gasConsumption;
+    fun exceedGas(orderType: Int, executionFeeDelta: Int, executionMultiple: Int, transferJetton: Bool): Int {
+        dump("exceed gas");
+        let tonBalanceBeforeMsg: Int = myBalance() - self.totalExecutionFee + executionFeeDelta - context().value;
+        // dump(myBalance() - context().value);
+        // dump(tonBalanceBeforeMsg);
+        tonBalanceBeforeMsg = max(0, tonBalanceBeforeMsg);
+        let storageFee: Int = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
+        let extraValue: Int = max(0, tonBalanceBeforeMsg - self.minTonsForStorage);
+        let gasConsumption: Int = orderType == ORDER_TYPE_LP ? self.lpGasConsumption : self.perpGasConsumption;
+        // dump(storageFee);
+        // dump(extraValue);
+        // dump(gasConsumption);
+        return context().value - storageFee - gasConsumption * executionMultiple + extraValue - 
+            (executionFeeDelta > 0 ? executionFeeDelta : 0) - (transferJetton ? self.gasTransferJetton : 0);
+    }
+
+    // transfer exceed ton
+    fun refundExceedTon(orderType: Int, to: Address, executionFeeDelta: Int, executionMultiple: Int, transferJetton: Bool) {
+        let refundValue: Int = self.exceedGas(orderType, executionFeeDelta, executionMultiple, transferJetton);
+        dump(refundValue);
         if (refundValue > 0) {
             send(SendParameters{
                 to: to,
                 bounce: false,
-                value: refundValue,
-                mode: SendIgnoreErrors
+                value: refundValue
+                // mode: SendIgnoreErrors
             });
         }
     }
 
     fun getPoolGas(orderType: Int): Int {
-        let gasConsumption: Int = orderType == ORDER_TYPE_LP ? self.lpGasConsumption : self.perpGasConsumption;
+        let gasConsumption: Int = orderType == ORDER_TYPE_LP ? self.poolLpGasConsumption : self.poolPerpGasConsumption;
         return context().readForwardFee() + gasConsumption + self.minTonsForStorage;
     }
 
@@ -235,7 +263,7 @@ contract OrderBook with Deployable, Resumable {
 
         let refundComment: String = "";
         let refund: Bool = false;
-        if (ctx.value < executionFee + self.gasConsumption) {
+        if (ctx.value < executionFee + self.lpGasConsumption) {
             refund = true;
             refundComment = "gas not enough";
         }
@@ -277,6 +305,8 @@ contract OrderBook with Deployable, Resumable {
             lastOperator: null
         });
 
+        self.totalExecutionFee += executionFee;
+
         // event
         emit(LPPositionOrderCreatedEvent{
             opType: ORDER_OP_TYPE_INCREASE,
@@ -287,7 +317,7 @@ contract OrderBook with Deployable, Resumable {
             trxId: queryId
         }.toCell());
 
-        self.refundExecessTon(account, executionFee);
+        self.refundExceedTon(ORDER_TYPE_LP, account, executionFee, 1, false);
     }
 
     // Create Decrease
@@ -296,7 +326,7 @@ contract OrderBook with Deployable, Resumable {
 
         let ctx: Context = context();
         // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
+        require(ctx.value - msg.executionFee >= self.lpGasConsumption, "gas not enough");
         // check execution fee
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
@@ -314,6 +344,8 @@ contract OrderBook with Deployable, Resumable {
             lastOperator: null
         });
 
+        self.totalExecutionFee += msg.executionFee;
+
         // event
         emit(LPPositionOrderCreatedEvent{
             opType: ORDER_OP_TYPE_DECREASE,
@@ -325,7 +357,7 @@ contract OrderBook with Deployable, Resumable {
         }.toCell());
 
         // transfer execess gas
-        self.refundExecessTon(sender(), msg.executionFee);
+        self.refundExceedTon(ORDER_TYPE_LP, sender(), msg.executionFee, 1, false);
     }
 
     // Cancel Increase / Decrease
@@ -340,9 +372,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption + self.gasTransferJetton, "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption, "gas not enough");
         }
         
         // check order
@@ -380,6 +412,8 @@ contract OrderBook with Deployable, Resumable {
                 value: order.executionFee,
                 mode: SendIgnoreErrors
             });
+
+            self.totalExecutionFee -= order.executionFee;
         }
 
         // event
@@ -390,7 +424,7 @@ contract OrderBook with Deployable, Resumable {
         }.toCell());
 
         // transfer execess gas
-        self.refundExecessTon(sender(), 0);
+        self.refundExceedTon(ORDER_TYPE_LP, sender(), -order.executionFee, 1, order.isIncrease);
     }
 
     // Execute Increase / Decrease
@@ -407,9 +441,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP), "gas not enough");
+            require(ctx.value >= self.lpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP), "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP) + self.gasTransferJetton, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_LP) + self.gasTransferJetton, "gas not enough");
         }
 
         // check order
@@ -461,9 +495,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.isIncrease) {
-            require(ctx.value >= self.gasConsumption, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption, "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption + self.gasTransferJetton, "gas not enough");
         }
 
         // delete order
@@ -484,6 +518,7 @@ contract OrderBook with Deployable, Resumable {
                 value: order.executionFee,
                 mode: SendIgnoreErrors
             });
+            self.totalExecutionFee -= order.executionFee;
         }
 
         // dump(myBalance());
@@ -497,7 +532,7 @@ contract OrderBook with Deployable, Resumable {
 
         // transfer excess gas
         if (order.lastOperator != null) {
-            self.refundExecessTon(order.lastOperator!!, 0);
+            self.refundExceedTon(ORDER_TYPE_LP, order.lastOperator!!, -order.executionFee, 1, msg.receive > 0);
         }
     }
 
@@ -541,7 +576,7 @@ contract OrderBook with Deployable, Resumable {
 
         let refundComment: String = "";
         let refund: Bool = false;
-        if (ctx.value < executionFee + self.gasConsumption) {
+        if (ctx.value < executionFee + self.perpGasConsumption) {
             refund = true;
             refundComment = "gas not enough";
         }
@@ -585,9 +620,11 @@ contract OrderBook with Deployable, Resumable {
             opType = ORDER_OP_TYPE_INCREASE_LIMIT;
         }
         self.createPerpOrder(queryId, opType, account, tokenId, isLong, marginDelta, sizeDelta, triggerPrice, 
-            tpSize, tpPrice, slSize, slPrice, executionFee);
+            tpSize, tpPrice, slSize, slPrice, executionFee / executionFeeMultiple);
 
-        self.refundExecessTon(account, executionFee);
+        self.totalExecutionFee += executionFee;
+
+        self.refundExceedTon(ORDER_TYPE_PERP, account, executionFee, 1, false);
     }
 
     // ============================ Create Decrease ================================ //
@@ -596,7 +633,7 @@ contract OrderBook with Deployable, Resumable {
 
         let ctx: Context = context();
         // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption, "gas not enough");
+        require(ctx.value - msg.executionFee >= self.perpGasConsumption, "gas not enough");
         // check execution fee
         require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
 
@@ -604,8 +641,10 @@ contract OrderBook with Deployable, Resumable {
         self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_MARKET, sender(), msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.triggerPrice, 
                 0, 0, 0, 0, msg.executionFee);
 
+        self.totalExecutionFee += msg.executionFee;
+
         // transfer execess gas
-        self.refundExecessTon(sender(), msg.executionFee);
+        self.refundExceedTon(ORDER_TYPE_PERP, sender(), msg.executionFee, 1, false);
     }
 
     receive(msg: CreateTpSlPerpPositionOrder) {
@@ -622,7 +661,7 @@ contract OrderBook with Deployable, Resumable {
         }
 
         // check gas
-        require(ctx.value - msg.executionFee >= self.gasConsumption * executionFeeMultiple, "gas not enough");
+        require(ctx.value - msg.executionFee >= self.perpGasConsumption * executionFeeMultiple, "gas not enough");
         // check execution fee
         require(msg.executionFee >= self.minExecutionFee * executionFeeMultiple, "execution fee not enough");
 
@@ -637,16 +676,10 @@ contract OrderBook with Deployable, Resumable {
                 0, 0, 0, 0, msg.executionFee / executionFeeMultiple);
         }
 
+        self.totalExecutionFee += msg.executionFee;
+
         // transfer execess gas
-        let refundValue: Int = context().value - msg.executionFee - self.gasConsumption * executionFeeMultiple;
-        if (refundValue > 0) {
-            send(SendParameters{
-                to: sender(),
-                bounce: false,
-                value: refundValue,
-                mode: SendIgnoreErrors
-            });
-        }
+        self.refundExceedTon(ORDER_TYPE_PERP, sender(), msg.executionFee, executionFeeMultiple, false);
     }
 
     fun createPerpOrder(trxId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, 
@@ -659,20 +692,21 @@ contract OrderBook with Deployable, Resumable {
         if (opType == ORDER_OP_TYPE_INCREASE_MARKET || opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             // increase for long order, must trigger below the price
             triggerAbove = !isLong;
-            let executionFeeMultiple: Int = 1;
-            if (tpSize > 0 && tpPrice > 0) {
-                executionFeeMultiple += 1;
-            }
-            if (slSize > 0 && slPrice > 0) {
-                executionFeeMultiple += 1;
-            }
             self.perpPositionOrderExs.set(orderId, PerpPositionOrderEx{
                 tpSize: tpSize,
                 tpPrice: tpPrice,
                 slSize: slSize,
                 slPrice: slPrice,
-                executionFee: executionFee / executionFeeMultiple
+                executionFee: executionFee
             });
+            // let tpSlExecutionFee: Int = 0;
+            // if (tpSize > 0 && tpPrice > 0) {
+            //     tpSlExecutionFee += executionFee;
+            // }
+            // if (slSize > 0 && slPrice > 0) {
+            //     tpSlExecutionFee += executionFee;
+            // }
+            // self.totalExecutionFee += tpSlExecutionFee;
         } else {
             if (opType == ORDER_OP_TYPE_DECREASE_MARKET) {
                 // decrease for long market order, must trigger above the price
@@ -702,6 +736,7 @@ contract OrderBook with Deployable, Resumable {
             executionFeeReceiver: sender(),
             lastOperator: null
         });
+
         // event
         emit(PerpPositionOrderCreatedEvent{
             opType: opType,
@@ -735,9 +770,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
+            require(ctx.value >= self.perpGasConsumption + self.gasTransferJetton, "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption, "gas not enough");
+            require(ctx.value >= self.perpGasConsumption, "gas not enough");
         }
 
         // check order
@@ -758,13 +793,40 @@ contract OrderBook with Deployable, Resumable {
             executionFeeReceiver = msg.executionFeeReceiver!!;
         }
 
-        // delete order
-        self.perpPositionOrders.set(msg.orderId, null);
-
+        let executionFee: Int = 0;
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
+            let orderExOpt: PerpPositionOrderEx? = self.perpPositionOrderExs.get(msg.orderId);
+            if (orderExOpt != null) {
+                let orderEx: PerpPositionOrderEx = orderExOpt!!;
+                // tp/sl
+                let tpSlExecutionFee: Int = 0;
+                if (orderEx.tpSize > 0 && orderEx.tpPrice > 0) {
+                    tpSlExecutionFee += orderEx.executionFee;
+                }
+                if (orderEx.slSize > 0 && orderEx.slPrice > 0) {
+                    tpSlExecutionFee += orderEx.executionFee;
+                }
+                if (tpSlExecutionFee > 0) {
+                    // transfer tpsl execution fee to user
+                    send(SendParameters{
+                        to: order.account,
+                        bounce: true,
+                        value: tpSlExecutionFee,
+                        mode: SendIgnoreErrors
+                    });
+                    executionFee += tpSlExecutionFee;
+                }
+
+                // delete
+                self.perpPositionOrderExs.set(msg.orderId, null);
+            }
+
             // transfer jetton
             self.refundJetton(msg.trxId, order.marginDelta, order.account, sender());
         }
+
+        // delete order
+        self.perpPositionOrders.set(msg.orderId, null);
 
         // transfer execution fee
         // self.transferExecutionFee(executionFeeReceiver, order.executionFee);
@@ -775,7 +837,9 @@ contract OrderBook with Deployable, Resumable {
                 value: order.executionFee,
                 mode: SendIgnoreErrors
             });
+            executionFee += order.executionFee;
         }
+        self.totalExecutionFee -= executionFee;
 
         // event
         emit(PerpPositionOrderCancelledEvent{
@@ -785,7 +849,7 @@ contract OrderBook with Deployable, Resumable {
         }.toCell());
 
         // transfer execess gas
-        self.refundExecessTon(sender(), 0);
+        self.refundExceedTon(ORDER_TYPE_PERP, sender(), -executionFee, 1, order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT);
     }
 
     // ============================ Execute Increase / Decrease ================================ //
@@ -804,9 +868,9 @@ contract OrderBook with Deployable, Resumable {
 
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP), "gas not enough");
+            require(ctx.value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP), "gas not enough");
         } else {
-            require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
+            require(ctx.value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
         }
 
         // check order
@@ -858,7 +922,7 @@ contract OrderBook with Deployable, Resumable {
     // increase success / bounced => excess gas
     // decrease success => transfer jetton => token excesses handel cancel => excess gas
     receive(msg: UpdatePerpPositionSuccess) {
-        // dump("UpdatePerpPositionSuccess");
+        dump("UpdatePerpPositionSuccess");
 
         let ctx: Context = context();
         require(sender() == self.pool, "invalid sender");
@@ -870,10 +934,11 @@ contract OrderBook with Deployable, Resumable {
         }
         let order: PerpPositionOrder = orderOpt!!;
 
-        let executionFeeMultiple: Int = 0;
+        let executionFee: Int = 0;
+        let executionFeeMultiple: Int = 1;
         // check gas
         if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
-            require(ctx.value >= self.gasConsumption, "gas not enough");
+            require(ctx.value >= self.perpGasConsumption, "gas not enough");
             // create tp sl
             let orderExOpt: PerpPositionOrderEx? = self.perpPositionOrderExs.get(msg.orderId);
             if (orderExOpt != null) {
@@ -892,7 +957,7 @@ contract OrderBook with Deployable, Resumable {
                 }
             }
         } else {
-            require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
+            require(ctx.value >= self.perpGasConsumption + self.gasTransferJetton, "gas not enough");
         }
 
         // delete order
@@ -922,18 +987,13 @@ contract OrderBook with Deployable, Resumable {
                 value: order.executionFee,
                 mode: SendIgnoreErrors
             });
+            self.totalExecutionFee -= order.executionFee;
         }
 
         // transfer execess gas
-        let refundValue: Int = context().value - order.executionFee - self.gasConsumption * (1 + executionFeeMultiple);
-        if (refundValue > 0) {
-            send(SendParameters{
-                to: order.lastOperator!!,
-                bounce: false,
-                value: refundValue,
-                mode: SendIgnoreErrors
-            });
-        }
+        self.refundExceedTon(ORDER_TYPE_PERP, order.lastOperator!!, -order.executionFee, executionFeeMultiple, msg.receive > 0);
+
+        dump("UpdatePerpPositionSuccess done");
     }
 
     // reset order pending
@@ -966,7 +1026,7 @@ contract OrderBook with Deployable, Resumable {
         let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
+        require(ctx.value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -1025,7 +1085,7 @@ contract OrderBook with Deployable, Resumable {
         let ctx: Context = context();
 
         // check gas
-        require(ctx.value >= self.gasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
+        require(ctx.value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -1115,7 +1175,7 @@ contract OrderBook with Deployable, Resumable {
 
         let ctx: Context = context();
         // check gas
-        require(ctx.value >= self.gasConsumption, "gas not enough");
+        require(ctx.value >= self.perpGasConsumption, "gas not enough");
 
         // add new compensate
         let compensateId: Int = self.compensateIndexNext;
@@ -1145,7 +1205,7 @@ contract OrderBook with Deployable, Resumable {
         }.toCell());
 
         // transfer execess gas
-        self.refundExecessTon(sender(), 0);
+        self.refundExceedTon(ORDER_TYPE_PERP, sender(), 0, 1, false);
     }
 
     receive(msg: CancelCompensate) {
@@ -1158,7 +1218,7 @@ contract OrderBook with Deployable, Resumable {
         require(self.compensates.get(msg.compensateId) != null, "compensate not exist");
 
         // check gas
-        require(ctx.value >= self.gasConsumption + self.gasTransferJetton, "gas not enough");
+        require(ctx.value >= self.perpGasConsumption + self.gasTransferJetton, "gas not enough");
 
         // delete compensate
         self.compensates.set(msg.compensateId, null);
@@ -1170,7 +1230,7 @@ contract OrderBook with Deployable, Resumable {
         }.toCell());
 
         // transfer execess gas
-        self.refundExecessTon(sender(), 0);
+        self.refundExceedTon(ORDER_TYPE_PERP, sender(), 0, 1, false);
     }
 
     receive(msg: ExecuteCompensate) {
@@ -1180,7 +1240,7 @@ contract OrderBook with Deployable, Resumable {
 
         let ctx: Context = context();
         // check gas
-        require(ctx.value >= self.gasConsumption, "gas not enough");
+        require(ctx.value >= self.perpGasConsumption, "gas not enough");
 
         // check unlock time
         let compensateOpt: Compensate? = self.compensates.get(msg.compensateId);
@@ -1231,7 +1291,7 @@ contract OrderBook with Deployable, Resumable {
         }.toCell());
 
         // transfer execess gas
-        self.refundExecessTon(sender(), 0);
+        self.refundExceedTon(ORDER_TYPE_PERP, sender(), 0, 1, compensate.refundReceiver != null && compensate.refundAmount > 0);
         return;
     }
 

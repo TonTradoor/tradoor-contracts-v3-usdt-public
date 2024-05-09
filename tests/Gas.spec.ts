@@ -89,6 +89,9 @@ describe('LP', () => {
         printTransactionFees(createIncreaseResult.trxResult.transactions);
 
         console.log('create increase LP order gas used:', fromNano(createIncreaseResult.balanceBefore.user0TonBalance - createIncreaseResult.balanceAfter.user0TonBalance - toNano(executionFee)));
+        console.log('orderbook ton balance', fromNano(createIncreaseResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(createIncreaseResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
 
         /// executor order
         const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
@@ -100,6 +103,9 @@ describe('LP', () => {
         });
 
         console.log('execute increase LP order gas used:', fromNano(executeIncreaseResult.balanceBefore.executorTonBalance - executeIncreaseResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+        console.log('orderbook ton balance', fromNano(executeIncreaseResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(executeIncreaseResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
 
         // check order
         expect(executeIncreaseResult.orderAfter).toBeNull();
@@ -128,6 +134,10 @@ describe('LP', () => {
             success: true,
         });
         console.log('create increase long perp order gas used:', fromNano(createResult.balanceBefore.user1TonBalance - createResult.balanceAfter.user1TonBalance - toNano(executionFee)));
+        console.log('orderbook ton balance', fromNano(createResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(createResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         // executor order
         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, premiumRate);
@@ -141,6 +151,10 @@ describe('LP', () => {
 
         console.log('position data after increase long:', executeResult.positionDataAfter);
         console.log('lp data after increase long:', executeResult.lpPositionDataAfter);
+        console.log('orderbook ton balance', fromNano(executeResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(executeResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         expect(executeResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
         expect(executeResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
@@ -163,6 +177,10 @@ describe('LP', () => {
             success: true,
         });
         console.log('create increase short perp order gas used:', fromNano(createIncreaseShortResult.balanceBefore.user1TonBalance - createIncreaseShortResult.balanceAfter.user1TonBalance - toNano(executionFee)));
+        console.log('orderbook ton balance', fromNano(createIncreaseShortResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(createIncreaseShortResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         // executor order
         const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice, -premiumRate);
@@ -176,6 +194,10 @@ describe('LP', () => {
 
         console.log('position data after increase short:', executeIncreaseShortResult.positionDataAfter);
         console.log('lp data after increase short:', executeIncreaseShortResult.lpPositionDataAfter);
+        console.log('orderbook ton balance', fromNano(executeIncreaseShortResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(executeIncreaseShortResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         expect(executeIncreaseShortResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(increaseShortSize - size));
         expect(executeIncreaseShortResult.positionDataAfter.globalLPPosition?.isLong).toBeTruthy();
@@ -198,6 +220,10 @@ describe('LP', () => {
         });
         console.log('decrease short order:', createDecreaseShortResult.order);
         console.log('create decrease short perp order gas used:', fromNano(createDecreaseShortResult.balanceBefore.user1TonBalance - createDecreaseShortResult.balanceAfter.user1TonBalance - toNano(executionFee)));
+        console.log('orderbook ton balance', fromNano(createDecreaseShortResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(createDecreaseShortResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         // executor order
         const executeDecreaseShortResult = await executePerpOrder(executor, createDecreaseShortResult.orderIdBefore, decreaseShortIncreasePrice, premiumRate);
@@ -211,6 +237,10 @@ describe('LP', () => {
 
         console.log('position data after decrease short:', executeDecreaseShortResult.positionDataAfter);
         console.log('lp data after decrease short:', executeDecreaseShortResult.lpPositionDataAfter);
+        console.log('orderbook ton balance', fromNano(executeDecreaseShortResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(executeDecreaseShortResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
         expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
@@ -233,6 +263,10 @@ describe('LP', () => {
         });
         console.log('decrease long order:', createDecreaseLongResult.order);
         console.log('create decrease long perp order gas used:', fromNano(createDecreaseLongResult.balanceBefore.user1TonBalance - createDecreaseLongResult.balanceAfter.user1TonBalance - toNano(executionFee)));
+        console.log('orderbook ton balance', fromNano(createDecreaseLongResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(createDecreaseLongResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         // executor order
         const executeDecreaseLongResult = await executePerpOrder(executor, createDecreaseLongResult.orderIdBefore, decreaseLongIncreasePrice, 0);
@@ -246,6 +280,10 @@ describe('LP', () => {
 
         console.log('position data after decrease long:', executeDecreaseLongResult.positionDataAfter);
         console.log('lp data after decrease long:', executeDecreaseLongResult.lpPositionDataAfter);
+        console.log('orderbook ton balance', fromNano(executeDecreaseLongResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(executeDecreaseLongResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         expect(executeDecreaseLongResult.positionDataAfter.globalLPPosition?.netSize).toEqual(0n);
         expect(executeDecreaseLongResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
@@ -255,7 +293,11 @@ describe('LP', () => {
         const createDecreaseLPResult = await createDecreaseLPOrder(user0, lpLiquidity, executionFee);
         printTransactionFees(createDecreaseLPResult.trxResult.transactions);
 
-        console.log('create increase LP order gas used:', fromNano(createDecreaseLPResult.balanceBefore.user0TonBalance - createDecreaseLPResult.balanceAfter.user0TonBalance - toNano(executionFee)));
+        console.log('create decrease LP order gas used:', fromNano(createDecreaseLPResult.balanceBefore.user0TonBalance - createDecreaseLPResult.balanceAfter.user0TonBalance - toNano(executionFee)));
+        console.log('orderbook ton balance', fromNano(createDecreaseLPResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(createDecreaseLPResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+
 
         /// executor order
         const executeDecreaseLPResult= await executeLPOrder(executor, createDecreaseLPResult.orderIdBefore);
@@ -266,8 +308,11 @@ describe('LP', () => {
             success: true,
         });
 
-        console.log('execute increase LP order gas used:', fromNano(executeDecreaseLPResult.balanceBefore.executorTonBalance - executeDecreaseLPResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+        console.log('execute decrease LP order gas used:', fromNano(executeDecreaseLPResult.balanceBefore.executorTonBalance - executeDecreaseLPResult.balanceAfter.executorTonBalance + toNano(executionFee)));
         console.log('lp data after decrease lp:', executeDecreaseLPResult.positionDataAfter);
+        console.log('orderbook ton balance', fromNano(executeDecreaseLPResult.balanceAfter.orderBookTonBalance));
+        console.log('pool ton balance', fromNano(executeDecreaseLPResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
 
         // check order
         expect(executeIncreaseResult.orderAfter).toBeNull();
@@ -279,100 +324,110 @@ describe('LP', () => {
 
     });
 
-    // it('should create a lot of position', async () => {
-    //     for (let i = 0; i < 100_000; i++) {
-    //         let user: SandboxContract<TreasuryContract> = await blockchain.treasury('user' + i);
+    it('should create a lot of position', async () => {
+        return;
+        for (let i = 0; i < 100_000; i++) {
+            let user: SandboxContract<TreasuryContract> = await blockchain.treasury('user' + i);
 
-    //         // mint
-    //         await mint(user.address, '100000');
+            // mint
+            await mint(user.address, '100000');
 
-    //         /* =========================== increase LP ================================ */
-    //         /// create order
-    //         let lpLiquidity = 10000;
-    //         let executionFee = 0.1;
+            /* =========================== increase LP ================================ */
+            /// create order
+            let lpLiquidity = 10000;
+            let executionFee = 0.1;
 
-    //         // create order
-    //         const createIncreaseResult = await createIncreaseLPOrder(user, lpLiquidity, executionFee);
-    //         // printTransactionFees(createIncreaseResult.trxResult.transactions);
+            // create order
+            const createIncreaseResult = await createIncreaseLPOrder(user, lpLiquidity, executionFee);
+            // printTransactionFees(createIncreaseResult.trxResult.transactions);
 
-    //         /// executor order
-    //         const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
-    //         // printTransactionFees(executeIncreaseResult.trxResult.transactions);
-    //         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-    //             from: orderBook.address,
-    //             to: pool.address,
-    //             success: true,
-    //         });
+            /// executor order
+            const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
+            // printTransactionFees(executeIncreaseResult.trxResult.transactions);
+            expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+                from: orderBook.address,
+                to: pool.address,
+                success: true,
+            });
+            // console.log('orderbook ton balance', fromNano(executeIncreaseResult.balanceAfter.orderBookTonBalance));
+            // console.log('pool ton balance', fromNano(executeIncreaseResult.balanceAfter.poolTonBalance));
+            // console.log('index', i, 'execute increase lp order gas used:', fromNano(executeIncreaseResult.balanceBefore.executorTonBalance - executeIncreaseResult.balanceAfter.executorTonBalance + toNano(executionFee)));
 
-    //         // check order
-    //         expect(executeIncreaseResult.orderAfter).toBeNull();
+            // check order
+            expect(executeIncreaseResult.orderAfter).toBeNull();
 
-    //         // check position
-    //         let position = executeIncreaseResult.positionDataAfter.lpPosition;
-    //         expect(position).not.toBeNull();
-    //         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
+            // check position
+            let position = executeIncreaseResult.positionDataAfter.lpPosition;
+            expect(position).not.toBeNull();
+            expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
             
-    //         if (i % 2 == 0) {
-    //             /* =========================== increase long perp ================================ */
-    //             let isMarket = true;
-    //             let tokenId = 1;
-    //             let margin = 50;
-    //             let size = 0.01; // 500u
-    //             let triggerPrice = 51000;
-    //             let increasePrice = 50000;
-    //             let premiumRate = 0.001;
+            if (i % 2 == 0) {
+                /* =========================== increase long perp ================================ */
+                let isMarket = true;
+                let tokenId = 1;
+                let margin = 50;
+                let size = 0.01; // 500u
+                let triggerPrice = 51000;
+                let increasePrice = 50000;
+                let premiumRate = 0.001;
 
-    //             // create order
-    //             const createResult = await createIncreasePerpOrder(user, executionFee, isMarket, tokenId, true, margin, size, triggerPrice, 0, 0, 0, 0);
-    //             // printTransactionFees(createResult.trxResult.transactions);
-    //             expect(createResult.trxResult.transactions).toHaveTransaction({
-    //                 from: orderBookJettonWallet.address,
-    //                 to: orderBook.address,
-    //                 success: true,
-    //             });
+                // create order
+                const createResult = await createIncreasePerpOrder(user, executionFee, isMarket, tokenId, true, margin, size, triggerPrice, 0, 0, 0, 0);
+                // printTransactionFees(createResult.trxResult.transactions);
+                expect(createResult.trxResult.transactions).toHaveTransaction({
+                    from: orderBookJettonWallet.address,
+                    to: orderBook.address,
+                    success: true,
+                });
 
-    //             // executor order
-    //             const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, premiumRate);
-    //             printTransactionFees(executeResult.trxResult.transactions);
-    //             expect(executeResult.trxResult.transactions).toHaveTransaction({
-    //                 from: orderBook.address,
-    //                 to: pool.address,
-    //                 success: true,
-    //             });
-    //             console.log('index', i, 'execute increase long perp order gas used:', fromNano(executeResult.balanceBefore.executorTonBalance - executeResult.balanceAfter.executorTonBalance + toNano(executionFee)));
-    //         } else {
-    //             /* =========================== increase short perp ================================ */
-    //             let isMarket = true;
-    //             let tokenId = 1;
-    //             let increaseShortMargin = 100;
-    //             let increaseShortSize = 0.02;
-    //             let increaseShortTriggerPrice = 49000;
-    //             let increaseShortIncreasePrice = 50000;
-    //             let premiumRate = 0.001;
+                // executor order
+                const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, premiumRate);
+                printTransactionFees(executeResult.trxResult.transactions);
+                expect(executeResult.trxResult.transactions).toHaveTransaction({
+                    from: orderBook.address,
+                    to: pool.address,
+                    success: true,
+                });
+                console.log('orderbook ton balance', fromNano(executeResult.balanceAfter.orderBookTonBalance));
+                console.log('pool ton balance', fromNano(executeResult.balanceAfter.poolTonBalance));
+    
+                console.log('index', i, 'execute increase long perp order gas used:', fromNano(executeResult.balanceBefore.executorTonBalance - executeResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+            } else {
+                /* =========================== increase short perp ================================ */
+                let isMarket = true;
+                let tokenId = 1;
+                let increaseShortMargin = 100;
+                let increaseShortSize = 0.02;
+                let increaseShortTriggerPrice = 49000;
+                let increaseShortIncreasePrice = 50000;
+                let premiumRate = 0.001;
 
-    //             // create order
-    //             const createIncreaseShortResult = await createIncreasePerpOrder(user, executionFee, isMarket, tokenId, false, increaseShortMargin, increaseShortSize, increaseShortTriggerPrice, 0, 0, 0, 0);
-    //             // printTransactionFees(createIncreaseShortResult.trxResult.transactions);
-    //             expect(createIncreaseShortResult.trxResult.transactions).toHaveTransaction({
-    //                 from: orderBookJettonWallet.address,
-    //                 to: orderBook.address,
-    //                 success: true,
-    //             });
+                // create order
+                const createIncreaseShortResult = await createIncreasePerpOrder(user, executionFee, isMarket, tokenId, false, increaseShortMargin, increaseShortSize, increaseShortTriggerPrice, 0, 0, 0, 0);
+                // printTransactionFees(createIncreaseShortResult.trxResult.transactions);
+                expect(createIncreaseShortResult.trxResult.transactions).toHaveTransaction({
+                    from: orderBookJettonWallet.address,
+                    to: orderBook.address,
+                    success: true,
+                });
 
-    //             // executor order
-    //             const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice, -premiumRate);
-    //             printTransactionFees(executeIncreaseShortResult.trxResult.transactions);
-    //             expect(executeIncreaseShortResult.trxResult.transactions).toHaveTransaction({
-    //                 from: orderBook.address,
-    //                 to: pool.address,
-    //                 success: true,
-    //             });
-    //             console.log('index', i, 'execute increase short perp order gas used:', fromNano(executeIncreaseShortResult.balanceBefore.executorTonBalance - executeIncreaseShortResult.balanceAfter.executorTonBalance + toNano(executionFee)));
-    //         }
+                // executor order
+                const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice, -premiumRate);
+                printTransactionFees(executeIncreaseShortResult.trxResult.transactions);
+                expect(executeIncreaseShortResult.trxResult.transactions).toHaveTransaction({
+                    from: orderBook.address,
+                    to: pool.address,
+                    success: true,
+                });
+                console.log('orderbook ton balance', fromNano(executeIncreaseShortResult.balanceAfter.orderBookTonBalance));
+                console.log('pool ton balance', fromNano(executeIncreaseShortResult.balanceAfter.poolTonBalance));
+    
+                console.log('index', i, 'execute increase short perp order gas used:', fromNano(executeIncreaseShortResult.balanceBefore.executorTonBalance - executeIncreaseShortResult.balanceAfter.executorTonBalance + toNano(executionFee)));
+            }
 
             
-    //     }
+        }
 
-    // });
+    });
 
 });
