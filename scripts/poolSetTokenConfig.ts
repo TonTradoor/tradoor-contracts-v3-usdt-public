@@ -16,6 +16,7 @@ export async function run(provider: NetworkProvider) {
 
     for (let index = 0; index < tokens.length; index++) {
         const name = tokens[index];
+        // if (index == 0) continue
         await pool.send(
             provider.sender(),
             {
