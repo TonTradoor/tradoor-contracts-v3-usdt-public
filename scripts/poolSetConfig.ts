@@ -37,8 +37,8 @@ export async function run(provider: NetworkProvider) {
             executorLength: BigInt(executors.size),
             executors: executors,
             claimExecutor: claimExecutor,
-            lpGasConsumption: toNano(0.016),
-            perpGasConsumption: toNano(0.035),
+            lpGasConsumption: toNano(0.018),
+            perpGasConsumption: toNano(0.038),
             minTonsForStorage: toNano(0.01),
             lpLockTime: 60n * 60n, // 1hour
             lpAddBonusFactor: 1n * 10n**9n,
