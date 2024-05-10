@@ -2473,16 +2473,17 @@ PROGRAM{
         s8 PUSH
         34 s() PUSH
         MUL
-        s2 PUSH
-        24 s() PUSH
+        s0 s2 XCHG
+        23 s() PUSH
         SUB
+        s1 s2 XCHG
         MUL
         SWAP
         100 PUSHINT
         MIN
         MUL
-        SWAP
-        10000 PUSHINT
+        21 s() PUSH
+        1000 PUSHINT
         MUL
         1000000000 PUSHINT
         MUL
@@ -2493,28 +2494,28 @@ PROGRAM{
         SUB
         s9 s(-1) PUXC
         MUL
-        s2 PUSH
+        23 s() PUSH
         DIV
         s6 s9 PUSH2
         36 s() PUSH
         MUL
-        s4 PUSH
-        26 s() PUSH
+        s0 s4 XCHG
+        25 s() PUSH
         SUB
+        s1 s4 XCHG
         MUL
-        s0 s3 XCHG
+        s0 s2 XCHG
         100 PUSHINT
         MIN
-        s1 s3 XCHG
+        s1 s2 XCHG
         MUL
-        s0 s3 XCHG
-        10000 PUSHINT
+        23 s() PUSH
+        1000 PUSHINT
         MUL
         1000000000 PUSHINT
         MUL
-        s1 s3 XCHG
         DIV
-        -ROT
+        s0 s2 XCHG
         MIN
         SWAP
         MAX

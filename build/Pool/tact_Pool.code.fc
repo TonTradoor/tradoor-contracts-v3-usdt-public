@@ -100,11 +100,11 @@
     if (($globalNetLP >= $self'globalLPLiquidity)) {
         int $n = (((now() - $lpPosition'unlockTime) + 86400) / 86400);
         if (($lpPosition'bonus == 0)) {
-            $bonus = (((($liquidityDelta * $self'lpRemoveBonusFactor) * ($globalNetLP - $self'globalLPLiquidity)) * min($n, 100)) / (($globalNetLP * 10000) * 1000000000));
+            $bonus = (((($liquidityDelta * $self'lpRemoveBonusFactor) * ($globalNetLP - $self'globalLPLiquidity)) * min($n, 100)) / (($self'globalLPLiquidity * 1000) * 1000000000));
         } else {
-            int $bonus1 = (($liquidityDelta * ($globalNetLP - $self'globalLPLiquidity)) / $globalNetLP);
+            int $bonus1 = (($liquidityDelta * ($globalNetLP - $self'globalLPLiquidity)) / $self'globalLPLiquidity);
             int $bonus2 = $lpPosition'bonus;
-            int $bonus3 = (((($liquidityDelta * $self'lpRemoveBonusFactor) * ($globalNetLP - $self'globalLPLiquidity)) * min($n, 100)) / (($globalNetLP * 10000) * 1000000000));
+            int $bonus3 = (((($liquidityDelta * $self'lpRemoveBonusFactor) * ($globalNetLP - $self'globalLPLiquidity)) * min($n, 100)) / (($self'globalLPLiquidity * 1000) * 1000000000));
             $bonus = max(min($bonus1, $bonus2), $bonus3);
         }
         $receive = ($liquidityDelta + $bonus);
