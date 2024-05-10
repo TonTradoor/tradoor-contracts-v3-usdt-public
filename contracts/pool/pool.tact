@@ -411,19 +411,15 @@ contract Pool with Deployable, Ownable {
     // ============================ Perp ================================ //
     receive(msg: UpdatePerpPosition) {
         // dump("UpdatePerpPosition");
-
         require(sender() == self.orderBook, "invalid sender");
-
-        // update price
-        let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(msg.tokenId, msg.price, false);
-
-        // get index price
-        let indexPrice: Int = msg.price;
 
         // trade price
         require(abs(msg.premiumRate) < PERCENTAGE_BASIS_POINT, "invalid premium rate");
-        let tradePrice: Int = (PERCENTAGE_BASIS_POINT + msg.premiumRate) * indexPrice / PERCENTAGE_BASIS_POINT;
+        let tradePrice: Int = (PERCENTAGE_BASIS_POINT + msg.premiumRate) * msg.price / PERCENTAGE_BASIS_POINT;
         self.prevPremiumRates.set(msg.tokenId, msg.premiumRate);
+
+        // update price
+        let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(msg.tokenId, tradePrice, false);
 
         // update position
         if (msg.opType == ORDER_OP_TYPE_INCREASE_MARKET || msg.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
@@ -1203,7 +1199,11 @@ contract Pool with Deployable, Ownable {
             if (updatePrice != null) {
                 // update price
                 let tokenId: Int = (updatePrice!!).tokenId;
-                let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(tokenId, (updatePrice!!).price, true);
+
+                let prevPremiumRate: Int = self.prevPremiumRates.get(tokenId) == null ? 0 : self.prevPremiumRates.get(tokenId)!!;
+                let tradePrice: Int = (PERCENTAGE_BASIS_POINT + prevPremiumRate) * (updatePrice!!).price / PERCENTAGE_BASIS_POINT;
+
+                let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(tokenId, tradePrice, true);
                 resultDatas.set(i, UpdateFundingRateEventData{
                     trxId: msg.trxId,
                     tokenId: tokenId,

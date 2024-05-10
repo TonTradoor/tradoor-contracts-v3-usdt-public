@@ -10,6 +10,30 @@ export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
     const pool = attachPool(provider);
 
+    // console.log('=================== Config ===================');
+    // console.log('orderbook config:', await orderBook.getConfigData(account));
+    // console.log('pool config:', await pool.getConfigData(account));
+    // console.log('token config:', await pool.getTokenConfig(tokenId));
+
+    // console.log('=================== LP ===================');
+    // // get index
+    // let lpOrderIdNext = await orderBook.getLpPositionOrderIndexNext();
+    // console.log(`lpOrderIdNext:`, lpOrderIdNext);
+
+    // if (orderId < 0) {
+    //     console.log('order not exist');
+    //     return;
+    // }
+
+    // // get order
+    // let lpOrder = await orderBook.getLpPositionOrder(orderId);
+    // console.log(`lpOrder:`, lpOrder);
+
+    // // get position
+    // let lpPosition = await pool.getLpPosition(account);
+    // console.log(`lpPosition:`, lpPosition);
+
+    console.log('=================== Perp ===================');
     // get index
     let orderIdNext = await orderBook.getPerpPositionOrderIndexNext();
     console.log(`orderIdNext:`, orderIdNext);
@@ -24,4 +48,7 @@ export async function run(provider: NetworkProvider) {
 
     let tokenConfig = await pool.getTokenConfig(tokenId);
     console.log('tokenConfig:', tokenConfig);
+
+    // get price
+    console.log('price', await pool.getPriceData(tokenId));
 }
