@@ -62,7 +62,7 @@ describe('LP', () => {
 
     it('auto refund -- not enough execution fee', async () => {
         let liquidity = 10;
-        let executionFee = 0.05;
+        let executionFee = 0.04;
         
         // get orderBook TON balance
         console.log("orderBookTonBalance", await getFriendlyTonBalance(orderBook.address));

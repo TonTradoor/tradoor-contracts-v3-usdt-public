@@ -3,7 +3,8 @@ struct ConfigData {
     isExecutor: Bool?;
     maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
-    minExecutionFee: Int as coins;
+    lpMinExecutionFee: Int as coins;
+    perpMinExecutionFee: Int as coins;
     lpGasConsumption: Int as coins;
     perpGasConsumption: Int as coins;
     poolLpGasConsumption: Int as coins;

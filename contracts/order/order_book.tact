@@ -23,8 +23,10 @@ contract OrderBook with Deployable, Resumable {
     minTonsForStorage: Int = ton("0.01"); // min pool storage gas
     // jetton gas
     gasTransferJetton: Int = ton("0.08"); // min pool storage gas
+    // execution fee
+    lpMinExecutionFee: Int = ton("0.05"); // fee for every operation
+    perpMinExecutionFee: Int = ton("0.1"); // fee for every operation
     // total gas
-    minExecutionFee: Int = ton("0.1"); // fee for every operation
     totalExecutionFee: Int = 0;
 
     // address
@@ -75,7 +77,8 @@ contract OrderBook with Deployable, Resumable {
         // config
         self.maxTimeDelayExecutor = msg.maxTimeDelayExecutor;
         self.minTimeDelayTrader = msg.minTimeDelayTrader;
-        self.minExecutionFee = msg.minExecutionFee;
+        self.lpMinExecutionFee = msg.lpMinExecutionFee;
+        self.perpMinExecutionFee = msg.perpMinExecutionFee;
 
         self.lpGasConsumption = msg.lpGasConsumption;
         self.perpGasConsumption = msg.perpGasConsumption;
@@ -104,7 +107,8 @@ contract OrderBook with Deployable, Resumable {
             isExecutor: isExecutor,
             maxTimeDelayExecutor: self.maxTimeDelayExecutor,
             minTimeDelayTrader: self.minTimeDelayTrader,
-            minExecutionFee: self.minExecutionFee,
+            lpMinExecutionFee: self.lpMinExecutionFee,
+            perpMinExecutionFee: self.perpMinExecutionFee,
             lpGasConsumption: self.lpGasConsumption,
             perpGasConsumption: self.perpGasConsumption,
             poolLpGasConsumption: self.poolLpGasConsumption,
@@ -273,7 +277,7 @@ contract OrderBook with Deployable, Resumable {
             refundComment = "jetton not enough";
         }
 
-        if (executionFee < self.minExecutionFee) {
+        if (executionFee < self.lpMinExecutionFee) {
             refund = true;
             refundComment = "execution fee not enough";
         }
@@ -328,7 +332,7 @@ contract OrderBook with Deployable, Resumable {
         // check gas
         require(ctx.value - msg.executionFee >= self.lpGasConsumption, "gas not enough");
         // check execution fee
-        require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
+        require(msg.executionFee >= self.lpMinExecutionFee, "execution fee not enough");
 
         // add new order
         let orderId: Int = self.lpPositionOrderIndexNext;
@@ -594,7 +598,7 @@ contract OrderBook with Deployable, Resumable {
             executionFeeMultiple += 1;
         }
 
-        if (executionFee < self.minExecutionFee * executionFeeMultiple) {
+        if (executionFee < self.perpMinExecutionFee * executionFeeMultiple) {
             refund = true;
             refundComment = "execution fee not enough";
         }
@@ -635,7 +639,7 @@ contract OrderBook with Deployable, Resumable {
         // check gas
         require(ctx.value - msg.executionFee >= self.perpGasConsumption, "gas not enough");
         // check execution fee
-        require(msg.executionFee >= self.minExecutionFee, "execution fee not enough");
+        require(msg.executionFee >= self.perpMinExecutionFee, "execution fee not enough");
 
         // add new order
         self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_MARKET, sender(), msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.triggerPrice, 
@@ -663,7 +667,7 @@ contract OrderBook with Deployable, Resumable {
         // check gas
         require(ctx.value - msg.executionFee >= self.perpGasConsumption * executionFeeMultiple, "gas not enough");
         // check execution fee
-        require(msg.executionFee >= self.minExecutionFee * executionFeeMultiple, "execution fee not enough");
+        require(msg.executionFee >= self.perpMinExecutionFee * executionFeeMultiple, "execution fee not enough");
 
         // create tp/sl
         if (msg.tpSize > 0 && msg.tpPrice > 0) {
