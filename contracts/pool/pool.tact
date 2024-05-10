@@ -311,11 +311,6 @@ contract Pool with Deployable, Ownable {
         require(globalNetLP > 0, "insufficient global LP");
 
         // calculate receive amount
-        if (globalNetLP < 0) {
-            globalNetLP = 0;
-        }
-        require(globalNetLP > 0, "insufficient global net LP");
-
         let receive: Int = 0;
         let bonus: Int = 0;
 
@@ -1377,7 +1372,7 @@ contract Pool with Deployable, Ownable {
         // get paidSize and receivedSize
         let paidSize: Int = 0;
         let receivedSize: Int = 0;
-        if (fundingRateDelta >= 0) {
+        if (clampedFundingRateDelta >= 0) {
             paidSize = globalPosition.longSize;
             receivedSize = globalPosition.shortSize;
         } else {
@@ -1387,7 +1382,7 @@ contract Pool with Deployable, Ownable {
 
         // calculate funding rate growth
         // paidFundingFeeGrowthDelta = (paidSize * price * fundingRate) / paidSize = price * fundingRate
-        let paidFundingFeeGrowthDelta: Int = price * abs(fundingRateDelta) / PERCENTAGE_BASIS_POINT;
+        let paidFundingFeeGrowthDelta: Int = price * abs(clampedFundingRateDelta) / PERCENTAGE_BASIS_POINT;
 
         let receivedFundingFeeGrowthDelta: Int = 0;
         let lpReceivedFundingFee: Int = 0;
@@ -1412,7 +1407,7 @@ contract Pool with Deployable, Ownable {
         }
 
         // funding rate > 0, long pay for short and LP
-        if (fundingRateDelta >= 0) {
+        if (clampedFundingRateDelta >= 0) {
             globalPosition.longFundingFeeGrowth -= paidFundingFeeGrowthDelta;
             globalPosition.shortFundingFeeGrowth += receivedFundingFeeGrowthDelta;
         } else {

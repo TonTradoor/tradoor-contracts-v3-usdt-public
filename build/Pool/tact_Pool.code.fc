@@ -95,10 +95,6 @@
     }
     int $globalNetLP = ($self'globalLPFund + $self'globalLPUnrealizedPnl);
     throw_unless(39251, ($globalNetLP > 0));
-    if (($globalNetLP < 0)) {
-        $globalNetLP = 0;
-    }
-    throw_unless(54040, ($globalNetLP > 0));
     int $receive = 0;
     int $bonus = 0;
     if (($globalNetLP >= $self'globalLPLiquidity)) {
@@ -121,6 +117,7 @@
     }
     $realizedFundingFee = $realizedFundingFee + $lpPosition'realizedFundingFee;
     $receive = $receive + $realizedFundingFee;
+    $lpPosition'entryFundingFeeGrowth = $self'globalLPFundingFeeGrowth;
     $lpPosition'realizedFundingFee = 0;
     $lpPosition'liquidity = $lpPosition'liquidity - $liquidityDelta;
     $lpPosition'bonus = $lpPosition'bonus - min($lpPosition'bonus, $bonus);
@@ -583,14 +580,14 @@
     $self'globalFundingRateSamples~__tact_dict_set_int_cell(257, $tokenId, $GlobalFundingRateSample$_store_cell(($sample'lastAdjustFundingRateTime, $sample'sampleCount, $sample'cumulativePremiumRate)));
     int $paidSize = 0;
     int $receivedSize = 0;
-    if (($fundingRateDelta >= 0)) {
+    if (($clampedFundingRateDelta >= 0)) {
         $paidSize = $globalPosition'longSize;
         $receivedSize = $globalPosition'shortSize;
     } else {
         $paidSize = $globalPosition'shortSize;
         $receivedSize = $globalPosition'longSize;
     }
-    int $paidFundingFeeGrowthDelta = (($price * abs($fundingRateDelta)) / 1000000000);
+    int $paidFundingFeeGrowthDelta = (($price * abs($clampedFundingRateDelta)) / 1000000000);
     int $receivedFundingFeeGrowthDelta = 0;
     int $lpReceivedFundingFee = 0;
     if (($paidFundingFeeGrowthDelta > 0)) {
@@ -612,7 +609,7 @@
             }
         }
     }
-    if (($fundingRateDelta >= 0)) {
+    if (($clampedFundingRateDelta >= 0)) {
         $globalPosition'longFundingFeeGrowth = $globalPosition'longFundingFeeGrowth - $paidFundingFeeGrowthDelta;
         $globalPosition'shortFundingFeeGrowth = $globalPosition'shortFundingFeeGrowth + $receivedFundingFeeGrowthDelta;
     } else {
@@ -836,7 +833,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmYg8LNkVuFeYtwWJQTsBmJEvDT83TieW3XDdK34y5D1ch";
+    return "ipfs://QmQt6ymGvGQ4sZkJrLZ5c6WHcCUg566nvvAbYFTQGB5yUb";
 }
 
 _ lazy_deployment_completed() method_id {
