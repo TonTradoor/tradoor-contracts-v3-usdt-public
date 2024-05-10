@@ -15,23 +15,23 @@ export async function run(provider: NetworkProvider) {
     // console.log('pool config:', await pool.getConfigData(account));
     // console.log('token config:', await pool.getTokenConfig(tokenId));
 
-    // console.log('=================== LP ===================');
-    // // get index
-    // let lpOrderIdNext = await orderBook.getLpPositionOrderIndexNext();
-    // console.log(`lpOrderIdNext:`, lpOrderIdNext);
+    console.log('=================== LP ===================');
+    // get index
+    let lpOrderIdNext = await orderBook.getLpPositionOrderIndexNext();
+    console.log(`lpOrderIdNext:`, lpOrderIdNext);
 
-    // if (orderId < 0) {
-    //     console.log('order not exist');
-    //     return;
-    // }
+    if (orderId < 0) {
+        console.log('order not exist');
+        return;
+    }
 
-    // // get order
-    // let lpOrder = await orderBook.getLpPositionOrder(orderId);
-    // console.log(`lpOrder:`, lpOrder);
+    // get order
+    let lpOrder = await orderBook.getLpPositionOrder(orderId);
+    console.log(`lpOrder:`, lpOrder);
 
-    // // get position
-    // let lpPosition = await pool.getLpPosition(account);
-    // console.log(`lpPosition:`, lpPosition);
+    // get position
+    let lpPosition = await pool.getLpPosition(account);
+    console.log(`lpPosition:`, lpPosition);
 
     console.log('=================== Perp ===================');
     // get index

@@ -344,6 +344,7 @@ contract Pool with Deployable, Ownable {
         receive += realizedFundingFee;
 
         // update position
+        lpPosition.entryFundingFeeGrowth = self.globalLPFundingFeeGrowth;
         lpPosition.realizedFundingFee = 0;
         lpPosition.liquidity -= liquidityDelta;
         lpPosition.bonus -= min(lpPosition.bonus, bonus);
