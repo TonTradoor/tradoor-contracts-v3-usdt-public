@@ -128,6 +128,9 @@
     }
     $self'globalLPFund = ($self'globalLPFund - $receive);
     $self'globalLPLiquidity = ($self'globalLPLiquidity - $liquidityDelta);
+    if (($self'globalLPLiquidity == 0)) {
+        throw_unless(37153, ( (($self'globalPerpNetValue == 0)) ? (($self'globalPerpSingleValue == 0)) : (false) ));
+    }
     int $msgValue = ($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates)~$Pool$_fun_exceedGas(1);
     $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'orderBook, $msgValue, false, 1, $UpdateLPPositionSuccess$_store_cell($UpdateLPPositionSuccess$_constructor_orderId_receive_trxId($orderId, $receive, $trxId))));
     $global_emit($LPPositionDecreasedEvent$_store_cell($LPPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_liquidityDelta_liquidityAfter_bonusDelta_bonusAfter_fundingFeeDelta_entryFundingFeeGrowthAfter_receive_lpFundAfter_lpLiquidityAfter($trxId, $orderId, 2, $lpPosition'positionId, $account, $liquidityDelta, $lpPosition'liquidity, $bonus, $lpPosition'bonus, $realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $receive, $self'globalLPFund, $self'globalLPLiquidity)));
@@ -833,7 +836,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmQt6ymGvGQ4sZkJrLZ5c6WHcCUg566nvvAbYFTQGB5yUb";
+    return "ipfs://QmakPGZKtzSbEFoLXZgYJ9JUX1Rnv3PMU8WuUXkCdpkQXo";
 }
 
 _ lazy_deployment_completed() method_id {

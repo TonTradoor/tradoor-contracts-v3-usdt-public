@@ -354,6 +354,9 @@ contract Pool with Deployable, Ownable {
         // update global position
         self.globalLPFund = self.globalLPFund - receive;
         self.globalLPLiquidity = self.globalLPLiquidity - liquidityDelta;
+        if (self.globalLPLiquidity == 0) {
+            require(self.globalPerpNetValue == 0 && self.globalPerpSingleValue == 0, "must close all perp before remove last liquidity");
+        }
 
         // exceed gas
         let msgValue: Int = self.exceedGas(ORDER_TYPE_LP);

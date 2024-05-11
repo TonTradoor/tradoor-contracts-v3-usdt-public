@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 14604 bytes
+BOC Size: 14627 bytes
 
 # Types
 Total Types: 37
@@ -212,6 +212,7 @@ Argument: account
 31332: less than min value
 31425: not reach unlock time
 36718: disabled token
+37153: must close all perp before remove last liquidity
 39251: insufficient global LP
 41207: invalid sender
 55754: insufficient liquidity for net value
