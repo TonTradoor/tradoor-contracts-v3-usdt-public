@@ -5225,8 +5225,25 @@ PROGRAM{
     1000000000 PUSHINT
     LESS
     THROWANYIFNOT
-    1000000000 PUSHINT
+    257 PUSHINT
+    s13 s(-1) s(-1) PUXCPU
+    s12 s(-1) PUXC
+    __tact_dict_get_int_int INLINECALLDICT
+    ISNULL
+    IF:<{
+      0 PUSHINT
+    }>ELSE<{
+      257 PUSHINT
+      s13 s(-1) s(-1) PUXCPU
+      s12 s(-1) PUXC
+      __tact_dict_get_int_int INLINECALLDICT
+      __tact_not_null INLINECALLDICT
+    }>
     OVER
+    1000000000 PUSHINT
+    s0 s2 XCHG
+    ADD
+    1 RSHIFT#
     ADD
     ROT
     MUL
