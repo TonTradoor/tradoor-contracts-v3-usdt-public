@@ -416,10 +416,10 @@ contract Pool with Deployable, Ownable {
         require(abs(msg.premiumRate) < PERCENTAGE_BASIS_POINT, "invalid premium rate");
         let prevPremiumRate: Int = self.prevPremiumRates.get(msg.tokenId) == null ? 0 : self.prevPremiumRates.get(msg.tokenId)!!;
         let tradePrice: Int = (PERCENTAGE_BASIS_POINT + (msg.premiumRate + prevPremiumRate) / 2) * msg.price / PERCENTAGE_BASIS_POINT;
-        self.prevPremiumRates.set(msg.tokenId, msg.premiumRate);
 
         // update price
         let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(msg.tokenId, tradePrice, false);
+        self.prevPremiumRates.set(msg.tokenId, msg.premiumRate);
 
         // update position
         if (msg.opType == ORDER_OP_TYPE_INCREASE_MARKET || msg.opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
@@ -512,11 +512,6 @@ contract Pool with Deployable, Ownable {
         let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
         globalPosition.longValue = globalPosition.longSize * tradePrice / PRICE_DECIMAL_FACTOR;
         globalPosition.shortValue = globalPosition.shortSize * tradePrice / PRICE_DECIMAL_FACTOR;
-        dump("check value");
-        dump(singleValueBefore);
-        dump(netValueBefore);
-        dump(self.globalPerpSingleValue);
-        dump(self.globalPerpNetValue);
 
         self.globalPerpSingleValue += max(globalPosition.longValue, globalPosition.shortValue) - singleValueBefore;
         self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
@@ -1326,7 +1321,14 @@ contract Pool with Deployable, Ownable {
         // cumulative PR
         let prevPremiumRate: Int = self.prevPremiumRates.get(tokenId) == null ? 0 : self.prevPremiumRates.get(tokenId)!!;
         let cumulativePremiumRate: Int = prevPremiumRate * ((sample.sampleCount + 1 + sampleCountAfter) * sampleCountDelta / 2 );
+
+        dump(prevPremiumRate);
+        dump(sample.sampleCount);
+        dump(sampleCountAfter);
+        dump(sample.cumulativePremiumRate);
         cumulativePremiumRate = sample.cumulativePremiumRate + cumulativePremiumRate;
+        dump("cumulativePremiumRate");
+        dump(cumulativePremiumRate);
 
         // sample count < 720, no need update funding rate
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
@@ -1344,6 +1346,7 @@ contract Pool with Deployable, Ownable {
 
         // average PR
         let premiumRateAvg: Int = cumulativePremiumRate / PREMIUM_RATE_AVG_DENOMINATOR;
+        dump(premiumRateAvg);
 
         // clamp (IR - avgPR) : -0.05%/8 <= (IR - avgPR) <= 0.05%/8
         let rateDelta: Int = tokenConfig.interestRate - premiumRateAvg;
@@ -1366,6 +1369,7 @@ contract Pool with Deployable, Ownable {
         } else {
             clampedFundingRateDelta = fundingRateDelta;
         }
+        dump(clampedFundingRateDelta);
 
         sample.lastAdjustFundingRateTime = maxSamplingTime;
         sample.cumulativePremiumRate = 0;

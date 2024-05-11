@@ -21,6 +21,9 @@ int __tact_my_balance() inline;
 ;; __tact_not_null
 forall X -> X __tact_not_null(X x) inline;
 
+;; __tact_debug_bool
+() __tact_debug_bool(int value) impure inline_ref;
+
 ;; __tact_context_get
 (int, slice, int, slice) __tact_context_get() inline;
 
@@ -56,6 +59,9 @@ cell __tact_dict_get_slice_cell(cell d, int kl, slice k) inline;
 
 ;; __tact_slice_eq_bits
 int __tact_slice_eq_bits(slice a, slice b) inline;
+
+;; __tact_int_to_string
+slice __tact_int_to_string(int src) inline_ref;
 
 ;; $Deploy$_load
 (slice, ((int))) $Deploy$_load(slice sc_0) inline;
