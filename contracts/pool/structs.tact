@@ -42,6 +42,7 @@ struct LPPosition {
     bonus: Int;
     realizedFundingFee: Int;
     entryFundingFeeGrowth: Int;
+    openTime: Int;
     unlockTime: Int;
 }
 

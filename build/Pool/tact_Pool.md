@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 14679 bytes
+BOC Size: 14695 bytes
 
 # Types
 Total Types: 37
@@ -106,12 +106,12 @@ TLB: `_ name:^string enable:bool minValue:int257 maxValue:int257 maxLeverage:int
 Signature: `TokenConfig{name:^string,enable:bool,minValue:int257,maxValue:int257,maxLeverage:int257,liquidationFee:int257,maintenanceRate:int257,liquidityProportion:int257,tradingFeeRate:int257,lpTradingFeeRate:int257,interestRate:int257,maxFundingRate:int257}`
 
 ## LPPosition
-TLB: `_ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition`
-Signature: `LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257}`
+TLB: `_ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 openTime:int257 unlockTime:int257 = LPPosition`
+Signature: `LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,openTime:int257,unlockTime:int257}`
 
 ## LPPositionData
-TLB: `_ lpPosition:Maybe LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} globalLPFund:int257 globalLPLiquidity:int257 globalLPFundingFeeGrowth:int257 globalLPUnrealizedPnl:int257 = LPPositionData`
-Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257},globalLPFund:int257,globalLPLiquidity:int257,globalLPFundingFeeGrowth:int257,globalLPUnrealizedPnl:int257}`
+TLB: `_ lpPosition:Maybe LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,openTime:int257,unlockTime:int257} globalLPFund:int257 globalLPLiquidity:int257 globalLPFundingFeeGrowth:int257 globalLPUnrealizedPnl:int257 = LPPositionData`
+Signature: `LPPositionData{lpPosition:Maybe LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,openTime:int257,unlockTime:int257},globalLPFund:int257,globalLPLiquidity:int257,globalLPFundingFeeGrowth:int257,globalLPUnrealizedPnl:int257}`
 
 ## AccountPerpPosition
 TLB: `_ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257},shortPosition:PerpPosition{positionId:uint64,margin:int257,size:int257,entryPrice:int257,entryFundingFeeGrowth:int257}}> = AccountPerpPosition`

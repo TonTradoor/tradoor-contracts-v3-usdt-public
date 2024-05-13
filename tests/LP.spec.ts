@@ -5,7 +5,7 @@ import { MockJetton } from '../wrappers/MockJetton';
 import { Pool } from '../wrappers/Pool';
 import { OrderBook } from '../wrappers/OrderBook';
 import { TestEnv } from './lib/TestEnv';
-import { getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits } from './lib/TokenHelper';
+import { fromJettonUnits, getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
 import {createIncreasePerpOrder, executePerpOrder, updatePrice} from "./lib/PerpHelper";
@@ -83,11 +83,85 @@ describe('LP', () => {
         // check order
         expect(createResult.order).toBeNull();
 
-        // check orderBook jetton balance
-        expect(await getJettonBalance(orderBook.address)).toEqual(0n);
+        // check user jetton balance
+        expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance);
 
         // check orderBook TON balance
         console.log("orderBookTonBalanceAfter", await getFriendlyTonBalance(orderBook.address));
+    });
+
+    it('auto refund -- stopped', async () => {
+        let liquidity = 10;
+        let executionFee = 0.05;
+        
+        // get orderBook TON balance
+        console.log("orderBookTonBalance", await getFriendlyTonBalance(orderBook.address));
+
+        // stop
+        const trxResult = await TestEnv.orderBook.send(
+            deployer.getSender(),
+            {
+                value: toNano('0.1'),
+            },
+            "Stop"
+        );
+        printTransactionFees(trxResult.transactions);
+        expect(trxResult.transactions).toHaveTransaction({
+            from: deployer.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // create order
+        let createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        printTransactionFees(createResult.trxResult.transactions);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check index
+        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore);
+
+        // check order
+        expect(createResult.order).toBeNull();
+
+        // check user jetton balance
+        expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance);
+
+        // resume
+        const trxResult1 = await TestEnv.orderBook.send(
+            deployer.getSender(),
+            {
+                value: toNano('0.1'),
+            },
+            "Resume"
+        );
+        printTransactionFees(trxResult.transactions);
+        expect(trxResult.transactions).toHaveTransaction({
+            from: deployer.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // create order
+        let createResult1 = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        printTransactionFees(createResult1.trxResult.transactions);
+        expect(createResult1.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check index
+        expect(createResult1.orderIdAfter).toEqual(createResult1.orderIdBefore + 1n);
+
+        // check order
+        expect(createResult1.order).not.toBeNull();
+
+        // check orderbook jetton balance
+        expect(createResult1.balanceAfter.orderBookJettonBalance).toEqual(toJettonUnits(liquidity));
     });
 
     it('should create increase LP order', async () => {

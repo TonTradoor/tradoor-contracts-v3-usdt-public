@@ -157,22 +157,22 @@ tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int, 
 tuple $TokenConfig$_load_opt(cell cl) inline;
 
 ;; $LPPosition$_store
-builder $LPPosition$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref;
+builder $LPPosition$_store(builder build_0, (int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $LPPosition$_store_cell
-cell $LPPosition$_store_cell((int, int, int, int, int, int) v) inline;
+cell $LPPosition$_store_cell((int, int, int, int, int, int, int) v) inline;
 
 ;; $LPPosition$_not_null
-((int, int, int, int, int, int)) $LPPosition$_not_null(tuple v) inline;
+((int, int, int, int, int, int, int)) $LPPosition$_not_null(tuple v) inline;
 
 ;; $LPPosition$_store_opt
 cell $LPPosition$_store_opt(tuple v) inline;
 
 ;; $LPPosition$_load
-(slice, ((int, int, int, int, int, int))) $LPPosition$_load(slice sc_0) inline_ref;
+(slice, ((int, int, int, int, int, int, int))) $LPPosition$_load(slice sc_0) inline_ref;
 
 ;; $LPPosition$_as_optional
-tuple $LPPosition$_as_optional((int, int, int, int, int, int) v) inline;
+tuple $LPPosition$_as_optional((int, int, int, int, int, int, int) v) inline;
 
 ;; $LPPosition$_load_opt
 tuple $LPPosition$_load_opt(cell cl) inline;
@@ -310,7 +310,7 @@ tuple $TokenConfig$_to_opt_tuple(tuple v) inline;
 tuple $TokenConfig$_to_opt_external(tuple v) inline;
 
 ;; $LPPosition$_to_tuple
-tuple $LPPosition$_to_tuple(((int, int, int, int, int, int)) v) inline;
+tuple $LPPosition$_to_tuple(((int, int, int, int, int, int, int)) v) inline;
 
 ;; $LPPosition$_to_opt_tuple
 tuple $LPPosition$_to_opt_tuple(tuple v) inline;
@@ -408,8 +408,8 @@ _ $UpdatePriceParam$_get_price((int, int) v) inline;
 ;; $Pool$_fun_exceedGas
 ((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell), int) $Pool$_fun_exceedGas((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell) $self, int $orderType) impure inline_ref;
 
-;; $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime
-((int, int, int, int, int, int)) $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime(int positionId, int liquidity, int bonus, int realizedFundingFee, int entryFundingFeeGrowth, int unlockTime) inline;
+;; $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_openTime_unlockTime
+((int, int, int, int, int, int, int)) $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_openTime_unlockTime(int positionId, int liquidity, int bonus, int realizedFundingFee, int entryFundingFeeGrowth, int openTime, int unlockTime) inline;
 
 ;; $SendParameters$_constructor_to_value_bounce_mode_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body(slice to, int value, int bounce, int mode, cell body) inline;

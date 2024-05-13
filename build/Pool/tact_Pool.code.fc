@@ -51,9 +51,9 @@
 ((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell), ()) $Pool$_fun_increaseLPPosition((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell) $self, int $trxId, int $orderId, slice $account, int $liquidityDelta) impure inline_ref {
     var (($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates)) = $self;
     tuple $lpPositionOpt = $LPPosition$_load_opt(__tact_dict_get_slice_cell($self'lpPositions, 267, $account));
-    var ($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'unlockTime) = $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime(0, 0, 0, 0, 0, 0);
+    var ($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'openTime, $lpPosition'unlockTime) = $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_openTime_unlockTime(0, 0, 0, 0, 0, 0, 0);
     if ((~ null?($lpPositionOpt))) {
-        ($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'unlockTime) = $LPPosition$_not_null($lpPositionOpt);
+        ($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'openTime, $lpPosition'unlockTime) = $LPPosition$_not_null($lpPositionOpt);
     } else {
         $lpPosition'positionId = $self'lpPositionIndexNext;
         $self'lpPositionIndexNext = ($self'lpPositionIndexNext + 1);
@@ -74,8 +74,9 @@
     $lpPosition'liquidity = ($lpPosition'liquidity + $liquidityDelta);
     $lpPosition'realizedFundingFee = $lpPosition'realizedFundingFee + $realizedFundingFee;
     $lpPosition'entryFundingFeeGrowth = $self'globalLPFundingFeeGrowth;
+    $lpPosition'openTime = now();
     $lpPosition'unlockTime = (now() + $self'lpLockTime);
-    $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_cell(($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'unlockTime)));
+    $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_cell(($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'openTime, $lpPosition'unlockTime)));
     $self'globalLPFund = ($self'globalLPFund + $liquidityDelta);
     $self'globalLPLiquidity = ($self'globalLPLiquidity + $liquidityDelta);
     int $msgValue = ($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates)~$Pool$_fun_exceedGas(1);
@@ -88,7 +89,7 @@
     var (($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates)) = $self;
     tuple $lpPositionOpt = $LPPosition$_load_opt(__tact_dict_get_slice_cell($self'lpPositions, 267, $account));
     throw_unless(5238, (~ null?($lpPositionOpt)));
-    var ($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'unlockTime) = $LPPosition$_not_null($lpPositionOpt);
+    var ($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'openTime, $lpPosition'unlockTime) = $LPPosition$_not_null($lpPositionOpt);
     throw_unless(31425, ($lpPosition'unlockTime <= now()));
     if (($lpPosition'liquidity < $liquidityDelta)) {
         $liquidityDelta = $lpPosition'liquidity;
@@ -98,9 +99,13 @@
     int $receive = 0;
     int $bonus = 0;
     if (($globalNetLP >= $self'globalLPLiquidity)) {
-        int $n = (((now() - $lpPosition'unlockTime) + 86400) / 86400);
+        int $n = ((now() - $lpPosition'openTime) / 86400);
+        __tact_nop();
+        __tact_nop();
         if (($lpPosition'bonus == 0)) {
             $bonus = (((($liquidityDelta * $self'lpRemoveBonusFactor) * ($globalNetLP - $self'globalLPLiquidity)) * min($n, 100)) / (($self'globalLPLiquidity * 1000) * 1000000000));
+            __tact_nop();
+            __tact_nop();
         } else {
             int $bonus1 = (($liquidityDelta * ($globalNetLP - $self'globalLPLiquidity)) / $self'globalLPLiquidity);
             int $bonus2 = $lpPosition'bonus;
@@ -122,7 +127,7 @@
     $lpPosition'liquidity = $lpPosition'liquidity - $liquidityDelta;
     $lpPosition'bonus = $lpPosition'bonus - min($lpPosition'bonus, $bonus);
     if (( (($lpPosition'liquidity > 0)) ? (true) : (($lpPosition'bonus > 0)) )) {
-        $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_cell(($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'unlockTime)));
+        $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_cell(($lpPosition'positionId, $lpPosition'liquidity, $lpPosition'bonus, $lpPosition'realizedFundingFee, $lpPosition'entryFundingFeeGrowth, $lpPosition'openTime, $lpPosition'unlockTime)));
     } else {
         $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_opt(null()));
     }
@@ -840,7 +845,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmakPGZKtzSbEFoLXZgYJ9JUX1Rnv3PMU8WuUXkCdpkQXo";
+    return "ipfs://QmX7qNnsRRWcazjmq74zeduWkwUWo7YHa5pgzhXuTYeU9m";
 }
 
 _ lazy_deployment_completed() method_id {

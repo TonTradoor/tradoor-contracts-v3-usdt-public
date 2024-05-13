@@ -71,10 +71,14 @@ export async function getAllBalance() {
         compensatorTonBalance: await getTonBalance(TestEnv.compensator.address),
         user0TonBalance: await getTonBalance(TestEnv.user0.address),
         user1TonBalance: await getTonBalance(TestEnv.user1.address),
+        user2TonBalance: await getTonBalance(TestEnv.user2.address),
+        user3TonBalance: await getTonBalance(TestEnv.user3.address),
         orderBookJettonBalance: await getJettonBalance(TestEnv.orderBook.address),
         poolJettonBalance: await getJettonBalance(TestEnv.pool.address),
         user0JettonBalance: await getJettonBalance(TestEnv.user0.address),
         user1JettonBalance: await getJettonBalance(TestEnv.user1.address),
+        user2JettonBalance: await getJettonBalance(TestEnv.user2.address),
+        user3JettonBalance: await getJettonBalance(TestEnv.user3.address),
         claimExecutorJettonBalance: await getJettonBalance(TestEnv.claimExecutor.address),
     }
 }

@@ -644,30 +644,31 @@ tuple $TokenConfig$_to_opt_external(tuple v) inline {
 
 ;;
 ;; Type: LPPosition
-;; TLB: _ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 unlockTime:int257 = LPPosition
+;; TLB: _ positionId:uint64 liquidity:int257 bonus:int257 realizedFundingFee:int257 entryFundingFeeGrowth:int257 openTime:int257 unlockTime:int257 = LPPosition
 ;;
 
-builder $LPPosition$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref {
-    var (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'unlockTime) = v;
+builder $LPPosition$_store(builder build_0, (int, int, int, int, int, int, int) v) inline_ref {
+    var (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'openTime, v'unlockTime) = v;
     build_0 = build_0.store_uint(v'positionId, 64);
     build_0 = build_0.store_int(v'liquidity, 257);
     build_0 = build_0.store_int(v'bonus, 257);
     build_0 = build_0.store_int(v'realizedFundingFee, 257);
     var build_1 = begin_cell();
     build_1 = build_1.store_int(v'entryFundingFeeGrowth, 257);
+    build_1 = build_1.store_int(v'openTime, 257);
     build_1 = build_1.store_int(v'unlockTime, 257);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $LPPosition$_store_cell((int, int, int, int, int, int) v) inline {
+cell $LPPosition$_store_cell((int, int, int, int, int, int, int) v) inline {
     return $LPPosition$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int, int, int, int)) $LPPosition$_not_null(tuple v) inline {
+((int, int, int, int, int, int, int)) $LPPosition$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'positionId, int vvv'liquidity, int vvv'bonus, int vvv'realizedFundingFee, int vvv'entryFundingFeeGrowth, int vvv'unlockTime) = __tact_tuple_destroy_6(v);
-    return (vvv'positionId, vvv'liquidity, vvv'bonus, vvv'realizedFundingFee, vvv'entryFundingFeeGrowth, vvv'unlockTime);
+    var (int vvv'positionId, int vvv'liquidity, int vvv'bonus, int vvv'realizedFundingFee, int vvv'entryFundingFeeGrowth, int vvv'openTime, int vvv'unlockTime) = __tact_tuple_destroy_7(v);
+    return (vvv'positionId, vvv'liquidity, vvv'bonus, vvv'realizedFundingFee, vvv'entryFundingFeeGrowth, vvv'openTime, vvv'unlockTime);
 }
 
 cell $LPPosition$_store_opt(tuple v) inline {
@@ -677,20 +678,21 @@ cell $LPPosition$_store_opt(tuple v) inline {
     return $LPPosition$_store_cell($LPPosition$_not_null(v));
 }
 
-(slice, ((int, int, int, int, int, int))) $LPPosition$_load(slice sc_0) inline_ref {
+(slice, ((int, int, int, int, int, int, int))) $LPPosition$_load(slice sc_0) inline_ref {
     var v'positionId = sc_0~load_uint(64);
     var v'liquidity = sc_0~load_int(257);
     var v'bonus = sc_0~load_int(257);
     var v'realizedFundingFee = sc_0~load_int(257);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'entryFundingFeeGrowth = sc_1~load_int(257);
+    var v'openTime = sc_1~load_int(257);
     var v'unlockTime = sc_1~load_int(257);
-    return (sc_0, (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'unlockTime));
+    return (sc_0, (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'openTime, v'unlockTime));
 }
 
-tuple $LPPosition$_as_optional((int, int, int, int, int, int) v) inline {
-    var (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'unlockTime) = v;
-    return __tact_tuple_create_6(v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'unlockTime);
+tuple $LPPosition$_as_optional((int, int, int, int, int, int, int) v) inline {
+    var (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'openTime, v'unlockTime) = v;
+    return __tact_tuple_create_7(v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'openTime, v'unlockTime);
 }
 
 tuple $LPPosition$_load_opt(cell cl) inline {
@@ -701,9 +703,9 @@ tuple $LPPosition$_load_opt(cell cl) inline {
     return $LPPosition$_as_optional(sc~$LPPosition$_load());
 }
 
-tuple $LPPosition$_to_tuple(((int, int, int, int, int, int)) v) inline {
-    var (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'unlockTime) = v;
-    return __tact_tuple_create_6(v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'unlockTime);
+tuple $LPPosition$_to_tuple(((int, int, int, int, int, int, int)) v) inline {
+    var (v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'openTime, v'unlockTime) = v;
+    return __tact_tuple_create_7(v'positionId, v'liquidity, v'bonus, v'realizedFundingFee, v'entryFundingFeeGrowth, v'openTime, v'unlockTime);
 }
 
 tuple $LPPosition$_to_opt_tuple(tuple v) inline {
@@ -711,13 +713,13 @@ tuple $LPPosition$_to_opt_tuple(tuple v) inline {
     return $LPPosition$_to_tuple($LPPosition$_not_null(v)); 
 }
 
-((int, int, int, int, int, int)) $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_unlockTime(int positionId, int liquidity, int bonus, int realizedFundingFee, int entryFundingFeeGrowth, int unlockTime) inline {
-    return (positionId, liquidity, bonus, realizedFundingFee, entryFundingFeeGrowth, unlockTime);
+((int, int, int, int, int, int, int)) $LPPosition$_constructor_positionId_liquidity_bonus_realizedFundingFee_entryFundingFeeGrowth_openTime_unlockTime(int positionId, int liquidity, int bonus, int realizedFundingFee, int entryFundingFeeGrowth, int openTime, int unlockTime) inline {
+    return (positionId, liquidity, bonus, realizedFundingFee, entryFundingFeeGrowth, openTime, unlockTime);
 }
 
 ;;
 ;; Type: LPPositionData
-;; TLB: _ lpPosition:Maybe LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,unlockTime:int257} globalLPFund:int257 globalLPLiquidity:int257 globalLPFundingFeeGrowth:int257 globalLPUnrealizedPnl:int257 = LPPositionData
+;; TLB: _ lpPosition:Maybe LPPosition{positionId:uint64,liquidity:int257,bonus:int257,realizedFundingFee:int257,entryFundingFeeGrowth:int257,openTime:int257,unlockTime:int257} globalLPFund:int257 globalLPLiquidity:int257 globalLPFundingFeeGrowth:int257 globalLPUnrealizedPnl:int257 = LPPositionData
 ;;
 
 (tuple, int, int, int, int) $LPPositionData$_to_external(((tuple, int, int, int, int)) v) inline {

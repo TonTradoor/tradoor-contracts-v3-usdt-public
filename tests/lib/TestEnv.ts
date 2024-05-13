@@ -20,6 +20,8 @@ export class TestEnv {
     static claimExecutor: SandboxContract<TreasuryContract>;
     static user0: SandboxContract<TreasuryContract>;
     static user1: SandboxContract<TreasuryContract>;
+    static user2: SandboxContract<TreasuryContract>;
+    static user3: SandboxContract<TreasuryContract>;
     static orderBook: SandboxContract<OrderBook>;
     static pool: SandboxContract<Pool>;
     static jetton: SandboxContract<MockJetton>;
@@ -49,6 +51,8 @@ export class TestEnv {
 
         TestEnv.user0 = await TestEnv.blockchain.treasury('user0');
         TestEnv.user1 = await TestEnv.blockchain.treasury('user1');
+        TestEnv.user2 = await TestEnv.blockchain.treasury('user2');
+        TestEnv.user3 = await TestEnv.blockchain.treasury('user3');
 
         // deploy order book
         const orderBookDeployResult = await TestEnv.orderBook.send(

@@ -211,6 +211,7 @@ contract Pool with Deployable, Ownable {
                 bonus: 0,
                 realizedFundingFee: 0,
                 entryFundingFeeGrowth: 0,
+                openTime: 0,
                 unlockTime: 0
             };
         if (lpPositionOpt != null) {
@@ -247,6 +248,7 @@ contract Pool with Deployable, Ownable {
         lpPosition.liquidity = lpPosition.liquidity + liquidityDelta;
         lpPosition.realizedFundingFee += realizedFundingFee;
         lpPosition.entryFundingFeeGrowth = self.globalLPFundingFeeGrowth;
+        lpPosition.openTime = now();
         lpPosition.unlockTime = now() + self.lpLockTime;
 
         // set position
@@ -315,11 +317,16 @@ contract Pool with Deployable, Ownable {
         let bonus: Int = 0;
 
         if (globalNetLP >= self.globalLPLiquidity) {
-            let n: Int = ((now() - lpPosition.unlockTime) + DAY) / DAY;
+            let n: Int = (now() - lpPosition.openTime) / DAY;
+            dump("decreaseLPPosition");
+            dump(n);
 
             if (lpPosition.bonus == 0) {
                 // bonus = liquidity * r（x-1）* min(n，100）* 0.1%
                 bonus = liquidityDelta * self.lpRemoveBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (self.globalLPLiquidity * 1000 * PERCENTAGE_BASIS_POINT);
+                dump(globalNetLP - self.globalLPLiquidity);
+                dump(bonus);
+
             } else {
                 let bonus1: Int = liquidityDelta * (globalNetLP - self.globalLPLiquidity) / self.globalLPLiquidity;
                 let bonus2: Int = lpPosition.bonus;
