@@ -40,7 +40,6 @@
 
 ((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), int) $OrderBook$_fun_exceedGas((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, int $orderType, int $executionFeeDelta, int $executionMultiple, int $transferJetton) impure inline_ref {
     var (($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)) = $self;
-    __tact_nop();
     int $tonBalanceBeforeMsg = (((__tact_my_balance() - $self'totalExecutionFee) + $executionFeeDelta) - $Context$_get_value(__tact_context_get()));
     $tonBalanceBeforeMsg = max(0, $tonBalanceBeforeMsg);
     int $storageFee = ($self'minTonsForStorage - min($tonBalanceBeforeMsg, $self'minTonsForStorage));
@@ -52,7 +51,6 @@
 ((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int), ()) $OrderBook$_fun_refundExceedTon((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, int $orderType, slice $to, int $executionFeeDelta, int $executionMultiple, int $transferJetton) impure inline_ref {
     var (($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)) = $self;
     int $refundValue = ($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_exceedGas($orderType, $executionFeeDelta, $executionMultiple, $transferJetton);
-    __tact_nop();
     if (($refundValue > 0)) {
         $global_send($SendParameters$_constructor_to_bounce_value_mode($to, true, $refundValue, 2));
     }
@@ -531,7 +529,6 @@
 (((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int)), ()) $OrderBook$_internal_binary_UpdatePerpPositionSuccess((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $self, (int, int, int) $msg) impure inline {
     var ($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext) = $self;
     var ($msg'orderId, $msg'receive, $msg'trxId) = $msg;
-    __tact_nop();
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(41207, ( __tact_slice_eq_bits($self'pool, __tact_context_get_sender()) ));
     tuple $orderOpt = $PerpPositionOrder$_load_opt(__tact_dict_get_int_cell($self'perpPositionOrders, 257, $msg'orderId));
@@ -572,7 +569,6 @@
         $self'totalExecutionFee = $self'totalExecutionFee - $order'executionFee;
     }
     ($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_refundExceedTon(2, __tact_not_null($order'lastOperator), (- $order'executionFee), $executionFeeMultiple, ($msg'receive > 0));
-    __tact_nop();
     return (($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
 }
 

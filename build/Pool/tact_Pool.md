@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 14708 bytes
+BOC Size: 14711 bytes
 
 # Types
 Total Types: 37
@@ -199,6 +199,7 @@ Argument: account
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
+1456: price must not zero
 1644: not reach trigger price
 5238: position not exist
 9429: send gas not enough

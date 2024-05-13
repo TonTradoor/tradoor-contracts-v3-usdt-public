@@ -52,6 +52,10 @@ contract Pool with Deployable, Ownable {
     prices: map<Int, Int>; // tokenId => price
     prevPremiumRates: map<Int, Int>; // tokenId => premiumRate
 
+    /**
+     * Initializes the pool contract.
+     * @param deployId The deployment ID.
+     */
     init(deployId: Int) {
         self.owner = sender();
         self.orderBook = newAddress(0, 0);
@@ -59,10 +63,11 @@ contract Pool with Deployable, Ownable {
         self.executors.set(sender(), true);
     }
 
-    // receive TON coin transfers to the contract
-    receive() {}
-
     // ======================================================== Admin ================================================================ //
+    /**
+     * @dev Receive function to update the configuration of the pool contract.
+     * @param msg The UpdateConfig struct containing the new configuration parameters.
+     */
     receive(msg: UpdateConfig) {
         self.requireOwner();
 
@@ -93,6 +98,11 @@ contract Pool with Deployable, Ownable {
         });
     }
 
+    /**
+     * Updates the token configuration for a specific token ID.
+     * 
+     * @param msg The UpdateTokenConfig message containing the new token configuration.
+     */
     receive(msg: UpdateTokenConfig) {
         self.requireOwner();
 
@@ -138,6 +148,10 @@ contract Pool with Deployable, Ownable {
         });
     }
 
+    /**
+     * @dev Receive function to claim protocol trading fee.
+     * @param msg The ClaimProtocolFee message containing the transaction ID, fee receiver, and amount.
+     */
     receive(msg: ClaimProtocolFee) {
         require(sender() == self.claimExecutor, "invalid sender");
 
@@ -157,6 +171,17 @@ contract Pool with Deployable, Ownable {
         }
     }
 
+    /**
+     * receive TON coin transfers to the contract
+     */
+    receive() {}
+
+    /**
+     * Retrieves the configuration data for the pool.
+     * 
+     * @param executor The address of the executor.
+     * @return The ConfigData object containing the pool configuration.
+     */
     get fun configData(executor: Address?): ConfigData {
         let isExecutor: Bool? = null;
         if (executor != null) {
@@ -176,14 +201,32 @@ contract Pool with Deployable, Ownable {
         };
     }
 
+    /**
+     * Retrieves the configuration of a token based on its ID.
+     * 
+     * @param tokenId The ID of the token.
+     * @return The TokenConfig object associated with the token ID, or null if not found.
+     */
     get fun tokenConfig(tokenId: Int): TokenConfig? {
         return self.tokenConfigs.get(tokenId);
     }
 
+    /**
+     * Retrieves the price data for a given token ID.
+     * 
+     * @param tokenId The ID of the token.
+     * @return The price data associated with the token ID, or `null` if no price data is found.
+     */
     get fun priceData(tokenId: Int): Int? {
         return self.prices.get(tokenId);
     }
 
+    /**
+     * Calculates the gas fee for a given order type.
+     * 
+     * @param orderType The type of the order (0 for LP order, 1 for perpetual order).
+     * @return The gas fee for the order.
+     */
     fun exceedGas(orderType: Int): Int {
         let tonBalanceBeforeMsg: Int = myBalance() - context().value;
         let storageFee: Int = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
@@ -193,6 +236,10 @@ contract Pool with Deployable, Ownable {
     }
 
     // ======================================================== LP ================================================================ //
+    /**
+     * @dev Receive function to update LP position based on the received message.
+     * @param msg The UpdateLPPosition message containing the necessary information.
+     */
     receive(msg: UpdateLPPosition) {
         require(sender() == self.orderBook, "invalid sender");
 
@@ -204,6 +251,14 @@ contract Pool with Deployable, Ownable {
         }
     }
 
+    /**
+     * Increases the LP (Liquidity Provider) position by adding liquidity to the pool.
+     * 
+     * @param trxId The transaction ID.
+     * @param orderId The order ID.
+     * @param account The address of the LP account.
+     * @param liquidityDelta The change in liquidity to be added to the LP position.
+     */
     fun increaseLPPosition(trxId: Int, orderId: Int, account: Address, liquidityDelta: Int) {
         // get position
         let lpPositionOpt: LPPosition? = self.lpPositions.get(account);
@@ -230,11 +285,6 @@ contract Pool with Deployable, Ownable {
         if (globalNetLP < 0) {
             globalNetLP = 0;
         }
-        // dump("globalNetLP");
-        // dump(self.globalLPFund);
-        // dump(self.globalLPUnrealizedPnl);
-        // dump(globalNetLP);
-        // dump(self.globalLPLiquidity);
         let bonus: Int = 0;
         if (globalNetLP < self.globalLPLiquidity) {
             // bonus = b + s (1 - x) * liquidity
@@ -296,6 +346,14 @@ contract Pool with Deployable, Ownable {
         }.toCell());
     }
 
+    /**
+     * Decreases the liquidity position of an LP (Liquidity Provider) account.
+     * 
+     * @param trxId The transaction ID.
+     * @param orderId The order ID.
+     * @param account The LP account address.
+     * @param liquidityDelta The amount of liquidity to decrease.
+     */
     fun decreaseLPPosition(trxId: Int, orderId: Int, account: Address, liquidityDelta: Int) {
         // get position
         let lpPositionOpt: LPPosition? = self.lpPositions.get(account);
@@ -321,15 +379,10 @@ contract Pool with Deployable, Ownable {
 
         if (globalNetLP >= self.globalLPLiquidity) {
             let n: Int = (now() - lpPosition.openTime) / DAY;
-            dump("decreaseLPPosition");
-            dump(n);
 
             if (lpPosition.bonus == 0) {
                 // bonus = liquidity * r（x-1）* min(n，100）* 0.1%
                 bonus = liquidityDelta * self.lpRemoveBonusFactor * (globalNetLP - self.globalLPLiquidity) * min(n, 100) / (self.globalLPLiquidity * 1000 * PERCENTAGE_BASIS_POINT);
-                dump(globalNetLP - self.globalLPLiquidity);
-                dump(bonus);
-
             } else {
                 let bonus1: Int = liquidityDelta * (globalNetLP - self.globalLPLiquidity) / self.globalLPLiquidity;
                 let bonus2: Int = lpPosition.bonus;
@@ -403,6 +456,12 @@ contract Pool with Deployable, Ownable {
         }.toCell());
     }
 
+    /**
+     * Retrieves the LP position data for a given account.
+     * 
+     * @param account The address of the account.
+     * @return LPPositionData The LP position data.
+     */
     get fun lpPosition(account: Address?): LPPositionData {
         let lpPosition: LPPosition? = null;
         if (account != null) {
@@ -418,8 +477,13 @@ contract Pool with Deployable, Ownable {
     }
 
     // ============================ Perp ================================ //
+    /**
+     * @dev This function is called when a `UpdatePerpPosition` message is received.
+     * It updates the perpetual position based on the provided parameters.
+     * 
+     * @param msg The `UpdatePerpPosition` message containing the necessary information.
+     */
     receive(msg: UpdatePerpPosition) {
-        // dump("UpdatePerpPosition");
         require(sender() == self.orderBook, "invalid sender");
 
         // trade price
@@ -453,8 +517,21 @@ contract Pool with Deployable, Ownable {
         }
     }
 
+    /**
+     * Increases the perpetual position for a given account and token.
+     * 
+     * @param trxId The transaction ID.
+     * @param orderId The order ID.
+     * @param opType The operation type.
+     * @param account The account address.
+     * @param tokenId The token ID.
+     * @param isLong Indicates whether the position is long or short.
+     * @param marginDelta The change in margin.
+     * @param sizeDelta The change in size.
+     * @param tradePrice The trade price.
+     * @param lpReceivedFundingFee The funding fee received by the liquidity provider.
+     */
     fun increasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
-        // dump("increasePerpPosition");
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -625,15 +702,12 @@ contract Pool with Deployable, Ownable {
         }
         accountPerpPosition.positions.set(account, directionPerpPosition);
         self.perpPositions.set(tokenId, accountPerpPosition);
-
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
-
 
         // exceed gas
         let msgValue: Int = self.exceedGas(ORDER_TYPE_PERP);
 
-        // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
         // send update success msg
         send(SendParameters{
@@ -684,9 +758,22 @@ contract Pool with Deployable, Ownable {
             lpRealizedPnl: lpRealizedPnl,
             lpReceivedFundingFee: lpReceivedFundingFee
         }.toCell());
-        // dump("increasePerpPosition done");
     }
 
+    /**
+     * Decreases the perpetual position for a given account and token.
+     * 
+     * @param trxId The transaction ID.
+     * @param orderId The order ID.
+     * @param opType The operation type.
+     * @param account The account address.
+     * @param tokenId The token ID.
+     * @param isLong Indicates whether the position is long or short.
+     * @param marginDelta The change in margin.
+     * @param sizeDelta The change in size.
+     * @param tradePrice The trade price.
+     * @param lpReceivedFundingFee The LP received funding fee.
+     */
     fun decreasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
@@ -775,8 +862,6 @@ contract Pool with Deployable, Ownable {
                 globalLPPosition.entryPrice = 0;
             }
         }
-        // dump(sizeRemaining);
-        // dump(isLong);
         // lp entry price
         if (sizeRemaining > 0) {
             globalLPPosition.entryPrice = (globalLPPosition.netSize * globalLPPosition.entryPrice + sizeRemaining * tradePrice) / (globalLPPosition.netSize + sizeRemaining);
@@ -883,7 +968,6 @@ contract Pool with Deployable, Ownable {
         // exceed gas
         let msgValue: Int = self.exceedGas(ORDER_TYPE_PERP);
 
-        // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
         // send update success msg
         send(SendParameters{
@@ -938,8 +1022,18 @@ contract Pool with Deployable, Ownable {
         }.toCell());
     }
 
+    /**
+     * Liquidates a perpetual position.
+     * 
+     * @param trxId The transaction ID.
+     * @param orderId The order ID.
+     * @param account The account address.
+     * @param tokenId The token ID.
+     * @param isLong Indicates if the position is long.
+     * @param tradePrice The trade price.
+     * @param lpReceivedFundingFee The funding fee received by the liquidity provider.
+     */
     fun liquidatePerpPosition(trxId: Int, orderId: Int, account: Address, tokenId: Int, isLong: Bool, tradePrice: Int, lpReceivedFundingFee: Int) {
-        // dump("liquidatePerpPosition");
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -1106,7 +1200,6 @@ contract Pool with Deployable, Ownable {
         // exceed gas
         let msgValue: Int = self.exceedGas(ORDER_TYPE_PERP);
 
-        // dump(msgValue);
         require(msgValue > 0, "send gas not enough");
         // send update success msg
         send(SendParameters{
@@ -1161,6 +1254,13 @@ contract Pool with Deployable, Ownable {
         }.toCell());
     }
 
+    /**
+     * Retrieves the perpetual position data for a given token ID and account.
+     * 
+     * @param tokenId The ID of the token.
+     * @param account The account address. If null, the global position data will be returned.
+     * @return The perpetual position data, including global values and specific position data.
+     */
     get fun perpPosition(tokenId: Int, account: Address?): PerpPositionData {
         // get position
         let perpPosition: DirectionPerpPosition? = null;
@@ -1181,9 +1281,12 @@ contract Pool with Deployable, Ownable {
         };
     }
 
-    // ============================ price ================================ //
+    // ============================ Price & Funding fee ================================ //
+    /**
+     * @dev Receive function to update the price and perform funding fee calculations for multiple tokens.
+     * @param msg The UpdatePrice message containing the prices for the tokens.
+     */
     receive(msg: UpdatePrice) {
-        dump("update price");
         // check sender
         let isExecutor: Bool = false;
         let isExecutorOpt: Bool? = self.executors.get(sender());
@@ -1238,10 +1341,16 @@ contract Pool with Deployable, Ownable {
         });
     }
 
-    // ============================ private function ================================ //
+    /**
+     * Updates the price and funding fee for a given token.
+     * 
+     * @param tokenId The ID of the token.
+     * @param price The new price of the token.
+     * @param updateValue Whether to update the value of the token.
+     * @return The result of updating the funding rate.
+     */    
     fun updatePriceAndFundingFee(tokenId: Int, price: Int, updateValue: Bool): UpdateFundingRateResult {
-        // dump("updatePriceAndFundingFee");
-        // TODO check price offset
+        require(price > 0, "price must not zero");
         self.prices.set(tokenId, price);
 
         let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
@@ -1259,7 +1368,6 @@ contract Pool with Deployable, Ownable {
         if (updateValue) {
             // update lp pnl
             let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(tokenId);
-            dump(globalLPPositionOpt == null);
             if (globalLPPositionOpt != null) {
                 let globalLPPosition: GlobalLPPosition = globalLPPositionOpt!!;
                 // unrealized pnl
@@ -1269,8 +1377,6 @@ contract Pool with Deployable, Ownable {
                 } else {
                     unrealizedPnl = globalLPPosition.netSize * (globalLPPosition.entryPrice - price) / PRICE_DECIMAL_FACTOR;
                 }
-                // dump("update unrealized pnl");
-                // dump(unrealizedPnl);
                 self.globalLPUnrealizedPnl = self.globalLPUnrealizedPnl - globalLPPosition.unrealizedPnl + unrealizedPnl;
                 globalLPPosition.unrealizedPnl = unrealizedPnl;
                 self.globalLPPositions.set(tokenId, globalLPPosition);
@@ -1309,11 +1415,9 @@ contract Pool with Deployable, Ownable {
         if (maxSamplingTime < timestamp) {
             timestamp = maxSamplingTime;
         }
-        // dump(timestamp);
 
         let lastSamplingTime: Int = lastAdjustFundingRateTime + sample.sampleCount * SAMPLE_PREMIUM_RATE_INTERVAL;
         let timeDelta: Int = timestamp - lastSamplingTime;
-        // dump(timeDelta);
         if (timeDelta < SAMPLE_PREMIUM_RATE_INTERVAL) {
             // no need to update
             return UpdateFundingRateResult{
@@ -1332,17 +1436,10 @@ contract Pool with Deployable, Ownable {
         let prevPremiumRate: Int = self.prevPremiumRates.get(tokenId) == null ? 0 : self.prevPremiumRates.get(tokenId)!!;
         let cumulativePremiumRate: Int = prevPremiumRate * ((sample.sampleCount + 1 + sampleCountAfter) * sampleCountDelta / 2 );
 
-        dump(prevPremiumRate);
-        dump(sample.sampleCount);
-        dump(sampleCountAfter);
-        dump(sample.cumulativePremiumRate);
         cumulativePremiumRate = sample.cumulativePremiumRate + cumulativePremiumRate;
-        dump("cumulativePremiumRate");
-        dump(cumulativePremiumRate);
 
         // sample count < 720, no need update funding rate
         if (sampleCountAfter < REQUIRED_SAMPLE_COUNT) {
-            // dump("update funding fee sample");
             sample.cumulativePremiumRate = cumulativePremiumRate;
             sample.sampleCount = sampleCountAfter;
             self.globalFundingRateSamples.set(tokenId, sample);
@@ -1356,7 +1453,6 @@ contract Pool with Deployable, Ownable {
 
         // average PR
         let premiumRateAvg: Int = cumulativePremiumRate / PREMIUM_RATE_AVG_DENOMINATOR;
-        dump(premiumRateAvg);
 
         // clamp (IR - avgPR) : -0.05%/8 <= (IR - avgPR) <= 0.05%/8
         let rateDelta: Int = tokenConfig.interestRate - premiumRateAvg;
@@ -1379,7 +1475,6 @@ contract Pool with Deployable, Ownable {
         } else {
             clampedFundingRateDelta = fundingRateDelta;
         }
-        dump(clampedFundingRateDelta);
 
         sample.lastAdjustFundingRateTime = maxSamplingTime;
         sample.cumulativePremiumRate = 0;

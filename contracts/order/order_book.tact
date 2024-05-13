@@ -51,6 +51,10 @@ contract OrderBook with Deployable, Resumable {
     compensateIndexNext: Int as uint64 = 1;
 
 
+    /**
+     * Initializes the order book contract.
+     * @param deployId The deployment ID.
+     */
     init(deployId: Int) {
         self.owner = sender();
         self.stopped = false;
@@ -61,6 +65,10 @@ contract OrderBook with Deployable, Resumable {
     }
 
     // ======================================================== Admin ================================================================ //
+    /**
+     * @dev Receive function to update the configuration parameters of the order book contract.
+     * @param msg The UpdateConfig message containing the new configuration values.
+     */
     receive(msg: UpdateConfig) {
         self.requireOwner();
         // auth
@@ -95,6 +103,12 @@ contract OrderBook with Deployable, Resumable {
         });
     }
 
+    /**
+     * Retrieves the configuration data for the order book.
+     * 
+     * @param executor The address of the executor.
+     * @return The ConfigData object containing the configuration data.
+     */
     get fun configData(executor: Address?): ConfigData {
         let isExecutor: Bool? = null;
         if (executor != null) {
@@ -118,16 +132,23 @@ contract OrderBook with Deployable, Resumable {
         };
     }
 
-    // ======================================================== Token ================================================================ //
-
-    // receive TON coin transfers to the contract
+    // ======================================================== Token ======================================================== //
+    /**
+     * receive TON coin transfers to the contract
+     */
     receive() {}
 
     /**
-    * @dev This function is called when the contract receives a TokenNotification message.
-    * It checks the token and handles the corresponding operation code.
-    * @param msg The TokenNotification message received.
-    */
+     * This function is the receive function of the OrderBook contract.
+     * It handles incoming TokenNotification messages and performs various operations based on the message's payload.
+     * If the sender is not the contract's USDT wallet, it refunds the token to the sender.
+     * If the contract is stopped, it refunds the token and sends a bounce message to the sender indicating that order creation is stopped.
+     * If the operation code is OP_CREATE_INCREASE_LP_POSITION_ORDER, it handles the creation of an increase LP position order.
+     * If the operation code is OP_CREATE_INCREASE_PERP_POSITION_ORDER, it handles the creation of an increase perpetual position order.
+     * If the operation code is not recognized, it refunds the token to the sender.
+     *
+     * @param msg The TokenNotification message received.
+     */
     receive(msg: TokenNotification) {
         // just refund other token
         if (sender() != self.usdtWallet) {
@@ -206,6 +227,14 @@ contract OrderBook with Deployable, Resumable {
         }
     }
 
+    /**
+     * Refunds the specified amount of jetton to the specified address.
+     * 
+     * @param queryId The ID of the query.
+     * @param amount The amount of jetton to refund.
+     * @param to The address to refund the jetton to.
+     * @param destination The optional address to specify as the response destination.
+     */
     fun refundJetton(queryId: Int, amount: Int, to: Address, destination: Address?) {
         if (amount > 0) {
             send(SendParameters{
@@ -226,26 +255,36 @@ contract OrderBook with Deployable, Resumable {
         }
     }
 
+    /**
+     * Calculates the gas cost for executing an order.
+     * 
+     * @param orderType The type of the order (0 for LP order, 1 for perpetual order).
+     * @param executionFeeDelta The change in execution fee.
+     * @param executionMultiple The execution fee multiple.
+     * @param transferJetton Indicates whether to transfer jetton.
+     * @return The gas cost for executing the order.
+     */
     fun exceedGas(orderType: Int, executionFeeDelta: Int, executionMultiple: Int, transferJetton: Bool): Int {
-        dump("exceed gas");
         let tonBalanceBeforeMsg: Int = myBalance() - self.totalExecutionFee + executionFeeDelta - context().value;
-        // dump(myBalance() - context().value);
-        // dump(tonBalanceBeforeMsg);
         tonBalanceBeforeMsg = max(0, tonBalanceBeforeMsg);
         let storageFee: Int = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
         let extraValue: Int = max(0, tonBalanceBeforeMsg - self.minTonsForStorage);
         let gasConsumption: Int = orderType == ORDER_TYPE_LP ? self.lpGasConsumption : self.perpGasConsumption;
-        // dump(storageFee);
-        // dump(extraValue);
-        // dump(gasConsumption);
         return context().value - storageFee - gasConsumption * executionMultiple + extraValue - 
             (executionFeeDelta > 0 ? executionFeeDelta : 0) - (transferJetton ? self.gasTransferJetton : 0);
     }
 
-    // transfer exceed ton
+    /**
+     * Refunds the excess ton tokens to the specified address.
+     * 
+     * @param orderType The type of the order.
+     * @param to The address to which the excess ton tokens will be refunded.
+     * @param executionFeeDelta The execution fee delta.
+     * @param executionMultiple The execution multiple.
+     * @param transferJetton A boolean value indicating whether to transfer jetton.
+     */
     fun refundExceedTon(orderType: Int, to: Address, executionFeeDelta: Int, executionMultiple: Int, transferJetton: Bool) {
         let refundValue: Int = self.exceedGas(orderType, executionFeeDelta, executionMultiple, transferJetton);
-        dump(refundValue);
         if (refundValue > 0) {
             send(SendParameters{
                 to: to,
@@ -256,13 +295,27 @@ contract OrderBook with Deployable, Resumable {
         }
     }
 
+    /**
+     * Calculates the total gas consumption for a given order type.
+     * 
+     * @param orderType The type of the order (0 for LP order, 1 for Perp order).
+     * @return The total gas consumption, including forward fee, gas consumption, and minimum tons for storage.
+     */
     fun getPoolGas(orderType: Int): Int {
         let gasConsumption: Int = orderType == ORDER_TYPE_LP ? self.poolLpGasConsumption : self.poolPerpGasConsumption;
         return context().readForwardFee() + gasConsumption + self.minTonsForStorage;
     }
 
-    // ======================================================== LP ================================================================ //
-    // Create Increase
+    // ======================================================== LP ======================================================== //
+    /**
+     * Handles the creation of an increase LP position order.
+     * 
+     * @param queryId The ID of the query.
+     * @param jettonFromAmount The amount of jetton from which the order is created.
+     * @param account The address of the account creating the order.
+     * @param executionFee The execution fee for the order.
+     * @param liquidityDelta The change in liquidity for the order.
+     */
     fun handleCreateIncreaseLPPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, liquidityDelta: Int) {
         let ctx: Context = context();
 
@@ -325,7 +378,11 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_LP, account, executionFee, 1, false);
     }
 
-    // Create Decrease
+    /**
+     * Receive function for creating a decrease LP position order.
+     * 
+     * @param msg The CreateDecreaseLPPositionOrder message containing the order details.
+     */
     receive(msg: CreateDecreaseLPPositionOrder) {
         self.requireNotStopped();
 
@@ -365,9 +422,12 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_LP, sender(), msg.executionFee, 1, false);
     }
 
-    // Cancel Increase / Decrease
-    // cancel increase => orderBook wallet => excess gas
-    // cancel decrease => excess gas
+    /**
+     * This function is called when a CancelLPPositionOrder message is received.
+     * It cancels a liquidity position order and performs various checks and operations.
+     * 
+     * @param msg The CancelLPPositionOrder message containing the order ID and other parameters.
+     */
     receive(msg: CancelLPPositionOrder) {
         let ctx: Context = context();
         // get order
@@ -432,9 +492,12 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_LP, sender(), -order.executionFee, 1, order.isIncrease);
     }
 
-    // Execute Increase / Decrease
-    // execute increase => increase position for pool => increase success / bounced => excess gas
-    // execute decrease => decrease position for pool => decrease success => orderBook wallet => excess gas
+    /**
+     * This function is called when executing an LP position order.
+     * It performs various checks and updates the order accordingly.
+     * 
+     * @param msg The ExecuteLPPositionOrder message containing the order details.
+     */
     receive(msg: ExecuteLPPositionOrder) {
         let ctx: Context = context();
 
@@ -484,8 +547,12 @@ contract OrderBook with Deployable, Resumable {
         });
     }
 
-    // increase success / bounced => excess gas
-    // decrease success => orderBook wallet => excess gas
+    /**
+     * This function is triggered when an LP position update is successful.
+     * It performs various checks and operations related to the LP position order.
+     * 
+     * @param msg The UpdateLPPositionSuccess message containing the order ID, transaction ID, and received amount.
+     */
     receive(msg: UpdateLPPositionSuccess) {
         let ctx: Context = context();
         require(sender() == self.pool, "invalid sender");
@@ -510,8 +577,6 @@ contract OrderBook with Deployable, Resumable {
             self.refundJetton(msg.trxId, msg.receive, order.account, order.lastOperator);
         }
 
-        // dump(myBalance());
-
         // transfer execution fee
         if (order.executionFee > 0) {
             send(SendParameters{
@@ -522,8 +587,6 @@ contract OrderBook with Deployable, Resumable {
             });
             self.totalExecutionFee -= order.executionFee;
         }
-
-        // dump(myBalance());
 
         // event
         emit(LPPositionOrderExecutedEvent{
@@ -538,7 +601,13 @@ contract OrderBook with Deployable, Resumable {
         }
     }
 
-    // reset order pending
+    /**
+     * This function is called when a transaction is bounced, indicating that an update to an LP position order has failed.
+     * It retrieves the LP position order associated with the bounced transaction and updates its pending status.
+     * If the order has a last operator, it sends a zero-value transaction to the last operator.
+     * 
+     * @param src The bounced transaction containing the order ID.
+     */
     bounced(src: bounced<UpdateLPPosition>) {
 
         // get order
@@ -561,7 +630,12 @@ contract OrderBook with Deployable, Resumable {
         }
     }
 
-    // ============================ Getter ================================ //
+    /**
+     * Retrieves the LPPositionOrderData for the specified order ID.
+     * 
+     * @param orderId The ID of the order to retrieve.
+     * @return The LPPositionOrderData object containing the next index and the LPPositionOrder associated with the order ID.
+     */
     get fun lpPositionOrder(orderId: Int): LPPositionOrderData {
         return LPPositionOrderData{
             lpPositionOrderIndexNext: self.lpPositionOrderIndexNext,
@@ -569,8 +643,25 @@ contract OrderBook with Deployable, Resumable {
         };
     }
 
-    // ============================ Perp ================================ //
-    // ============================ Create Increase ================================ //
+    // ======================================================== Perp ======================================================== //
+    /**
+     * Handles the creation and increase of a perpetual position order.
+     * 
+     * @param queryId The unique identifier for the order.
+     * @param jettonFromAmount The amount of jetton to be used for the order.
+     * @param account The address of the account placing the order.
+     * @param executionFee The execution fee for the order.
+     * @param isMarket A boolean indicating whether the order is a market order or a limit order.
+     * @param tokenId The ID of the token associated with the order.
+     * @param isLong A boolean indicating whether the order is a long position or a short position.
+     * @param marginDelta The change in margin for the order.
+     * @param sizeDelta The change in size for the order.
+     * @param triggerPrice The trigger price for the order.
+     * @param tpSize The take profit size for the order.
+     * @param tpPrice The take profit price for the order.
+     * @param slSize The stop loss size for the order.
+     * @param slPrice The stop loss price for the order.
+     */
     fun handleCreateIncreasePerpPositionOrder(queryId: Int, jettonFromAmount: Int, account: Address, executionFee: Int, isMarket: Bool,
         tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, tpSize: Int, tpPrice: Int, slSize: Int, slPrice: Int) {
         let ctx: Context = context();
@@ -628,7 +719,11 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_PERP, account, executionFee, 1, false);
     }
 
-    // ============================ Create Decrease ================================ //
+    /**
+     * Receive function for creating a decrease perpetual position order.
+     * 
+     * @param msg The CreateDecreasePerpPositionOrder message containing the order details.
+     */
     receive(msg: CreateDecreasePerpPositionOrder) {
         self.requireNotStopped();
 
@@ -648,6 +743,12 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_PERP, sender(), msg.executionFee, 1, false);
     }
 
+    /**
+     * @dev This function is called when receiving a CreateTpSlPerpPositionOrder message.
+     * It performs various checks on gas and execution fee, creates take profit (tp) and stop loss (sl) orders if necessary,
+     * updates the total execution fee, and transfers excess gas.
+     * @param msg The CreateTpSlPerpPositionOrder message containing the necessary information for creating tp/sl orders.
+     */
     receive(msg: CreateTpSlPerpPositionOrder) {
         self.requireNotStopped();
         
@@ -683,6 +784,24 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_PERP, sender(), msg.executionFee, executionFeeMultiple, false);
     }
 
+    /**
+     * Creates a perpetual order in the order book.
+     * 
+     * @param trxId The transaction ID associated with the order.
+     * @param opType The operation type of the order.
+     * @param account The address of the account placing the order.
+     * @param tokenId The ID of the token being traded.
+     * @param isLong A boolean indicating whether the order is for a long position.
+     * @param marginDelta The change in margin for the order.
+     * @param sizeDelta The change in size for the order.
+     * @param triggerPrice The trigger price for the order.
+     * @param tpSize The take profit size for the order.
+     * @param tpPrice The take profit price for the order.
+     * @param slSize The stop loss size for the order.
+     * @param slPrice The stop loss price for the order.
+     * @param executionFee The execution fee for the order.
+     * @return The ID of the created order.
+     */    
     fun createPerpOrder(trxId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, 
         tpSize: Int, tpPrice: Int, slSize: Int, slPrice: Int, executionFee: Int): Int {
         let triggerAbove: Bool = false;
@@ -700,14 +819,6 @@ contract OrderBook with Deployable, Resumable {
                 slPrice: slPrice,
                 executionFee: executionFee
             });
-            // let tpSlExecutionFee: Int = 0;
-            // if (tpSize > 0 && tpPrice > 0) {
-            //     tpSlExecutionFee += executionFee;
-            // }
-            // if (slSize > 0 && slPrice > 0) {
-            //     tpSlExecutionFee += executionFee;
-            // }
-            // self.totalExecutionFee += tpSlExecutionFee;
         } else {
             if (opType == ORDER_OP_TYPE_DECREASE_MARKET) {
                 // decrease for long market order, must trigger above the price
@@ -759,9 +870,12 @@ contract OrderBook with Deployable, Resumable {
         return orderId;
     }
 
-    // ============================ Cancel Increase / Decrease ================================ //
-    // cancel increase => orderBook wallet => user wallet => token excess handel cancel => excess gas
-    // cancel decrease => excess gas
+    /**
+     * This function is called when a CancelPerpPositionOrder message is received.
+     * It cancels a perpetual position order and performs various checks and operations.
+     * 
+     * @param msg The CancelPerpPositionOrder message containing the order ID and other parameters.
+     */
     receive(msg: CancelPerpPositionOrder) {
         let ctx: Context = context();
         // check order
@@ -853,12 +967,13 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_PERP, sender(), -executionFee, 1, order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_INCREASE_LIMIT);
     }
 
-    // ============================ Execute Increase / Decrease ================================ //
-    // execute increase => increase position for pool => increase success / bounced => excess gas
-    // execute decrease => decrease position for pool => decrease success => transfer jetton => token excesses handel cancel => excess gas
-    receive(msg: ExecutePerpPositionOrder) {
-        // dump("ExecutePerpPositionOrder");
 
+    /**
+     * Receives and executes a perpetual position order.
+     * 
+     * @param msg The ExecutePerpPositionOrder message containing the order details.
+     */
+    receive(msg: ExecutePerpPositionOrder) {
         let ctx: Context = context();
 
         // check order
@@ -915,11 +1030,13 @@ contract OrderBook with Deployable, Resumable {
         });
     }
 
-    // increase success / bounced => excess gas
-    // decrease success => transfer jetton => token excesses handel cancel => excess gas
+    /**
+     * This function is called when a successful update is made to a perpetual position order.
+     * It performs various checks and actions based on the type of order and the received message.
+     * 
+     * @param msg The UpdatePerpPositionSuccess message containing the order ID and transaction ID.
+     */
     receive(msg: UpdatePerpPositionSuccess) {
-        dump("UpdatePerpPositionSuccess");
-
         let ctx: Context = context();
         require(sender() == self.pool, "invalid sender");
 
@@ -988,11 +1105,14 @@ contract OrderBook with Deployable, Resumable {
 
         // transfer execess gas
         self.refundExceedTon(ORDER_TYPE_PERP, order.lastOperator!!, -order.executionFee, executionFeeMultiple, msg.receive > 0);
-
-        dump("UpdatePerpPositionSuccess done");
     }
 
-    // reset order pending
+    /**
+     * Handles the bounced event for an UpdatePerpPosition.
+     * If the order is a liquidation order, it is deleted from the perpPositionOrders mapping.
+     * Otherwise, the order's isPending flag is set to false.
+     * If the order has a lastOperator, a send transaction is triggered to the lastOperator with a value of 0.
+     */
     bounced(src: bounced<UpdatePerpPosition>) {
         // get order
         let orderOpt: PerpPositionOrder? = self.perpPositionOrders.get(src.orderId);
@@ -1017,7 +1137,12 @@ contract OrderBook with Deployable, Resumable {
         }
     }
 
-    // ============================ Liquidation ================================ //
+    /**
+     * This function is called when a LiquidatePerpPosition message is received.
+     * It performs various checks, adds a new order to the order book, and sends an update position message to the pool.
+     * 
+     * @param msg The LiquidatePerpPosition message containing information about the liquidation.
+     */
     receive(msg: LiquidatePerpPosition) {
         // check gas
         require(context().value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
@@ -1074,7 +1199,15 @@ contract OrderBook with Deployable, Resumable {
         });
     }
     
-    // ============================ ADL ================================ //
+    /**
+     * @dev This function is called when a new ADLPerpPosition is received.
+     * It performs the following steps:
+     * 1. Checks if there is enough gas for execution.
+     * 2. Verifies the sender is a valid executor.
+     * 3. Adds a new order to the order book.
+     * 4. Sends an update position message to the pool.
+     * @param msg The ADLPerpPosition message containing the order details.
+     */
     receive(msg: ADLPerpPosition) {
         // check gas
         require(context().value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
@@ -1125,7 +1258,12 @@ contract OrderBook with Deployable, Resumable {
         });
     }
 
-    // ============================ Getter ================================ //
+    /**
+     * Retrieves the PerpPositionOrderData for the specified order ID.
+     * 
+     * @param orderId: The ID of the order to retrieve.
+     * @return The PerpPositionOrderData object containing the next index, order details, and extended order details.
+     */
     get fun perpPositionOrder(orderId: Int): PerpPositionOrderData {
         return PerpPositionOrderData{
             perpPositionOrderIndexNext: self.perpPositionOrderIndexNext,
@@ -1135,6 +1273,12 @@ contract OrderBook with Deployable, Resumable {
     }
 
     // ======================================================== Claim ================================================================ //
+    /**
+     * @dev This function is called when a `SendProtocolFee` message is received.
+     * It verifies that the sender is the contract's pool and transfers the specified amount of tokens to the fee receiver.
+     * If the amount is greater than 0, it sends the tokens using the specified parameters.
+     * @param msg The `SendProtocolFee` message containing the transaction ID, amount, fee receiver, and other details.
+     */
     receive(msg: SendProtocolFee) {
         require(sender() == self.pool, "invalid sender");
 
@@ -1158,7 +1302,12 @@ contract OrderBook with Deployable, Resumable {
     }
 
     // ======================================================== Compensate ================================================================ //
-    // Create compensate, lock one day
+    /**
+     * This function is called when a CreateCompensate message is received.
+     * It performs various checks and adds a new compensate to the order book.
+     * 
+     * @param msg The CreateCompensate message containing the details of the compensate.
+     */
     receive(msg: CreateCompensate) {
 
         // check sender
@@ -1199,6 +1348,10 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_PERP, sender(), 0, 1, false);
     }
 
+    /**
+     * @dev This function is the entry point for executing or canceling a compensation.
+     * @param msg The ExecuteOrCancelCompensate message containing the necessary information for execution or cancellation.
+     */
     receive(msg: ExecuteOrCancelCompensate) {
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -1273,7 +1426,12 @@ contract OrderBook with Deployable, Resumable {
         return;
     }
 
-    // ============================ Getter ================================ //
+    /**
+     * Retrieves the compensation data for a given compensateId.
+     * 
+     * @param compensateId The ID of the compensation to retrieve.
+     * @return The CompensateData object containing the compensateIndexNext and the compensate with the given compensateId.
+     */
     get fun compensate(compensateId: Int): CompensateData {
         return CompensateData{
             compensateIndexNext: self.compensateIndexNext,
@@ -1281,8 +1439,12 @@ contract OrderBook with Deployable, Resumable {
         };
     }
 
-    // ======================================================== private function ================================================================ //
-
+    /**
+     * Checks if the given account is an executor.
+     * 
+     * @param account The address of the account to check.
+     * @return True if the account is an executor, false otherwise.
+     */
     fun isExecutor(account: Address): Bool {
         let isExecutorOpt: Bool? = self.executors.get(account);
         if (isExecutorOpt == null) {
