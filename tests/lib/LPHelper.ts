@@ -3,10 +3,11 @@ import { Address, beginCell, Dictionary, DictionaryValue, toNano } from "@ton/co
 import { TestEnv } from "./TestEnv";
 import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits } from "./TokenHelper";
+import { OP_CREATE_INCREASE_LP_POSITION_ORDER } from "../../utils/constants";
 
 export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = await TestEnv.orderBook.getLpPositionOrderIndexNext();
+    let orderIdBefore = (await TestEnv.orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
     // create order
     const jettonWallet = await getJettonWallet(user.address);
     const trxResult = await jettonWallet.send(
@@ -26,7 +27,7 @@ export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContra
                 beginCell()
                 .storeRef(
                     beginCell()
-                    .storeUint(1,32) // op
+                    .storeUint(OP_CREATE_INCREASE_LP_POSITION_ORDER, 32) // op
                     .storeUint(toUnits(liquidity, TestEnv.jettonDecimal), 128) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()
@@ -35,8 +36,8 @@ export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContra
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = await TestEnv.orderBook.getLpPositionOrderIndexNext();
-    let order = await TestEnv.orderBook.getLpPositionOrder(orderIdBefore);
+    let orderIdAfter = (await TestEnv.orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
+    let order = (await TestEnv.orderBook.getLpPositionOrder(orderIdBefore)).lpPositionOrder;
 
     return {
         trxResult,
@@ -66,7 +67,7 @@ export async function cancelLPOrder(executor: SandboxContract<TreasuryContract>,
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let order = await TestEnv.orderBook.getLpPositionOrder(orderId);
+    let order = (await TestEnv.orderBook.getLpPositionOrder(orderId)).lpPositionOrder;
 
     return {
         trxResult,
@@ -79,7 +80,7 @@ export async function cancelLPOrder(executor: SandboxContract<TreasuryContract>,
 
 export async function executeLPOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
     let balanceBefore = await getAllBalance();
-    let orderBefore = await TestEnv.orderBook.getLpPositionOrder(orderId);
+    let orderBefore = (await TestEnv.orderBook.getLpPositionOrder(orderId)).lpPositionOrder;
     let positionDataBefore = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
 
     const trxResult = await TestEnv.orderBook.send(
@@ -97,7 +98,7 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderAfter = await TestEnv.orderBook.getLpPositionOrder(orderId);
+    let orderAfter = (await TestEnv.orderBook.getLpPositionOrder(orderId)).lpPositionOrder;
     let positionDataAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
 
     return {
@@ -114,7 +115,7 @@ export async function executeLPOrder(executor: SandboxContract<TreasuryContract>
 
 export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = await TestEnv.orderBook.getLpPositionOrderIndexNext();
+    let orderIdBefore = (await TestEnv.orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
     // create order
     const trxResult = await TestEnv.orderBook.send(
         user.getSender(),
@@ -130,8 +131,8 @@ export async function createDecreaseLPOrder(user: SandboxContract<TreasuryContra
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = await TestEnv.orderBook.getLpPositionOrderIndexNext();
-    let order = await TestEnv.orderBook.getLpPositionOrder(orderIdBefore);
+    let orderIdAfter = (await TestEnv.orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
+    let order = (await TestEnv.orderBook.getLpPositionOrder(orderIdBefore)).lpPositionOrder;
 
     return {
         trxResult,

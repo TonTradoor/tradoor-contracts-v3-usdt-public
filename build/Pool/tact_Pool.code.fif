@@ -170,6 +170,7 @@ PROGRAM{
   DECLPROC $UpdateFundingRateEventData$_constructor_trxId_tokenId_price_lpReceivedFundingFeeDelta_globalLPFundingFeeGrowth_longFundingFeeGrowthAfter_shortFundingFeeGrowthAfter
   DECLPROC $UpdateFundingFeeEvent$_constructor_length_datas
   DECLPROC $DeployOk$_constructor_queryId
+  DECLPROC %$Pool$_internal_empty
   DECLPROC $Pool$_internal_binary_UpdateConfig
   DECLPROC $Pool$_internal_binary_UpdateTokenConfig
   DECLPROC $Pool$_internal_binary_ClaimProtocolFee
@@ -4987,6 +4988,8 @@ PROGRAM{
   }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
+  %$Pool$_internal_empty PROCINLINE:<{
+  }>
   $Pool$_internal_binary_UpdateConfig PROCINLINE:<{
     27 s() 38 s() XCHG
     26 s() 37 s() XCHG
@@ -5788,7 +5791,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5837714e6e7352525763617a6a6d7137347a656475576b7755576f375948613570677a68587554596555396d} PUSHSLICE
+    x{697066733a2f2f516d6279335264686174357a346d4838316d4c5a524e78596a36693263656e3866466b714c77633571474b4e636a} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -5810,6 +5813,17 @@ PROGRAM{
       DROP
       DUP
       32 PLDU
+    }>
+    DUP
+    0 EQINT
+    s2 PUSH
+    SBITS
+    33 LESSINT
+    AND
+    IFJMP:<{
+      2DROP
+      %$Pool$_internal_empty INLINECALLDICT
+      TRUE
     }>
     DUP
     1251946368 PUSHINT

@@ -542,7 +542,7 @@ describe('LP', () => {
         expect(perpPosition?.entryPrice).toBeGreaterThanOrEqual(toPriceUnits(indexPrice));
 
         // check tp order
-        let tpOrder = await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 1n);
+        let tpOrder = (await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 1n)).perpPositionOrder;
         console.log('tpOrder after increase:', tpOrder);
 
         expect(tpOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_TP);
@@ -551,7 +551,7 @@ describe('LP', () => {
         expect(tpOrder?.triggerAbove).toEqual(true);
 
         // check sl order
-        let slOrder = await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 2n);
+        let slOrder = (await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 2n)).perpPositionOrder;
         console.log('slOrder after increase:', slOrder);
 
         expect(slOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_SL);

@@ -9,7 +9,6 @@ import "./constants";
 contract OrderBook with Deployable, Resumable {
     
     // config
-    maxTimeDelayExecutor: Int = 30 * 60; // executor execute before 30min
     minTimeDelayTrader: Int = 3 * 60; // trader execute after 3min
 
     // gas
@@ -75,7 +74,6 @@ contract OrderBook with Deployable, Resumable {
         }
 
         // config
-        self.maxTimeDelayExecutor = msg.maxTimeDelayExecutor;
         self.minTimeDelayTrader = msg.minTimeDelayTrader;
         self.lpMinExecutionFee = msg.lpMinExecutionFee;
         self.perpMinExecutionFee = msg.perpMinExecutionFee;
@@ -91,7 +89,7 @@ contract OrderBook with Deployable, Resumable {
         self.pool = msg.pool;
         send(SendParameters{
             to: sender(),
-            bounce: false,
+            bounce: true,
             value: 0,
             mode: SendRemainingValue
         });
@@ -105,7 +103,6 @@ contract OrderBook with Deployable, Resumable {
 
         return ConfigData{
             isExecutor: isExecutor,
-            maxTimeDelayExecutor: self.maxTimeDelayExecutor,
             minTimeDelayTrader: self.minTimeDelayTrader,
             lpMinExecutionFee: self.lpMinExecutionFee,
             perpMinExecutionFee: self.perpMinExecutionFee,
@@ -122,6 +119,10 @@ contract OrderBook with Deployable, Resumable {
     }
 
     // ======================================================== Token ================================================================ //
+
+    // receive TON coin transfers to the contract
+    receive() {}
+
     /**
     * @dev This function is called when the contract receives a TokenNotification message.
     * It checks the token and handles the corresponding operation code.
@@ -248,9 +249,9 @@ contract OrderBook with Deployable, Resumable {
         if (refundValue > 0) {
             send(SendParameters{
                 to: to,
-                bounce: false,
-                value: refundValue
-                // mode: SendIgnoreErrors
+                bounce: true,
+                value: refundValue,
+                mode: SendIgnoreErrors
             });
         }
     }
@@ -457,9 +458,6 @@ contract OrderBook with Deployable, Resumable {
         let isExecutor: Bool = self.isExecutor(sender());
         require(isExecutor, "invalid sender");
 
-        // execute must before maxTimeDelayExecutor
-        require(order.blockTime + self.maxTimeDelayExecutor > now(), "order expired");
-
         // update order
         if (msg.executionFeeReceiver != null) {
             order.executionFeeReceiver = msg.executionFeeReceiver!!;
@@ -564,12 +562,11 @@ contract OrderBook with Deployable, Resumable {
     }
 
     // ============================ Getter ================================ //
-    get fun lpPositionOrder(orderId: Int): LPPositionOrder? {
-        return self.lpPositionOrders.get(orderId);
-    }
-
-    get fun lpPositionOrderIndexNext(): Int {
-        return self.lpPositionOrderIndexNext;
+    get fun lpPositionOrder(orderId: Int): LPPositionOrderData {
+        return LPPositionOrderData{
+            lpPositionOrderIndexNext: self.lpPositionOrderIndexNext,
+            lpPositionOrder: self.lpPositionOrders.get(orderId)
+        };
     }
 
     // ============================ Perp ================================ //
@@ -885,11 +882,6 @@ contract OrderBook with Deployable, Resumable {
         let isExecutor: Bool = self.isExecutor(sender());
         require(isExecutor, "invalid sender");
 
-        // execute market must before maxTimeDelayExecutor
-        if (order.opType == ORDER_OP_TYPE_INCREASE_MARKET || order.opType == ORDER_OP_TYPE_DECREASE_MARKET) {
-            require(order.blockTime + self.maxTimeDelayExecutor > now(), "order expired");
-        }
-
         // update order
         if (msg.executionFeeReceiver != null) {
             order.executionFeeReceiver = msg.executionFeeReceiver!!;
@@ -1027,10 +1019,8 @@ contract OrderBook with Deployable, Resumable {
 
     // ============================ Liquidation ================================ //
     receive(msg: LiquidatePerpPosition) {
-        let ctx: Context = context();
-
         // check gas
-        require(ctx.value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
+        require(context().value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -1086,10 +1076,8 @@ contract OrderBook with Deployable, Resumable {
     
     // ============================ ADL ================================ //
     receive(msg: ADLPerpPosition) {
-        let ctx: Context = context();
-
         // check gas
-        require(ctx.value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
+        require(context().value >= self.perpGasConsumption * 2 + self.getPoolGas(ORDER_TYPE_PERP) + self.gasTransferJetton, "gas not enough");
 
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
@@ -1138,12 +1126,12 @@ contract OrderBook with Deployable, Resumable {
     }
 
     // ============================ Getter ================================ //
-    get fun perpPositionOrder(orderId: Int): PerpPositionOrder? {
-        return self.perpPositionOrders.get(orderId);
-    }
-
-    get fun perpPositionOrderIndexNext(): Int {
-        return self.perpPositionOrderIndexNext;
+    get fun perpPositionOrder(orderId: Int): PerpPositionOrderData {
+        return PerpPositionOrderData{
+            perpPositionOrderIndexNext: self.perpPositionOrderIndexNext,
+            perpPositionOrder: self.perpPositionOrders.get(orderId),
+            perpPositionOrderEx: self.perpPositionOrderExs.get(orderId)
+        };
     }
 
     // ======================================================== Claim ================================================================ //
@@ -1174,8 +1162,7 @@ contract OrderBook with Deployable, Resumable {
     receive(msg: CreateCompensate) {
 
         // check sender
-        let isExecutor: Bool = self.isExecutor(sender());
-        require(isExecutor, "invalid sender");
+        require(self.isExecutor(sender()), "invalid sender");
 
         let ctx: Context = context();
         // check gas
@@ -1212,64 +1199,48 @@ contract OrderBook with Deployable, Resumable {
         self.refundExceedTon(ORDER_TYPE_PERP, sender(), 0, 1, false);
     }
 
-    receive(msg: CancelCompensate) {
+    receive(msg: ExecuteOrCancelCompensate) {
         // check sender
         let isExecutor: Bool = self.isExecutor(sender());
         require(isExecutor, "invalid sender");
 
-        let ctx: Context = context();
+        // check gas
+        require(context().value >= self.perpGasConsumption + self.gasTransferJetton, "gas not enough");
+
         // get compensate
-        require(self.compensates.get(msg.compensateId) != null, "compensate not exist");
-
-        // check gas
-        require(ctx.value >= self.perpGasConsumption + self.gasTransferJetton, "gas not enough");
-
-        // delete compensate
-        self.compensates.set(msg.compensateId, null);
-
-        // event
-        emit(CompensateCancelledEvent{
-            compensateId: msg.compensateId,
-            trxId: msg.trxId
-        }.toCell());
-
-        // transfer execess gas
-        self.refundExceedTon(ORDER_TYPE_PERP, sender(), 0, 1, false);
-    }
-
-    receive(msg: ExecuteCompensate) {
-        // check sender
-        let isExecutor: Bool = self.isExecutor(sender());
-        require(isExecutor, "invalid sender");
-
-        let ctx: Context = context();
-        // check gas
-        require(ctx.value >= self.perpGasConsumption, "gas not enough");
-
-        // check unlock time
         let compensateOpt: Compensate? = self.compensates.get(msg.compensateId);
         require(compensateOpt != null, "compensate not exist");
         let compensate: Compensate = compensateOpt!!;
 
+        // cancel
+        if (msg.isCancel) {
+            // delete compensate
+            self.compensates.set(msg.compensateId, null);
+
+            // event
+            emit(CompensateCancelledEvent{
+                compensateId: msg.compensateId,
+                trxId: msg.trxId
+            }.toCell());
+
+            // transfer execess gas
+            self.refundExceedTon(ORDER_TYPE_PERP, sender(), 0, 1, false);
+            return;
+        }
+
+        // check unlock time
         require(now() >= compensate.unlockTime, "not reach unlock time");        
 
         // get order
         if(compensate.orderType != null) {
-            let isPending: Bool = true;
             if (compensate.orderType == ORDER_TYPE_LP) {
                 let orderOpt: LPPositionOrder? = self.lpPositionOrders.get(compensate.orderId);
-                if (orderOpt != null) {
-                    isPending = (orderOpt!!).isPending;
-                }
                 self.lpPositionOrders.set(compensate.orderId, null);
             } else {
                 let orderOpt: PerpPositionOrder? = self.perpPositionOrders.get(compensate.orderId);
-                if (orderOpt != null) {
-                    isPending = (orderOpt!!).isPending;
-                }
                 self.perpPositionOrders.set(compensate.orderId, null);
+                self.perpPositionOrderExs.set(compensate.orderId, null);
             }
-            require(isPending, "order not pending");
         }
 
         // refund
@@ -1289,6 +1260,9 @@ contract OrderBook with Deployable, Resumable {
             });
         }
 
+        // delete compensate
+        self.compensates.set(msg.compensateId, null);
+
         emit(CompensateExecutedEvent{
             compensateId: msg.compensateId,
             trxId: compensate.trxId
@@ -1297,6 +1271,14 @@ contract OrderBook with Deployable, Resumable {
         // transfer execess gas
         self.refundExceedTon(ORDER_TYPE_PERP, sender(), 0, 1, compensate.refundReceiver != null && compensate.refundAmount > 0);
         return;
+    }
+
+    // ============================ Getter ================================ //
+    get fun compensate(compensateId: Int): CompensateData {
+        return CompensateData{
+            compensateIndexNext: self.compensateIndexNext,
+            compensate: self.compensates.get(compensateId)
+        };
     }
 
     // ======================================================== private function ================================================================ //

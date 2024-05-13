@@ -37,7 +37,6 @@ export async function run(provider: NetworkProvider) {
             $$type: 'UpdateConfig',
             executorLength: BigInt(executors.size),
             executors: executors,
-            maxTimeDelayExecutor: 30n * 60n,
             minTimeDelayTrader: 3n * 60n,
             lpMinExecutionFee: toNano(0.05),
             perpMinExecutionFee: toNano(0.1),

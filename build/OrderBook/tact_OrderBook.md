@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 16157 bytes
+BOC Size: 15667 bytes
 
 # Types
-Total Types: 45
+Total Types: 47
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -50,8 +50,8 @@ TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
 Signature: `TokenExcesses{queryId:uint64}`
 
 ## UpdateConfig
-TLB: `update_config#92cd3362 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = UpdateConfig`
-Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,usdtWallet:address,pool:address}`
+TLB: `update_config#ad47a750 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = UpdateConfig`
+Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,minTimeDelayTrader:int257,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,usdtWallet:address,pool:address}`
 
 ## SendProtocolFee
 TLB: `send_protocol_fee#5dd58461 trxId:uint64 feeReceiver:address amount:int257 = SendProtocolFee`
@@ -81,13 +81,9 @@ Signature: `UpdateLPPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
 TLB: `create_compensate#af93b5c8 orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:uint128 executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate`
 Signature: `CreateCompensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:uint128,executionFeeReceiver:Maybe address,executionFee:coins}`
 
-## CancelCompensate
-TLB: `cancel_compensate#58def8ba compensateId:uint64 trxId:uint64 = CancelCompensate`
-Signature: `CancelCompensate{compensateId:uint64,trxId:uint64}`
-
-## ExecuteCompensate
-TLB: `execute_compensate#cc1ca2f0 compensateId:uint64 trxId:uint64 = ExecuteCompensate`
-Signature: `ExecuteCompensate{compensateId:uint64,trxId:uint64}`
+## ExecuteOrCancelCompensate
+TLB: `execute_or_cancel_compensate#88e7f927 isCancel:bool compensateId:uint64 trxId:uint64 = ExecuteOrCancelCompensate`
+Signature: `ExecuteOrCancelCompensate{isCancel:bool,compensateId:uint64,trxId:uint64}`
 
 ## CreateDecreasePerpPositionOrder
 TLB: `create_decrease_perp_position_order#6a923ddb executionFee:coins tokenId:uint64 isLong:bool marginDelta:uint128 sizeDelta:uint128 triggerPrice:uint128 trxId:uint64 = CreateDecreasePerpPositionOrder`
@@ -158,8 +154,8 @@ TLB: `compensate_executed_event#db45e438 compensateId:uint64 trxId:uint64 = Comp
 Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 
 ## ConfigData
-TLB: `_ isExecutor:Maybe bool maxTimeDelayExecutor:int257 minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins totalExecutionFee:coins usdtWallet:address pool:address = ConfigData`
-Signature: `ConfigData{isExecutor:Maybe bool,maxTimeDelayExecutor:int257,minTimeDelayTrader:int257,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,totalExecutionFee:coins,usdtWallet:address,pool:address}`
+TLB: `_ isExecutor:Maybe bool minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins totalExecutionFee:coins usdtWallet:address pool:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,minTimeDelayTrader:int257,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,totalExecutionFee:coins,usdtWallet:address,pool:address}`
 
 ## ExecutorParam
 TLB: `_ executor:address enable:bool = ExecutorParam`
@@ -169,6 +165,10 @@ Signature: `ExecutorParam{executor:address,enable:bool}`
 TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = LPPositionOrder`
 Signature: `LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
 
+## LPPositionOrderData
+TLB: `_ lpPositionOrderIndexNext:int257 lpPositionOrder:Maybe LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address} = LPPositionOrderData`
+Signature: `LPPositionOrderData{lpPositionOrderIndexNext:int257,lpPositionOrder:Maybe LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}}`
+
 ## PerpPositionOrder
 TLB: `_ opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = PerpPositionOrder`
 Signature: `PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
@@ -176,6 +176,10 @@ Signature: `PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong
 ## PerpPositionOrderEx
 TLB: `_ tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:int257 = PerpPositionOrderEx`
 Signature: `PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:int257}`
+
+## PerpPositionOrderData
+TLB: `_ perpPositionOrderIndexNext:int257 perpPositionOrder:Maybe PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address} perpPositionOrderEx:Maybe PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:int257} = PerpPositionOrderData`
+Signature: `PerpPositionOrderData{perpPositionOrderIndexNext:int257,perpPositionOrder:Maybe PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address},perpPositionOrderEx:Maybe PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:int257}}`
 
 ## UpdatePrice
 TLB: `_ tokenId:uint64 price:int257 = UpdatePrice`
@@ -185,8 +189,12 @@ Signature: `UpdatePrice{tokenId:uint64,price:int257}`
 TLB: `_ orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins unlockTime:int257 = Compensate`
 Signature: `Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}`
 
+## CompensateData
+TLB: `_ compensateIndexNext:int257 compensate:Maybe Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257} = CompensateData`
+Signature: `CompensateData{compensateIndexNext:int257,compensate:Maybe Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}}`
+
 # Get Methods
-Total Get Methods: 7
+Total Get Methods: 6
 
 ## configData
 Argument: executor
@@ -194,12 +202,11 @@ Argument: executor
 ## lpPositionOrder
 Argument: orderId
 
-## lpPositionOrderIndexNext
-
 ## perpPositionOrder
 Argument: orderId
 
-## perpPositionOrderIndexNext
+## compensate
+Argument: compensateId
 
 ## stopped
 
@@ -231,7 +238,6 @@ Argument: orderId
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 11120: compensate not exist
-16780: order expired
 19305: gas not enough
 24173: order is pending
 24562: execution fee not enough
@@ -240,6 +246,5 @@ Argument: orderId
 39703: too early
 40368: Contract stopped
 41207: invalid sender
-42241: order not pending
 51911: token not match
 53296: Contract not stopped

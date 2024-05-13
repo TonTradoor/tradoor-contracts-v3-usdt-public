@@ -1,7 +1,6 @@
 // ============================ Config ================================ //
 struct ConfigData {
     isExecutor: Bool?;
-    maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
     lpMinExecutionFee: Int as coins;
     perpMinExecutionFee: Int as coins;
@@ -33,6 +32,11 @@ struct LPPositionOrder {
     lastOperator: Address?;
 }
 
+struct LPPositionOrderData {
+    lpPositionOrderIndexNext: Int;
+    lpPositionOrder: LPPositionOrder?;
+}
+
 // ============================ Perp ================================ //
 struct PerpPositionOrder {
     opType: Int as uint8;
@@ -58,6 +62,12 @@ struct PerpPositionOrderEx {
     executionFee: Int;
 }
 
+struct PerpPositionOrderData {
+    perpPositionOrderIndexNext: Int;
+    perpPositionOrder: PerpPositionOrder?;
+    perpPositionOrderEx: PerpPositionOrderEx?;
+}
+
 // ============================ Price ================================ //
 struct UpdatePrice {
     tokenId: Int as uint64;
@@ -74,4 +84,9 @@ struct Compensate {
     executionFeeReceiver: Address?;
     executionFee: Int as coins;
     unlockTime: Int;
+}
+
+struct CompensateData {
+    compensateIndexNext: Int;
+    compensate: Compensate?;
 }

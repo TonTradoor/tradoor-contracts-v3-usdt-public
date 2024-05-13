@@ -26,7 +26,6 @@ message(0xd53276db) TokenExcesses {
 message UpdateConfig {
     executorLength: Int;
     executors: map<Int, ExecutorParam>;
-    maxTimeDelayExecutor: Int;
     minTimeDelayTrader: Int;
     lpMinExecutionFee: Int as coins;
     perpMinExecutionFee: Int as coins;
@@ -79,6 +78,8 @@ message(0x1cf0cf81) UpdateLPPositionSuccess {
     trxId: Int as uint64;
 }
 
+
+// ============================ Compensate ================================ //
 message CreateCompensate {
     orderType: Int? as uint8;
     orderId: Int as uint64;
@@ -89,12 +90,8 @@ message CreateCompensate {
     executionFee: Int as coins;
 }
 
-message CancelCompensate {
-    compensateId: Int as uint64;
-    trxId: Int as uint64;
-}
-
-message ExecuteCompensate {
+message ExecuteOrCancelCompensate {
+    isCancel: Bool;
     compensateId: Int as uint64;
     trxId: Int as uint64;
 }

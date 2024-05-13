@@ -59,6 +59,9 @@ contract Pool with Deployable, Ownable {
         self.executors.set(sender(), true);
     }
 
+    // receive TON coin transfers to the contract
+    receive() {}
+
     // ======================================================== Admin ================================================================ //
     receive(msg: UpdateConfig) {
         self.requireOwner();

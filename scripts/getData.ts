@@ -17,7 +17,7 @@ export async function run(provider: NetworkProvider) {
 
     console.log('=================== LP ===================');
     // get index
-    let lpOrderIdNext = await orderBook.getLpPositionOrderIndexNext();
+    let lpOrderIdNext = (await orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
     console.log(`lpOrderIdNext:`, lpOrderIdNext);
 
     if (orderId < 0) {
@@ -35,7 +35,7 @@ export async function run(provider: NetworkProvider) {
 
     console.log('=================== Perp ===================');
     // get index
-    let orderIdNext = await orderBook.getPerpPositionOrderIndexNext();
+    let orderIdNext = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
     console.log(`orderIdNext:`, orderIdNext);
 
     // get order

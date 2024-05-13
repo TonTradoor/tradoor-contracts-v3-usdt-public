@@ -5,10 +5,12 @@ import { MockJetton } from '../wrappers/MockJetton';
 import { Pool } from '../wrappers/Pool';
 import { OrderBook } from '../wrappers/OrderBook';
 import { TestEnv } from './lib/TestEnv';
-import { fromJettonUnits, getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits } from './lib/TokenHelper';
+import { getFriendlyTonBalance, getJettonBalance, getTonBalance, mint, toJettonUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
 import {createIncreasePerpOrder, executePerpOrder, updatePrice} from "./lib/PerpHelper";
+import { createCompensate, executeCompensate, sendCompensateJetton } from './lib/OrderBookHelper';
+import { ORDER_TYPE_LP } from '../utils/constants';
 
 describe('LP', () => {
     let blockchain: Blockchain;
@@ -17,7 +19,6 @@ describe('LP', () => {
     let pool: SandboxContract<Pool>;
     let jetton: SandboxContract<MockJetton>;
     let executor: SandboxContract<TreasuryContract>;
-    let compensator: SandboxContract<TreasuryContract>;
     let user0: SandboxContract<TreasuryContract>;
     let user1: SandboxContract<TreasuryContract>;
     let user0JettonWallet: SandboxContract<JettonDefaultWallet>;
@@ -32,7 +33,6 @@ describe('LP', () => {
         pool = TestEnv.pool;
         jetton = TestEnv.jetton;
         executor = TestEnv.executor;
-        compensator = TestEnv.compensator;
         user0 = TestEnv.user0;
         user1 = TestEnv.user1;
         user0JettonWallet = TestEnv.user0JettonWallet;
@@ -551,6 +551,81 @@ describe('LP', () => {
         expect(position).not.toBeNull();
         expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity + lpLiquidity - decreaseLiquidity));
         
+    });
+
+    it('should compensate transfer in', async () => {
+        let amount = 100;
+        const executeResult = await sendCompensateJetton(user0, amount);
+        printTransactionFees(executeResult.trxResult.transactions);
+        expect(executeResult.balanceAfter.orderBookJettonBalance).toEqual(executeResult.balanceBefore.orderBookJettonBalance + toJettonUnits(amount));
+        
+        let ton = 1;
+        const transferResult = await executor.send({
+            value: toNano(ton),
+            to: orderBook.address,
+            sendMode: 1
+        });
+        printTransactionFees(transferResult.transactions);
+        expect(await getTonBalance(orderBook.address)).toBeGreaterThan(executeResult.balanceAfter.orderBookTonBalance + toNano(ton * 0.9))
+
+    });
+
+    it('should compensate', async () => {
+        blockchain.now = Math.floor(Date.now() / 1000);
+
+        // create order
+        let liquidity = 10;
+        let executionFee = 0.1;
+        const createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        printTransactionFees(createResult.trxResult.transactions);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        console.log('create order gas used:', fromNano(createResult.balanceBefore.user0TonBalance - createResult.balanceAfter.user0TonBalance - toNano(executionFee)));
+
+        // check order
+        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore + 1n);
+        expect(createResult.order).not.toBeNull();
+        expect(createResult.order?.liquidityDelta).toEqual(toJettonUnits(liquidity));
+        // check jetton
+        expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance - toJettonUnits(liquidity));
+        expect(createResult.balanceAfter.orderBookJettonBalance).toEqual(createResult.balanceBefore.orderBookJettonBalance + toJettonUnits(liquidity));
+        console.log('orderbook ton after create lp order', fromNano(createResult.balanceAfter.orderBookTonBalance));
+        
+        // create compensate order
+        const createCompensateResult = await createCompensate(executor, ORDER_TYPE_LP, createResult.orderIdBefore, user0.address, liquidity, user1.address, executionFee);
+        printTransactionFees(createCompensateResult.trxResult.transactions);
+        expect(createCompensateResult.trxResult.transactions).toHaveTransaction({
+            from: executor.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log('create compensate', createCompensateResult.compensate);
+        // check compensate
+        expect(createCompensateResult.compensateIdAfter).toEqual(createCompensateResult.compensateIdBefore + 1n);
+        expect(createCompensateResult.compensate).not.toBeNull();
+
+        // 1 day later
+        blockchain.now = blockchain.now + 24 * 60 * 60 + 60;
+        const executeCompensateResult = await executeCompensate(executor, createCompensateResult.compensateIdBefore);
+        printTransactionFees(executeCompensateResult.trxResult.transactions);
+        expect(executeCompensateResult.trxResult.transactions).toHaveTransaction({
+            from: executor.address,
+            to: orderBook.address,
+            success: true,
+        });
+        // check compensate
+        expect(executeCompensateResult.compensate).toBeNull();
+        expect((await TestEnv.orderBook.getLpPositionOrder(createResult.orderIdBefore)).lpPositionOrder).toBeNull();
+        // check jetton
+        expect(executeCompensateResult.balanceAfter.user0JettonBalance).toEqual(executeCompensateResult.balanceBefore.user0JettonBalance + toJettonUnits(liquidity));
+        expect(executeCompensateResult.balanceAfter.orderBookJettonBalance).toEqual(executeCompensateResult.balanceBefore.orderBookJettonBalance - toJettonUnits(liquidity));
+        // check ton
+        expect(executeCompensateResult.balanceAfter.user1TonBalance).toBeGreaterThan(executeCompensateResult.balanceBefore.user1TonBalance + toNano(executionFee * 0.9))
+
     });
 
 });
