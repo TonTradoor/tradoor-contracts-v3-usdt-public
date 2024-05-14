@@ -1103,13 +1103,11 @@ contract Pool with Deployable, Ownable {
             unrealizedPnl = perpPosition.size * (perpPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
         }
         let maintenanceMargin: Int = perpPosition.size * tradePrice * (tokenConfig.tradingFeeRate + tokenConfig.maintenanceRate) / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR) + tokenConfig.liquidationFee;
-        require(maintenanceMargin >= perpPosition.margin + fundingFee + unrealizedPnl, "margin rate too low");
+        require(maintenanceMargin >= perpPosition.margin + fundingFee + unrealizedPnl, "margin is too high to liquidate");
 
         // liquidate price
         let liquidatePrice: Int = ((perpPosition.margin + fundingFee - tokenConfig.liquidationFee) * PRICE_DECIMAL_FACTOR + (isLong ? -perpPosition.entryPrice * perpPosition.size : perpPosition.entryPrice * perpPosition.size))
             / (perpPosition.size * (tokenConfig.tradingFeeRate + tokenConfig.maintenanceRate + (isLong ? - PERCENTAGE_BASIS_POINT : PERCENTAGE_BASIS_POINT)) / PERCENTAGE_BASIS_POINT);
-        // require(isLong ? liquidatePrice < perpPosition.entryPrice : liquidatePrice > perpPosition.entryPrice, "not reach liquidate price");
-        tradePrice = liquidatePrice;
 
         // get global position
         let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(tokenId);
@@ -1126,9 +1124,9 @@ contract Pool with Deployable, Ownable {
         if (globalLPPosition.netSize > 0 && (isLong != globalLPPosition.isLong)) {
             let sizeUsed: Int = min(globalLPPosition.netSize, sizeDelta);
             if (!isLong) {
-                lpRealizedPnl = sizeUsed * (tradePrice - globalLPPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
+                lpRealizedPnl = sizeUsed * (liquidatePrice - globalLPPosition.entryPrice) / PRICE_DECIMAL_FACTOR;
             } else {
-                lpRealizedPnl = sizeUsed * (globalLPPosition.entryPrice - tradePrice) / PRICE_DECIMAL_FACTOR;
+                lpRealizedPnl = sizeUsed * (globalLPPosition.entryPrice - liquidatePrice) / PRICE_DECIMAL_FACTOR;
             }
             sizeRemaining -= sizeUsed;
             globalLPPosition.netSize -= sizeUsed;
@@ -1138,13 +1136,13 @@ contract Pool with Deployable, Ownable {
         }
         // lp entry price
         if (sizeRemaining > 0) {
-            globalLPPosition.entryPrice = (globalLPPosition.netSize * globalLPPosition.entryPrice + sizeRemaining * tradePrice) / (globalLPPosition.netSize + sizeRemaining);
+            globalLPPosition.entryPrice = (globalLPPosition.netSize * globalLPPosition.entryPrice + sizeRemaining * liquidatePrice) / (globalLPPosition.netSize + sizeRemaining);
             globalLPPosition.netSize += sizeRemaining;
             globalLPPosition.isLong = isLong;
         }
 
         // trading fee
-        let tradingFee: Int = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
+        let tradingFee: Int = sizeDelta * liquidatePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
         let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let protocolTradingFee: Int = tradingFee - lpTradingFee;
 
@@ -1227,7 +1225,7 @@ contract Pool with Deployable, Ownable {
             marginAfter: perpPosition.margin,
             sizeDelta: sizeDelta,
             sizeAfter: perpPosition.size,
-            tradePrice: tradePrice,
+            tradePrice: liquidatePrice,
             entryPrice: perpPosition.entryPrice,
             realizedPnLDelta: realizedPnl,
             tradingFee: tradingFee,
