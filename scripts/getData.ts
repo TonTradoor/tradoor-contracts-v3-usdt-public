@@ -46,9 +46,10 @@ export async function run(provider: NetworkProvider) {
     let position = await pool.getPerpPosition(tokenId, account);
     console.log(`position:`, position);
 
+    // get price
+    console.log('price', await pool.getPriceData(tokenId));
+
     let tokenConfig = await pool.getTokenConfig(tokenId);
     console.log('tokenConfig:', tokenConfig);
 
-    // get price
-    console.log('price', await pool.getPriceData(tokenId));
 }

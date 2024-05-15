@@ -489,7 +489,8 @@ contract Pool with Deployable, Ownable {
         // trade price
         require(abs(msg.premiumRate) < PERCENTAGE_BASIS_POINT, "invalid premium rate");
         let prevPremiumRate: Int = self.prevPremiumRates.get(msg.tokenId) == null ? 0 : self.prevPremiumRates.get(msg.tokenId)!!;
-        let tradePrice: Int = (PERCENTAGE_BASIS_POINT + (msg.premiumRate + prevPremiumRate) / 2) * msg.price / PERCENTAGE_BASIS_POINT;
+        let avgPremiumRate: Int = (PERCENTAGE_BASIS_POINT + (msg.premiumRate + prevPremiumRate) / 2);
+        let tradePrice: Int = avgPremiumRate * msg.price / PERCENTAGE_BASIS_POINT;
 
         // update price
         let result: UpdateFundingRateResult = self.updatePriceAndFundingFee(msg.tokenId, tradePrice, false);
@@ -502,18 +503,18 @@ contract Pool with Deployable, Ownable {
             } else {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
-            self.increasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice, result.lpReceivedFundingFeeDelta);
+            self.increasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, avgPremiumRate, tradePrice, result.lpReceivedFundingFeeDelta);
         } else if (msg.opType == ORDER_OP_TYPE_LIQUIDATION) {
-            self.liquidatePerpPosition(msg.trxId, msg.orderId, msg.account, msg.tokenId, msg.isLong, tradePrice, result.lpReceivedFundingFeeDelta);
+            self.liquidatePerpPosition(msg.trxId, msg.orderId, msg.account, msg.tokenId, msg.isLong, avgPremiumRate, tradePrice, result.lpReceivedFundingFeeDelta);
         } else if (msg.opType == ORDER_OP_TYPE_ADL) {
-            self.decreasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice, result.lpReceivedFundingFeeDelta);
+            self.decreasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, avgPremiumRate, tradePrice, result.lpReceivedFundingFeeDelta);
         } else {
             if (msg.triggerAbove) {
                 require(tradePrice >= msg.triggerPrice, "not reach trigger price");
             } else {
                 require(tradePrice <= msg.triggerPrice, "not reach trigger price");
             }
-            self.decreasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, tradePrice, result.lpReceivedFundingFeeDelta);
+            self.decreasePerpPosition(msg.trxId, msg.orderId, msg.opType, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, avgPremiumRate, tradePrice, result.lpReceivedFundingFeeDelta);
         }
     }
 
@@ -531,7 +532,8 @@ contract Pool with Deployable, Ownable {
      * @param tradePrice The trade price.
      * @param lpReceivedFundingFee The funding fee received by the liquidity provider.
      */
-    fun increasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
+    fun increasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, 
+        avgPremiumRate: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -735,6 +737,7 @@ contract Pool with Deployable, Ownable {
             marginAfter: perpPosition.margin,
             sizeDelta: sizeDelta,
             sizeAfter: perpPosition.size,
+            avgPremiumRate: avgPremiumRate,
             tradePrice: tradePrice,
             entryPrice: perpPosition.entryPrice,
             tradingFee: tradingFee,
@@ -774,7 +777,8 @@ contract Pool with Deployable, Ownable {
      * @param tradePrice The trade price.
      * @param lpReceivedFundingFee The LP received funding fee.
      */
-    fun decreasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
+    fun decreasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, 
+        avgPremiumRate: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -995,6 +999,7 @@ contract Pool with Deployable, Ownable {
             marginAfter: perpPosition.margin,
             sizeDelta: sizeDelta,
             sizeAfter: perpPosition.size,
+            avgPremiumRate: avgPremiumRate,
             tradePrice: tradePrice,
             entryPrice: perpPosition.entryPrice,
             realizedPnLDelta: realizedPnl,
@@ -1033,7 +1038,7 @@ contract Pool with Deployable, Ownable {
      * @param tradePrice The trade price.
      * @param lpReceivedFundingFee The funding fee received by the liquidity provider.
      */
-    fun liquidatePerpPosition(trxId: Int, orderId: Int, account: Address, tokenId: Int, isLong: Bool, tradePrice: Int, lpReceivedFundingFee: Int) {
+    fun liquidatePerpPosition(trxId: Int, orderId: Int, account: Address, tokenId: Int, isLong: Bool, avgPremiumRate: Int, tradePrice: Int, lpReceivedFundingFee: Int) {
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
@@ -1225,6 +1230,7 @@ contract Pool with Deployable, Ownable {
             marginAfter: perpPosition.margin,
             sizeDelta: sizeDelta,
             sizeAfter: perpPosition.size,
+            avgPremiumRate: avgPremiumRate,
             tradePrice: liquidatePrice,
             entryPrice: perpPosition.entryPrice,
             realizedPnLDelta: realizedPnl,

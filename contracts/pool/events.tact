@@ -52,6 +52,7 @@ message PerpPositionIncreasedEvent {
     marginAfter: Int;
     sizeDelta: Int;
     sizeAfter: Int;
+    avgPremiumRate: Int;
     tradePrice: Int;
     entryPrice: Int;
     fundingFee: Int;
@@ -90,7 +91,8 @@ message PerpPositionDecreasedEvent {
     marginAfter: Int;
     sizeDelta: Int;
     sizeAfter: Int;
-    tradePrice: Int;
+    avgPremiumRate: Int;
+    tradePrice: Int; // liquidatePrice for liquidate
     entryPrice: Int;
     realizedPnLDelta: Int;
     fundingFee: Int;
