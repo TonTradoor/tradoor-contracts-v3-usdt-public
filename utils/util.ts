@@ -84,14 +84,10 @@ export function toUnits(src: number | string | bigint, decimal: number) {
             if (!Number.isFinite(src)) {
                 throw Error('Invalid number');
             }
-            if (Math.log10(Math.abs(src)) <= 6) {
-                src = src.toLocaleString('en', { minimumFractionDigits: decimal, useGrouping: false });
-            }
-            else if (src - Math.trunc(src) === 0) {
+            if (src - Math.trunc(src) === 0) {
                 src = src.toLocaleString('en', { maximumFractionDigits: 0, useGrouping: false });
-            }
-            else {
-                throw Error('Not enough precision for a number value. Use string value instead');
+            } else {
+                src = src.toLocaleString('en', { minimumFractionDigits: decimal, useGrouping: false });
             }
         }
         // Check sign

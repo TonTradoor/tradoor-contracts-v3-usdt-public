@@ -415,7 +415,7 @@ contract Pool with Deployable, Ownable {
         }
 
         // update global position
-        self.globalLPFund = self.globalLPFund - receive;
+        self.globalLPFund = self.globalLPFund - (receive - realizedFundingFee);
         self.globalLPLiquidity = self.globalLPLiquidity - liquidityDelta;
         if (self.globalLPLiquidity == 0) {
             require(self.globalPerpNetValue == 0 && self.globalPerpSingleValue == 0, "must close all perp before remove last liquidity");
@@ -1387,7 +1387,6 @@ contract Pool with Deployable, Ownable {
             }
 
             // update global value
-
             let singleValueBefore: Int = max(globalPosition.longValue, globalPosition.shortValue);
             let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
             globalPosition.longValue = globalPosition.longSize * price / PRICE_DECIMAL_FACTOR;

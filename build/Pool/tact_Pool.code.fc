@@ -127,7 +127,7 @@
     } else {
         $self'lpPositions~__tact_dict_set_slice_cell(267, $account, $LPPosition$_store_opt(null()));
     }
-    $self'globalLPFund = ($self'globalLPFund - $receive);
+    $self'globalLPFund = ($self'globalLPFund - ($receive - $realizedFundingFee));
     $self'globalLPLiquidity = ($self'globalLPLiquidity - $liquidityDelta);
     if (($self'globalLPLiquidity == 0)) {
         throw_unless(37153, ( (($self'globalPerpNetValue == 0)) ? (($self'globalPerpSingleValue == 0)) : (false) ));

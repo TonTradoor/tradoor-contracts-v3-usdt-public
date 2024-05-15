@@ -32,7 +32,10 @@ export class TestEnv {
     static jettonDecimal: number = 6;
     static priceDecimal: number = 20;
 
-    static tradingFeeRate: number = 0.001;
+    static tokenConfig = {
+        tradingFeeRate: 0.001,
+        lpTradingFeeRate: 0.6
+    }
 
     static async resetEnv() {
         TestEnv.blockchain = await Blockchain.create({
@@ -217,8 +220,8 @@ export class TestEnv {
                     maxLeverage: 105n,
                     liquidationFee: toJettonUnits(0.2), // 0.2U
                     maintenanceRate: BigInt(0.005 * PERCENTAGE_BASIS_POINT), // 0.5%
-                    tradingFeeRate: BigInt(TestEnv.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
-                    lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
+                    tradingFeeRate: BigInt(this.tokenConfig.tradingFeeRate * PERCENTAGE_BASIS_POINT), // 0.1%
+                    lpTradingFeeRate: BigInt(this.tokenConfig.lpTradingFeeRate * PERCENTAGE_BASIS_POINT), // 60%
                     interestRate: 0n,
                     maxFundingRate: BigInt(62500), // 0.00625%
                     liquidityProportion: BigInt(PERCENTAGE_BASIS_POINT / tokens.length), // 100% / n

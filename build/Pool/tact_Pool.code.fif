@@ -2607,8 +2607,9 @@ PROGRAM{
       __tact_dict_set_slice_cell INLINECALLDICT
       s1 s5 XCHG
     }>
-    s0 22 s() XCHG
-    OVER
+    s1 s3 PUSH2
+    SUB
+    s1 23 s() XCHG
     SUB
     s0 21 s() XCHG
     s7 PUSH
