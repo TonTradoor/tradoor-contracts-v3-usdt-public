@@ -1311,7 +1311,7 @@ contract OrderBook with Deployable, Resumable {
     receive(msg: CreateCompensate) {
 
         // check sender
-        require(self.isExecutor(sender()), "invalid sender");
+        self.requireOwner();
 
         let ctx: Context = context();
         // check gas
@@ -1328,7 +1328,7 @@ contract OrderBook with Deployable, Resumable {
             refundAmount: msg.refundAmount,
             executionFeeReceiver: msg.executionFeeReceiver,
             executionFee: msg.executionFee,
-            unlockTime: now() + DAY
+            unlockTime: now() + 3 * DAY
         });
 
         // event
@@ -1341,7 +1341,7 @@ contract OrderBook with Deployable, Resumable {
             refundAmount: msg.refundAmount,
             executionFeeReceiver: msg.executionFeeReceiver,
             executionFee: msg.executionFee,
-            unlockTime: now() + DAY
+            unlockTime: now() + 3 * DAY
         }.toCell());
 
         // transfer execess gas
@@ -1354,8 +1354,7 @@ contract OrderBook with Deployable, Resumable {
      */
     receive(msg: ExecuteOrCancelCompensate) {
         // check sender
-        let isExecutor: Bool = self.isExecutor(sender());
-        require(isExecutor, "invalid sender");
+        self.requireOwner();
 
         // check gas
         require(context().value >= self.perpGasConsumption + self.gasTransferJetton, "gas not enough");
