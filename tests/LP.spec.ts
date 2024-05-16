@@ -596,10 +596,10 @@ describe('LP', () => {
         console.log('orderbook ton after create lp order', fromNano(createResult.balanceAfter.orderBookTonBalance));
         
         // create compensate order
-        const createCompensateResult = await createCompensate(executor, ORDER_TYPE_LP, createResult.orderIdBefore, user0.address, liquidity, user1.address, executionFee);
+        const createCompensateResult = await createCompensate(deployer, ORDER_TYPE_LP, createResult.orderIdBefore, user0.address, liquidity, user1.address, executionFee);
         printTransactionFees(createCompensateResult.trxResult.transactions);
         expect(createCompensateResult.trxResult.transactions).toHaveTransaction({
-            from: executor.address,
+            from: deployer.address,
             to: orderBook.address,
             success: true,
         });
@@ -609,11 +609,11 @@ describe('LP', () => {
         expect(createCompensateResult.compensate).not.toBeNull();
 
         // 1 day later
-        blockchain.now = blockchain.now + 24 * 60 * 60 + 60;
-        const executeCompensateResult = await executeCompensate(executor, createCompensateResult.compensateIdBefore);
+        blockchain.now = blockchain.now + 3 * 24 * 60 * 60 + 60;
+        const executeCompensateResult = await executeCompensate(deployer, createCompensateResult.compensateIdBefore);
         printTransactionFees(executeCompensateResult.trxResult.transactions);
         expect(executeCompensateResult.trxResult.transactions).toHaveTransaction({
-            from: executor.address,
+            from: deployer.address,
             to: orderBook.address,
             success: true,
         });
