@@ -393,6 +393,8 @@ contract Pool with Deployable, Ownable {
         } else {
             receive = liquidityDelta * globalNetLP / self.globalLPLiquidity;
         }
+        require(receive <= self.globalLPFund, "lp fund not enough");
+
         // withdraw funding fee
         let realizedFundingFee: Int = 0;
         if (lpPosition.liquidity > 0) {

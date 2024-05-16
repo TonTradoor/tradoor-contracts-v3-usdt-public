@@ -112,6 +112,7 @@
     } else {
         $receive = (($liquidityDelta * $globalNetLP) / $self'globalLPLiquidity);
     }
+    throw_unless(54795, ($receive <= $self'globalLPFund));
     int $realizedFundingFee = 0;
     if (($lpPosition'liquidity > 0)) {
         $realizedFundingFee = ((($self'globalLPFundingFeeGrowth - $lpPosition'entryFundingFeeGrowth) * $lpPosition'liquidity) / 100000000000000000000);
@@ -837,7 +838,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmZrE2bJGFnk5qUw6oQNPYmsqPReSCUx52uebBbT7mJhEm";
+    return "ipfs://QmZJSJv5uvRSDDeDmsCTjvxSg9ABGKad71yW5gEZgE3rXm";
 }
 
 _ lazy_deployment_completed() method_id {
