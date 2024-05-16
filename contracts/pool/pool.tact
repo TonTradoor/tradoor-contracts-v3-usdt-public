@@ -529,6 +529,7 @@ contract Pool with Deployable, Ownable {
      * @param isLong Indicates whether the position is long or short.
      * @param marginDelta The change in margin.
      * @param sizeDelta The change in size.
+     * @param avgPremiumRate The average premium rate.
      * @param tradePrice The trade price.
      * @param lpReceivedFundingFee The funding fee received by the liquidity provider.
      */
@@ -774,6 +775,7 @@ contract Pool with Deployable, Ownable {
      * @param isLong Indicates whether the position is long or short.
      * @param marginDelta The change in margin.
      * @param sizeDelta The change in size.
+     * @param avgPremiumRate The average premium rate.
      * @param tradePrice The trade price.
      * @param lpReceivedFundingFee The LP received funding fee.
      */
@@ -1035,6 +1037,7 @@ contract Pool with Deployable, Ownable {
      * @param account The account address.
      * @param tokenId The token ID.
      * @param isLong Indicates if the position is long.
+     * @param avgPremiumRate The average premium rate.
      * @param tradePrice The trade price.
      * @param lpReceivedFundingFee The funding fee received by the liquidity provider.
      */
