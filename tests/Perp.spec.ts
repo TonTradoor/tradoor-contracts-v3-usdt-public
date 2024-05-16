@@ -1426,6 +1426,8 @@ describe('LP', () => {
         console.log('receive token:', fromJettonUnits(executeDecreaseResul3.balanceAfter.user3JettonBalance - executeDecreaseResul3.balanceBefore.user3JettonBalance));
 
         /* =========================== decrease LP ================================ */
+        // blockchain.now = blockchain.now + 100 * 24 * 60 * 60 + 40 * 60;
+
         let decreaseLiquidity4 = 1000000;
 
         // create order
@@ -1461,7 +1463,8 @@ describe('LP', () => {
         console.log('lp data after increase:', executeDecreaseResult4.positionDataAfter);
         console.log('receive token:', fromJettonUnits(executeDecreaseResult4.balanceAfter.user0JettonBalance - executeDecreaseResult4.balanceBefore.user0JettonBalance));
 
-        
+        console.log('protocol fee', fromJettonUnits((await pool.getConfigData(null)).protocolTradingFee));
+        console.log('token of orderbook', fromJettonUnits(executeDecreaseResult4.balanceAfter.orderBookJettonBalance));
     });
 
 });

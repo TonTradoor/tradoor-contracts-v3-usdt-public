@@ -151,6 +151,7 @@ export class TestEnv {
                 $$type: 'UpdateConfig',
                 executorLength: BigInt(executors.size),
                 executors: executors,
+                compensator: this.compensator.address,
                 minTimeDelayTrader: 3n * 60n,
                 lpMinExecutionFee: toNano(0.05),
                 perpMinExecutionFee: toNano(0.1),

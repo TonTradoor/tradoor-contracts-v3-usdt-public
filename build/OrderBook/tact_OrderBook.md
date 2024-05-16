@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 15638 bytes
+BOC Size: 15673 bytes
 
 # Types
 Total Types: 47
@@ -50,8 +50,8 @@ TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
 Signature: `TokenExcesses{queryId:uint64}`
 
 ## UpdateConfig
-TLB: `update_config#ad47a750 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = UpdateConfig`
-Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,minTimeDelayTrader:int257,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,usdtWallet:address,pool:address}`
+TLB: `update_config#92cf3566 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> compensator:address minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = UpdateConfig`
+Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,compensator:address,minTimeDelayTrader:int257,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,usdtWallet:address,pool:address}`
 
 ## SendProtocolFee
 TLB: `send_protocol_fee#5dd58461 trxId:uint64 feeReceiver:address amount:int257 = SendProtocolFee`

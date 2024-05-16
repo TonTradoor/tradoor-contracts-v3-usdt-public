@@ -26,6 +26,7 @@ message(0xd53276db) TokenExcesses {
 message UpdateConfig {
     executorLength: Int;
     executors: map<Int, ExecutorParam>;
+    compensator: Address;
     minTimeDelayTrader: Int;
     lpMinExecutionFee: Int as coins;
     perpMinExecutionFee: Int as coins;

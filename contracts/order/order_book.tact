@@ -36,6 +36,7 @@ contract OrderBook with Deployable, Resumable {
     owner: Address;
     stopped: Bool;
     executors: map<Address, Bool>; // account => enabled
+    compensator: Address;
 
     // LP
     lpPositionOrders: map<Int, LPPositionOrder>; // orderId => order
@@ -57,6 +58,7 @@ contract OrderBook with Deployable, Resumable {
      */
     init(deployId: Int) {
         self.owner = sender();
+        self.compensator = sender();
         self.stopped = false;
         self.executors.set(sender(), true);
 
@@ -80,6 +82,7 @@ contract OrderBook with Deployable, Resumable {
             }
             i += 1;
         }
+        self.compensator = msg.compensator;
 
         // config
         self.minTimeDelayTrader = msg.minTimeDelayTrader;
@@ -1311,7 +1314,7 @@ contract OrderBook with Deployable, Resumable {
     receive(msg: CreateCompensate) {
 
         // check sender
-        self.requireOwner();
+        require(self.compensator == sender(), "invalid sender");
 
         let ctx: Context = context();
         // check gas
@@ -1354,7 +1357,7 @@ contract OrderBook with Deployable, Resumable {
      */
     receive(msg: ExecuteOrCancelCompensate) {
         // check sender
-        self.requireOwner();
+        require(self.compensator == sender(), "invalid sender");
 
         // check gas
         require(context().value >= self.perpGasConsumption + self.gasTransferJetton, "gas not enough");

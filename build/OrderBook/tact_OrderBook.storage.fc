@@ -121,28 +121,29 @@ cell $TokenTransfer$_store_cell((int, int, slice, slice, cell, int, slice) v) in
 
 ;;
 ;; Type: UpdateConfig
-;; Header: 0xad47a750
-;; TLB: update_config#ad47a750 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = UpdateConfig
+;; Header: 0x92cf3566
+;; TLB: update_config#92cf3566 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> compensator:address minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = UpdateConfig
 ;;
 
-(slice, ((int, cell, int, int, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 2907154256);
+(slice, ((int, cell, slice, int, int, int, int, int, int, int, int, int, slice, slice))) $UpdateConfig$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 2463053158);
     var v'executorLength = sc_0~load_int(257);
     var v'executors = sc_0~load_dict();
+    var v'compensator = sc_0~__tact_load_address();
     var v'minTimeDelayTrader = sc_0~load_int(257);
     var v'lpMinExecutionFee = sc_0~load_coins();
-    var v'perpMinExecutionFee = sc_0~load_coins();
-    var v'lpGasConsumption = sc_0~load_coins();
     slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'perpMinExecutionFee = sc_1~load_coins();
+    var v'lpGasConsumption = sc_1~load_coins();
     var v'perpGasConsumption = sc_1~load_coins();
     var v'poolLpGasConsumption = sc_1~load_coins();
     var v'poolPerpGasConsumption = sc_1~load_coins();
     var v'minTonsForStorage = sc_1~load_coins();
     var v'gasTransferJetton = sc_1~load_coins();
-    var v'usdtWallet = sc_1~__tact_load_address();
     slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'usdtWallet = sc_2~__tact_load_address();
     var v'pool = sc_2~__tact_load_address();
-    return (sc_0, (v'executorLength, v'executors, v'minTimeDelayTrader, v'lpMinExecutionFee, v'perpMinExecutionFee, v'lpGasConsumption, v'perpGasConsumption, v'poolLpGasConsumption, v'poolPerpGasConsumption, v'minTonsForStorage, v'gasTransferJetton, v'usdtWallet, v'pool));
+    return (sc_0, (v'executorLength, v'executors, v'compensator, v'minTimeDelayTrader, v'lpMinExecutionFee, v'perpMinExecutionFee, v'lpGasConsumption, v'perpGasConsumption, v'poolLpGasConsumption, v'poolPerpGasConsumption, v'minTonsForStorage, v'gasTransferJetton, v'usdtWallet, v'pool));
 }
 
 ;;
@@ -1093,8 +1094,8 @@ tuple $Compensate$_to_opt_tuple(tuple v) inline {
 ;; Type: OrderBook
 ;;
 
-builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) v) inline {
-    var (v'minTimeDelayTrader, v'lpGasConsumption, v'perpGasConsumption, v'poolLpGasConsumption, v'poolPerpGasConsumption, v'minTonsForStorage, v'gasTransferJetton, v'lpMinExecutionFee, v'perpMinExecutionFee, v'totalExecutionFee, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext) = v;
+builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, slice, cell, int, cell, cell, int, cell, int) v) inline {
+    var (v'minTimeDelayTrader, v'lpGasConsumption, v'perpGasConsumption, v'poolLpGasConsumption, v'poolPerpGasConsumption, v'minTonsForStorage, v'gasTransferJetton, v'lpMinExecutionFee, v'perpMinExecutionFee, v'totalExecutionFee, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'compensator, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext) = v;
     build_0 = build_0.store_int(v'minTimeDelayTrader, 257);
     build_0 = build_0.store_int(v'lpGasConsumption, 257);
     build_0 = build_0.store_int(v'perpGasConsumption, 257);
@@ -1114,6 +1115,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, i
     build_4 = __tact_store_address(build_4, v'owner);
     build_4 = build_4.store_int(v'stopped, 1);
     build_4 = build_4.store_dict(v'executors);
+    build_4 = __tact_store_address(build_4, v'compensator);
     build_4 = build_4.store_dict(v'lpPositionOrders);
     build_4 = build_4.store_uint(v'lpPositionOrderIndexNext, 64);
     build_4 = build_4.store_dict(v'perpPositionOrders);
@@ -1130,7 +1132,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, i
     return build_0;
 }
 
-(slice, ((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int))) $OrderBook$_load(slice sc_0) inline {
+(slice, ((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, slice, cell, int, cell, cell, int, cell, int))) $OrderBook$_load(slice sc_0) inline {
     var v'minTimeDelayTrader = sc_0~load_int(257);
     var v'lpGasConsumption = sc_0~load_int(257);
     var v'perpGasConsumption = sc_0~load_int(257);
@@ -1150,6 +1152,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, i
     var v'owner = sc_4~__tact_load_address();
     var v'stopped = sc_4~load_int(1);
     var v'executors = sc_4~load_dict();
+    var v'compensator = sc_4~__tact_load_address();
     var v'lpPositionOrders = sc_4~load_dict();
     var v'lpPositionOrderIndexNext = sc_4~load_uint(64);
     var v'perpPositionOrders = sc_4~load_dict();
@@ -1158,7 +1161,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, i
     var v'perpPositionOrderIndexNext = sc_5~load_uint(64);
     var v'compensates = sc_5~load_dict();
     var v'compensateIndexNext = sc_5~load_uint(64);
-    return (sc_0, (v'minTimeDelayTrader, v'lpGasConsumption, v'perpGasConsumption, v'poolLpGasConsumption, v'poolPerpGasConsumption, v'minTonsForStorage, v'gasTransferJetton, v'lpMinExecutionFee, v'perpMinExecutionFee, v'totalExecutionFee, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext));
+    return (sc_0, (v'minTimeDelayTrader, v'lpGasConsumption, v'perpGasConsumption, v'poolLpGasConsumption, v'poolPerpGasConsumption, v'minTonsForStorage, v'gasTransferJetton, v'lpMinExecutionFee, v'perpMinExecutionFee, v'totalExecutionFee, v'usdtWallet, v'pool, v'owner, v'stopped, v'executors, v'compensator, v'lpPositionOrders, v'lpPositionOrderIndexNext, v'perpPositionOrders, v'perpPositionOrderExs, v'perpPositionOrderIndexNext, v'compensates, v'compensateIndexNext));
 }
 
 (slice, ((int))) $OrderBook$init$_load(slice sc_0) inline {
@@ -1166,7 +1169,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, i
     return (sc_0, (v'deployId));
 }
 
-(int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) $OrderBook$_contract_load() impure inline_ref {
+(int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, slice, cell, int, cell, cell, int, cell, int) $OrderBook$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1181,7 +1184,7 @@ builder $OrderBook$_store(builder build_0, (int, int, int, int, int, int, int, i
     }
 }
 
-() $OrderBook$_contract_store((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, cell, int, cell, cell, int, cell, int) v) impure inline {
+() $OrderBook$_contract_store((int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int, cell, slice, cell, int, cell, cell, int, cell, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

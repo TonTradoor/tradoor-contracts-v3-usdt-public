@@ -13,6 +13,7 @@ export async function run(provider: NetworkProvider) {
     // const executor = Address.parse(await provider.ui().input('executor address:'));
     const executor = Address.parse(getConfig(provider, "executor"));
     const executor1 = Address.parse(getConfig(provider, "executor1"));
+    const compensator = Address.parse(getConfig(provider, "compensator"));
     
     const orderBookJettonWallet = await jetton.getGetWalletAddress(orderBook.address!!);
 
@@ -37,6 +38,7 @@ export async function run(provider: NetworkProvider) {
             $$type: 'UpdateConfig',
             executorLength: BigInt(executors.size),
             executors: executors,
+            compensator: compensator,
             minTimeDelayTrader: 3n * 60n,
             lpMinExecutionFee: toNano(0.05),
             perpMinExecutionFee: toNano(0.1),
