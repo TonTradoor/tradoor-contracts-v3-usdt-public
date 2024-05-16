@@ -8,7 +8,7 @@ import { TestEnv } from './lib/TestEnv';
 import { fromJettonUnits, getFriendlyTonBalance, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
 import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
 import '@ton/test-utils';
-import { adlPerpPosition, cancelPerpOrder, claimProtocolFee, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, } from './lib/PerpHelper';
+import { adlPerpPosition, cancelPerpOrder, claimProtocolFee, createDecreasePerpOrder, createIncreasePerpOrder, createTpSlPerpOrder, executePerpOrder, liquidatePerpPosition, updatePrice, } from './lib/PerpHelper';
 import { ORDER_OP_TYPE_DECREASE_MARKET, ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
 
 describe('LP', () => {
@@ -1192,8 +1192,15 @@ describe('LP', () => {
         expect(executeIncreaseResult2.positionDataAfter.globalLPFund).toEqual(toJettonUnits(2999819.636679));
         console.log('lp data after increase:', executeIncreaseResult2.positionDataAfter);
 
-        /* =========================== decrease short perp ================================ */
+        /* =========================== update price ================================ */
         blockchain.now = blockchain.now - blockchain.now % 3600 + 60 * 60; // HH+2:00
+        // let newPrice = 3000;
+        // const updatePriceResult = await updatePrice(executor, tokenId, newPrice);
+
+        // console.log('position data after update price:', updatePriceResult.positionDataAfter);
+        // console.log('lp data after update price:', updatePriceResult.lpPositionDataAfter)
+
+        /* =========================== decrease short perp ================================ */
         blockchain.now = blockchain.now + 459; // H+1:10
 
         let decreaseShortMargin = 0;
