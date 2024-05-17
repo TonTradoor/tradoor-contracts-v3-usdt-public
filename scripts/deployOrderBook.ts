@@ -9,6 +9,9 @@ export async function run(provider: NetworkProvider) {
 
     console.log('deployId:', deployId, 'deploying order book to address:', orderBook.address);
 
+    setConfig(provider, 'orderBook', "");
+    setConfig(provider, 'pool', "");
+
     await orderBook.send(
         provider.sender(),
         {

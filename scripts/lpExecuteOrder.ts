@@ -5,7 +5,7 @@ import { attachOrderBook, attachPool, getConfig, getLastTransaction, waitForTran
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
     const pool = attachPool(provider);
-    let orderIdNext = await orderBook.getLpPositionOrderIndexNext();
+    let orderIdNext = (await orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
     let orderId = orderIdNext - 1n;
     console.log(`orderIdNext:`, orderIdNext);
     console.log(`orderId:`, orderId);
@@ -16,7 +16,7 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get last order
-    let order = await orderBook.getLpPositionOrder(orderId);
+    let order = (await orderBook.getLpPositionOrder(orderId)).lpPositionOrder;
     console.log(`order:`, order);
 
     // execute order

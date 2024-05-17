@@ -2,11 +2,10 @@ import { Address, beginCell, toNano } from '@ton/core';
 import { } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { toUnits, getConfig, getLastTransaction, waitForTransaction, attachOrderBook, attachJettonWallet } from '../utils/util';
+import { JETTON_DECIMAL, PRICE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
-    const jettonDecimal = getConfig(provider, "jettonDecimal");
-    const priceDecimal = getConfig(provider, "priceDecimal");
 
     /// create order
     let executionFee = 0.1;
@@ -25,7 +24,7 @@ export async function run(provider: NetworkProvider) {
     let user0JettonData = await user0JettonWallet.getGetWalletData();
     console.log('user jetton balance:', user0JettonData.balance);
 
-    let orderId = await orderBook.getPerpPositionOrderIndexNext();
+    let orderId = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
 
     const lastTrx = await getLastTransaction(provider, orderBook.address);
     await user0JettonWallet.send(
@@ -36,7 +35,7 @@ export async function run(provider: NetworkProvider) {
         {
             $$type: 'TokenTransfer',
             query_id: 0n,
-            amount: toUnits(margin, jettonDecimal),
+            amount: toUnits(margin, JETTON_DECIMAL),
             sender: orderBook.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
@@ -50,14 +49,14 @@ export async function run(provider: NetworkProvider) {
                     .storeInt(isMarket? -1n : 0n, 1)
                     .storeUint(tokenId, 64)
                     .storeInt(isLong? -1n : 0n, 1)
-                    .storeUint(toUnits(margin, jettonDecimal), 128)
-                    .storeUint(toUnits(size, jettonDecimal), 128)
-                    .storeUint(toUnits(triggerPrice, priceDecimal), 256)
+                    .storeUint(toUnits(margin, JETTON_DECIMAL), 128)
+                    .storeUint(toUnits(size, JETTON_DECIMAL), 128)
+                    .storeUint(toUnits(triggerPrice, PRICE_DECIMAL), 256)
                     .storeRef(
                         beginCell()
-                        .storeUint(toUnits(0, jettonDecimal), 128)
+                        .storeUint(toUnits(0, JETTON_DECIMAL), 128)
                         .storeUint(0, 256)
-                        .storeUint(toUnits(0, jettonDecimal), 128)
+                        .storeUint(toUnits(0, JETTON_DECIMAL), 128)
                         .storeUint(0, 256)
                     )
                     .endCell()
@@ -78,7 +77,7 @@ export async function run(provider: NetworkProvider) {
     console.log('pool jetton balance:', poolJettonData.balance);
 
     // get index
-    let orderIdNext = await orderBook.getPerpPositionOrderIndexNext();
+    let orderIdNext = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 

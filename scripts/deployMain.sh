@@ -1,4 +1,4 @@
-yarn runmain deployMockJetton
+yarn build
 yarn runmain deployOrderBook
 yarn runmain deployPool
 yarn runmain orderBookSetConfig

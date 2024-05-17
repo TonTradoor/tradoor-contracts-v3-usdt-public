@@ -8,27 +8,20 @@ export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
     const jetton = attachMockJetton(provider);
 
-    const lastTrx = await getLastTransaction(provider, orderBook.address);
-
-    // const executor = Address.parse(await provider.ui().input('executor address:'));
-    const executor = Address.parse(getConfig(provider, "executor"));
-    const executor1 = Address.parse(getConfig(provider, "executor1"));
-    const compensator = Address.parse(getConfig(provider, "compensator"));
-    
     const orderBookJettonWallet = await jetton.getGetWalletAddress(orderBook.address!!);
 
+    const config = getConfig(provider);
+    const executorAddrs = config["executor"];
     let executors =  Dictionary.empty(Dictionary.Keys.BigInt(32), ExecutorParamValue)
-            .set(0n, {
-                $$type: 'ExecutorParam',
-                executor: executor,
-                enable: true
-            })
-            .set(1n, {
-                $$type: 'ExecutorParam',
-                executor: executor1,
-                enable: true
-            });
+    for (const i in executorAddrs) {
+        executors.set(BigInt(i), {
+            $$type: 'ExecutorParam',
+            executor: Address.parse(executorAddrs[i]),
+            enable: true
+        })
+    }
 
+    const lastTrx = await getLastTransaction(provider, orderBook.address);
     await orderBook.send(
         provider.sender(),
         {
@@ -38,16 +31,16 @@ export async function run(provider: NetworkProvider) {
             $$type: 'UpdateConfig',
             executorLength: BigInt(executors.size),
             executors: executors,
-            compensator: compensator,
-            minTimeDelayTrader: 3n * 60n,
-            lpMinExecutionFee: toNano(0.05),
-            perpMinExecutionFee: toNano(0.1),
-            lpGasConsumption: toNano(0.015),
-            perpGasConsumption: toNano(0.017),
-            poolLpGasConsumption: toNano(0.018),
-            poolPerpGasConsumption: toNano(0.038),
-            minTonsForStorage: toNano(0.01),
-            gasTransferJetton: toNano(0.025),
+            compensator: Address.parse(config["compensator"]),
+            minTimeDelayTrader: BigInt(config["minTimeDelayTrader"]),
+            lpMinExecutionFee: toNano(config["lpMinExecutionFee"]),
+            perpMinExecutionFee: toNano(config["perpMinExecutionFee"]),
+            lpGasConsumption: toNano(config["orderbookLpGasConsumption"]),
+            perpGasConsumption: toNano(config["orderbookPerpGasConsumption"]),
+            poolLpGasConsumption: toNano(config["poolLpGasConsumption"]),
+            poolPerpGasConsumption: toNano(config["poolPerpGasConsumption"]),
+            minTonsForStorage: toNano(config["minTonsForStorage"]),
+            gasTransferJetton: toNano(config["gasTransferJetton"]),
             usdtWallet: orderBookJettonWallet,
             pool: pool.address
         }

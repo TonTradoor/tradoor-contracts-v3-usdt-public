@@ -26,9 +26,12 @@ export function setConfig(provider: NetworkProvider, key: string, val: string) {
     fs.writeFileSync(path, JSON.stringify(json, null, 2));
 }
 
-export function getConfig(provider: NetworkProvider, key: string) {
+export function getConfig(provider: NetworkProvider, key?: string) {
     let path = getPath(provider.network());
-    let json = JSON.parse(fs.readFileSync(path))
+    let json = JSON.parse(fs.readFileSync(path));
+    if (key == undefined) {
+        return json;
+    }
     return json[key];
 }
 

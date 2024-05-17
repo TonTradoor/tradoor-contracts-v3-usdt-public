@@ -7,7 +7,7 @@ export async function run(provider: NetworkProvider) {
     const jettonDecimal = getConfig(provider, "jettonDecimal");
 
     /// create order
-    let orderId = await orderBook.getLpPositionOrderIndexNext();
+    let orderId = (await orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
     let decreaseLiquidity = 4;
     let executionFee = 0.2;
 
@@ -32,7 +32,7 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get index
-    let orderIdNext = await orderBook.getLpPositionOrderIndexNext();
+    let orderIdNext = (await orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 

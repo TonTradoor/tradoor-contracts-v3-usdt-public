@@ -1,22 +1,15 @@
 import { Address, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { attachMockJetton, attachOrderBook, attachPool, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
-import { PERCENTAGE_BASIS_POINT } from '../utils/constants';
+import { JETTON_DECIMAL, PERCENTAGE_BASIS_POINT, PERCENTAGE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
-    const orderBook = attachOrderBook(provider);
-    const jetton = attachMockJetton(provider);
-    const jettonDecimal = getConfig(provider, "jettonDecimal");
-    const priceDecimal = getConfig(provider, "priceDecimal");
 
-    const lastTrx = await getLastTransaction(provider, pool.address);
-
-    const tokens = ['BTC', 'ETH'];
-
-    for (let index = 0; index < tokens.length; index++) {
-        const name = tokens[index];
-        // if (index == 0) continue
+    const config = getConfig(provider);
+    const tokens = config["tokens"];
+    for (const token of tokens) {
+        const lastTrx = await getLastTransaction(provider, pool.address);
         await pool.send(
             provider.sender(),
             {
@@ -24,27 +17,27 @@ export async function run(provider: NetworkProvider) {
             },
             {
                 $$type: 'UpdateTokenConfig',
-                tokenId: BigInt(index + 1),
-                name: name,
-                enable: true,
-                minValue: toUnits(100, jettonDecimal), // 100U
-                maxValue: toUnits(10_000_000, jettonDecimal), // 1000w U
-                maxLeverage: 105n,
-                liquidationFee: toUnits(0.5, jettonDecimal), // 0.5U
-                maintenanceRate: BigInt(0.005 * PERCENTAGE_BASIS_POINT), // 0.5%
-                liquidityProportion: BigInt(PERCENTAGE_BASIS_POINT / tokens.length), // 100% / n
-                tradingFeeRate: BigInt(0.001 * PERCENTAGE_BASIS_POINT), // 0.1%
-                lpTradingFeeRate: BigInt(0.6 * PERCENTAGE_BASIS_POINT), // 60%
-                interestRate: 0n,
-                maxFundingRate: BigInt(62500) // 0.00625%
+                tokenId: BigInt(token["tokenId"]),
+                name: token["name"],
+                enable: token["enable"],
+                minValue: toUnits(token["minValue"], JETTON_DECIMAL),
+                maxValue: toUnits(token["maxValue"], JETTON_DECIMAL),
+                maxLeverage: BigInt(token["maxLeverage"]),
+                liquidationFee: toUnits(token["liquidationFee"], JETTON_DECIMAL),
+                maintenanceRate: toUnits(token["maintenanceRate"], PERCENTAGE_DECIMAL),
+                liquidityProportion: toUnits(token["liquidityProportion"], PERCENTAGE_DECIMAL),
+                tradingFeeRate: toUnits(token["tradingFeeRate"], PERCENTAGE_DECIMAL),
+                lpTradingFeeRate: toUnits(token["lpTradingFeeRate"], PERCENTAGE_DECIMAL),
+                interestRate: toUnits(token["interestRate"], PERCENTAGE_DECIMAL),
+                maxFundingRate: toUnits(token["maxFundingRate"], PERCENTAGE_DECIMAL)
             }
         );
 
         const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
         if (transDone) {
-            console.log(`set ${name} token config success`);
+            console.log(`set ${token["name"]} token config success`);
         } else {
-            console.error(`set ${name} token config failed`);
+            console.error(`set ${token["name"]} token config failed`);
         }
     }
 

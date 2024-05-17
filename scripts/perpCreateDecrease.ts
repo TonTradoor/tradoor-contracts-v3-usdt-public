@@ -1,15 +1,13 @@
 import { Address, beginCell, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { toUnits, getConfig, getLastTransaction, waitForTransaction, attachOrderBook } from '../utils/util';
-import { ORDER_OP_TYPE_DECREASE_MARKET } from '../utils/constants';
+import { JETTON_DECIMAL, ORDER_OP_TYPE_DECREASE_MARKET, PRICE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
-    const jettonDecimal = getConfig(provider, "jettonDecimal");
-    const priceDecimal = getConfig(provider, "priceDecimal");
 
     /// create order
-    let orderId = await orderBook.getPerpPositionOrderIndexNext();
+    let orderId = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
     let executionFee = 0.1;
     let tokenId = 1;
     let isLong = true;
@@ -28,9 +26,9 @@ export async function run(provider: NetworkProvider) {
             executionFee: toNano(executionFee),
             tokenId: BigInt(tokenId),
             isLong: isLong,
-            marginDelta: toUnits(margin, jettonDecimal),
-            sizeDelta: toUnits(size, jettonDecimal),
-            triggerPrice: toUnits(triggerPrice, priceDecimal),
+            marginDelta: toUnits(margin, JETTON_DECIMAL),
+            sizeDelta: toUnits(size, JETTON_DECIMAL),
+            triggerPrice: toUnits(triggerPrice, PRICE_DECIMAL),
             trxId: 1n
         }
     );
@@ -42,7 +40,7 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get index
-    let orderIdNext = await orderBook.getPerpPositionOrderIndexNext();
+    let orderIdNext = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 

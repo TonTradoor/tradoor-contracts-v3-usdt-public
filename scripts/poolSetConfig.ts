@@ -2,31 +2,24 @@ import { Address, Dictionary, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { attachMockJetton, attachOrderBook, attachPool, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
 import { ExecutorParamValue } from '../wrappers/OrderBook';
+import { PERCENTAGE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
     const orderBook = attachOrderBook(provider);
-    const jetton = attachMockJetton(provider);
-    const jettonDecimal = getConfig(provider, "jettonDecimal");
-    const priceDecimal = getConfig(provider, "priceDecimal");
-    const executor = Address.parse(getConfig(provider, "executor"));
-    const executor1 = Address.parse(getConfig(provider, "executor1"));
-    const claimExecutor = Address.parse(getConfig(provider, "claimExecutor"));
 
-    const lastTrx = await getLastTransaction(provider, pool.address);
-
-    let executors = Dictionary.empty(Dictionary.Keys.BigInt(32), ExecutorParamValue)
-        .set(0n, {
+    const config = getConfig(provider);
+    const executorAddrs = config["executors"];
+    let executors =  Dictionary.empty(Dictionary.Keys.BigInt(32), ExecutorParamValue)
+    for (const i in executorAddrs) {
+        executors.set(BigInt(i), {
             $$type: 'ExecutorParam',
-            executor: executor,
+            executor: Address.parse(executorAddrs[i]),
             enable: true
         })
-        .set(1n, {
-            $$type: 'ExecutorParam',
-            executor: executor1,
-            enable: true
-        });
+    }
 
+    const lastTrx = await getLastTransaction(provider, pool.address);
     await pool.send(
         provider.sender(),
         {
@@ -36,14 +29,14 @@ export async function run(provider: NetworkProvider) {
             $$type: 'UpdateConfig',
             executorLength: BigInt(executors.size),
             executors: executors,
-            claimExecutor: claimExecutor,
-            lpGasConsumption: toNano(0.018),
-            perpGasConsumption: toNano(0.038),
-            minTonsForStorage: toNano(0.01),
-            lpLockTime: 10n * 60n, // 10 min
-            lpAddBonusFactor: 1n * 10n**9n,
-            lpRemoveBonusFactor: 10n * 10n**9n,
-            lpLiquidityFactor: 2n * 10n**9n,
+            claimExecutor: Address.parse(config["claimExecutor"]),
+            lpGasConsumption: toNano(config["poolLpGasConsumption"]),
+            perpGasConsumption: toNano(config["poolPerpGasConsumption"]),
+            minTonsForStorage: toNano(config["minTonsForStorage"]),
+            lpLockTime: BigInt(config["lpLockTime"]),
+            lpAddBonusFactor: toUnits(config["lpAddBonusFactor"], PERCENTAGE_DECIMAL),
+            lpRemoveBonusFactor: toUnits(config["lpRemoveBonusFactor"], PERCENTAGE_DECIMAL),
+            lpLiquidityFactor: toUnits(config["lpLiquidityFactor"], PERCENTAGE_DECIMAL),
             orderBook: orderBook.address
         }
     );

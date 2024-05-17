@@ -19,7 +19,7 @@ export async function run(provider: NetworkProvider) {
     let user0JettonData = await user0JettonWallet.getGetWalletData();
     console.log('user jetton balance:', user0JettonData.balance);
 
-    let orderId = await orderBook.getLpPositionOrderIndexNext();
+    let orderId = (await orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
 
     const lastTrx = await getLastTransaction(provider, orderBook.address);
     await user0JettonWallet.send(
@@ -60,7 +60,7 @@ export async function run(provider: NetworkProvider) {
     console.log('pool jetton balance:', poolJettonData.balance);
 
     // get index
-    let orderIdNext = await orderBook.getLpPositionOrderIndexNext();
+    let orderIdNext = (await orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 

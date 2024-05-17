@@ -5,8 +5,6 @@ import { ORDER_OP_TYPE_DECREASE_MARKET } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
-    const jettonDecimal = getConfig(provider, "jettonDecimal");
-    const priceDecimal = getConfig(provider, "priceDecimal");
 
     /// create order
     const orderId = BigInt(await provider.ui().input('orderId to cancel:'));
@@ -32,7 +30,7 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get index
-    let orderIdNext = await orderBook.getPerpPositionOrderIndexNext();
+    let orderIdNext = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
