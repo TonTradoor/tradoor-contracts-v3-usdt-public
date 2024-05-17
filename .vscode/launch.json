@@ -11,8 +11,14 @@
             "type": "node-terminal"
         },
         {
-            "command": "yarn test RBF",
-            "name": "Run test RBF",
+            "command": "yarn rundev getData",
+            "name": "Run custom getData",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
+            "command": "yarn rundev getData --testnet",
+            "name": "Run testnet getData",
             "request": "launch",
             "type": "node-terminal"
         },
