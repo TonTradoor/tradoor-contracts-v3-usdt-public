@@ -3,7 +3,8 @@ import { attachOrderBook, attachPool, getConfig } from '../utils/util';
 import { Address } from '@ton/core';
 
 export async function run(provider: NetworkProvider) {
-    const account = Address.parse(await provider.ui().input('account address:'));
+    let accountAddr = await provider.ui().input('account address:');
+    const account = accountAddr === '' ? null : Address.parse(accountAddr);
     const tokenId = BigInt(await provider.ui().input('tokenId:'));
     const orderId = BigInt(await provider.ui().input('orderId:'));
 
