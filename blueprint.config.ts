@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'mainnet') {
             endpoint: 'https://mainnet-v4.tonhubapi.com',
             type: 'mainnet',
             version: 'v4',
-        }
+        },
     };
 } else {
     config = {

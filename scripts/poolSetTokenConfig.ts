@@ -9,6 +9,7 @@ export async function run(provider: NetworkProvider) {
     const config = getConfig();
     const tokens = config["tokens"];
     for (const token of tokens) {
+        console.log(`set ${token["name"]} token config begining`);
         const lastTrx = await getLastTransaction(provider, pool.address);
         await pool.send(
             provider.sender(),

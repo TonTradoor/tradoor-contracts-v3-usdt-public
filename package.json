@@ -7,14 +7,14 @@
         "test": "jest --verbose --maxWorkers=1",
         "test-build": "yarn build && yarn test",
         "run": "blueprint run --mnemonic",
-        "runmain": "NODE_ENV=mainnet blueprint run --mnemonic",
-        "runtest": "NODE_ENV=testnet blueprint run --mnemonic",
-        "rundev": "NODE_ENV=devnet blueprint run --mnemonic",
         "runlocal": "NODE_ENV=localnet blueprint run --mnemonic",
+        "rundev": "NODE_ENV=devnet blueprint run --mnemonic",
+        "runtest": "NODE_ENV=testnet blueprint run --mnemonic",
+        "runmain": "NODE_ENV=mainnet blueprint run --mnemonic --mainnet",
         "deploylocal": "sh scripts/deploy.sh localnet",
         "deploydev": "sh scripts/deploy.sh devnet",
         "deploytest": "sh scripts/deploy.sh testnet",
-        "deploymain": "sh scripts/deploy.sh mainnet"
+        "deploymain": "sh scripts/deployMain.sh"
     },
     "devDependencies": {
         "@orbs-network/ton-access": "^2.3.3",
