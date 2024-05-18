@@ -5,7 +5,7 @@ import { BlockchainTransaction } from "@ton/sandbox";
 import { JettonDefaultWallet } from "../../wrappers/JettonDefaultWallet";
 
 
-export async function mint(to: Address, amount: string): Promise<BlockchainTransaction[]> {
+export async function mint(to: Address, amount: string) {
     const mintResult = await TestEnv.jetton.send(
         TestEnv.deployer.getSender(),
         {
@@ -24,7 +24,7 @@ export async function mint(to: Address, amount: string): Promise<BlockchainTrans
         success: true,
     });
 
-    return mintResult.transactions;
+    return mintResult;
 }
 
 export async function getJettonWallet(senderAddress: Address) {

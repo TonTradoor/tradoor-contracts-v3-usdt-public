@@ -2858,22 +2858,80 @@ PROGRAM{
         s15 16 s() XCHG
         15 ROLL
       }>
+      1 LDU
+      SWAP
+      1 EQINT
+      DUP
+      NOT
+      IFJMP:<{
+        2DROP
+        24 s() 25 s() XCHG
+        23 s() 25 s() XCHG
+        22 s() 25 s() XCHG
+        21 s() 25 s() XCHG
+        20 s() 25 s() XCHG
+        19 s() 25 s() XCHG
+        18 s() 25 s() XCHG
+        17 s() 25 s() XCHG
+        16 s() 25 s() XCHG
+        s15 25 s() XCHG
+        s14 25 s() XCHG
+        s13 25 s() XCHG
+        s12 25 s() XCHG
+        s11 25 s() XCHG
+        s10 25 s() XCHG
+        s9 25 s() XCHG
+        s0 25 s() XCHG
+        s0 s8 XCHG
+        s0 s7 XCHG
+        s0 s6 XCHG
+        5 -ROLL
+        25 s() PUSH
+        26 s() PUSH
+        $OrderBook$_fun_refundJetton INLINECALLDICT
+        TRUE
+        0 PUSHINT
+        66 PUSHINT
+        B{b5ee9c7241010101001700002a000000007061796c6f6164206e6f7420657869737410e4d965} B>boc PUSHREF
+        s4 27 s() XCHG
+        $SendParameters$_constructor_to_bounce_value_mode_body INLINECALLDICT
+        $global_send INLINECALLDICT
+        21 s() 22 s() XCHG
+        20 s() 21 s() XCHG
+        19 s() 20 s() XCHG
+        18 s() 19 s() XCHG
+        17 s() 18 s() XCHG
+        16 s() 17 s() XCHG
+        s15 16 s() XCHG
+        15 ROLL
+      }>
+      SWAP
       LDREF
       DROP
       $Cell$_fun_asSlice INLINECALLDICT
       32 LDU
-      OVER
-      1 EQINT
+      s2 PUSH
       IF:<{
-        NIP
+        OVER
+        1 EQINT
+      }>ELSE<{
+        FALSE
+      }>
+      IF:<{
+        2 1 BLKDROP2
         128 LDU
         LDGRAMS
         DROP
         SWAP
         $OrderBook$_fun_handleCreateIncreaseLPPositionOrder INLINECALLDICT
       }>ELSE<{
-        SWAP
-        2 EQINT
+        s0 s2 XCHG
+        IF:<{
+          2 EQINT
+        }>ELSE<{
+          DROP
+          FALSE
+        }>
         IF:<{
           LDGRAMS
           1 LDI

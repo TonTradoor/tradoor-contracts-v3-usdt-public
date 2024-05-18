@@ -41,8 +41,12 @@ describe('LP', () => {
         orderBookJettonWallet = TestEnv.orderBookJettonWallet;
 
         // mint to user
-        await mint(user0.address, '100000');
-        await mint(user1.address, '100000');
+        let trxResult = await mint(user0.address, '100000');
+        printTransactionFees(trxResult.transactions);
+
+        trxResult = await mint(user1.address, '100000');
+        printTransactionFees(trxResult.transactions);
+
         // get user jetton balance
         expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('100000'));
         expect(await getJettonBalance(user1.address)).toEqual(toJettonUnits('100000'));

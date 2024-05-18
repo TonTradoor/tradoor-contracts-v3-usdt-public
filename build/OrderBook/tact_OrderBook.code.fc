@@ -261,13 +261,19 @@
         $global_send($SendParameters$_constructor_to_bounce_value_mode_body($msg'from, true, 0, (2 + 64), __gen_cell_comment_dfde81661693d5b2a6fafcd95a1debc64650c7aa9cee823a5fe18067c1b07bb4()));
         return (($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'compensator, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
     }
+    int $exist = ($msg'forwardPayload~load_uint(1) == 1);
+    if ((~ $exist)) {
+        ($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'compensator, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_refundJetton($msg'queryId, $msg'amount, $msg'from, $msg'from);
+        $global_send($SendParameters$_constructor_to_bounce_value_mode_body($msg'from, true, 0, (2 + 64), __gen_cell_comment_38d9a6bcfd62e0adf3e99c849984e2cf2a3ded8b23400bd1c243e2ef9984651b()));
+        return (($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'compensator, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext), ());
+    }
     slice $operation = $Cell$_fun_asSlice($msg'forwardPayload~load_ref());
     int $opCode = $operation~load_uint(32);
-    if (($opCode == 1)) {
+    if (( ($exist) ? (($opCode == 1)) : (false) )) {
         int $liquidityDelta = $operation~load_uint(128);
         int $executionFee = $operation~load_coins();
         ($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'compensator, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_handleCreateIncreaseLPPositionOrder($msg'queryId, $msg'amount, $msg'from, $executionFee, $liquidityDelta);
-    } elseif (($opCode == 2)) {
+    } elseif (( ($exist) ? (($opCode == 2)) : (false) )) {
         int $executionFee = $operation~load_coins();
         int $isMarket = ($operation~load_int(1) == (- 1));
         int $tokenId = $operation~load_uint(64);

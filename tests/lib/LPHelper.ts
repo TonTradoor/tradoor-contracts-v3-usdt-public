@@ -25,6 +25,7 @@ export async function createIncreaseLPOrder(user: SandboxContract<TreasuryContra
             forward_ton_amount: toNano(executionFee + 0.1),
             forward_payload: 
                 beginCell()
+                .storeUint(1, 1)
                 .storeRef(
                     beginCell()
                     .storeUint(OP_CREATE_INCREASE_LP_POSITION_ORDER, 32) // op

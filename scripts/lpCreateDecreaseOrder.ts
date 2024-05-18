@@ -1,10 +1,10 @@
 import { Address, beginCell, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { toUnits, getConfig, getLastTransaction, waitForTransaction, attachOrderBook } from '../utils/util';
+import { JETTON_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
-    const jettonDecimal = getConfig(provider, "jettonDecimal");
 
     /// create order
     let orderId = (await orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
@@ -20,7 +20,7 @@ export async function run(provider: NetworkProvider) {
         {
             $$type: 'CreateDecreaseLPPositionOrder',
             executionFee: toNano(executionFee),
-            liquidityDelta: toUnits(decreaseLiquidity, jettonDecimal),
+            liquidityDelta: toUnits(decreaseLiquidity, JETTON_DECIMAL),
             trxId: 1n
         }
     );

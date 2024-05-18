@@ -1,4 +1,4 @@
-import { Blockchain, RemoteBlockchainStorage, SandboxContract, TreasuryContract, wrapTonClient4ForRemote } from '@ton/sandbox';
+import { Blockchain, printTransactionFees, RemoteBlockchainStorage, SandboxContract, TreasuryContract, wrapTonClient4ForRemote } from '@ton/sandbox';
 import { ExecutorParamValue, OrderBook } from '../../wrappers/OrderBook';
 import { Pool } from '../../wrappers/Pool';
 import { MockJetton } from '../../wrappers/MockJetton';
@@ -118,6 +118,7 @@ export class TestEnv {
                 queryId: 0n
             }
         );
+        printTransactionFees(jettonDeployResult.transactions);
 
         expect(jettonDeployResult.transactions).toHaveTransaction({
             from: TestEnv.deployer.address,

@@ -8,7 +8,7 @@ message(0xf8a7ea5) TokenTransfer {
     responseDestination: Address?;
     customPayload: Cell?;
     forwardTonAmount: Int as coins;
-    forwardPayload: Slice as remaining; 
+    forwardPayload: Slice as remaining;
 }
 
 message(0x7362d09c) TokenNotification {

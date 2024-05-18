@@ -8,21 +8,24 @@ export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
 
     /// create order
-    let executionFee = 0.1;
+    let executionFee = 0;
     let isMarket = true;
     let tokenId = 1;
     let isLong = true;
-    let margin = 100;
-    let size = 0.02;
+    let margin = 0.001;
+    let size = 0.005;
     let triggerPrice = 67180;
 
     // transfer jetton with create increase perp position order payload
     // get user jetton wallet address
     let user0JettonWallet = await attachJettonWallet(provider, provider.sender().address!!);
-
     // get user jetton balance
+    if (!await provider.isContractDeployed(user0JettonWallet.address)) {
+        console.log('user jetton wallet:', user0JettonWallet.address);
+        return;
+    }
     let user0JettonData = await user0JettonWallet.getGetWalletData();
-    console.log('user jetton balance:', user0JettonData.balance);
+    console.log(`user jetton wallet ${user0JettonWallet.address} balance ${user0JettonData.balance}`);
 
     let orderId = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
 
@@ -30,7 +33,7 @@ export async function run(provider: NetworkProvider) {
     await user0JettonWallet.send(
         provider.sender(),
         {
-            value: toNano(executionFee + 0.3),
+            value: toNano(executionFee + 0.2),
         },
         {
             $$type: 'TokenTransfer',
@@ -39,9 +42,10 @@ export async function run(provider: NetworkProvider) {
             sender: orderBook.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
-            forward_ton_amount: toNano(executionFee + 0.2),
+            forward_ton_amount: toNano(executionFee + 0.02),
             forward_payload: 
                 beginCell()
+                .storeUint(1, 1)
                 .storeRef(
                     beginCell()
                     .storeUint(2,32) // op

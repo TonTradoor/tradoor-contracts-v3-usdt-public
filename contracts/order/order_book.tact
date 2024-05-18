@@ -187,14 +187,26 @@ contract OrderBook with Deployable, Resumable {
         }
 
         // get op code
+        let exist: Bool = msg.forwardPayload.loadUint(1) == 1;
+        if (!exist) {
+            self.refundJetton(msg.queryId, msg.amount, msg.from, msg.from);
+            send(SendParameters{
+                to: msg.from,
+                bounce: true,
+                value: 0,
+                mode: SendIgnoreErrors + SendRemainingValue,
+                body: "payload not exist".asComment()
+            });
+            return;
+        }
         let operation: Slice = msg.forwardPayload.loadRef().asSlice();
         let opCode: Int = operation.loadUint(32);
-        if (opCode == OP_CREATE_INCREASE_LP_POSITION_ORDER) {
+        if (exist && opCode == OP_CREATE_INCREASE_LP_POSITION_ORDER) {
             let liquidityDelta: Int = operation.loadUint(128);
             let executionFee: Int = operation.loadCoins();
 
             self.handleCreateIncreaseLPPositionOrder(msg.queryId, msg.amount, msg.from, executionFee, liquidityDelta);
-        } else if (opCode == OP_CREATE_INCREASE_PERP_POSITION_ORDER) {
+        } else if (exist && opCode == OP_CREATE_INCREASE_PERP_POSITION_ORDER) {
             let executionFee: Int = operation.loadCoins();
             let isMarket: Bool = operation.loadInt(1) == -1;
             let tokenId: Int = operation.loadUint(64);
