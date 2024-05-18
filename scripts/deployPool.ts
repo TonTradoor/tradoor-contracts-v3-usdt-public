@@ -4,7 +4,7 @@ import { NetworkProvider } from '@ton/blueprint';
 import { getConfig, setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    let deployId = getConfig(provider, "nextDeployId");
+    let deployId = getConfig("nextDeployId");
     const pool = provider.open(await Pool.fromInit(deployId));
 
     console.log('deployId:', deployId, 'deploying pool to address:', pool.address);
@@ -22,5 +22,5 @@ export async function run(provider: NetworkProvider) {
 
     await provider.waitForDeploy(pool.address);
     
-    setConfig(provider, "pool", pool.address.toString());
+    setConfig("pool", pool.address.toString());
 }

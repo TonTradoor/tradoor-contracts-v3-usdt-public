@@ -4,13 +4,13 @@ import { NetworkProvider } from '@ton/blueprint';
 import { getConfig, setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    let deployId = getConfig(provider, "nextDeployId");
+    let deployId = getConfig("nextDeployId");
     const orderBook = provider.open(await OrderBook.fromInit(deployId));
 
     console.log('deployId:', deployId, 'deploying order book to address:', orderBook.address);
 
-    setConfig(provider, 'orderBook', "");
-    setConfig(provider, 'pool', "");
+    setConfig('orderBook', "");
+    setConfig('pool', "");
 
     await orderBook.send(
         provider.sender(),
@@ -25,5 +25,5 @@ export async function run(provider: NetworkProvider) {
 
     await provider.waitForDeploy(orderBook.address);
 
-    setConfig(provider, "orderBook", orderBook.address.toString());
+    setConfig("orderBook", orderBook.address.toString());
 }

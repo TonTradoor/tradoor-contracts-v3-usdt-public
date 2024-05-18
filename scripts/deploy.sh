@@ -1,8 +1,8 @@
 yarn build
 # yarn rundev deployMockJetton
-yarn rundev deployOrderBook
-yarn rundev deployPool
-yarn rundev orderBookSetConfig
-yarn rundev poolSetConfig
-yarn rundev poolSetTokenConfig
-yarn rundev incrementDeployId
+NODE_ENV=$1 yarn run run deployOrderBook
+NODE_ENV=$1 yarn run run deployPool
+NODE_ENV=$1 yarn run run orderBookSetConfig
+NODE_ENV=$1 yarn run run poolSetConfig
+NODE_ENV=$1 yarn run run poolSetTokenConfig
+NODE_ENV=$1 yarn run run incrementDeployId

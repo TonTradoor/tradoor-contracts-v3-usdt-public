@@ -6,7 +6,7 @@ import { buildOnchainMetadata } from '../contracts/mock/utils/jetton-helpers';
 import { getConfig, setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    let deployId = getConfig(provider, "nextDeployId");
+    let deployId = getConfig("nextDeployId");
 
     const jettonParams = {
         name: 'Mock USDT ' + deployId,
@@ -38,6 +38,6 @@ export async function run(provider: NetworkProvider) {
     );
 
     await provider.waitForDeploy(sampleJetton.address);
-    setConfig(provider, 'sampleJetton', sampleJetton.address.toString());
+    setConfig('sampleJetton', sampleJetton.address.toString());
 
 }

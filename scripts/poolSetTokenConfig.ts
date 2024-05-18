@@ -1,12 +1,12 @@
-import { Address, toNano } from '@ton/core';
-import { NetworkProvider, sleep } from '@ton/blueprint';
-import { attachMockJetton, attachOrderBook, attachPool, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
-import { JETTON_DECIMAL, PERCENTAGE_BASIS_POINT, PERCENTAGE_DECIMAL } from '../utils/constants';
+import { toNano } from '@ton/core';
+import { NetworkProvider } from '@ton/blueprint';
+import { attachPool, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
+import { JETTON_DECIMAL, PERCENTAGE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
 
-    const config = getConfig(provider);
+    const config = getConfig();
     const tokens = config["tokens"];
     for (const token of tokens) {
         const lastTrx = await getLastTransaction(provider, pool.address);

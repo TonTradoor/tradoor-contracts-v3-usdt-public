@@ -10,7 +10,7 @@ export async function run(provider: NetworkProvider) {
 
     const orderBookJettonWallet = await jetton.getGetWalletAddress(orderBook.address!!);
 
-    const config = getConfig(provider);
+    const config = getConfig();
     const executorAddrs = config["executor"];
     let executors =  Dictionary.empty(Dictionary.Keys.BigInt(32), ExecutorParamValue)
     for (const i in executorAddrs) {

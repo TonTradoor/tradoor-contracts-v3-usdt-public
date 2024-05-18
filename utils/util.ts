@@ -16,8 +16,8 @@ function getConfigPath(fileName: string) {
     return __dirname + "/../config/" + fileName
 }
 
-export function setConfig(provider: NetworkProvider, key: string, val: string) {
-    let path = getPath(provider.network());
+export function setConfig(key: string, val: string) {
+    let path = getPath(process.env.NODE_ENV!!);
     if (!fs.existsSync(path)) {
         fs.writeFileSync(path, "{}");
     }
@@ -26,8 +26,8 @@ export function setConfig(provider: NetworkProvider, key: string, val: string) {
     fs.writeFileSync(path, JSON.stringify(json, null, 2));
 }
 
-export function getConfig(provider: NetworkProvider, key?: string) {
-    let path = getPath(provider.network());
+export function getConfig(key?: string) {
+    let path = getPath(process.env.NODE_ENV!!);
     let json = JSON.parse(fs.readFileSync(path));
     if (key == undefined) {
         return json;
@@ -161,17 +161,17 @@ export function fromUnits(src: number | string | bigint, decimal: number) {
 }
 
 export function attachOrderBook(provider: NetworkProvider) {
-    const orderBookAddress = Address.parse(getConfig(provider, "orderBook"));
+    const orderBookAddress = Address.parse(getConfig("orderBook"));
     return provider.open(OrderBook.fromAddress(orderBookAddress));
 }
 
 export function attachPool(provider: NetworkProvider) {
-    const poolAddress = Address.parse(getConfig(provider, "pool"));
+    const poolAddress = Address.parse(getConfig("pool"));
     return provider.open(Pool.fromAddress(poolAddress));
 }
 
 export function attachMockJetton(provider: NetworkProvider) {
-    const jettonAddress = Address.parse(getConfig(provider, "sampleJetton"));
+    const jettonAddress = Address.parse(getConfig("sampleJetton"));
     return provider.open(MockJetton.fromAddress(jettonAddress));
 }
 

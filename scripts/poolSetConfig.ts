@@ -1,6 +1,6 @@
 import { Address, Dictionary, toNano } from '@ton/core';
-import { NetworkProvider, sleep } from '@ton/blueprint';
-import { attachMockJetton, attachOrderBook, attachPool, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
+import { NetworkProvider } from '@ton/blueprint';
+import { attachOrderBook, attachPool, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
 import { ExecutorParamValue } from '../wrappers/OrderBook';
 import { PERCENTAGE_DECIMAL } from '../utils/constants';
 
@@ -8,7 +8,7 @@ export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
     const orderBook = attachOrderBook(provider);
 
-    const config = getConfig(provider);
+    const config = getConfig();
     const executorAddrs = config["executors"];
     let executors =  Dictionary.empty(Dictionary.Keys.BigInt(32), ExecutorParamValue)
     for (const i in executorAddrs) {
