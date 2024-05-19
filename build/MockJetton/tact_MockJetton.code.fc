@@ -29,7 +29,7 @@
     throw_unless(18668, $self'mintable);
     $self'total_supply = ($self'total_supply + $amount);
     var ($winit'code, $winit'data) = ($self'total_supply, $self'owner, $self'content, $self'mintable)~$MockJetton$_fun_getJettonWalletInit($to);
-    $global_send($SendParameters$_constructor_to_value_bounce_mode_body_code_data($global_contractAddress(($winit'code, $winit'data)), 0, true, 64, $TokenTransferInternal$_store_cell($TokenTransferInternal$_constructor_query_id_amount_from_response_destination_forward_ton_amount_forward_payload(0, $amount, my_address(), $response_destination, 0, $Cell$_fun_asSlice(end_cell(begin_cell())))), $winit'code, $winit'data));
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body_code_data($global_contractAddress(($winit'code, $winit'data)), 0, true, 64, $TokenTransferInternal$_store_cell($TokenTransferInternal$_constructor_query_id_amount_from_response_destination_forward_ton_amount_forward_payload(0, $amount, my_address(), $response_destination, 0, $Cell$_fun_asSlice(end_cell(store_uint(begin_cell(), 0, 1))))), $winit'code, $winit'data));
     return (($self'total_supply, $self'owner, $self'content, $self'mintable), ());
 }
 
@@ -158,7 +158,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmTwQMjfgSRqiVDMe1LQ8dknZE4KMxd5rqwcVSgymyqxAE";
+    return "ipfs://QmP4PwB2TaZYpjqELaXw4fRCNq2RuabeWxpMZbiCpmvvAg";
 }
 
 _ lazy_deployment_completed() method_id {

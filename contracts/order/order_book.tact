@@ -167,7 +167,7 @@ contract OrderBook with Deployable, Resumable {
                     responseDestination: msg.from,
                     customPayload: null,
                     forwardTonAmount: 0,
-                    forwardPayload: beginCell().endCell().asSlice()
+                    forwardPayload: beginCell().storeUint(0, 1).endCell().asSlice()
                 }.toCell()
             });
             return;
@@ -236,7 +236,7 @@ contract OrderBook with Deployable, Resumable {
                     responseDestination: msg.from,
                     customPayload: null,
                     forwardTonAmount: 0,
-                    forwardPayload: beginCell().endCell().asSlice()
+                    forwardPayload: beginCell().storeUint(0, 1).endCell().asSlice()
                 }.toCell()
             });
         }
@@ -264,7 +264,7 @@ contract OrderBook with Deployable, Resumable {
                     responseDestination: destination,
                     customPayload: null,
                     forwardTonAmount: 0,
-                    forwardPayload: beginCell().endCell().asSlice()
+                    forwardPayload: beginCell().storeUint(0, 1).endCell().asSlice()
                 }.toCell()
             });
         }
@@ -1310,7 +1310,7 @@ contract OrderBook with Deployable, Resumable {
                     responseDestination: msg.feeReceiver,
                     customPayload: null,
                     forwardTonAmount: 0,
-                    forwardPayload: beginCell().endCell().asSlice()
+                    forwardPayload: beginCell().storeUint(0, 1).endCell().asSlice()
                 }.toCell()
             });
         }

@@ -114,7 +114,7 @@ export async function sendCompensateJetton(user: SandboxContract<TreasuryContrac
             response_destination: user.address,
             custom_payload: null,
             forward_ton_amount: toNano(0),
-            forward_payload: beginCell().endCell()
+            forward_payload: beginCell().storeBit(0).endCell()
         }
     );
     // after trx

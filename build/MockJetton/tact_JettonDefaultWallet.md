@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: JettonDefaultWallet
-BOC Size: 2127 bytes
+BOC Size: 2157 bytes
 
 # Types
 Total Types: 20
@@ -117,6 +117,7 @@ Total Get Methods: 1
 137: Masterchain support is not enabled for this contract
 3688: Not mintable
 4429: Invalid sender
+13257: Invalid message
 14534: Not owner
 16059: Invalid value
 18668: Can't Mint Anymore

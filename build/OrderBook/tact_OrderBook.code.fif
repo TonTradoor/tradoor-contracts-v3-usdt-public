@@ -1992,7 +1992,9 @@ PROGRAM{
       FALSE
       PUSHNULL
       0 PUSHINT
+      DUP
       NEWC
+      1 STU
       ENDC
       $Cell$_fun_asSlice INLINECALLDICT
       s6 s8 XCHG
@@ -2798,8 +2800,9 @@ PROGRAM{
       66 PUSHINT
       FALSE
       PUSHNULL
-      s3 PUSH
+      s3 s3 PUSH2
       NEWC
+      1 STU
       ENDC
       $Cell$_fun_asSlice INLINECALLDICT
       s7 PUSH
@@ -2961,8 +2964,9 @@ PROGRAM{
           66 PUSHINT
           FALSE
           PUSHNULL
-          s3 PUSH
+          s3 s3 PUSH2
           NEWC
+          1 STU
           ENDC
           $Cell$_fun_asSlice INLINECALLDICT
           s6 PUSH
@@ -5258,7 +5262,9 @@ PROGRAM{
       FALSE
       PUSHNULL
       0 PUSHINT
+      DUP
       NEWC
+      1 STU
       ENDC
       $Cell$_fun_asSlice INLINECALLDICT
       s6 PUSH

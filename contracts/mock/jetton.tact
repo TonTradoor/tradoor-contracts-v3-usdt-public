@@ -78,7 +78,7 @@ trait Jetton with Ownable {
                 from: myAddress(),
                 response_destination: response_destination,
                 forward_ton_amount: 0,
-                forward_payload: beginCell().endCell().asSlice()
+                forward_payload: beginCell().storeUint(0, 1).endCell().asSlice()
             }.toCell(),
             code: winit.code,
             data: winit.data
@@ -116,7 +116,7 @@ trait Jetton with Ownable {
 contract JettonDefaultWallet {
     // const minTonsForStorage: Int = ton("0.019");
     // const gasConsumption: Int = ton("0.013");
-    const minTonsForStorage: Int = ton("0.001");
+    const minTonsForStorage: Int = ton("0.005");
     const gasConsumption: Int = ton("0.01");
 
     balance: Int as coins = 0;
@@ -142,6 +142,12 @@ contract JettonDefaultWallet {
         // Update balance
         self.balance = self.balance - msg.amount; 
         require(self.balance >= 0, "Invalid balance");
+
+        if (msg.forward_payload.preloadUint(1) >= 1) {
+            let remain_refs: Int = msg.forward_payload.refs();
+            let remain_bits: Int = msg.forward_payload.bits();
+            require(remain_refs == 1 && remain_bits == 1, "Invalid message");
+        }
 
         let init: StateInit = initOf JettonDefaultWallet(msg.sender, self.master);  
         let wallet_address: Address = contractAddress(init);
