@@ -2,17 +2,17 @@ import { Address, beginCell, toNano } from '@ton/core';
 import { } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { toUnits, getConfig, getLastTransaction, waitForTransaction, attachOrderBook, attachJettonWallet } from '../utils/util';
-import { JETTON_DECIMAL, PRICE_DECIMAL } from '../utils/constants';
+import { JETTON_DECIMAL, OP_CREATE_INCREASE_PERP_POSITION_ORDER, PRICE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
 
     /// create order
-    let executionFee = 0;
+    let executionFee = 0.1;
     let isMarket = true;
     let tokenId = 1;
     let isLong = true;
-    let margin = 0.001;
+    let margin = 0.01;
     let size = 0.005;
     let triggerPrice = 67180;
 
@@ -33,7 +33,7 @@ export async function run(provider: NetworkProvider) {
     await user0JettonWallet.send(
         provider.sender(),
         {
-            value: toNano(executionFee + 0.2),
+            value: toNano(executionFee + 0.3),
         },
         {
             $$type: 'TokenTransfer',
@@ -42,13 +42,13 @@ export async function run(provider: NetworkProvider) {
             sender: orderBook.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
-            forward_ton_amount: toNano(executionFee + 0.02),
+            forward_ton_amount: toNano(executionFee + 0.2),
             forward_payload: 
                 beginCell()
                 .storeUint(1, 1)
                 .storeRef(
                     beginCell()
-                    .storeUint(2,32) // op
+                    .storeUint(OP_CREATE_INCREASE_PERP_POSITION_ORDER, 32) // op
                     .storeCoins(toNano(executionFee)) // execution fee
                     .storeInt(isMarket? -1n : 0n, 1)
                     .storeUint(tokenId, 64)

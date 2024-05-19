@@ -107,7 +107,9 @@
     $self'perpPositionOrderIndexNext = ($orderId + 1);
     if (( (($opType == 10)) ? (true) : (($opType == 11)) )) {
         $triggerAbove = (~ $isLong);
-        $self'perpPositionOrderExs~__tact_dict_set_int_cell(257, $orderId, $PerpPositionOrderEx$_store_cell($PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee($tpSize, $tpPrice, $slSize, $slPrice, $executionFee)));
+        if (( (( (($tpSize > 0)) ? (($tpPrice > 0)) : (false) )) ? (true) : (( (($slSize > 0)) ? (($slPrice > 0)) : (false) )) )) {
+            $self'perpPositionOrderExs~__tact_dict_set_int_cell(257, $orderId, $PerpPositionOrderEx$_store_cell($PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee($tpSize, $tpPrice, $slSize, $slPrice, $executionFee)));
+        }
     } else {
         if (($opType == 12)) {
             $triggerAbove = $isLong;
@@ -559,6 +561,7 @@
                 $executionFeeMultiple = $executionFeeMultiple + 1;
                 ($self'minTimeDelayTrader, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'totalExecutionFee, $self'usdtWallet, $self'pool, $self'owner, $self'stopped, $self'executors, $self'compensator, $self'lpPositionOrders, $self'lpPositionOrderIndexNext, $self'perpPositionOrders, $self'perpPositionOrderExs, $self'perpPositionOrderIndexNext, $self'compensates, $self'compensateIndexNext)~$OrderBook$_fun_createPerpOrder($msg'trxId, 14, __tact_context_get_sender(), $order'tokenId, $order'isLong, 0, $orderEx'slSize, $orderEx'slPrice, 0, 0, 0, 0, $orderEx'executionFee);
             }
+            $self'perpPositionOrderExs~__tact_dict_set_int_cell(257, $msg'orderId, $PerpPositionOrderEx$_store_opt(null()));
         }
     } else {
         throw_unless(19305, ($ctx'value >= ($self'perpGasConsumption + $self'gasTransferJetton)));

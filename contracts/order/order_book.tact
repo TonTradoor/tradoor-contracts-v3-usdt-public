@@ -827,13 +827,15 @@ contract OrderBook with Deployable, Resumable {
         if (opType == ORDER_OP_TYPE_INCREASE_MARKET || opType == ORDER_OP_TYPE_INCREASE_LIMIT) {
             // increase for long order, must trigger below the price
             triggerAbove = !isLong;
-            self.perpPositionOrderExs.set(orderId, PerpPositionOrderEx{
-                tpSize: tpSize,
-                tpPrice: tpPrice,
-                slSize: slSize,
-                slPrice: slPrice,
-                executionFee: executionFee
-            });
+            if ((tpSize > 0 && tpPrice > 0) || (slSize > 0 && slPrice > 0)) {
+                self.perpPositionOrderExs.set(orderId, PerpPositionOrderEx{
+                    tpSize: tpSize,
+                    tpPrice: tpPrice,
+                    slSize: slSize,
+                    slPrice: slPrice,
+                    executionFee: executionFee
+                });
+            }
         } else {
             if (opType == ORDER_OP_TYPE_DECREASE_MARKET) {
                 // decrease for long market order, must trigger above the price
@@ -1083,6 +1085,8 @@ contract OrderBook with Deployable, Resumable {
                     self.createPerpOrder(msg.trxId, ORDER_OP_TYPE_DECREASE_SL, sender(), order.tokenId, order.isLong, 0, orderEx.slSize, orderEx.slPrice, 
                         0, 0, 0, 0, orderEx.executionFee);
                 }
+                // delete
+                self.perpPositionOrderExs.set(msg.orderId, null);
             }
         } else {
             require(ctx.value >= self.perpGasConsumption + self.gasTransferJetton, "gas not enough");

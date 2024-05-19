@@ -17,15 +17,6 @@ export async function run(provider: NetworkProvider) {
     console.log('token config:', await pool.getTokenConfig(tokenId));
 
     console.log('=================== LP ===================');
-    // get index
-    let lpOrderIdNext = (await orderBook.getLpPositionOrder(0n)).lpPositionOrderIndexNext;
-    console.log(`lpOrderIdNext:`, lpOrderIdNext);
-
-    if (orderId < 0) {
-        console.log('order not exist');
-        return;
-    }
-
     // get order
     let lpOrder = await orderBook.getLpPositionOrder(orderId);
     console.log(`lpOrder:`, lpOrder);
@@ -36,12 +27,8 @@ export async function run(provider: NetworkProvider) {
 
     console.log('=================== Perp ===================');
     // get index
-    let orderIdNext = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
-    console.log(`orderIdNext:`, orderIdNext);
-
-    // get order
     let order = await orderBook.getPerpPositionOrder(orderId);
-    console.log(`order:`, order);
+    console.log(`perp order:`, order);
 
     // get position
     let position = await pool.getPerpPosition(tokenId, account);

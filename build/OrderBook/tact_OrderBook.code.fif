@@ -2303,15 +2303,38 @@ PROGRAM{
     IF:<{
       s9 PUSH
       NOT
-      257 PUSHINT
-      s7 s6 s5 PUSH3
-      s7 s6 PUSH2
-      $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee INLINECALLDICT
-      $PerpPositionOrderEx$_store_cell INLINECALLDICT
-      s2 20 s() XCHG
-      19 s() PUSH
-      SWAP
-      __tact_dict_set_int_cell INLINECALLDICT
+      s6 PUSH
+      0 GTINT
+      IF:<{
+        s5 PUSH
+        0 GTINT
+      }>ELSE<{
+        FALSE
+      }>
+      IF:<{
+        TRUE
+      }>ELSE<{
+        s4 PUSH
+        0 GTINT
+        IF:<{
+          s3 PUSH
+          0 GTINT
+        }>ELSE<{
+          FALSE
+        }>
+      }>
+      IF:<{
+        257 PUSHINT
+        s7 s6 s5 PUSH3
+        s7 s6 PUSH2
+        $PerpPositionOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee INLINECALLDICT
+        $PerpPositionOrderEx$_store_cell INLINECALLDICT
+        s2 20 s() XCHG
+        19 s() PUSH
+        SWAP
+        __tact_dict_set_int_cell INLINECALLDICT
+        s0 18 s() XCHG
+      }>
     }>ELSE<{
       s12 PUSH
       12 EQINT
@@ -2327,7 +2350,6 @@ PROGRAM{
           NOT
         }>
       }>
-      s0 18 s() XCHG
     }>
     257 PUSHINT
     NOW
@@ -2347,8 +2369,7 @@ PROGRAM{
     18 s() PUSH
     s0 s4 XCHG
     18 s() PUSH
-    s0 s4 XCHG
-    30 s() PUSH
+    s4 s12 XCPU
     s4 s15 XCPU
     4 -ROLL
     $PerpPositionOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator INLINECALLDICT
@@ -2362,15 +2383,14 @@ PROGRAM{
     17 s() PUSH
     s0 s7 XCHG
     s3 s6 XCHG
-    s5 19 s() XCHG
+    s5 20 s() XCHG
     s0 s4 XCHG
-    s2 19 s() XCHG
+    s2 20 s() XCHG
     s0 s15 XCHG2
     $PerpPositionOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_tpSize_tpPrice_slSize_slPrice_trxId INLINECALLDICT
     $PerpPositionOrderCreatedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     s0 s5 XCHG
-    s0 s4 XCHG
     s0 s3 XCHG
   }>
   $OrderBook$_fun_handleCreateIncreasePerpPositionOrder PROCREF:<{
@@ -4767,6 +4787,14 @@ PROGRAM{
             s3 POP
             s4 POP
           }>
+          257 PUSHINT
+          PUSHNULL
+          $PerpPositionOrderEx$_store_opt INLINECALLDICT
+          s10 PUSH
+          s3 s15 XCHG
+          SWAP
+          __tact_dict_set_int_cell INLINECALLDICT
+          s0 s12 XCHG
         }>ELSE<{
           DROP
           s3 POP

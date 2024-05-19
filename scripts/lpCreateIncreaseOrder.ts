@@ -2,7 +2,7 @@ import { Address, beginCell, toNano } from '@ton/core';
 import { } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
 import { toUnits, getConfig, getLastTransaction, waitForTransaction, attachOrderBook, attachJettonWallet } from '../utils/util';
-import { JETTON_DECIMAL } from '../utils/constants';
+import { JETTON_DECIMAL, OP_CREATE_INCREASE_LP_POSITION_ORDER } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
@@ -25,7 +25,7 @@ export async function run(provider: NetworkProvider) {
     await user0JettonWallet.send(
         provider.sender(),
         {
-            value: toNano(executionFee + 0.3),
+            value: toNano(executionFee + 0.2),
         },
         {
             $$type: 'TokenTransfer',
@@ -34,13 +34,13 @@ export async function run(provider: NetworkProvider) {
             sender: orderBook.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
-            forward_ton_amount: toNano(executionFee + 0.2),
+            forward_ton_amount: toNano(executionFee + 0.1),
             forward_payload: 
                 beginCell()
                 .storeUint(1, 1)
                 .storeRef(
                     beginCell()
-                    .storeUint(1,32) // op
+                    .storeUint(OP_CREATE_INCREASE_LP_POSITION_ORDER, 32) // op
                     .storeUint(toUnits(liquidity, JETTON_DECIMAL), 128) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()

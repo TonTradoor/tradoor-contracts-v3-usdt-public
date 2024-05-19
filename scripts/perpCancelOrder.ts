@@ -13,7 +13,7 @@ export async function run(provider: NetworkProvider) {
     await orderBook.send(
         provider.sender(),
         {
-            value: toNano('1'),
+            value: toNano('0.2'),
         },
         {
             $$type: 'CancelPerpPositionOrder',
