@@ -33,7 +33,7 @@ export async function run(provider: NetworkProvider) {
     await user0JettonWallet.send(
         provider.sender(),
         {
-            value: toNano(executionFee + 0.3),
+            value: toNano(executionFee + 0.2),
         },
         {
             $$type: 'TokenTransfer',
@@ -42,7 +42,7 @@ export async function run(provider: NetworkProvider) {
             sender: orderBook.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
-            forward_ton_amount: toNano(executionFee + 0.2),
+            forward_ton_amount: toNano(executionFee + 0.1),
             forward_payload: 
                 beginCell()
                 .storeUint(1, 1)
