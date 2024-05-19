@@ -54,6 +54,7 @@ export async function createIncreasePerpOrder(user: SandboxContract<TreasuryCont
     let balanceAfter = await getAllBalance();
     let orderIdAfter = (await TestEnv.orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
     let order = (await TestEnv.orderBook.getPerpPositionOrder(orderIdBefore)).perpPositionOrder;
+    let orderEx = (await TestEnv.orderBook.getPerpPositionOrder(orderIdBefore)).perpPositionOrderEx;
 
     return {
         trxResult,
@@ -61,7 +62,8 @@ export async function createIncreasePerpOrder(user: SandboxContract<TreasuryCont
         balanceAfter,
         orderIdBefore,
         orderIdAfter,
-        order
+        order,
+        orderEx
     };
 }
 
@@ -120,6 +122,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
     // after trx
     let balanceAfter = await getAllBalance();
     let orderAfter = (await TestEnv.orderBook.getPerpPositionOrder(orderId)).perpPositionOrder;
+    let orderExAfter = (await TestEnv.orderBook.getPerpPositionOrder(orderId)).perpPositionOrderEx;
     let positionDataAfter = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
     let positionAfter = orderBefore?.isLong!! ? positionDataAfter?.perpPosition?.longPosition!! : positionDataAfter?.perpPosition?.shortPosition!!;
     let lpPositionDataAfter = await TestEnv.pool.getLpPosition(orderBefore?.account!!);
@@ -130,6 +133,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
         balanceAfter,
         orderBefore,
         orderAfter,
+        orderExAfter,
         positionDataBefore,
         positionBefore,
         lpPositionDataBefore,

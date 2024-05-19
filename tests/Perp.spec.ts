@@ -336,6 +336,7 @@ describe('LP', () => {
             to: orderBook.address,
             success: true,
         });
+        expect(createResult.orderEx).toBeNull();
 
         // executor order
         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, pr);
@@ -516,6 +517,11 @@ describe('LP', () => {
             to: orderBook.address,
             success: true,
         });
+        expect(createResult1.orderEx?.executionFee).toEqual(toNano(executionFee));
+        expect(createResult1.orderEx?.tpPrice).toEqual(toPriceUnits(tpPrice));
+        expect(createResult1.orderEx?.tpSize).toEqual(toJettonUnits(tpSize));
+        expect(createResult1.orderEx?.slPrice).toEqual(toPriceUnits(slPrice));
+        expect(createResult1.orderEx?.slSize).toEqual(toJettonUnits(slSize));
         console.log('total execution fee after create order with tp/sl', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
 
         /// executor order
@@ -530,6 +536,7 @@ describe('LP', () => {
 
         // check order
         expect(executeResult.orderAfter).toBeNull();
+        expect(executeResult.orderExAfter).toBeNull();
 
         // check position
         let perpPosition = executeResult.positionAfter;
@@ -542,22 +549,27 @@ describe('LP', () => {
         expect(perpPosition?.entryPrice).toBeGreaterThanOrEqual(toPriceUnits(indexPrice));
 
         // check tp order
-        let tpOrder = (await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 1n)).perpPositionOrder;
-        console.log('tpOrder after increase:', tpOrder);
+        let tpOrderData = (await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 1n));
+        console.log('tpOrder after increase:', tpOrderData);
 
+        let tpOrder = tpOrderData.perpPositionOrder;
         expect(tpOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_TP);
         expect(tpOrder?.sizeDelta).toEqual(toJettonUnits(tpSize));
         expect(tpOrder?.triggerPrice).toEqual(toPriceUnits(tpPrice));
         expect(tpOrder?.triggerAbove).toEqual(true);
+        expect(tpOrderData.perpPositionOrderEx).toBeNull();
 
         // check sl order
-        let slOrder = (await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 2n)).perpPositionOrder;
-        console.log('slOrder after increase:', slOrder);
+        let slOrderData = (await TestEnv.orderBook.getPerpPositionOrder(createResult1.orderIdBefore + 2n));
+        console.log('slOrder after increase:', slOrderData);
 
+        let slOrder = slOrderData.perpPositionOrder;
         expect(slOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_SL);
         expect(slOrder?.sizeDelta).toEqual(toJettonUnits(slSize));
         expect(slOrder?.triggerPrice).toEqual(toPriceUnits(slPrice));
         expect(slOrder?.triggerAbove).toEqual(false);
+        expect(slOrderData.perpPositionOrderEx).toBeNull();
+        
     });
     
     it('should execute tp', async () => {
