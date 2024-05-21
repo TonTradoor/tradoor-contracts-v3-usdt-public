@@ -32,7 +32,7 @@
 - yarn test
 
 ## deploy
-- create *.env
+- create .env.devnet / .env.localnet / .env.testnet / .env.mainnet
 ```
 WALLET_MNEMONIC=""
 WALLET_VERSION=v4
@@ -40,7 +40,23 @@ WALLET_VERSION=v4
 
 - deploy
 
-sh scripts/deploy.sh
+yarn deploylocal
+
+yarn deploydev
+
+yarn deploytest
+
+yarn deploymain
+
+## run script
+
+yarn runlocal
+
+yarn rundev
+
+yarn runtest
+
+yarn runmain
 
 - mint token:
 
