@@ -20,16 +20,6 @@ builder __tact_store_address(builder b, slice address) inline {
     return b.store_slice(__tact_verify_address(address));
 }
 
-slice __tact_create_address(int chain, int hash) inline {
-    var b = begin_cell();
-    b = b.store_uint(2, 2);
-    b = b.store_uint(0, 1);
-    b = b.store_int(chain, 8);
-    b = b.store_uint(hash, 256);
-    var addr = b.end_cell().begin_parse();
-    return __tact_verify_address(addr);
-}
-
 int __tact_my_balance() inline {
     return pair_first(get_balance());
 }
@@ -41,8 +31,6 @@ forall X -> X __tact_not_null(X x) inline {
 (cell, int) __tact_dict_delete(cell dict, int key_len, slice index) asm(index dict key_len) "DICTDEL";
 
 ((cell), ()) __tact_dict_set_ref(cell dict, int key_len, slice index, cell value) asm(value index dict key_len) "DICTSETREF";
-
-(slice, int) __tact_dict_get(cell dict, int key_len, slice index) asm(index dict key_len) "DICTGET" "NULLSWAPIFNOT";
 
 (cell, int) __tact_dict_get_ref(cell dict, int key_len, slice index) asm(index dict key_len) "DICTGETREF" "NULLSWAPIFNOT";
 
@@ -58,55 +46,55 @@ builder __tact_store_bool(builder b, int v) inline {
     return b.store_int(v, 1);
 }
 
-(cell, ()) __tact_dict_set_int_int(cell d, int kl, int k, int v, int vl) inline {
+(cell, ()) __tact_dict_set_uint_uint(cell d, int kl, int k, int v, int vl) inline {
     if (null?(v)) {
-        var (r, ok) = idict_delete?(d, kl, k);
+        var (r, ok) = udict_delete?(d, kl, k);
         return (r, ());
     } else {
-        return (idict_set_builder(d, kl, k, begin_cell().store_int(v, vl)), ());
+        return (udict_set_builder(d, kl, k, begin_cell().store_uint(v, vl)), ());
     }
 }
 
-int __tact_dict_get_int_int(cell d, int kl, int k, int vl) inline {
-    var (r, ok) = idict_get?(d, kl, k);
+int __tact_dict_get_uint_uint(cell d, int kl, int k, int vl) inline {
+    var (r, ok) = udict_get?(d, kl, k);
     if (ok) {
-        return r~load_int(vl);
+        return r~load_uint(vl);
     } else {
         return null();
     }
 }
 
-(cell, ()) __tact_dict_set_int_cell(cell d, int kl, int k, cell v) inline {
-    if (null?(v)) {
-        var (r, ok) = idict_delete?(d, kl, k);
-        return (r, ());
+(int, int, int) __tact_dict_min_uint_uint(cell d, int kl, int vl) inline {
+    var (key, value, flag) = udict_get_min?(d, kl);
+    if (flag) {
+        return (key, value~load_uint(vl), flag);
     } else {
-        return (idict_set_ref(d, kl, k, v), ());
+        return (null(), null(), flag);
     }
 }
 
-cell __tact_dict_get_int_cell(cell d, int kl, int k) inline {
-    var (r, ok) = idict_get_ref?(d, kl, k);
+(int, int, int) __tact_dict_next_uint_uint(cell d, int kl, int pivot, int vl) inline {
+    var (key, value, flag) = udict_get_next?(d, kl, pivot);
+    if (flag) {
+        return (key, value~load_uint(vl), flag);
+    } else {
+        return (null(), null(), flag);
+    }
+}
+
+(cell, ()) __tact_dict_set_uint_cell(cell d, int kl, int k, cell v) inline {
+    if (null?(v)) {
+        var (r, ok) = udict_delete?(d, kl, k);
+        return (r, ());
+    } else {
+        return (udict_set_ref(d, kl, k, v), ());
+    }
+}
+
+cell __tact_dict_get_uint_cell(cell d, int kl, int k) inline {
+    var (r, ok) = udict_get_ref?(d, kl, k);
     if (ok) {
         return r;
-    } else {
-        return null();
-    }
-}
-
-(cell, ()) __tact_dict_set_slice_int(cell d, int kl, slice k, int v, int vl) inline {
-    if (null?(v)) {
-        var (r, ok) = __tact_dict_delete(d, kl, k);
-        return (r, ());
-    } else {
-        return (dict_set_builder(d, kl, k, begin_cell().store_int(v, vl)), ());
-    }
-}
-
-int __tact_dict_get_slice_int(cell d, int kl, slice k, int vl) inline {
-    var (r, ok) = __tact_dict_get(d, kl, k);
-    if (ok) {
-        return r~load_int(vl);
     } else {
         return null();
     }
@@ -146,27 +134,30 @@ forall X0, X1, X2 -> tuple __tact_tuple_create_3((X0, X1, X2) v) asm "3 TUPLE";
 
 forall X0, X1, X2 -> (X0, X1, X2) __tact_tuple_destroy_3(tuple v) asm "3 UNTUPLE";
 
-forall X0, X1, X2, X3 -> tuple __tact_tuple_create_4((X0, X1, X2, X3) v) asm "4 TUPLE";
+forall X0, X1, X2, X3, X4, X5 -> tuple __tact_tuple_create_6((X0, X1, X2, X3, X4, X5) v) asm "6 TUPLE";
 
-forall X0, X1, X2, X3 -> (X0, X1, X2, X3) __tact_tuple_destroy_4(tuple v) asm "4 UNTUPLE";
+forall X0, X1, X2, X3, X4, X5 -> (X0, X1, X2, X3, X4, X5) __tact_tuple_destroy_6(tuple v) asm "6 UNTUPLE";
 
-forall X0, X1, X2, X3, X4 -> tuple __tact_tuple_create_5((X0, X1, X2, X3, X4) v) asm "5 TUPLE";
+forall X0, X1, X2, X3, X4, X5, X6, X7, X8 -> tuple __tact_tuple_create_9((X0, X1, X2, X3, X4, X5, X6, X7, X8) v) asm "9 TUPLE";
 
-forall X0, X1, X2, X3, X4, X5, X6 -> tuple __tact_tuple_create_7((X0, X1, X2, X3, X4, X5, X6) v) asm "7 TUPLE";
-
-forall X0, X1, X2, X3, X4, X5, X6 -> (X0, X1, X2, X3, X4, X5, X6) __tact_tuple_destroy_7(tuple v) asm "7 UNTUPLE";
-
-forall X0, X1, X2, X3, X4, X5, X6, X7 -> tuple __tact_tuple_create_8((X0, X1, X2, X3, X4, X5, X6, X7) v) asm "8 TUPLE";
-
-forall X0, X1, X2, X3, X4, X5, X6, X7 -> (X0, X1, X2, X3, X4, X5, X6, X7) __tact_tuple_destroy_8(tuple v) asm "8 UNTUPLE";
-
-forall X0, X1, X2, X3, X4, X5, X6, X7, X8, X9 -> tuple __tact_tuple_create_10((X0, X1, X2, X3, X4, X5, X6, X7, X8, X9) v) asm "10 TUPLE";
-
-forall X0, X1, X2, X3, X4, X5, X6, X7, X8, X9 -> (X0, X1, X2, X3, X4, X5, X6, X7, X8, X9) __tact_tuple_destroy_10(tuple v) asm "10 UNTUPLE";
+forall X0, X1, X2, X3, X4, X5, X6, X7, X8 -> (X0, X1, X2, X3, X4, X5, X6, X7, X8) __tact_tuple_destroy_9(tuple v) asm "9 UNTUPLE";
 
 forall X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11 -> tuple __tact_tuple_create_12((X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11) v) asm "12 TUPLE";
 
 forall X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11 -> (X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11) __tact_tuple_destroy_12(tuple v) asm "12 UNTUPLE";
+
+cell $global_emptyCell() impure inline {
+    return end_cell(begin_cell());
+}
+
+slice $Cell$_fun_asSlice(cell $self) impure inline {
+    var ($self) = $self;
+    return begin_parse($self);
+}
+
+slice $global_emptySlice() impure inline {
+    return $Cell$_fun_asSlice($global_emptyCell());
+}
 
 () $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref {
     var (($params'bounce, $params'to, $params'value, $params'mode, $params'body, $params'code, $params'data)) = $params;
@@ -176,7 +167,7 @@ forall X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11 -> (X0, X1, X2, X3, X4, 
     $b = store_int($b, 0, 3);
     $b = __tact_store_address($b, $params'to);
     $b = store_coins($b, $params'value);
-    $b = store_int($b, 0, ((((1 + 4) + 4) + 64) + 32));
+    $b = store_int($b, 0, 105);
     if (( ((~ null?($params'code))) ? (true) : ((~ null?($params'data))) )) {
         $b = __tact_store_bool($b, true);
         builder $bc = begin_cell();
@@ -216,8 +207,8 @@ forall X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11 -> (X0, X1, X2, X3, X4, 
     send_raw_message($c, 0);
 }
 
-((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell), ()) $Pool$_fun_forward((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
-    var (($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates)) = $self;
+((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell), ()) $Pool$_fun_forward((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
+    var (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices)) = $self;
     var ($init) = $init;
     cell $code = null();
     cell $data = null();
@@ -226,22 +217,28 @@ forall X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11 -> (X0, X1, X2, X3, X4, 
         $code = $init2'code;
         $data = $init2'data;
     }
-    if ((0 > 0)) {
+    if (false) {
         var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
         int $balance = __tact_my_balance();
         int $balanceBeforeMessage = ($balance - $ctx'value);
         if (($balanceBeforeMessage < 0)) {
             raw_reserve(0, 0);
-            $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (128 + 2), $body, $code, $data));
-            return (($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates), ());
+            $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, 130, $body, $code, $data));
+            return (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices), ());
         }
     }
-    $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (64 + 2), $body, $code, $data));
-    return (($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates), ());
+    $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, 66, $body, $code, $data));
+    return (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices), ());
 }
 
-((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell), ()) $Pool$_fun_notify((int, int, int, cell, int, int, int, int, slice, slice, int, slice, cell, cell, int, cell, int, int, int, int, cell, int, cell, int, int, cell, cell, cell) $self, cell $body) impure inline {
-    var (($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates)) = $self;
-    ($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates)~$Pool$_fun_forward(__tact_context_get_sender(), $body, false, null());
-    return (($self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'tokenConfigs, $self'lpLockTime, $self'lpAddBonusFactor, $self'lpRemoveBonusFactor, $self'lpLiquidityFactor, $self'owner, $self'orderBook, $self'protocolTradingFee, $self'claimExecutor, $self'executors, $self'lpPositions, $self'lpPositionIndexNext, $self'globalLPPositions, $self'globalLPFund, $self'globalLPLiquidity, $self'globalLPFundingFeeGrowth, $self'globalLPUnrealizedPnl, $self'perpPositions, $self'perpPositionIndexNext, $self'globalPositions, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'globalFundingRateSamples, $self'prices, $self'prevPremiumRates), ());
+((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell), ()) $Pool$_fun_reply((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, cell $body) impure inline {
+    var (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices)) = $self;
+    ($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices)~$Pool$_fun_forward(__tact_context_get_sender(), $body, true, null());
+    return (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices), ());
+}
+
+((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell), ()) $Pool$_fun_notify((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, cell $body) impure inline {
+    var (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices)) = $self;
+    ($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices)~$Pool$_fun_forward(__tact_context_get_sender(), $body, false, null());
+    return (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices), ());
 }

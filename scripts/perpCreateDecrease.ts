@@ -1,13 +1,14 @@
 import { Address, beginCell, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { toUnits, getConfig, getLastTransaction, waitForTransaction, attachOrderBook } from '../utils/util';
-import { JETTON_DECIMAL, ORDER_OP_TYPE_DECREASE_MARKET, PRICE_DECIMAL } from '../utils/constants';
+import { now, getConfig, getLastTransaction, waitForTransaction, attachOrderBook } from '../utils/util';
+import { MOCK_DECIMAL, ORDER_OP_TYPE_DECREASE_MARKET, PRICE_DECIMAL } from '../utils/constants';
+import { toJettonUnits, toPriceUnits } from '../tests/lib/TokenHelper';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
 
     /// create order
-    let orderId = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
+    let orderId = (await orderBook.getPerpOrder(0n)).perpOrderIndexNext;
     let executionFee = 0.1;
     let tokenId = 1;
     let isLong = true;
@@ -22,13 +23,14 @@ export async function run(provider: NetworkProvider) {
             value: toNano('1'),
         },
         {
-            $$type: 'CreateDecreasePerpPositionOrder',
+            $$type: 'CreateDecreasePerpOrder',
             executionFee: toNano(executionFee),
             tokenId: BigInt(tokenId),
             isLong: isLong,
-            marginDelta: toUnits(margin, JETTON_DECIMAL),
-            sizeDelta: toUnits(size, JETTON_DECIMAL),
-            triggerPrice: toUnits(triggerPrice, PRICE_DECIMAL),
+            marginDelta: toJettonUnits(margin),
+            sizeDelta: toJettonUnits(size),
+            triggerPrice: toPriceUnits(triggerPrice),
+            requestTime: BigInt(now()),
             trxId: 1n
         }
     );
@@ -40,12 +42,12 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get index
-    let orderIdNext = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
+    let orderIdNext = (await orderBook.getPerpOrder(0n)).perpOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
     // get order
-    let order = await orderBook.getPerpPositionOrder(orderId);
+    let order = await orderBook.getPerpOrder(orderId);
     console.log(`order:`, order);
 
 }

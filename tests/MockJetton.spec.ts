@@ -1,10 +1,8 @@
 import { Blockchain, SandboxContract, TreasuryContract } from '@ton/sandbox';
 import { Address, Cell, beginCell, contractAddress, toNano } from '@ton/core';
-import { MockJetton } from '../wrappers/MockJetton';
-import { buildOnchainMetadata } from '../contracts/mock/utils/jetton-helpers';
+import { MockJettonMaster as MockJetton } from '../wrappers/JettonMock';
+import { buildOnchainMetadata } from '../contracts/jetton/utils/jetton-helpers';
 import '@ton/test-utils';
-import { compile } from '@ton/blueprint';
-import { JettonDefaultWallet } from '../wrappers/JettonDefaultWallet';
 
 describe('Jetton', () => {
     let blockchain: Blockchain;

@@ -1,7 +1,7 @@
 import { toNano } from '@ton/core';
 import { NetworkProvider } from '@ton/blueprint';
 import { attachPool, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
-import { JETTON_DECIMAL, PERCENTAGE_DECIMAL } from '../utils/constants';
+import { MOCK_DECIMAL, PERCENTAGE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
@@ -19,18 +19,18 @@ export async function run(provider: NetworkProvider) {
             {
                 $$type: 'UpdateTokenConfig',
                 tokenId: BigInt(token["tokenId"]),
-                name: token["name"],
-                enable: token["enable"],
-                minValue: toUnits(token["minValue"], JETTON_DECIMAL),
-                maxValue: toUnits(token["maxValue"], JETTON_DECIMAL),
-                maxLeverage: BigInt(token["maxLeverage"]),
-                liquidationFee: toUnits(token["liquidationFee"], JETTON_DECIMAL),
-                maintenanceRate: toUnits(token["maintenanceRate"], PERCENTAGE_DECIMAL),
-                liquidityProportion: toUnits(token["liquidityProportion"], PERCENTAGE_DECIMAL),
-                tradingFeeRate: toUnits(token["tradingFeeRate"], PERCENTAGE_DECIMAL),
-                lpTradingFeeRate: toUnits(token["lpTradingFeeRate"], PERCENTAGE_DECIMAL),
-                interestRate: toUnits(token["interestRate"], PERCENTAGE_DECIMAL),
-                maxFundingRate: toUnits(token["maxFundingRate"], PERCENTAGE_DECIMAL)
+                config: {
+                    $$type: 'TokenConfig',
+                    name: token["name"],
+                    enable: token["enable"],
+                    minValue: toUnits(token["minValue"], MOCK_DECIMAL),
+                    maxValue: toUnits(token["maxValue"], MOCK_DECIMAL),
+                    maxLeverage: BigInt(token["maxLeverage"]),
+                    liquidationFee: toUnits(token["liquidationFee"], MOCK_DECIMAL),
+                    maintenanceRate: toUnits(token["maintenanceRate"], PERCENTAGE_DECIMAL),
+                    tradingFeeRate: toUnits(token["tradingFeeRate"], PERCENTAGE_DECIMAL),
+                    lpTradingFeeRate: toUnits(token["lpTradingFeeRate"], PERCENTAGE_DECIMAL)
+                }
             }
         );
 

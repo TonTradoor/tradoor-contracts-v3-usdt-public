@@ -1,57 +1,40 @@
 // ============================ Config ================================ //
 struct ConfigData {
-    isExecutor: Bool?;
     lpGasConsumption: Int as coins;
     perpGasConsumption: Int as coins;
     minTonsForStorage: Int as coins;
-    lpAddBonusFactor: Int;
-    lpRemoveBonusFactor: Int;
-    lpLiquidityFactor: Int;
+    gasForMintTlp: Int as coins;
+    maxLpNetCap: Int as coins;
+    tlpJetton: Address;
     orderBook: Address;
     claimExecutor: Address;
-    protocolTradingFee: Int;
-}
-
-struct ExecutorParam {
-    executor: Address;
-    enable: Bool;
 }
 
 struct TokenConfig {
     name: String;
     enable: Bool;
     // ==================== Trader Position Config ====================
-    minValue: Int;
-    maxValue: Int;
-    maxLeverage: Int;
-    liquidationFee: Int;
-    maintenanceRate: Int;
-    liquidityProportion: Int;
+    minValue: Int as coins;
+    maxValue: Int as coins;
+    maxLeverage: Int as uint16;
+    liquidationFee: Int as coins;
+    maintenanceRate: Int as uint32;
     // ==================== Trading Fee Config ====================
-    tradingFeeRate: Int;
-    lpTradingFeeRate: Int;
-    // ==================== Funding Fee Config ====================
-    interestRate: Int;
-    maxFundingRate: Int;
+    tradingFeeRate: Int as uint32;
+    lpTradingFeeRate: Int as uint32;
 }
 
 // ============================ LP ================================ //
-struct LPPosition {
-    positionId: Int as uint64;
-    liquidity: Int;
-    bonus: Int;
-    realizedFundingFee: Int;
-    entryFundingFeeGrowth: Int;
-    openTime: Int;
-    unlockTime: Int;
-}
 
-struct LPPositionData {
-    lpPosition: LPPosition?;
-    globalLPFund: Int;
-    globalLPLiquidity: Int;
-    globalLPFundingFeeGrowth: Int;
-    globalLPUnrealizedPnl: Int;
+struct GlobalPoolData {
+    tlpSupply: Int as coins;
+    protocolTradingFee: Int as coins;
+    globalLPFund: Int as int128;
+    globalLPUnrealizedPnl: Int as int128;
+    globalLpFundingFeeGrowth: Int as coins;
+    globalRolloverFeeGrowth: Int as coins;
+    globalPerpNetValue: Int as coins;
+    globalPerpSingleValue: Int as coins;
 }
 
 // ============================ Perp ================================ //
@@ -66,67 +49,34 @@ struct DirectionPerpPosition {
 }
 
 struct PerpPosition {
-    positionId: Int as uint64;
-    margin: Int;
-    size: Int;
-    entryPrice: Int;
-    entryFundingFeeGrowth: Int;
+    positionId: Int as uint64 = 0;
+    margin: Int as coins = 0;
+    size: Int as coins = 0;
+    entryPrice: Int as uint128 = 0;
+    entryFundingFeeGrowth: Int as coins = 0;
+    entryRolloverFeeGrowth: Int as coins = 0;
 }
 
 struct GlobalLPPosition {
-    netSize: Int;
-    isLong: Bool;
-    entryPrice: Int;
-    unrealizedPnl: Int;
+    netSize: Int as coins = 0;
+    isLong: Bool = false;
+    entryPrice: Int as uint128 = 0;
 }
 
 struct PerpPositionData {
-    globalPerpNetValue: Int;
-    globalPerpSingleValue: Int;
+    globalPerpNetValue: Int as coins;
+    globalPerpSingleValue: Int as coins;
     perpPosition: DirectionPerpPosition?;
     globalLPPosition: GlobalLPPosition?;
     globalPosition: GlobalPosition?;
-    globalFundingRateSample: GlobalFundingRateSample?;
-    prevPremiumRate: Int?;
 }
 
-// ============================ Price ================================ //
-struct UpdatePriceParam {
-    tokenId: Int as uint64;
-    price: Int;
-}
-
-// ============================ Funding Rate ================================ //
 struct GlobalPosition {
-    longMargin: Int;
-    shortMargin: Int;
-    longSize: Int;
-    shortSize: Int;
-    longFundingFeeGrowth: Int;
-    shortFundingFeeGrowth: Int;
-    longValue: Int;
-    shortValue: Int;
+    longMargin: Int as coins = 0;
+    shortMargin: Int as coins = 0;
+    longSize: Int as coins = 0;
+    shortSize: Int as coins = 0;
+    longValue: Int as coins = 0;
+    shortValue: Int as coins = 0;
 }
 
-struct GlobalFundingRateSample {
-    lastAdjustFundingRateTime: Int;
-    sampleCount: Int;
-    cumulativePremiumRate: Int;
-}
-
-struct UpdateFundingRateResult {
-    lpReceivedFundingFeeDelta: Int;
-    globalLPFundingFeeGrowth: Int;
-    longFundingFeeGrowthAfter: Int;
-    shortFundingFeeGrowthAfter: Int;
-}
-
-struct UpdateFundingRateEventData {
-    trxId: Int;
-    tokenId: Int;
-    price: Int;
-    lpReceivedFundingFeeDelta: Int;
-    globalLPFundingFeeGrowth: Int;
-    longFundingFeeGrowthAfter: Int;
-    shortFundingFeeGrowthAfter: Int;
-}

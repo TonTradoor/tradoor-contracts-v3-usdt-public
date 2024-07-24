@@ -1,16 +1,29 @@
 import { Blockchain, SandboxContract, TreasuryContract, prettyLogTransactions, printTransactionFees } from '@ton/sandbox';
 import { toNano, fromNano, Dictionary } from '@ton/core';
-import { JettonDefaultWallet } from '../wrappers/JettonDefaultWallet';
-import { MockJetton } from '../wrappers/MockJetton';
+import { MockJettonWallet } from '../wrappers/MockJettonWallet';
+import { TLPJettonWallet as TLPJettonWallet } from '../wrappers/TLPJettonWallet';
+import { MockJettonMaster as MockJetton } from '../wrappers/JettonMock';
+import { TLPJettonMaster as TLPJetton } from '../wrappers/JettonTLP';
 import { Pool } from '../wrappers/Pool';
 import { OrderBook } from '../wrappers/OrderBook';
 import { TestEnv } from './lib/TestEnv';
-import { getFriendlyTonBalance, getJettonBalance, getTonBalance, mint, toJettonUnits } from './lib/TokenHelper';
-import { cancelLPOrder, createDecreaseLPOrder, createIncreaseLPOrder, executeLPOrder } from './lib/LPHelper';
+import {
+    fromJettonUnits,
+    fromTlpUnits,
+    getFriendlyTonBalance,
+    getJettonBalance,
+    getTonBalance,
+    mint,
+    mintTlp,
+    toJettonUnits,
+    toPriceUnits, toTlpUnits
+} from './lib/TokenHelper';
+import { cancelLiquidityOrder, createDecreaseLiquidityOrder, createIncreaseLiquidityOrder, executeLiquidityOrder } from './lib/LPHelper';
 import '@ton/test-utils';
-import {createIncreasePerpOrder, executePerpOrder, updatePrice} from "./lib/PerpHelper";
+import {createIncreasePerpOrder, executePerpOrder} from "./lib/PerpHelper";
 import { createCompensate, executeCompensate, sendCompensateJetton } from './lib/OrderBookHelper';
 import { ORDER_TYPE_LP } from '../utils/constants';
+import { now } from '../utils/util';
 
 describe('LP', () => {
     let blockchain: Blockchain;
@@ -18,12 +31,17 @@ describe('LP', () => {
     let orderBook: SandboxContract<OrderBook>;
     let pool: SandboxContract<Pool>;
     let jetton: SandboxContract<MockJetton>;
+    let tlp: SandboxContract<TLPJetton>;
     let executor: SandboxContract<TreasuryContract>;
     let compensator: SandboxContract<TreasuryContract>;
     let user0: SandboxContract<TreasuryContract>;
     let user1: SandboxContract<TreasuryContract>;
-    let user0JettonWallet: SandboxContract<JettonDefaultWallet>;
-    let orderBookJettonWallet: SandboxContract<JettonDefaultWallet>;
+    let orderBookJettonWallet: SandboxContract<MockJettonWallet>;
+    let orderBookTlpWallet: SandboxContract<TLPJettonWallet>;
+    let user0JettonWallet: SandboxContract<MockJettonWallet>;
+    let user0TlpWallet: SandboxContract<TLPJettonWallet>;
+    let user1JettonWallet: SandboxContract<MockJettonWallet>;
+    let user1TlpWallet: SandboxContract<TLPJettonWallet>;
 
     beforeEach(async () => {
         await TestEnv.resetEnv();
@@ -33,12 +51,17 @@ describe('LP', () => {
         orderBook = TestEnv.orderBook;
         pool = TestEnv.pool;
         jetton = TestEnv.jetton;
+        tlp = TestEnv.tlp;
         executor = TestEnv.executor;
         compensator = TestEnv.compensator;
         user0 = TestEnv.user0;
         user1 = TestEnv.user1;
-        user0JettonWallet = TestEnv.user0JettonWallet;
         orderBookJettonWallet = TestEnv.orderBookJettonWallet;
+        orderBookTlpWallet = TestEnv.orderBookTlpWallet;
+        user0JettonWallet = TestEnv.user0JettonWallet;
+        user0TlpWallet = TestEnv.user0TlpWallet;
+        user1JettonWallet = TestEnv.user1JettonWallet;
+        user1TlpWallet = TestEnv.user1TlpWallet;
 
         // mint to user
         let trxResult = await mint(user0.address, '100000');
@@ -54,10 +77,10 @@ describe('LP', () => {
         // check config
         let orderBookConfigData = await orderBook.getConfigData(executor.address);
         expect(orderBookConfigData.pool).toEqualAddress(pool.address);
-        expect(orderBookConfigData.usdtWallet).toEqualAddress(orderBookJettonWallet.address);
+        expect(orderBookConfigData.jettonWallet).toEqualAddress(orderBookJettonWallet.address);
         expect(orderBookConfigData.isExecutor).toBeTruthy();
 
-        let poolConfigData = await pool.getConfigData(null);
+        let poolConfigData = await pool.getConfigData();
         expect(poolConfigData.orderBook).toEqualAddress(orderBook.address);
     });
 
@@ -74,7 +97,7 @@ describe('LP', () => {
         console.log("orderBookTonBalance", await getFriendlyTonBalance(orderBook.address));
 
         // create order
-        let createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        let createResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
         printTransactionFees(createResult.trxResult.transactions);
         prettyLogTransactions(createResult.trxResult.transactions);
         expect(createResult.trxResult.transactions).toHaveTransaction({
@@ -119,7 +142,7 @@ describe('LP', () => {
         });
 
         // create order
-        let createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        let createResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
         printTransactionFees(createResult.trxResult.transactions);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
@@ -152,7 +175,7 @@ describe('LP', () => {
         });
 
         // create order
-        let createResult1 = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        let createResult1 = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
         printTransactionFees(createResult1.trxResult.transactions);
         expect(createResult1.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
@@ -176,11 +199,10 @@ describe('LP', () => {
         let executionFee = 0.1;
 
         // set block time
-        const time1 = Math.floor(Date.now() / 1000); 
-        blockchain.now = time1;
+        blockchain.now = now(); 
 
         // create order
-        const createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        const createResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
             to: orderBook.address,
@@ -194,7 +216,7 @@ describe('LP', () => {
         // check order
         expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore + 1n);
         expect(createResult.order).not.toBeNull();
-        expect(createResult.order?.liquidityDelta).toEqual(toJettonUnits(liquidity));
+        expect(createResult.order?.jettonDelta).toEqual(toJettonUnits(liquidity));
         // check jetton
         expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance - toJettonUnits(liquidity));
         expect(createResult.balanceAfter.orderBookJettonBalance).toEqual(createResult.balanceBefore.orderBookJettonBalance + toJettonUnits(liquidity));
@@ -206,14 +228,13 @@ describe('LP', () => {
         let executionFee = 0.1;
 
         // set block time
-        const time1 = Math.floor(Date.now() / 1000); 
-        blockchain.now = time1;
+        blockchain.now = now();
 
         // create order
-        const createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        const createResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
 
         /// cancel order
-        const cancelResult = await cancelLPOrder(executor, createResult.orderIdBefore);
+        const cancelResult = await cancelLiquidityOrder(executor, createResult.orderIdBefore);
         printTransactionFees(cancelResult.trxResult.transactions);
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
@@ -238,14 +259,26 @@ describe('LP', () => {
         let executionFee = 0.1;
 
         // set block time
-        const time1 = Math.floor(Date.now() / 1000); 
-        blockchain.now = time1;
+        blockchain.now = now();
 
         // create order
-        const createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        const createResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
+        printTransactionFees(createResult.trxResult.transactions);
+        prettyLogTransactions(createResult.trxResult.transactions);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
 
         /// executor order
-        const executeResult = await executeLPOrder(executor, createResult.orderIdBefore);
+        const prices =  Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128))
+        prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
+
+        const lpFundingFeeGrowth = 0;
+        const rolloverFeeGrowth = 0;
+
+        const executeResult = await executeLiquidityOrder(executor, createResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         printTransactionFees(executeResult.trxResult.transactions);
         prettyLogTransactions(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
@@ -257,53 +290,140 @@ describe('LP', () => {
         // check order
         expect(executeResult.orderAfter).toBeNull();
 
-        // check position
-        let position = executeResult.positionDataAfter.lpPosition;
-        expect(position).not.toBeNull();
-        expect(position?.liquidity).toEqual(toJettonUnits(liquidity));
+        // check tlp
+        let user0TlpBalance = executeResult.balanceAfter.user0TlpBalance;
+        expect(user0TlpBalance).toBeGreaterThan(0);
     });
 
-    it('should create decrease LP order', async () => {
-        let liquidity = 10;
+    it('should create decrease LP order failed - insufficient tlp-jetton', async () => {
+        let tlpAmount = 10;
         let executionFee = 0.1;
 
         // set block time
-        const time1 = Math.floor(Date.now() / 1000); 
-        blockchain.now = time1;
+        blockchain.now = now();
 
         // create order
-        const createResult = await createDecreaseLPOrder(user0, liquidity, executionFee);
+        const createResult = await createDecreaseLiquidityOrder(user0, tlpAmount, executionFee);
         console.log('order:', createResult.order);
 
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: user0.address,
-            to: orderBook.address,
-            success: true,
+            to: user0TlpWallet.address,
+            success: false,
         });
 
         console.log('create order gas used:', fromNano(createResult.balanceBefore.user0TonBalance - createResult.balanceAfter.user0TonBalance - toNano(executionFee)));
 
         // check order
-        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore + 1n);
-        expect(createResult.order).not.toBeNull();
-        expect(createResult.order?.liquidityDelta).toEqual(toJettonUnits(liquidity));
+        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore);
+        expect(createResult.order).toBeNull();
+        // check user jetton balance
+        expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance);
     });
 
-    it('should cancel decrease LP order', async () => {
+    it('should create decrease LP order failed - not in whitelist', async () => {
         /// create order
         let liquidity = 10;
         let executionFee = 0.1;
 
         // set block time
-        const time1 = Math.floor(Date.now() / 1000); 
-        blockchain.now = time1;
+        blockchain.now = now();
 
         // create order
-        const createResult = await createDecreaseLPOrder(user0, liquidity, executionFee);
-        console.log('orderId', createResult.orderIdBefore);
+        const createIncreaseResult = await createIncreaseLiquidityOrder(user1, liquidity, executionFee);
+
+        /// executor order
+        const prices =  Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128));
+        prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
+
+        let lpFundingFeeGrowth = 0;
+        let rolloverFeeGrowth = 0;
+
+        // wait for 6s (cancel )
+        blockchain.now += 60;
+        const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
+        printTransactionFees(executeIncreaseResult.trxResult.transactions);
+        prettyLogTransactions(executeIncreaseResult.trxResult.transactions);
+
+        let tlpAmount = Number(fromTlpUnits(executeIncreaseResult.balanceAfter.user1TlpBalance));
+
+        // set block time
+        blockchain.now += 60;
+
+        // create order
+        const createResult = await createDecreaseLiquidityOrder(user1, tlpAmount, executionFee);
+        console.log('order:', createResult.order);
+
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookTlpWallet.address,
+            to: orderBook.address,
+            success: false,
+        });
+
+        // check order
+        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore);
+        expect(createResult.order).toBeNull();
+        // check user jetton balance
+        expect(createResult.balanceAfter.user1JettonBalance).toEqual(createResult.balanceBefore.user1JettonBalance);
+    });
+
+    it('should create & cancel decrease LP order successfully', async () => {
+        // set block time
+        blockchain.now = now();
+
+        /// create order
+        let liquidity = 100;
+        let executionFee = 0.1;
+        let lpFundingFeeGrowth = 0;
+        let rolloverFeeGrowth = 0;
+
+        // create order
+        const createIncreaseResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
+        printTransactionFees(createIncreaseResult.trxResult.transactions);
+        prettyLogTransactions(createIncreaseResult.trxResult.transactions);
+        expect(createIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+        // wait for 6s (cancel )
+        blockchain.now += 60;
+
+        /// executor order
+        const prices =  Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128));
+        prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
+
+        const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
+        printTransactionFees(executeIncreaseResult.trxResult.transactions);
+        prettyLogTransactions(executeIncreaseResult.trxResult.transactions);
+        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: pool.address,
+            to: orderBook.address,
+            success: true,
+        });
+        console.log(">>>>>>>>user0TLPBalance", fromTlpUnits(executeIncreaseResult.balanceAfter.user0TlpBalance));
+        let tlpAmount = 50;
+
+        // set block time
+        blockchain.now += 60;
+
+        // create order
+        const createResult = await createDecreaseLiquidityOrder(user0, tlpAmount, executionFee);
+        console.log('order:', createResult.order);
+
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookTlpWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
+
+        // check order
+        expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore + 1n);
+        expect(createResult.order).not.toBeNull();
+        expect(createResult.order?.jettonDelta).toEqual(toTlpUnits(tlpAmount));
 
         /// cancel order
-        const cancelResult = await cancelLPOrder(executor, createResult.orderIdBefore);
+        const cancelResult = await cancelLiquidityOrder(executor, createResult.orderIdBefore);
         printTransactionFees(cancelResult.trxResult.transactions);
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
@@ -315,28 +435,34 @@ describe('LP', () => {
 
         // check order
         expect(cancelResult.order).toBeNull();
-
-        console.log('create order gas used:', fromNano(cancelResult.balanceBefore.executorTonBalance - cancelResult.balanceAfter.executorTonBalance + toNano(executionFee)));
     });
 
-    it('should decrease LP', async () => {
-        /* =========================== increase LP ================================ */
-        /// create order
-        let liquidity = 10;
-        let executionFee = 0.1;
-
+    it('should decrease LP successfully', async () => {
         // set block time
-        const time1 = Math.floor(Date.now() / 1000); 
-        blockchain.now = time1;
+        blockchain.now = now();
+
+        /// create order
+        let liquidity = 100.5;
+        let executionFee = 0.1;
+        let lpFundingFeeGrowth = 0;
+        let rolloverFeeGrowth = 0;
+        const prices =  Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128));
+        prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
 
         // create order
-        const createIncreaseResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
-        
+        const createIncreaseResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
+        printTransactionFees(createIncreaseResult.trxResult.transactions);
+        prettyLogTransactions(createIncreaseResult.trxResult.transactions);
+        expect(createIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: orderBookJettonWallet.address,
+            to: orderBook.address,
+            success: true,
+        });
         // wait for 6s (cancel )
-        blockchain.now = blockchain.now + 6;
+        blockchain.now += 60;
 
         /// executor order
-        const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
+        const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         printTransactionFees(executeIncreaseResult.trxResult.transactions);
         prettyLogTransactions(executeIncreaseResult.trxResult.transactions);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
@@ -344,40 +470,33 @@ describe('LP', () => {
             to: orderBook.address,
             success: true,
         });
+        const  user0TLPBalance = executeIncreaseResult.balanceAfter.user0TlpBalance;
+        console.log(">>>>>>>>user0TLPBalance", fromTlpUnits(executeIncreaseResult.balanceAfter.user0TlpBalance));
+        let user0JettonBalance = executeIncreaseResult.balanceAfter.user0JettonBalance;
+        console.log(">>>>>>>>user0JettonBalance", fromJettonUnits(user0JettonBalance));
+        let tlpAmount = 50;
 
-        // check order
-        expect(executeIncreaseResult.orderAfter).toBeNull();
-
-        // check position
-        let position = executeIncreaseResult.positionDataAfter.lpPosition;
-        expect(position).not.toBeNull();
-        expect(position?.liquidity).toEqual(toJettonUnits(liquidity));
-
-        /* =========================== decrease LP ================================ */
-        // after 10days
-        blockchain.now = blockchain.now + 10 * 24 * 60 * 60;
-        let decreaseLiquidity = 4;
+        // set block time
+        blockchain.now += 60;
 
         // create order
-        const createDecreaseResult = await createDecreaseLPOrder(user0, decreaseLiquidity, executionFee);
+        const createDecreaseResult = await createDecreaseLiquidityOrder(user0, tlpAmount, executionFee);
         console.log('order:', createDecreaseResult.order);
 
         expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
-            from: user0.address,
+            from: orderBookTlpWallet.address,
             to: orderBook.address,
             success: true,
         });
 
-        console.log('create order gas used:', fromNano(createDecreaseResult.balanceBefore.user0TonBalance - createDecreaseResult.balanceAfter.user0TonBalance - toNano(executionFee)));
-
         // check order
         expect(createDecreaseResult.orderIdAfter).toEqual(createDecreaseResult.orderIdBefore + 1n);
         expect(createDecreaseResult.order).not.toBeNull();
-        expect(createDecreaseResult.order?.liquidityDelta).toEqual(toJettonUnits(decreaseLiquidity));
+        expect(createDecreaseResult.order?.jettonDelta).toEqual(toTlpUnits(tlpAmount));
 
-        blockchain.now = blockchain.now + 10;
+        blockchain.now += 60;
         /// executor order
-        const executeDecreaseResult = await executeLPOrder(executor, createDecreaseResult.orderIdBefore);
+        const executeDecreaseResult = await executeLiquidityOrder(executor, createDecreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         printTransactionFees(executeDecreaseResult.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
         expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
@@ -389,47 +508,51 @@ describe('LP', () => {
         // check order
         expect(executeDecreaseResult.orderAfter).toBeNull();
 
-        // check position
-        position = executeDecreaseResult.positionDataAfter.lpPosition;
-        expect(position).not.toBeNull();
-        expect(position?.liquidity).toEqual(toJettonUnits(liquidity - decreaseLiquidity));
+        // check tlp
+        let user0TLPBalance1 = executeDecreaseResult.balanceAfter.user0TlpBalance;
+        expect(user0TLPBalance1).toBeGreaterThan(0n);
+        expect(user0TLPBalance1).toEqual(user0TLPBalance - toTlpUnits(tlpAmount));
+        let user0JettonBalance1 = executeDecreaseResult.balanceAfter.user1JettonBalance;
+        console.log(">>>>>>>>user0JettonBalance1", fromJettonUnits(user0JettonBalance1));
     });
 
     it('should increase LP with bonus', async () => {
         // set block time
-        const time1 = Math.floor(Date.now() / 1000); 
-        blockchain.now = time1;
+        blockchain.now = now();
 
         /* =========================== increase LP ================================ */
         /// create order
         let lpLiquidity = 10000;
         let executionFee = 0.1;
+        
+        const prices =  Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128));
+        prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
+        let lpFundingFeeGrowth = 0;
+        let rolloverFeeGrowth = 0;
 
         // create order
-        const createIncreaseResult = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
+        const createIncreaseResult = await createIncreaseLiquidityOrder(user0, lpLiquidity, executionFee);
         printTransactionFees(createIncreaseResult.trxResult.transactions);
 
         console.log('create increase LP order gas used:', fromNano(createIncreaseResult.balanceBefore.user0TonBalance - createIncreaseResult.balanceAfter.user0TonBalance - toNano(executionFee)));
 
         /// executor order
-        const executeIncreaseResult = await executeLPOrder(executor, createIncreaseResult.orderIdBefore);
+        const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         printTransactionFees(executeIncreaseResult.trxResult.transactions);
+        prettyLogTransactions(executeIncreaseResult.trxResult.transactions);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
-            to: pool.address,
+            from: pool.address,
+            to: orderBook.address,
             success: true,
         });
-        console.log('execute increase LP order gas used:', fromNano(executeIncreaseResult.balanceBefore.executorTonBalance - executeIncreaseResult.balanceAfter.executorTonBalance + toNano(executionFee)));
 
         // check order
         expect(executeIncreaseResult.orderAfter).toBeNull();
 
-        // check position
-        let position = executeIncreaseResult.positionDataAfter.lpPosition;
-        console.log('lp position after increase:', executeIncreaseResult.positionDataAfter);
-        expect(position).not.toBeNull();
-        expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity));
-
+        // check tlp balance
+        let user0TlpBalance = executeIncreaseResult.balanceAfter.user0TlpBalance;
+        console.log('user0TlpBalance:', user0TlpBalance);
+        expect(user0TlpBalance).toBeGreaterThan(0);
 
         /* =========================== increase long perp ================================ */
         let isMarket = true;
@@ -439,7 +562,8 @@ describe('LP', () => {
         let size = 0.01; // 500u
         let triggerPrice = 51000;
         let increasePrice = 50000;
-        let premiumRate = 0;
+        let _fundingFeeGrowth = 0;
+        let _rolloverFeeGrowth = 0;
 
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
@@ -452,7 +576,7 @@ describe('LP', () => {
         console.log('create increase long perp order gas used:', fromNano(createResult.balanceBefore.user1TonBalance - createResult.balanceAfter.user1TonBalance - toNano(executionFee)));
 
         // executor order
-        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, premiumRate);
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         printTransactionFees(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
@@ -462,31 +586,23 @@ describe('LP', () => {
         console.log('execute increase long perp order gas used:', fromNano(executeResult.balanceBefore.executorTonBalance - executeResult.balanceAfter.executorTonBalance + toNano(executionFee)));
 
         console.log('position after increase long:', executeResult.positionDataAfter);
-        console.log('lp position after increase long:', executeResult.lpPositionDataAfter);
 
         expect(executeResult.positionDataAfter.globalLPPosition?.netSize).toEqual(toJettonUnits(size));
         expect(executeResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
 
-        /* =========================== update price ================================ */
-        let indexPrice = 51000;
-
-        const updatePriceResult = await updatePrice(executor, tokenId, indexPrice);
-        printTransactionFees(updatePriceResult.trxResult.transactions);
-
-        expect(updatePriceResult.lpPositionDataAfter.globalLPUnrealizedPnl).toEqual(toJettonUnits((increasePrice - indexPrice) * size));
-
-        console.log('lp position data after update price:', updatePriceResult.lpPositionDataAfter);
-        console.log('position data after update price:', updatePriceResult.positionDataAfter);
-
         /* =========================== increase LP ================================ */
         /// create order
-        const createIncreaseResult1 = await createIncreaseLPOrder(user0, lpLiquidity, executionFee);
+        const createIncreaseResult1 = await createIncreaseLiquidityOrder(user0, lpLiquidity, executionFee);
         printTransactionFees(createIncreaseResult1.trxResult.transactions);
 
         console.log('create increase LP order gas used:', fromNano(createIncreaseResult1.balanceBefore.user0TonBalance - createIncreaseResult1.balanceAfter.user0TonBalance - toNano(executionFee)));
 
         /// executor order
-        const executeIncreaseResult1 = await executeLPOrder(executor, createIncreaseResult1.orderIdBefore);
+        prices.set(1, toPriceUnits(61000)).set(2, toPriceUnits(3100));
+        lpFundingFeeGrowth = 0;
+        rolloverFeeGrowth = 0;
+
+        const executeIncreaseResult1 = await executeLiquidityOrder(executor, createIncreaseResult1.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         printTransactionFees(executeIncreaseResult1.trxResult.transactions);
         expect(executeIncreaseResult1.trxResult.transactions).toHaveTransaction({
             from: orderBook.address,
@@ -499,35 +615,22 @@ describe('LP', () => {
         // check order
         expect(executeIncreaseResult1.orderAfter).toBeNull();
 
-        // check position
-        let position1 = executeIncreaseResult1.positionDataAfter.lpPosition;
-        console.log('lp position data after increase position:', executeIncreaseResult1.positionDataAfter);
-
-        expect(position1).not.toBeNull();
-        expect(position1?.liquidity).toEqual(toJettonUnits(lpLiquidity + lpLiquidity));
-
-        /* =========================== update price ================================ */
-        let indexPrice1 = 49000;
-
-        const updatePriceResult1 = await updatePrice(executor, tokenId, indexPrice1);
-        printTransactionFees(updatePriceResult1.trxResult.transactions);
-
-        expect(updatePriceResult1.lpPositionDataAfter.globalLPUnrealizedPnl).toEqual(toJettonUnits((increasePrice - indexPrice1) * size));
-
-        console.log('lp position data after update price:', updatePriceResult1.lpPositionDataAfter);
-        console.log('position data after update price:', updatePriceResult1.positionDataAfter);
+        // check tlp balance
+        let user0TlpBalance1 = executeIncreaseResult.balanceAfter.user0TlpBalance;
+        console.log('user0TlpBalance1:', user0TlpBalance1);
+        expect(user0TlpBalance1).toBeGreaterThan(0);
 
         /* =========================== decrease LP ================================ */
         // after 1 days
-        blockchain.now = blockchain.now + 10 * 24 * 60 * 60;
-        let decreaseLiquidity = 5000;
+        blockchain.now += 10 * 24 * 60 * 60;
+        let decreaseTlpAmount = 5000;
 
         // create order
-        const createDecreaseResult = await createDecreaseLPOrder(user0, decreaseLiquidity, executionFee);
+        const createDecreaseResult = await createDecreaseLiquidityOrder(user0, decreaseTlpAmount, executionFee);
         console.log('order:', createDecreaseResult.order);
 
         expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
-            from: user0.address,
+            from: orderBookTlpWallet.address,
             to: orderBook.address,
             success: true,
         });
@@ -537,11 +640,14 @@ describe('LP', () => {
         // check order
         expect(createDecreaseResult.orderIdAfter).toEqual(createDecreaseResult.orderIdBefore + 1n);
         expect(createDecreaseResult.order).not.toBeNull();
-        expect(createDecreaseResult.order?.liquidityDelta).toEqual(toJettonUnits(decreaseLiquidity));
+        expect(createDecreaseResult.order?.jettonDelta).toEqual(toTlpUnits(decreaseTlpAmount));
 
         blockchain.now = blockchain.now + 10;
         /// executor order
-        const executeDecreaseResult = await executeLPOrder(executor, createDecreaseResult.orderIdBefore);
+        prices.set(1, toPriceUnits(61000)).set(2, toPriceUnits(3100));
+        lpFundingFeeGrowth = 1;
+        rolloverFeeGrowth = 1;
+        const executeDecreaseResult = await executeLiquidityOrder(executor, createDecreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         printTransactionFees(executeDecreaseResult.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
         expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
@@ -550,12 +656,10 @@ describe('LP', () => {
             success: true,
         });
         
-        console.log('lp position data after decrease lp:', executeDecreaseResult.positionDataAfter);
-
         // check position
-        position = executeDecreaseResult.positionDataAfter.lpPosition;
-        expect(position).not.toBeNull();
-        expect(position?.liquidity).toEqual(toJettonUnits(lpLiquidity + lpLiquidity - decreaseLiquidity));
+        let user0TlpBalance2 = executeIncreaseResult.balanceAfter.user0TlpBalance;
+        console.log('user0TlpBalance2:', user0TlpBalance2);
+        expect(user0TlpBalance2).toBeGreaterThan(0);
         
     });
 
@@ -582,7 +686,7 @@ describe('LP', () => {
         // create order
         let liquidity = 10;
         let executionFee = 0.1;
-        const createResult = await createIncreaseLPOrder(user0, liquidity, executionFee);
+        const createResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
         printTransactionFees(createResult.trxResult.transactions);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookJettonWallet.address,
@@ -595,7 +699,7 @@ describe('LP', () => {
         // check order
         expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore + 1n);
         expect(createResult.order).not.toBeNull();
-        expect(createResult.order?.liquidityDelta).toEqual(toJettonUnits(liquidity));
+        expect(createResult.order?.jettonDelta).toEqual(toJettonUnits(liquidity));
         // check jetton
         expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance - toJettonUnits(liquidity));
         expect(createResult.balanceAfter.orderBookJettonBalance).toEqual(createResult.balanceBefore.orderBookJettonBalance + toJettonUnits(liquidity));
@@ -625,7 +729,6 @@ describe('LP', () => {
         });
         // check compensate
         expect(executeCompensateResult.compensate).toBeNull();
-        expect((await TestEnv.orderBook.getLpPositionOrder(createResult.orderIdBefore)).lpPositionOrder).toBeNull();
         // check jetton
         expect(executeCompensateResult.balanceAfter.user0JettonBalance).toEqual(executeCompensateResult.balanceBefore.user0JettonBalance + toJettonUnits(liquidity));
         expect(executeCompensateResult.balanceAfter.orderBookJettonBalance).toEqual(executeCompensateResult.balanceBefore.orderBookJettonBalance - toJettonUnits(liquidity));

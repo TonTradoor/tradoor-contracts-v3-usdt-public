@@ -1,0 +1,1 @@
+export * from '../build/JettonMock/tact_MockJettonWallet';

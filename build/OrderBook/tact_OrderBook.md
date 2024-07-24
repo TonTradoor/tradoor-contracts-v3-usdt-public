@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 15968 bytes
+BOC Size: 16059 bytes
 
 # Types
-Total Types: 47
+Total Types: 48
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -37,113 +37,113 @@ Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
 TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
-## TokenTransfer
-TLB: `token_transfer#0f8a7ea5 queryId:uint64 amount:coins receiver:address responseDestination:Maybe address customPayload:Maybe ^cell forwardTonAmount:coins forwardPayload:remainder<slice> = TokenTransfer`
-Signature: `TokenTransfer{queryId:uint64,amount:coins,receiver:address,responseDestination:Maybe address,customPayload:Maybe ^cell,forwardTonAmount:coins,forwardPayload:remainder<slice>}`
+## JettonTransfer
+TLB: `jetton_transfer#0f8a7ea5 query_id:uint64 amount:coins destination:address response_destination:Maybe address custom_payload:Maybe ^cell forward_ton_amount:coins forward_payload:remainder<slice> = JettonTransfer`
+Signature: `JettonTransfer{query_id:uint64,amount:coins,destination:address,response_destination:Maybe address,custom_payload:Maybe ^cell,forward_ton_amount:coins,forward_payload:remainder<slice>}`
 
-## TokenNotification
-TLB: `token_notification#7362d09c queryId:uint64 amount:coins from:address forwardPayload:remainder<slice> = TokenNotification`
-Signature: `TokenNotification{queryId:uint64,amount:coins,from:address,forwardPayload:remainder<slice>}`
+## JettonTransferNotification
+TLB: `jetton_transfer_notification#7362d09c query_id:uint64 amount:coins sender:address forward_payload:remainder<slice> = JettonTransferNotification`
+Signature: `JettonTransferNotification{query_id:uint64,amount:coins,sender:address,forward_payload:remainder<slice>}`
 
-## TokenExcesses
-TLB: `token_excesses#d53276db queryId:uint64 = TokenExcesses`
-Signature: `TokenExcesses{queryId:uint64}`
+## JettonBurn
+TLB: `jetton_burn#595f07bc query_id:uint64 amount:coins response_destination:address custom_payload:Maybe ^cell = JettonBurn`
+Signature: `JettonBurn{query_id:uint64,amount:coins,response_destination:address,custom_payload:Maybe ^cell}`
+
+## DeployTLP
+TLB: `deploy_tlp#f6ba9e09 jetton_content:^cell = DeployTLP`
+Signature: `DeployTLP{jetton_content:^cell}`
 
 ## UpdateConfig
-TLB: `update_config#92cf3566 executorLength:int257 executors:dict<int, ^ExecutorParam{executor:address,enable:bool}> compensator:address minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins usdtWallet:address pool:address = UpdateConfig`
-Signature: `UpdateConfig{executorLength:int257,executors:dict<int, ^ExecutorParam{executor:address,enable:bool}>,compensator:address,minTimeDelayTrader:int257,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,usdtWallet:address,pool:address}`
+TLB: `update_config#9b32c809 orderLockTime:Maybe uint32 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,gasForBurnTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,lpExecutors:dict<address, bool>,compensator:address} contractConfig:Maybe ContractConfig{tlpWallet:address,jettonWallet:address,pool:address} = UpdateConfig`
+Signature: `UpdateConfig{orderLockTime:Maybe uint32,gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,gasForBurnTlp:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,lpExecutors:dict<address, bool>,compensator:address},contractConfig:Maybe ContractConfig{tlpWallet:address,jettonWallet:address,pool:address}}`
 
 ## SendProtocolFee
-TLB: `send_protocol_fee#5dd58461 trxId:uint64 feeReceiver:address amount:int257 = SendProtocolFee`
-Signature: `SendProtocolFee{trxId:uint64,feeReceiver:address,amount:int257}`
+TLB: `send_protocol_fee#5dd58461 trxId:uint64 feeReceiver:address amount:coins = SendProtocolFee`
+Signature: `SendProtocolFee{trxId:uint64,feeReceiver:address,amount:coins}`
 
-## CreateDecreaseLPPositionOrder
-TLB: `create_decrease_lp_position_order#25b21724 executionFee:coins liquidityDelta:uint128 trxId:uint64 = CreateDecreaseLPPositionOrder`
-Signature: `CreateDecreaseLPPositionOrder{executionFee:coins,liquidityDelta:uint128,trxId:uint64}`
+## CancelLiquidityOrder
+TLB: `cancel_liquidity_order#481e7561 orderId:uint64 trxId:uint64 executionFeeReceiver:Maybe address = CancelLiquidityOrder`
+Signature: `CancelLiquidityOrder{orderId:uint64,trxId:uint64,executionFeeReceiver:Maybe address}`
 
-## CancelLPPositionOrder
-TLB: `cancel_lp_position_order#7d91eb36 orderId:uint64 trxId:uint64 executionFeeReceiver:Maybe address = CancelLPPositionOrder`
-Signature: `CancelLPPositionOrder{orderId:uint64,trxId:uint64,executionFeeReceiver:Maybe address}`
+## ExecuteLiquidityOrder
+TLB: `execute_liquidity_order#abcf587b orderId:uint64 trxId:uint64 executionFeeReceiver:Maybe address prices:dict<uint16, uint128> lpFundingFeeGrowth:coins rolloverFeeGrowth:coins = ExecuteLiquidityOrder`
+Signature: `ExecuteLiquidityOrder{orderId:uint64,trxId:uint64,executionFeeReceiver:Maybe address,prices:dict<uint16, uint128>,lpFundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
-## ExecuteLPPositionOrder
-TLB: `execute_lp_position_order#1286b98b orderId:uint64 trxId:uint64 executionFeeReceiver:Maybe address = ExecuteLPPositionOrder`
-Signature: `ExecuteLPPositionOrder{orderId:uint64,trxId:uint64,executionFeeReceiver:Maybe address}`
+## UpdateLiquidityPool
+TLB: `update_liquidity_pool#5523d11e isIncrease:bool orderId:uint64 account:address jettonDelta:coins trxId:uint64 prices:dict<uint16, uint128> lpFundingFeeGrowth:coins rolloverFeeGrowth:coins = UpdateLiquidityPool`
+Signature: `UpdateLiquidityPool{isIncrease:bool,orderId:uint64,account:address,jettonDelta:coins,trxId:uint64,prices:dict<uint16, uint128>,lpFundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
-## UpdateLPPosition
-TLB: `update_lp_position#e89cd45f isIncrease:bool orderId:uint64 account:address liquidityDelta:int257 trxId:uint64 = UpdateLPPosition`
-Signature: `UpdateLPPosition{isIncrease:bool,orderId:uint64,account:address,liquidityDelta:int257,trxId:uint64}`
-
-## UpdateLPPositionSuccess
-TLB: `update_lp_position_success#1cf0cf81 orderId:uint64 receive:int257 trxId:uint64 = UpdateLPPositionSuccess`
-Signature: `UpdateLPPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
+## LiquidityPoolUpdated
+TLB: `liquidity_pool_updated#cd6336bc isIncrease:bool orderId:uint64 tlpPrice:uint128 tlpDelta:coins jettonDelta:coins trxId:uint64 = LiquidityPoolUpdated`
+Signature: `LiquidityPoolUpdated{isIncrease:bool,orderId:uint64,tlpPrice:uint128,tlpDelta:coins,jettonDelta:coins,trxId:uint64}`
 
 ## CreateCompensate
-TLB: `create_compensate#af93b5c8 orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:uint128 executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate`
-Signature: `CreateCompensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:uint128,executionFeeReceiver:Maybe address,executionFee:coins}`
+TLB: `create_compensate#fc33877d orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:coins executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate`
+Signature: `CreateCompensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:coins,executionFeeReceiver:Maybe address,executionFee:coins}`
 
 ## ExecuteOrCancelCompensate
 TLB: `execute_or_cancel_compensate#88e7f927 isCancel:bool compensateId:uint64 trxId:uint64 = ExecuteOrCancelCompensate`
 Signature: `ExecuteOrCancelCompensate{isCancel:bool,compensateId:uint64,trxId:uint64}`
 
-## CreateDecreasePerpPositionOrder
-TLB: `create_decrease_perp_position_order#6a923ddb executionFee:coins tokenId:uint64 isLong:bool marginDelta:uint128 sizeDelta:uint128 triggerPrice:uint128 trxId:uint64 = CreateDecreasePerpPositionOrder`
-Signature: `CreateDecreasePerpPositionOrder{executionFee:coins,tokenId:uint64,isLong:bool,marginDelta:uint128,sizeDelta:uint128,triggerPrice:uint128,trxId:uint64}`
+## CreateDecreasePerpOrder
+TLB: `create_decrease_perp_order#eef5924d executionFee:coins tokenId:uint16 isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 trxId:uint64 requestTime:uint32 = CreateDecreasePerpOrder`
+Signature: `CreateDecreasePerpOrder{executionFee:coins,tokenId:uint16,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,trxId:uint64,requestTime:uint32}`
 
-## CreateTpSlPerpPositionOrder
-TLB: `create_tp_sl_perp_position_order#23c72f58 executionFee:coins tokenId:uint64 isLong:bool tpSize:uint128 tpPrice:uint128 slSize:uint128 slPrice:uint128 trxId:uint64 = CreateTpSlPerpPositionOrder`
-Signature: `CreateTpSlPerpPositionOrder{executionFee:coins,tokenId:uint64,isLong:bool,tpSize:uint128,tpPrice:uint128,slSize:uint128,slPrice:uint128,trxId:uint64}`
+## CreateTpSlPerpOrder
+TLB: `create_tp_sl_perp_order#f94f80bb executionFee:coins tokenId:uint16 isLong:bool tpSize:coins tpPrice:uint128 slSize:coins slPrice:uint128 trxId:uint64 requestTime:uint32 = CreateTpSlPerpOrder`
+Signature: `CreateTpSlPerpOrder{executionFee:coins,tokenId:uint16,isLong:bool,tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,trxId:uint64,requestTime:uint32}`
 
-## CancelPerpPositionOrder
-TLB: `cancel_perp_position_order#c1f953f2 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 = CancelPerpPositionOrder`
-Signature: `CancelPerpPositionOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64}`
+## CancelPerpOrder
+TLB: `cancel_perp_order#099ff4a3 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 = CancelPerpOrder`
+Signature: `CancelPerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64}`
 
-## ExecutePerpPositionOrder
-TLB: `execute_perp_position_order#9dfa0ed8 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint64 price:int257 premiumRate:int257 = ExecutePerpPositionOrder`
-Signature: `ExecutePerpPositionOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint64,price:int257,premiumRate:int257}`
+## ExecutePerpOrder
+TLB: `execute_perp_order#e984aae0 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint16 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = ExecutePerpOrder`
+Signature: `ExecutePerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint16,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
 ## LiquidatePerpPosition
-TLB: `liquidate_perp_position#23343bb4 liquidationFeeReceiver:Maybe address tokenId:uint64 account:address isLong:bool trxId:uint64 price:int257 premiumRate:int257 = LiquidatePerpPosition`
-Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint64,account:address,isLong:bool,trxId:uint64,price:int257,premiumRate:int257}`
+TLB: `liquidate_perp_position#fb837963 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = LiquidatePerpPosition`
+Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint16,account:address,isLong:bool,trxId:uint64,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
 ## ADLPerpPosition
-TLB: `adl_perp_position#ec33cc52 tokenId:uint64 account:address isLong:bool marginDelta:uint128 sizeDelta:uint128 trxId:uint64 price:int257 premiumRate:int257 = ADLPerpPosition`
-Signature: `ADLPerpPosition{tokenId:uint64,account:address,isLong:bool,marginDelta:uint128,sizeDelta:uint128,trxId:uint64,price:int257,premiumRate:int257}`
+TLB: `adl_perp_position#c3100342 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = ADLPerpPosition`
+Signature: `ADLPerpPosition{tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,trxId:uint64,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool trxId:uint64 price:int257 premiumRate:int257 = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,trxId:uint64,price:int257,premiumRate:int257}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool trxId:uint64 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,trxId:uint64,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
-## UpdatePerpPositionSuccess
-TLB: `update_perp_position_success#ef01c2b4 orderId:uint64 receive:int257 trxId:uint64 = UpdatePerpPositionSuccess`
-Signature: `UpdatePerpPositionSuccess{orderId:uint64,receive:int257,trxId:uint64}`
+## PerpPositionUpdated
+TLB: `perp_position_updated#ef01c2b4 orderId:uint64 payout:coins trxId:uint64 = PerpPositionUpdated`
+Signature: `PerpPositionUpdated{orderId:uint64,payout:coins,trxId:uint64}`
 
-## LPPositionOrderCreatedEvent
-TLB: `lp_position_order_created_event#b417cc6c opType:uint8 account:address liquidityDelta:int257 executionFee:coins orderId:int257 trxId:uint64 = LPPositionOrderCreatedEvent`
-Signature: `LPPositionOrderCreatedEvent{opType:uint8,account:address,liquidityDelta:int257,executionFee:coins,orderId:int257,trxId:uint64}`
+## LiquidityOrderCreatedEvent
+TLB: `liquidity_order_created_event#c4d020e4 opType:uint8 account:address jettonDelta:coins executionFee:coins orderId:uint64 trxId:uint64 = LiquidityOrderCreatedEvent`
+Signature: `LiquidityOrderCreatedEvent{opType:uint8,account:address,jettonDelta:coins,executionFee:coins,orderId:uint64,trxId:uint64}`
 
-## LPPositionOrderCancelledEvent
-TLB: `lp_position_order_cancelled_event#4b658ac0 opType:uint8 orderId:uint64 trxId:uint64 = LPPositionOrderCancelledEvent`
-Signature: `LPPositionOrderCancelledEvent{opType:uint8,orderId:uint64,trxId:uint64}`
+## LiquidityOrderCancelledEvent
+TLB: `liquidity_order_cancelled_event#b9b03cbc opType:uint8 orderId:uint64 trxId:uint64 = LiquidityOrderCancelledEvent`
+Signature: `LiquidityOrderCancelledEvent{opType:uint8,orderId:uint64,trxId:uint64}`
 
-## LPPositionOrderExecutedEvent
-TLB: `lp_position_order_executed_event#b3055fd4 opType:uint8 orderId:uint64 trxId:uint64 = LPPositionOrderExecutedEvent`
-Signature: `LPPositionOrderExecutedEvent{opType:uint8,orderId:uint64,trxId:uint64}`
+## LiquidityOrderExecutedEvent
+TLB: `liquidity_order_executed_event#2a138100 opType:uint8 orderId:uint64 trxId:uint64 = LiquidityOrderExecutedEvent`
+Signature: `LiquidityOrderExecutedEvent{opType:uint8,orderId:uint64,trxId:uint64}`
 
-## PerpPositionOrderCreatedEvent
-TLB: `perp_position_order_created_event#7263615d opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:coins orderId:int257 trxId:uint64 = PerpPositionOrderCreatedEvent`
-Signature: `PerpPositionOrderCreatedEvent{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:coins,orderId:int257,trxId:uint64}`
+## PerpOrderCreatedEvent
+TLB: `perp_order_created_event#66ef465f opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins orderId:uint64 trxId:uint64 blockTime:uint32 requestTime:uint32 = PerpOrderCreatedEvent`
+Signature: `PerpOrderCreatedEvent{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,orderId:uint64,trxId:uint64,blockTime:uint32,requestTime:uint32}`
 
-## PerpPositionOrderCancelledEvent
-TLB: `perp_position_order_cancelled_event#803e6175 opType:uint8 orderId:uint64 trxId:uint64 = PerpPositionOrderCancelledEvent`
-Signature: `PerpPositionOrderCancelledEvent{opType:uint8,orderId:uint64,trxId:uint64}`
+## PerpOrderCancelledEvent
+TLB: `perp_order_cancelled_event#f2c5aeac opType:uint8 orderId:uint64 trxId:uint64 = PerpOrderCancelledEvent`
+Signature: `PerpOrderCancelledEvent{opType:uint8,orderId:uint64,trxId:uint64}`
 
-## PerpPositionOrderExecutedEvent
-TLB: `perp_position_order_executed_event#a1bb0b3f opType:uint8 orderId:uint64 trxId:uint64 = PerpPositionOrderExecutedEvent`
-Signature: `PerpPositionOrderExecutedEvent{opType:uint8,orderId:uint64,trxId:uint64}`
+## PerpOrderExecutedEvent
+TLB: `perp_order_executed_event#fc1cdc95 opType:uint8 orderId:uint64 trxId:uint64 = PerpOrderExecutedEvent`
+Signature: `PerpOrderExecutedEvent{opType:uint8,orderId:uint64,trxId:uint64}`
 
 ## CompensateCreatedEvent
-TLB: `compensate_created_event#17e6cb93 compensateId:uint64 orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins unlockTime:int257 = CompensateCreatedEvent`
-Signature: `CompensateCreatedEvent{compensateId:uint64,orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}`
+TLB: `compensate_created_event#9628ba96 compensateId:uint64 orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:coins executionFeeReceiver:Maybe address executionFee:coins unlockTime:uint32 = CompensateCreatedEvent`
+Signature: `CompensateCreatedEvent{compensateId:uint64,orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:coins,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:uint32}`
 
 ## CompensateCancelledEvent
 TLB: `compensate_cancelled_event#4bc341d5 compensateId:uint64 trxId:uint64 = CompensateCancelledEvent`
@@ -153,56 +153,60 @@ Signature: `CompensateCancelledEvent{compensateId:uint64,trxId:uint64}`
 TLB: `compensate_executed_event#db45e438 compensateId:uint64 trxId:uint64 = CompensateExecutedEvent`
 Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 
+## GasConfig
+TLB: `_ lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins gasForBurnTlp:coins = GasConfig`
+Signature: `GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,gasForBurnTlp:coins}`
+
+## ExecutorConfig
+TLB: `_ executors:dict<address, bool> lpExecutors:dict<address, bool> compensator:address = ExecutorConfig`
+Signature: `ExecutorConfig{executors:dict<address, bool>,lpExecutors:dict<address, bool>,compensator:address}`
+
+## ContractConfig
+TLB: `_ tlpWallet:address jettonWallet:address pool:address = ContractConfig`
+Signature: `ContractConfig{tlpWallet:address,jettonWallet:address,pool:address}`
+
 ## ConfigData
-TLB: `_ isExecutor:Maybe bool minTimeDelayTrader:int257 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins totalExecutionFee:coins usdtWallet:address pool:address = ConfigData`
-Signature: `ConfigData{isExecutor:Maybe bool,minTimeDelayTrader:int257,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,totalExecutionFee:coins,usdtWallet:address,pool:address}`
+TLB: `_ isExecutor:Maybe bool orderLockTime:uint32 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins poolLpGasConsumption:coins poolPerpGasConsumption:coins minTonsForStorage:coins gasTransferJetton:coins gasForBurnTlp:coins totalExecutionFee:coins tlpWallet:address jettonWallet:address pool:address = ConfigData`
+Signature: `ConfigData{isExecutor:Maybe bool,orderLockTime:uint32,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,poolLpGasConsumption:coins,poolPerpGasConsumption:coins,minTonsForStorage:coins,gasTransferJetton:coins,gasForBurnTlp:coins,totalExecutionFee:coins,tlpWallet:address,jettonWallet:address,pool:address}`
 
-## ExecutorParam
-TLB: `_ executor:address enable:bool = ExecutorParam`
-Signature: `ExecutorParam{executor:address,enable:bool}`
+## LiquidityOrder
+TLB: `_ isIncrease:bool account:address jettonDelta:coins executionFee:coins blockTime:uint32 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = LiquidityOrder`
+Signature: `LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
 
-## LPPositionOrder
-TLB: `_ isIncrease:bool account:address liquidityDelta:int257 executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = LPPositionOrder`
-Signature: `LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
+## LiquidityOrderData
+TLB: `_ liquidityOrderIndexNext:uint64 liquidityOrder:Maybe LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address} = LiquidityOrderData`
+Signature: `LiquidityOrderData{liquidityOrderIndexNext:uint64,liquidityOrder:Maybe LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}}`
 
-## LPPositionOrderData
-TLB: `_ lpPositionOrderIndexNext:int257 lpPositionOrder:Maybe LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address} = LPPositionOrderData`
-Signature: `LPPositionOrderData{lpPositionOrderIndexNext:int257,lpPositionOrder:Maybe LPPositionOrder{isIncrease:bool,account:address,liquidityDelta:int257,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}}`
+## PerpOrder
+TLB: `_ opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins blockTime:uint32 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = PerpOrder`
+Signature: `PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
 
-## PerpPositionOrder
-TLB: `_ opType:uint8 tokenId:uint64 account:address isLong:bool marginDelta:int257 sizeDelta:int257 triggerPrice:int257 triggerAbove:bool executionFee:coins blockTime:int257 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = PerpPositionOrder`
-Signature: `PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
+## PerpOrderEx
+TLB: `_ tpSize:coins tpPrice:uint128 slSize:coins slPrice:uint128 executionFee:coins = PerpOrderEx`
+Signature: `PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins}`
 
-## PerpPositionOrderEx
-TLB: `_ tpSize:int257 tpPrice:int257 slSize:int257 slPrice:int257 executionFee:int257 = PerpPositionOrderEx`
-Signature: `PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:int257}`
-
-## PerpPositionOrderData
-TLB: `_ perpPositionOrderIndexNext:int257 perpPositionOrder:Maybe PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address} perpPositionOrderEx:Maybe PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:int257} = PerpPositionOrderData`
-Signature: `PerpPositionOrderData{perpPositionOrderIndexNext:int257,perpPositionOrder:Maybe PerpPositionOrder{opType:uint8,tokenId:uint64,account:address,isLong:bool,marginDelta:int257,sizeDelta:int257,triggerPrice:int257,triggerAbove:bool,executionFee:coins,blockTime:int257,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address},perpPositionOrderEx:Maybe PerpPositionOrderEx{tpSize:int257,tpPrice:int257,slSize:int257,slPrice:int257,executionFee:int257}}`
-
-## UpdatePrice
-TLB: `_ tokenId:uint64 price:int257 = UpdatePrice`
-Signature: `UpdatePrice{tokenId:uint64,price:int257}`
+## PerpOrderData
+TLB: `_ perpOrderIndexNext:uint64 perpOrder:Maybe PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address} perpOrderEx:Maybe PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins} = PerpOrderData`
+Signature: `PerpOrderData{perpOrderIndexNext:uint64,perpOrder:Maybe PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address},perpOrderEx:Maybe PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins}}`
 
 ## Compensate
-TLB: `_ orderType:Maybe int257 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:int257 executionFeeReceiver:Maybe address executionFee:coins unlockTime:int257 = Compensate`
-Signature: `Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}`
+TLB: `_ orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:coins executionFeeReceiver:Maybe address executionFee:coins unlockTime:uint32 = Compensate`
+Signature: `Compensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:coins,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:uint32}`
 
 ## CompensateData
-TLB: `_ compensateIndexNext:int257 compensate:Maybe Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257} = CompensateData`
-Signature: `CompensateData{compensateIndexNext:int257,compensate:Maybe Compensate{orderType:Maybe int257,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:int257,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:int257}}`
+TLB: `_ compensateIndexNext:uint64 compensate:Maybe Compensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:coins,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:uint32} = CompensateData`
+Signature: `CompensateData{compensateIndexNext:uint64,compensate:Maybe Compensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:coins,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:uint32}}`
 
 # Get Methods
 Total Get Methods: 6
 
 ## configData
-Argument: executor
+Argument: account
 
-## lpPositionOrder
+## liquidityOrder
 Argument: orderId
 
-## perpPositionOrder
+## perpOrder
 Argument: orderId
 
 ## compensate
@@ -213,7 +217,7 @@ Argument: compensateId
 ## owner
 
 # Error Codes
-2: Stack undeflow
+2: Stack underflow
 3: Stack overflow
 4: Integer overflow
 5: Integer out of expected range

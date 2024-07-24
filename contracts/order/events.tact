@@ -1,52 +1,50 @@
 // ============================ LP ================================ //
 // increase LP
-message LPPositionOrderCreatedEvent {
+message LiquidityOrderCreatedEvent {
     opType: Int as uint8;
     account: Address;
-    liquidityDelta: Int;
+    jettonDelta: Int as coins;
     executionFee: Int as coins;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int as uint64;
 }
 
-message LPPositionOrderCancelledEvent {
+message LiquidityOrderCancelledEvent {
     opType: Int as uint8;
     orderId: Int as uint64;
     trxId: Int as uint64;
 }
 
-message LPPositionOrderExecutedEvent {
+message LiquidityOrderExecutedEvent {
     opType: Int as uint8;
     orderId: Int as uint64;
     trxId: Int as uint64;
 }
 
 // ============================ Perp ================================ //
-message PerpPositionOrderCreatedEvent {
+message PerpOrderCreatedEvent {
     opType: Int as uint8;
-    tokenId: Int as uint64;
+    tokenId: Int as uint16;
     account: Address;
     isLong: Bool;
-    marginDelta: Int;
-    sizeDelta: Int;
-    triggerPrice: Int;
+    marginDelta: Int as coins;
+    sizeDelta: Int as coins;
+    triggerPrice: Int as uint128;
     triggerAbove: Bool;
-    tpSize: Int;
-    tpPrice: Int;
-    slSize: Int;
-    slPrice: Int;
     executionFee: Int as coins;
-    orderId: Int;
+    orderId: Int as uint64;
     trxId: Int as uint64;
+    blockTime: Int as uint32;
+    requestTime: Int as uint32;
 }
 
-message PerpPositionOrderCancelledEvent {
+message PerpOrderCancelledEvent {
     opType: Int as uint8;
     orderId: Int as uint64;
     trxId: Int as uint64;
 }
 
-message PerpPositionOrderExecutedEvent {
+message PerpOrderExecutedEvent {
     opType: Int as uint8;
     orderId: Int as uint64;
     trxId: Int as uint64;
@@ -55,14 +53,14 @@ message PerpPositionOrderExecutedEvent {
 // ============================ Compensate ================================ //
 message CompensateCreatedEvent {
     compensateId: Int as uint64;
-    orderType: Int?;
+    orderType: Int? as uint8;
     orderId: Int as uint64;
     trxId: Int as uint64;
     refundReceiver: Address?;
-    refundAmount: Int;
+    refundAmount: Int as coins;
     executionFeeReceiver: Address?;
     executionFee: Int as coins;
-    unlockTime: Int;
+    unlockTime: Int as uint32;
 }
 
 message CompensateCancelledEvent {

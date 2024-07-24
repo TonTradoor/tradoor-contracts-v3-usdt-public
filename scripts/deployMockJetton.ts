@@ -1,8 +1,8 @@
 import { Address, SendMode, beginCell, toNano } from '@ton/core';
 
 import { NetworkProvider } from '@ton/blueprint';
-import { MockJetton } from '../wrappers/MockJetton';
-import { buildOnchainMetadata } from '../contracts/mock/utils/jetton-helpers';
+import { MockJettonMaster as MockJetton } from '../wrappers/JettonMock';
+import { buildOnchainMetadata } from '../contracts/jetton/utils/jetton-helpers';
 import { getConfig, setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
@@ -10,9 +10,9 @@ export async function run(provider: NetworkProvider) {
 
     const jettonParams = {
         name: 'Mock USDT ' + deployId,
-        description: 'Mock USDT Token in Tact-lang',
+        description: 'Mock USDT Jetton',
         symbol: 'mUSDT',
-        image: 'https://avatars.githubusercontent.com/u/104382459?s=200&v=4',
+        image: 'https://ton.app/media/jetton-1bf95814-787a-4e2d-86ea-e0dae3a9484c.jpg?w=640&q=50',
         decimals: '6'
     };
 
@@ -21,12 +21,12 @@ export async function run(provider: NetworkProvider) {
 
     let address = provider.sender().address!!;
     // create jetton contract
-    const sampleJetton = provider.open(await MockJetton.fromInit(address, content));
+    const mock = provider.open(await MockJetton.fromInit(address, content));
 
-    console.log('deployId:', deployId, 'deploying jetton to address:', sampleJetton.address);
+    console.log('deployId:', deployId, 'deploying jetton to address:', mock.address);
 
     // deploy
-    await sampleJetton.send(
+    await mock.send(
         provider.sender(),
         {
             value: toNano('0.1')
@@ -37,7 +37,7 @@ export async function run(provider: NetworkProvider) {
         }
     );
 
-    await provider.waitForDeploy(sampleJetton.address);
-    setConfig('sampleJetton', sampleJetton.address.toString());
+    await provider.waitForDeploy(mock.address);
+    setConfig('mockJetton', mock.address.toString());
 
 }

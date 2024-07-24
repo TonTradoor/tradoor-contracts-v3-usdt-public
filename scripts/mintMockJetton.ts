@@ -1,40 +1,44 @@
-import { Address, toNano } from '@ton/core';
+import { Address, beginCell, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { attachJettonWallet, attachMockJetton, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
-import { JETTON_DECIMAL } from '../utils/constants';
+import { attachMockJettonWallet, attachMockJetton, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
+import { MOCK_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
-    const sampleJetton = attachMockJetton(provider);
+    const mockJetton = attachMockJetton(provider);
 
-    const recevier = Address.parse(await provider.ui().input('recevier address:'));
+    const receiver = Address.parse(await provider.ui().input('receiver address:'));
     const amount = await provider.ui().input('mint amount:');
 
-    console.log(`mint to ${recevier} for ${amount}`);
+    console.log(`mint MOCK-Jetton to ${receiver} for ${amount}`);
 
-    const lastTrx = await getLastTransaction(provider, sampleJetton.address);
+    const lastTrx = await getLastTransaction(provider, mockJetton.address);
 
-    await sampleJetton.send(
+    await mockJetton.send(
         provider.sender(),
         {
             value: toNano('0.5'),
         },
         {
-            $$type: 'Mint',
-            amount: toUnits(amount, JETTON_DECIMAL),
-            receiver: recevier
+            $$type: 'JettonMint',
+            origin: provider.sender().address!!,
+            amount: toUnits(amount, MOCK_DECIMAL),
+            receiver: receiver,
+            custom_payload: null,
+            forward_ton_amount: 0n,
+            forward_payload: beginCell().endCell(),
         }
     );
 
     // wait for trx
-    const transDone = await waitForTransaction(provider, sampleJetton.address, lastTrx, 20);
+    const transDone = await waitForTransaction(provider, mockJetton.address, lastTrx, 20);
     if (transDone) {
-        console.log(`create decrease LP success`);
+        console.log(`mint MOCK-jetton...`);
     }
 
     // get user jetton balance
-    let user0JettonWallet = await attachJettonWallet(provider, recevier);
+    let user0JettonWallet = await attachMockJettonWallet(provider, receiver);
     let user0JettonData = await user0JettonWallet.getGetWalletData();
-    console.log('user jetton balance:', user0JettonData.balance);
+    console.log('user MOCK-jetton balance:', user0JettonData.balance);
 
     console.log('Mint successfully!');
 }

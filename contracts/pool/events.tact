@@ -2,40 +2,27 @@ import "./structs";
 
 // ============================ LP ================================ //
 // increase LP
-message LPPositionIncreasedEvent {
+message LiquidityIncreasedEvent {
     trxId: Int as uint64;
-    orderId: Int as uint64;
     opType: Int as uint8;
-    positionId: Int as uint64;
     account: Address;
-    liquidityDelta: Int;
-    liquidityAfter: Int;
-    bonusDelta: Int;
-    bonusAfter: Int;
-    unlockTimeAfter: Int;
-    realizedFundingFeeDelta: Int;
-    realizedFundingFeeAfter: Int;
-    entryFundingFeeGrowthAfter: Int;
-    lpFundAfter: Int;
-    lpLiquidityAfter: Int;
+    jettonDelta: Int as coins;
+    tlpDelta: Int as coins;
+    tlpPrice: Int as uint128;
+    tlpSupply: Int as coins;
+    lpFundAfter: Int as int128;
 }
 
 // decrease LP
-message LPPositionDecreasedEvent {
+message LiquidityDecreasedEvent {
     trxId: Int as uint64;
-    orderId: Int as uint64;
     opType: Int as uint8;
-    positionId: Int as uint64;
     account: Address;
-    liquidityDelta: Int; // decrease liquidty
-    liquidityAfter: Int;
-    bonusDelta: Int;
-    bonusAfter: Int;
-    fundingFeeDelta: Int;
-    entryFundingFeeGrowthAfter: Int;
-    receive: Int; // realizedPnl = receive - liquidityDelta
-    lpFundAfter: Int;
-    lpLiquidityAfter: Int;
+    jettonDelta: Int as coins;
+    tlpDelta: Int as coins;
+    tlpPrice: Int as uint128;
+    tlpSupply: Int as coins;
+    lpFundAfter: Int as int128;
 }
 
 // ============================ Perp ================================ //
@@ -46,36 +33,33 @@ message PerpPositionIncreasedEvent {
     opType: Int as uint8;
     positionId: Int as uint64;
     account: Address;
-    tokenId: Int as uint64;
+    tokenId: Int as uint16;
     isLong: Bool;
-    marginDelta: Int;
-    marginAfter: Int;
-    sizeDelta: Int;
-    sizeAfter: Int;
-    avgPremiumRate: Int;
-    tradePrice: Int;
-    entryPrice: Int;
-    fundingFee: Int;
-    tradingFee: Int;
-    entryFundingFeeGrowthAfter: Int;
+    marginDelta: Int as int128;
+    marginAfter: Int as coins;
+    sizeDelta: Int as int128;
+    sizeAfter: Int as coins;
+    tradePrice: Int as uint128;
+    entryPrice: Int as uint128;
+    fundingFee: Int as int128;
+    rolloverFee: Int as coins;
+    tradingFee: Int as coins;
+    entryFundingFeeGrowthAfter: Int as coins;
+    entryRolloverFeeGrowthAfter: Int as coins;
     // global position
-    globalLongMarginAfter: Int;
-    globalShortMarginAfter: Int;
-    globalLongSizeAfter: Int;
-    globalShortSizeAfter: Int;
-    globalLongFundingFeeGrowthAfter: Int;
-    globalShortFundingFeeGrowthAfter: Int;
-    globalLPFundingFeeGrowthAfter: Int;
+    globalLongMarginAfter: Int as coins;
+    globalShortMarginAfter: Int as coins;
+    globalLongSizeAfter: Int as coins;
+    globalShortSizeAfter: Int as coins;
+
     // lp position
-    lpNetSizeAfter: Int;
+    lpNetSizeAfter: Int as coins;
     lpIsLong: Bool;
-    lpEntryPriceAfter: Int;
+    lpEntryPriceAfter: Int as uint128;
     // lp liquidity
-    lpFundAfter: Int;
-    lpLiquidityAfter: Int;
-    lpTradingFee: Int;
-    lpRealizedPnl: Int;
-    lpReceivedFundingFee: Int;
+    lpFundAfter: Int as int128;
+    lpTradingFee: Int as coins;
+    lpRealizedPnl: Int as int128;
 }
 
 message PerpPositionDecreasedEvent {
@@ -85,42 +69,33 @@ message PerpPositionDecreasedEvent {
     opType: Int as uint8;
     positionId: Int as uint64;
     account: Address;
-    tokenId: Int as uint64;
+    tokenId: Int as uint16;
     isLong: Bool;
-    marginDelta: Int;
-    marginAfter: Int;
-    sizeDelta: Int;
-    sizeAfter: Int;
-    avgPremiumRate: Int;
-    tradePrice: Int; // liquidatePrice for liquidate
-    entryPrice: Int;
-    realizedPnLDelta: Int;
-    fundingFee: Int;
-    tradingFee: Int;
-    entryFundingFeeGrowthAfter: Int;
-    receive: Int;
+    marginDelta: Int as int128;
+    marginAfter: Int as coins;
+    sizeDelta: Int as int128;
+    sizeAfter: Int as coins;
+    tradePrice: Int as uint128; // liquidatePrice for liquidate
+    entryPrice: Int as uint128;
+    realizedPnLDelta: Int as int128;
+    fundingFee: Int as int128;
+    rolloverFee: Int as coins;
+    tradingFee: Int as coins;
+    entryFundingFeeGrowthAfter: Int as coins;
+    entryRolloverFeeGrowthAfter: Int as coins;
+    payout: Int as coins;
     // global position
-    globalLongMarginAfter: Int;
-    globalShortMarginAfter: Int;
-    globalLongSizeAfter: Int;
-    globalShortSizeAfter: Int;
-    globalLongFundingFeeGrowthAfter: Int;
-    globalShortFundingFeeGrowthAfter: Int;
-    globalLPFundingFeeGrowthAfter: Int;
-    // lp position
-    lpNetSizeAfter: Int;
-    lpIsLong: Bool;
-    lpEntryPriceAfter: Int;
-    // lp liquidity
-    lpFundAfter: Int;
-    lpLiquidityAfter: Int;
-    lpTradingFee: Int;
-    lpRealizedPnl: Int;
-    lpReceivedFundingFee: Int;
-}
+    globalLongMarginAfter: Int as coins;
+    globalShortMarginAfter: Int as coins;
+    globalLongSizeAfter: Int as coins;
+    globalShortSizeAfter: Int as coins;
 
-// ============================ Funding Fee ================================ //
-message UpdateFundingFeeEvent {
-    length: Int;
-    datas: map<Int, UpdateFundingRateEventData>;
+    // lp position
+    lpNetSizeAfter: Int as coins;
+    lpIsLong: Bool;
+    lpEntryPriceAfter: Int as uint128;
+    // lp liquidity
+    lpFundAfter: Int as int128;
+    lpTradingFee: Int as coins;
+    lpRealizedPnl: Int as int128;
 }

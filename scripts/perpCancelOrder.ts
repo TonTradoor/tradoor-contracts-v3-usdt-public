@@ -16,7 +16,7 @@ export async function run(provider: NetworkProvider) {
             value: toNano('0.2'),
         },
         {
-            $$type: 'CancelPerpPositionOrder',
+            $$type: 'CancelPerpOrder',
             orderId: orderId,
             trxId: 1n,
             executionFeeReceiver: provider.sender().address!!
@@ -26,16 +26,16 @@ export async function run(provider: NetworkProvider) {
     // wait for trx
     const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 20);
     if (transDone) {
-        console.log(`create decrease perp success`);
+        console.log(`cancel perp order submitted...`);
     }
 
     // get index
-    let orderIdNext = (await orderBook.getPerpPositionOrder(0n)).perpPositionOrderIndexNext;
+    let orderIdNext = (await orderBook.getPerpOrder(0n)).perpOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
     // get order
-    let order = await orderBook.getPerpPositionOrder(orderId);
+    let order = await orderBook.getPerpOrder(orderId);
     console.log(`order:`, order);
 
 }

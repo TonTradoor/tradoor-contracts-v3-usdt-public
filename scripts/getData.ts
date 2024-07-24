@@ -13,21 +13,19 @@ export async function run(provider: NetworkProvider) {
 
     console.log('=================== Config ===================');
     console.log('orderbook config:', await orderBook.getConfigData(account));
-    console.log('pool config:', await pool.getConfigData(account));
-    console.log('token config:', await pool.getTokenConfig(tokenId));
-
+    console.log('pool config:', await pool.getConfigData());
     console.log('=================== LP ===================');
     // get order
-    let lpOrder = await orderBook.getLpPositionOrder(orderId);
+    let lpOrder = await orderBook.getLiquidityOrder(orderId);
     console.log(`lpOrder:`, lpOrder);
 
-    // get position
-    let lpPosition = await pool.getLpPosition(account);
-    console.log(`lpPosition:`, lpPosition);
+    // get global pool
+    let globalPoolData = await pool.getGlobalPoolData();
+    console.log(`globalPoolData:`, globalPoolData);
 
     console.log('=================== Perp ===================');
     // get index
-    let order = await orderBook.getPerpPositionOrder(orderId);
+    let order = await orderBook.getPerpOrder(orderId);
     console.log(`perp order:`, order);
 
     // get position

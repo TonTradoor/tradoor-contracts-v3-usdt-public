@@ -5,9 +5,10 @@ import { getConfig, setConfig } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
     let deployId = getConfig("nextDeployId");
+
     const orderBook = provider.open(await OrderBook.fromInit(deployId));
 
-    console.log('deployId:', deployId, 'deploying order book to address:', orderBook.address);
+    console.log('deployId:', deployId, 'deploying order_book to address:', orderBook.address);
 
     setConfig('orderBook', "");
     setConfig('pool', "");

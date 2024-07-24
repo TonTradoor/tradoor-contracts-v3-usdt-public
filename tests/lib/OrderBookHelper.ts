@@ -107,10 +107,10 @@ export async function sendCompensateJetton(user: SandboxContract<TreasuryContrac
             value: toNano(0.2),
         },
         {
-            $$type: 'TokenTransfer',
+            $$type: 'JettonTransfer',
             query_id: 0n,
             amount: toJettonUnits(amount),
-            sender: TestEnv.orderBook.address,
+            destination: TestEnv.orderBook.address,
             response_destination: user.address,
             custom_payload: null,
             forward_ton_amount: toNano(0),

@@ -1,24 +1,35 @@
 import { Address, Dictionary, toNano } from '@ton/core';
-import { NetworkProvider, sleep } from '@ton/blueprint';
-import { attachMockJetton, attachOrderBook, attachPool, getConfig, getLastTransaction, waitForTransaction } from '../utils/util';
-import { ExecutorParamValue } from '../wrappers/OrderBook';
+import { NetworkProvider } from '@ton/blueprint';
+import {
+    attachMockJetton,
+    attachOrderBook,
+    attachPool,
+    attachTLPJetton,
+    getConfig,
+    getLastTransaction,
+    waitForTransaction
+} from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
     const orderBook = attachOrderBook(provider);
-    const jetton = attachMockJetton(provider);
+    const mockJetton = attachMockJetton(provider);
+    const tlpJetton = attachTLPJetton(provider);
 
-    const orderBookJettonWallet = await jetton.getGetWalletAddress(orderBook.address!!);
+    const orderBookMockJettonWallet = await mockJetton.getGetWalletAddress(orderBook.address!!);
+    const orderBookTLPJettonWallet = await tlpJetton.getGetWalletAddress(orderBook.address!!);
 
     const config = getConfig();
     const executorAddrs = config["executors"];
-    let executors =  Dictionary.empty(Dictionary.Keys.BigInt(32), ExecutorParamValue)
+    let executors =  Dictionary.empty(Dictionary.Keys.Address(), Dictionary.Values.Bool())
     for (const i in executorAddrs) {
-        executors.set(BigInt(i), {
-            $$type: 'ExecutorParam',
-            executor: Address.parse(executorAddrs[i]),
-            enable: true
-        })
+        executors.set(Address.parse(executorAddrs[i]), true);
+    }
+
+    const lpExecutorAddrs = config["executors"];
+    let lpExecutors =  Dictionary.empty(Dictionary.Keys.Address(), Dictionary.Values.Bool())
+    for (const i in lpExecutorAddrs) {
+        lpExecutors.set(Address.parse(lpExecutorAddrs[i]), true);
     }
 
     const lastTrx = await getLastTransaction(provider, orderBook.address);
@@ -29,20 +40,31 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'UpdateConfig',
-            executorLength: BigInt(executors.size),
-            executors: executors,
-            compensator: Address.parse(config["compensator"]),
-            minTimeDelayTrader: BigInt(config["minTimeDelayTrader"]),
-            lpMinExecutionFee: toNano(config["lpMinExecutionFee"]),
-            perpMinExecutionFee: toNano(config["perpMinExecutionFee"]),
-            lpGasConsumption: toNano(config["orderbookLpGasConsumption"]),
-            perpGasConsumption: toNano(config["orderbookPerpGasConsumption"]),
-            poolLpGasConsumption: toNano(config["poolLpGasConsumption"]),
-            poolPerpGasConsumption: toNano(config["poolPerpGasConsumption"]),
-            minTonsForStorage: toNano(config["minTonsForStorage"]),
-            gasTransferJetton: toNano(config["gasTransferJetton"]),
-            usdtWallet: orderBookJettonWallet,
-            pool: pool.address
+            orderLockTime: BigInt(config["orderLockTime"]),
+            gasConfig: {
+                $$type: 'GasConfig',
+                lpMinExecutionFee: toNano(config["lpMinExecutionFee"]),
+                perpMinExecutionFee: toNano(config["perpMinExecutionFee"]),
+                lpGasConsumption: toNano(config["orderbookLpGasConsumption"]),
+                perpGasConsumption: toNano(config["orderbookPerpGasConsumption"]),
+                poolLpGasConsumption: toNano(config["poolLpGasConsumption"]),
+                poolPerpGasConsumption: toNano(config["poolPerpGasConsumption"]),
+                minTonsForStorage: toNano(config["minTonsForStorage"]),
+                gasTransferJetton: toNano(config["gasTransferJetton"]),
+                gasForBurnTlp: toNano(config["gasForBurnTlp"]),
+            },
+            executorConfig: {
+                $$type: 'ExecutorConfig',
+                executors: executors,
+                lpExecutors: lpExecutors,
+                compensator: Address.parse(config["compensator"]),
+            },
+            contractConfig: {
+                $$type: 'ContractConfig',
+                tlpWallet: orderBookTLPJettonWallet,
+                jettonWallet: orderBookMockJettonWallet,
+                pool: pool.address,
+            }
         }
     );
 

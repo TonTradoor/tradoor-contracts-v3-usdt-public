@@ -1,9 +1,8 @@
-import { AccountState, Address, fromNano, toNano } from "@ton/core";
-import { fromUnits, toUnits } from "../../utils/util";
+import { AccountState, Address, beginCell, fromNano, toNano } from "@ton/core";
+import { attachOrderBook, fromUnits, toUnits } from '../../utils/util';
 import { TestEnv } from "./TestEnv";
-import { BlockchainTransaction } from "@ton/sandbox";
-import { JettonDefaultWallet } from "../../wrappers/JettonDefaultWallet";
-
+import { MockJettonWallet } from "../../wrappers/MockJettonWallet";
+import { TLPJettonWallet } from "../../wrappers/TLPJettonWallet";
 
 export async function mint(to: Address, amount: string) {
     const mintResult = await TestEnv.jetton.send(
@@ -12,9 +11,13 @@ export async function mint(to: Address, amount: string) {
             value: toNano('0.1'),
         },
         {
-            $$type: 'Mint',
+            $$type: 'JettonMint',
+            origin: TestEnv.deployer.address,
             amount: toJettonUnits(amount),
             receiver: to,
+            custom_payload: null,
+            forward_ton_amount: 0n,
+            forward_payload: beginCell().endCell(),
         }
     );
 
@@ -27,8 +30,42 @@ export async function mint(to: Address, amount: string) {
     return mintResult;
 }
 
+export async function mintTlp(to: Address, amount: string) {
+    const mintResult = await TestEnv.tlp.send(
+        TestEnv.deployer.getSender(),
+        {
+            value: toNano('0.1'),
+        },
+        {
+            $$type: 'JettonMint',
+            origin: TestEnv.deployer.address,
+            amount: toJettonUnits(amount),
+            receiver: to,
+            custom_payload: null,
+            forward_ton_amount: 0n,
+            forward_payload: beginCell().endCell(),
+        }
+    );
+
+    expect(mintResult.transactions).toHaveTransaction({
+        from: TestEnv.deployer.address,
+        to: TestEnv.tlp.address,
+        success: true,
+    });
+
+    return mintResult;
+}
+
 export async function getJettonWallet(senderAddress: Address) {
-    return TestEnv.blockchain.openContract(await JettonDefaultWallet.fromInit(senderAddress, TestEnv.jetton.address));
+    return TestEnv.blockchain.openContract(await MockJettonWallet.fromInit(senderAddress, TestEnv.jetton.address));
+}
+
+export async function getTlpWallet(senderAddress: Address) {
+    return TestEnv.blockchain.openContract(await TLPJettonWallet.fromInit(senderAddress, TestEnv.tlp.address));
+}
+
+export function toTlpUnits(src: number | string | bigint) {
+    return toUnits(src, TestEnv.tlpDecimal);
 }
 
 export function toJettonUnits(src: number | string | bigint) {
@@ -37,6 +74,10 @@ export function toJettonUnits(src: number | string | bigint) {
 
 export function fromJettonUnits(src: number | string | bigint) {
     return fromUnits(src, TestEnv.jettonDecimal);
+}
+
+export function fromTlpUnits(src: number | string | bigint) {
+    return fromUnits(src, TestEnv.tlpDecimal);
 }
 
 export async function getTonBalance(address: Address) {
@@ -62,6 +103,16 @@ export async function getFriendlyJettonBalance(address: Address) {
     return fromUnits(balance, TestEnv.jettonDecimal);
 }
 
+export async function getTlpBalance(address: Address) {
+    let tlpWallet = await getTlpWallet(address);
+    let tlpWalletSmart = await TestEnv.blockchain.getContract(tlpWallet.address);
+    if (tlpWalletSmart.accountState?.type == 'active') {
+        let tlpData = await tlpWallet.getGetWalletData();
+        return tlpData.balance;
+    }
+    return 0n;
+}
+
 export async function getAllBalance() {
     return {
         deployerTonBalance: await getTonBalance(TestEnv.deployer.address),
@@ -79,6 +130,11 @@ export async function getAllBalance() {
         user1JettonBalance: await getJettonBalance(TestEnv.user1.address),
         user2JettonBalance: await getJettonBalance(TestEnv.user2.address),
         user3JettonBalance: await getJettonBalance(TestEnv.user3.address),
+        orderBookTlpBalance: await getTlpBalance(TestEnv.orderBook.address),
+        user0TlpBalance: await getTlpBalance(TestEnv.user0.address),
+        user1TlpBalance: await getTlpBalance(TestEnv.user1.address),
+        user2TlpBalance: await getTlpBalance(TestEnv.user2.address),
+        user3TlpBalance: await getTlpBalance(TestEnv.user3.address),
         claimExecutorJettonBalance: await getJettonBalance(TestEnv.claimExecutor.address),
     }
 }

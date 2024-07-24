@@ -1,23 +1,23 @@
 import { Address, beginCell, fromNano, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { attachJettonWallet, attachMockJetton, fromUnits, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
-import { JETTON_DECIMAL } from '../utils/constants';
+import { attachMockJettonWallet, attachMockJetton, fromUnits, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
+import { MOCK_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const sampleJetton = attachMockJetton(provider);
 
-    const recevier = Address.parse(await provider.ui().input('recevier address:'));
+    const receiver = Address.parse(await provider.ui().input('receiver address:'));
     const tonAmount = await provider.ui().input('ton amount:');
     const jettonAmount = await provider.ui().input('jetton amount:');
 
-    console.log(`transfer to ${recevier} for ton ${tonAmount} and jetton ${jettonAmount}`);
+    console.log(`transfer to ${receiver} for ton ${tonAmount} and jetton ${jettonAmount}`);
 
     const lastTrx = await getLastTransaction(provider, sampleJetton.address);
 
     // get jetton balance
-    let senderJettonWallet = await attachJettonWallet(provider, provider.sender().address!!);
+    let senderJettonWallet = await attachMockJettonWallet(provider, provider.sender().address!!);
     let senderJettonData = await senderJettonWallet.getGetWalletData();
-    console.log('sender jetton balance:', fromUnits(senderJettonData.balance, JETTON_DECIMAL));
+    console.log('sender jetton balance:', fromUnits(senderJettonData.balance, MOCK_DECIMAL));
 
     await senderJettonWallet.send(
         provider.sender(),
@@ -25,10 +25,10 @@ export async function run(provider: NetworkProvider) {
             value: toNano(tonAmount + 0.2),
         },
         {
-            $$type: 'TokenTransfer',
+            $$type: 'JettonTransfer',
             query_id: 0n,
-            amount: toUnits(jettonAmount, JETTON_DECIMAL),
-            sender: recevier,
+            amount: toUnits(jettonAmount, MOCK_DECIMAL),
+            destination: receiver,
             response_destination: provider.sender().address!!,
             custom_payload: null,
             forward_ton_amount: toNano(tonAmount),
@@ -43,9 +43,9 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get user jetton balance
-    let user0JettonWallet = await attachJettonWallet(provider, recevier);
+    let user0JettonWallet = await attachMockJettonWallet(provider, receiver);
     let user0JettonData = await user0JettonWallet.getGetWalletData();
-    console.log('user jetton balance:', fromUnits(user0JettonData.balance, JETTON_DECIMAL));
+    console.log('user jetton balance:', fromUnits(user0JettonData.balance, MOCK_DECIMAL));
 
     console.log('Transfer successfully!');
 }

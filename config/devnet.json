@@ -1,15 +1,22 @@
 {
-  "nextDeployId": 10006,
-  "sampleJetton": "EQAJGpLnnf_8hDcQX0AFxPAygd6sERrqgJyq77Z-iEgWVC3B",
-  "orderBook": "EQBmO5D8thM3-qlYthax6fNfrUdd3Zy9W0KOCdogjFcCL1aA",
-  "pool": "EQBzA9Hg0BYEcVVX92eVqWFENK59ICPVMaw-dDuXzOjEudK-",
+  "nextDeployId": 5,
+  "mockJetton": "EQDC_reVxAGncIkTTzMEr7UzzKH-rbn2K1L5WmlXzEvFTdff",
+  "tlpJetton": "EQA_6plQ__f7NTJm_XO5OOCNT2AYWjcjB-Fzd55Se9fo2vwf",
+  "orderBook": "EQAD5w6vL8tkZuPsJsVf2lulAzaXHvIzxBtGg_wE0Zni-h8k",
+  "pool": "EQBnErGxO1mQzy649PCZhSvbLpBC6pq2CPk41GiI7i3wCI0i",
   "executors": [
     "0QBWA3yJYPJ9LJCdy2WlzoGO2_0Cw6l7D3exFw25hxR_bDkS",
-    "0QAjBLsS_axAf647M2sPtCVCsJ-kI4WP82N72gPLHjsNHY9i"
+    "0QAjBLsS_axAf647M2sPtCVCsJ-kI4WP82N72gPLHjsNHY9i",
+    "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk"
   ],
-  "compensator": "EQB4Crd6SkFE1trvXSc-uMKEoPyPaOZ7ZbWWbx5bw372lUxg",
-  "claimExecutor": "0QBWA3yJYPJ9LJCdy2WlzoGO2_0Cw6l7D3exFw25hxR_bDkS",
-  "minTimeDelayTrader": 180,
+  "lpExecutors": [
+    "0QBWA3yJYPJ9LJCdy2WlzoGO2_0Cw6l7D3exFw25hxR_bDkS",
+    "0QAjBLsS_axAf647M2sPtCVCsJ-kI4WP82N72gPLHjsNHY9i",
+    "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk"
+  ],
+  "compensator": "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk",
+  "claimExecutor": "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk",
+  "orderLockTime": 180,
   "lpMinExecutionFee": 0.05,
   "perpMinExecutionFee": 0.1,
   "orderbookLpGasConsumption": 0.015,
@@ -18,10 +25,10 @@
   "poolPerpGasConsumption": 0.038,
   "minTonsForStorage": 0.01,
   "gasTransferJetton": 0.03,
-  "lpLockTime": 600,
-  "lpAddBonusFactor": 1,
-  "lpRemoveBonusFactor": 8,
-  "lpLiquidityFactor": 1,
+  "gasForMintTlp": 0.03,
+  "gasForBurnTlp": 0.03,
+  "lpRolloverFeeRate": 0.01,
+  "maxLpNetCap": 100000000,
   "tokens": [
     {
       "tokenId": 1,
@@ -33,10 +40,7 @@
       "liquidationFee": 0.5,
       "maintenanceRate": 0.005,
       "tradingFeeRate": 0.001,
-      "lpTradingFeeRate": 0.7,
-      "interestRate": 0,
-      "maxFundingRate": 0.0025,
-      "liquidityProportion": 0.35
+      "lpTradingFeeRate": 0.7
     },
     {
       "tokenId": 2,
@@ -48,10 +52,7 @@
       "liquidationFee": 0.5,
       "maintenanceRate": 0.005,
       "tradingFeeRate": 0.001,
-      "lpTradingFeeRate": 0.7,
-      "interestRate": 0,
-      "maxFundingRate": 0.0025,
-      "liquidityProportion": 0.35
+      "lpTradingFeeRate": 0.7
     },
     {
       "tokenId": 3,
@@ -63,10 +64,7 @@
       "liquidationFee": 1,
       "maintenanceRate": 0.01,
       "tradingFeeRate": 0.002,
-      "lpTradingFeeRate": 0.7,
-      "interestRate": 0,
-      "maxFundingRate": 0.005,
-      "liquidityProportion": 0.2
+      "lpTradingFeeRate": 0.7
     },
     {
       "tokenId": 4,
@@ -78,10 +76,7 @@
       "liquidationFee": 1,
       "maintenanceRate": 0.025,
       "tradingFeeRate": 0.002,
-      "lpTradingFeeRate": 0.7,
-      "interestRate": 0,
-      "maxFundingRate": 0.005,
-      "liquidityProportion": 0.1
+      "lpTradingFeeRate": 0.7
     }
   ]
 }

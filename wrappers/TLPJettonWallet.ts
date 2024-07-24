@@ -1,0 +1,1 @@
+export * from '../build/JettonTLP/tact_TLPJettonWallet';

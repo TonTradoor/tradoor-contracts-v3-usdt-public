@@ -2,9 +2,11 @@ import { NetworkProvider, sleep } from "@ton/blueprint";
 import { Address } from "@ton/core";
 import { TonClient } from "@ton/ton";
 import { Pool } from "../wrappers/Pool";
-import { MockJetton } from "../wrappers/MockJetton";
-import { JettonDefaultWallet } from "../wrappers/JettonDefaultWallet";
+import { MockJettonMaster } from "../wrappers/JettonMock";
+import { TLPJettonMaster } from "../wrappers/JettonTLP";
 import { OrderBook } from "../wrappers/OrderBook";
+import { MockJettonWallet } from '../build/JettonMock/tact_MockJettonWallet';
+import { TLPJettonWallet } from '../build/JettonTLP/tact_TLPJettonWallet';
 let fs = require('fs');
 let readline = require('readline');
 
@@ -39,8 +41,8 @@ export function randomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min))  + min;
 }
 
-export function getCurrentTimestamp(): number {
-    return Math.ceil(new Date().getTime() / 1000);
+export function now(): number {
+    return Math.ceil(Date.now() / 1000);
 }
 
 export const getLastTransaction = async (provider:NetworkProvider, address:Address) => {
@@ -171,14 +173,25 @@ export function attachPool(provider: NetworkProvider) {
 }
 
 export function attachMockJetton(provider: NetworkProvider) {
-    const jettonAddress = Address.parse(getConfig("sampleJetton"));
-    return provider.open(MockJetton.fromAddress(jettonAddress));
+    const mockJettonAddress = Address.parse(getConfig("mockJetton"));
+    return provider.open(MockJettonMaster.fromAddress(mockJettonAddress));
 }
 
-export async function attachJettonWallet(provider: NetworkProvider, userAddress: Address) {
-    const jetton = attachMockJetton(provider);
-    let walletAddress = await jetton.getGetWalletAddress(userAddress);
-    return provider.open(JettonDefaultWallet.fromAddress(walletAddress));
+export async function attachMockJettonWallet(provider: NetworkProvider, userAddress: Address) {
+    const mockJetton = attachMockJetton(provider);
+    let walletAddress = await mockJetton.getGetWalletAddress(userAddress);
+    return provider.open(MockJettonWallet.fromAddress(walletAddress));
+}
+
+export function attachTLPJetton(provider: NetworkProvider) {
+    const tlpJettonAddress = Address.parse(getConfig("tlpJetton"));
+    return provider.open(TLPJettonMaster.fromAddress(tlpJettonAddress));
+}
+
+export async function attachTLPJettonWallet(provider: NetworkProvider, userAddress: Address) {
+    const tlpJetton = attachTLPJetton(provider);
+    let walletAddress = await tlpJetton.getGetWalletAddress(userAddress);
+    return provider.open(TLPJettonWallet.fromAddress(walletAddress));
 }
 
 // sampleRanges: {
