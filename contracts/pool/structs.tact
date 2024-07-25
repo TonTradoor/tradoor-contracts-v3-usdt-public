@@ -53,8 +53,8 @@ struct PerpPosition {
     margin: Int as coins = 0;
     size: Int as coins = 0;
     entryPrice: Int as uint128 = 0;
-    entryFundingFeeGrowth: Int as coins = 0;
-    entryRolloverFeeGrowth: Int as coins = 0;
+    entryFundingFeeGrowth: Int as int128 = 0;
+    entryRolloverFeeGrowth: Int as int128 = 0;
 }
 
 struct GlobalLPPosition {

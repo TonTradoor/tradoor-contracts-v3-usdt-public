@@ -517,7 +517,7 @@ cell $PerpPositionDecreasedEvent$_store_cell((int, int, int, int, slice, int, in
 
 ;;
 ;; Type: AccountPerpPosition
-;; TLB: _ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}}> = AccountPerpPosition
+;; TLB: _ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}}> = AccountPerpPosition
 ;;
 
 builder $AccountPerpPosition$_store(builder build_0, (cell) v) inline {
@@ -565,7 +565,7 @@ _ $AccountPerpPosition$_get_positions((cell) v) inline {
 
 ;;
 ;; Type: PerpPosition
-;; TLB: _ positionId:uint64 margin:coins size:coins entryPrice:uint128 entryFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = PerpPosition
+;; TLB: _ positionId:uint64 margin:coins size:coins entryPrice:uint128 entryFundingFeeGrowth:int128 entryRolloverFeeGrowth:int128 = PerpPosition
 ;;
 
 builder $PerpPosition$_store(builder build_0, (int, int, int, int, int, int) v) inline_ref {
@@ -574,8 +574,8 @@ builder $PerpPosition$_store(builder build_0, (int, int, int, int, int, int) v) 
     build_0 = build_0.store_coins(v'margin);
     build_0 = build_0.store_coins(v'size);
     build_0 = build_0.store_uint(v'entryPrice, 128);
-    build_0 = build_0.store_coins(v'entryFundingFeeGrowth);
-    build_0 = build_0.store_coins(v'entryRolloverFeeGrowth);
+    build_0 = build_0.store_int(v'entryFundingFeeGrowth, 128);
+    build_0 = build_0.store_int(v'entryRolloverFeeGrowth, 128);
     return build_0;
 }
 
@@ -584,8 +584,8 @@ builder $PerpPosition$_store(builder build_0, (int, int, int, int, int, int) v) 
     var v'margin = sc_0~load_coins();
     var v'size = sc_0~load_coins();
     var v'entryPrice = sc_0~load_uint(128);
-    var v'entryFundingFeeGrowth = sc_0~load_coins();
-    var v'entryRolloverFeeGrowth = sc_0~load_coins();
+    var v'entryFundingFeeGrowth = sc_0~load_int(128);
+    var v'entryRolloverFeeGrowth = sc_0~load_int(128);
     return (sc_0, (v'positionId, v'margin, v'size, v'entryPrice, v'entryFundingFeeGrowth, v'entryRolloverFeeGrowth));
 }
 
@@ -600,7 +600,7 @@ tuple $PerpPosition$_to_tuple(((int, int, int, int, int, int)) v) inline {
 
 ;;
 ;; Type: DirectionPerpPosition
-;; TLB: _ longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins} shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins} = DirectionPerpPosition
+;; TLB: _ longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128} shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128} = DirectionPerpPosition
 ;;
 
 builder $DirectionPerpPosition$_store(builder build_0, ((int, int, int, int, int, int), (int, int, int, int, int, int)) v) inline {
@@ -778,7 +778,7 @@ tuple $GlobalPosition$_to_opt_tuple(tuple v) inline {
 
 ;;
 ;; Type: PerpPositionData
-;; TLB: _ globalPerpNetValue:coins globalPerpSingleValue:coins perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}} globalLPPosition:Maybe GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128} globalPosition:Maybe GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins} = PerpPositionData
+;; TLB: _ globalPerpNetValue:coins globalPerpSingleValue:coins perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}} globalLPPosition:Maybe GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128} globalPosition:Maybe GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins} = PerpPositionData
 ;;
 
 (int, int, tuple, tuple, tuple) $PerpPositionData$_to_external(((int, int, tuple, tuple, tuple)) v) inline {
