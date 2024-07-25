@@ -75,6 +75,7 @@ message(0xff57e557) UpdatePerpPosition {
     triggerAbove: Bool;
     trxId: Int as uint64;
     price: Int as uint128;
+    premiumRate: Int as uint32;
     fundingFeeGrowth: Int as coins;
     rolloverFeeGrowth: Int as coins;
 }

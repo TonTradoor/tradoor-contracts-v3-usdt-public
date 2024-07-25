@@ -1,7 +1,7 @@
 import { Address, beginCell, toNano } from '@ton/core';
 import { } from '../wrappers/Pool';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { now, getConfig, getLastTransaction, waitForTransaction, attachOrderBook, attachMockJettonWallet } from '../utils/util';
+import { now, getConfig, getLastTransaction, waitForTransaction, attachOrderBook, attachMockJettonWallet, toUnits } from '../utils/util';
 import { MOCK_DECIMAL, OP_CREATE_INCREASE_PERP_POSITION_ORDER, PRICE_DECIMAL } from '../utils/constants';
 import { toJettonUnits, toPriceUnits } from '../tests/lib/TokenHelper';
 
@@ -13,9 +13,9 @@ export async function run(provider: NetworkProvider) {
     let isMarket = true;
     let tokenId = 1;
     let isLong = true;
-    let margin = 0.01;
-    let size = 0.005;
-    let triggerPrice = 67180;
+    let margin = 100;
+    let size = 0.01;
+    let triggerPrice = 70000;
 
     // transfer jetton with create increase perp position order payload
     // get user jetton wallet address
@@ -30,6 +30,8 @@ export async function run(provider: NetworkProvider) {
 
     let orderId = (await orderBook.getPerpOrder(0n)).perpOrderIndexNext;
 
+    let trxId = BigInt(await provider.ui().input('trxId:'));
+
     const lastTrx = await getLastTransaction(provider, orderBook.address);
     await user0JettonWallet.send(
         provider.sender(),
@@ -38,8 +40,8 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'JettonTransfer',
-            query_id: 0n,
-            amount: toJettonUnits(margin),
+            query_id: trxId,
+            amount: toUnits(margin, MOCK_DECIMAL),
             destination: orderBook.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
@@ -54,15 +56,15 @@ export async function run(provider: NetworkProvider) {
                     .storeInt(isMarket? -1n : 0n, 1)
                     .storeUint(tokenId, 16)
                     .storeInt(isLong? -1n : 0n, 1)
-                    .storeCoins(toJettonUnits(margin))
-                    .storeCoins(toJettonUnits(size))
-                    .storeUint(toPriceUnits(triggerPrice), 128)
+                    .storeCoins(toUnits(margin, MOCK_DECIMAL))
+                    .storeCoins(toUnits(size, MOCK_DECIMAL))
+                    .storeUint(toUnits(triggerPrice, PRICE_DECIMAL), 128)
                     .storeUint(now(), 32)
                     .storeRef(
                         beginCell()
-                        .storeCoins(toJettonUnits(0))
+                        .storeCoins(toUnits(0, MOCK_DECIMAL))
                         .storeUint(0, 128)
-                        .storeCoins(toJettonUnits(0))
+                        .storeCoins(toUnits(0, MOCK_DECIMAL))
                         .storeUint(0, 128)
                     )
                     .endCell()

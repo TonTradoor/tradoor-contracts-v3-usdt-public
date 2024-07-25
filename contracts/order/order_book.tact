@@ -949,6 +949,7 @@ contract OrderBook with Deployable, Resumable {
                 triggerPrice: order.triggerPrice,
                 triggerAbove: order.triggerAbove,
                 price: msg.price,
+                premiumRate: msg.premiumRate,
                 fundingFeeGrowth: msg.fundingFeeGrowth,
                 rolloverFeeGrowth: msg.rolloverFeeGrowth
             }.toCell()
@@ -1109,6 +1110,7 @@ contract OrderBook with Deployable, Resumable {
                 triggerPrice: 0,
                 triggerAbove: false,
                 price: msg.price,
+                premiumRate: msg.premiumRate,
                 fundingFeeGrowth: msg.fundingFeeGrowth,
                 rolloverFeeGrowth: msg.rolloverFeeGrowth
             }.toCell()
@@ -1169,6 +1171,7 @@ contract OrderBook with Deployable, Resumable {
                 triggerPrice: 0,
                 triggerAbove: false,
                 price: msg.price,
+                premiumRate: msg.premiumRate,
                 fundingFeeGrowth: msg.fundingFeeGrowth,
                 rolloverFeeGrowth: msg.rolloverFeeGrowth
             }.toCell()

@@ -1,19 +1,19 @@
 import { Address, beginCell, toNano } from '@ton/core';
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { now, getConfig, getLastTransaction, waitForTransaction, attachOrderBook } from '../utils/util';
+import { now, getConfig, getLastTransaction, waitForTransaction, attachOrderBook, toUnits } from '../utils/util';
 import { MOCK_DECIMAL, ORDER_OP_TYPE_DECREASE_MARKET, PRICE_DECIMAL } from '../utils/constants';
-import { toJettonUnits, toPriceUnits } from '../tests/lib/TokenHelper';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
 
     /// create order
+    let trxId = BigInt(await provider.ui().input('trxId:'));
     let orderId = (await orderBook.getPerpOrder(0n)).perpOrderIndexNext;
     let executionFee = 0.1;
     let tokenId = 1;
     let isLong = true;
-    let margin = 100;
-    let size = 0.02;
+    let margin = 0;
+    let size = 0.01;
     let triggerPrice = 51000;
 
     const lastTrx = await getLastTransaction(provider, orderBook.address);
@@ -27,11 +27,11 @@ export async function run(provider: NetworkProvider) {
             executionFee: toNano(executionFee),
             tokenId: BigInt(tokenId),
             isLong: isLong,
-            marginDelta: toJettonUnits(margin),
-            sizeDelta: toJettonUnits(size),
-            triggerPrice: toPriceUnits(triggerPrice),
+            marginDelta: toUnits(margin, MOCK_DECIMAL),
+            sizeDelta: toUnits(size, MOCK_DECIMAL),
+            triggerPrice: toUnits(triggerPrice, PRICE_DECIMAL),
             requestTime: BigInt(now()),
-            trxId: 1n
+            trxId: trxId
         }
     );
 

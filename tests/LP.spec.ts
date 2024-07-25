@@ -14,7 +14,6 @@ import {
     getJettonBalance,
     getTonBalance,
     mint,
-    mintTlp,
     toJettonUnits,
     toPriceUnits, toTlpUnits
 } from './lib/TokenHelper';

@@ -30,32 +30,6 @@ export async function mint(to: Address, amount: string) {
     return mintResult;
 }
 
-export async function mintTlp(to: Address, amount: string) {
-    const mintResult = await TestEnv.tlp.send(
-        TestEnv.deployer.getSender(),
-        {
-            value: toNano('0.1'),
-        },
-        {
-            $$type: 'JettonMint',
-            origin: TestEnv.deployer.address,
-            amount: toJettonUnits(amount),
-            receiver: to,
-            custom_payload: null,
-            forward_ton_amount: 0n,
-            forward_payload: beginCell().endCell(),
-        }
-    );
-
-    expect(mintResult.transactions).toHaveTransaction({
-        from: TestEnv.deployer.address,
-        to: TestEnv.tlp.address,
-        success: true,
-    });
-
-    return mintResult;
-}
-
 export async function getJettonWallet(senderAddress: Address) {
     return TestEnv.blockchain.openContract(await MockJettonWallet.fromInit(senderAddress, TestEnv.jetton.address));
 }

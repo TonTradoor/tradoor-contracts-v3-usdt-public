@@ -113,6 +113,7 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
             executionFeeReceiver: executor.address,
             tokenId: 1n,
             price: toPriceUnits(price),
+            premiumRate: 0n,
             fundingFeeGrowth: toJettonUnits(fundingFeeGrowth),
             rolloverFeeGrowth: toJettonUnits(rolloverFeeGrowth)
         }
@@ -247,6 +248,7 @@ export async function liquidatePerpPosition(executor: SandboxContract<TreasuryCo
             trxId: 2n,
             liquidationFeeReceiver: executor.address,
             price: toPriceUnits(price),
+            premiumRate: 0n,
             fundingFeeGrowth: toJettonUnits(1),
             rolloverFeeGrowth: toJettonUnits(1)
         }
@@ -293,6 +295,7 @@ export async function adlPerpPosition(executor: SandboxContract<TreasuryContract
             sizeDelta: toJettonUnits(size),
             trxId: 1n,
             price: toPriceUnits(price),
+            premiumRate: 0n,
             fundingFeeGrowth: toJettonUnits(1),
             rolloverFeeGrowth: toJettonUnits(1)
         }

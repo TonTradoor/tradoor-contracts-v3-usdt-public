@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: OrderBook
-BOC Size: 16059 bytes
+BOC Size: 16108 bytes
 
 # Types
 Total Types: 48
@@ -98,20 +98,20 @@ TLB: `cancel_perp_order#099ff4a3 executionFeeReceiver:Maybe address orderId:uint
 Signature: `CancelPerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64}`
 
 ## ExecutePerpOrder
-TLB: `execute_perp_order#e984aae0 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint16 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = ExecutePerpOrder`
-Signature: `ExecutePerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint16,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
+TLB: `execute_perp_order#a6acee84 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint16 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = ExecutePerpOrder`
+Signature: `ExecutePerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint16,price:uint128,premiumRate:uint32,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
 ## LiquidatePerpPosition
-TLB: `liquidate_perp_position#fb837963 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = LiquidatePerpPosition`
-Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint16,account:address,isLong:bool,trxId:uint64,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
+TLB: `liquidate_perp_position#159c658d liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = LiquidatePerpPosition`
+Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint16,account:address,isLong:bool,trxId:uint64,price:uint128,premiumRate:uint32,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
 ## ADLPerpPosition
-TLB: `adl_perp_position#c3100342 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = ADLPerpPosition`
-Signature: `ADLPerpPosition{tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,trxId:uint64,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
+TLB: `adl_perp_position#cbc5c561 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = ADLPerpPosition`
+Signature: `ADLPerpPosition{tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,trxId:uint64,price:uint128,premiumRate:uint32,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool trxId:uint64 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,trxId:uint64,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,trxId:uint64,price:uint128,premiumRate:uint32,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
 ## PerpPositionUpdated
 TLB: `perp_position_updated#ef01c2b4 orderId:uint64 payout:coins trxId:uint64 = PerpPositionUpdated`

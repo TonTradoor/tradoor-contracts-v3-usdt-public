@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 9523 bytes
+BOC Size: 9528 bytes
 
 # Types
 Total Types: 30
@@ -66,8 +66,8 @@ TLB: `liquidity_pool_updated#cd6336bc isIncrease:bool orderId:uint64 tlpPrice:ui
 Signature: `LiquidityPoolUpdated{isIncrease:bool,orderId:uint64,tlpPrice:uint128,tlpDelta:coins,jettonDelta:coins,trxId:uint64}`
 
 ## UpdatePerpPosition
-TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool trxId:uint64 price:uint128 fundingFeeGrowth:coins rolloverFeeGrowth:coins = UpdatePerpPosition`
-Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,trxId:uint64,price:uint128,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
+TLB: `update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = UpdatePerpPosition`
+Signature: `UpdatePerpPosition{orderId:uint64,opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,trxId:uint64,price:uint128,premiumRate:uint32,fundingFeeGrowth:coins,rolloverFeeGrowth:coins}`
 
 ## PerpPositionUpdated
 TLB: `perp_position_updated#ef01c2b4 orderId:uint64 payout:coins trxId:uint64 = PerpPositionUpdated`

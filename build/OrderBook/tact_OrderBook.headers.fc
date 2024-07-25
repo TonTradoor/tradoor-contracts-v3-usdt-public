@@ -151,19 +151,19 @@ cell $UpdateLiquidityPool$_store_cell((int, int, slice, int, int, cell, int, int
 (slice, ((slice, int, int))) $CancelPerpOrder$_load(slice sc_0) inline;
 
 ;; $ExecutePerpOrder$_load
-(slice, ((slice, int, int, int, int, int, int))) $ExecutePerpOrder$_load(slice sc_0) inline_ref;
+(slice, ((slice, int, int, int, int, int, int, int))) $ExecutePerpOrder$_load(slice sc_0) inline_ref;
 
 ;; $LiquidatePerpPosition$_load
-(slice, ((slice, int, slice, int, int, int, int, int))) $LiquidatePerpPosition$_load(slice sc_0) inline_ref;
+(slice, ((slice, int, slice, int, int, int, int, int, int))) $LiquidatePerpPosition$_load(slice sc_0) inline_ref;
 
 ;; $ADLPerpPosition$_load
-(slice, ((int, slice, int, int, int, int, int, int, int))) $ADLPerpPosition$_load(slice sc_0) inline_ref;
+(slice, ((int, slice, int, int, int, int, int, int, int, int))) $ADLPerpPosition$_load(slice sc_0) inline_ref;
 
 ;; $UpdatePerpPosition$_store
-builder $UpdatePerpPosition$_store(builder build_0, (int, int, int, slice, int, int, int, int, int, int, int, int, int) v) inline_ref;
+builder $UpdatePerpPosition$_store(builder build_0, (int, int, int, slice, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $UpdatePerpPosition$_store_cell
-cell $UpdatePerpPosition$_store_cell((int, int, int, slice, int, int, int, int, int, int, int, int, int) v) inline;
+cell $UpdatePerpPosition$_store_cell((int, int, int, slice, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $UpdatePerpPosition$_load_bounced
 (slice, ((int, int, int))) $UpdatePerpPosition$_load_bounced(slice sc_0) inline;
@@ -561,14 +561,14 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $PerpOrderCancelledEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $PerpOrderCancelledEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
-;; $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_price_fundingFeeGrowth_rolloverFeeGrowth
-((int, int, int, slice, int, int, int, int, int, int, int, int, int)) $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_price_fundingFeeGrowth_rolloverFeeGrowth(int orderId, int opType, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int price, int fundingFeeGrowth, int rolloverFeeGrowth) inline;
+;; $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_price_premiumRate_fundingFeeGrowth_rolloverFeeGrowth
+((int, int, int, slice, int, int, int, int, int, int, int, int, int, int)) $UpdatePerpPosition$_constructor_orderId_opType_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_price_premiumRate_fundingFeeGrowth_rolloverFeeGrowth(int orderId, int opType, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int price, int premiumRate, int fundingFeeGrowth, int rolloverFeeGrowth) inline;
 
 ;; $PerpOrderExecutedEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $PerpOrderExecutedEvent$_constructor_opType_orderId_trxId(int opType, int orderId, int trxId) inline;
 
-;; $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_price_fundingFeeGrowth_rolloverFeeGrowth
-((int, int, int, slice, int, int, int, int, int, int, int, int, int)) $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_price_fundingFeeGrowth_rolloverFeeGrowth(int opType, int orderId, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int price, int fundingFeeGrowth, int rolloverFeeGrowth) inline;
+;; $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_price_premiumRate_fundingFeeGrowth_rolloverFeeGrowth
+((int, int, int, slice, int, int, int, int, int, int, int, int, int, int)) $UpdatePerpPosition$_constructor_opType_orderId_trxId_account_tokenId_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_price_premiumRate_fundingFeeGrowth_rolloverFeeGrowth(int opType, int orderId, int trxId, slice account, int tokenId, int isLong, int marginDelta, int sizeDelta, int triggerPrice, int triggerAbove, int price, int premiumRate, int fundingFeeGrowth, int rolloverFeeGrowth) inline;
 
 ;; $Compensate$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
 ((int, int, int, slice, int, slice, int, int)) $Compensate$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime(int orderType, int orderId, int trxId, slice refundReceiver, int refundAmount, slice executionFeeReceiver, int executionFee, int unlockTime) inline;

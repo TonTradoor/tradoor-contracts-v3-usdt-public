@@ -548,12 +548,14 @@ PROGRAM{
     1 LDI
     64 LDU
     128 LDU
+    32 LDU
     LDREF
     SWAP
     CTOS
     LDGRAMS
     LDGRAMS
     DROP
+    s2 s14 XCHG
     s2 s13 XCHG
     s2 s12 XCHG
     s2 s11 XCHG
@@ -3733,6 +3735,7 @@ PROGRAM{
     }>
   }>
   $Pool$_internal_binary_UpdatePerpPosition PROCINLINE:<{
+    s2 POP
     41207 PUSHINT
     __tact_context_get_sender INLINECALLDICT
     37 s() PUSH
@@ -3765,11 +3768,11 @@ PROGRAM{
       }>
       s11 s10 s0 XCHG3
       s1 s9 XCHG
-      s8 s2 XCHG2
-      s1 s6 XCHG
-      s1 s5 XCHG
-      s1 s4 XCHG
-      s1 s3 XCHG
+      s0 s0 s8 XCHG3
+      s0 s6 XCHG
+      s0 s5 XCHG
+      s0 s4 XCHG
+      s0 s3 XCHG
       $Pool$_fun_increasePerpPosition INLINECALLDICT
     }>ELSE<{
       s11 PUSH
@@ -3781,7 +3784,7 @@ PROGRAM{
         s2 s7 XCHG
         s2 s6 XCHG
         s4 s5 XCHG
-        ROT
+        s1 s2 XCHG
         $Pool$_fun_liquidatePerpPosition INLINECALLDICT
       }>ELSE<{
         s11 PUSH
@@ -3791,11 +3794,11 @@ PROGRAM{
           s4 POP
           s11 s10 s0 XCHG3
           s1 s9 XCHG
-          s8 s2 XCHG2
-          s1 s6 XCHG
-          s1 s5 XCHG
-          s1 s4 XCHG
-          s1 s3 XCHG
+          s0 s0 s8 XCHG3
+          s0 s6 XCHG
+          s0 s5 XCHG
+          s0 s4 XCHG
+          s0 s3 XCHG
           $Pool$_fun_decreasePerpPosition INLINECALLDICT
         }>ELSE<{
           s0 s4 XCHG
@@ -3810,11 +3813,11 @@ PROGRAM{
           }>
           s11 s10 s0 XCHG3
           s1 s9 XCHG
-          s8 s2 XCHG2
-          s1 s6 XCHG
-          s1 s5 XCHG
-          s1 s4 XCHG
-          s1 s3 XCHG
+          s0 s0 s8 XCHG3
+          s0 s6 XCHG
+          s0 s5 XCHG
+          s0 s4 XCHG
+          s0 s3 XCHG
           $Pool$_fun_decreasePerpPosition INLINECALLDICT
         }>
       }>
@@ -3918,7 +3921,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5062564178506b42367741715241537a38725438426734555370535a536459536a4755524567793355723156} PUSHSLICE
+    x{697066733a2f2f516d6544346b3548595665377a796b4c4d78617371434b3636444b59587a34713943535a626e3968794761616470} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -3998,7 +4001,7 @@ PROGRAM{
     IFJMP:<{
       DROP
       $UpdatePerpPosition$_load INLINECALLDICT
-      1 13 BLKDROP2
+      1 14 BLKDROP2
       $Pool$_internal_binary_UpdatePerpPosition INLINECALLDICT
       TRUE
     }>

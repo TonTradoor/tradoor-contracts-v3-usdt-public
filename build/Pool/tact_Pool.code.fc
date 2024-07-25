@@ -477,9 +477,9 @@
     return (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices), ());
 }
 
-(((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell)), ()) $Pool$_internal_binary_UpdatePerpPosition((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, (int, int, int, slice, int, int, int, int, int, int, int, int, int) $msg) impure inline {
+(((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell)), ()) $Pool$_internal_binary_UpdatePerpPosition((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, (int, int, int, slice, int, int, int, int, int, int, int, int, int, int) $msg) impure inline {
     var ($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices) = $self;
-    var ($msg'orderId, $msg'opType, $msg'tokenId, $msg'account, $msg'isLong, $msg'marginDelta, $msg'sizeDelta, $msg'triggerPrice, $msg'triggerAbove, $msg'trxId, $msg'price, $msg'fundingFeeGrowth, $msg'rolloverFeeGrowth) = $msg;
+    var ($msg'orderId, $msg'opType, $msg'tokenId, $msg'account, $msg'isLong, $msg'marginDelta, $msg'sizeDelta, $msg'triggerPrice, $msg'triggerAbove, $msg'trxId, $msg'price, $msg'premiumRate, $msg'fundingFeeGrowth, $msg'rolloverFeeGrowth) = $msg;
     throw_unless(41207, ( __tact_slice_eq_bits($self'orderBook, __tact_context_get_sender()) ));
     int $tradePrice = $msg'price;
     $self'prices~__tact_dict_set_uint_uint(16, $msg'tokenId, $tradePrice, 128);
@@ -568,7 +568,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmPbVAxPkB6wAqRASz8rT8Bg4USpSZSdYSjGUREgy3Ur1V";
+    return "ipfs://QmeD4k5HYVe7zykLMxasqCK66DKYXz4q9CSZbn9hyGaadp";
 }
 
 _ lazy_deployment_completed() method_id {

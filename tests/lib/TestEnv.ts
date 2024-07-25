@@ -36,7 +36,7 @@ export class TestEnv {
     // config
     static tlpDecimal: number = 9;
     static jettonDecimal: number = 6;
-    static priceDecimal: number = 20;
+    static priceDecimal: number = 18;
 
     static lpRolloverFeeRate: number = 0.7;
     static tokenConfig = [{
