@@ -76,8 +76,8 @@ message(0xff57e557) UpdatePerpPosition {
     trxId: Int as uint64;
     price: Int as uint128;
     premiumRate: Int as uint32;
-    fundingFeeGrowth: Int as coins;
-    rolloverFeeGrowth: Int as coins;
+    fundingFeeGrowth: Int as int128;
+    rolloverFeeGrowth: Int as int128;
 }
 
 message(0xef01c2b4) PerpPositionUpdated {

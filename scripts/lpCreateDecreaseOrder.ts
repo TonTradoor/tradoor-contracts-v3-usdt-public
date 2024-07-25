@@ -14,8 +14,10 @@ import { toTlpUnits } from '../tests/lib/TokenHelper';
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
 
+    let trxId = BigInt(await provider.ui().input('trxId:'));
+
     /// create order
-    let tlp = 1;
+    let tlp = 100;
     let executionFee = 0.1;
 
     // transfer TLP-jetton with create decrease liquidity order payload
@@ -36,7 +38,7 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'JettonTransfer',
-            query_id: 0n,
+            query_id: trxId,
             amount: toUnits(tlp, TLP_DECIMAL),
             destination: orderBook.address,
             response_destination: provider.sender().address!!,

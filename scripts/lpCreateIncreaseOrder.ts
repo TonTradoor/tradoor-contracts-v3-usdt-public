@@ -7,8 +7,10 @@ import { MOCK_DECIMAL, OP_CREATE_INCREASE_LP_POSITION_ORDER } from '../utils/con
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
 
+    let trxId = BigInt(await provider.ui().input('trxId:'));
+
     /// create order
-    let liquidity = 100;
+    let liquidity = 1000;
     let executionFee = 0.1;
 
     // transfer jetton with create increase LP position order payload
@@ -29,7 +31,7 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'JettonTransfer',
-            query_id: 7n,
+            query_id: trxId,
             amount: toUnits(liquidity, MOCK_DECIMAL),
             destination: orderBook.address,
             response_destination: provider.sender().address!!,

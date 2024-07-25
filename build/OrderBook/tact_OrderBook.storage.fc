@@ -492,31 +492,31 @@ cell $UpdateLiquidityPool$_store_cell((int, int, slice, int, int, cell, int, int
 
 ;;
 ;; Type: ExecutePerpOrder
-;; Header: 0xa6acee84
-;; TLB: execute_perp_order#a6acee84 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint16 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = ExecutePerpOrder
+;; Header: 0x2c589fd1
+;; TLB: execute_perp_order#2c589fd1 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint16 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ExecutePerpOrder
 ;;
 
 (slice, ((slice, int, int, int, int, int, int, int))) $ExecutePerpOrder$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 2796351108);
+    throw_unless(129, sc_0~load_uint(32) == 744005585);
     var v'executionFeeReceiver = sc_0~__tact_load_address_opt();
     var v'orderId = sc_0~load_uint(64);
     var v'trxId = sc_0~load_uint(64);
     var v'tokenId = sc_0~load_uint(16);
     var v'price = sc_0~load_uint(128);
     var v'premiumRate = sc_0~load_uint(32);
-    var v'fundingFeeGrowth = sc_0~load_coins();
-    var v'rolloverFeeGrowth = sc_0~load_coins();
+    var v'fundingFeeGrowth = sc_0~load_int(128);
+    var v'rolloverFeeGrowth = sc_0~load_int(128);
     return (sc_0, (v'executionFeeReceiver, v'orderId, v'trxId, v'tokenId, v'price, v'premiumRate, v'fundingFeeGrowth, v'rolloverFeeGrowth));
 }
 
 ;;
 ;; Type: LiquidatePerpPosition
-;; Header: 0x159c658d
-;; TLB: liquidate_perp_position#159c658d liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = LiquidatePerpPosition
+;; Header: 0x1b68b053
+;; TLB: liquidate_perp_position#1b68b053 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = LiquidatePerpPosition
 ;;
 
 (slice, ((slice, int, slice, int, int, int, int, int, int))) $LiquidatePerpPosition$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 362571149);
+    throw_unless(129, sc_0~load_uint(32) == 459845715);
     var v'liquidationFeeReceiver = sc_0~__tact_load_address_opt();
     var v'tokenId = sc_0~load_uint(16);
     var v'account = sc_0~__tact_load_address();
@@ -524,20 +524,20 @@ cell $UpdateLiquidityPool$_store_cell((int, int, slice, int, int, cell, int, int
     var v'trxId = sc_0~load_uint(64);
     var v'price = sc_0~load_uint(128);
     var v'premiumRate = sc_0~load_uint(32);
-    var v'fundingFeeGrowth = sc_0~load_coins();
+    var v'fundingFeeGrowth = sc_0~load_int(128);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'rolloverFeeGrowth = sc_1~load_coins();
+    var v'rolloverFeeGrowth = sc_1~load_int(128);
     return (sc_0, (v'liquidationFeeReceiver, v'tokenId, v'account, v'isLong, v'trxId, v'price, v'premiumRate, v'fundingFeeGrowth, v'rolloverFeeGrowth));
 }
 
 ;;
 ;; Type: ADLPerpPosition
-;; Header: 0xcbc5c561
-;; TLB: adl_perp_position#cbc5c561 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = ADLPerpPosition
+;; Header: 0x3c745017
+;; TLB: adl_perp_position#3c745017 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ADLPerpPosition
 ;;
 
 (slice, ((int, slice, int, int, int, int, int, int, int, int))) $ADLPerpPosition$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 3418735969);
+    throw_unless(129, sc_0~load_uint(32) == 1014255639);
     var v'tokenId = sc_0~load_uint(16);
     var v'account = sc_0~__tact_load_address();
     var v'isLong = sc_0~load_int(1);
@@ -546,16 +546,16 @@ cell $UpdateLiquidityPool$_store_cell((int, int, slice, int, int, cell, int, int
     var v'trxId = sc_0~load_uint(64);
     var v'price = sc_0~load_uint(128);
     var v'premiumRate = sc_0~load_uint(32);
-    var v'fundingFeeGrowth = sc_0~load_coins();
+    var v'fundingFeeGrowth = sc_0~load_int(128);
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'rolloverFeeGrowth = sc_1~load_coins();
+    var v'rolloverFeeGrowth = sc_1~load_int(128);
     return (sc_0, (v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'trxId, v'price, v'premiumRate, v'fundingFeeGrowth, v'rolloverFeeGrowth));
 }
 
 ;;
 ;; Type: UpdatePerpPosition
 ;; Header: 0xff57e557
-;; TLB: update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:coins rolloverFeeGrowth:coins = UpdatePerpPosition
+;; TLB: update_perp_position#ff57e557 orderId:uint64 opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = UpdatePerpPosition
 ;;
 
 builder $UpdatePerpPosition$_store(builder build_0, (int, int, int, slice, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
@@ -574,8 +574,8 @@ builder $UpdatePerpPosition$_store(builder build_0, (int, int, int, slice, int, 
     build_0 = build_0.store_uint(v'price, 128);
     build_0 = build_0.store_uint(v'premiumRate, 32);
     var build_1 = begin_cell();
-    build_1 = build_1.store_coins(v'fundingFeeGrowth);
-    build_1 = build_1.store_coins(v'rolloverFeeGrowth);
+    build_1 = build_1.store_int(v'fundingFeeGrowth, 128);
+    build_1 = build_1.store_int(v'rolloverFeeGrowth, 128);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
