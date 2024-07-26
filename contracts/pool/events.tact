@@ -44,8 +44,8 @@ message PerpPositionIncreasedEvent {
     fundingFee: Int as int128;
     rolloverFee: Int as coins;
     tradingFee: Int as coins;
-    entryFundingFeeGrowthAfter: Int as coins;
-    entryRolloverFeeGrowthAfter: Int as coins;
+    entryFundingFeeGrowthAfter: Int as int128;
+    entryRolloverFeeGrowthAfter: Int as int128;
     // global position
     globalLongMarginAfter: Int as coins;
     globalShortMarginAfter: Int as coins;
@@ -81,8 +81,8 @@ message PerpPositionDecreasedEvent {
     fundingFee: Int as int128;
     rolloverFee: Int as coins;
     tradingFee: Int as coins;
-    entryFundingFeeGrowthAfter: Int as coins;
-    entryRolloverFeeGrowthAfter: Int as coins;
+    entryFundingFeeGrowthAfter: Int as int128;
+    entryRolloverFeeGrowthAfter: Int as int128;
     payout: Int as coins;
     // global position
     globalLongMarginAfter: Int as coins;

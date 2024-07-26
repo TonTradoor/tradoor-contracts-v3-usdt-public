@@ -381,13 +381,13 @@ cell $LiquidityDecreasedEvent$_store_cell((int, int, slice, int, int, int, int, 
 
 ;;
 ;; Type: PerpPositionIncreasedEvent
-;; Header: 0x6efc01c6
-;; TLB: perp_position_increased_event#6efc01c6 trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:coins entryRolloverFeeGrowthAfter:coins globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionIncreasedEvent
+;; Header: 0x2f2c10e5
+;; TLB: perp_position_increased_event#2f2c10e5 trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:int128 entryRolloverFeeGrowthAfter:int128 globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionIncreasedEvent
 ;;
 
 builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
     var (v'trxId, v'orderId, v'opType, v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'entryPrice, v'fundingFee, v'rolloverFee, v'tradingFee, v'entryFundingFeeGrowthAfter, v'entryRolloverFeeGrowthAfter, v'globalLongMarginAfter, v'globalShortMarginAfter, v'globalLongSizeAfter, v'globalShortSizeAfter, v'lpNetSizeAfter, v'lpIsLong, v'lpEntryPriceAfter, v'lpFundAfter, v'lpTradingFee, v'lpRealizedPnl) = v;
-    build_0 = store_uint(build_0, 1862009286, 32);
+    build_0 = store_uint(build_0, 791417061, 32);
     build_0 = build_0.store_uint(v'trxId, 64);
     build_0 = build_0.store_uint(v'orderId, 64);
     build_0 = build_0.store_uint(v'opType, 8);
@@ -405,8 +405,8 @@ builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, int, int, int,
     build_1 = build_1.store_int(v'fundingFee, 128);
     build_1 = build_1.store_coins(v'rolloverFee);
     build_1 = build_1.store_coins(v'tradingFee);
-    build_1 = build_1.store_coins(v'entryFundingFeeGrowthAfter);
-    build_1 = build_1.store_coins(v'entryRolloverFeeGrowthAfter);
+    build_1 = build_1.store_int(v'entryFundingFeeGrowthAfter, 128);
+    build_1 = build_1.store_int(v'entryRolloverFeeGrowthAfter, 128);
     build_1 = build_1.store_coins(v'globalLongMarginAfter);
     var build_2 = begin_cell();
     build_2 = build_2.store_coins(v'globalShortMarginAfter);
@@ -433,13 +433,13 @@ cell $PerpPositionIncreasedEvent$_store_cell((int, int, int, int, slice, int, in
 
 ;;
 ;; Type: PerpPositionDecreasedEvent
-;; Header: 0x6b9bfbd4
-;; TLB: perp_position_decreased_event#6b9bfbd4 trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 realizedPnLDelta:int128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:coins entryRolloverFeeGrowthAfter:coins payout:coins globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionDecreasedEvent
+;; Header: 0xfd8c49cb
+;; TLB: perp_position_decreased_event#fd8c49cb trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 realizedPnLDelta:int128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:int128 entryRolloverFeeGrowthAfter:int128 payout:coins globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionDecreasedEvent
 ;;
 
 builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
     var (v'trxId, v'orderId, v'opType, v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'entryPrice, v'realizedPnLDelta, v'fundingFee, v'rolloverFee, v'tradingFee, v'entryFundingFeeGrowthAfter, v'entryRolloverFeeGrowthAfter, v'payout, v'globalLongMarginAfter, v'globalShortMarginAfter, v'globalLongSizeAfter, v'globalShortSizeAfter, v'lpNetSizeAfter, v'lpIsLong, v'lpEntryPriceAfter, v'lpFundAfter, v'lpTradingFee, v'lpRealizedPnl) = v;
-    build_0 = store_uint(build_0, 1805384660, 32);
+    build_0 = store_uint(build_0, 4253829579, 32);
     build_0 = build_0.store_uint(v'trxId, 64);
     build_0 = build_0.store_uint(v'orderId, 64);
     build_0 = build_0.store_uint(v'opType, 8);
@@ -458,8 +458,8 @@ builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, int, int,
     build_1 = build_1.store_int(v'fundingFee, 128);
     build_1 = build_1.store_coins(v'rolloverFee);
     build_1 = build_1.store_coins(v'tradingFee);
-    build_1 = build_1.store_coins(v'entryFundingFeeGrowthAfter);
-    build_1 = build_1.store_coins(v'entryRolloverFeeGrowthAfter);
+    build_1 = build_1.store_int(v'entryFundingFeeGrowthAfter, 128);
+    build_1 = build_1.store_int(v'entryRolloverFeeGrowthAfter, 128);
     var build_2 = begin_cell();
     build_2 = build_2.store_coins(v'payout);
     build_2 = build_2.store_coins(v'globalLongMarginAfter);
