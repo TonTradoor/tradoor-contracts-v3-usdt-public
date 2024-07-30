@@ -9,7 +9,6 @@ import {
     attachTLPJettonWallet
 } from '../utils/util';
 import { TLP_DECIMAL } from '../utils/constants';
-import { toTlpUnits } from '../tests/lib/TokenHelper';
 
 export async function run(provider: NetworkProvider) {
     const orderBook = attachOrderBook(provider);
@@ -49,7 +48,7 @@ export async function run(provider: NetworkProvider) {
                     .storeUint(1, 1)
                     .storeRef(
                         beginCell()
-                            .storeCoins(toTlpUnits(tlp))
+                            .storeCoins(toUnits(tlp, TLP_DECIMAL))
                             .storeCoins(toNano(executionFee)) // execution fee
                             .endCell()
                     ).endCell()
