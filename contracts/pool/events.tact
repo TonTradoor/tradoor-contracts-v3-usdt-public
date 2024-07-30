@@ -11,6 +11,8 @@ message LiquidityIncreasedEvent {
     tlpPrice: Int as uint128;
     tlpSupply: Int as coins;
     lpFundAfter: Int as int128;
+    entryLpFundingFeeGrowth: Int as coins;
+    entryRolloverFeeGrowth: Int as coins;
 }
 
 // decrease LP
@@ -23,6 +25,8 @@ message LiquidityDecreasedEvent {
     tlpPrice: Int as uint128;
     tlpSupply: Int as coins;
     lpFundAfter: Int as int128;
+    entryLpFundingFeeGrowth: Int as coins;
+    entryRolloverFeeGrowth: Int as coins;
 }
 
 // ============================ Perp ================================ //

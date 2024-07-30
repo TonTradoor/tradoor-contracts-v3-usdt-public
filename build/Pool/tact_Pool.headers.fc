@@ -118,16 +118,16 @@ builder $PerpPositionUpdated$_store(builder build_0, (int, int, int) v) inline;
 cell $PerpPositionUpdated$_store_cell((int, int, int) v) inline;
 
 ;; $LiquidityIncreasedEvent$_store
-builder $LiquidityIncreasedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int) v) inline_ref;
+builder $LiquidityIncreasedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $LiquidityIncreasedEvent$_store_cell
-cell $LiquidityIncreasedEvent$_store_cell((int, int, slice, int, int, int, int, int) v) inline;
+cell $LiquidityIncreasedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int) v) inline;
 
 ;; $LiquidityDecreasedEvent$_store
-builder $LiquidityDecreasedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int) v) inline_ref;
+builder $LiquidityDecreasedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $LiquidityDecreasedEvent$_store_cell
-cell $LiquidityDecreasedEvent$_store_cell((int, int, slice, int, int, int, int, int) v) inline;
+cell $LiquidityDecreasedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int) v) inline;
 
 ;; $PerpPositionIncreasedEvent$_store
 builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
@@ -327,17 +327,17 @@ slice $global_emptySlice() impure inline;
 ;; $LiquidityPoolUpdated$_constructor_isIncrease_orderId_tlpPrice_tlpDelta_jettonDelta_trxId
 ((int, int, int, int, int, int)) $LiquidityPoolUpdated$_constructor_isIncrease_orderId_tlpPrice_tlpDelta_jettonDelta_trxId(int isIncrease, int orderId, int tlpPrice, int tlpDelta, int jettonDelta, int trxId) inline;
 
-;; $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter
-((int, int, slice, int, int, int, int, int)) $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter(int trxId, int opType, slice account, int jettonDelta, int tlpPrice, int tlpDelta, int tlpSupply, int lpFundAfter) inline;
+;; $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth
+((int, int, slice, int, int, int, int, int, int, int)) $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth(int trxId, int opType, slice account, int jettonDelta, int tlpPrice, int tlpDelta, int tlpSupply, int lpFundAfter, int entryLpFundingFeeGrowth, int entryRolloverFeeGrowth) inline;
 
 ;; $Pool$_fun_increaseLiquidity
-((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell), ()) $Pool$_fun_increaseLiquidity((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, int $trxId, int $orderId, slice $account, int $jettonDelta) impure inline_ref;
+((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell), ()) $Pool$_fun_increaseLiquidity((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, int $trxId, int $orderId, slice $account, int $jettonDelta, int $lpFundingFeeGrowth, int $rolloverFeeGrowth) impure inline_ref;
 
-;; $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter
-((int, int, slice, int, int, int, int, int)) $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter(int trxId, int opType, slice account, int tlpDelta, int jettonDelta, int tlpPrice, int tlpSupply, int lpFundAfter) inline;
+;; $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth
+((int, int, slice, int, int, int, int, int, int, int)) $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth(int trxId, int opType, slice account, int tlpDelta, int jettonDelta, int tlpPrice, int tlpSupply, int lpFundAfter, int entryLpFundingFeeGrowth, int entryRolloverFeeGrowth) inline;
 
 ;; $Pool$_fun_decreaseLiquidity
-((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell), ()) $Pool$_fun_decreaseLiquidity((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, int $trxId, int $orderId, slice $account, int $tlpDelta) impure inline_ref;
+((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell), ()) $Pool$_fun_decreaseLiquidity((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, int $trxId, int $orderId, slice $account, int $tlpDelta, int $lpFundingFeeGrowth, int $rolloverFeeGrowth) impure inline_ref;
 
 ;; $GlobalPoolData$_constructor_tlpSupply_protocolTradingFee_globalLPFund_globalLPUnrealizedPnl_globalLpFundingFeeGrowth_globalRolloverFeeGrowth_globalPerpNetValue_globalPerpSingleValue
 ((int, int, int, int, int, int, int, int)) $GlobalPoolData$_constructor_tlpSupply_protocolTradingFee_globalLPFund_globalLPUnrealizedPnl_globalLpFundingFeeGrowth_globalRolloverFeeGrowth_globalPerpNetValue_globalPerpSingleValue(int tlpSupply, int protocolTradingFee, int globalLPFund, int globalLPUnrealizedPnl, int globalLpFundingFeeGrowth, int globalRolloverFeeGrowth, int globalPerpNetValue, int globalPerpSingleValue) inline;

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 9525 bytes
+BOC Size: 9596 bytes
 
 # Types
 Total Types: 30
@@ -74,12 +74,12 @@ TLB: `perp_position_updated#ef01c2b4 orderId:uint64 payout:coins trxId:uint64 = 
 Signature: `PerpPositionUpdated{orderId:uint64,payout:coins,trxId:uint64}`
 
 ## LiquidityIncreasedEvent
-TLB: `liquidity_increased_event#36d2752d trxId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 = LiquidityIncreasedEvent`
-Signature: `LiquidityIncreasedEvent{trxId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128}`
+TLB: `liquidity_increased_event#b9b08d0d trxId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = LiquidityIncreasedEvent`
+Signature: `LiquidityIncreasedEvent{trxId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128,entryLpFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}`
 
 ## LiquidityDecreasedEvent
-TLB: `liquidity_decreased_event#41ea309e trxId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 = LiquidityDecreasedEvent`
-Signature: `LiquidityDecreasedEvent{trxId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128}`
+TLB: `liquidity_decreased_event#a15613d6 trxId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = LiquidityDecreasedEvent`
+Signature: `LiquidityDecreasedEvent{trxId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128,entryLpFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}`
 
 ## PerpPositionIncreasedEvent
 TLB: `perp_position_increased_event#2f2c10e5 trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:int128 entryRolloverFeeGrowthAfter:int128 globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionIncreasedEvent`

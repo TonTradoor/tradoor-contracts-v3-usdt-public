@@ -200,9 +200,9 @@ contract Pool with Deployable, Ownable {
         self.globalRolloverFeeGrowth = msg.rolloverFeeGrowth;
 
         if (msg.isIncrease) {
-            self.increaseLiquidity(msg.trxId, msg.orderId, msg.account, msg.jettonDelta);
+            self.increaseLiquidity(msg.trxId, msg.orderId, msg.account, msg.jettonDelta, msg.lpFundingFeeGrowth, msg.rolloverFeeGrowth);
         } else {
-            self.decreaseLiquidity(msg.trxId, msg.orderId, msg.account, msg.jettonDelta);
+            self.decreaseLiquidity(msg.trxId, msg.orderId, msg.account, msg.jettonDelta, msg.lpFundingFeeGrowth, msg.rolloverFeeGrowth);
         }
     }
 
@@ -214,7 +214,7 @@ contract Pool with Deployable, Ownable {
      * @param account The address of the LP account.
      * @param jettonDelta The change in liquidity to be added to the LP position.
      */
-    fun increaseLiquidity(trxId: Int, orderId: Int, account: Address, jettonDelta: Int) {
+    fun increaseLiquidity(trxId: Int, orderId: Int, account: Address, jettonDelta: Int, lpFundingFeeGrowth: Int, rolloverFeeGrowth: Int) {
         // calculate tlp delta
         let globalNetLP: Int = self.globalLPFund + self.globalLPUnrealizedPnl;
         let availableJetton: Int = max(0, (self.maxLpNetCap - globalNetLP));
@@ -261,6 +261,8 @@ contract Pool with Deployable, Ownable {
             tlpDelta: tlpDelta,
             tlpSupply: self.tlpSupply,
             lpFundAfter: self.globalLPFund,
+            entryLpFundingFeeGrowth: lpFundingFeeGrowth,
+            entryRolloverFeeGrowth: rolloverFeeGrowth
         }.toCell());
     }
 
@@ -272,7 +274,7 @@ contract Pool with Deployable, Ownable {
      * @param account The LP account address.
      * @param tlpDelta The amount of TLP-jetton to unstake.
      */
-    fun decreaseLiquidity(trxId: Int, orderId: Int, account: Address, tlpDelta: Int) {
+    fun decreaseLiquidity(trxId: Int, orderId: Int, account: Address, tlpDelta: Int, lpFundingFeeGrowth: Int, rolloverFeeGrowth: Int) {
         let globalNetLP: Int = self.globalLPFund + self.globalLPUnrealizedPnl;
         let tlpPrice: Int = globalNetLP * (TLP_DECIMAL / JETTON_DECIMAL) * PRICE_DECIMAL_FACTOR / self.tlpSupply;
         let jettonDelta: Int = tlpPrice * tlpDelta / ((TLP_DECIMAL / JETTON_DECIMAL) * PRICE_DECIMAL_FACTOR);
@@ -307,6 +309,8 @@ contract Pool with Deployable, Ownable {
             tlpPrice: tlpPrice,
             tlpSupply: self.tlpSupply,
             lpFundAfter: self.globalLPFund,
+            entryLpFundingFeeGrowth: lpFundingFeeGrowth,
+            entryRolloverFeeGrowth: rolloverFeeGrowth
         }.toCell());
     }
 

@@ -325,13 +325,13 @@ cell $PerpPositionUpdated$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: LiquidityIncreasedEvent
-;; Header: 0x36d2752d
-;; TLB: liquidity_increased_event#36d2752d trxId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 = LiquidityIncreasedEvent
+;; Header: 0xb9b08d0d
+;; TLB: liquidity_increased_event#b9b08d0d trxId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = LiquidityIncreasedEvent
 ;;
 
-builder $LiquidityIncreasedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int) v) inline_ref {
-    var (v'trxId, v'opType, v'account, v'jettonDelta, v'tlpDelta, v'tlpPrice, v'tlpSupply, v'lpFundAfter) = v;
-    build_0 = store_uint(build_0, 919762221, 32);
+builder $LiquidityIncreasedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'trxId, v'opType, v'account, v'jettonDelta, v'tlpDelta, v'tlpPrice, v'tlpSupply, v'lpFundAfter, v'entryLpFundingFeeGrowth, v'entryRolloverFeeGrowth) = v;
+    build_0 = store_uint(build_0, 3115355405, 32);
     build_0 = build_0.store_uint(v'trxId, 64);
     build_0 = build_0.store_uint(v'opType, 8);
     build_0 = __tact_store_address(build_0, v'account);
@@ -340,26 +340,30 @@ builder $LiquidityIncreasedEvent$_store(builder build_0, (int, int, slice, int, 
     build_0 = build_0.store_uint(v'tlpPrice, 128);
     build_0 = build_0.store_coins(v'tlpSupply);
     build_0 = build_0.store_int(v'lpFundAfter, 128);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_coins(v'entryLpFundingFeeGrowth);
+    build_1 = build_1.store_coins(v'entryRolloverFeeGrowth);
+    build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $LiquidityIncreasedEvent$_store_cell((int, int, slice, int, int, int, int, int) v) inline {
+cell $LiquidityIncreasedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int) v) inline {
     return $LiquidityIncreasedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, slice, int, int, int, int, int)) $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter(int trxId, int opType, slice account, int jettonDelta, int tlpPrice, int tlpDelta, int tlpSupply, int lpFundAfter) inline {
-    return (trxId, opType, account, jettonDelta, tlpDelta, tlpPrice, tlpSupply, lpFundAfter);
+((int, int, slice, int, int, int, int, int, int, int)) $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth(int trxId, int opType, slice account, int jettonDelta, int tlpPrice, int tlpDelta, int tlpSupply, int lpFundAfter, int entryLpFundingFeeGrowth, int entryRolloverFeeGrowth) inline {
+    return (trxId, opType, account, jettonDelta, tlpDelta, tlpPrice, tlpSupply, lpFundAfter, entryLpFundingFeeGrowth, entryRolloverFeeGrowth);
 }
 
 ;;
 ;; Type: LiquidityDecreasedEvent
-;; Header: 0x41ea309e
-;; TLB: liquidity_decreased_event#41ea309e trxId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 = LiquidityDecreasedEvent
+;; Header: 0xa15613d6
+;; TLB: liquidity_decreased_event#a15613d6 trxId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = LiquidityDecreasedEvent
 ;;
 
-builder $LiquidityDecreasedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int) v) inline_ref {
-    var (v'trxId, v'opType, v'account, v'jettonDelta, v'tlpDelta, v'tlpPrice, v'tlpSupply, v'lpFundAfter) = v;
-    build_0 = store_uint(build_0, 1105866910, 32);
+builder $LiquidityDecreasedEvent$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'trxId, v'opType, v'account, v'jettonDelta, v'tlpDelta, v'tlpPrice, v'tlpSupply, v'lpFundAfter, v'entryLpFundingFeeGrowth, v'entryRolloverFeeGrowth) = v;
+    build_0 = store_uint(build_0, 2706772950, 32);
     build_0 = build_0.store_uint(v'trxId, 64);
     build_0 = build_0.store_uint(v'opType, 8);
     build_0 = __tact_store_address(build_0, v'account);
@@ -368,15 +372,19 @@ builder $LiquidityDecreasedEvent$_store(builder build_0, (int, int, slice, int, 
     build_0 = build_0.store_uint(v'tlpPrice, 128);
     build_0 = build_0.store_coins(v'tlpSupply);
     build_0 = build_0.store_int(v'lpFundAfter, 128);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_coins(v'entryLpFundingFeeGrowth);
+    build_1 = build_1.store_coins(v'entryRolloverFeeGrowth);
+    build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $LiquidityDecreasedEvent$_store_cell((int, int, slice, int, int, int, int, int) v) inline {
+cell $LiquidityDecreasedEvent$_store_cell((int, int, slice, int, int, int, int, int, int, int) v) inline {
     return $LiquidityDecreasedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, slice, int, int, int, int, int)) $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter(int trxId, int opType, slice account, int tlpDelta, int jettonDelta, int tlpPrice, int tlpSupply, int lpFundAfter) inline {
-    return (trxId, opType, account, jettonDelta, tlpDelta, tlpPrice, tlpSupply, lpFundAfter);
+((int, int, slice, int, int, int, int, int, int, int)) $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth(int trxId, int opType, slice account, int tlpDelta, int jettonDelta, int tlpPrice, int tlpSupply, int lpFundAfter, int entryLpFundingFeeGrowth, int entryRolloverFeeGrowth) inline {
+    return (trxId, opType, account, jettonDelta, tlpDelta, tlpPrice, tlpSupply, lpFundAfter, entryLpFundingFeeGrowth, entryRolloverFeeGrowth);
 }
 
 ;;

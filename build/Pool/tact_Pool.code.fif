@@ -107,9 +107,9 @@ PROGRAM{
   DECLPROC $JettonMint$_constructor_origin_receiver_amount_custom_payload_forward_ton_amount_forward_payload
   DECLPROC $SendParameters$_constructor_to_value_bounce_mode_body
   DECLPROC $LiquidityPoolUpdated$_constructor_isIncrease_orderId_tlpPrice_tlpDelta_jettonDelta_trxId
-  DECLPROC $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter
+  DECLPROC $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth
   DECLPROC $Pool$_fun_increaseLiquidity
-  DECLPROC $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter
+  DECLPROC $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth
   DECLPROC $Pool$_fun_decreaseLiquidity
   DECLPROC $GlobalPoolData$_constructor_tlpSupply_protocolTradingFee_globalLPFund_globalLPUnrealizedPnl_globalLpFundingFeeGrowth_globalRolloverFeeGrowth_globalPerpNetValue_globalPerpSingleValue
   DECLPROC $Pool$_fun_globalPoolData
@@ -585,16 +585,16 @@ PROGRAM{
     ENDC
   }>
   $LiquidityIncreasedEvent$_store PROCREF:<{
-    919762221 PUSHINT
-    s0 s9 XCHG2
+    3115355405 PUSHINT
+    s0 s11 XCHG2
     32 STU
-    s1 s7 XCHG
+    s1 s9 XCHG
     64 STU
-    s1 s5 XCHG
+    s1 s7 XCHG
     8 STU
-    s0 s3 XCHG2
+    s0 s5 XCHG2
     __tact_store_address INLINECALLDICT
-    SWAP
+    s0 s3 XCHG2
     STGRAMS
     SWAP
     STGRAMS
@@ -602,24 +602,32 @@ PROGRAM{
     SWAP
     STGRAMS
     128 STI
+    NEWC
+    ROT
+    STGRAMS
+    ROT
+    STGRAMS
+    ENDC
+    SWAP
+    STREF
   }>
   $LiquidityIncreasedEvent$_store_cell PROCINLINE:<{
     NEWC
-    8 -ROLL
+    10 -ROLL
     $LiquidityIncreasedEvent$_store INLINECALLDICT
     ENDC
   }>
   $LiquidityDecreasedEvent$_store PROCREF:<{
-    1105866910 PUSHINT
-    s0 s9 XCHG2
+    2706772950 PUSHINT
+    s0 s11 XCHG2
     32 STU
-    s1 s7 XCHG
+    s1 s9 XCHG
     64 STU
-    s1 s5 XCHG
+    s1 s7 XCHG
     8 STU
-    s0 s3 XCHG2
+    s0 s5 XCHG2
     __tact_store_address INLINECALLDICT
-    SWAP
+    s0 s3 XCHG2
     STGRAMS
     SWAP
     STGRAMS
@@ -627,10 +635,18 @@ PROGRAM{
     SWAP
     STGRAMS
     128 STI
+    NEWC
+    ROT
+    STGRAMS
+    ROT
+    STGRAMS
+    ENDC
+    SWAP
+    STREF
   }>
   $LiquidityDecreasedEvent$_store_cell PROCINLINE:<{
     NEWC
-    8 -ROLL
+    10 -ROLL
     $LiquidityDecreasedEvent$_store INLINECALLDICT
     ENDC
   }>
@@ -1523,23 +1539,24 @@ PROGRAM{
   }>
   $LiquidityPoolUpdated$_constructor_isIncrease_orderId_tlpPrice_tlpDelta_jettonDelta_trxId PROCINLINE:<{
   }>
-  $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter PROCINLINE:<{
-    s2 s3 XCHG
+  $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth PROCINLINE:<{
+    s4 s5 XCHG
   }>
   $Pool$_fun_increaseLiquidity PROCREF:<{
-    s14 s13 PUSH2
+    16 s() PUSH
+    16 s() PUSH
     ADD
     0 PUSHINT
-    22 s() PUSH
+    24 s() PUSH
     s2 PUSH
     SUB
     MAX
-    s2 PUSH
+    s4 PUSH
     23653 PUSHINT
     s0 s2 XCHG
     LEQ
     THROWANYIFNOT
-    17 s() PUSH
+    19 s() PUSH
     0 EQINT
     IF:<{
       DROP
@@ -1549,10 +1566,10 @@ PROGRAM{
       MUL
       1000000000000000000 PUSHINT
       MUL
-      17 s() PUSH
+      19 s() PUSH
       DIV
     }>
-    OVER
+    s3 PUSH
     1000 PUSHINT
     MUL
     1000000000000000000 PUSHINT
@@ -1564,47 +1581,48 @@ PROGRAM{
     PUSHNULL
     0 PUSHINT
     $global_emptySlice INLINECALLDICT
-    s8 PUSH
-    s3 s9 XCPU
+    s10 PUSH
+    s3 s11 XCPU
     s3 s7 XCPU
     s0 s3 XCHG
     $JettonMint$_constructor_origin_receiver_amount_custom_payload_forward_ton_amount_forward_payload INLINECALLDICT
     $JettonMint$_store_cell INLINECALLDICT
-    22 s() PUSH
+    24 s() PUSH
     s0 s3 XCHG
-    27 s() PUSH
+    29 s() PUSH
     s1 s3 s3 XCHG3
     $SendParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
     $global_send INLINECALLDICT
-    s0 16 s() XCHG
-    s2 PUSH
-    ADD
     s0 18 s() XCHG
-    16 s() PUSH
+    s4 PUSH
     ADD
-    23 s() 29 s() XCHG
-    22 s() 28 s() XCHG
-    21 s() 27 s() XCHG
-    20 s() 26 s() XCHG
-    19 s() 25 s() XCHG
-    18 s() 24 s() XCHG
-    17 s() 29 s() XCHG
-    16 s() 28 s() XCHG
-    s15 27 s() XCHG
-    s14 26 s() XCHG
-    s13 25 s() XCHG
+    s0 20 s() XCHG
+    18 s() PUSH
+    ADD
+    23 s() 31 s() XCHG
+    22 s() 30 s() XCHG
+    21 s() 29 s() XCHG
+    20 s() 28 s() XCHG
+    19 s() 27 s() XCHG
+    18 s() 26 s() XCHG
+    17 s() 25 s() XCHG
+    16 s() 24 s() XCHG
+    s15 31 s() XCHG
+    s14 30 s() XCHG
+    s13 29 s() XCHG
     s0 s12 XCHG
-    s11 29 s() XCHG
-    s10 24 s() XCHG
-    s9 27 s() XCHG
-    s8 26 s() XCHG
-    s7 25 s() XCHG
-    s0 s6 XCHG
+    s11 27 s() XCHG
+    s10 28 s() XCHG
+    s9 25 s() XCHG
+    s8 24 s() XCHG
+    s7 31 s() XCHG
+    s6 30 s() XCHG
     s5 29 s() XCHG
-    s4 24 s() XCHG
+    s0 s4 XCHG
     s3 27 s() XCHG
-    s2 26 s() XCHG
+    s2 28 s() XCHG
     s1 25 s() XCHG
+    s0 24 s() XCHG
     $Pool$_fun_exceedGas INLINECALLDICT
     21 s() PUSH
     SUB
@@ -1614,89 +1632,98 @@ PROGRAM{
     1 PUSHINT
     TRUE
     SWAP
-    s0 28 s() XCHG
+    s0 34 s() XCHG
     29 s() PUSH
-    33 s() PUSH
-    32 s() PUSH
-    36 s() PUSH
+    31 s() PUSH
+    30 s() PUSH
+    38 s() PUSH
     $LiquidityPoolUpdated$_constructor_isIncrease_orderId_tlpPrice_tlpDelta_jettonDelta_trxId INLINECALLDICT
     $LiquidityPoolUpdated$_store_cell INLINECALLDICT
     25 s() PUSH
     s0 s4 XCHG
-    s0 28 s() XCHG
+    s0 34 s() XCHG
     SWAP
     $SendParameters$_constructor_to_value_bounce_mode_body INLINECALLDICT
     $global_send INLINECALLDICT
-    s4 28 s() XCHG
+    s6 30 s() XCHG
     1 PUSHINT
-    s0 s4 XCHG
-    s3 27 s() XCHG
+    s0 s6 XCHG
+    s5 29 s() XCHG
+    s4 24 s() XCHG
+    s3 25 s() XCHG
     s2 26 s() XCHG
-    s1 25 s() XCHG
-    s0 28 s() XCHG
-    s12 s10 PUSH2
-    $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter INLINECALLDICT
+    s12 PUSH
+    s11 s2 s(-1) PUXC2
+    s1 29 s() XCHG
+    s0 30 s() XCHG
+    $LiquidityIncreasedEvent$_constructor_trxId_opType_account_jettonDelta_tlpPrice_tlpDelta_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth INLINECALLDICT
     $LiquidityIncreasedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    17 s() 23 s() XCHG
-    16 s() 22 s() XCHG
-    s15 21 s() XCHG
-    s14 20 s() XCHG
-    s13 19 s() XCHG
-    s12 18 s() XCHG
-    s11 17 s() XCHG
-    s10 16 s() XCHG
-    s9 s15 XCHG
-    s8 s14 XCHG
-    s7 s13 XCHG
-    s6 s12 XCHG
-    6 6 BLKSWAP
+    s15 23 s() XCHG
+    s14 22 s() XCHG
+    s13 21 s() XCHG
+    s12 20 s() XCHG
+    s11 19 s() XCHG
+    s10 18 s() XCHG
+    s9 17 s() XCHG
+    s8 16 s() XCHG
+    s7 s15 XCHG
+    s6 s14 XCHG
+    s5 s13 XCHG
+    s4 s12 XCHG
+    s3 s11 XCHG
+    s10 s1 s8 XCHG3
+    s0 s4 XCHG
+    s9 s6 XCHG2
+    s1 s3 XCHG
   }>
-  $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter PROCINLINE:<{
-    s3 s4 XCHG
+  $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth PROCINLINE:<{
+    s5 s6 XCHG
   }>
   $Pool$_fun_decreaseLiquidity PROCREF:<{
-    s14 s13 PUSH2
+    16 s() PUSH
+    16 s() PUSH
     ADD
     1000 PUSHINT
     MUL
     1000000000000000000 PUSHINT
     MUL
-    17 s() PUSH
+    19 s() PUSH
     DIV
-    s0 s1 PUSH2
+    s0 s3 PUSH2
     MUL
     1000000000000000000000 PUSHINT
     DIV
-    s0 16 s() XCHG
-    16 s() PUSH
-    SUB
     s0 18 s() XCHG
-    s2 PUSH
+    18 s() PUSH
     SUB
-    23 s() 29 s() XCHG
-    22 s() 28 s() XCHG
-    21 s() 27 s() XCHG
-    20 s() 26 s() XCHG
-    19 s() 25 s() XCHG
-    18 s() 24 s() XCHG
-    17 s() 29 s() XCHG
-    16 s() 28 s() XCHG
-    s15 27 s() XCHG
-    s14 26 s() XCHG
-    s13 25 s() XCHG
+    s0 20 s() XCHG
+    s4 PUSH
+    SUB
+    23 s() 31 s() XCHG
+    22 s() 30 s() XCHG
+    21 s() 29 s() XCHG
+    20 s() 28 s() XCHG
+    19 s() 27 s() XCHG
+    18 s() 26 s() XCHG
+    17 s() 25 s() XCHG
+    16 s() 24 s() XCHG
+    s15 31 s() XCHG
+    s14 30 s() XCHG
+    s13 29 s() XCHG
     s0 s12 XCHG
-    s11 29 s() XCHG
-    s10 24 s() XCHG
-    s9 27 s() XCHG
-    s8 26 s() XCHG
-    s7 25 s() XCHG
-    s0 s6 XCHG
+    s11 27 s() XCHG
+    s10 28 s() XCHG
+    s9 25 s() XCHG
+    s8 24 s() XCHG
+    s7 31 s() XCHG
+    s6 30 s() XCHG
     s5 29 s() XCHG
-    s4 24 s() XCHG
+    s0 s4 XCHG
     s3 27 s() XCHG
-    s2 26 s() XCHG
+    s2 28 s() XCHG
     s1 25 s() XCHG
+    s0 24 s() XCHG
     $Pool$_fun_exceedGas INLINECALLDICT
     21 s() PUSH
     SUB
@@ -1704,44 +1731,50 @@ PROGRAM{
     3 PUSHINT
     FALSE
     SWAP
-    s0 28 s() XCHG
+    s0 34 s() XCHG
     29 s() PUSH
-    31 s() PUSH
-    34 s() PUSH
-    36 s() PUSH
+    29 s() PUSH
+    32 s() PUSH
+    38 s() PUSH
     $LiquidityPoolUpdated$_constructor_isIncrease_orderId_tlpPrice_tlpDelta_jettonDelta_trxId INLINECALLDICT
     $LiquidityPoolUpdated$_store_cell INLINECALLDICT
     25 s() PUSH
     s0 s4 XCHG
-    s0 28 s() XCHG
+    s0 34 s() XCHG
     SWAP
     $SendParameters$_constructor_to_value_bounce_mode_body INLINECALLDICT
     $global_send INLINECALLDICT
-    s4 28 s() XCHG
+    s6 30 s() XCHG
     2 PUSHINT
-    s0 s4 XCHG
-    s3 27 s() XCHG
-    s2 26 s() XCHG
-    s1 28 s() XCHG
-    s0 25 s() XCHG
-    s12 s10 PUSH2
-    $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter INLINECALLDICT
+    s0 s6 XCHG
+    s5 29 s() XCHG
+    s4 24 s() XCHG
+    s3 26 s() XCHG
+    s2 25 s() XCHG
+    s12 PUSH
+    s11 s2 s(-1) PUXC2
+    s1 29 s() XCHG
+    s0 30 s() XCHG
+    $LiquidityDecreasedEvent$_constructor_trxId_opType_account_tlpDelta_jettonDelta_tlpPrice_tlpSupply_lpFundAfter_entryLpFundingFeeGrowth_entryRolloverFeeGrowth INLINECALLDICT
     $LiquidityDecreasedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    17 s() 23 s() XCHG
-    16 s() 22 s() XCHG
-    s15 21 s() XCHG
-    s14 20 s() XCHG
-    s13 19 s() XCHG
-    s12 18 s() XCHG
-    s11 17 s() XCHG
-    s10 16 s() XCHG
-    s9 s15 XCHG
-    s8 s14 XCHG
-    s7 s13 XCHG
-    s6 s12 XCHG
-    6 6 BLKSWAP
-    s1 s4 XCHG
+    s15 23 s() XCHG
+    s14 22 s() XCHG
+    s13 21 s() XCHG
+    s12 20 s() XCHG
+    s11 19 s() XCHG
+    s10 18 s() XCHG
+    s9 17 s() XCHG
+    s8 16 s() XCHG
+    s7 s15 XCHG
+    s6 s14 XCHG
+    s5 s13 XCHG
+    s4 s12 XCHG
+    s3 s11 XCHG
+    s10 s1 s8 XCHG3
+    s0 s4 XCHG
+    s9 s9 s6 XCHG3
+    s1 s3 XCHG
   }>
   $GlobalPoolData$_constructor_tlpSupply_protocolTradingFee_globalLPFund_globalLPUnrealizedPnl_globalLpFundingFeeGrowth_globalRolloverFeeGrowth_globalPerpNetValue_globalPerpSingleValue PROCINLINE:<{
   }>
@@ -3706,28 +3739,38 @@ PROGRAM{
     SUB
     s1 17 s() XCHG
     ADD
-    16 s() PUSH
-    s0 s14 XCHG2
+    s15 PUSH
+    17 s() PUSH
+    s0 s15 XCHG2
     SUB
     DUP
-    22 s() PUSH
+    23 s() PUSH
     MUL
     1000000000 PUSHINT
     DIV
-    s14 s14 XCPU
+    s2 s2 XCPU
     ADD
-    s0 s14 XCHG
+    s0 s2 XCHG
     SUB
-    s1 17 s() XCHG
+    s1 18 s() XCHG
     ADD
-    s0 s4 XCHG
+    16 s() PUSH
+    s0 s6 XCHG
     IF:<{
-      s3 s15 XCHG
-      4 11 REVERSE
+      s0 17 s() XCHG
+      s0 16 s() XCHG
+      s14 s15 XCHG
+      s13 s14 XCHG
+      s1 s5 XCHG
+      s1 s13 XCHG
       $Pool$_fun_increaseLiquidity INLINECALLDICT
     }>ELSE<{
-      s3 s15 XCHG
-      4 11 REVERSE
+      s0 17 s() XCHG
+      s0 16 s() XCHG
+      s14 s15 XCHG
+      s13 s14 XCHG
+      s1 s5 XCHG
+      s1 s13 XCHG
       $Pool$_fun_decreaseLiquidity INLINECALLDICT
     }>
   }>
@@ -3918,7 +3961,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d59586f474e5461656477393673654564415a4b596d62366545614e5247785936666f515569584d386b536e64} PUSHSLICE
+    x{697066733a2f2f516d524a334e62717833714234767a43693377754a784261484c3851624b4e734d456d5258676247436b44416431} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
