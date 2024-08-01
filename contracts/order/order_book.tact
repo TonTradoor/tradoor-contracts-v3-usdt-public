@@ -375,13 +375,31 @@ contract OrderBook with Deployable, Resumable {
      */
     fun handleCreateDecreaseLiquidityOrder(query_id: Int, jettonFromAmount: Int, account: Address, executionFee: Int, tlpDelta: Int) {
         //check sender
-        require(self.lpExecutors.get(account) != null, "invalid sender");
+        let refundComment: String = "";
+        let refund: Bool = false;
+
+        let isExecutor: Bool = self.lpExecutors.get(account) != null;
+        if (!isExecutor) {
+            refund = true;
+            refundComment = "invalid sender";
+        }
 
         let ctx: Context = context();
-        // check gas
-        require(ctx.value - executionFee >= self.lpGasConsumption, "gas not enough");
-        // check execution fee
-        require(executionFee >= self.lpMinExecutionFee, "execution fee not enough");
+        if( !refund && ctx.value < self.lpGasConsumption + executionFee) {
+            refund = true;
+            refundComment = "gas not enough";
+        }
+
+        if (!refund && executionFee < self.lpMinExecutionFee) {
+            refund = true;
+            refundComment = "execution fee not enough";
+        }
+
+        if (refund) {
+            self.refundJetton(self.tlpWallet, query_id, tlpDelta, account, account);
+            self.forward(account, refundComment.asComment(), true, null);
+            return;
+        }
 
         // add new order
         let orderId: Int = self.liquidityOrderIndexNext;

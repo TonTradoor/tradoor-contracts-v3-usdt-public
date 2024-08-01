@@ -96,10 +96,27 @@
 
 ((slice, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, cell, cell, slice, cell, int, cell, cell, int, cell, int, int), ()) $OrderBook$_fun_handleCreateDecreaseLiquidityOrder((slice, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, cell, cell, slice, cell, int, cell, cell, int, cell, int, int) $self, int $query_id, int $jettonFromAmount, slice $account, int $executionFee, int $tlpDelta) impure inline_ref {
     var (($self'owner, $self'stopped, $self'orderLockTime, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'gasForBurnTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpWallet, $self'jettonWallet, $self'pool, $self'executors, $self'lpExecutors, $self'compensator, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'totalExecutionFee)) = $self;
-    throw_unless(41207, (~ null?(__tact_dict_get_slice_int($self'lpExecutors, 267, $account, 1))));
+    slice $refundComment = __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
+    int $refund = false;
+    int $isExecutor = (~ null?(__tact_dict_get_slice_int($self'lpExecutors, 267, $account, 1)));
+    if ((~ $isExecutor)) {
+        $refund = true;
+        $refundComment = __gen_slice_string_7bbc93d6639cffd5345b5ced501b248d05fe698def6462ca589fc3bb351a4fe7();
+    }
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
-    throw_unless(19305, (($ctx'value - $executionFee) >= $self'lpGasConsumption));
-    throw_unless(24562, ($executionFee >= $self'lpMinExecutionFee));
+    if (( ((~ $refund)) ? (($ctx'value < ($self'lpGasConsumption + $executionFee))) : (false) )) {
+        $refund = true;
+        $refundComment = __gen_slice_string_8ba9018bc74a66ae95c44ce5cb80fbce64c3667445aa0d92336158bca8b98806();
+    }
+    if (( ((~ $refund)) ? (($executionFee < $self'lpMinExecutionFee)) : (false) )) {
+        $refund = true;
+        $refundComment = __gen_slice_string_dec71a65a2cdc865d4307f5761ab01137c82cb0513cb4734f6a1048ca6ce4039();
+    }
+    if ($refund) {
+        ($self'owner, $self'stopped, $self'orderLockTime, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'gasForBurnTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpWallet, $self'jettonWallet, $self'pool, $self'executors, $self'lpExecutors, $self'compensator, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'totalExecutionFee)~$OrderBook$_fun_refundJetton($self'tlpWallet, $query_id, $tlpDelta, $account, $account);
+        ($self'owner, $self'stopped, $self'orderLockTime, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'gasForBurnTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpWallet, $self'jettonWallet, $self'pool, $self'executors, $self'lpExecutors, $self'compensator, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'totalExecutionFee)~$OrderBook$_fun_forward($account, $String$_fun_asComment($refundComment), true, null());
+        return (($self'owner, $self'stopped, $self'orderLockTime, $self'lpGasConsumption, $self'perpGasConsumption, $self'poolLpGasConsumption, $self'poolPerpGasConsumption, $self'minTonsForStorage, $self'gasTransferJetton, $self'gasForBurnTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpWallet, $self'jettonWallet, $self'pool, $self'executors, $self'lpExecutors, $self'compensator, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'totalExecutionFee), ());
+    }
     int $orderId = $self'liquidityOrderIndexNext;
     $self'liquidityOrderIndexNext = $self'liquidityOrderIndexNext + 1;
     $self'liquidityOrders~__tact_dict_set_uint_cell(64, $orderId, $LiquidityOrder$_store_cell($LiquidityOrder$_constructor_isIncrease_account_jettonDelta_executionFee_blockTime_isPending_executionFeeReceiver_lastOperator(false, $account, $tlpDelta, $executionFee, now(), false, $account, null())));

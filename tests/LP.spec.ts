@@ -356,14 +356,15 @@ describe('LP', () => {
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: orderBookTlpWallet.address,
             to: orderBook.address,
-            success: false,
+            success: true,
         });
-
+        console.log('>>>user1.tlp:', fromTlpUnits(createResult.balanceBefore.user1TlpBalance));
         // check order
         expect(createResult.orderIdAfter).toEqual(createResult.orderIdBefore);
         expect(createResult.order).toBeNull();
         // check user jetton balance
         expect(createResult.balanceAfter.user1JettonBalance).toEqual(createResult.balanceBefore.user1JettonBalance);
+        expect(createResult.balanceAfter.user1TlpBalance).toEqual(createResult.balanceBefore.user1TlpBalance);
     });
 
     it('should create & cancel decrease LP order successfully', async () => {
