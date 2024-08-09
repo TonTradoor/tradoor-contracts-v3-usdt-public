@@ -90,6 +90,9 @@ tuple $TokenConfig$_load_opt(cell cl) inline;
 ;; $UpdateTokenConfig$_load
 (slice, ((int, (slice, int, int, int, int, int, int, int, int)))) $UpdateTokenConfig$_load(slice sc_0) inline;
 
+;; $DelistToken$_load
+(slice, ((int))) $DelistToken$_load(slice sc_0) inline;
+
 ;; $ClaimProtocolFee$_load
 (slice, ((int, slice))) $ClaimProtocolFee$_load(slice sc_0) inline;
 
@@ -272,6 +275,12 @@ tuple $GlobalPosition$_to_opt_tuple(tuple v) inline;
 
 ;; $PerpPositionData$_to_external
 (int, int, tuple, tuple, tuple) $PerpPositionData$_to_external(((int, int, tuple, tuple, tuple)) v) inline;
+
+;; $GlobalPosition$_get_longSize
+_ $GlobalPosition$_get_longSize((int, int, int, int, int, int) v) inline;
+
+;; $GlobalPosition$_get_shortSize
+_ $GlobalPosition$_get_shortSize((int, int, int, int, int, int) v) inline;
 
 ;; $Pool$init$_load
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline;

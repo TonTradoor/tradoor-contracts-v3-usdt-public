@@ -85,6 +85,24 @@ contract Pool with Deployable, Ownable {
     }
 
     /**
+     * @dev Delist a token.
+     * @param msg The DelistToken message containing the token ID.
+     */
+    receive(msg: DelistToken) {
+        self.requireOwner();
+        let position: GlobalPosition? = self.globalPositions.get(msg.tokenId);
+        if (position != null) {
+            require(position!!.longSize + position!!.shortSize == 0, "token cannot be delisted");
+            self.tokenConfigs.del(msg.tokenId);
+            self.globalPositions.del(msg.tokenId);
+            self.globalLPPositions.del(msg.tokenId);
+            self.perpPositions.del(msg.tokenId);
+            self.prices.del(msg.tokenId);
+        }
+        self.reply("token delisted".asComment());
+    }
+
+    /**
      * @dev Receive function to claim protocol trading fee.
      * @param msg The ClaimProtocolFee message containing the transaction ID, fee receiver, and amount.
      */

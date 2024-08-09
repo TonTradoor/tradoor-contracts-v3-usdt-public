@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 9596 bytes
+BOC Size: 9955 bytes
 
 # Types
-Total Types: 30
+Total Types: 31
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -48,6 +48,10 @@ Signature: `UpdateConfig{tlpJetton:address,orderBook:address,claimExecutor:addre
 ## UpdateTokenConfig
 TLB: `update_token_config#e6424c82 tokenId:uint16 config:TokenConfig{name:^string,enable:bool,minValue:coins,maxValue:coins,maxLeverage:uint16,liquidationFee:coins,maintenanceRate:uint32,tradingFeeRate:uint32,lpTradingFeeRate:uint32} = UpdateTokenConfig`
 Signature: `UpdateTokenConfig{tokenId:uint16,config:TokenConfig{name:^string,enable:bool,minValue:coins,maxValue:coins,maxLeverage:uint16,liquidationFee:coins,maintenanceRate:uint32,tradingFeeRate:uint32,lpTradingFeeRate:uint32}}`
+
+## DelistToken
+TLB: `delist_token#9b42e4ef tokenId:uint16 = DelistToken`
+Signature: `DelistToken{tokenId:uint16}`
 
 ## ClaimProtocolFee
 TLB: `claim_protocol_fee#feb2a766 trxId:uint64 feeReceiver:address = ClaimProtocolFee`
@@ -175,6 +179,7 @@ Argument: account
 17312: leverage too high
 23245: greater than max value
 23653: insufficient available jetton
+24325: token cannot be delisted
 27798: invalid token
 28603: margin rate too high
 31332: less than min value

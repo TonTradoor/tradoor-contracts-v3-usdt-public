@@ -28,6 +28,7 @@ PROGRAM{
   DECLPROC $TokenConfig$_as_optional
   DECLPROC $TokenConfig$_load_opt
   DECLPROC $UpdateTokenConfig$_load
+  DECLPROC $DelistToken$_load
   DECLPROC $ClaimProtocolFee$_load
   DECLPROC $SendProtocolFee$_store
   DECLPROC $SendProtocolFee$_store_cell
@@ -89,6 +90,8 @@ PROGRAM{
   DECLPROC $GlobalPosition$_not_null
   DECLPROC $GlobalPosition$_to_opt_tuple
   DECLPROC $PerpPositionData$_to_external
+  DECLPROC $GlobalPosition$_get_longSize
+  DECLPROC $GlobalPosition$_get_shortSize
   DECLPROC $Pool$init$_load
   DECLPROC $Pool$_contract_init
   DECLPROC $Pool$_contract_load
@@ -136,6 +139,7 @@ PROGRAM{
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $Pool$_internal_binary_UpdateConfig
   DECLPROC $Pool$_internal_binary_UpdateTokenConfig
+  DECLPROC $Pool$_internal_binary_DelistToken
   DECLPROC $Pool$_internal_binary_ClaimProtocolFee
   DECLPROC %$Pool$_internal_empty
   DECLPROC $Pool$_internal_binary_UpdateLiquidityPool
@@ -464,6 +468,15 @@ PROGRAM{
     16 LDU
     $TokenConfig$_load INLINECALLDICT
     s9 s10 XCHG
+  }>
+  $DelistToken$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    2604852463 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    16 LDU
+    SWAP
   }>
   $ClaimProtocolFee$_load PROCINLINE:<{
     32 LDU
@@ -1251,6 +1264,14 @@ PROGRAM{
     s0 s2 XCHG
     $GlobalPosition$_to_opt_tuple INLINECALLDICT
     s1 s2 XCHG
+  }>
+  $GlobalPosition$_get_longSize PROCINLINE:<{
+    s3 s5 XCHG
+    5 BLKDROP
+  }>
+  $GlobalPosition$_get_shortSize PROCINLINE:<{
+    s2 s5 XCHG
+    5 BLKDROP
   }>
   $Pool$init$_load PROCINLINE:<{
     257 PUSHINT
@@ -3648,6 +3669,104 @@ PROGRAM{
     s3 s3 s0 XCHG3
     $Pool$_fun_reply INLINECALLDICT
   }>
+  $Pool$_internal_binary_DelistToken PROCINLINE:<{
+    23 s() 24 s() XCHG
+    22 s() 24 s() XCHG
+    21 s() 24 s() XCHG
+    20 s() 24 s() XCHG
+    19 s() 24 s() XCHG
+    18 s() 24 s() XCHG
+    17 s() 24 s() XCHG
+    16 s() 24 s() XCHG
+    s15 24 s() XCHG
+    s14 24 s() XCHG
+    s13 24 s() XCHG
+    s12 24 s() XCHG
+    s11 24 s() XCHG
+    s10 24 s() XCHG
+    s9 24 s() XCHG
+    s0 24 s() XCHG
+    s0 s8 XCHG
+    s0 s7 XCHG
+    s0 s6 XCHG
+    5 -ROLL
+    $Pool$_fun_requireOwner INLINECALLDICT
+    OVER
+    16 PUSHINT
+    26 s() PUSH
+    __tact_dict_get_uint_cell INLINECALLDICT
+    $GlobalPosition$_load_opt INLINECALLDICT
+    DUP
+    ISNULL
+    NOT
+    IF:<{
+      24325 PUSHINT
+      OVER
+      $GlobalPosition$_not_null INLINECALLDICT
+      $GlobalPosition$_get_longSize INLINECALLDICT
+      s0 s2 XCHG
+      $GlobalPosition$_not_null INLINECALLDICT
+      $GlobalPosition$_get_shortSize INLINECALLDICT
+      s1 s2 XCHG
+      ADD
+      0 EQINT
+      THROWANYIFNOT
+      24 s() PUSH
+      s0 s15 XCHG2
+      16 PUSHINT
+      DICTUDEL
+      DROP
+      24 s() PUSH
+      ROT
+      16 PUSHINT
+      DICTUDEL
+      DROP
+      24 s() PUSH
+      s0 s3 XCHG2
+      16 PUSHINT
+      DICTUDEL
+      DROP
+      24 s() PUSH
+      s0 s4 XCHG2
+      16 PUSHINT
+      DICTUDEL
+      DROP
+      s1 24 s() XCHG
+      s0 s14 XCHG
+      16 PUSHINT
+      DICTUDEL
+      DROP
+      s0 23 s() XCHG
+      s13 s13 s13 XCHG3
+    }>ELSE<{
+      DROP
+      24 s() POP
+    }>
+    B{b5ee9c7241010101001400002400000000746f6b656e2064656c69737465642069b25b} B>boc PUSHREF
+    23 s() 24 s() XCHG
+    22 s() 23 s() XCHG
+    21 s() 22 s() XCHG
+    20 s() 21 s() XCHG
+    19 s() 20 s() XCHG
+    18 s() 19 s() XCHG
+    17 s() 18 s() XCHG
+    16 s() 17 s() XCHG
+    s15 16 s() XCHG
+    s14 s15 XCHG
+    s13 s14 XCHG
+    s12 s13 XCHG
+    s11 s12 XCHG
+    s10 s11 XCHG
+    s9 s10 XCHG
+    s8 s9 XCHG
+    s7 s8 XCHG
+    s6 s7 XCHG
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s1 s3 s0 XCHG3
+    $Pool$_fun_reply INLINECALLDICT
+  }>
   $Pool$_internal_binary_ClaimProtocolFee PROCINLINE:<{
     41207 PUSHINT
     __tact_context_get_sender INLINECALLDICT
@@ -3961,7 +4080,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d524a334e62717833714234767a43693377754a784261484c3851624b4e734d456d5258676247436b44416431} PUSHSLICE
+    x{697066733a2f2f516d5439514863364e67684850345a71344b76364c726467337556415043523378475a7466456a61686734507552} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -4002,6 +4121,16 @@ PROGRAM{
       $UpdateTokenConfig$_load INLINECALLDICT
       1 10 BLKDROP2
       $Pool$_internal_binary_UpdateTokenConfig INLINECALLDICT
+      TRUE
+    }>
+    DUP
+    2604852463 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $DelistToken$_load INLINECALLDICT
+      NIP
+      $Pool$_internal_binary_DelistToken INLINECALLDICT
       TRUE
     }>
     DUP

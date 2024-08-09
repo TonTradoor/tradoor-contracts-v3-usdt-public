@@ -194,6 +194,18 @@ tuple $TokenConfig$_to_opt_external(tuple v) inline {
 }
 
 ;;
+;; Type: DelistToken
+;; Header: 0x9b42e4ef
+;; TLB: delist_token#9b42e4ef tokenId:uint16 = DelistToken
+;;
+
+(slice, ((int))) $DelistToken$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2604852463);
+    var v'tokenId = sc_0~load_uint(16);
+    return (sc_0, (v'tokenId));
+}
+
+;;
 ;; Type: ClaimProtocolFee
 ;; Header: 0xfeb2a766
 ;; TLB: claim_protocol_fee#feb2a766 trxId:uint64 feeReceiver:address = ClaimProtocolFee
@@ -778,6 +790,16 @@ tuple $GlobalPosition$_to_tuple(((int, int, int, int, int, int)) v) inline {
 tuple $GlobalPosition$_to_opt_tuple(tuple v) inline {
     if (null?(v)) { return null(); } 
     return $GlobalPosition$_to_tuple($GlobalPosition$_not_null(v)); 
+}
+
+_ $GlobalPosition$_get_longSize((int, int, int, int, int, int) v) inline {
+    var (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longValue, v'shortValue) = v;
+    return v'longSize;
+}
+
+_ $GlobalPosition$_get_shortSize((int, int, int, int, int, int) v) inline {
+    var (v'longMargin, v'shortMargin, v'longSize, v'shortSize, v'longValue, v'shortValue) = v;
+    return v'shortSize;
 }
 
 ((int, int, int, int, int, int)) $GlobalPosition$_constructor_longMargin_shortMargin_longSize_shortSize_longValue_shortValue(int longMargin, int shortMargin, int longSize, int shortSize, int longValue, int shortValue) inline {

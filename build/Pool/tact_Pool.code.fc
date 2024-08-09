@@ -424,6 +424,23 @@
     return (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices), ());
 }
 
+(((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell)), ()) $Pool$_internal_binary_DelistToken((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, (int) $msg) impure inline {
+    var ($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices) = $self;
+    var ($msg'tokenId) = $msg;
+    ($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices)~$Pool$_fun_requireOwner();
+    tuple $position = $GlobalPosition$_load_opt(__tact_dict_get_uint_cell($self'globalPositions, 16, $msg'tokenId));
+    if ((~ null?($position))) {
+        throw_unless(24325, (($GlobalPosition$_get_longSize($GlobalPosition$_not_null($position)) + $GlobalPosition$_get_shortSize($GlobalPosition$_not_null($position))) == 0));
+        $self'tokenConfigs~__tact_dict_delete_uint(16, $msg'tokenId);
+        $self'globalPositions~__tact_dict_delete_uint(16, $msg'tokenId);
+        $self'globalLPPositions~__tact_dict_delete_uint(16, $msg'tokenId);
+        $self'perpPositions~__tact_dict_delete_uint(16, $msg'tokenId);
+        $self'prices~__tact_dict_delete_uint(16, $msg'tokenId);
+    }
+    ($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices)~$Pool$_fun_reply(__gen_cell_comment_594c1f31d48ebe4187726a1bc890e98cb4eea0cb233b1f511b8c80a064829484());
+    return (($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices), ());
+}
+
 (((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell)), ()) $Pool$_internal_binary_ClaimProtocolFee((slice, slice, slice, int, int, int, int, int, int, cell, slice, int, int, int, int, int, int, int, int, int, cell, cell, cell, cell) $self, (int, slice) $msg) impure inline {
     var ($self'owner, $self'orderBook, $self'claimExecutor, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForMintTlp, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'tokenConfigs, $self'tlpJetton, $self'tlpSupply, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'prices) = $self;
     var ($msg'trxId, $msg'feeReceiver) = $msg;
@@ -568,7 +585,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmRJ3Nbqx3qB4vzCi3wuJxBaHL8QbKNsMEmRXgbGCkDAd1";
+    return "ipfs://QmT9QHc6NghHP4Zq4Kv6Lrdg3uVAPCR3xGZtfEjahg4PuR";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -603,6 +620,13 @@ _ lazy_deployment_completed() method_id {
     if (op == 3863104642) {
         var msg = in_msg~$UpdateTokenConfig$_load();
         self~$Pool$_internal_binary_UpdateTokenConfig(msg);
+        return (self, true);
+    }
+    
+    ;; Receive DelistToken message
+    if (op == 2604852463) {
+        var msg = in_msg~$DelistToken$_load();
+        self~$Pool$_internal_binary_DelistToken(msg);
         return (self, true);
     }
     

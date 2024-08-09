@@ -29,6 +29,10 @@ message UpdateTokenConfig {
     config: TokenConfig;
 }
 
+message DelistToken {
+    tokenId: Int as uint16;
+}
+
 message ClaimProtocolFee {
     trxId: Int as uint64;
     feeReceiver: Address;
