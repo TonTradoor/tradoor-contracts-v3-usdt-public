@@ -1,12 +1,10 @@
-import { Address, beginCell, toNano } from '@ton/core';
-import { } from '../wrappers/Pool';
-import { NetworkProvider, sleep } from '@ton/blueprint';
-import { now, getConfig, getLastTransaction, waitForTransaction, attachOrderBook, attachMockJettonWallet, toUnits } from '../utils/util';
+import { beginCell, toNano } from '@ton/core';
+import { NetworkProvider } from '@ton/blueprint';
+import { now, getLastTransaction, waitForTransaction, attachPool, attachMockJettonWallet, toUnits } from '../utils/util';
 import { MOCK_DECIMAL, OP_CREATE_INCREASE_PERP_POSITION_ORDER, PRICE_DECIMAL } from '../utils/constants';
-import { toJettonUnits, toPriceUnits } from '../tests/lib/TokenHelper';
 
 export async function run(provider: NetworkProvider) {
-    const orderBook = attachOrderBook(provider);
+    const pool = attachPool(provider);
 
     /// create order
     let executionFee = 0.1;
@@ -28,11 +26,11 @@ export async function run(provider: NetworkProvider) {
     let user0JettonData = await user0JettonWallet.getGetWalletData();
     console.log(`user jetton wallet ${user0JettonWallet.address} balance ${user0JettonData.balance}`);
 
-    let orderId = (await orderBook.getPerpOrder(0n)).perpOrderIndexNext;
+    let orderId = (await pool.getPerpOrder(0n)).perpOrderIndexNext;
 
     let trxId = BigInt(await provider.ui().input('trxId:'));
 
-    const lastTrx = await getLastTransaction(provider, orderBook.address);
+    const lastTrx = await getLastTransaction(provider, pool.address);
     await user0JettonWallet.send(
         provider.sender(),
         {
@@ -42,7 +40,7 @@ export async function run(provider: NetworkProvider) {
             $$type: 'JettonTransfer',
             query_id: trxId,
             amount: toUnits(margin, MOCK_DECIMAL),
-            destination: orderBook.address,
+            destination: pool.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
             forward_ton_amount: toNano(executionFee + 0.1),
@@ -68,29 +66,29 @@ export async function run(provider: NetworkProvider) {
                         .storeUint(0, 128)
                     )
                     .endCell()
-                ).endCell()
+                ).endCell().asSlice()
         }
     );
 
     // wait for trx
-    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 20);
+    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
     if (transDone) {
         console.log(`create increase success`);
     }
 
     // get pool jetton wallet address 
-    let poolJettonWallet = await attachMockJettonWallet(provider, orderBook.address);
+    let poolJettonWallet = await attachMockJettonWallet(provider, pool.address);
     let poolJettonData = await poolJettonWallet.getGetWalletData();
 
     console.log('pool jetton balance:', poolJettonData.balance);
 
     // get index
-    let orderIdNext = (await orderBook.getPerpOrder(0n)).perpOrderIndexNext;
+    let orderIdNext = (await pool.getPerpOrder(0n)).perpOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
     // get order
-    let order = await orderBook.getPerpOrder(orderId);
+    let order = await pool.getPerpOrder(orderId);
     console.log(`order:`, order);
 
 }

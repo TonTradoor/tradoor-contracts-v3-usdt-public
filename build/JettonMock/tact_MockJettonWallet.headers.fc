@@ -4,7 +4,7 @@
 ;;
 
 ;; __tact_verify_address
-slice __tact_verify_address(slice address) inline;
+slice __tact_verify_address(slice address) impure inline;
 
 ;; __tact_load_address
 (slice, slice) __tact_load_address(slice cs) inline;
@@ -25,7 +25,7 @@ slice __tact_compute_contract_address(int chain, cell code, cell data) inline;
 int __tact_my_balance() inline;
 
 ;; __tact_not_null
-forall X -> X __tact_not_null(X x) inline;
+forall X -> X __tact_not_null(X x) impure inline;
 
 ;; __tact_context_get
 (int, slice, int, slice) __tact_context_get() inline;
@@ -130,19 +130,19 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, slice, slice), int) $MockJettonWallet$_fun__internal_transfer_estimate_remain_value((int, slice, slice) $self, (int, slice, int, slice) $ctx, (int, int, slice, slice, int, slice) $msg) impure inline;
 
 ;; $SendParameters$_constructor_to_value_mode_bounce_body
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice to, int value, int mode, int bounce, cell body) inline;
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice $to, int $value, int $mode, int $bounce, cell $body) inline;
 
 ;; $JettonTransferNotification$_constructor_query_id_amount_sender_forward_payload
-((int, int, slice, slice)) $JettonTransferNotification$_constructor_query_id_amount_sender_forward_payload(int query_id, int amount, slice sender, slice forward_payload) inline;
+((int, int, slice, slice)) $JettonTransferNotification$_constructor_query_id_amount_sender_forward_payload(int $query_id, int $amount, slice $sender, slice $forward_payload) inline;
 
 ;; $MockJettonWallet$_fun__internal_transfer_notification
 ((int, slice, slice), ()) $MockJettonWallet$_fun__internal_transfer_notification((int, slice, slice) $self, (int, slice, int, slice) $ctx, (int, int, slice, slice, int, slice) $msg) impure inline;
 
 ;; $SendParameters$_constructor_to_value_bounce_mode_body
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body(slice to, int value, int bounce, int mode, cell body) inline;
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body(slice $to, int $value, int $bounce, int $mode, cell $body) inline;
 
 ;; $JettonExcesses$_constructor_query_id
-((int)) $JettonExcesses$_constructor_query_id(int query_id) inline;
+((int)) $JettonExcesses$_constructor_query_id(int $query_id) inline;
 
 ;; $MockJettonWallet$_fun__internal_transfer_excesses
 ((int, slice, slice), ()) $MockJettonWallet$_fun__internal_transfer_excesses((int, slice, slice) $self, (int, slice, int, slice) $ctx, (int, int, slice, slice, int, slice) $msg, int $remain) impure inline;
@@ -151,7 +151,7 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, slice, slice), ()) $MockJettonWallet$_fun__burn_validate((int, slice, slice) $self, (int, slice, int, slice) $ctx, (int, int, slice, cell) $msg) impure inline;
 
 ;; $JettonBurnNotification$_constructor_query_id_amount_sender_response_destination
-((int, int, slice, slice)) $JettonBurnNotification$_constructor_query_id_amount_sender_response_destination(int query_id, int amount, slice sender, slice response_destination) inline;
+((int, int, slice, slice)) $JettonBurnNotification$_constructor_query_id_amount_sender_response_destination(int $query_id, int $amount, slice $sender, slice $response_destination) inline;
 
 ;; $MockJettonWallet$_fun__burn_tokens
 ((int, slice, slice), ()) $MockJettonWallet$_fun__burn_tokens((int, slice, slice) $self, (int, slice, int, slice) $ctx, (int, int, slice, cell) $msg) impure inline;
@@ -163,16 +163,16 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ((int, slice, slice), ()) $MockJettonWallet$_fun__transfer_estimate_remain_value((int, slice, slice) $self, (int, slice, int, slice) $ctx, (int, int, slice, slice, cell, int, slice) $msg) impure inline;
 
 ;; $SendParameters$_constructor_to_value_bounce_mode_body_code_data
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body_code_data(slice to, int value, int bounce, int mode, cell body, cell code, cell data) inline;
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body_code_data(slice $to, int $value, int $bounce, int $mode, cell $body, cell $code, cell $data) inline;
 
 ;; $JettonInternalTransfer$_constructor_query_id_amount_response_address_from_forward_ton_amount_forward_payload
-((int, int, slice, slice, int, slice)) $JettonInternalTransfer$_constructor_query_id_amount_response_address_from_forward_ton_amount_forward_payload(int query_id, int amount, slice response_address, slice from, int forward_ton_amount, slice forward_payload) inline;
+((int, int, slice, slice, int, slice)) $JettonInternalTransfer$_constructor_query_id_amount_response_address_from_forward_ton_amount_forward_payload(int $query_id, int $amount, slice $response_address, slice $from, int $forward_ton_amount, slice $forward_payload) inline;
 
 ;; $MockJettonWallet$_fun__transfer_jetton
 ((int, slice, slice), ()) $MockJettonWallet$_fun__transfer_jetton((int, slice, slice) $self, (int, slice, int, slice) $ctx, (int, int, slice, slice, cell, int, slice) $msg) impure inline;
 
 ;; $WalletData$_constructor_balance_owner_jetton_jetton_wallet_code
-((int, slice, slice, cell)) $WalletData$_constructor_balance_owner_jetton_jetton_wallet_code(int balance, slice owner, slice jetton, cell jetton_wallet_code) inline;
+((int, slice, slice, cell)) $WalletData$_constructor_balance_owner_jetton_jetton_wallet_code(int $balance, slice $owner, slice $jetton, cell $jetton_wallet_code) inline;
 
 ;; $MockJettonWallet$_fun_get_wallet_data
 ((int, slice, slice), (int, slice, slice, cell)) $MockJettonWallet$_fun_get_wallet_data((int, slice, slice) $self) impure inline_ref;

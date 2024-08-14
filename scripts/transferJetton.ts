@@ -1,5 +1,5 @@
-import { Address, beginCell, fromNano, toNano } from '@ton/core';
-import { NetworkProvider, sleep } from '@ton/blueprint';
+import { Address, beginCell, toNano } from '@ton/core';
+import { NetworkProvider} from '@ton/blueprint';
 import { attachMockJettonWallet, attachMockJetton, fromUnits, getConfig, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
 import { MOCK_DECIMAL } from '../utils/constants';
 
@@ -32,7 +32,7 @@ export async function run(provider: NetworkProvider) {
             response_destination: provider.sender().address!!,
             custom_payload: null,
             forward_ton_amount: toNano(tonAmount),
-            forward_payload: beginCell().storeUint(0, 1).endCell()
+            forward_payload: beginCell().endCell().asSlice()
         }
     );
 

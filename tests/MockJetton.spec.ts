@@ -1,5 +1,5 @@
 import { Blockchain, SandboxContract, TreasuryContract } from '@ton/sandbox';
-import { Address, Cell, beginCell, contractAddress, toNano } from '@ton/core';
+import { toNano } from '@ton/core';
 import { MockJettonMaster as MockJetton } from '../wrappers/JettonMock';
 import { buildOnchainMetadata } from '../contracts/jetton/utils/jetton-helpers';
 import '@ton/test-utils';

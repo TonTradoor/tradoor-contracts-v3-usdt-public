@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: MockJettonWallet
-BOC Size: 2193 bytes
+BOC Size: 2067 bytes
 
 # Types
 Total Types: 18
@@ -118,3 +118,20 @@ Total Get Methods: 1
 43365: JettonMaster: Sender is not a Jetton owner
 47048: JettonWallet: Only owner can burn tokens
 60354: JettonWallet: Not enough balance to burn tokens
+
+# Trait Inheritance Diagram
+
+```mermaid
+graph TD
+MockJettonWallet
+MockJettonWallet --> BaseTrait
+MockJettonWallet --> JettonWallet
+JettonWallet --> BaseTrait
+```
+
+# Contract Dependency Diagram
+
+```mermaid
+graph TD
+MockJettonWallet
+```

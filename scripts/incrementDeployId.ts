@@ -1,5 +1,3 @@
-import { toNano } from '@ton/core';
-import { OrderBook } from '../wrappers/OrderBook';
 import { NetworkProvider } from '@ton/blueprint';
 import { getConfig, setConfig } from '../utils/util';
 

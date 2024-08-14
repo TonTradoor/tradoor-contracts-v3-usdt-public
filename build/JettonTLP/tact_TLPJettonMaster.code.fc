@@ -4,6 +4,7 @@
 
 #include "tact_TLPJettonMaster.headers.fc";
 #include "tact_TLPJettonMaster.stdlib.fc";
+#include "tact_TLPJettonMaster.constants.fc";
 #include "tact_TLPJettonMaster.storage.fc";
 
 ;;
@@ -55,7 +56,7 @@
     var (($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw)) = $ctx;
     var (($msg'query_id, $msg'amount, $msg'sender, $msg'response_destination)) = $msg;
     $self'total_supply = ($self'total_supply - $msg'amount);
-    if ((~ null?($msg'response_destination))) {
+    if (( ~ __tact_slice_eq_bits(__gen_slice_address_61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c(), $msg'response_destination) )) {
         $global_send($SendParameters$_constructor_to_value_bounce_mode($msg'response_destination, 0, false, 66));
     }
     return (($self'total_supply, $self'mintable, $self'owner, $self'jetton_content), ());
@@ -138,8 +139,8 @@ _ %get_jetton_data() method_id(106029) {
     return $JettonData$_to_external(res);
 }
 
-_ %get_wallet_address(slice $$owner_address) method_id(103289) {
-    slice $owner_address = __tact_verify_address($$owner_address);
+_ %get_wallet_address(slice $owner_address) method_id(103289) {
+    slice $owner_address = __tact_verify_address($owner_address);
     var self = $TLPJettonMaster$_contract_load();
     var res = self~$TLPJettonMaster$_fun_get_wallet_address($owner_address);
     return res;
@@ -149,21 +150,6 @@ _ %owner() method_id(83229) {
     var self = $TLPJettonMaster$_contract_load();
     var res = self~$TLPJettonMaster$_fun_owner();
     return res;
-}
-
-_ supported_interfaces() method_id {
-    return (
-        "org.ton.introspection.v0"H >> 128,
-        "org.ton.abi.ipfs.v0"H >> 128,
-        "org.ton.deploy.lazy.v0"H >> 128,
-        "org.ton.debug.v0"H >> 128,
-        "org.ton.chain.workchain.v0"H >> 128,
-        "org.ton.ownable"H >> 128
-    );
-}
-
-_ get_abi_ipfs() method_id {
-    return "ipfs://QmeQbLuW6e8HhHiNPMRGJQGmy22KHJNjHU7qQdapaUjEWj";
 }
 
 _ lazy_deployment_completed() method_id {

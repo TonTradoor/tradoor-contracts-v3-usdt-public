@@ -9,7 +9,6 @@ import { Dictionary, fromNano, toNano } from '@ton/core';
 import { MockJettonWallet } from '../wrappers/MockJettonWallet';
 import { MockJettonMaster as MockJetton } from '../wrappers/JettonMock';
 import { Pool } from '../wrappers/Pool';
-import { OrderBook } from '../wrappers/OrderBook';
 import { TestEnv } from './lib/TestEnv';
 import { fromJettonUnits, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
 import { createDecreaseLiquidityOrder, createIncreaseLiquidityOrder, executeLiquidityOrder } from './lib/LPHelper';
@@ -27,10 +26,9 @@ import {
 import { ORDER_OP_TYPE_DECREASE_SL, ORDER_OP_TYPE_DECREASE_TP } from '../utils/constants';
 import { now } from '../utils/util';
 
-describe('LP', () => {
+describe('PERP', () => {
     let blockchain: Blockchain;
     let deployer: SandboxContract<TreasuryContract>;
-    let orderBook: SandboxContract<OrderBook>;
     let pool: SandboxContract<Pool>;
     let jetton: SandboxContract<MockJetton>;
     let executor: SandboxContract<TreasuryContract>;
@@ -40,7 +38,7 @@ describe('LP', () => {
     let user2: SandboxContract<TreasuryContract>;
     let user3: SandboxContract<TreasuryContract>;
     let user0JettonWallet: SandboxContract<MockJettonWallet>;
-    let orderBookJettonWallet: SandboxContract<MockJettonWallet>;
+    let poolJettonWallet: SandboxContract<MockJettonWallet>;
     let claimExecutor: SandboxContract<TreasuryContract>;
 
     beforeEach(async () => {
@@ -48,7 +46,6 @@ describe('LP', () => {
 
         blockchain = TestEnv.blockchain;
         deployer = TestEnv.deployer;
-        orderBook = TestEnv.orderBook;
         pool = TestEnv.pool;
         jetton = TestEnv.jetton;
         executor = TestEnv.executor;
@@ -58,7 +55,7 @@ describe('LP', () => {
         user2 = TestEnv.user2;
         user3 = TestEnv.user3;
         user0JettonWallet = TestEnv.user0JettonWallet;
-        orderBookJettonWallet = TestEnv.orderBookJettonWallet;
+        poolJettonWallet = TestEnv.poolJettonWallet;
         claimExecutor = TestEnv.claimExecutor;
 
         // mint
@@ -75,19 +72,14 @@ describe('LP', () => {
         expect(await getJettonBalance(user3.address)).toEqual(toJettonUnits('100000000'));
 
         // check config
-        let orderBookConfigData = await orderBook.getConfigData(executor.address);
-        expect(orderBookConfigData.pool).toEqualAddress(pool.address);
-        expect(orderBookConfigData.jettonWallet).toEqualAddress(orderBookJettonWallet.address);
-        expect(orderBookConfigData.isExecutor).toBeTruthy();
-
-        let poolConfigData = await pool.getConfigData();
-        expect(poolConfigData.orderBook).toEqualAddress(orderBook.address);
+        let configData = await pool.getConfigData();
+        expect(configData.jettonWallet).toEqualAddress(poolJettonWallet.address);
     });
 
-    // it('should deploy', async () => {
-    //     // the check is done inside beforeEach
-    //     // blockchain and pool are ready to use
-    // });
+    it('should deploy', async () => {
+        // the check is done inside beforeEach
+        // blockchain and pool are ready to use
+    });
 
     it('should executor cancel market increase perp order', async () => {
         let executionFee = 0.1;
@@ -101,8 +93,8 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user0, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
@@ -113,7 +105,7 @@ describe('LP', () => {
         expect(createResult.order?.sizeDelta).toEqual(toJettonUnits(size));
         // check jetton
         expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance - toJettonUnits(margin));
-        expect(createResult.balanceAfter.orderBookJettonBalance).toEqual(createResult.balanceBefore.orderBookJettonBalance + toJettonUnits(margin));
+        expect(createResult.balanceAfter.poolJettonBalance).toEqual(createResult.balanceBefore.poolJettonBalance + toJettonUnits(margin));
 
         /// cancel order
         const cancelResult = await cancelPerpOrder(executor, createResult.orderIdBefore);
@@ -121,7 +113,7 @@ describe('LP', () => {
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
         expect(cancelResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
+            from: poolJettonWallet.address,
             to: user0JettonWallet.address,
             success: true
         });
@@ -147,8 +139,8 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user0, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
@@ -159,7 +151,7 @@ describe('LP', () => {
         expect(createResult.order?.sizeDelta).toEqual(toJettonUnits(size));
         // check jetton
         expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance - toJettonUnits(margin));
-        expect(createResult.balanceAfter.orderBookJettonBalance).toEqual(createResult.balanceBefore.orderBookJettonBalance + toJettonUnits(margin));
+        expect(createResult.balanceAfter.poolJettonBalance).toEqual(createResult.balanceBefore.poolJettonBalance + toJettonUnits(margin));
 
         /// cancel order
         const cancelResult = await cancelPerpOrder(user0, createResult.orderIdBefore);
@@ -167,7 +159,7 @@ describe('LP', () => {
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
         expect(cancelResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
+            from: poolJettonWallet.address,
             to: user0JettonWallet.address,
             success: true
         });
@@ -205,7 +197,7 @@ describe('LP', () => {
         printTransactionFees(executeIncreaseResult.trxResult.transactions);
         prettyLogTransactions(executeIncreaseResult.trxResult.transactions);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -232,8 +224,8 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
@@ -244,7 +236,7 @@ describe('LP', () => {
         printTransactionFees(executeResult.trxResult.transactions);
         prettyLogTransactions(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -291,7 +283,7 @@ describe('LP', () => {
         const createResult = await createDecreasePerpOrder(user0, executionFee, tokenId, isLong, margin, size, triggerPrice);
         expect(createResult.trxResult.transactions).toHaveTransaction({
             from: user0.address,
-            to: orderBook.address,
+            to: pool.address,
             success: true
         });
 
@@ -308,7 +300,7 @@ describe('LP', () => {
 
         expect(cancelResult.trxResult.transactions).toHaveTransaction({
             from: executor.address,
-            to: orderBook.address,
+            to: pool.address,
             success: true
         });
 
@@ -335,7 +327,7 @@ describe('LP', () => {
         /// executor order
         const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -362,8 +354,8 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
         expect(createResult.orderEx).toBeNull();
@@ -371,14 +363,14 @@ describe('LP', () => {
         // executor order
         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
         console.log('position after increase:', executeResult.positionDataAfter);
-        console.log('global pool after increase:', executeResult.globalPoolDataAfter);
+        console.log('global pool after increase:', executeResult.poolStatAfter);
 
         /* =========================== decrease perp ================================ */
         /// create order
@@ -394,7 +386,7 @@ describe('LP', () => {
         const createDecreaseResult = await createDecreasePerpOrder(user1, executionFee, tokenId, isLong, decreaseMargin, decreaseSize, decreaseTriggerPrice);
         expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,
-            to: orderBook.address,
+            to: pool.address,
             success: true
         });
 
@@ -405,13 +397,13 @@ describe('LP', () => {
         printTransactionFees(executeDecreaseResult.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
         expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
         let perpPositionAfterDecrease = executeDecreaseResult.positionAfter;
         console.log('position after decrease:', executeDecreaseResult.positionDataAfter);
-        console.log('global pool after decrease:', executeResult.globalPoolDataAfter);
+        console.log('global pool after decrease:', executeResult.poolStatAfter);
 
         // check position
         // let tradingFee = decreaseSize * decreasePrice * TestEnv.tradingFeeRate;
@@ -439,7 +431,7 @@ describe('LP', () => {
         const createDecreaseResult1 = await createDecreasePerpOrder(user1, executionFee, tokenId, isLong, decreaseMargin, decreaseSize, decreaseTriggerPrice);
         expect(createDecreaseResult1.trxResult.transactions).toHaveTransaction({
             from: user1.address,
-            to: orderBook.address,
+            to: pool.address,
             success: true
         });
 
@@ -450,12 +442,12 @@ describe('LP', () => {
         printTransactionFees(executeDecreaseResult1.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult1.trxResult.transactions);
         expect(executeDecreaseResult1.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
         console.log('position after close:', executeDecreaseResult1.positionDataAfter);
-        console.log('global pool after close:', executeDecreaseResult1.globalPoolDataAfter);
+        console.log('global pool after close:', executeDecreaseResult1.poolStatAfter);
 
         // check position
         expect(executeDecreaseResult1.positionAfter.size).toEqual(0n);
@@ -496,7 +488,7 @@ describe('LP', () => {
         printTransactionFees(executeIncreaseResult.trxResult.transactions);
         prettyLogTransactions(executeIncreaseResult.trxResult.transactions);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -529,12 +521,12 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee * 3, isMarket, tokenId, isLong, margin, size, triggerPrice, tpSize, tpPrice, slSize, slPrice);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
-        console.log('orderbook ton balance after create order', fromNano(createResult.balanceAfter.orderBookTonBalance));
-        console.log('total execution fee after create order with tp/sl', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+        console.log('pool ton balance after create order', fromNano(createResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee after create order with tp/sl', fromNano((await pool.getPoolStat()).totalExecutionFee));
 
         /// cancel order
         const cancelResult = await cancelPerpOrder(executor, createResult.orderIdBefore);
@@ -542,18 +534,18 @@ describe('LP', () => {
 
         expect(cancelResult.trxResult.transactions).toHaveTransaction({
             from: executor.address,
-            to: orderBook.address,
+            to: pool.address,
             success: true
         });
-        console.log('orderbook ton balance after cancel order', fromNano(cancelResult.balanceAfter.orderBookTonBalance));
-        console.log('total execution fee after cancel order with tp/sl', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+        console.log('pool ton balance after cancel order', fromNano(cancelResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee after cancel order with tp/sl', fromNano((await pool.getPoolStat()).totalExecutionFee));
         console.log('receive execution fee', fromNano(cancelResult.balanceAfter.user1TonBalance - cancelResult.balanceBefore.user1TonBalance));
 
         // create order
         const createResult1 = await createIncreasePerpOrder(user1, executionFee * 3, isMarket, tokenId, isLong, margin, size, triggerPrice, tpSize, tpPrice, slSize, slPrice);
         expect(createResult1.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
         expect(createResult1.orderEx?.executionFee).toEqual(toNano(executionFee));
@@ -561,17 +553,17 @@ describe('LP', () => {
         expect(createResult1.orderEx?.tpSize).toEqual(toJettonUnits(tpSize));
         expect(createResult1.orderEx?.slPrice).toEqual(toPriceUnits(slPrice));
         expect(createResult1.orderEx?.slSize).toEqual(toJettonUnits(slSize));
-        console.log('total execution fee after create order with tp/sl', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+        console.log('total execution fee after create order with tp/sl', fromNano((await pool.getPoolStat()).totalExecutionFee));
 
         /// executor order
         const executeResult = await executePerpOrder(executor, createResult1.orderIdBefore, indexPrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         printTransactionFees(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
-        console.log('total execution fee after execute order', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+        console.log('total execution fee after execute order', fromNano((await pool.getPoolStat()).totalExecutionFee));
 
         // check order
         expect(executeResult.orderAfter).toBeNull();
@@ -588,7 +580,7 @@ describe('LP', () => {
         expect(perpPosition?.entryPrice).toBeGreaterThanOrEqual(toPriceUnits(indexPrice));
 
         // check tp order
-        let tpOrderData = (await TestEnv.orderBook.getPerpOrder(createResult1.orderIdBefore + 1n));
+        let tpOrderData = (await TestEnv.pool.getPerpOrder(createResult1.orderIdBefore + 1n));
         console.log('tpOrder after increase:', tpOrderData);
 
         let tpOrder = tpOrderData.perpOrder;
@@ -599,7 +591,7 @@ describe('LP', () => {
         expect(tpOrderData.perpOrderEx).toBeNull();
 
         // check sl order
-        let slOrderData = (await TestEnv.orderBook.getPerpOrder(createResult1.orderIdBefore + 2n));
+        let slOrderData = (await TestEnv.pool.getPerpOrder(createResult1.orderIdBefore + 2n));
         console.log('slOrder after increase:', slOrderData);
 
         let slOrder = slOrderData.perpOrder;
@@ -628,7 +620,7 @@ describe('LP', () => {
         /// executor order
         const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -655,22 +647,22 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
         // executor order
         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
         console.log('position data after increase:', executeResult.positionDataAfter);
-        console.log('global pool data after increase:', executeResult.globalPoolDataAfter);
+        console.log('global pool data after increase:', executeResult.poolStatAfter);
 
         /* =========================== decrease perp ================================ */
         /// create order
@@ -689,11 +681,11 @@ describe('LP', () => {
         printTransactionFees(createDecreaseResult.trxResult.transactions);
         expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,
-            to: orderBook.address,
+            to: pool.address,
             success: true
         });
-        console.log('orderbook ton balance', fromNano(createDecreaseResult.balanceAfter.orderBookTonBalance));
-        console.log('total execution fee after create order', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+        console.log('pool ton balance', fromNano(createDecreaseResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee after create order', fromNano((await pool.getPoolStat()).totalExecutionFee));
 
         let tpOrder = createDecreaseResult.order0;
         expect(tpOrder?.opType).toEqual(ORDER_OP_TYPE_DECREASE_TP);
@@ -712,16 +704,16 @@ describe('LP', () => {
         printTransactionFees(executeDecreaseResult.trxResult.transactions);
         prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
         expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
         let perpPositionAfterDecrease = executeDecreaseResult.positionAfter;
         console.log('position data after decrease:', executeDecreaseResult.positionDataAfter);
-        console.log('global pool data after decrease:', executeDecreaseResult.globalPoolDataAfter);
+        console.log('global pool data after decrease:', executeDecreaseResult.poolStatAfter);
 
-        console.log('orderbook ton balance', fromNano(executeDecreaseResult.balanceAfter.orderBookTonBalance));
-        console.log('total execution fee after execute order', fromNano((await orderBook.getConfigData(null)).totalExecutionFee));
+        console.log('pool ton balance', fromNano(executeDecreaseResult.balanceAfter.poolTonBalance));
+        console.log('total execution fee after execute order', fromNano((await pool.getPoolStat()).totalExecutionFee));
 
         // check position
         // let tradingFee = tpSize * decreasePrice * TestEnv.tradingFeeRate;
@@ -752,7 +744,7 @@ describe('LP', () => {
         /// executor order
         const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -779,28 +771,28 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
         // executor order
         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
         console.log('position data after increase:', executeResult.positionDataAfter);
-        console.log('global pool data after increase:', executeResult.globalPoolDataAfter);
+        console.log('global pool data after increase:', executeResult.poolStatAfter);
 
         /* =========================== liquidate perp ================================ */
         let liquidatePrice = 45000;
         const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice, 0);
         expect(liquidateResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -831,7 +823,7 @@ describe('LP', () => {
         /// executor order
         const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -858,8 +850,8 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
@@ -867,21 +859,21 @@ describe('LP', () => {
         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         printTransactionFees(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
         console.log('position data after increase:', executeResult.positionDataAfter);
-        console.log('global pool data after increase:', executeResult.globalPoolDataAfter);
+        console.log('global pool data after increase:', executeResult.poolStatAfter);
 
         /* =========================== liquidate perp ================================ */
         let liquidatePrice = 56000;
         const liquidateResult = await liquidatePerpPosition(executor, tokenId, user1.address, isLong, liquidatePrice, 0);
         printTransactionFees(liquidateResult.trxResult.transactions);
         expect(liquidateResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -913,7 +905,7 @@ describe('LP', () => {
         /// executor order
         const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -940,22 +932,22 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
         // executor order
         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
 
         let perpPositionAfterIncrease = executeResult.positionAfter;
         console.log('position data after increase:', executeResult.positionDataAfter);
-        console.log('global pool data after increase:', executeResult.globalPoolDataAfter);
+        console.log('global pool data after increase:', executeResult.poolStatAfter);
 
         /* =========================== adl perp ================================ */
         let adlMargin = 50;
@@ -964,7 +956,7 @@ describe('LP', () => {
 
         const adlResult = await adlPerpPosition(executor, tokenId, user1.address, isLong, adlMargin, adlSize, adlPrice, 0);
         expect(adlResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -997,7 +989,7 @@ describe('LP', () => {
         /// executor order
         const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -1024,8 +1016,8 @@ describe('LP', () => {
         // create order
         const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
         expect(createResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
@@ -1033,7 +1025,7 @@ describe('LP', () => {
         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         printTransactionFees(executeResult.trxResult.transactions);
         expect(executeResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -1049,8 +1041,8 @@ describe('LP', () => {
         // create order
         const createIncreaseShortResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, false, increaseShortMargin, increaseShortSize, increaseShortTriggerPrice, 0, 0, 0, 0);
         expect(createIncreaseShortResult.trxResult.transactions).toHaveTransaction({
-            from: orderBookJettonWallet.address,
-            to: orderBook.address,
+            from: poolJettonWallet.address,
+            to: pool.address,
             success: true
         });
 
@@ -1058,7 +1050,7 @@ describe('LP', () => {
         const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortIncreasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         printTransactionFees(executeIncreaseShortResult.trxResult.transactions);
         expect(executeIncreaseShortResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -1079,7 +1071,7 @@ describe('LP', () => {
         const createDecreaseShortResult = await createDecreasePerpOrder(user1, executionFee, tokenId, false, decreaseShortMargin, decreaseShortSize, decreaseShortTriggerPrice);
         expect(createDecreaseShortResult.trxResult.transactions).toHaveTransaction({
             from: user1.address,
-            to: orderBook.address,
+            to: pool.address,
             success: true
         });
         console.log('decrease short order:', createDecreaseShortResult.order);
@@ -1088,7 +1080,7 @@ describe('LP', () => {
         const executeDecreaseShortResult = await executePerpOrder(executor, createDecreaseShortResult.orderIdBefore, decreaseShortIncreasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
         printTransactionFees(executeDecreaseShortResult.trxResult.transactions);
         expect(executeDecreaseShortResult.trxResult.transactions).toHaveTransaction({
-            from: orderBook.address,
+            from: executor.address,
             to: pool.address,
             success: true
         });
@@ -1101,8 +1093,8 @@ describe('LP', () => {
         const claimResult = await claimProtocolFee(claimExecutor);
         printTransactionFees(claimResult.trxResult.transactions);
         expect(claimResult.trxResult.transactions).toHaveTransaction({
-            from: pool.address,
-            to: orderBook.address,
+            from: claimExecutor.address,
+            to: pool.address,
             success: true
         });
         console.log('jetton balance of claim executor', claimResult.balanceAfter.claimExecutorJettonBalance);
@@ -1129,14 +1121,14 @@ describe('LP', () => {
     //     const createIncreaseResult = await createIncreaseLiquidityOrder(user0, increaseLiquidity, executionFee);
     //     expect(createIncreaseResult.trxResult.transactions).toHaveTransaction({
     //         from: orderBookJettonWallet.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //     /// executor order
     //     const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
     //     printTransactionFees(executeIncreaseResult.trxResult.transactions);
     //     expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-    //         from: orderBook.address,
+    //         from: executor.address,
     //         to: pool.address,
     //         success: true
     //     });
@@ -1167,7 +1159,7 @@ describe('LP', () => {
     //     const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, increaseLongMargin, increaseLongSize, triggerPrice, 0, 0, 0, 0);
     //     expect(createResult.trxResult.transactions).toHaveTransaction({
     //         from: orderBookJettonWallet.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1175,7 +1167,7 @@ describe('LP', () => {
     //     const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increaseLongPrice, _fundingFeeGrowth, _fundingFeeGrowth);
     //     printTransactionFees(executeResult.trxResult.transactions);
     //     expect(executeResult.trxResult.transactions).toHaveTransaction({
-    //         from: orderBook.address,
+    //         from: executor.address,
     //         to: pool.address,
     //         success: true
     //     });
@@ -1215,7 +1207,7 @@ describe('LP', () => {
     //     const createIncreaseShortResult = await createIncreasePerpOrder(user2, executionFee, isMarket, tokenId, false, increaseShortMargin, increaseShortSize, increaseShortTriggerPrice, 0, 0, 0, 0);
     //     expect(createIncreaseShortResult.trxResult.transactions).toHaveTransaction({
     //         from: orderBookJettonWallet.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1223,7 +1215,7 @@ describe('LP', () => {
     //     const executeIncreaseShortResult = await executePerpOrder(executor, createIncreaseShortResult.orderIdBefore, increaseShortPrice, _fundingFeeGrowth, _rolloverFeeGrowth);
     //     printTransactionFees(executeIncreaseShortResult.trxResult.transactions);
     //     expect(executeIncreaseShortResult.trxResult.transactions).toHaveTransaction({
-    //         from: orderBook.address,
+    //         from: executor.address,
     //         to: pool.address,
     //         success: true
     //     });
@@ -1261,7 +1253,7 @@ describe('LP', () => {
     //     const executeIncreaseResult2 = await executeLiquidityOrder(executor, createIncreaseResult2.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
     //     printTransactionFees(executeIncreaseResult2.trxResult.transactions);
     //     expect(executeIncreaseResult2.trxResult.transactions).toHaveTransaction({
-    //         from: orderBook.address,
+    //         from: executor.address,
     //         to: pool.address,
     //         success: true
     //     });
@@ -1300,7 +1292,7 @@ describe('LP', () => {
     //     const createDecreaseShortResult = await createDecreasePerpOrder(user2, executionFee, tokenId, false, decreaseShortMargin, decreaseShortSize, decreaseShortTriggerPrice);
     //     expect(createDecreaseShortResult.trxResult.transactions).toHaveTransaction({
     //         from: user2.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //     console.log('decrease short order:', createDecreaseShortResult.order);
@@ -1309,7 +1301,7 @@ describe('LP', () => {
     //     const executeDecreaseShortResult = await executePerpOrder(executor, createDecreaseShortResult.orderIdBefore, decreaseShortIncreasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
     //     printTransactionFees(executeDecreaseShortResult.trxResult.transactions);
     //     expect(executeDecreaseShortResult.trxResult.transactions).toHaveTransaction({
-    //         from: orderBook.address,
+    //         from: executor.address,
     //         to: pool.address,
     //         success: true
     //     });
@@ -1348,14 +1340,14 @@ describe('LP', () => {
     //     const createDecreaseLongResult = await createDecreasePerpOrder(user1, executionFee, tokenId, true, decreaseLongMargin, decreaseLongSize, decreaseLongTriggerPrice);
     //     expect(createDecreaseLongResult.trxResult.transactions).toHaveTransaction({
     //         from: user1.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //     // executor order
     //     const executeDecreaseLongResult = await executePerpOrder(executor, createDecreaseLongResult.orderIdBefore, decreaseLongIncreasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
     //     printTransactionFees(executeDecreaseLongResult.trxResult.transactions);
     //     expect(executeDecreaseLongResult.trxResult.transactions).toHaveTransaction({
-    //         from: orderBook.address,
+    //         from: executor.address,
     //         to: pool.address,
     //         success: true
     //     });
@@ -1394,7 +1386,7 @@ describe('LP', () => {
     //     const createDecreaseResult = await createDecreaseLiquidityOrder(user3, decreaseLiquidity, executionFee);
     //     expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
     //         from: user3.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1407,8 +1399,8 @@ describe('LP', () => {
     //     const executeDecreaseResult = await executeLiquidityOrder(executor, createDecreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
     //     printTransactionFees(executeDecreaseResult.trxResult.transactions);
     //     expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
-    //         from: pool.address,
-    //         to: orderBook.address,
+    //         from: executor.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1433,7 +1425,7 @@ describe('LP', () => {
     //     const createDecreaseResult2 = await createDecreaseLiquidityOrder(user0, decreaseLiquidity2, executionFee);
     //     expect(createDecreaseResult2.trxResult.transactions).toHaveTransaction({
     //         from: user0.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1446,8 +1438,8 @@ describe('LP', () => {
     //     const executeDecreaseResult2 = await executeLiquidityOrder(executor, createDecreaseResult2.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
     //     printTransactionFees(executeDecreaseResult2.trxResult.transactions);
     //     expect(executeDecreaseResult2.trxResult.transactions).toHaveTransaction({
-    //         from: pool.address,
-    //         to: orderBook.address,
+    //         from: executor.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1477,7 +1469,7 @@ describe('LP', () => {
     //     const createDecreaseResult3 = await createDecreaseLiquidityOrder(user3, decreaseLiquidity3, executionFee);
     //     expect(createDecreaseResult3.trxResult.transactions).toHaveTransaction({
     //         from: user3.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1490,8 +1482,8 @@ describe('LP', () => {
     //     const executeDecreaseResul3 = await executeLiquidityOrder(executor, createDecreaseResult3.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
     //     printTransactionFees(executeDecreaseResul3.trxResult.transactions);
     //     expect(executeDecreaseResul3.trxResult.transactions).toHaveTransaction({
-    //         from: pool.address,
-    //         to: orderBook.address,
+    //         from: executor.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1517,7 +1509,7 @@ describe('LP', () => {
     //     const createDecreaseResult4 = await createDecreaseLiquidityOrder(user0, decreaseLiquidity4, executionFee);
     //     expect(createDecreaseResult4.trxResult.transactions).toHaveTransaction({
     //         from: user0.address,
-    //         to: orderBook.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1530,8 +1522,8 @@ describe('LP', () => {
     //     const executeDecreaseResult4 = await executeLiquidityOrder(executor, createDecreaseResult4.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
     //     printTransactionFees(executeDecreaseResult4.trxResult.transactions);
     //     expect(executeDecreaseResult4.trxResult.transactions).toHaveTransaction({
-    //         from: pool.address,
-    //         to: orderBook.address,
+    //         from: executor.address,
+    //         to: pool.address,
     //         success: true
     //     });
     //
@@ -1546,7 +1538,7 @@ describe('LP', () => {
     //     console.log('receive token:', fromJettonUnits(executeDecreaseResult4.balanceAfter.user0JettonBalance - executeDecreaseResult4.balanceBefore.user0JettonBalance));
     //
     //     console.log('protocol fee', fromJettonUnits((await pool.getGlobalPoolData()).protocolTradingFee));
-    //     console.log('token of orderbook', fromJettonUnits(executeDecreaseResult4.balanceAfter.orderBookJettonBalance));
+    //     console.log('token of pool', fromJettonUnits(executeDecreaseResult4.balanceAfter.orderBookJettonBalance));
     // });
 
 });

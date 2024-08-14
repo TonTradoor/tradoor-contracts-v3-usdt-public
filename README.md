@@ -1,4 +1,4 @@
-# tradoor-contracts
+# tradoor-contracts-v3
 
 ## Project structure
 
@@ -66,7 +66,7 @@ yarn rundev mintMockJetton
 
 add 'executor' in config/testnet.json
 
-yarn rundev orderBookSetConfig
+yarn rundev updatePoolConfig
 
 - create LP increase order:
 

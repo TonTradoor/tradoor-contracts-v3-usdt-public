@@ -1,9 +1,8 @@
-import { Blockchain, printTransactionFees, RemoteBlockchainStorage, SandboxContract, TreasuryContract, wrapTonClient4ForRemote } from '@ton/sandbox';
-import { OrderBook } from '../../wrappers/OrderBook';
+import { Blockchain, printTransactionFees, SandboxContract, TreasuryContract } from '@ton/sandbox';
 import { Pool } from '../../wrappers/Pool';
 import { MockJettonMaster as MockJetton } from '../../wrappers/JettonMock';
 import { TLPJettonMaster as TLPJetton } from '../../wrappers/JettonTLP';
-import { Dictionary, DictionaryKey, toNano } from '@ton/core';
+import { Dictionary, toNano } from '@ton/core';
 import { buildOnchainMetadata } from '../../contracts/jetton/utils/jetton-helpers';
 import { MockJettonWallet } from '../../wrappers/MockJettonWallet';
 import { TLPJettonWallet } from '../../wrappers/TLPJettonWallet';
@@ -22,14 +21,13 @@ export class TestEnv {
     static user1: SandboxContract<TreasuryContract>;
     static user2: SandboxContract<TreasuryContract>;
     static user3: SandboxContract<TreasuryContract>;
-    static orderBook: SandboxContract<OrderBook>;
     static pool: SandboxContract<Pool>;
     static jetton: SandboxContract<MockJetton>;
     static user0JettonWallet: SandboxContract<MockJettonWallet>;
-    static orderBookJettonWallet: SandboxContract<MockJettonWallet>;
+    static poolJettonWallet: SandboxContract<MockJettonWallet>;
     static tlp: SandboxContract<TLPJetton>;
     static user0TlpWallet: SandboxContract<TLPJettonWallet>;
-    static orderBookTlpWallet: SandboxContract<TLPJettonWallet>;
+    static poolTlpWallet: SandboxContract<TLPJettonWallet>;
     static user1JettonWallet: SandboxContract<MockJettonWallet>;
     static user1TlpWallet: SandboxContract<TLPJettonWallet>;
 
@@ -58,7 +56,6 @@ export class TestEnv {
             //     endpoint: "https://testnet.toncenter.com/api/v2",
             // })))
         });
-        TestEnv.orderBook = TestEnv.blockchain.openContract(await OrderBook.fromInit(0n));
         TestEnv.pool = TestEnv.blockchain.openContract(await Pool.fromInit(0n));
 
         TestEnv.deployer = await TestEnv.blockchain.treasury('deployer');
@@ -71,25 +68,6 @@ export class TestEnv {
         TestEnv.user1 = await TestEnv.blockchain.treasury('user1');
         TestEnv.user2 = await TestEnv.blockchain.treasury('user2');
         TestEnv.user3 = await TestEnv.blockchain.treasury('user3');
-
-        // deploy order book
-        const orderBookDeployResult = await TestEnv.orderBook.send(
-            TestEnv.deployer.getSender(),
-            {
-                value: toNano('0.1'),
-            },
-            {
-                $$type: 'Deploy',
-                queryId: 0n,
-            }
-        );
-
-        expect(orderBookDeployResult.transactions).toHaveTransaction({
-            from: TestEnv.deployer.address,
-            to: TestEnv.orderBook.address,
-            deploy: true,
-            success: true,
-        });
 
         // deploy pool
         const poolDeployResult = await TestEnv.pool.send(
@@ -144,7 +122,7 @@ export class TestEnv {
 
         TestEnv.user0JettonWallet = TestEnv.blockchain.openContract(await MockJettonWallet.fromInit(TestEnv.user0.address, TestEnv.jetton.address));
         TestEnv.user1JettonWallet = TestEnv.blockchain.openContract(await MockJettonWallet.fromInit(TestEnv.user1.address, TestEnv.jetton.address));
-        TestEnv.orderBookJettonWallet = TestEnv.blockchain.openContract(await MockJettonWallet.fromInit(TestEnv.orderBook.address, TestEnv.jetton.address));
+        TestEnv.poolJettonWallet = TestEnv.blockchain.openContract(await MockJettonWallet.fromInit(TestEnv.pool.address, TestEnv.jetton.address));
 
         const tlpParams = {
             name: "Tradoor LP",
@@ -179,58 +157,11 @@ export class TestEnv {
 
         TestEnv.user0TlpWallet = TestEnv.blockchain.openContract(await TLPJettonWallet.fromInit(TestEnv.user0.address, TestEnv.tlp.address));
         TestEnv.user1TlpWallet = TestEnv.blockchain.openContract(await TLPJettonWallet.fromInit(TestEnv.user1.address, TestEnv.tlp.address));
-        TestEnv.orderBookTlpWallet = TestEnv.blockchain.openContract(await TLPJettonWallet.fromInit(TestEnv.orderBook.address, TestEnv.tlp.address));
+        TestEnv.poolTlpWallet = TestEnv.blockchain.openContract(await TLPJettonWallet.fromInit(TestEnv.pool.address, TestEnv.tlp.address));
 
         let executors =  Dictionary.empty(Dictionary.Keys.Address(), Dictionary.Values.Bool())
             .set(this.executor.address, true)
             .set(this.executor1.address, true);
-
-        let lpExecutors =  Dictionary.empty(Dictionary.Keys.Address(), Dictionary.Values.Bool())
-            .set(this.user0.address, true);
-
-        // set config to orderBook
-        const setOderBookConfigResult = await TestEnv.orderBook.send(
-            TestEnv.deployer.getSender(),
-            {
-                value: toNano('0.1'),
-            },
-            {
-                $$type: 'UpdateConfig',
-                orderLockTime: 3n * 60n,
-                gasConfig: {
-                    $$type: 'GasConfig',
-                    lpMinExecutionFee: toNano(0.05),
-                    perpMinExecutionFee: toNano(0.1),
-                    lpGasConsumption: toNano(0.015),
-                    perpGasConsumption: toNano(0.017),
-                    poolLpGasConsumption: toNano(0.018),
-                    poolPerpGasConsumption: toNano(0.038),
-                    minTonsForStorage: toNano(0.01),
-                    gasTransferJetton: toNano(0.03),
-                    gasForBurnTlp: toNano(0.05),
-                },
-                executorConfig: {
-                    $$type: 'ExecutorConfig',
-                    executors: executors,
-                    lpExecutors: lpExecutors,
-                    compensator: this.compensator.address,
-                },
-                contractConfig: {
-                    $$type: 'ContractConfig',
-                    tlpWallet: TestEnv.orderBookTlpWallet.address,
-                    jettonWallet: TestEnv.orderBookJettonWallet.address,
-                    pool: TestEnv.pool.address,
-                }
-            }
-        );
-        
-        expect(setOderBookConfigResult.transactions).toHaveTransaction({
-            from: TestEnv.deployer.address,
-            to: TestEnv.orderBook.address,
-            success: true,
-        });
-        const orderBookConfigData = await  this.orderBook.getConfigData(null);
-        console.log("orderBookConfigData", orderBookConfigData);
 
         // set config to pool
         const setPoolConfigResult = await TestEnv.pool.send(
@@ -240,26 +171,43 @@ export class TestEnv {
             },
             {
                 $$type: 'UpdateConfig',
-                orderBook: TestEnv.orderBook.address,
-                tlpJetton: TestEnv.tlp.address,
-                claimExecutor: this.claimExecutor.address,
-                lpGasConsumption: toNano(0.018),
-                perpGasConsumption: toNano(0.038),
-                minTonsForStorage: toNano(0.01),
-                gasForMintTlp: toNano(0.05),
+                orderLockTime: 3n * 60n,
                 maxLpNetCap: toJettonUnits(10**9),
                 lpRolloverFeeRate: BigInt(this.lpRolloverFeeRate * PERCENTAGE_BASIS_POINT),
+                gasConfig: {
+                    $$type: 'GasConfig',
+                    lpMinExecutionFee: toNano(0.05),
+                    perpMinExecutionFee: toNano(0.1),
+                    lpGasConsumption: toNano(0.015),
+                    perpGasConsumption: toNano(0.017),
+                    minTonsForStorage: toNano(0.01),
+                    gasForTransferJetton: toNano(0.03),
+                    gasForBurnTlp: toNano(0.05),
+                    gasForMintTlp: toNano(0.05),
+                },
+                executorConfig: {
+                    $$type: 'ExecutorConfig',
+                    executors: executors,
+                    compensator: this.compensator.address,
+                    claimer: this.claimExecutor.address,
+                },
+                contractConfig: {
+                    $$type: 'ContractConfig',
+                    tlpJetton: TestEnv.tlp.address,
+                    tlpWallet: TestEnv.poolTlpWallet.address,
+                    jettonWallet: TestEnv.poolJettonWallet.address,
+                }
             }
         );
-
+        
         expect(setPoolConfigResult.transactions).toHaveTransaction({
             from: TestEnv.deployer.address,
             to: TestEnv.pool.address,
             success: true,
         });
 
-        const poolConfigData = await  this.pool.getConfigData();
-        console.log("poolConfigData", poolConfigData);
+        const configData = await  this.pool.getConfigData();
+        console.log("configData", configData);
 
         // set token config to pool
         for (let index = 0; index < this.tokenConfig.length; index++) {
@@ -270,7 +218,7 @@ export class TestEnv {
                     value: toNano('0.1'),
                 },
                 {
-                    $$type: 'UpdateTokenConfig',
+                    $$type: 'ListToken',
                     tokenId: tokenId,
                     config: {
                         $$type: 'TokenConfig',

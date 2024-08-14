@@ -1,17 +1,16 @@
 import { beginCell, toNano } from '@ton/core';
-import { } from '../wrappers/Pool';
 import { NetworkProvider } from '@ton/blueprint';
 import {
     toUnits,
     getLastTransaction,
     waitForTransaction,
-    attachOrderBook,
+    attachPool,
     attachTLPJettonWallet
 } from '../utils/util';
 import { TLP_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
-    const orderBook = attachOrderBook(provider);
+    const pool = attachPool(provider);
 
     let trxId = BigInt(await provider.ui().input('trxId:'));
 
@@ -27,9 +26,9 @@ export async function run(provider: NetworkProvider) {
     let user0TlpData = await user0TlpWallet.getGetWalletData();
     console.log('user TLP-Jetton balance:', user0TlpData.balance);
 
-    let orderId = (await orderBook.getLiquidityOrder(0n)).liquidityOrderIndexNext;
+    let orderId = (await pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
 
-    const lastTrx = await getLastTransaction(provider, orderBook.address);
+    const lastTrx = await getLastTransaction(provider, pool.address);
     await user0TlpWallet.send(
         provider.sender(),
         {
@@ -39,7 +38,7 @@ export async function run(provider: NetworkProvider) {
             $$type: 'JettonTransfer',
             query_id: trxId,
             amount: toUnits(tlp, TLP_DECIMAL),
-            destination: orderBook.address,
+            destination: pool.address,
             response_destination: provider.sender().address!!,
             custom_payload: null,
             forward_ton_amount: toNano(executionFee + 0.1),
@@ -50,30 +49,30 @@ export async function run(provider: NetworkProvider) {
                         beginCell()
                             .storeCoins(toUnits(tlp, TLP_DECIMAL))
                             .storeCoins(toNano(executionFee)) // execution fee
-                            .endCell()
-                    ).endCell()
+                            .endCell())
+                    .endCell().asSlice()
         }
     );
 
     // wait for trx
-    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 20);
+    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
     if (transDone) {
         console.log(`create decrease liquidity order success`);
     }
 
     // get pool TLP-jetton wallet address
-    let poolTlpWallet = await attachTLPJettonWallet(provider, orderBook.address);
+    let poolTlpWallet = await attachTLPJettonWallet(provider, pool.address);
     let poolTlpData = await poolTlpWallet.getGetWalletData();
 
     console.log('pool TLP-jetton balance:', poolTlpData.balance);
 
     // get index
-    let orderIdNext = (await orderBook.getLiquidityOrder(0n)).liquidityOrderIndexNext;
+    let orderIdNext = (await pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
     // get order
-    let order = await orderBook.getLiquidityOrder(orderId);
+    let order = await pool.getLiquidityOrder(orderId);
     console.log(`order:`, order);
 
 }

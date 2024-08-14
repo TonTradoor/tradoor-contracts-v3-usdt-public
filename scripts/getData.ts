@@ -1,5 +1,5 @@
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { attachOrderBook, attachPool, getConfig } from '../utils/util';
+import { attachPool, getConfig } from '../utils/util';
 import { Address } from '@ton/core';
 
 export async function run(provider: NetworkProvider) {
@@ -8,34 +8,29 @@ export async function run(provider: NetworkProvider) {
     const tokenId = BigInt(await provider.ui().input('tokenId:'));
     const orderId = BigInt(await provider.ui().input('orderId:'));
 
-    const orderBook = attachOrderBook(provider);
     const pool = attachPool(provider);
 
     console.log('=================== Config ===================');
-    console.log('orderbook config:', await orderBook.getConfigData(account));
+    let tokenConfig = await pool.getTokenConfig(tokenId);
+    console.log('token config:', tokenConfig);
     console.log('pool config:', await pool.getConfigData());
-    console.log('=================== LP ===================');
-    // get order
-    let lpOrder = await orderBook.getLiquidityOrder(orderId);
-    console.log(`lpOrder:`, lpOrder);
 
-    // get global pool
-    let globalPoolData = await pool.getGlobalPoolData();
-    console.log(`globalPoolData:`, globalPoolData);
+    console.log('=================== Liquidity ===================');
+    // get liquidity order
+    let liquidityOrder = await pool.getLiquidityOrder(orderId);
+    console.log(`liquidity order:`, liquidityOrder);
+
+    // get pool stat
+    let poolStat = await pool.getPoolStat();
+    console.log(`poolStat:`, poolStat);
 
     console.log('=================== Perp ===================');
-    // get index
-    let order = await orderBook.getPerpOrder(orderId);
+    // get perp order
+    let order = await pool.getPerpOrder(orderId);
     console.log(`perp order:`, order);
 
-    // get position
+    // get perp position
     let position = await pool.getPerpPosition(tokenId, account);
     console.log(`position:`, position);
-
-    // get price
-    console.log('price', await pool.getPriceData(tokenId));
-
-    let tokenConfig = await pool.getTokenConfig(tokenId);
-    console.log('tokenConfig:', tokenConfig);
 
 }

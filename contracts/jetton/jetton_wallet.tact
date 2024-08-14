@@ -158,7 +158,7 @@ trait JettonWallet {
 
     // @dev  _internal_transfer_excesses will send excesses message back after transfer action completed
     virtual inline fun _internal_transfer_excesses(ctx: Context, msg: JettonInternalTransfer, remain: Int){
-        if((msg.response_address != null) && remain > 0){
+        if((msg.response_address != newAddress(0, 0)) && remain > 0){
             send(SendParameters{
                 to: msg.response_address,
                 value: remain,

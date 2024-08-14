@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: TLPJettonMaster
-BOC Size: 1809 bytes
+BOC Size: 1662 bytes
 
 # Types
 Total Types: 18
@@ -123,3 +123,26 @@ Argument: owner_address
 43365: JettonMaster: Sender is not a Jetton owner
 47048: JettonWallet: Only owner can burn tokens
 60354: JettonWallet: Not enough balance to burn tokens
+
+# Trait Inheritance Diagram
+
+```mermaid
+graph TD
+TLPJettonMaster
+TLPJettonMaster --> BaseTrait
+TLPJettonMaster --> JettonMaster
+JettonMaster --> BaseTrait
+JettonMaster --> Ownable
+Ownable --> BaseTrait
+TLPJettonMaster --> Ownable
+TLPJettonMaster --> Deployable
+Deployable --> BaseTrait
+```
+
+# Contract Dependency Diagram
+
+```mermaid
+graph TD
+TLPJettonMaster
+TLPJettonMaster --> TLPJettonWallet
+```

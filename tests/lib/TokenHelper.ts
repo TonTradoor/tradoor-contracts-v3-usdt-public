@@ -1,5 +1,5 @@
-import { AccountState, Address, beginCell, fromNano, toNano } from "@ton/core";
-import { attachOrderBook, fromUnits, toUnits } from '../../utils/util';
+import { Address, beginCell, fromNano, toNano } from "@ton/core";
+import { fromUnits, toUnits } from '../../utils/util';
 import { TestEnv } from "./TestEnv";
 import { MockJettonWallet } from "../../wrappers/MockJettonWallet";
 import { TLPJettonWallet } from "../../wrappers/TLPJettonWallet";
@@ -17,7 +17,7 @@ export async function mint(to: Address, amount: string) {
             receiver: to,
             custom_payload: null,
             forward_ton_amount: 0n,
-            forward_payload: beginCell().endCell(),
+            forward_payload: beginCell().endCell().asSlice(),
         }
     );
 
@@ -90,7 +90,6 @@ export async function getTlpBalance(address: Address) {
 export async function getAllBalance() {
     return {
         deployerTonBalance: await getTonBalance(TestEnv.deployer.address),
-        orderBookTonBalance: await getTonBalance(TestEnv.orderBook.address),
         poolTonBalance: await getTonBalance(TestEnv.pool.address),
         executorTonBalance: await getTonBalance(TestEnv.executor.address),
         compensatorTonBalance: await getTonBalance(TestEnv.compensator.address),
@@ -98,13 +97,12 @@ export async function getAllBalance() {
         user1TonBalance: await getTonBalance(TestEnv.user1.address),
         user2TonBalance: await getTonBalance(TestEnv.user2.address),
         user3TonBalance: await getTonBalance(TestEnv.user3.address),
-        orderBookJettonBalance: await getJettonBalance(TestEnv.orderBook.address),
         poolJettonBalance: await getJettonBalance(TestEnv.pool.address),
         user0JettonBalance: await getJettonBalance(TestEnv.user0.address),
         user1JettonBalance: await getJettonBalance(TestEnv.user1.address),
         user2JettonBalance: await getJettonBalance(TestEnv.user2.address),
         user3JettonBalance: await getJettonBalance(TestEnv.user3.address),
-        orderBookTlpBalance: await getTlpBalance(TestEnv.orderBook.address),
+        poolTlpBalance: await getTlpBalance(TestEnv.pool.address),
         user0TlpBalance: await getTlpBalance(TestEnv.user0.address),
         user1TlpBalance: await getTlpBalance(TestEnv.user1.address),
         user2TlpBalance: await getTlpBalance(TestEnv.user2.address),

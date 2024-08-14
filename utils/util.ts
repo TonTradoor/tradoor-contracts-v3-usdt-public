@@ -4,11 +4,9 @@ import { TonClient } from "@ton/ton";
 import { Pool } from "../wrappers/Pool";
 import { MockJettonMaster } from "../wrappers/JettonMock";
 import { TLPJettonMaster } from "../wrappers/JettonTLP";
-import { OrderBook } from "../wrappers/OrderBook";
 import { MockJettonWallet } from '../build/JettonMock/tact_MockJettonWallet';
 import { TLPJettonWallet } from '../build/JettonTLP/tact_TLPJettonWallet';
 let fs = require('fs');
-let readline = require('readline');
 
 function getPath(network: string) {
     return getConfigPath(network + ".json")
@@ -160,11 +158,6 @@ export function fromUnits(src: number | string | bigint, decimal: number) {
         value = '-' + value;
     }
     return value;
-}
-
-export function attachOrderBook(provider: NetworkProvider) {
-    const orderBookAddress = Address.parse(getConfig("orderBook"));
-    return provider.open(OrderBook.fromAddress(orderBookAddress));
 }
 
 export function attachPool(provider: NetworkProvider) {

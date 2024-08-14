@@ -2,22 +2,22 @@ import { Address, Dictionary, toNano } from '@ton/core';
 import { NetworkProvider } from '@ton/blueprint';
 import {
     attachMockJetton,
-    attachOrderBook,
     attachPool,
     attachTLPJetton,
     getConfig,
     getLastTransaction,
-    waitForTransaction
+    waitForTransaction,
+    toUnits
 } from '../utils/util';
+import { PERCENTAGE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
-    const orderBook = attachOrderBook(provider);
     const mockJetton = attachMockJetton(provider);
     const tlpJetton = attachTLPJetton(provider);
 
-    const orderBookMockJettonWallet = await mockJetton.getGetWalletAddress(orderBook.address!!);
-    const orderBookTLPJettonWallet = await tlpJetton.getGetWalletAddress(orderBook.address!!);
+    const orderBookMockJettonWallet = await mockJetton.getGetWalletAddress(pool.address!!);
+    const orderBookTLPJettonWallet = await tlpJetton.getGetWalletAddress(pool.address!!);
 
     const config = getConfig();
     const executorAddrs = config["executors"];
@@ -26,14 +26,8 @@ export async function run(provider: NetworkProvider) {
         executors.set(Address.parse(executorAddrs[i]), true);
     }
 
-    const lpExecutorAddrs = config["executors"];
-    let lpExecutors =  Dictionary.empty(Dictionary.Keys.Address(), Dictionary.Values.Bool())
-    for (const i in lpExecutorAddrs) {
-        lpExecutors.set(Address.parse(lpExecutorAddrs[i]), true);
-    }
-
-    const lastTrx = await getLastTransaction(provider, orderBook.address);
-    await orderBook.send(
+    const lastTrx = await getLastTransaction(provider, pool.address);
+    await pool.send(
         provider.sender(),
         {
             value: toNano('0.1'),
@@ -41,34 +35,35 @@ export async function run(provider: NetworkProvider) {
         {
             $$type: 'UpdateConfig',
             orderLockTime: BigInt(config["orderLockTime"]),
+            maxLpNetCap: toUnits(config["maxLpNetCap"], PERCENTAGE_DECIMAL),
+            lpRolloverFeeRate: toUnits(config["lpRolloverFeeRate"], PERCENTAGE_DECIMAL),
             gasConfig: {
                 $$type: 'GasConfig',
                 lpMinExecutionFee: toNano(config["lpMinExecutionFee"]),
                 perpMinExecutionFee: toNano(config["perpMinExecutionFee"]),
                 lpGasConsumption: toNano(config["orderbookLpGasConsumption"]),
                 perpGasConsumption: toNano(config["orderbookPerpGasConsumption"]),
-                poolLpGasConsumption: toNano(config["poolLpGasConsumption"]),
-                poolPerpGasConsumption: toNano(config["poolPerpGasConsumption"]),
                 minTonsForStorage: toNano(config["minTonsForStorage"]),
-                gasTransferJetton: toNano(config["gasTransferJetton"]),
+                gasForTransferJetton: toNano(config["gasForTransferJetton"]),
                 gasForBurnTlp: toNano(config["gasForBurnTlp"]),
+                gasForMintTlp: toNano(config["gasForMintTlp"]),
             },
             executorConfig: {
                 $$type: 'ExecutorConfig',
                 executors: executors,
-                lpExecutors: lpExecutors,
                 compensator: Address.parse(config["compensator"]),
+                claimer: Address.parse(config["claimer"]),
             },
             contractConfig: {
                 $$type: 'ContractConfig',
+                tlpJetton: tlpJetton.address,
                 tlpWallet: orderBookTLPJettonWallet,
                 jettonWallet: orderBookMockJettonWallet,
-                pool: pool.address,
             }
         }
     );
 
-    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 20);
+    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
     if (transDone) {
         console.log(`set config success`);
     } else {

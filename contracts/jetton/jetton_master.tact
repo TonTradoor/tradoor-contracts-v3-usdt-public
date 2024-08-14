@@ -105,7 +105,7 @@ trait JettonMaster with Ownable {
     // @dev  _burn_notification dwindles total_supply and send notification to wallet after receiving JettonBurnNotification
     inline fun _burn_notification(ctx: Context, msg: JettonBurnNotification) {
         self.total_supply = self.total_supply - msg.amount;
-        if(msg.response_destination != null){
+        if(msg.response_destination != newAddress(0, 0)){
             send(SendParameters{
                 to: msg.response_destination,
                 value: 0,

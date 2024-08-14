@@ -9,6 +9,8 @@ export async function run(provider: NetworkProvider) {
 
     console.log('deployId:', deployId, 'deploying pool to address:', pool.address);
 
+    setConfig('pool', "");
+
     await pool.send(
         provider.sender(),
         {

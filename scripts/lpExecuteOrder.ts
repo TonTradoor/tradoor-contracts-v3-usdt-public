@@ -1,12 +1,11 @@
-import { Address, Dictionary, toNano } from '@ton/core';
-import { NetworkProvider, sleep } from '@ton/blueprint';
-import { attachOrderBook, attachPool, getConfig, getLastTransaction, waitForTransaction } from '../utils/util';
-import { toJettonUnits, toPriceUnits, toTlpUnits } from '../tests/lib/TokenHelper';
+import { Dictionary, toNano } from '@ton/core';
+import { NetworkProvider } from '@ton/blueprint';
+import { attachPool, getLastTransaction, waitForTransaction } from '../utils/util';
+import { toJettonUnits, toPriceUnits } from '../tests/lib/TokenHelper';
 
 export async function run(provider: NetworkProvider) {
-    const orderBook = attachOrderBook(provider);
     const pool = attachPool(provider);
-    let orderIdNext = (await orderBook.getLiquidityOrder(0n)).liquidityOrderIndexNext;
+    let orderIdNext = (await pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
     let orderId = orderIdNext - 1n;
     console.log(`orderIdNext:`, orderIdNext);
     console.log(`orderId:`, orderId);
@@ -17,7 +16,7 @@ export async function run(provider: NetworkProvider) {
     }
 
     // get last order
-    let order = (await orderBook.getLiquidityOrder(orderId)).liquidityOrder;
+    let order = (await pool.getLiquidityOrder(orderId)).liquidityOrder;
     console.log(`order:`, order);
 
     let prices =  Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128))
@@ -27,8 +26,8 @@ export async function run(provider: NetworkProvider) {
     prices.set(4, toPriceUnits(0.001));
 
     // execute order
-    const lastTrx = await getLastTransaction(provider, orderBook.address);
-    await orderBook.send(
+    const lastTrx = await getLastTransaction(provider, pool.address);
+    await pool.send(
         provider.sender(),
         {
             value: toNano('0.5'),
@@ -44,7 +43,7 @@ export async function run(provider: NetworkProvider) {
         }
     );
     // wait for trx
-    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 20);
+    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
     if (transDone) {
         console.log(`execute LP success`);
     }

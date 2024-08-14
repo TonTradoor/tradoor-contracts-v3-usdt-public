@@ -1,16 +1,15 @@
-import { Address, beginCell, toNano } from '@ton/core';
-import { NetworkProvider, sleep } from '@ton/blueprint';
-import { toUnits, getConfig, getLastTransaction, waitForTransaction, attachOrderBook } from '../utils/util';
-import { ORDER_OP_TYPE_DECREASE_MARKET } from '../utils/constants';
+import { toNano } from '@ton/core';
+import { NetworkProvider } from '@ton/blueprint';
+import { getLastTransaction, waitForTransaction, attachPool } from '../utils/util';
 
 export async function run(provider: NetworkProvider) {
-    const orderBook = attachOrderBook(provider);
+    const pool = attachPool(provider);
 
     /// create order
     const orderId = BigInt(await provider.ui().input('orderId to cancel:'));
 
-    const lastTrx = await getLastTransaction(provider, orderBook.address);
-    await orderBook.send(
+    const lastTrx = await getLastTransaction(provider, pool.address);
+    await pool.send(
         provider.sender(),
         {
             value: toNano('0.2'),
@@ -24,18 +23,18 @@ export async function run(provider: NetworkProvider) {
     );
 
     // wait for trx
-    const transDone = await waitForTransaction(provider, orderBook.address, lastTrx, 20);
+    const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
     if (transDone) {
         console.log(`cancel perp order submitted...`);
     }
 
     // get index
-    let orderIdNext = (await orderBook.getPerpOrder(0n)).perpOrderIndexNext;
+    let orderIdNext = (await pool.getPerpOrder(0n)).perpOrderIndexNext;
     console.log(`orderId:`, orderId);
     console.log(`orderIdNext:`, orderIdNext);
 
     // get order
-    let order = await orderBook.getPerpOrder(orderId);
+    let order = await pool.getPerpOrder(orderId);
     console.log(`order:`, order);
 
 }

@@ -1,14 +1,14 @@
 import { SandboxContract, TreasuryContract } from "@ton/sandbox";
-import { Address, beginCell, Dictionary, DictionaryValue, toNano } from "@ton/core";
+import { Address, beginCell, toNano } from "@ton/core";
 import { TestEnv } from "./TestEnv";
-import { now, toUnits } from "../../utils/util";
+import { now } from "../../utils/util";
 import { getAllBalance, getJettonWallet, toJettonUnits, toPriceUnits } from "./TokenHelper";
 import { OP_CREATE_INCREASE_PERP_POSITION_ORDER } from "../../utils/constants";
 
 export async function createIncreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, isMarket: boolean, 
     tokenId: number, isLong: boolean, margin: number, size: number, triggerPrice: number, tpSize: number, tpPrice: number, slSize: number, slPrice: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = (await TestEnv.orderBook.getPerpOrder(0n)).perpOrderIndexNext;
+    let orderIdBefore = (await TestEnv.pool.getPerpOrder(0n)).perpOrderIndexNext;
     // create order
     const jettonWallet = await getJettonWallet(user.address);
     const trxResult = await jettonWallet.send(
@@ -20,7 +20,7 @@ export async function createIncreasePerpOrder(user: SandboxContract<TreasuryCont
             $$type: 'JettonTransfer',
             query_id: 0n,
             amount: toJettonUnits(margin),
-            destination: TestEnv.orderBook.address,
+            destination: TestEnv.pool.address,
             response_destination: user.address,
             custom_payload: null,
             forward_ton_amount: toNano(executionFee + 0.1),
@@ -45,14 +45,14 @@ export async function createIncreasePerpOrder(user: SandboxContract<TreasuryCont
                         .storeCoins(toJettonUnits(slSize))
                         .storeUint(toPriceUnits(slPrice), 128)
                     ).endCell()
-                ).endCell()
+                ).endCell().asSlice()
         }
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = (await TestEnv.orderBook.getPerpOrder(0n)).perpOrderIndexNext;
-    let order = (await TestEnv.orderBook.getPerpOrder(orderIdBefore)).perpOrder;
-    let orderEx = (await TestEnv.orderBook.getPerpOrder(orderIdBefore)).perpOrderEx;
+    let orderIdAfter = (await TestEnv.pool.getPerpOrder(0n)).perpOrderIndexNext;
+    let order = (await TestEnv.pool.getPerpOrder(orderIdBefore)).perpOrder;
+    let orderEx = (await TestEnv.pool.getPerpOrder(orderIdBefore)).perpOrderEx;
 
     return {
         trxResult,
@@ -68,7 +68,7 @@ export async function createIncreasePerpOrder(user: SandboxContract<TreasuryCont
 export async function cancelPerpOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
     let balanceBefore = await getAllBalance();
     
-    const trxResult = await TestEnv.orderBook.send(
+    const trxResult = await TestEnv.pool.send(
         executor.getSender(),
         {
             value: toNano(0.2),
@@ -83,7 +83,7 @@ export async function cancelPerpOrder(executor: SandboxContract<TreasuryContract
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let order = (await TestEnv.orderBook.getPerpOrder(orderId)).perpOrder;
+    let order = (await TestEnv.pool.getPerpOrder(orderId)).perpOrder;
 
     return {
         trxResult,
@@ -96,12 +96,12 @@ export async function cancelPerpOrder(executor: SandboxContract<TreasuryContract
 
 export async function executePerpOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint, price: number, fundingFeeGrowth: number, rolloverFeeGrowth: number) {
     let balanceBefore = await getAllBalance();
-    let orderBefore = (await TestEnv.orderBook.getPerpOrder(orderId)).perpOrder;
+    let orderBefore = (await TestEnv.pool.getPerpOrder(orderId)).perpOrder;
     let positionDataBefore = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
     let positionBefore = orderBefore?.isLong!! ? positionDataBefore?.perpPosition?.longPosition!! : positionDataBefore?.perpPosition?.shortPosition!!;
-    let globalPoolDataBefore = await TestEnv.pool.getGlobalPoolData();
+    let poolStatBefore = await TestEnv.pool.getPoolStat();
 
-    const trxResult = await TestEnv.orderBook.send(
+    const trxResult = await TestEnv.pool.send(
         executor.getSender(),
         {
             value: toNano('0.3'),
@@ -121,11 +121,11 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderAfter = (await TestEnv.orderBook.getPerpOrder(orderId)).perpOrder;
-    let orderExAfter = (await TestEnv.orderBook.getPerpOrder(orderId)).perpOrder;
+    let orderAfter = (await TestEnv.pool.getPerpOrder(orderId)).perpOrder;
+    let orderExAfter = (await TestEnv.pool.getPerpOrder(orderId)).perpOrder;
     let positionDataAfter = await TestEnv.pool.getPerpPosition(orderBefore?.tokenId!!, orderBefore?.account!!);
     let positionAfter = orderBefore?.isLong!! ? positionDataAfter?.perpPosition?.longPosition!! : positionDataAfter?.perpPosition?.shortPosition!!;
-    let globalPoolDataAfter = await TestEnv.pool.getGlobalPoolData();
+    let poolStatAfter = await TestEnv.pool.getPoolStat();
 
     return {
         trxResult,
@@ -136,10 +136,10 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
         orderExAfter,
         positionDataBefore,
         positionBefore,
-        globalPoolDataBefore,
+        poolStatBefore,
         positionDataAfter,
         positionAfter,
-        globalPoolDataAfter
+        poolStatAfter
     };
 }
 
@@ -147,9 +147,9 @@ export async function executePerpOrder(executor: SandboxContract<TreasuryContrac
 export async function createDecreasePerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, 
     tokenId: number, isLong: boolean, margin: number, size: number, triggerPrice: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = (await TestEnv.orderBook.getPerpOrder(0n)).perpOrderIndexNext;
+    let orderIdBefore = (await TestEnv.pool.getPerpOrder(0n)).perpOrderIndexNext;
     // create order
-    const trxResult = await TestEnv.orderBook.send(
+    const trxResult = await TestEnv.pool.send(
         user.getSender(),
         {
             value: toNano('0.2'),
@@ -168,8 +168,8 @@ export async function createDecreasePerpOrder(user: SandboxContract<TreasuryCont
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = (await TestEnv.orderBook.getPerpOrder(0n)).perpOrderIndexNext;
-    let order = (await TestEnv.orderBook.getPerpOrder(orderIdBefore)).perpOrder;
+    let orderIdAfter = (await TestEnv.pool.getPerpOrder(0n)).perpOrderIndexNext;
+    let order = (await TestEnv.pool.getPerpOrder(orderIdBefore)).perpOrder;
 
     return {
         trxResult,
@@ -184,9 +184,9 @@ export async function createDecreasePerpOrder(user: SandboxContract<TreasuryCont
 export async function createTpSlPerpOrder(user: SandboxContract<TreasuryContract>, executionFee: number, 
     tokenId: number, isLong: boolean, tpSize: number, tpPrice: number, slSize: number, slPrice: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = (await TestEnv.orderBook.getPerpOrder(0n)).perpOrderIndexNext;
+    let orderIdBefore = (await TestEnv.pool.getPerpOrder(0n)).perpOrderIndexNext;
     // create order
-    const trxResult = await TestEnv.orderBook.send(
+    const trxResult = await TestEnv.pool.send(
         user.getSender(),
         {
             value: toNano(executionFee + 0.1),
@@ -206,14 +206,14 @@ export async function createTpSlPerpOrder(user: SandboxContract<TreasuryContract
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = (await TestEnv.orderBook.getPerpOrder(0n)).perpOrderIndexNext;
+    let orderIdAfter = (await TestEnv.pool.getPerpOrder(0n)).perpOrderIndexNext;
     let order0;
     let order1;
     if (orderIdAfter - orderIdBefore == 1n) {
-        order0 = (await TestEnv.orderBook.getPerpOrder(orderIdBefore)).perpOrder;
+        order0 = (await TestEnv.pool.getPerpOrder(orderIdBefore)).perpOrder;
     } else {
-        order0 = (await TestEnv.orderBook.getPerpOrder(orderIdBefore)).perpOrder;
-        order1 = (await TestEnv.orderBook.getPerpOrder(orderIdBefore + 1n)).perpOrder;
+        order0 = (await TestEnv.pool.getPerpOrder(orderIdBefore)).perpOrder;
+        order1 = (await TestEnv.pool.getPerpOrder(orderIdBefore + 1n)).perpOrder;
     }
 
     return {
@@ -235,7 +235,7 @@ export async function liquidatePerpPosition(executor: SandboxContract<TreasuryCo
     let globalLPPositionBefore = positionDataBefore?.globalLPPosition;
     let globalPositionBefore = positionDataBefore?.globalPosition;
 
-    const trxResult = await TestEnv.orderBook.send(
+    const trxResult = await TestEnv.pool.send(
         executor.getSender(),
         {
             value: toNano('0.3'),
@@ -281,7 +281,7 @@ export async function adlPerpPosition(executor: SandboxContract<TreasuryContract
     let globalLPPositionBefore = positionDataBefore?.globalLPPosition;
     let globalPositionBefore = positionDataBefore?.globalPosition;
 
-    const trxResult = await TestEnv.orderBook.send(
+    const trxResult = await TestEnv.pool.send(
         executor.getSender(),
         {
             value: toNano('0.3'),

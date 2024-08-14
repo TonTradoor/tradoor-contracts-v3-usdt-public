@@ -4,7 +4,7 @@
 ;;
 
 ;; __tact_verify_address
-slice __tact_verify_address(slice address) inline;
+slice __tact_verify_address(slice address) impure inline;
 
 ;; __tact_load_address
 (slice, slice) __tact_load_address(slice cs) inline;
@@ -22,7 +22,7 @@ slice __tact_compute_contract_address(int chain, cell code, cell data) inline;
 int __tact_my_balance() inline;
 
 ;; __tact_not_null
-forall X -> X __tact_not_null(X x) inline;
+forall X -> X __tact_not_null(X x) impure inline;
 
 ;; __tact_context_get
 (int, slice, int, slice) __tact_context_get() inline;
@@ -106,13 +106,13 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 (cell, cell) $MockJettonWallet$_init_child(cell sys', slice $owner, slice $jetton_master) inline_ref;
 
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;
 
 ;; $SendParameters$_constructor_to_value_bounce_mode_body_code_data
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body_code_data(slice to, int value, int bounce, int mode, cell body, cell code, cell data) inline;
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body_code_data(slice $to, int $value, int $bounce, int $mode, cell $body, cell $code, cell $data) inline;
 
 ;; $JettonInternalTransfer$_constructor_query_id_amount_response_address_from_forward_ton_amount_forward_payload
-((int, int, slice, slice, int, slice)) $JettonInternalTransfer$_constructor_query_id_amount_response_address_from_forward_ton_amount_forward_payload(int query_id, int amount, slice response_address, slice from, int forward_ton_amount, slice forward_payload) inline;
+((int, int, slice, slice, int, slice)) $JettonInternalTransfer$_constructor_query_id_amount_response_address_from_forward_ton_amount_forward_payload(int $query_id, int $amount, slice $response_address, slice $from, int $forward_ton_amount, slice $forward_payload) inline;
 
 ;; $MockJettonMaster$_fun__mint_validate
 ((int, int, slice, cell), ()) $MockJettonMaster$_fun__mint_validate((int, int, slice, cell) $self, (int, slice, int, slice) $ctx, (slice, slice, int, cell, int, slice) $msg) impure inline;
@@ -133,13 +133,13 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 ((int, int, slice, cell), ()) $MockJettonMaster$_fun__burn_notification_validate((int, int, slice, cell) $self, (int, slice, int, slice) $ctx, (int, int, slice, slice) $msg) impure inline;
 
 ;; $SendParameters$_constructor_to_value_bounce_mode
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode(slice to, int value, int bounce, int mode) inline;
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode(slice $to, int $value, int $bounce, int $mode) inline;
 
 ;; $MockJettonMaster$_fun__burn_notification
 ((int, int, slice, cell), ()) $MockJettonMaster$_fun__burn_notification((int, int, slice, cell) $self, (int, slice, int, slice) $ctx, (int, int, slice, slice) $msg) impure inline;
 
 ;; $JettonData$_constructor_total_supply_mintable_admin_address_jetton_content_jetton_wallet_code
-((int, int, slice, cell, cell)) $JettonData$_constructor_total_supply_mintable_admin_address_jetton_content_jetton_wallet_code(int total_supply, int mintable, slice admin_address, cell jetton_content, cell jetton_wallet_code) inline;
+((int, int, slice, cell, cell)) $JettonData$_constructor_total_supply_mintable_admin_address_jetton_content_jetton_wallet_code(int $total_supply, int $mintable, slice $admin_address, cell $jetton_content, cell $jetton_wallet_code) inline;
 
 ;; $MockJettonMaster$_fun_get_jetton_data
 ((int, int, slice, cell), (int, int, slice, cell, cell)) $MockJettonMaster$_fun_get_jetton_data((int, int, slice, cell) $self) impure inline_ref;
@@ -154,4 +154,4 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 ((int, int, slice, cell), slice) $MockJettonMaster$_fun_owner((int, int, slice, cell) $self) impure inline_ref;
 
 ;; $DeployOk$_constructor_queryId
-((int)) $DeployOk$_constructor_queryId(int queryId) inline;
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline;

@@ -25,7 +25,7 @@ export async function run(provider: NetworkProvider) {
             receiver: receiver,
             custom_payload: null,
             forward_ton_amount: 0n,
-            forward_payload: beginCell().endCell(),
+            forward_payload: beginCell().endCell().asSlice(),
         }
     );
 

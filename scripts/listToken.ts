@@ -17,7 +17,7 @@ export async function run(provider: NetworkProvider) {
                 value: toNano('0.1'),
             },
             {
-                $$type: 'UpdateTokenConfig',
+                $$type: 'ListToken',
                 tokenId: BigInt(token["tokenId"]),
                 config: {
                     $$type: 'TokenConfig',

@@ -1,13 +1,12 @@
 import { SandboxContract, TreasuryContract } from "@ton/sandbox";
-import { Address, beginCell, Dictionary, DictionaryValue, toNano } from "@ton/core";
+import { beginCell, Dictionary, toNano } from "@ton/core";
 import { TestEnv } from "./TestEnv";
-import { toUnits } from "../../utils/util";
 import { getAllBalance, getJettonWallet, getTlpWallet, toJettonUnits, toTlpUnits } from "./TokenHelper";
 import { OP_CREATE_INCREASE_LP_POSITION_ORDER } from "../../utils/constants";
 
 export async function createIncreaseLiquidityOrder(user: SandboxContract<TreasuryContract>, liquidity: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = (await TestEnv.orderBook.getLiquidityOrder(0n)).liquidityOrderIndexNext;
+    let orderIdBefore = (await TestEnv.pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
     // create order
     const jettonWallet = await getJettonWallet(user.address);
     const trxResult = await jettonWallet.send(
@@ -19,7 +18,7 @@ export async function createIncreaseLiquidityOrder(user: SandboxContract<Treasur
             $$type: 'JettonTransfer',
             query_id: 0n,
             amount: toJettonUnits(liquidity),
-            destination: TestEnv.orderBook.address,
+            destination: TestEnv.pool.address,
             response_destination: user.address,
             custom_payload: null,
             forward_ton_amount: toNano(executionFee + 0.1),
@@ -32,13 +31,13 @@ export async function createIncreaseLiquidityOrder(user: SandboxContract<Treasur
                     .storeCoins(toJettonUnits(liquidity)) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()
-                ).endCell()
+                ).endCell().asSlice()
         }
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = (await TestEnv.orderBook.getLiquidityOrder(0n)).liquidityOrderIndexNext;
-    let order = (await TestEnv.orderBook.getLiquidityOrder(orderIdBefore)).liquidityOrder;
+    let orderIdAfter = (await TestEnv.pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
+    let order = (await TestEnv.pool.getLiquidityOrder(orderIdBefore)).liquidityOrder;
 
     return {
         trxResult,
@@ -53,7 +52,7 @@ export async function createIncreaseLiquidityOrder(user: SandboxContract<Treasur
 export async function cancelLiquidityOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint) {
     let balanceBefore = await getAllBalance();
     
-    const trxResult = await TestEnv.orderBook.send(
+    const trxResult = await TestEnv.pool.send(
         executor.getSender(),
         {
             value: toNano('0.2'),
@@ -68,7 +67,7 @@ export async function cancelLiquidityOrder(executor: SandboxContract<TreasuryCon
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let order = (await TestEnv.orderBook.getLiquidityOrder(orderId)).liquidityOrder;
+    let order = (await TestEnv.pool.getLiquidityOrder(orderId)).liquidityOrder;
 
     return {
         trxResult,
@@ -82,10 +81,10 @@ export async function cancelLiquidityOrder(executor: SandboxContract<TreasuryCon
 export async function executeLiquidityOrder(executor: SandboxContract<TreasuryContract>, orderId: bigint, 
     prices: Dictionary<number, bigint>, lpFundingFeeGrowth: number, rolloverFeeGrowth: number) {
     let balanceBefore = await getAllBalance();
-    let orderBefore = (await TestEnv.orderBook.getLiquidityOrder(orderId)).liquidityOrder;
-    let poolDataBefore = await TestEnv.pool.getGlobalPoolData();
+    let orderBefore = (await TestEnv.pool.getLiquidityOrder(orderId)).liquidityOrder;
+    let poolDataBefore = await TestEnv.pool.getPoolStat();
 
-    const trxResult = await TestEnv.orderBook.send(
+    const trxResult = await TestEnv.pool.send(
         executor.getSender(),
         {
             value: toNano('0.5'),
@@ -103,8 +102,8 @@ export async function executeLiquidityOrder(executor: SandboxContract<TreasuryCo
 
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderAfter = (await TestEnv.orderBook.getLiquidityOrder(orderId)).liquidityOrder;
-    let poolDataAfter = await TestEnv.pool.getGlobalPoolData();
+    let orderAfter = (await TestEnv.pool.getLiquidityOrder(orderId)).liquidityOrder;
+    let poolDataAfter = await TestEnv.pool.getPoolStat();
 
     return {
         trxResult,
@@ -120,7 +119,7 @@ export async function executeLiquidityOrder(executor: SandboxContract<TreasuryCo
 
 export async function createDecreaseLiquidityOrder(user: SandboxContract<TreasuryContract>, tlp: number, executionFee: number) {
     let balanceBefore = await getAllBalance();
-    let orderIdBefore = (await TestEnv.orderBook.getLiquidityOrder(0n)).liquidityOrderIndexNext;
+    let orderIdBefore = (await TestEnv.pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
     // create order
     const tlpWallet = await getTlpWallet(user.address);
     const trxResult = await tlpWallet.send(
@@ -132,7 +131,7 @@ export async function createDecreaseLiquidityOrder(user: SandboxContract<Treasur
             $$type: 'JettonTransfer',
             query_id: 0n,
             amount: toTlpUnits(tlp),
-            destination: TestEnv.orderBook.address,
+            destination: TestEnv.pool.address,
             response_destination: user.address,
             custom_payload: null,
             forward_ton_amount: toNano(executionFee + 0.1),
@@ -144,13 +143,13 @@ export async function createDecreaseLiquidityOrder(user: SandboxContract<Treasur
                             .storeCoins(toTlpUnits(tlp))
                             .storeCoins(toNano(executionFee)) // execution fee
                             .endCell()
-                    ).endCell()
+                    ).endCell().asSlice()
         }
     );
     // after trx
     let balanceAfter = await getAllBalance();
-    let orderIdAfter = (await TestEnv.orderBook.getLiquidityOrder(0n)).liquidityOrderIndexNext;
-    let order = (await TestEnv.orderBook.getLiquidityOrder(orderIdBefore)).liquidityOrder;
+    let orderIdAfter = (await TestEnv.pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
+    let order = (await TestEnv.pool.getLiquidityOrder(orderIdBefore)).liquidityOrder;
 
     return {
         trxResult,
