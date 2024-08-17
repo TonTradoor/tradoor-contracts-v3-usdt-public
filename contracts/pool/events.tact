@@ -14,7 +14,7 @@ message LiquidityOrderCancelledEvent {
     trxId: Int as uint64;
 }
 
-message LiquidityPoolUpdatedEvent {
+message LiquidityPoolChangedEvent {
     trxId: Int as uint64;
     orderId: Int as uint64;
     opType: Int as uint8;
@@ -50,7 +50,6 @@ message PerpOrderCancelledEvent {
     orderId: Int as uint64;
     trxId: Int as uint64;
 }
-
 message PerpPositionIncreasedEvent {
     // perp position
     trxId: Int as uint64;

@@ -76,8 +76,7 @@ struct GlobalLPPosition {
 }
 
 struct PerpPositionData {
-    //https://github.com/tact-lang/tact/issues/690
-    perpPosition: DirectionPerpPosition;
+    perpPosition: DirectionPerpPosition?;
     globalLPPosition: GlobalLPPosition?;
     globalPosition: GlobalPosition?;
 }

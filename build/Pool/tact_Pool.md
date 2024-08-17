@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 25876 bytes
+BOC Size: 26398 bytes
 
 # Types
 Total Types: 56
@@ -117,9 +117,9 @@ Signature: `LiquidityOrderCreatedEvent{opType:uint8,account:address,jettonDelta:
 TLB: `liquidity_order_cancelled_event#b9b03cbc opType:uint8 orderId:uint64 trxId:uint64 = LiquidityOrderCancelledEvent`
 Signature: `LiquidityOrderCancelledEvent{opType:uint8,orderId:uint64,trxId:uint64}`
 
-## LiquidityPoolUpdatedEvent
-TLB: `liquidity_pool_updated_event#de31ff3d trxId:uint64 orderId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = LiquidityPoolUpdatedEvent`
-Signature: `LiquidityPoolUpdatedEvent{trxId:uint64,orderId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128,entryLpFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}`
+## LiquidityPoolChangedEvent
+TLB: `liquidity_pool_changed_event#4177f598 trxId:uint64 orderId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = LiquidityPoolChangedEvent`
+Signature: `LiquidityPoolChangedEvent{trxId:uint64,orderId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128,entryLpFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}`
 
 ## PerpOrderCreatedEvent
 TLB: `perp_order_created_event#66ef465f opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins orderId:uint64 trxId:uint64 blockTime:uint32 requestTime:uint32 = PerpOrderCreatedEvent`
@@ -182,8 +182,8 @@ TLB: `_ netSize:coins isLong:bool entryPrice:uint128 = GlobalLPPosition`
 Signature: `GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128}`
 
 ## PerpPositionData
-TLB: `_ perpPosition:DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}} globalLPPosition:Maybe GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128} globalPosition:Maybe GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins} = PerpPositionData`
-Signature: `PerpPositionData{perpPosition:DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}},globalLPPosition:Maybe GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128},globalPosition:Maybe GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins}}`
+TLB: `_ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}} globalLPPosition:Maybe GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128} globalPosition:Maybe GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins} = PerpPositionData`
+Signature: `PerpPositionData{perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}},globalLPPosition:Maybe GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128},globalPosition:Maybe GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins}}`
 
 ## GlobalPosition
 TLB: `_ longMargin:coins shortMargin:coins longSize:coins shortSize:coins longValue:coins shortValue:coins = GlobalPosition`
@@ -286,6 +286,7 @@ Argument: compensateId
 137: Masterchain support is not enabled for this contract
 1644: not reach trigger price
 5238: position not exist
+6118: too early to cancel
 10594: insufficient quota to supply
 11120: compensate not exist
 17312: leverage too high
@@ -300,9 +301,7 @@ Argument: compensateId
 31332: less than min value
 31425: not reach unlock time
 32637: order not exist
-34724: operation limited
 36718: disabled token
-39703: too early
 40368: Contract stopped
 40940: margin is too high to liquidate
 41207: invalid sender
