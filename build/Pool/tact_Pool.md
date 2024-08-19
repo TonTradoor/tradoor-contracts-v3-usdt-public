@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 26398 bytes
+BOC Size: 25412 bytes
 
 # Types
 Total Types: 56
@@ -118,8 +118,8 @@ TLB: `liquidity_order_cancelled_event#b9b03cbc opType:uint8 orderId:uint64 trxId
 Signature: `LiquidityOrderCancelledEvent{opType:uint8,orderId:uint64,trxId:uint64}`
 
 ## LiquidityPoolChangedEvent
-TLB: `liquidity_pool_changed_event#4177f598 trxId:uint64 orderId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = LiquidityPoolChangedEvent`
-Signature: `LiquidityPoolChangedEvent{trxId:uint64,orderId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128,entryLpFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}`
+TLB: `liquidity_pool_changed_event#48426f36 trxId:uint64 orderId:uint64 opType:uint8 account:address jettonDelta:coins tlpDelta:coins tlpPrice:uint128 tlpSupply:coins lpFundAfter:int128 realizedLpFundingFeeDelta:coins realizedLpRolloverFeeDelta:coins entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = LiquidityPoolChangedEvent`
+Signature: `LiquidityPoolChangedEvent{trxId:uint64,orderId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128,realizedLpFundingFeeDelta:coins,realizedLpRolloverFeeDelta:coins,entryLpFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}`
 
 ## PerpOrderCreatedEvent
 TLB: `perp_order_created_event#66ef465f opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins orderId:uint64 trxId:uint64 blockTime:uint32 requestTime:uint32 = PerpOrderCreatedEvent`
@@ -202,24 +202,24 @@ TLB: `_ tlpJetton:address tlpWallet:address jettonWallet:address = ContractConfi
 Signature: `ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address}`
 
 ## LiquidityOrder
-TLB: `_ isIncrease:bool account:address jettonDelta:coins executionFee:coins blockTime:uint32 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = LiquidityOrder`
-Signature: `LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
+TLB: `_ isIncrease:bool account:address jettonDelta:coins executionFee:coins blockTime:uint32 isPending:bool = LiquidityOrder`
+Signature: `LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool}`
 
 ## LiquidityOrderData
-TLB: `_ liquidityOrderIndexNext:uint64 liquidityOrder:Maybe LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address} = LiquidityOrderData`
-Signature: `LiquidityOrderData{liquidityOrderIndexNext:uint64,liquidityOrder:Maybe LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}}`
+TLB: `_ liquidityOrderIndexNext:uint64 liquidityOrder:Maybe LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool} = LiquidityOrderData`
+Signature: `LiquidityOrderData{liquidityOrderIndexNext:uint64,liquidityOrder:Maybe LiquidityOrder{isIncrease:bool,account:address,jettonDelta:coins,executionFee:coins,blockTime:uint32,isPending:bool}}`
 
 ## PerpOrder
-TLB: `_ opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins blockTime:uint32 isPending:bool executionFeeReceiver:address lastOperator:Maybe address = PerpOrder`
-Signature: `PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address}`
+TLB: `_ opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins blockTime:uint32 isPending:bool = PerpOrder`
+Signature: `PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool}`
 
 ## PerpOrderEx
 TLB: `_ tpSize:coins tpPrice:uint128 slSize:coins slPrice:uint128 executionFee:coins = PerpOrderEx`
 Signature: `PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins}`
 
 ## PerpOrderData
-TLB: `_ perpOrderIndexNext:uint64 perpOrder:Maybe PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address} perpOrderEx:Maybe PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins} = PerpOrderData`
-Signature: `PerpOrderData{perpOrderIndexNext:uint64,perpOrder:Maybe PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool,executionFeeReceiver:address,lastOperator:Maybe address},perpOrderEx:Maybe PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins}}`
+TLB: `_ perpOrderIndexNext:uint64 perpOrder:Maybe PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool} perpOrderEx:Maybe PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins} = PerpOrderData`
+Signature: `PerpOrderData{perpOrderIndexNext:uint64,perpOrder:Maybe PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool},perpOrderEx:Maybe PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins}}`
 
 ## Compensate
 TLB: `_ orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:coins executionFeeReceiver:Maybe address executionFee:coins unlockTime:uint32 = Compensate`

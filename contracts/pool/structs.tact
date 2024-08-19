@@ -123,8 +123,6 @@ struct LiquidityOrder {
     executionFee: Int as coins;
     blockTime: Int as uint32;
     isPending: Bool;
-    executionFeeReceiver: Address;
-    lastOperator: Address?;
 }
 
 struct LiquidityOrderData {
@@ -145,8 +143,6 @@ struct PerpOrder {
     executionFee: Int as coins;
     blockTime: Int as uint32;
     isPending: Bool;
-    executionFeeReceiver: Address;
-    lastOperator: Address?;
 }
 
 struct PerpOrderEx {
