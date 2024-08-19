@@ -6932,16 +6932,16 @@ PROGRAM{
         DROP
         1000000000000000000 PUSHINT
       }>ELSE<{
-        19 s() PUSH
-        DIV
         1000000000000000000000 PUSHINT
         MUL
+        19 s() PUSH
+        DIV
       }>
       30 s() PUSH
-      OVER
-      DIV
       1000000000000000000000 PUSHINT
       MUL
+      OVER
+      DIV
       TRUE
       PUSHNULL
       0 PUSHINT
@@ -6965,10 +6965,10 @@ PROGRAM{
       18 s() PUSH
       ADD
     }>ELSE<{
-      19 s() PUSH
-      DIV
       1000000000000000000000 PUSHINT
       MUL
+      19 s() PUSH
+      DIV
       DUP
       31 s() PUSH
       MUL

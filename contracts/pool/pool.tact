@@ -450,8 +450,8 @@ contract Pool with Deployable, Resumable {
             let availableQuota: Int = max(0, (self.maxLpNetCap - globalNetLP));
             require(jettonDelta <= availableQuota, "insufficient quota to supply");
 
-            tlpPrice = self.tlpSupply == 0 ? PRICE_DECIMAL_FACTOR : (globalNetLP / self.tlpSupply * JETTON_PRICE_DECIMAL_FACTOR );
-            tlpDelta = jettonDelta / tlpPrice * JETTON_PRICE_DECIMAL_FACTOR; 
+            tlpPrice = self.tlpSupply == 0 ? PRICE_DECIMAL_FACTOR : (globalNetLP * JETTON_PRICE_DECIMAL_FACTOR / self.tlpSupply);
+            tlpDelta = jettonDelta  * JETTON_PRICE_DECIMAL_FACTOR / tlpPrice; 
 
             send(SendParameters{
                 to: self.tlpJetton, 
@@ -463,7 +463,7 @@ contract Pool with Deployable, Resumable {
             self.tlpSupply += tlpDelta;
         } else {
             tlpDelta = order.jettonDelta; // tlp
-            tlpPrice = globalNetLP / self.tlpSupply * JETTON_PRICE_DECIMAL_FACTOR;
+            tlpPrice = globalNetLP  * JETTON_PRICE_DECIMAL_FACTOR / self.tlpSupply;
             jettonDelta = tlpPrice * tlpDelta / JETTON_PRICE_DECIMAL_FACTOR;
 
             send(SendParameters{
