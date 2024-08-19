@@ -3,7 +3,7 @@ Contract: Pool
 BOC Size: 25412 bytes
 
 # Types
-Total Types: 56
+Total Types: 57
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -228,6 +228,10 @@ Signature: `Compensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundR
 ## CompensateData
 TLB: `_ compensateIndexNext:uint64 compensate:Maybe Compensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:coins,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:uint32} = CompensateData`
 Signature: `CompensateData{compensateIndexNext:uint64,compensate:Maybe Compensate{orderType:Maybe uint8,orderId:uint64,trxId:uint64,refundReceiver:Maybe address,refundAmount:coins,executionFeeReceiver:Maybe address,executionFee:coins,unlockTime:uint32}}`
+
+## Pool$Data
+TLB: `null`
+Signature: `null`
 
 # Get Methods
 Total Get Methods: 10

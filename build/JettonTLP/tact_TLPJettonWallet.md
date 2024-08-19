@@ -3,7 +3,7 @@ Contract: TLPJettonWallet
 BOC Size: 2067 bytes
 
 # Types
-Total Types: 18
+Total Types: 20
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -76,6 +76,14 @@ Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
 ## ChangeOwnerOk
 TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
+
+## TLPJettonWallet$Data
+TLB: `null`
+Signature: `null`
+
+## TLPJettonMaster$Data
+TLB: `null`
+Signature: `null`
 
 # Get Methods
 Total Get Methods: 1

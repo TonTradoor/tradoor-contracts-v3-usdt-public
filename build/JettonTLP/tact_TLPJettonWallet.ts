@@ -1126,6 +1126,126 @@ function dictValueParserChangeOwnerOk(): DictionaryValue<ChangeOwnerOk> {
     }
 }
 
+export type TLPJettonWallet$Data = {
+    $$type: 'TLPJettonWallet$Data';
+    balance: bigint;
+    owner: Address;
+    jetton_master: Address;
+}
+
+export function storeTLPJettonWallet$Data(src: TLPJettonWallet$Data) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeCoins(src.balance);
+        b_0.storeAddress(src.owner);
+        b_0.storeAddress(src.jetton_master);
+    };
+}
+
+export function loadTLPJettonWallet$Data(slice: Slice) {
+    let sc_0 = slice;
+    let _balance = sc_0.loadCoins();
+    let _owner = sc_0.loadAddress();
+    let _jetton_master = sc_0.loadAddress();
+    return { $$type: 'TLPJettonWallet$Data' as const, balance: _balance, owner: _owner, jetton_master: _jetton_master };
+}
+
+function loadTupleTLPJettonWallet$Data(source: TupleReader) {
+    let _balance = source.readBigNumber();
+    let _owner = source.readAddress();
+    let _jetton_master = source.readAddress();
+    return { $$type: 'TLPJettonWallet$Data' as const, balance: _balance, owner: _owner, jetton_master: _jetton_master };
+}
+
+function loadGetterTupleTLPJettonWallet$Data(source: TupleReader) {
+    let _balance = source.readBigNumber();
+    let _owner = source.readAddress();
+    let _jetton_master = source.readAddress();
+    return { $$type: 'TLPJettonWallet$Data' as const, balance: _balance, owner: _owner, jetton_master: _jetton_master };
+}
+
+function storeTupleTLPJettonWallet$Data(source: TLPJettonWallet$Data) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.balance);
+    builder.writeAddress(source.owner);
+    builder.writeAddress(source.jetton_master);
+    return builder.build();
+}
+
+function dictValueParserTLPJettonWallet$Data(): DictionaryValue<TLPJettonWallet$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeTLPJettonWallet$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadTLPJettonWallet$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type TLPJettonMaster$Data = {
+    $$type: 'TLPJettonMaster$Data';
+    total_supply: bigint;
+    mintable: boolean;
+    owner: Address;
+    jetton_content: Cell;
+}
+
+export function storeTLPJettonMaster$Data(src: TLPJettonMaster$Data) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeCoins(src.total_supply);
+        b_0.storeBit(src.mintable);
+        b_0.storeAddress(src.owner);
+        b_0.storeRef(src.jetton_content);
+    };
+}
+
+export function loadTLPJettonMaster$Data(slice: Slice) {
+    let sc_0 = slice;
+    let _total_supply = sc_0.loadCoins();
+    let _mintable = sc_0.loadBit();
+    let _owner = sc_0.loadAddress();
+    let _jetton_content = sc_0.loadRef();
+    return { $$type: 'TLPJettonMaster$Data' as const, total_supply: _total_supply, mintable: _mintable, owner: _owner, jetton_content: _jetton_content };
+}
+
+function loadTupleTLPJettonMaster$Data(source: TupleReader) {
+    let _total_supply = source.readBigNumber();
+    let _mintable = source.readBoolean();
+    let _owner = source.readAddress();
+    let _jetton_content = source.readCell();
+    return { $$type: 'TLPJettonMaster$Data' as const, total_supply: _total_supply, mintable: _mintable, owner: _owner, jetton_content: _jetton_content };
+}
+
+function loadGetterTupleTLPJettonMaster$Data(source: TupleReader) {
+    let _total_supply = source.readBigNumber();
+    let _mintable = source.readBoolean();
+    let _owner = source.readAddress();
+    let _jetton_content = source.readCell();
+    return { $$type: 'TLPJettonMaster$Data' as const, total_supply: _total_supply, mintable: _mintable, owner: _owner, jetton_content: _jetton_content };
+}
+
+function storeTupleTLPJettonMaster$Data(source: TLPJettonMaster$Data) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.total_supply);
+    builder.writeBoolean(source.mintable);
+    builder.writeAddress(source.owner);
+    builder.writeCell(source.jetton_content);
+    return builder.build();
+}
+
+function dictValueParserTLPJettonMaster$Data(): DictionaryValue<TLPJettonMaster$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeTLPJettonMaster$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadTLPJettonMaster$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
  type TLPJettonWallet_init_args = {
     $$type: 'TLPJettonWallet_init_args';
     owner: Address;
@@ -1208,6 +1328,8 @@ const TLPJettonWallet_types: ABIType[] = [
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwner","header":2174598809,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwnerOk","header":846932810,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"TLPJettonWallet$Data","header":null,"fields":[{"name":"balance","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"jetton_master","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"TLPJettonMaster$Data","header":null,"fields":[{"name":"total_supply","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"mintable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"jetton_content","type":{"kind":"simple","type":"cell","optional":false}}]},
 ]
 
 const TLPJettonWallet_getters: ABIGetter[] = [

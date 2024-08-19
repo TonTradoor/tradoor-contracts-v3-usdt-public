@@ -1126,6 +1126,126 @@ function dictValueParserChangeOwnerOk(): DictionaryValue<ChangeOwnerOk> {
     }
 }
 
+export type MockJettonWallet$Data = {
+    $$type: 'MockJettonWallet$Data';
+    balance: bigint;
+    owner: Address;
+    jetton_master: Address;
+}
+
+export function storeMockJettonWallet$Data(src: MockJettonWallet$Data) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeCoins(src.balance);
+        b_0.storeAddress(src.owner);
+        b_0.storeAddress(src.jetton_master);
+    };
+}
+
+export function loadMockJettonWallet$Data(slice: Slice) {
+    let sc_0 = slice;
+    let _balance = sc_0.loadCoins();
+    let _owner = sc_0.loadAddress();
+    let _jetton_master = sc_0.loadAddress();
+    return { $$type: 'MockJettonWallet$Data' as const, balance: _balance, owner: _owner, jetton_master: _jetton_master };
+}
+
+function loadTupleMockJettonWallet$Data(source: TupleReader) {
+    let _balance = source.readBigNumber();
+    let _owner = source.readAddress();
+    let _jetton_master = source.readAddress();
+    return { $$type: 'MockJettonWallet$Data' as const, balance: _balance, owner: _owner, jetton_master: _jetton_master };
+}
+
+function loadGetterTupleMockJettonWallet$Data(source: TupleReader) {
+    let _balance = source.readBigNumber();
+    let _owner = source.readAddress();
+    let _jetton_master = source.readAddress();
+    return { $$type: 'MockJettonWallet$Data' as const, balance: _balance, owner: _owner, jetton_master: _jetton_master };
+}
+
+function storeTupleMockJettonWallet$Data(source: MockJettonWallet$Data) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.balance);
+    builder.writeAddress(source.owner);
+    builder.writeAddress(source.jetton_master);
+    return builder.build();
+}
+
+function dictValueParserMockJettonWallet$Data(): DictionaryValue<MockJettonWallet$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeMockJettonWallet$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadMockJettonWallet$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type MockJettonMaster$Data = {
+    $$type: 'MockJettonMaster$Data';
+    total_supply: bigint;
+    mintable: boolean;
+    owner: Address;
+    jetton_content: Cell;
+}
+
+export function storeMockJettonMaster$Data(src: MockJettonMaster$Data) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeCoins(src.total_supply);
+        b_0.storeBit(src.mintable);
+        b_0.storeAddress(src.owner);
+        b_0.storeRef(src.jetton_content);
+    };
+}
+
+export function loadMockJettonMaster$Data(slice: Slice) {
+    let sc_0 = slice;
+    let _total_supply = sc_0.loadCoins();
+    let _mintable = sc_0.loadBit();
+    let _owner = sc_0.loadAddress();
+    let _jetton_content = sc_0.loadRef();
+    return { $$type: 'MockJettonMaster$Data' as const, total_supply: _total_supply, mintable: _mintable, owner: _owner, jetton_content: _jetton_content };
+}
+
+function loadTupleMockJettonMaster$Data(source: TupleReader) {
+    let _total_supply = source.readBigNumber();
+    let _mintable = source.readBoolean();
+    let _owner = source.readAddress();
+    let _jetton_content = source.readCell();
+    return { $$type: 'MockJettonMaster$Data' as const, total_supply: _total_supply, mintable: _mintable, owner: _owner, jetton_content: _jetton_content };
+}
+
+function loadGetterTupleMockJettonMaster$Data(source: TupleReader) {
+    let _total_supply = source.readBigNumber();
+    let _mintable = source.readBoolean();
+    let _owner = source.readAddress();
+    let _jetton_content = source.readCell();
+    return { $$type: 'MockJettonMaster$Data' as const, total_supply: _total_supply, mintable: _mintable, owner: _owner, jetton_content: _jetton_content };
+}
+
+function storeTupleMockJettonMaster$Data(source: MockJettonMaster$Data) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.total_supply);
+    builder.writeBoolean(source.mintable);
+    builder.writeAddress(source.owner);
+    builder.writeCell(source.jetton_content);
+    return builder.build();
+}
+
+function dictValueParserMockJettonMaster$Data(): DictionaryValue<MockJettonMaster$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeMockJettonMaster$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadMockJettonMaster$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
  type MockJettonMaster_init_args = {
     $$type: 'MockJettonMaster_init_args';
     owner: Address;
@@ -1208,6 +1328,8 @@ const MockJettonMaster_types: ABIType[] = [
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwner","header":2174598809,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwnerOk","header":846932810,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"MockJettonWallet$Data","header":null,"fields":[{"name":"balance","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"jetton_master","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"MockJettonMaster$Data","header":null,"fields":[{"name":"total_supply","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"mintable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"jetton_content","type":{"kind":"simple","type":"cell","optional":false}}]},
 ]
 
 const MockJettonMaster_getters: ABIGetter[] = [

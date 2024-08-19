@@ -206,9 +206,6 @@ export class TestEnv {
             success: true,
         });
 
-        const configData = await  this.pool.getConfigData();
-        console.log("configData", configData);
-
         // set token config to pool
         for (let index = 0; index < this.tokenConfig.length; index++) {
             const { tokenId, name, tradingFeeRate, lpTradingFeeRate } = this.tokenConfig[index];

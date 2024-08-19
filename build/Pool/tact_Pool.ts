@@ -4391,6 +4391,305 @@ function dictValueParserCompensateData(): DictionaryValue<CompensateData> {
     }
 }
 
+export type Pool$Data = {
+    $$type: 'Pool$Data';
+    owner: Address;
+    stopped: boolean;
+    orderLockTime: bigint;
+    maxLpNetCap: bigint;
+    lpRolloverFeeRate: bigint;
+    lpGasConsumption: bigint;
+    perpGasConsumption: bigint;
+    minTonsForStorage: bigint;
+    gasForTransferJetton: bigint;
+    gasForBurnTlp: bigint;
+    gasForMintTlp: bigint;
+    lpMinExecutionFee: bigint;
+    perpMinExecutionFee: bigint;
+    tlpJetton: Address;
+    tlpWallet: Address;
+    jettonWallet: Address;
+    compensator: Address;
+    claimer: Address;
+    executors: Dictionary<Address, boolean>;
+    tokenConfigs: Dictionary<number, TokenConfig>;
+    liquidityOrders: Dictionary<bigint, LiquidityOrder>;
+    liquidityOrderIndexNext: bigint;
+    perpOrders: Dictionary<bigint, PerpOrder>;
+    perpOrderExs: Dictionary<bigint, PerpOrderEx>;
+    perpOrderIndexNext: bigint;
+    compensates: Dictionary<bigint, Compensate>;
+    compensateIndexNext: bigint;
+    perpPositionIndexNext: bigint;
+    perpPositions: Dictionary<number, AccountPerpPosition>;
+    globalLPPositions: Dictionary<number, GlobalLPPosition>;
+    globalPositions: Dictionary<number, GlobalPosition>;
+    tlpSupply: bigint;
+    totalExecutionFee: bigint;
+    protocolTradingFee: bigint;
+    globalLPFund: bigint;
+    globalLPUnrealizedPnl: bigint;
+    globalLpFundingFeeGrowth: bigint;
+    globalRolloverFeeGrowth: bigint;
+    globalPerpNetValue: bigint;
+    globalPerpSingleValue: bigint;
+}
+
+export function storePool$Data(src: Pool$Data) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeAddress(src.owner);
+        b_0.storeBit(src.stopped);
+        b_0.storeUint(src.orderLockTime, 32);
+        b_0.storeCoins(src.maxLpNetCap);
+        b_0.storeUint(src.lpRolloverFeeRate, 32);
+        b_0.storeCoins(src.lpGasConsumption);
+        b_0.storeCoins(src.perpGasConsumption);
+        b_0.storeCoins(src.minTonsForStorage);
+        b_0.storeCoins(src.gasForTransferJetton);
+        let b_1 = new Builder();
+        b_1.storeCoins(src.gasForBurnTlp);
+        b_1.storeCoins(src.gasForMintTlp);
+        b_1.storeCoins(src.lpMinExecutionFee);
+        b_1.storeCoins(src.perpMinExecutionFee);
+        b_1.storeAddress(src.tlpJetton);
+        let b_2 = new Builder();
+        b_2.storeAddress(src.tlpWallet);
+        b_2.storeAddress(src.jettonWallet);
+        b_2.storeAddress(src.compensator);
+        let b_3 = new Builder();
+        b_3.storeAddress(src.claimer);
+        b_3.storeDict(src.executors, Dictionary.Keys.Address(), Dictionary.Values.Bool());
+        b_3.storeDict(src.tokenConfigs, Dictionary.Keys.Uint(16), dictValueParserTokenConfig());
+        b_3.storeDict(src.liquidityOrders, Dictionary.Keys.BigUint(64), dictValueParserLiquidityOrder());
+        b_3.storeUint(src.liquidityOrderIndexNext, 64);
+        let b_4 = new Builder();
+        b_4.storeDict(src.perpOrders, Dictionary.Keys.BigUint(64), dictValueParserPerpOrder());
+        b_4.storeDict(src.perpOrderExs, Dictionary.Keys.BigUint(64), dictValueParserPerpOrderEx());
+        b_4.storeUint(src.perpOrderIndexNext, 64);
+        b_4.storeDict(src.compensates, Dictionary.Keys.BigUint(64), dictValueParserCompensate());
+        b_4.storeUint(src.compensateIndexNext, 64);
+        b_4.storeUint(src.perpPositionIndexNext, 64);
+        let b_5 = new Builder();
+        b_5.storeDict(src.perpPositions, Dictionary.Keys.Uint(16), dictValueParserAccountPerpPosition());
+        b_5.storeDict(src.globalLPPositions, Dictionary.Keys.Uint(16), dictValueParserGlobalLPPosition());
+        b_5.storeDict(src.globalPositions, Dictionary.Keys.Uint(16), dictValueParserGlobalPosition());
+        b_5.storeCoins(src.tlpSupply);
+        b_5.storeCoins(src.totalExecutionFee);
+        b_5.storeCoins(src.protocolTradingFee);
+        b_5.storeInt(src.globalLPFund, 128);
+        b_5.storeInt(src.globalLPUnrealizedPnl, 128);
+        b_5.storeCoins(src.globalLpFundingFeeGrowth);
+        b_5.storeCoins(src.globalRolloverFeeGrowth);
+        b_5.storeCoins(src.globalPerpNetValue);
+        let b_6 = new Builder();
+        b_6.storeCoins(src.globalPerpSingleValue);
+        b_5.storeRef(b_6.endCell());
+        b_4.storeRef(b_5.endCell());
+        b_3.storeRef(b_4.endCell());
+        b_2.storeRef(b_3.endCell());
+        b_1.storeRef(b_2.endCell());
+        b_0.storeRef(b_1.endCell());
+    };
+}
+
+export function loadPool$Data(slice: Slice) {
+    let sc_0 = slice;
+    let _owner = sc_0.loadAddress();
+    let _stopped = sc_0.loadBit();
+    let _orderLockTime = sc_0.loadUintBig(32);
+    let _maxLpNetCap = sc_0.loadCoins();
+    let _lpRolloverFeeRate = sc_0.loadUintBig(32);
+    let _lpGasConsumption = sc_0.loadCoins();
+    let _perpGasConsumption = sc_0.loadCoins();
+    let _minTonsForStorage = sc_0.loadCoins();
+    let _gasForTransferJetton = sc_0.loadCoins();
+    let sc_1 = sc_0.loadRef().beginParse();
+    let _gasForBurnTlp = sc_1.loadCoins();
+    let _gasForMintTlp = sc_1.loadCoins();
+    let _lpMinExecutionFee = sc_1.loadCoins();
+    let _perpMinExecutionFee = sc_1.loadCoins();
+    let _tlpJetton = sc_1.loadAddress();
+    let sc_2 = sc_1.loadRef().beginParse();
+    let _tlpWallet = sc_2.loadAddress();
+    let _jettonWallet = sc_2.loadAddress();
+    let _compensator = sc_2.loadAddress();
+    let sc_3 = sc_2.loadRef().beginParse();
+    let _claimer = sc_3.loadAddress();
+    let _executors = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.Bool(), sc_3);
+    let _tokenConfigs = Dictionary.load(Dictionary.Keys.Uint(16), dictValueParserTokenConfig(), sc_3);
+    let _liquidityOrders = Dictionary.load(Dictionary.Keys.BigUint(64), dictValueParserLiquidityOrder(), sc_3);
+    let _liquidityOrderIndexNext = sc_3.loadUintBig(64);
+    let sc_4 = sc_3.loadRef().beginParse();
+    let _perpOrders = Dictionary.load(Dictionary.Keys.BigUint(64), dictValueParserPerpOrder(), sc_4);
+    let _perpOrderExs = Dictionary.load(Dictionary.Keys.BigUint(64), dictValueParserPerpOrderEx(), sc_4);
+    let _perpOrderIndexNext = sc_4.loadUintBig(64);
+    let _compensates = Dictionary.load(Dictionary.Keys.BigUint(64), dictValueParserCompensate(), sc_4);
+    let _compensateIndexNext = sc_4.loadUintBig(64);
+    let _perpPositionIndexNext = sc_4.loadUintBig(64);
+    let sc_5 = sc_4.loadRef().beginParse();
+    let _perpPositions = Dictionary.load(Dictionary.Keys.Uint(16), dictValueParserAccountPerpPosition(), sc_5);
+    let _globalLPPositions = Dictionary.load(Dictionary.Keys.Uint(16), dictValueParserGlobalLPPosition(), sc_5);
+    let _globalPositions = Dictionary.load(Dictionary.Keys.Uint(16), dictValueParserGlobalPosition(), sc_5);
+    let _tlpSupply = sc_5.loadCoins();
+    let _totalExecutionFee = sc_5.loadCoins();
+    let _protocolTradingFee = sc_5.loadCoins();
+    let _globalLPFund = sc_5.loadIntBig(128);
+    let _globalLPUnrealizedPnl = sc_5.loadIntBig(128);
+    let _globalLpFundingFeeGrowth = sc_5.loadCoins();
+    let _globalRolloverFeeGrowth = sc_5.loadCoins();
+    let _globalPerpNetValue = sc_5.loadCoins();
+    let sc_6 = sc_5.loadRef().beginParse();
+    let _globalPerpSingleValue = sc_6.loadCoins();
+    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, lpGasConsumption: _lpGasConsumption, perpGasConsumption: _perpGasConsumption, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth, globalPerpNetValue: _globalPerpNetValue, globalPerpSingleValue: _globalPerpSingleValue };
+}
+
+function loadTuplePool$Data(source: TupleReader) {
+    let _owner = source.readAddress();
+    let _stopped = source.readBoolean();
+    let _orderLockTime = source.readBigNumber();
+    let _maxLpNetCap = source.readBigNumber();
+    let _lpRolloverFeeRate = source.readBigNumber();
+    let _lpGasConsumption = source.readBigNumber();
+    let _perpGasConsumption = source.readBigNumber();
+    let _minTonsForStorage = source.readBigNumber();
+    let _gasForTransferJetton = source.readBigNumber();
+    let _gasForBurnTlp = source.readBigNumber();
+    let _gasForMintTlp = source.readBigNumber();
+    let _lpMinExecutionFee = source.readBigNumber();
+    let _perpMinExecutionFee = source.readBigNumber();
+    let _tlpJetton = source.readAddress();
+    source = source.readTuple();
+    let _tlpWallet = source.readAddress();
+    let _jettonWallet = source.readAddress();
+    let _compensator = source.readAddress();
+    let _claimer = source.readAddress();
+    let _executors = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Bool(), source.readCellOpt());
+    let _tokenConfigs = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserTokenConfig(), source.readCellOpt());
+    let _liquidityOrders = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserLiquidityOrder(), source.readCellOpt());
+    let _liquidityOrderIndexNext = source.readBigNumber();
+    let _perpOrders = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserPerpOrder(), source.readCellOpt());
+    let _perpOrderExs = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserPerpOrderEx(), source.readCellOpt());
+    let _perpOrderIndexNext = source.readBigNumber();
+    let _compensates = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserCompensate(), source.readCellOpt());
+    let _compensateIndexNext = source.readBigNumber();
+    let _perpPositionIndexNext = source.readBigNumber();
+    source = source.readTuple();
+    let _perpPositions = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserAccountPerpPosition(), source.readCellOpt());
+    let _globalLPPositions = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserGlobalLPPosition(), source.readCellOpt());
+    let _globalPositions = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserGlobalPosition(), source.readCellOpt());
+    let _tlpSupply = source.readBigNumber();
+    let _totalExecutionFee = source.readBigNumber();
+    let _protocolTradingFee = source.readBigNumber();
+    let _globalLPFund = source.readBigNumber();
+    let _globalLPUnrealizedPnl = source.readBigNumber();
+    let _globalLpFundingFeeGrowth = source.readBigNumber();
+    let _globalRolloverFeeGrowth = source.readBigNumber();
+    let _globalPerpNetValue = source.readBigNumber();
+    let _globalPerpSingleValue = source.readBigNumber();
+    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, lpGasConsumption: _lpGasConsumption, perpGasConsumption: _perpGasConsumption, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth, globalPerpNetValue: _globalPerpNetValue, globalPerpSingleValue: _globalPerpSingleValue };
+}
+
+function loadGetterTuplePool$Data(source: TupleReader) {
+    let _owner = source.readAddress();
+    let _stopped = source.readBoolean();
+    let _orderLockTime = source.readBigNumber();
+    let _maxLpNetCap = source.readBigNumber();
+    let _lpRolloverFeeRate = source.readBigNumber();
+    let _lpGasConsumption = source.readBigNumber();
+    let _perpGasConsumption = source.readBigNumber();
+    let _minTonsForStorage = source.readBigNumber();
+    let _gasForTransferJetton = source.readBigNumber();
+    let _gasForBurnTlp = source.readBigNumber();
+    let _gasForMintTlp = source.readBigNumber();
+    let _lpMinExecutionFee = source.readBigNumber();
+    let _perpMinExecutionFee = source.readBigNumber();
+    let _tlpJetton = source.readAddress();
+    let _tlpWallet = source.readAddress();
+    let _jettonWallet = source.readAddress();
+    let _compensator = source.readAddress();
+    let _claimer = source.readAddress();
+    let _executors = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Bool(), source.readCellOpt());
+    let _tokenConfigs = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserTokenConfig(), source.readCellOpt());
+    let _liquidityOrders = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserLiquidityOrder(), source.readCellOpt());
+    let _liquidityOrderIndexNext = source.readBigNumber();
+    let _perpOrders = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserPerpOrder(), source.readCellOpt());
+    let _perpOrderExs = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserPerpOrderEx(), source.readCellOpt());
+    let _perpOrderIndexNext = source.readBigNumber();
+    let _compensates = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserCompensate(), source.readCellOpt());
+    let _compensateIndexNext = source.readBigNumber();
+    let _perpPositionIndexNext = source.readBigNumber();
+    let _perpPositions = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserAccountPerpPosition(), source.readCellOpt());
+    let _globalLPPositions = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserGlobalLPPosition(), source.readCellOpt());
+    let _globalPositions = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserGlobalPosition(), source.readCellOpt());
+    let _tlpSupply = source.readBigNumber();
+    let _totalExecutionFee = source.readBigNumber();
+    let _protocolTradingFee = source.readBigNumber();
+    let _globalLPFund = source.readBigNumber();
+    let _globalLPUnrealizedPnl = source.readBigNumber();
+    let _globalLpFundingFeeGrowth = source.readBigNumber();
+    let _globalRolloverFeeGrowth = source.readBigNumber();
+    let _globalPerpNetValue = source.readBigNumber();
+    let _globalPerpSingleValue = source.readBigNumber();
+    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, lpGasConsumption: _lpGasConsumption, perpGasConsumption: _perpGasConsumption, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth, globalPerpNetValue: _globalPerpNetValue, globalPerpSingleValue: _globalPerpSingleValue };
+}
+
+function storeTuplePool$Data(source: Pool$Data) {
+    let builder = new TupleBuilder();
+    builder.writeAddress(source.owner);
+    builder.writeBoolean(source.stopped);
+    builder.writeNumber(source.orderLockTime);
+    builder.writeNumber(source.maxLpNetCap);
+    builder.writeNumber(source.lpRolloverFeeRate);
+    builder.writeNumber(source.lpGasConsumption);
+    builder.writeNumber(source.perpGasConsumption);
+    builder.writeNumber(source.minTonsForStorage);
+    builder.writeNumber(source.gasForTransferJetton);
+    builder.writeNumber(source.gasForBurnTlp);
+    builder.writeNumber(source.gasForMintTlp);
+    builder.writeNumber(source.lpMinExecutionFee);
+    builder.writeNumber(source.perpMinExecutionFee);
+    builder.writeAddress(source.tlpJetton);
+    builder.writeAddress(source.tlpWallet);
+    builder.writeAddress(source.jettonWallet);
+    builder.writeAddress(source.compensator);
+    builder.writeAddress(source.claimer);
+    builder.writeCell(source.executors.size > 0 ? beginCell().storeDictDirect(source.executors, Dictionary.Keys.Address(), Dictionary.Values.Bool()).endCell() : null);
+    builder.writeCell(source.tokenConfigs.size > 0 ? beginCell().storeDictDirect(source.tokenConfigs, Dictionary.Keys.Uint(16), dictValueParserTokenConfig()).endCell() : null);
+    builder.writeCell(source.liquidityOrders.size > 0 ? beginCell().storeDictDirect(source.liquidityOrders, Dictionary.Keys.BigUint(64), dictValueParserLiquidityOrder()).endCell() : null);
+    builder.writeNumber(source.liquidityOrderIndexNext);
+    builder.writeCell(source.perpOrders.size > 0 ? beginCell().storeDictDirect(source.perpOrders, Dictionary.Keys.BigUint(64), dictValueParserPerpOrder()).endCell() : null);
+    builder.writeCell(source.perpOrderExs.size > 0 ? beginCell().storeDictDirect(source.perpOrderExs, Dictionary.Keys.BigUint(64), dictValueParserPerpOrderEx()).endCell() : null);
+    builder.writeNumber(source.perpOrderIndexNext);
+    builder.writeCell(source.compensates.size > 0 ? beginCell().storeDictDirect(source.compensates, Dictionary.Keys.BigUint(64), dictValueParserCompensate()).endCell() : null);
+    builder.writeNumber(source.compensateIndexNext);
+    builder.writeNumber(source.perpPositionIndexNext);
+    builder.writeCell(source.perpPositions.size > 0 ? beginCell().storeDictDirect(source.perpPositions, Dictionary.Keys.Uint(16), dictValueParserAccountPerpPosition()).endCell() : null);
+    builder.writeCell(source.globalLPPositions.size > 0 ? beginCell().storeDictDirect(source.globalLPPositions, Dictionary.Keys.Uint(16), dictValueParserGlobalLPPosition()).endCell() : null);
+    builder.writeCell(source.globalPositions.size > 0 ? beginCell().storeDictDirect(source.globalPositions, Dictionary.Keys.Uint(16), dictValueParserGlobalPosition()).endCell() : null);
+    builder.writeNumber(source.tlpSupply);
+    builder.writeNumber(source.totalExecutionFee);
+    builder.writeNumber(source.protocolTradingFee);
+    builder.writeNumber(source.globalLPFund);
+    builder.writeNumber(source.globalLPUnrealizedPnl);
+    builder.writeNumber(source.globalLpFundingFeeGrowth);
+    builder.writeNumber(source.globalRolloverFeeGrowth);
+    builder.writeNumber(source.globalPerpNetValue);
+    builder.writeNumber(source.globalPerpSingleValue);
+    return builder.build();
+}
+
+function dictValueParserPool$Data(): DictionaryValue<Pool$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storePool$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadPool$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
  type Pool_init_args = {
     $$type: 'Pool_init_args';
     deployId: bigint;
@@ -4521,6 +4820,7 @@ const Pool_types: ABIType[] = [
     {"name":"PerpOrderData","header":null,"fields":[{"name":"perpOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpOrder","type":{"kind":"simple","type":"PerpOrder","optional":true}},{"name":"perpOrderEx","type":{"kind":"simple","type":"PerpOrderEx","optional":true}}]},
     {"name":"Compensate","header":null,"fields":[{"name":"orderType","type":{"kind":"simple","type":"uint","optional":true,"format":8}},{"name":"orderId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"refundReceiver","type":{"kind":"simple","type":"address","optional":true}},{"name":"refundAmount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executionFeeReceiver","type":{"kind":"simple","type":"address","optional":true}},{"name":"executionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"unlockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
     {"name":"CompensateData","header":null,"fields":[{"name":"compensateIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"compensate","type":{"kind":"simple","type":"Compensate","optional":true}}]},
+    {"name":"Pool$Data","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"stopped","type":{"kind":"simple","type":"bool","optional":false}},{"name":"orderLockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"maxLpNetCap","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpRolloverFeeRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"lpGasConsumption","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"perpGasConsumption","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"minTonsForStorage","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForTransferJetton","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForBurnTlp","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForMintTlp","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"perpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"tlpJetton","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"jettonWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"compensator","type":{"kind":"simple","type":"address","optional":false}},{"name":"claimer","type":{"kind":"simple","type":"address","optional":false}},{"name":"executors","type":{"kind":"dict","key":"address","value":"bool"}},{"name":"tokenConfigs","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"TokenConfig","valueFormat":"ref"}},{"name":"liquidityOrders","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"LiquidityOrder","valueFormat":"ref"}},{"name":"liquidityOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpOrders","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"PerpOrder","valueFormat":"ref"}},{"name":"perpOrderExs","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"PerpOrderEx","valueFormat":"ref"}},{"name":"perpOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"compensates","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"Compensate","valueFormat":"ref"}},{"name":"compensateIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpPositionIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"AccountPerpPosition","valueFormat":"ref"}},{"name":"globalLPPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"GlobalLPPosition","valueFormat":"ref"}},{"name":"globalPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"GlobalPosition","valueFormat":"ref"}},{"name":"tlpSupply","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"totalExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"protocolTradingFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalLPFund","type":{"kind":"simple","type":"int","optional":false,"format":128}},{"name":"globalLPUnrealizedPnl","type":{"kind":"simple","type":"int","optional":false,"format":128}},{"name":"globalLpFundingFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalRolloverFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalPerpNetValue","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalPerpSingleValue","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
 ]
 
 const Pool_getters: ABIGetter[] = [
