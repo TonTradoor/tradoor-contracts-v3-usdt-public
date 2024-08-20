@@ -6819,7 +6819,7 @@ PROGRAM{
     IF:<{
       19305 PUSHINT
       47 s() PUSH
-      3 MULCONST
+      1 LSHIFT#
       43 s() PUSH
       ADD
       s1 s8 XCHG
@@ -6829,7 +6829,7 @@ PROGRAM{
     }>ELSE<{
       19305 PUSHINT
       47 s() PUSH
-      3 MULCONST
+      1 LSHIFT#
       44 s() PUSH
       ADD
       45 s() PUSH

@@ -693,9 +693,9 @@
     var ($order'isIncrease, $order'account, $order'jettonDelta, $order'executionFee, $order'blockTime, $order'isPending) = $LiquidityOrder$_not_null($orderOpt);
     throw_unless(24173, (~ $order'isPending));
     if ($order'isIncrease) {
-        throw_unless(19305, ($ctx'value >= (($self'lpGasConsumption * 3) + $self'gasForMintTlp)));
+        throw_unless(19305, ($ctx'value >= (($self'lpGasConsumption * 2) + $self'gasForMintTlp)));
     } else {
-        throw_unless(19305, ($ctx'value >= ((($self'lpGasConsumption * 3) + $self'gasForBurnTlp) + $self'gasForTransferJetton)));
+        throw_unless(19305, ($ctx'value >= ((($self'lpGasConsumption * 2) + $self'gasForBurnTlp) + $self'gasForTransferJetton)));
     }
     $order'isPending = true;
     $self'liquidityOrders~__tact_dict_set_uint_cell(64, $msg'orderId, $LiquidityOrder$_store_cell(($order'isIncrease, $order'account, $order'jettonDelta, $order'executionFee, $order'blockTime, $order'isPending)));
