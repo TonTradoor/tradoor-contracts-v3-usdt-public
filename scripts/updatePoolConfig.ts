@@ -16,8 +16,8 @@ export async function run(provider: NetworkProvider) {
     const mockJetton = attachMockJetton(provider);
     const tlpJetton = attachTLPJetton(provider);
 
-    const orderBookMockJettonWallet = await mockJetton.getGetWalletAddress(pool.address!!);
-    const orderBookTLPJettonWallet = await tlpJetton.getGetWalletAddress(pool.address!!);
+    const poolMockJettonWallet = await mockJetton.getGetWalletAddress(pool.address!!);
+    const poolTLPJettonWallet = await tlpJetton.getGetWalletAddress(pool.address!!);
 
     const config = getConfig();
     const executorAddrs = config["executors"];
@@ -41,8 +41,8 @@ export async function run(provider: NetworkProvider) {
                 $$type: 'GasConfig',
                 lpMinExecutionFee: toNano(config["lpMinExecutionFee"]),
                 perpMinExecutionFee: toNano(config["perpMinExecutionFee"]),
-                lpGasConsumption: toNano(config["orderbookLpGasConsumption"]),
-                perpGasConsumption: toNano(config["orderbookPerpGasConsumption"]),
+                lpGasConsumption: toNano(config["lpGasConsumption"]),
+                perpGasConsumption: toNano(config["perpGasConsumption"]),
                 minTonsForStorage: toNano(config["minTonsForStorage"]),
                 gasForTransferJetton: toNano(config["gasForTransferJetton"]),
                 gasForBurnTlp: toNano(config["gasForBurnTlp"]),
@@ -57,8 +57,8 @@ export async function run(provider: NetworkProvider) {
             contractConfig: {
                 $$type: 'ContractConfig',
                 tlpJetton: tlpJetton.address,
-                tlpWallet: orderBookTLPJettonWallet,
-                jettonWallet: orderBookMockJettonWallet,
+                tlpWallet: poolTLPJettonWallet,
+                jettonWallet: poolMockJettonWallet,
             }
         }
     );

@@ -409,10 +409,10 @@ contract Pool with Deployable, Resumable {
 
         if(order.isIncrease){
             // compute gas + mint tlp gas
-            require(ctx.value >= self.lpGasConsumption * 3 + self.gasForMintTlp, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption * 2 + self.gasForMintTlp, "gas not enough");
         }else{
             // compute gas + burn tlp gas + transfer jetton gas(transfer usdt to trader)
-            require(ctx.value >= self.lpGasConsumption * 3 + self.gasForBurnTlp + self.gasForTransferJetton, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption * 2 + self.gasForBurnTlp + self.gasForTransferJetton, "gas not enough");
         }
 
         order.isPending = true;
