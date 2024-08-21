@@ -6819,7 +6819,6 @@ PROGRAM{
     IF:<{
       19305 PUSHINT
       47 s() PUSH
-      1 LSHIFT#
       43 s() PUSH
       ADD
       s1 s8 XCHG
@@ -6829,7 +6828,6 @@ PROGRAM{
     }>ELSE<{
       19305 PUSHINT
       47 s() PUSH
-      1 LSHIFT#
       44 s() PUSH
       ADD
       45 s() PUSH
@@ -7904,16 +7902,14 @@ PROGRAM{
     DUP
     IF:<{
       19305 PUSHINT
+      s0 s14 XCHG
       54 s() PUSH
-      1 LSHIFT#
-      s1 s15 XCHG
       GEQ
       s1 s14 XCHG
       THROWANYIFNOT
     }>ELSE<{
       19305 PUSHINT
       54 s() PUSH
-      1 LSHIFT#
       53 s() PUSH
       ADD
       s1 s15 XCHG
@@ -7983,7 +7979,6 @@ PROGRAM{
     s2 POP
     19305 PUSHINT
     44 s() PUSH
-    1 LSHIFT#
     43 s() PUSH
     ADD
     s1 s3 XCHG
@@ -8046,7 +8041,6 @@ PROGRAM{
     s2 POP
     19305 PUSHINT
     45 s() PUSH
-    1 LSHIFT#
     44 s() PUSH
     ADD
     s1 s3 XCHG

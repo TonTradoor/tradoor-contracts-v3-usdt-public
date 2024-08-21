@@ -409,10 +409,10 @@ contract Pool with Deployable, Resumable {
 
         if(order.isIncrease){
             // compute gas + mint tlp gas
-            require(ctx.value >= self.lpGasConsumption * 2 + self.gasForMintTlp, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption + self.gasForMintTlp, "gas not enough");
         }else{
             // compute gas + burn tlp gas + transfer jetton gas(transfer usdt to trader)
-            require(ctx.value >= self.lpGasConsumption * 2 + self.gasForBurnTlp + self.gasForTransferJetton, "gas not enough");
+            require(ctx.value >= self.lpGasConsumption + self.gasForBurnTlp + self.gasForTransferJetton, "gas not enough");
         }
 
         order.isPending = true;
@@ -782,9 +782,9 @@ contract Pool with Deployable, Resumable {
 
         let increase: Bool = order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_INCREASE_LIMIT;
         if (increase) {
-            require(ctx.value >= self.perpGasConsumption * 2, "gas not enough");
+            require(ctx.value >= self.perpGasConsumption, "gas not enough");
         } else {
-            require(ctx.value >= self.perpGasConsumption * 2 + self.gasForTransferJetton, "gas not enough");
+            require(ctx.value >= self.perpGasConsumption + self.gasForTransferJetton, "gas not enough");
         }
         require(!order.isPending, "order is pending");
 
@@ -1207,7 +1207,7 @@ contract Pool with Deployable, Resumable {
      */
     receive(msg: LiquidatePerpPosition) {
         let ctx: Context = context();
-        require(ctx.value >= self.perpGasConsumption * 2 + self.gasForTransferJetton, "gas not enough");
+        require(ctx.value >= self.perpGasConsumption + self.gasForTransferJetton, "gas not enough");
         require(self.executors.get(ctx.sender) != null, "invalid sender");
 
         let liquidationFeeReceiver: Address = msg.liquidationFeeReceiver != null ? msg.liquidationFeeReceiver!! : ctx.sender;
@@ -1414,7 +1414,7 @@ contract Pool with Deployable, Resumable {
      */
     receive(msg: ADLPerpPosition) {
         let ctx: Context = context();
-        require(ctx.value >= self.perpGasConsumption * 2 + self.gasForTransferJetton, "gas not enough");
+        require(ctx.value >= self.perpGasConsumption + self.gasForTransferJetton, "gas not enough");
         require(self.executors.get(ctx.sender) != null, "invalid sender");
 
         let orderId: Int = self.perpOrderIndexNext;

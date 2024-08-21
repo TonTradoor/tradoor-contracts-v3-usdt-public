@@ -693,9 +693,9 @@
     var ($order'isIncrease, $order'account, $order'jettonDelta, $order'executionFee, $order'blockTime, $order'isPending) = $LiquidityOrder$_not_null($orderOpt);
     throw_unless(24173, (~ $order'isPending));
     if ($order'isIncrease) {
-        throw_unless(19305, ($ctx'value >= (($self'lpGasConsumption * 2) + $self'gasForMintTlp)));
+        throw_unless(19305, ($ctx'value >= ($self'lpGasConsumption + $self'gasForMintTlp)));
     } else {
-        throw_unless(19305, ($ctx'value >= ((($self'lpGasConsumption * 2) + $self'gasForBurnTlp) + $self'gasForTransferJetton)));
+        throw_unless(19305, ($ctx'value >= (($self'lpGasConsumption + $self'gasForBurnTlp) + $self'gasForTransferJetton)));
     }
     $order'isPending = true;
     $self'liquidityOrders~__tact_dict_set_uint_cell(64, $msg'orderId, $LiquidityOrder$_store_cell(($order'isIncrease, $order'account, $order'jettonDelta, $order'executionFee, $order'blockTime, $order'isPending)));
@@ -850,9 +850,9 @@
     var ($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending) = $PerpOrder$_not_null($orderOpt);
     int $increase = ( (($order'opType == 10)) ? (true) : (($order'opType == 11)) );
     if ($increase) {
-        throw_unless(19305, ($ctx'value >= ($self'perpGasConsumption * 2)));
+        throw_unless(19305, ($ctx'value >= $self'perpGasConsumption));
     } else {
-        throw_unless(19305, ($ctx'value >= (($self'perpGasConsumption * 2) + $self'gasForTransferJetton)));
+        throw_unless(19305, ($ctx'value >= ($self'perpGasConsumption + $self'gasForTransferJetton)));
     }
     throw_unless(24173, (~ $order'isPending));
     $order'isPending = true;
@@ -871,7 +871,7 @@
     var ($self'owner, $self'stopped, $self'orderLockTime, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForTransferJetton, $self'gasForBurnTlp, $self'gasForMintTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpJetton, $self'tlpWallet, $self'jettonWallet, $self'compensator, $self'claimer, $self'executors, $self'tokenConfigs, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'tlpSupply, $self'totalExecutionFee, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue) = $self;
     var ($msg'liquidationFeeReceiver, $msg'tokenId, $msg'account, $msg'isLong, $msg'trxId, $msg'price, $msg'premiumRate, $msg'fundingFeeGrowth, $msg'rolloverFeeGrowth) = $msg;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
-    throw_unless(19305, ($ctx'value >= (($self'perpGasConsumption * 2) + $self'gasForTransferJetton)));
+    throw_unless(19305, ($ctx'value >= ($self'perpGasConsumption + $self'gasForTransferJetton)));
     throw_unless(41207, (~ null?(__tact_dict_get_slice_int($self'executors, 267, $ctx'sender, 1))));
     slice $liquidationFeeReceiver = ((~ null?($msg'liquidationFeeReceiver)) ? __tact_not_null($msg'liquidationFeeReceiver) : $ctx'sender);
     int $orderId = $self'perpOrderIndexNext;
@@ -885,7 +885,7 @@
     var ($self'owner, $self'stopped, $self'orderLockTime, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForTransferJetton, $self'gasForBurnTlp, $self'gasForMintTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpJetton, $self'tlpWallet, $self'jettonWallet, $self'compensator, $self'claimer, $self'executors, $self'tokenConfigs, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'tlpSupply, $self'totalExecutionFee, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'globalPerpNetValue, $self'globalPerpSingleValue) = $self;
     var ($msg'tokenId, $msg'account, $msg'isLong, $msg'marginDelta, $msg'sizeDelta, $msg'trxId, $msg'price, $msg'premiumRate, $msg'fundingFeeGrowth, $msg'rolloverFeeGrowth) = $msg;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
-    throw_unless(19305, ($ctx'value >= (($self'perpGasConsumption * 2) + $self'gasForTransferJetton)));
+    throw_unless(19305, ($ctx'value >= ($self'perpGasConsumption + $self'gasForTransferJetton)));
     throw_unless(41207, (~ null?(__tact_dict_get_slice_int($self'executors, 267, $ctx'sender, 1))));
     int $orderId = $self'perpOrderIndexNext;
     $self'perpOrderIndexNext = $self'perpOrderIndexNext + 1;
