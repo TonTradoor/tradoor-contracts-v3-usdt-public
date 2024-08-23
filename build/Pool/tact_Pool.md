@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 25386 bytes
+BOC Size: 24629 bytes
 
 # Types
 Total Types: 57
@@ -122,8 +122,8 @@ TLB: `liquidity_pool_changed_event#48426f36 trxId:uint64 orderId:uint64 opType:u
 Signature: `LiquidityPoolChangedEvent{trxId:uint64,orderId:uint64,opType:uint8,account:address,jettonDelta:coins,tlpDelta:coins,tlpPrice:uint128,tlpSupply:coins,lpFundAfter:int128,realizedLpFundingFeeDelta:coins,realizedLpRolloverFeeDelta:coins,entryLpFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}`
 
 ## PerpOrderCreatedEvent
-TLB: `perp_order_created_event#66ef465f opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins orderId:uint64 trxId:uint64 blockTime:uint32 requestTime:uint32 = PerpOrderCreatedEvent`
-Signature: `PerpOrderCreatedEvent{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,orderId:uint64,trxId:uint64,blockTime:uint32,requestTime:uint32}`
+TLB: `perp_order_created_event#ad8e31ef opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins orderId:uint64 trxId:uint64 requestTime:uint32 = PerpOrderCreatedEvent`
+Signature: `PerpOrderCreatedEvent{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,orderId:uint64,trxId:uint64,requestTime:uint32}`
 
 ## PerpOrderCancelledEvent
 TLB: `perp_order_cancelled_event#f2c5aeac opType:uint8 orderId:uint64 trxId:uint64 = PerpOrderCancelledEvent`
@@ -162,8 +162,8 @@ TLB: `_ name:^string enable:bool minValue:coins maxValue:coins maxLeverage:uint1
 Signature: `TokenConfig{name:^string,enable:bool,minValue:coins,maxValue:coins,maxLeverage:uint16,liquidationFee:coins,maintenanceRate:uint32,tradingFeeRate:uint32,lpTradingFeeRate:uint32}`
 
 ## PoolStat
-TLB: `_ tlpSupply:coins totalExecutionFee:coins protocolTradingFee:coins globalLPFund:int128 globalLPUnrealizedPnl:int128 globalLpFundingFeeGrowth:coins globalRolloverFeeGrowth:coins globalPerpNetValue:coins globalPerpSingleValue:coins = PoolStat`
-Signature: `PoolStat{tlpSupply:coins,totalExecutionFee:coins,protocolTradingFee:coins,globalLPFund:int128,globalLPUnrealizedPnl:int128,globalLpFundingFeeGrowth:coins,globalRolloverFeeGrowth:coins,globalPerpNetValue:coins,globalPerpSingleValue:coins}`
+TLB: `_ tlpSupply:coins totalExecutionFee:coins protocolTradingFee:coins globalLPFund:int128 globalLPUnrealizedPnl:int128 globalLpFundingFeeGrowth:coins globalRolloverFeeGrowth:coins = PoolStat`
+Signature: `PoolStat{tlpSupply:coins,totalExecutionFee:coins,protocolTradingFee:coins,globalLPFund:int128,globalLPUnrealizedPnl:int128,globalLpFundingFeeGrowth:coins,globalRolloverFeeGrowth:coins}`
 
 ## AccountPerpPosition
 TLB: `_ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}}> = AccountPerpPosition`

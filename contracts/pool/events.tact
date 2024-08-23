@@ -43,7 +43,6 @@ message PerpOrderCreatedEvent {
     executionFee: Int as coins;
     orderId: Int as uint64;
     trxId: Int as uint64;
-    blockTime: Int as uint32;
     requestTime: Int as uint32;
 }
 

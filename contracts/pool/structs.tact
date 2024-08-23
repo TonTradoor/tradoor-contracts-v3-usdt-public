@@ -45,8 +45,6 @@ struct PoolStat {
     globalLPUnrealizedPnl: Int as int128;
     globalLpFundingFeeGrowth: Int as coins;
     globalRolloverFeeGrowth: Int as coins;
-    globalPerpNetValue: Int as coins;
-    globalPerpSingleValue: Int as coins;
 }
 
 // ============================ Perp ================================ //

@@ -55,12 +55,12 @@ contract Pool with Deployable, Resumable {
     tlpSupply: Int as coins = 0;
     totalExecutionFee: Int as coins = 0; // total execution fee of all pending orders
     protocolTradingFee: Int as coins = 0; // protocol trading fee of tradoor.io
+
     globalLPFund: Int as int128 = 0;
     globalLPUnrealizedPnl: Int as int128 = 0;
+
     globalLpFundingFeeGrowth: Int as coins = 0;
     globalRolloverFeeGrowth: Int as coins = 0;
-    globalPerpNetValue: Int as coins = 0;
-    globalPerpSingleValue: Int as coins = 0;
 
     /**
      * Initializes the contract.
@@ -687,7 +687,6 @@ contract Pool with Deployable, Resumable {
             orderId: orderId,
             triggerPrice: triggerPrice,
             triggerAbove: triggerAbove,
-            blockTime: blockTime,
             requestTime: requestTime,
             trxId: trxId
         }.toCell());
@@ -722,8 +721,6 @@ contract Pool with Deployable, Resumable {
             require(order.blockTime + self.orderLockTime <= now(), "too early to cancel");
         }
 
-        let executionFeeReceiver: Address = msg.executionFeeReceiver == null ? ctx.sender : msg.executionFeeReceiver!!;
-
         let executionFee: Int = 0;
         if (increase) {
             let orderExOpt: PerpOrderEx? = self.perpOrderExs.get(msg.orderId);
@@ -752,6 +749,7 @@ contract Pool with Deployable, Resumable {
 
         // transfer execution fee
         if (order.executionFee > 0) {
+            let executionFeeReceiver: Address = msg.executionFeeReceiver == null ? ctx.sender : msg.executionFeeReceiver!!;
             send(SendParameters{ to: executionFeeReceiver, value: order.executionFee, mode: SendIgnoreErrors });
             executionFee += order.executionFee;
         }
@@ -856,14 +854,9 @@ contract Pool with Deployable, Resumable {
         } else {
             globalPosition.shortSize += sizeDelta;
         }
-        // update global value and check liquidity
-        let singleValueBefore: Int = max(globalPosition.longValue, globalPosition.shortValue);
-        let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
+        // update global value
         globalPosition.longValue = globalPosition.longSize * tradePrice / PRICE_DECIMAL_FACTOR;
         globalPosition.shortValue = globalPosition.shortSize * tradePrice / PRICE_DECIMAL_FACTOR;
-
-        self.globalPerpSingleValue += max(globalPosition.longValue, globalPosition.shortValue) - singleValueBefore;
-        self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
 
         // get global lp position
         let globalLPPositionOpt: GlobalLPPosition? = self.globalLPPositions.get(tokenId);
@@ -1141,13 +1134,8 @@ contract Pool with Deployable, Resumable {
             globalPosition.shortMargin -= marginDeltaAfter;
             globalPosition.shortSize -= sizeDelta;
         }
-
-        let singleValueBefore: Int = max(globalPosition.longValue, globalPosition.shortValue);
-        let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
         globalPosition.longValue = globalPosition.longSize * tradePrice / PRICE_DECIMAL_FACTOR;
         globalPosition.shortValue = globalPosition.shortSize * tradePrice / PRICE_DECIMAL_FACTOR;
-        self.globalPerpSingleValue += max(globalPosition.longValue, globalPosition.shortValue) - singleValueBefore;
-        self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
 
         accountPerpPosition.positions.set(account, directionPerpPosition);
         self.perpPositions.set(tokenId, accountPerpPosition);
@@ -1346,12 +1334,8 @@ contract Pool with Deployable, Resumable {
         }
 
         // update global value
-        let singleValueBefore: Int = max(globalPosition.longValue, globalPosition.shortValue);
-        let netValueBefore: Int = abs(globalPosition.longValue - globalPosition.shortValue);
         globalPosition.longValue = globalPosition.longSize * tradePrice / PRICE_DECIMAL_FACTOR;
         globalPosition.shortValue = globalPosition.shortSize * tradePrice / PRICE_DECIMAL_FACTOR;
-        self.globalPerpSingleValue += max(globalPosition.longValue, globalPosition.shortValue) - singleValueBefore;
-        self.globalPerpNetValue += abs(globalPosition.longValue - globalPosition.shortValue) - netValueBefore;
 
         accountPerpPosition.positions.set(account, directionPerpPosition);
         self.perpPositions.set(tokenId, accountPerpPosition);
@@ -1613,8 +1597,6 @@ contract Pool with Deployable, Resumable {
             globalLPUnrealizedPnl: self.globalLPUnrealizedPnl,
             globalLpFundingFeeGrowth: self.globalLpFundingFeeGrowth,
             globalRolloverFeeGrowth: self.globalRolloverFeeGrowth,
-            globalPerpNetValue: self.globalPerpNetValue,
-            globalPerpSingleValue: self.globalPerpSingleValue
         };
     }
 
