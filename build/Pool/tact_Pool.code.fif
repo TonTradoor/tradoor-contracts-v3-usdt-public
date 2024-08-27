@@ -6745,6 +6745,8 @@ PROGRAM{
     DIV
     s11 s0 PUSH2
     ADD
+    1000000000000 PUSHINT
+    DIV
     s1 s15 XCHG
     ADD
     s1 s14 XCPU

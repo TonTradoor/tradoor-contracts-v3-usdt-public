@@ -704,7 +704,7 @@
     int $rolloverFeeGrowthDelta = ($msg'rolloverFeeGrowth - $self'globalRolloverFeeGrowth);
     int $lpRolloverFeeGrowthDelta = (($rolloverFeeGrowthDelta * $self'lpRolloverFeeRate) / 1000000000);
     $self'globalRolloverFeeGrowth = $msg'rolloverFeeGrowth;
-    $self'globalLPFund = $self'globalLPFund + ($lpFundingFeeGrowthDelta + $lpRolloverFeeGrowthDelta);
+    $self'globalLPFund = $self'globalLPFund + (($lpFundingFeeGrowthDelta + $lpRolloverFeeGrowthDelta) / 1000000000000);
     $self'protocolTradingFee = $self'protocolTradingFee + ($rolloverFeeGrowthDelta - $lpRolloverFeeGrowthDelta);
     int $globalNetLP = ($self'globalLPFund + $self'globalLPUnrealizedPnl);
     int $tlpPrice = 0;

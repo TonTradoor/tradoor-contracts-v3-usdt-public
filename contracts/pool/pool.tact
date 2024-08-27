@@ -438,7 +438,7 @@ contract Pool with Deployable, Resumable {
         let lpRolloverFeeGrowthDelta: Int = rolloverFeeGrowthDelta * self.lpRolloverFeeRate / PERCENTAGE_BASIS_POINT;
         self.globalRolloverFeeGrowth = msg.rolloverFeeGrowth;
 
-        self.globalLPFund += lpFundingFeeGrowthDelta + lpRolloverFeeGrowthDelta;
+        self.globalLPFund += (lpFundingFeeGrowthDelta + lpRolloverFeeGrowthDelta) / (PRICE_DECIMAL_FACTOR / JETTON_DECIMAL);
         self.protocolTradingFee += (rolloverFeeGrowthDelta - lpRolloverFeeGrowthDelta);
 
         let globalNetLP: Int = self.globalLPFund + self.globalLPUnrealizedPnl;
