@@ -943,13 +943,13 @@ contract Pool with Deployable, Resumable {
             // create tp/sl
             if (orderEx.tpSize > 0 && orderEx.tpPrice > 0) {
                 executionFeeMultiple += 1;
-                self.createPerpOrder(trxId, OP_TYPE_PERP_DECREASE_TP, sender(), order.tokenId, order.isLong, 0, orderEx.tpSize, orderEx.tpPrice, 
+                self.createPerpOrder(trxId, OP_TYPE_PERP_DECREASE_TP, order.account, order.tokenId, order.isLong, 0, orderEx.tpSize, orderEx.tpPrice, 
                     0, 0, 0, 0, orderEx.executionFee, now());
             }
 
             if (orderEx.slSize > 0 && orderEx.slPrice > 0) {
                 executionFeeMultiple += 1;
-                self.createPerpOrder(trxId, OP_TYPE_PERP_DECREASE_SL, sender(), order.tokenId, order.isLong, 0, orderEx.slSize, orderEx.slPrice, 
+                self.createPerpOrder(trxId, OP_TYPE_PERP_DECREASE_SL, order.account, order.tokenId, order.isLong, 0, orderEx.slSize, orderEx.slPrice, 
                     0, 0, 0, 0, orderEx.executionFee, now());
             }
             // delete
