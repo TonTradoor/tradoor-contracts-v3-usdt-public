@@ -1127,7 +1127,7 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive ExecutePerpOrder message
-    if (op == 744005585) {
+    if (op == 3983970926) {
         var msg = in_msg~$ExecutePerpOrder$_load();
         self~$Pool$_internal_binary_ExecutePerpOrder(msg);
         return (self, true);

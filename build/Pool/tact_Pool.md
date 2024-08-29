@@ -90,8 +90,8 @@ TLB: `cancel_perp_order#099ff4a3 executionFeeReceiver:Maybe address orderId:uint
 Signature: `CancelPerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64}`
 
 ## ExecutePerpOrder
-TLB: `execute_perp_order#2c589fd1 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint16 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ExecutePerpOrder`
-Signature: `ExecutePerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint16,price:uint128,premiumRate:uint32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
+TLB: `execute_perp_order#ed76926e executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint16 price:uint128 premiumRate:int32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ExecutePerpOrder`
+Signature: `ExecutePerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint16,price:uint128,premiumRate:int32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
 
 ## LiquidatePerpPosition
 TLB: `liquidate_perp_position#1b68b053 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = LiquidatePerpPosition`

@@ -898,7 +898,7 @@ PROGRAM{
   $ExecutePerpOrder$_load PROCREF:<{
     32 LDU
     SWAP
-    744005585 PUSHINT
+    3983970926 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
@@ -907,7 +907,7 @@ PROGRAM{
     64 LDU
     16 LDU
     128 LDU
-    32 LDU
+    32 LDI
     128 LDI
     128 LDI
     8 -ROLL
@@ -8620,7 +8620,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    744005585 PUSHINT
+    3983970926 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
