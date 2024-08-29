@@ -845,7 +845,9 @@
     throw_unless(24173, (~ $order'isPending));
     $order'isPending = true;
     $self'perpOrders~__tact_dict_set_uint_cell(64, $msg'orderId, $PerpOrder$_store_cell(($order'opType, $order'tokenId, $order'account, $order'isLong, $order'marginDelta, $order'sizeDelta, $order'triggerPrice, $order'triggerAbove, $order'executionFee, $order'blockTime, $order'isPending)));
-    throw_unless(1644, ($order'triggerAbove ? ($msg'price >= $order'triggerPrice) : ($msg'price <= $order'triggerPrice)));
+    if ((~ ( (($order'opType == 10)) ? (true) : (($order'opType == 12)) ))) {
+        throw_unless(1644, ($order'triggerAbove ? ($msg'price >= $order'triggerPrice) : ($msg'price <= $order'triggerPrice)));
+    }
     slice $executionFeeReceiver = (null?($msg'executionFeeReceiver) ? $ctx'sender : __tact_not_null($msg'executionFeeReceiver));
     if ($increase) {
         ($self'owner, $self'stopped, $self'orderLockTime, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForTransferJetton, $self'gasForBurnTlp, $self'gasForMintTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpJetton, $self'tlpWallet, $self'jettonWallet, $self'compensator, $self'claimer, $self'executors, $self'tokenConfigs, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'tlpSupply, $self'totalExecutionFee, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth)~$Pool$_fun_increasePerpPosition($msg'trxId, $msg'orderId, $order'opType, $order'account, $order'tokenId, $order'isLong, $order'marginDelta, $order'sizeDelta, $msg'price, $msg'fundingFeeGrowth, $msg'rolloverFeeGrowth, $executionFeeReceiver);

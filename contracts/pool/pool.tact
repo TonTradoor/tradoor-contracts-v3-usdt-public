@@ -789,7 +789,9 @@ contract Pool with Deployable, Resumable {
         order.isPending = true;
         self.perpOrders.set(msg.orderId, order);
 
-        require(order.triggerAbove ? (msg.price >= order.triggerPrice) : (msg.price <= order.triggerPrice), "not reach trigger price");
+        if (!(order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_DECREASE_MARKET)){
+            require(order.triggerAbove ? (msg.price >= order.triggerPrice) : (msg.price <= order.triggerPrice), "not reach trigger price");
+        }
         let executionFeeReceiver = msg.executionFeeReceiver == null ? ctx.sender : msg.executionFeeReceiver!!;
         if (increase) {
             self.increasePerpPosition(msg.trxId, msg.orderId, order.opType, order.account, order.tokenId, order.isLong, order.marginDelta, order.sizeDelta, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth, executionFeeReceiver);

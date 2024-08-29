@@ -7749,15 +7749,29 @@ PROGRAM{
     16 s() PUSH
     SWAP
     __tact_dict_set_uint_cell INLINECALLDICT
-    s0 31 s() XCHG
+    s7 PUSH
+    10 EQINT
     IF:<{
-      s10 s(-1) PUXC
-      GEQ
+      TRUE
     }>ELSE<{
-      s10 s(-1) PUXC
-      LEQ
+      s7 PUSH
+      12 EQINT
     }>
-    1644 THROWIFNOT
+    NOT
+    IF:<{
+      s0 31 s() XCHG
+      IF:<{
+        s10 s(-1) PUXC
+        GEQ
+      }>ELSE<{
+        s10 s(-1) PUXC
+        LEQ
+      }>
+      1644 THROWIFNOT
+    }>ELSE<{
+      31 s() POP
+      DROP
+    }>
     s13 PUSH
     ISNULL
     IF:<{
