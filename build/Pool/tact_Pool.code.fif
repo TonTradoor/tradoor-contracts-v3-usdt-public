@@ -4260,6 +4260,22 @@ PROGRAM{
       s2 PUSH
       s0 30 s() XCHG
     }>
+    35 s() PUSH
+    4 EQINT
+    IF:<{
+      54555 PUSHINT
+      33 s() PUSH
+      IF:<{
+        30 s() PUSH
+        s4 PUSH
+        GREATER
+      }>ELSE<{
+        30 s() PUSH
+        s4 PUSH
+        LESS
+      }>
+      THROWANYIFNOT
+    }>
     45 s() PUSH
     16 PUSHINT
     35 s() PUSH

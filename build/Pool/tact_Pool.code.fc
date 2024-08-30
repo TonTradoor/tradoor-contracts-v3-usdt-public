@@ -252,6 +252,9 @@
     if (($sizeDelta > $perpPosition'size)) {
         $sizeDelta = $perpPosition'size;
     }
+    if (($opType == 4)) {
+        throw_unless(54555, ($isLong ? ($tradePrice > $perpPosition'entryPrice) : ($tradePrice < $perpPosition'entryPrice)));
+    }
     tuple $globalPositionOpt = $GlobalPosition$_load_opt(__tact_dict_get_uint_cell($self'globalPositions, 16, $tokenId));
     var ($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longValue, $globalPosition'shortValue) = ((~ null?($globalPositionOpt)) ? $GlobalPosition$_not_null($globalPositionOpt) : $GlobalPosition$_constructor_longMargin_shortMargin_longSize_shortSize_longValue_shortValue(0, 0, 0, 0, 0, 0));
     int $fundingFee = ((($fundingFeeGrowth - $perpPosition'entryFundingFeeGrowth) * $perpPosition'size) / 1000000000000000000);

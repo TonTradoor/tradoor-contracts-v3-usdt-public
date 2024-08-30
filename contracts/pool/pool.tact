@@ -1041,6 +1041,10 @@ contract Pool with Deployable, Resumable {
             sizeDelta = perpPosition.size;
         }
 
+        if (opType == OP_TYPE_PERP_ADL){
+            require(isLong? tradePrice > perpPosition.entryPrice : tradePrice < perpPosition.entryPrice, "pnl <= 0");
+        }
+
         let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
         let globalPosition: GlobalPosition = globalPositionOpt != null ? globalPositionOpt!! : GlobalPosition{};
 
