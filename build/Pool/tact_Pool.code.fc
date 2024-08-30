@@ -1134,14 +1134,14 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive LiquidatePerpPosition message
-    if (op == 459845715) {
+    if (op == 1189008210) {
         var msg = in_msg~$LiquidatePerpPosition$_load();
         self~$Pool$_internal_binary_LiquidatePerpPosition(msg);
         return (self, true);
     }
     
     ;; Receive ADLPerpPosition message
-    if (op == 1014255639) {
+    if (op == 3588145116) {
         var msg = in_msg~$ADLPerpPosition$_load();
         self~$Pool$_internal_binary_ADLPerpPosition(msg);
         return (self, true);

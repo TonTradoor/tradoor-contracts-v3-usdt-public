@@ -62,8 +62,8 @@ trait JettonWallet {
     balance: Int;
     owner: Address;
     jetton_master: Address;
-    virtual const gasConsumption: Int = ton("0.01");
-    virtual const minTonsForStorage: Int = ton("0.005");
+    virtual const gasConsumption: Int = ton("0.05");
+    virtual const minTonsForStorage: Int = ton("0.05");
 
     //********************************************//
     //                  Messages                  //

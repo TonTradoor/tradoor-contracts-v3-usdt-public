@@ -94,12 +94,12 @@ TLB: `execute_perp_order#ed76926e executionFeeReceiver:Maybe address orderId:uin
 Signature: `ExecutePerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint16,price:uint128,premiumRate:int32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
 
 ## LiquidatePerpPosition
-TLB: `liquidate_perp_position#1b68b053 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = LiquidatePerpPosition`
-Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint16,account:address,isLong:bool,trxId:uint64,price:uint128,premiumRate:uint32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
+TLB: `liquidate_perp_position#46ded352 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:int32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = LiquidatePerpPosition`
+Signature: `LiquidatePerpPosition{liquidationFeeReceiver:Maybe address,tokenId:uint16,account:address,isLong:bool,trxId:uint64,price:uint128,premiumRate:int32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
 
 ## ADLPerpPosition
-TLB: `adl_perp_position#3c745017 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ADLPerpPosition`
-Signature: `ADLPerpPosition{tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,trxId:uint64,price:uint128,premiumRate:uint32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
+TLB: `adl_perp_position#d5debfdc tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 premiumRate:int32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ADLPerpPosition`
+Signature: `ADLPerpPosition{tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,trxId:uint64,price:uint128,premiumRate:int32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
 
 ## CreateCompensate
 TLB: `create_compensate#fc33877d orderType:Maybe uint8 orderId:uint64 trxId:uint64 refundReceiver:Maybe address refundAmount:coins executionFeeReceiver:Maybe address executionFee:coins = CreateCompensate`

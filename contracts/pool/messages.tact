@@ -121,7 +121,7 @@ message LiquidatePerpPosition {
     isLong: Bool;
     trxId: Int as uint64;
     price: Int as uint128;
-    premiumRate: Int as uint32;
+    premiumRate: Int as int32;
     fundingFeeGrowth: Int as int128;
     rolloverFeeGrowth: Int as int128;
 }
@@ -134,7 +134,7 @@ message ADLPerpPosition {
     sizeDelta: Int as coins;
     trxId: Int as uint64;
     price: Int as uint128;
-    premiumRate: Int as uint32;
+    premiumRate: Int as int32;
     fundingFeeGrowth: Int as int128;
     rolloverFeeGrowth: Int as int128;
 }

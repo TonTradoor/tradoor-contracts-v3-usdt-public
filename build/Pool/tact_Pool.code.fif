@@ -915,7 +915,7 @@ PROGRAM{
   $LiquidatePerpPosition$_load PROCREF:<{
     32 LDU
     SWAP
-    459845715 PUSHINT
+    1189008210 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address_opt INLINECALLDICT
@@ -926,7 +926,7 @@ PROGRAM{
     1 LDI
     64 LDU
     128 LDU
-    32 LDU
+    32 LDI
     128 LDI
     LDREF
     SWAP
@@ -944,7 +944,7 @@ PROGRAM{
   $ADLPerpPosition$_load PROCREF:<{
     32 LDU
     SWAP
-    1014255639 PUSHINT
+    3588145116 PUSHINT
     EQUAL
     129 THROWIFNOT
     16 LDU
@@ -955,7 +955,7 @@ PROGRAM{
     LDGRAMS
     64 LDU
     128 LDU
-    32 LDU
+    32 LDI
     128 LDI
     LDREF
     SWAP
@@ -8630,7 +8630,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    459845715 PUSHINT
+    1189008210 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -8640,7 +8640,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    1014255639 PUSHINT
+    3588145116 PUSHINT
     EQUAL
     IFJMP:<{
       DROP

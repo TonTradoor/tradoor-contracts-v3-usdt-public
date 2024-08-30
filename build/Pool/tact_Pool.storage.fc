@@ -546,19 +546,19 @@ tuple $TokenConfig$_to_opt_external(tuple v) inline {
 
 ;;
 ;; Type: LiquidatePerpPosition
-;; Header: 0x1b68b053
-;; TLB: liquidate_perp_position#1b68b053 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = LiquidatePerpPosition
+;; Header: 0x46ded352
+;; TLB: liquidate_perp_position#46ded352 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:int32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = LiquidatePerpPosition
 ;;
 
 (slice, ((slice, int, slice, int, int, int, int, int, int))) $LiquidatePerpPosition$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 459845715);
+    throw_unless(129, sc_0~load_uint(32) == 1189008210);
     var v'liquidationFeeReceiver = sc_0~__tact_load_address_opt();
     var v'tokenId = sc_0~load_uint(16);
     var v'account = sc_0~__tact_load_address();
     var v'isLong = sc_0~load_int(1);
     var v'trxId = sc_0~load_uint(64);
     var v'price = sc_0~load_uint(128);
-    var v'premiumRate = sc_0~load_uint(32);
+    var v'premiumRate = sc_0~load_int(32);
     var v'fundingFeeGrowth = sc_0~load_int(128);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'rolloverFeeGrowth = sc_1~load_int(128);
@@ -567,12 +567,12 @@ tuple $TokenConfig$_to_opt_external(tuple v) inline {
 
 ;;
 ;; Type: ADLPerpPosition
-;; Header: 0x3c745017
-;; TLB: adl_perp_position#3c745017 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 premiumRate:uint32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ADLPerpPosition
+;; Header: 0xd5debfdc
+;; TLB: adl_perp_position#d5debfdc tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins trxId:uint64 price:uint128 premiumRate:int32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ADLPerpPosition
 ;;
 
 (slice, ((int, slice, int, int, int, int, int, int, int, int))) $ADLPerpPosition$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 1014255639);
+    throw_unless(129, sc_0~load_uint(32) == 3588145116);
     var v'tokenId = sc_0~load_uint(16);
     var v'account = sc_0~__tact_load_address();
     var v'isLong = sc_0~load_int(1);
@@ -580,7 +580,7 @@ tuple $TokenConfig$_to_opt_external(tuple v) inline {
     var v'sizeDelta = sc_0~load_coins();
     var v'trxId = sc_0~load_uint(64);
     var v'price = sc_0~load_uint(128);
-    var v'premiumRate = sc_0~load_uint(32);
+    var v'premiumRate = sc_0~load_int(32);
     var v'fundingFeeGrowth = sc_0~load_int(128);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'rolloverFeeGrowth = sc_1~load_int(128);

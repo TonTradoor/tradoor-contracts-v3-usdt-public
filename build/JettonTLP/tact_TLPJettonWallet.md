@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: TLPJettonWallet
-BOC Size: 2067 bytes
+BOC Size: 2068 bytes
 
 # Types
 Total Types: 20
