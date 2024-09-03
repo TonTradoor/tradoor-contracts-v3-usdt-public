@@ -200,7 +200,7 @@ PROGRAM{
   DECLPROC $Pool$_fun_liquidatePerpPosition
   DECLPROC $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer
   DECLPROC $Pool$_fun_accountInfo
-  DECLPROC $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition
+  DECLPROC $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition
   DECLPROC $Pool$_fun_perpPosition
   DECLPROC $ConfigData$_constructor_orderLockTime_lpMinExecutionFee_perpMinExecutionFee_lpGasConsumption_perpGasConsumption_minTonsForStorage_gasForTransferJetton_gasForBurnTlp_gasForMintTlp_tlpWallet_jettonWallet_tlpJetton_maxLpNetCap
   DECLPROC $Pool$_fun_configData
@@ -5384,7 +5384,7 @@ PROGRAM{
     s1 s2 XCHG
     $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer INLINECALLDICT
   }>
-  $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition PROCINLINE:<{
+  $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition PROCINLINE:<{
   }>
   $Pool$_fun_perpPosition PROCREF:<{
     PUSHNULL
@@ -5426,8 +5426,9 @@ PROGRAM{
     s11 s0 s3 PUXC2
     __tact_dict_get_uint_cell INLINECALLDICT
     $GlobalPosition$_load_opt INLINECALLDICT
-    s1 s2 XCHG
-    $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition INLINECALLDICT
+    s13 PUSH
+    s3 s3 XCHG2
+    $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition INLINECALLDICT
   }>
   $ConfigData$_constructor_orderLockTime_lpMinExecutionFee_perpMinExecutionFee_lpGasConsumption_perpGasConsumption_minTonsForStorage_gasForTransferJetton_gasForBurnTlp_gasForMintTlp_tlpWallet_jettonWallet_tlpJetton_maxLpNetCap PROCINLINE:<{
   }>
@@ -8312,9 +8313,9 @@ PROGRAM{
     s14 16 s() XCHG
     2 14 BLKSWAP
     $Pool$_fun_perpPosition INLINECALLDICT
-    15 3 BLKDROP2
-    15 3 BLKDROP2
-    8 3 BLKDROP2
+    12 4 BLKDROP2
+    12 4 BLKDROP2
+    14 4 BLKDROP2
     $PerpPositionData$_to_external INLINECALLDICT
   }>
   %configData PROC:<{

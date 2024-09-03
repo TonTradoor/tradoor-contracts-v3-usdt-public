@@ -1221,16 +1221,16 @@ _ $GlobalPosition$_get_shortSize((int, int, int, int, int, int) v) inline {
 
 ;;
 ;; Type: PerpPositionData
-;; TLB: _ perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}} globalLPPosition:Maybe GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128} globalPosition:Maybe GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins} = PerpPositionData
+;; TLB: _ perpPositionIndexNext:uint64 perpPosition:Maybe DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}} globalLPPosition:Maybe GlobalLPPosition{netSize:coins,isLong:bool,entryPrice:uint128} globalPosition:Maybe GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins} = PerpPositionData
 ;;
 
-(tuple, tuple, tuple) $PerpPositionData$_to_external(((tuple, tuple, tuple)) v) inline {
-    var (v'perpPosition, v'globalLPPosition, v'globalPosition) = v; 
-    return (v'perpPosition, v'globalLPPosition, v'globalPosition);
+(int, tuple, tuple, tuple) $PerpPositionData$_to_external(((int, tuple, tuple, tuple)) v) inline {
+    var (v'perpPositionIndexNext, v'perpPosition, v'globalLPPosition, v'globalPosition) = v; 
+    return (v'perpPositionIndexNext, v'perpPosition, v'globalLPPosition, v'globalPosition);
 }
 
-((tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition(tuple $perpPosition, tuple $globalLPPosition, tuple $globalPosition) inline {
-    return ($perpPosition, $globalLPPosition, $globalPosition);
+((int, tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition(int $perpPositionIndexNext, tuple $perpPosition, tuple $globalLPPosition, tuple $globalPosition) inline {
+    return ($perpPositionIndexNext, $perpPosition, $globalLPPosition, $globalPosition);
 }
 
 ;;

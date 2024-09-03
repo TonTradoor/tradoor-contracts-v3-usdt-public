@@ -74,6 +74,7 @@ struct GlobalLPPosition {
 }
 
 struct PerpPositionData {
+    perpPositionIndexNext: Int as uint64;
     perpPosition: DirectionPerpPosition?;
     globalLPPosition: GlobalLPPosition?;
     globalPosition: GlobalPosition?;

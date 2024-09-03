@@ -424,7 +424,7 @@ _ $AccountPerpPosition$_get_positions((cell) v) inline;
 ((int, int, int)) $GlobalLPPosition$_not_null(tuple v) inline;
 
 ;; $PerpPositionData$_to_external
-(tuple, tuple, tuple) $PerpPositionData$_to_external(((tuple, tuple, tuple)) v) inline;
+(int, tuple, tuple, tuple) $PerpPositionData$_to_external(((int, tuple, tuple, tuple)) v) inline;
 
 ;; $GlobalPosition$_get_longSize
 _ $GlobalPosition$_get_longSize((int, int, int, int, int, int) v) inline;
@@ -606,11 +606,11 @@ slice $global_emptySlice() impure inline;
 ;; $Pool$_fun_accountInfo
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, int, int)) $Pool$_fun_accountInfo((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, slice $account) impure inline_ref;
 
-;; $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition
-((tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPosition_globalLPPosition_globalPosition(tuple $perpPosition, tuple $globalLPPosition, tuple $globalPosition) inline;
+;; $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition
+((int, tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition(int $perpPositionIndexNext, tuple $perpPosition, tuple $globalLPPosition, tuple $globalPosition) inline;
 
 ;; $Pool$_fun_perpPosition
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (tuple, tuple, tuple)) $Pool$_fun_perpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $tokenId, slice $account) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, tuple, tuple, tuple)) $Pool$_fun_perpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $tokenId, slice $account) impure inline_ref;
 
 ;; $ConfigData$_constructor_orderLockTime_lpMinExecutionFee_perpMinExecutionFee_lpGasConsumption_perpGasConsumption_minTonsForStorage_gasForTransferJetton_gasForBurnTlp_gasForMintTlp_tlpWallet_jettonWallet_tlpJetton_maxLpNetCap
 ((int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) $ConfigData$_constructor_orderLockTime_lpMinExecutionFee_perpMinExecutionFee_lpGasConsumption_perpGasConsumption_minTonsForStorage_gasForTransferJetton_gasForBurnTlp_gasForMintTlp_tlpWallet_jettonWallet_tlpJetton_maxLpNetCap(int $orderLockTime, int $lpMinExecutionFee, int $perpMinExecutionFee, int $lpGasConsumption, int $perpGasConsumption, int $minTonsForStorage, int $gasForTransferJetton, int $gasForBurnTlp, int $gasForMintTlp, slice $tlpWallet, slice $jettonWallet, slice $tlpJetton, int $maxLpNetCap) inline;

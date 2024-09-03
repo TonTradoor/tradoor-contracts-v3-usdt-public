@@ -1548,6 +1548,7 @@ contract Pool with Deployable, Resumable {
             }
         }
         return PerpPositionData {
+            perpPositionIndexNext: self.perpPositionIndexNext,
             perpPosition: position,
             globalLPPosition: self.globalLPPositions.get(tokenId),
             globalPosition: self.globalPositions.get(tokenId)
