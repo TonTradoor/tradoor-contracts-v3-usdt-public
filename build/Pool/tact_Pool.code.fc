@@ -302,7 +302,7 @@
     $perpPosition'margin = $perpPosition'margin + ((($realizedPnl + $fundingFee) - $tradingFee) - $rolloverFee);
     throw_unless(62409, ($perpPosition'margin >= 0));
     if (( (( (($sizeDelta > 0)) ? (($sizeDelta < $perpPosition'size)) : (false) )) ? (($marginDelta == 0)) : (false) )) {
-        $marginDelta = ($perpPosition'margin * ($sizeDelta / $perpPosition'size));
+        $marginDelta = (($perpPosition'margin * $sizeDelta) / $perpPosition'size);
     }
     if (($marginDelta > $perpPosition'margin)) {
         $marginDelta = $perpPosition'margin;

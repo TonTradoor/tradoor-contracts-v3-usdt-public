@@ -1101,7 +1101,7 @@ contract Pool with Deployable, Resumable {
         require(perpPosition.margin >= 0, "insufficient margin");
         // partially close position
         if (sizeDelta > 0 && sizeDelta < perpPosition.size && marginDelta == 0) {
-            marginDelta = perpPosition.margin * (sizeDelta / perpPosition.size);
+            marginDelta = perpPosition.margin * sizeDelta / perpPosition.size;
         }
         if (marginDelta > perpPosition.margin) {
             marginDelta = perpPosition.margin;

@@ -465,6 +465,109 @@ describe('PERP', () => {
         expect(globalLPPositionAfterClose?.isLong).toBeFalsy();
     });
 
+    it('should execute partial close perp position', async () => {
+        /* =========================== increase LP ================================ */
+        /// create order
+        let lpLiquidity = 100000;
+        let executionFee = 0.1;
+        const prices = Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128));
+        prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
+
+        let lpFundingFeeGrowth = 0;
+        let rolloverFeeGrowth = 0;
+
+        // create order
+        const createIncreaseResult = await createIncreaseLiquidityOrder(user0, lpLiquidity, executionFee);
+
+        /// executor order
+        const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
+        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+            from: executor.address,
+            to: pool.address,
+            success: true
+        });
+
+        // check order
+        expect(executeIncreaseResult.orderAfter).toBeNull();
+
+        // check tpl balance
+        let user0TlpBalance = executeIncreaseResult.balanceAfter.user0TlpBalance;
+        console.log('user0TlpBalance:', user0TlpBalance);
+        expect(user0TlpBalance).toBeGreaterThan(0);
+
+        /* =========================== increase perp ================================ */
+        let isMarket = true;
+        let tokenId = 1;
+        let isLong = true;
+        let margin = 100;
+        let size = 0.02; // 1000u
+        let triggerPrice = 51000;
+        let increasePrice = 50000;
+        let _fundingFeeGrowth = 0;
+        let _rolloverFeeGrowth = 0;
+
+        // create order
+        const createResult = await createIncreasePerpOrder(user1, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: poolJettonWallet.address,
+            to: pool.address,
+            success: true
+        });
+        expect(createResult.orderEx).toBeNull();
+
+        // executor order
+        const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
+        expect(executeResult.trxResult.transactions).toHaveTransaction({
+            from: executor.address,
+            to: pool.address,
+            success: true
+        });
+
+        let perpPositionAfterIncrease = executeResult.positionAfter;
+        console.log('position after increase:', executeResult.positionDataAfter);
+        console.log('global pool after increase:', executeResult.poolStatAfter);
+
+        /* =========================== decrease perp ================================ */
+        /// create order
+        let decreaseMargin = 0;
+        let decreaseSize = 0.01;
+        let decreaseTriggerPrice = 51000;
+        let decreasePrice = 55000;
+
+        // set block time
+        blockchain.now = now();
+
+        // create order
+        const createDecreaseResult = await createDecreasePerpOrder(user1, executionFee, tokenId, isLong, decreaseMargin, decreaseSize, decreaseTriggerPrice);
+        expect(createDecreaseResult.trxResult.transactions).toHaveTransaction({
+            from: user1.address,
+            to: pool.address,
+            success: true
+        });
+
+        /// executor order
+        _fundingFeeGrowth = 0;
+        _rolloverFeeGrowth = 0;
+        const executeDecreaseResult = await executePerpOrder(executor, createDecreaseResult.orderIdBefore, decreasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
+        printTransactionFees(executeDecreaseResult.trxResult.transactions);
+        prettyLogTransactions(executeDecreaseResult.trxResult.transactions);
+        expect(executeDecreaseResult.trxResult.transactions).toHaveTransaction({
+            from: executor.address,
+            to: pool.address,
+            success: true
+        });
+        let perpPositionAfterDecrease = executeDecreaseResult.positionAfter;
+        console.log('position after decrease:', executeDecreaseResult.positionDataAfter);
+        console.log('global pool after decrease:', executeResult.poolStatAfter);
+
+        // check position
+        // let tradingFee = decreaseSize * decreasePrice * TestEnv.tradingFeeRate;
+        expect(perpPositionAfterDecrease).not.toBeNull();
+        // expect(perpPositionAfterDecrease?.margin).toEqual(perpPositionAfterIncrease?.margin + toJettonUnits(realizedPnl) - toJettonUnits(decreaseMargin + tradingFee));
+        expect(perpPositionAfterDecrease?.size).toEqual(perpPositionAfterIncrease?.size - toJettonUnits(decreaseSize));
+
+    });
+
     it('should execute increase perp market order with tp/sl', async () => {
         console.log('should execute increase perp market order with tp/sl');
         /* =========================== increase LP ================================ */
