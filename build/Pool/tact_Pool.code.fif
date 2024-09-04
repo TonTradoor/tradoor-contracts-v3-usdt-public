@@ -2902,6 +2902,16 @@ PROGRAM{
     s4 s0 s0 XCHG3
   }>
   $Pool$_fun_createPerpOrder PROCREF:<{
+    3428 PUSHINT
+    s9 PUSH
+    0 GTINT
+    IF:<{
+      TRUE
+    }>ELSE<{
+      s8 PUSH
+      0 GTINT
+    }>
+    THROWANYIFNOT
     27 s() PUSH
     INC
     s13 PUSH
@@ -4460,6 +4470,31 @@ PROGRAM{
     OVER
     -1 GTINT
     THROWANYIFNOT
+    42 s() PUSH
+    0 GTINT
+    IF:<{
+      42 s() PUSH
+      16 s() PUSH
+      LESS
+    }>ELSE<{
+      FALSE
+    }>
+    IF:<{
+      43 s() PUSH
+      0 EQINT
+    }>ELSE<{
+      FALSE
+    }>
+    IF:<{
+      43 s() POP
+      41 s() PUSH
+      s15 PUSH
+      DIV
+      43 s() PUSH
+      SWAP
+      MUL
+      s0 43 s() XCHG
+    }>
     43 s() PUSH
     OVER
     GREATER
@@ -6764,8 +6799,6 @@ PROGRAM{
     DIV
     s11 s0 PUSH2
     ADD
-    1000000000000 PUSHINT
-    DIV
     s1 s15 XCHG
     ADD
     s1 s14 XCPU

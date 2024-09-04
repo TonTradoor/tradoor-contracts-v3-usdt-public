@@ -438,7 +438,7 @@ contract Pool with Deployable, Resumable {
         let lpRolloverFeeGrowthDelta: Int = rolloverFeeGrowthDelta * self.lpRolloverFeeRate / PERCENTAGE_BASIS_POINT;
         self.globalRolloverFeeGrowth = msg.rolloverFeeGrowth;
 
-        self.globalLPFund += (lpFundingFeeGrowthDelta + lpRolloverFeeGrowthDelta) / (PRICE_DECIMAL_FACTOR / JETTON_DECIMAL);
+        self.globalLPFund += lpFundingFeeGrowthDelta + lpRolloverFeeGrowthDelta;
         self.protocolTradingFee += (rolloverFeeGrowthDelta - lpRolloverFeeGrowthDelta);
 
         let globalNetLP: Int = self.globalLPFund + self.globalLPUnrealizedPnl;
@@ -639,6 +639,7 @@ contract Pool with Deployable, Resumable {
      */    
     fun createPerpOrder(trxId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, 
         tpSize: Int, tpPrice: Int, slSize: Int, slPrice: Int, executionFee: Int, requestTime: Int) {
+        require(marginDelta > 0 || sizeDelta > 0, "invalid margin/size delta");
         let triggerAbove: Bool = false;
 
         let orderId: Int = self.perpOrderIndexNext;
@@ -1098,6 +1099,10 @@ contract Pool with Deployable, Resumable {
         perpPosition.margin += realizedPnl + fundingFee - tradingFee - rolloverFee;
 
         require(perpPosition.margin >= 0, "insufficient margin");
+        // partially close position
+        if (sizeDelta > 0 && sizeDelta < perpPosition.size && marginDelta == 0) {
+            marginDelta = perpPosition.margin * (sizeDelta / perpPosition.size);
+        }
         if (marginDelta > perpPosition.margin) {
             marginDelta = perpPosition.margin;
         }

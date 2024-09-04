@@ -70,6 +70,7 @@
 
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_createPerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee, int $requestTime) impure inline_ref {
     var (($self'owner, $self'stopped, $self'orderLockTime, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForTransferJetton, $self'gasForBurnTlp, $self'gasForMintTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpJetton, $self'tlpWallet, $self'jettonWallet, $self'compensator, $self'claimer, $self'executors, $self'tokenConfigs, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'tlpSupply, $self'totalExecutionFee, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth)) = $self;
+    throw_unless(3428, ( (($marginDelta > 0)) ? (true) : (($sizeDelta > 0)) ));
     int $triggerAbove = false;
     int $orderId = $self'perpOrderIndexNext;
     $self'perpOrderIndexNext = $self'perpOrderIndexNext + 1;
@@ -300,6 +301,9 @@
     int $marginBefore = $perpPosition'margin;
     $perpPosition'margin = $perpPosition'margin + ((($realizedPnl + $fundingFee) - $tradingFee) - $rolloverFee);
     throw_unless(62409, ($perpPosition'margin >= 0));
+    if (( (( (($sizeDelta > 0)) ? (($sizeDelta < $perpPosition'size)) : (false) )) ? (($marginDelta == 0)) : (false) )) {
+        $marginDelta = ($perpPosition'margin * ($sizeDelta / $perpPosition'size));
+    }
     if (($marginDelta > $perpPosition'margin)) {
         $marginDelta = $perpPosition'margin;
     }
@@ -707,7 +711,7 @@
     int $rolloverFeeGrowthDelta = ($msg'rolloverFeeGrowth - $self'globalRolloverFeeGrowth);
     int $lpRolloverFeeGrowthDelta = (($rolloverFeeGrowthDelta * $self'lpRolloverFeeRate) / 1000000000);
     $self'globalRolloverFeeGrowth = $msg'rolloverFeeGrowth;
-    $self'globalLPFund = $self'globalLPFund + (($lpFundingFeeGrowthDelta + $lpRolloverFeeGrowthDelta) / 1000000000000);
+    $self'globalLPFund = $self'globalLPFund + ($lpFundingFeeGrowthDelta + $lpRolloverFeeGrowthDelta);
     $self'protocolTradingFee = $self'protocolTradingFee + ($rolloverFeeGrowthDelta - $lpRolloverFeeGrowthDelta);
     int $globalNetLP = ($self'globalLPFund + $self'globalLPUnrealizedPnl);
     int $tlpPrice = 0;

@@ -246,7 +246,7 @@ describe('LP', () => {
 
     it('should execute increase LP', async () => {
         /// create order
-        let liquidity = 10;
+        let liquidity = 1000;
         let executionFee = 0.1;
 
         // set block time
@@ -266,8 +266,8 @@ describe('LP', () => {
         const prices =  Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128))
         prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
 
-        const lpFundingFeeGrowth = 0;
-        const rolloverFeeGrowth = 0;
+        const lpFundingFeeGrowth = 10;
+        const rolloverFeeGrowth = 20;
 
         const executeResult = await executeLiquidityOrder(executor, createResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
         printTransactionFees(executeResult.trxResult.transactions);

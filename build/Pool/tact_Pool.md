@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 24708 bytes
+BOC Size: 24750 bytes
 
 # Types
 Total Types: 57
@@ -289,6 +289,7 @@ Argument: compensateId
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 1644: not reach trigger price
+3428: invalid margin/size delta
 5238: position not exist
 6118: too early to cancel
 10594: insufficient quota to supply
