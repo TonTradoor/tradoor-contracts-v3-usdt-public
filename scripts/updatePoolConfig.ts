@@ -9,7 +9,7 @@ import {
     waitForTransaction,
     toUnits
 } from '../utils/util';
-import { PERCENTAGE_DECIMAL } from '../utils/constants';
+import { MOCK_DECIMAL, PERCENTAGE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
@@ -35,7 +35,7 @@ export async function run(provider: NetworkProvider) {
         {
             $$type: 'UpdateConfig',
             orderLockTime: BigInt(config["orderLockTime"]),
-            maxLpNetCap: toUnits(config["maxLpNetCap"], PERCENTAGE_DECIMAL),
+            maxLpNetCap: toUnits(config["maxLpNetCap"], MOCK_DECIMAL),
             lpRolloverFeeRate: toUnits(config["lpRolloverFeeRate"], PERCENTAGE_DECIMAL),
             gasConfig: {
                 $$type: 'GasConfig',

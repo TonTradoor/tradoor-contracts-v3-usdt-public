@@ -61,15 +61,15 @@ describe('LP', () => {
         user1TlpWallet = TestEnv.user1TlpWallet;
 
         // mint to user
-        let trxResult = await mint(user0.address, '100000');
+        let trxResult = await mint(user0.address, '10000000');
         printTransactionFees(trxResult.transactions);
 
-        trxResult = await mint(user1.address, '100000');
+        trxResult = await mint(user1.address, '10000000');
         printTransactionFees(trxResult.transactions);
 
         // get user jetton balance
-        expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('100000'));
-        expect(await getJettonBalance(user1.address)).toEqual(toJettonUnits('100000'));
+        expect(await getJettonBalance(user0.address)).toEqual(toJettonUnits('10000000'));
+        expect(await getJettonBalance(user1.address)).toEqual(toJettonUnits('10000000'));
 
         // check config
         let configData = await pool.getConfigData();
@@ -298,6 +298,41 @@ describe('LP', () => {
         // check tlp
         let user0TlpBalance = executeResult.balanceAfter.user0TlpBalance;
         expect(user0TlpBalance).toBeGreaterThan(0);
+    });
+
+    it('should create decrease LP order failed - insufficient quota of liquidity', async () => {
+        /// create order
+        let liquidity = 100001;
+        let executionFee = 0.1;
+
+        // set block time
+        blockchain.now = now();
+
+        // create order
+        const createResult = await createIncreaseLiquidityOrder(user0, liquidity, executionFee);
+        printTransactionFees(createResult.trxResult.transactions);
+        prettyLogTransactions(createResult.trxResult.transactions);
+        expect(createResult.trxResult.transactions).toHaveTransaction({
+            from: poolJettonWallet.address,
+            to: pool.address,
+            success: true,
+        });
+
+        /// executor order
+        const prices =  Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128))
+        prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
+
+        const lpFundingFeeGrowth = 0;
+        const rolloverFeeGrowth = 0;
+
+        const executeResult = await executeLiquidityOrder(executor, createResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
+        printTransactionFees(executeResult.trxResult.transactions);
+        prettyLogTransactions(executeResult.trxResult.transactions);
+        expect(executeResult.trxResult.transactions).toHaveTransaction({
+            from: executor.address,
+            to: pool.address,
+            success: false,
+        });
     });
 
     it('should create decrease LP order failed - insufficient tlp-jetton', async () => {

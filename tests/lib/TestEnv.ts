@@ -172,7 +172,7 @@ export class TestEnv {
             {
                 $$type: 'UpdateConfig',
                 orderLockTime: 3n * 60n,
-                maxLpNetCap: toJettonUnits(10**9),
+                maxLpNetCap: toJettonUnits(100000n),
                 lpRolloverFeeRate: BigInt(this.lpRolloverFeeRate * PERCENTAGE_BASIS_POINT),
                 gasConfig: {
                     $$type: 'GasConfig',
