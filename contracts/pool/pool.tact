@@ -151,7 +151,7 @@ contract Pool with Deployable, Resumable {
         require(self.protocolTradingFee > 0, "no enough jettons to claim");
         send(SendParameters{
                 to: self.jettonWallet, 
-                value: self.gasForTransferJetton,
+                value: 0,
                 mode: SendRemainingValue | SendIgnoreErrors, 
                 bounce: false,
                 body: JettonTransfer{
@@ -164,6 +164,7 @@ contract Pool with Deployable, Resumable {
                     forward_payload: emptySlice()
                 }.toCell()
             });
+        self.protocolTradingFee = 0;
     }
 
     // ======================================================== Token ======================================================== //
@@ -639,7 +640,6 @@ contract Pool with Deployable, Resumable {
      */    
     fun createPerpOrder(trxId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, 
         tpSize: Int, tpPrice: Int, slSize: Int, slPrice: Int, executionFee: Int, requestTime: Int) {
-        require(marginDelta > 0 || sizeDelta > 0, "invalid margin/size delta");
         let triggerAbove: Bool = false;
 
         let orderId: Int = self.perpOrderIndexNext;
@@ -1152,7 +1152,6 @@ contract Pool with Deployable, Resumable {
         self.perpPositions.set(tokenId, accountPerpPosition);
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
-
         self.perpOrders.del(orderId);
         self.transferJetton(self.jettonWallet, trxId, payout, order.account, sender());
         if (order.executionFee > 0) {

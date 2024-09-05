@@ -1284,17 +1284,17 @@ describe('PERP', () => {
         expect(executeDecreaseShortResult.positionDataAfter.globalLPPosition?.isLong).toBeFalsy();
 
         /* =========================== claim protocol fee ================================ */
-        console.log('config', await pool.getConfigData());
+        console.log('>>>>>poolStat before claim', await pool.getPoolStat());
 
-        const claimResult = await claimProtocolFee(claimExecutor);
+        const claimResult = await claimProtocolFee(user3);
         printTransactionFees(claimResult.trxResult.transactions);
         expect(claimResult.trxResult.transactions).toHaveTransaction({
             from: claimExecutor.address,
             to: pool.address,
             success: true
         });
-        console.log('jetton balance of claim executor', claimResult.balanceAfter.claimExecutorJettonBalance);
-        console.log('config', await pool.getConfigData());
+        console.log('jetton balance after claim.', claimResult.balanceAfter.user3JettonBalance);
+        console.log('>>>>>poolStat after claim', await pool.getPoolStat());
 
     });
 

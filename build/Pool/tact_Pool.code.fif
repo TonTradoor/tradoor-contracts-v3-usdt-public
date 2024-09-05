@@ -2902,16 +2902,6 @@ PROGRAM{
     s4 s0 s0 XCHG3
   }>
   $Pool$_fun_createPerpOrder PROCREF:<{
-    3428 PUSHINT
-    s9 PUSH
-    0 GTINT
-    IF:<{
-      TRUE
-    }>ELSE<{
-      s8 PUSH
-      0 GTINT
-    }>
-    THROWANYIFNOT
     27 s() PUSH
     INC
     s13 PUSH
@@ -6037,25 +6027,27 @@ PROGRAM{
     s7 PUSH
     0 GTINT
     THROWANYIFNOT
+    0 PUSHINT
     66 PUSHINT
     FALSE
     PUSHNULL
-    0 PUSHINT
+    s3 PUSH
     $global_emptySlice INLINECALLDICT
-    s11 PUSH
-    s5 s7 XCHG
-    s4 s6 XCPU
+    s6 PUSH
+    s6 s8 XCHG
+    s5 s13 XCHG
     s0 s4 XCHG
-    s3 s7 XCHG
-    s7 s2 XCHG2
+    s0 s7 XCHG
+    3 -ROLL
     $JettonTransfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount_forward_payload INLINECALLDICT
     $JettonTransfer$_store_cell INLINECALLDICT
     25 s() PUSH
-    s0 s3 XCHG
-    33 s() PUSH
-    s1 s3 s3 XCHG3
+    s0 s4 XCHG
+    s8 s8 s8 XCHG3
     $SendParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
     $global_send INLINECALLDICT
+    0 PUSHINT
+    s0 s4 XCHG
   }>
   %$Pool$_internal_empty PROCINLINE:<{
   }>

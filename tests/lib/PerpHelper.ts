@@ -322,18 +322,18 @@ export async function adlPerpPosition(executor: SandboxContract<TreasuryContract
 }
 
 
-export async function claimProtocolFee(executor: SandboxContract<TreasuryContract>) {
+export async function claimProtocolFee(feeReceiver: SandboxContract<TreasuryContract>) {
     let balanceBefore = await getAllBalance();
     
     const trxResult = await TestEnv.pool.send(
-        executor.getSender(),
+        TestEnv.claimExecutor.getSender(),
         {
             value: toNano(0.2),
         },
         {
             $$type: 'ClaimProtocolFee',
             trxId: 0n,
-            feeReceiver: executor.address
+            feeReceiver: feeReceiver.address
         }
     );
 
