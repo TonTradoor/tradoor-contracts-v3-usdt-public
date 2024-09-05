@@ -134,11 +134,11 @@ contract Pool with Deployable, Resumable {
         let position: GlobalPosition? = self.globalPositions.get(msg.tokenId);
         if (position != null) {
             require(position!!.longSize + position!!.shortSize == 0, "token cannot be delisted");
-            self.tokenConfigs.del(msg.tokenId);
-            self.globalPositions.del(msg.tokenId);
-            self.globalLPPositions.del(msg.tokenId);
-            self.perpPositions.del(msg.tokenId);
         }
+        self.tokenConfigs.del(msg.tokenId);
+        self.globalPositions.del(msg.tokenId);
+        self.globalLPPositions.del(msg.tokenId);
+        self.perpPositions.del(msg.tokenId);
         self.reply("token delisted".asComment());
     }
 

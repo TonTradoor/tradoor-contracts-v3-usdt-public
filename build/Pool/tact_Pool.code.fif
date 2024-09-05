@@ -5947,36 +5947,30 @@ PROGRAM{
       ADD
       0 EQINT
       THROWANYIFNOT
-      38 s() PUSH
-      SWAP
-      s0 19 s() XCHG
-      16 PUSHINT
-      DICTUDEL
-      DROP
-      38 s() PUSH
-      s0 s8 XCHG2
-      16 PUSHINT
-      DICTUDEL
-      DROP
-      38 s() PUSH
-      s0 s9 XCHG2
-      16 PUSHINT
-      DICTUDEL
-      DROP
-      s1 38 s() XCHG
-      s0 s9 XCHG
-      16 PUSHINT
-      DICTUDEL
-      DROP
-      17 s() 37 s() XCHG
-      s6 17 s() XCHG
-      s0 s8 XCHG
-      s0 s7 XCHG
-      s0 s6 XCHG
     }>ELSE<{
       DROP
-      38 s() POP
     }>
+    38 s() PUSH
+    SWAP
+    s0 19 s() XCHG
+    16 PUSHINT
+    DICTUDEL
+    DROP
+    38 s() PUSH
+    s0 s8 XCHG2
+    16 PUSHINT
+    DICTUDEL
+    DROP
+    38 s() PUSH
+    s0 s9 XCHG2
+    16 PUSHINT
+    DICTUDEL
+    DROP
+    s1 38 s() XCHG
+    s0 s9 XCHG
+    16 PUSHINT
+    DICTUDEL
+    DROP
     B{b5ee9c7241010101001400002400000000746f6b656e2064656c69737465642069b25b} B>boc PUSHREF
     37 s() 38 s() XCHG
     36 s() 37 s() XCHG
@@ -5997,7 +5991,7 @@ PROGRAM{
     21 s() 22 s() XCHG
     20 s() 21 s() XCHG
     19 s() 20 s() XCHG
-    18 s() 19 s() XCHG
+    s7 19 s() XCHG
     17 s() 18 s() XCHG
     16 s() 17 s() XCHG
     s15 16 s() XCHG
@@ -6005,15 +5999,13 @@ PROGRAM{
     s13 s14 XCHG
     s12 s13 XCHG
     s11 s12 XCHG
-    s10 s11 XCHG
-    s9 s10 XCHG
-    s8 s9 XCHG
-    s7 s8 XCHG
+    s1 s10 XCHG
+    s1 s11 XCHG
     s6 s7 XCHG
     s5 s6 XCHG
     s4 s5 XCHG
     s3 s4 XCHG
-    s1 s3 s0 XCHG3
+    s2 s3 XCHG
     $Pool$_fun_reply INLINECALLDICT
   }>
   $Pool$_internal_binary_ClaimProtocolFee PROCINLINE:<{

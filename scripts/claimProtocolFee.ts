@@ -6,7 +6,7 @@ export async function run(provider: NetworkProvider) {
     const feeReceiver = await provider.ui().input('feeReceiver:');
 
     console.log("feeReceiver:", feeReceiver);
-    const sure = await provider.ui().choose('continue execution??????', ['no', 'yes'], a => a) === 'yes';
+    const sure = await provider.ui().input('confirm? (y/n)') === 'y';
     if (!sure) {
         return;
     }

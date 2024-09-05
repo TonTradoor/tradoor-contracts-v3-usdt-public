@@ -4,6 +4,27 @@ import { TestEnv } from "./TestEnv";
 import { MockJettonWallet } from "../../wrappers/MockJettonWallet";
 import { TLPJettonWallet } from "../../wrappers/TLPJettonWallet";
 
+export async function delistToken(tokenId: bigint) {
+    let tokenConfigBefore = (await TestEnv.pool.getTokenConfig(tokenId));
+    const trxResult = await TestEnv.pool.send(
+        TestEnv.deployer.getSender(),
+        {
+            value: toNano('0.1'),
+        },
+        {
+            $$type: 'DelistToken',
+            tokenId: tokenId
+        }
+    );
+    let tokenConfigAfter = (await TestEnv.pool.getTokenConfig(tokenId));
+
+    return {
+        trxResult,
+        tokenConfigBefore,
+        tokenConfigAfter
+    };
+}
+
 export async function mint(to: Address, amount: string) {
     const mintResult = await TestEnv.jetton.send(
         TestEnv.deployer.getSender(),

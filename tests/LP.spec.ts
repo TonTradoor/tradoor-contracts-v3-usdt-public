@@ -7,6 +7,7 @@ import { TLPJettonMaster as TLPJetton } from '../wrappers/JettonTLP';
 import { Pool } from '../wrappers/Pool';
 import { TestEnv } from './lib/TestEnv';
 import {
+    delistToken,
     fromJettonUnits,
     fromTlpUnits,
     getFriendlyTonBalance,
@@ -78,6 +79,19 @@ describe('LP', () => {
     it('should deploy', async () => {
         // the check is done inside beforeEach
         // blockchain and pool are ready to use
+    });
+
+    it('should delist token', async () => {
+        // the check is done inside beforeEach
+        // blockchain and pool are ready to use
+        const res = await delistToken(2n);
+        expect(res.trxResult.transactions).toHaveTransaction({
+            from: TestEnv.deployer.address,
+            to: pool.address,
+            success: true,
+        });
+        expect(res.tokenConfigBefore).not.toBeNull();
+        expect(res.tokenConfigAfter).toBeNull();
     });
 
     it('auto refund -- not enough execution fee', async () => {

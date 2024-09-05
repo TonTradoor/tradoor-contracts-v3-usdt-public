@@ -575,11 +575,11 @@
     tuple $position = $GlobalPosition$_load_opt(__tact_dict_get_uint_cell($self'globalPositions, 16, $msg'tokenId));
     if ((~ null?($position))) {
         throw_unless(24325, (($GlobalPosition$_get_longSize($GlobalPosition$_not_null($position)) + $GlobalPosition$_get_shortSize($GlobalPosition$_not_null($position))) == 0));
-        $self'tokenConfigs~__tact_dict_delete_uint(16, $msg'tokenId);
-        $self'globalPositions~__tact_dict_delete_uint(16, $msg'tokenId);
-        $self'globalLPPositions~__tact_dict_delete_uint(16, $msg'tokenId);
-        $self'perpPositions~__tact_dict_delete_uint(16, $msg'tokenId);
     }
+    $self'tokenConfigs~__tact_dict_delete_uint(16, $msg'tokenId);
+    $self'globalPositions~__tact_dict_delete_uint(16, $msg'tokenId);
+    $self'globalLPPositions~__tact_dict_delete_uint(16, $msg'tokenId);
+    $self'perpPositions~__tact_dict_delete_uint(16, $msg'tokenId);
     ($self'owner, $self'stopped, $self'orderLockTime, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForTransferJetton, $self'gasForBurnTlp, $self'gasForMintTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpJetton, $self'tlpWallet, $self'jettonWallet, $self'compensator, $self'claimer, $self'executors, $self'tokenConfigs, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'tlpSupply, $self'totalExecutionFee, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth)~$Pool$_fun_reply(__gen_cell_comment_594c1f31d48ebe4187726a1bc890e98cb4eea0cb233b1f511b8c80a064829484());
     return (($self'owner, $self'stopped, $self'orderLockTime, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForTransferJetton, $self'gasForBurnTlp, $self'gasForMintTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpJetton, $self'tlpWallet, $self'jettonWallet, $self'compensator, $self'claimer, $self'executors, $self'tokenConfigs, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'tlpSupply, $self'totalExecutionFee, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth), ());
 }
