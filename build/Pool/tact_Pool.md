@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 24546 bytes
+BOC Size: 24535 bytes
 
 # Types
 Total Types: 57
@@ -303,7 +303,6 @@ Argument: compensateId
 27798: invalid token
 28603: margin rate too high
 31332: less than min value
-31425: not reach unlock time
 32637: order not exist
 36718: disabled token
 40368: Contract stopped

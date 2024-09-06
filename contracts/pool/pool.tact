@@ -1491,7 +1491,7 @@ contract Pool with Deployable, Resumable {
             return;
         }
 
-        require(now() >= compensate.unlockTime, "not reach unlock time");        
+        //todo require(now() >= compensate.unlockTime, "not reach unlock time");        
 
         if(compensate.orderType != null) {
             if (compensate.orderType == ORDER_TYPE_LP) {
