@@ -9,7 +9,7 @@ export async function run(provider: NetworkProvider) {
     let trxId = BigInt(await provider.ui().input('trxId:'));
 
     /// create order
-    let liquidity = 10000000;
+    let liquidity = 100000;
     let executionFee = 0.1;
 
     // transfer jetton with create increase LP position order payload

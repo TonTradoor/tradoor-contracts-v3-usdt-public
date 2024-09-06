@@ -1,6 +1,7 @@
 import { Address, toNano } from '@ton/core';
 import { NetworkProvider } from '@ton/blueprint';
-import { attachPool, getLastTransaction, waitForTransaction } from '../utils/util';
+import { attachPool, getLastTransaction, toUnits, waitForTransaction } from '../utils/util';
+import { MOCK_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     let refundReceiverAddr = await provider.ui().input('refundReceiver:');
@@ -33,7 +34,7 @@ export async function run(provider: NetworkProvider) {
             orderId: orderId,
             trxId: 0n,
             refundReceiver: refundReceiver,
-            refundAmount: toNano(refundAmount),
+            refundAmount: toUnits(refundAmount, MOCK_DECIMAL),
             executionFeeReceiver: executionFeeReceiver,
             executionFee: toNano(executionFee)
         }

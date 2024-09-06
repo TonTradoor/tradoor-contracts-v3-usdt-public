@@ -7986,10 +7986,9 @@ PROGRAM{
     NOT
     THROWANYIFNOT
     $Compensate$_not_null INLINECALLDICT
-    DROP
-    s0 s9 XCHG
+    s0 s10 XCHG
     IF:<{
-      6 BLKDROP
+      7 BLKDROP
       s2 POP
       s0 s14 PUXC
       64 PUSHINT
@@ -8006,7 +8005,13 @@ PROGRAM{
       FALSE
       $Pool$_fun_transferEstimatedRemainValue INLINECALLDICT
     }>ELSE<{
-      s6 POP
+      s7 POP
+      31425 PUSHINT
+      NOW
+      s0 s10 XCHG2
+      GEQ
+      s1 s9 XCHG
+      THROWANYIFNOT
       s4 PUSH
       ISNULL
       NOT
@@ -8135,24 +8140,25 @@ PROGRAM{
         s6 s12 XCHG
         6 6 BLKSWAP
       }>
-      s3 PUSH
+      s5 PUSH
       ISNULL
       NOT
       IF:<{
-        s5 PUSH
+        s3 PUSH
         0 GTINT
       }>ELSE<{
         FALSE
       }>
       IF:<{
-        s0 s3 XCHG
+        s0 s5 XCHG
         __tact_not_null INLINECALLDICT
         TRUE
         ROT
-        s0 s6 XCHG
+        s0 s4 XCHG
         2 PUSHINT
         $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
         $global_send INLINECALLDICT
+        s1 s3 XCHG
       }>ELSE<{
         s3 POP
         s4 POP
