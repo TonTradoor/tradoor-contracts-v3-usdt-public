@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: MockJettonWallet
-BOC Size: 2068 bytes
+BOC Size: 2067 bytes
 
 # Types
 Total Types: 20

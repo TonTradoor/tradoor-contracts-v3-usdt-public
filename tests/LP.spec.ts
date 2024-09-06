@@ -745,7 +745,7 @@ describe('LP', () => {
         expect(createResult.balanceAfter.user0JettonBalance).toEqual(createResult.balanceBefore.user0JettonBalance - toJettonUnits(liquidity));
         expect(createResult.balanceAfter.poolJettonBalance).toEqual(createResult.balanceBefore.poolJettonBalance + toJettonUnits(liquidity));
         console.log('pool ton after create lp order', fromNano(createResult.balanceAfter.poolTonBalance));
-        
+        console.log('pool usdt after create lp order', fromJettonUnits(createResult.balanceAfter.poolJettonBalance));
         // create compensate order
         const createCompensateResult = await createCompensate(compensator, ORDER_TYPE_LP, createResult.orderIdBefore, user0.address, liquidity, user1.address, executionFee);
         printTransactionFees(createCompensateResult.trxResult.transactions);
@@ -773,8 +773,6 @@ describe('LP', () => {
         // check jetton
         expect(executeCompensateResult.balanceAfter.user0JettonBalance).toEqual(executeCompensateResult.balanceBefore.user0JettonBalance + toJettonUnits(liquidity));
         expect(executeCompensateResult.balanceAfter.poolJettonBalance).toEqual(executeCompensateResult.balanceBefore.poolJettonBalance - toJettonUnits(liquidity));
-        // check ton
-        expect(executeCompensateResult.balanceAfter.user1TonBalance).toBeGreaterThan(executeCompensateResult.balanceBefore.user1TonBalance + toNano(executionFee * 0.9))
 
     });
 

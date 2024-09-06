@@ -252,9 +252,6 @@
     if (($sizeDelta > $perpPosition'size)) {
         $sizeDelta = $perpPosition'size;
     }
-    if (($opType == 4)) {
-        throw_unless(54555, ($isLong ? ($tradePrice > $perpPosition'entryPrice) : ($tradePrice < $perpPosition'entryPrice)));
-    }
     tuple $globalPositionOpt = $GlobalPosition$_load_opt(__tact_dict_get_uint_cell($self'globalPositions, 16, $tokenId));
     var ($globalPosition'longMargin, $globalPosition'shortMargin, $globalPosition'longSize, $globalPosition'shortSize, $globalPosition'longValue, $globalPosition'shortValue) = ((~ null?($globalPositionOpt)) ? $GlobalPosition$_not_null($globalPositionOpt) : $GlobalPosition$_constructor_longMargin_shortMargin_longSize_shortSize_longValue_shortValue(0, 0, 0, 0, 0, 0));
     int $fundingFee = ((($fundingFeeGrowth - $perpPosition'entryFundingFeeGrowth) * $perpPosition'size) / 1000000000000000000);
@@ -922,17 +919,17 @@
     throw_unless(31425, (now() >= $compensate'unlockTime));
     if ((~ null?($compensate'orderType))) {
         if (__tact_int_eq_nullable_one($compensate'orderType, 1)) {
-            $self'liquidityOrders~__tact_dict_set_uint_cell(64, $compensate'orderId, $LiquidityOrder$_store_opt(null()));
+            $self'liquidityOrders~__tact_dict_delete_uint(64, $compensate'orderId);
         } else {
-            $self'perpOrders~__tact_dict_set_uint_cell(64, $compensate'orderId, $PerpOrder$_store_opt(null()));
-            $self'perpOrderExs~__tact_dict_set_uint_cell(64, $compensate'orderId, $PerpOrderEx$_store_opt(null()));
+            $self'perpOrders~__tact_dict_delete_uint(64, $compensate'orderId);
+            $self'perpOrderExs~__tact_dict_delete_uint(64, $compensate'orderId);
         }
     }
     if (( ((~ null?($compensate'refundReceiver))) ? (($compensate'refundAmount > 0)) : (false) )) {
         ($self'owner, $self'stopped, $self'orderLockTime, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'lpGasConsumption, $self'perpGasConsumption, $self'minTonsForStorage, $self'gasForTransferJetton, $self'gasForBurnTlp, $self'gasForMintTlp, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'tlpJetton, $self'tlpWallet, $self'jettonWallet, $self'compensator, $self'claimer, $self'executors, $self'tokenConfigs, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'tlpSupply, $self'totalExecutionFee, $self'protocolTradingFee, $self'globalLPFund, $self'globalLPUnrealizedPnl, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth)~$Pool$_fun_transferJetton($self'jettonWallet, $compensate'trxId, $compensate'refundAmount, __tact_not_null($compensate'refundReceiver), __tact_context_get_sender());
     }
     if (( ((~ null?($compensate'executionFeeReceiver))) ? (($compensate'executionFee > 0)) : (false) )) {
-        $global_send($SendParameters$_constructor_to_value_mode(__tact_not_null($compensate'executionFeeReceiver), $compensate'executionFee, 2));
+        $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_not_null($compensate'executionFeeReceiver), true, $compensate'executionFee, 2));
     }
     $self'compensates~__tact_dict_delete_uint(64, $msg'compensateId);
     $global_emit($CompensateExecutedEvent$_store_cell($CompensateExecutedEvent$_constructor_compensateId_trxId($msg'compensateId, $compensate'trxId)));

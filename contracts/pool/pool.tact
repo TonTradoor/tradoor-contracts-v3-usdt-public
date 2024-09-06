@@ -1042,10 +1042,6 @@ contract Pool with Deployable, Resumable {
             sizeDelta = perpPosition.size;
         }
 
-        if (opType == OP_TYPE_PERP_ADL){
-            require(isLong? tradePrice > perpPosition.entryPrice : tradePrice < perpPosition.entryPrice, "pnl <= 0");
-        }
-
         let globalPositionOpt: GlobalPosition? = self.globalPositions.get(tokenId);
         let globalPosition: GlobalPosition = globalPositionOpt != null ? globalPositionOpt!! : GlobalPosition{};
 
@@ -1499,10 +1495,10 @@ contract Pool with Deployable, Resumable {
 
         if(compensate.orderType != null) {
             if (compensate.orderType == ORDER_TYPE_LP) {
-                self.liquidityOrders.set(compensate.orderId, null);
+                self.liquidityOrders.del(compensate.orderId);
             } else {
-                self.perpOrders.set(compensate.orderId, null);
-                self.perpOrderExs.set(compensate.orderId, null);
+                self.perpOrders.del(compensate.orderId);
+                self.perpOrderExs.del(compensate.orderId);
             }
         }
 
@@ -1511,7 +1507,7 @@ contract Pool with Deployable, Resumable {
         }
 
         if (compensate.executionFeeReceiver != null && compensate.executionFee > 0) {
-            send(SendParameters{ to: compensate.executionFeeReceiver!!, value: compensate.executionFee, mode: SendIgnoreErrors });
+            send(SendParameters{ to: compensate.executionFeeReceiver!!, bounce: true, value: compensate.executionFee, mode: SendIgnoreErrors });
         }
         self.compensates.del(msg.compensateId);
 

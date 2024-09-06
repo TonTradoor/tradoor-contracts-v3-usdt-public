@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 24708 bytes
+BOC Size: 24546 bytes
 
 # Types
 Total Types: 57
@@ -310,7 +310,6 @@ Argument: compensateId
 40940: margin is too high to liquidate
 41207: invalid sender
 53296: Contract not stopped
-54555: pnl <= 0
 62409: insufficient margin
 
 # Trait Inheritance Diagram

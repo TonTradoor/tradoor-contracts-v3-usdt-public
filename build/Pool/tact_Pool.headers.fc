@@ -306,12 +306,6 @@ builder $LiquidityOrder$_store(builder build_0, (int, slice, int, int, int, int)
 ;; $LiquidityOrder$_store_cell
 cell $LiquidityOrder$_store_cell((int, slice, int, int, int, int) v) inline;
 
-;; $LiquidityOrder$_not_null
-((int, slice, int, int, int, int)) $LiquidityOrder$_not_null(tuple v) inline;
-
-;; $LiquidityOrder$_store_opt
-cell $LiquidityOrder$_store_opt(tuple v) inline;
-
 ;; $LiquidityOrder$_load
 (slice, ((int, slice, int, int, int, int))) $LiquidityOrder$_load(slice sc_0) inline_ref;
 
@@ -327,12 +321,6 @@ builder $PerpOrder$_store(builder build_0, (int, int, slice, int, int, int, int,
 ;; $PerpOrder$_store_cell
 cell $PerpOrder$_store_cell((int, int, slice, int, int, int, int, int, int, int, int) v) inline;
 
-;; $PerpOrder$_not_null
-((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_not_null(tuple v) inline;
-
-;; $PerpOrder$_store_opt
-cell $PerpOrder$_store_opt(tuple v) inline;
-
 ;; $PerpOrder$_load
 (slice, ((int, int, slice, int, int, int, int, int, int, int, int))) $PerpOrder$_load(slice sc_0) inline_ref;
 
@@ -347,12 +335,6 @@ builder $PerpOrderEx$_store(builder build_0, (int, int, int, int, int) v) inline
 
 ;; $PerpOrderEx$_store_cell
 cell $PerpOrderEx$_store_cell((int, int, int, int, int) v) inline;
-
-;; $PerpOrderEx$_not_null
-((int, int, int, int, int)) $PerpOrderEx$_not_null(tuple v) inline;
-
-;; $PerpOrderEx$_store_opt
-cell $PerpOrderEx$_store_opt(tuple v) inline;
 
 ;; $PerpOrderEx$_load
 (slice, ((int, int, int, int, int))) $PerpOrderEx$_load(slice sc_0) inline;
@@ -486,8 +468,17 @@ _ $ContractConfig$_get_jettonWallet((slice, slice, slice) v) inline;
 ;; $ContractConfig$_not_null
 ((slice, slice, slice)) $ContractConfig$_not_null(tuple v) inline;
 
+;; $LiquidityOrder$_not_null
+((int, slice, int, int, int, int)) $LiquidityOrder$_not_null(tuple v) inline;
+
 ;; $LiquidityOrderData$_to_external
 (int, tuple) $LiquidityOrderData$_to_external(((int, tuple)) v) inline;
+
+;; $PerpOrder$_not_null
+((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_not_null(tuple v) inline;
+
+;; $PerpOrderEx$_not_null
+((int, int, int, int, int)) $PerpOrderEx$_not_null(tuple v) inline;
 
 ;; $PerpOrderData$_to_external
 (int, tuple, tuple) $PerpOrderData$_to_external(((int, tuple, tuple)) v) inline;
@@ -692,6 +683,9 @@ slice $global_emptySlice() impure inline;
 
 ;; $CompensateCancelledEvent$_constructor_compensateId_trxId
 ((int, int)) $CompensateCancelledEvent$_constructor_compensateId_trxId(int $compensateId, int $trxId) inline;
+
+;; $SendParameters$_constructor_to_bounce_value_mode
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice $to, int $bounce, int $value, int $mode) inline;
 
 ;; $CompensateExecutedEvent$_constructor_compensateId_trxId
 ((int, int)) $CompensateExecutedEvent$_constructor_compensateId_trxId(int $compensateId, int $trxId) inline;

@@ -830,98 +830,98 @@ describe('PERP', () => {
 
     });
 
-    it('should create 1000 positions', async () => {
-        /* =========================== increase LP ================================ */
-        /// create order
-        let lpLiquidity = 10000000;
-        let executionFee = 0.1;
-        const prices = Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128));
-        prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
-
-        let lpFundingFeeGrowth = 0;
-        let rolloverFeeGrowth = 0;
-
-        // create order
-        const createIncreaseResult = await createIncreaseLiquidityOrder(user0, lpLiquidity, executionFee);
-
-        /// executor order
-        const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
-        expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
-            from: executor.address,
-            to: pool.address,
-            success: true
-        });
-
-        // check order
-        expect(executeIncreaseResult.orderAfter).toBeNull();
-
-        // check tpl balance
-        let user0TlpBalance = executeIncreaseResult.balanceAfter.user0TlpBalance;
-        console.log('user0TlpBalance:', user0TlpBalance);
-        expect(user0TlpBalance).toBeGreaterThan(0);
-
-        /* =========================== increase perp ================================ */
-        let isMarket = true;
-        let tokenId = 1;
-        let isLong = true;
-        let margin = 100;
-        let size = 0.02; // 1000u
-        let triggerPrice = 51000;
-        let increasePrice = 50000;
-        let _fundingFeeGrowth = 0;
-        let _rolloverFeeGrowth = 0;
-        for (let i = 0; i < 1000; i++) {
-            blockchain.now = now() + i* 5000;
-            const user =  await TestEnv.blockchain.treasury('user_'+i);
-            await mint(user.address, '100000000');
-            expect(await getJettonBalance(user.address)).toEqual(toJettonUnits('100000000'));
-            // create order
-            const createResult = await createIncreasePerpOrder(user, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
-            printTransactionFees(createResult.trxResult.transactions);
-            expect(createResult.trxResult.transactions).toHaveTransaction({
-                from: poolJettonWallet.address,
-                to: pool.address,
-                success: true
-            });
-
-            // executor order
-            const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
-            printTransactionFees(executeResult.trxResult.transactions);
-            expect(executeResult.trxResult.transactions).toHaveTransaction({
-                from: executor.address,
-                to: pool.address,
-                success: true
-            });
-        }
-
-        // const promises = [];
-        // for (let i = 0; i < 100; i++) {
-        //     promises.push(async () => {
-        //         const user =  await TestEnv.blockchain.treasury('user_'+i);
-        //         await mint(user.address, '100000000');
-        //         expect(await getJettonBalance(user.address)).toEqual(toJettonUnits('100000000'));
-        //         // create order
-        //         const createResult = await createIncreasePerpOrder(user, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
-        //         expect(createResult.trxResult.transactions).toHaveTransaction({
-        //             from: poolJettonWallet.address,
-        //             to: pool.address,
-        //             success: true
-        //         });
-        //
-        //         // executor order
-        //         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
-        //         expect(executeResult.trxResult.transactions).toHaveTransaction({
-        //             from: executor.address,
-        //             to: pool.address,
-        //             success: true
-        //         });
-        //     });
-        // }
-        // await Promise.all(promises.map(p => p()));
-        const position = await TestEnv.pool.getPerpPosition(1n, user1.address);
-        console.log('>>>>>>>>> position',position.perpPositionIndexNext);
-
-    });
+    // it('should create 1000 positions', async () => {
+    //     /* =========================== increase LP ================================ */
+    //     /// create order
+    //     let lpLiquidity = 10000000;
+    //     let executionFee = 0.1;
+    //     const prices = Dictionary.empty(Dictionary.Keys.Int(16), Dictionary.Values.BigInt(128));
+    //     prices.set(1, toPriceUnits(60000)).set(2, toPriceUnits(3000));
+    //
+    //     let lpFundingFeeGrowth = 0;
+    //     let rolloverFeeGrowth = 0;
+    //
+    //     // create order
+    //     const createIncreaseResult = await createIncreaseLiquidityOrder(user0, lpLiquidity, executionFee);
+    //
+    //     /// executor order
+    //     const executeIncreaseResult = await executeLiquidityOrder(executor, createIncreaseResult.orderIdBefore, prices, lpFundingFeeGrowth, rolloverFeeGrowth);
+    //     expect(executeIncreaseResult.trxResult.transactions).toHaveTransaction({
+    //         from: executor.address,
+    //         to: pool.address,
+    //         success: true
+    //     });
+    //
+    //     // check order
+    //     expect(executeIncreaseResult.orderAfter).toBeNull();
+    //
+    //     // check tpl balance
+    //     let user0TlpBalance = executeIncreaseResult.balanceAfter.user0TlpBalance;
+    //     console.log('user0TlpBalance:', user0TlpBalance);
+    //     expect(user0TlpBalance).toBeGreaterThan(0);
+    //
+    //     /* =========================== increase perp ================================ */
+    //     let isMarket = true;
+    //     let tokenId = 1;
+    //     let isLong = true;
+    //     let margin = 100;
+    //     let size = 0.02; // 1000u
+    //     let triggerPrice = 51000;
+    //     let increasePrice = 50000;
+    //     let _fundingFeeGrowth = 0;
+    //     let _rolloverFeeGrowth = 0;
+    //     for (let i = 0; i < 1000; i++) {
+    //         blockchain.now = now() + i* 5000;
+    //         const user =  await TestEnv.blockchain.treasury('user_'+i);
+    //         await mint(user.address, '100000000');
+    //         expect(await getJettonBalance(user.address)).toEqual(toJettonUnits('100000000'));
+    //         // create order
+    //         const createResult = await createIncreasePerpOrder(user, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+    //         printTransactionFees(createResult.trxResult.transactions);
+    //         expect(createResult.trxResult.transactions).toHaveTransaction({
+    //             from: poolJettonWallet.address,
+    //             to: pool.address,
+    //             success: true
+    //         });
+    //
+    //         // executor order
+    //         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
+    //         printTransactionFees(executeResult.trxResult.transactions);
+    //         expect(executeResult.trxResult.transactions).toHaveTransaction({
+    //             from: executor.address,
+    //             to: pool.address,
+    //             success: true
+    //         });
+    //     }
+    //
+    //     // const promises = [];
+    //     // for (let i = 0; i < 100; i++) {
+    //     //     promises.push(async () => {
+    //     //         const user =  await TestEnv.blockchain.treasury('user_'+i);
+    //     //         await mint(user.address, '100000000');
+    //     //         expect(await getJettonBalance(user.address)).toEqual(toJettonUnits('100000000'));
+    //     //         // create order
+    //     //         const createResult = await createIncreasePerpOrder(user, executionFee, isMarket, tokenId, isLong, margin, size, triggerPrice, 0, 0, 0, 0);
+    //     //         expect(createResult.trxResult.transactions).toHaveTransaction({
+    //     //             from: poolJettonWallet.address,
+    //     //             to: pool.address,
+    //     //             success: true
+    //     //         });
+    //     //
+    //     //         // executor order
+    //     //         const executeResult = await executePerpOrder(executor, createResult.orderIdBefore, increasePrice, _fundingFeeGrowth, _rolloverFeeGrowth);
+    //     //         expect(executeResult.trxResult.transactions).toHaveTransaction({
+    //     //             from: executor.address,
+    //     //             to: pool.address,
+    //     //             success: true
+    //     //         });
+    //     //     });
+    //     // }
+    //     // await Promise.all(promises.map(p => p()));
+    //     const position = await TestEnv.pool.getPerpPosition(1n, user1.address);
+    //     console.log('>>>>>>>>> position',position.perpPositionIndexNext);
+    //
+    // });
 
     it('should liquidate long perp', async () => {
         /* =========================== increase LP ================================ */

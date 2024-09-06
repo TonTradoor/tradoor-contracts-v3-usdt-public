@@ -40,6 +40,10 @@ _ $Context$_get_value((int, slice, int, slice) v) inline {
     return ($bounce, $to, $value, 0, $body, null(), null());
 }
 
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice $to, int $bounce, int $value, int $mode) inline {
+    return ($bounce, $to, $value, $mode, null(), null(), null());
+}
+
 ;;
 ;; Type: Deploy
 ;; Header: 0x946a98b6
@@ -1253,19 +1257,6 @@ cell $LiquidityOrder$_store_cell((int, slice, int, int, int, int) v) inline {
     return $LiquidityOrder$_store(begin_cell(), v).end_cell();
 }
 
-((int, slice, int, int, int, int)) $LiquidityOrder$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (int vvv'isIncrease, slice vvv'account, int vvv'jettonDelta, int vvv'executionFee, int vvv'blockTime, int vvv'isPending) = __tact_tuple_destroy_6(v);
-    return (vvv'isIncrease, vvv'account, vvv'jettonDelta, vvv'executionFee, vvv'blockTime, vvv'isPending);
-}
-
-cell $LiquidityOrder$_store_opt(tuple v) inline {
-    if (null?(v)) {
-        return null();
-    }
-    return $LiquidityOrder$_store_cell($LiquidityOrder$_not_null(v));
-}
-
 (slice, ((int, slice, int, int, int, int))) $LiquidityOrder$_load(slice sc_0) inline_ref {
     var v'isIncrease = sc_0~load_int(1);
     var v'account = sc_0~__tact_load_address();
@@ -1287,6 +1278,12 @@ tuple $LiquidityOrder$_load_opt(cell cl) inline {
     }
     var sc = cl.begin_parse();
     return $LiquidityOrder$_as_optional(sc~$LiquidityOrder$_load());
+}
+
+((int, slice, int, int, int, int)) $LiquidityOrder$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'isIncrease, slice vvv'account, int vvv'jettonDelta, int vvv'executionFee, int vvv'blockTime, int vvv'isPending) = __tact_tuple_destroy_6(v);
+    return (vvv'isIncrease, vvv'account, vvv'jettonDelta, vvv'executionFee, vvv'blockTime, vvv'isPending);
 }
 
 ((int, slice, int, int, int, int)) $LiquidityOrder$_constructor_isIncrease_account_jettonDelta_executionFee_blockTime_isPending(int $isIncrease, slice $account, int $jettonDelta, int $executionFee, int $blockTime, int $isPending) inline {
@@ -1332,19 +1329,6 @@ cell $PerpOrder$_store_cell((int, int, slice, int, int, int, int, int, int, int,
     return $PerpOrder$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (int vvv'opType, int vvv'tokenId, slice vvv'account, int vvv'isLong, int vvv'marginDelta, int vvv'sizeDelta, int vvv'triggerPrice, int vvv'triggerAbove, int vvv'executionFee, int vvv'blockTime, int vvv'isPending) = __tact_tuple_destroy_11(v);
-    return (vvv'opType, vvv'tokenId, vvv'account, vvv'isLong, vvv'marginDelta, vvv'sizeDelta, vvv'triggerPrice, vvv'triggerAbove, vvv'executionFee, vvv'blockTime, vvv'isPending);
-}
-
-cell $PerpOrder$_store_opt(tuple v) inline {
-    if (null?(v)) {
-        return null();
-    }
-    return $PerpOrder$_store_cell($PerpOrder$_not_null(v));
-}
-
 (slice, ((int, int, slice, int, int, int, int, int, int, int, int))) $PerpOrder$_load(slice sc_0) inline_ref {
     var v'opType = sc_0~load_uint(8);
     var v'tokenId = sc_0~load_uint(16);
@@ -1373,6 +1357,12 @@ tuple $PerpOrder$_load_opt(cell cl) inline {
     return $PerpOrder$_as_optional(sc~$PerpOrder$_load());
 }
 
+((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'opType, int vvv'tokenId, slice vvv'account, int vvv'isLong, int vvv'marginDelta, int vvv'sizeDelta, int vvv'triggerPrice, int vvv'triggerAbove, int vvv'executionFee, int vvv'blockTime, int vvv'isPending) = __tact_tuple_destroy_11(v);
+    return (vvv'opType, vvv'tokenId, vvv'account, vvv'isLong, vvv'marginDelta, vvv'sizeDelta, vvv'triggerPrice, vvv'triggerAbove, vvv'executionFee, vvv'blockTime, vvv'isPending);
+}
+
 ((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending(int $opType, int $tokenId, slice $account, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $triggerAbove, int $executionFee, int $blockTime, int $isPending) inline {
     return ($opType, $tokenId, $account, $isLong, $marginDelta, $sizeDelta, $triggerPrice, $triggerAbove, $executionFee, $blockTime, $isPending);
 }
@@ -1396,19 +1386,6 @@ cell $PerpOrderEx$_store_cell((int, int, int, int, int) v) inline {
     return $PerpOrderEx$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int, int, int)) $PerpOrderEx$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (int vvv'tpSize, int vvv'tpPrice, int vvv'slSize, int vvv'slPrice, int vvv'executionFee) = __tact_tuple_destroy_5(v);
-    return (vvv'tpSize, vvv'tpPrice, vvv'slSize, vvv'slPrice, vvv'executionFee);
-}
-
-cell $PerpOrderEx$_store_opt(tuple v) inline {
-    if (null?(v)) {
-        return null();
-    }
-    return $PerpOrderEx$_store_cell($PerpOrderEx$_not_null(v));
-}
-
 (slice, ((int, int, int, int, int))) $PerpOrderEx$_load(slice sc_0) inline {
     var v'tpSize = sc_0~load_coins();
     var v'tpPrice = sc_0~load_uint(128);
@@ -1429,6 +1406,12 @@ tuple $PerpOrderEx$_load_opt(cell cl) inline {
     }
     var sc = cl.begin_parse();
     return $PerpOrderEx$_as_optional(sc~$PerpOrderEx$_load());
+}
+
+((int, int, int, int, int)) $PerpOrderEx$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'tpSize, int vvv'tpPrice, int vvv'slSize, int vvv'slPrice, int vvv'executionFee) = __tact_tuple_destroy_5(v);
+    return (vvv'tpSize, vvv'tpPrice, vvv'slSize, vvv'slPrice, vvv'executionFee);
 }
 
 ((int, int, int, int, int)) $PerpOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee(int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee) inline {

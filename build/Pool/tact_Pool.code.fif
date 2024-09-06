@@ -100,22 +100,16 @@ PROGRAM{
   DECLPROC $GlobalPosition$_load_opt
   DECLPROC $LiquidityOrder$_store
   DECLPROC $LiquidityOrder$_store_cell
-  DECLPROC $LiquidityOrder$_not_null
-  DECLPROC $LiquidityOrder$_store_opt
   DECLPROC $LiquidityOrder$_load
   DECLPROC $LiquidityOrder$_as_optional
   DECLPROC $LiquidityOrder$_load_opt
   DECLPROC $PerpOrder$_store
   DECLPROC $PerpOrder$_store_cell
-  DECLPROC $PerpOrder$_not_null
-  DECLPROC $PerpOrder$_store_opt
   DECLPROC $PerpOrder$_load
   DECLPROC $PerpOrder$_as_optional
   DECLPROC $PerpOrder$_load_opt
   DECLPROC $PerpOrderEx$_store
   DECLPROC $PerpOrderEx$_store_cell
-  DECLPROC $PerpOrderEx$_not_null
-  DECLPROC $PerpOrderEx$_store_opt
   DECLPROC $PerpOrderEx$_load
   DECLPROC $PerpOrderEx$_as_optional
   DECLPROC $PerpOrderEx$_load_opt
@@ -160,7 +154,10 @@ PROGRAM{
   DECLPROC $ContractConfig$_get_tlpWallet
   DECLPROC $ContractConfig$_get_jettonWallet
   DECLPROC $ContractConfig$_not_null
+  DECLPROC $LiquidityOrder$_not_null
   DECLPROC $LiquidityOrderData$_to_external
+  DECLPROC $PerpOrder$_not_null
+  DECLPROC $PerpOrderEx$_not_null
   DECLPROC $PerpOrderData$_to_external
   DECLPROC $Compensate$_not_null
   DECLPROC $CompensateData$_to_external
@@ -229,6 +226,7 @@ PROGRAM{
   DECLPROC $Compensate$_constructor_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
   DECLPROC $CompensateCreatedEvent$_constructor_compensateId_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime
   DECLPROC $CompensateCancelledEvent$_constructor_compensateId_trxId
+  DECLPROC $SendParameters$_constructor_to_bounce_value_mode
   DECLPROC $CompensateExecutedEvent$_constructor_compensateId_trxId
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $Pool$_internal_binary_UpdateConfig
@@ -1584,23 +1582,6 @@ PROGRAM{
     $LiquidityOrder$_store INLINECALLDICT
     ENDC
   }>
-  $LiquidityOrder$_not_null PROCINLINE:<{
-    DUP
-    ISNULL
-    128 THROWIF
-    6 UNTUPLE
-  }>
-  $LiquidityOrder$_store_opt PROCINLINE:<{
-    DUP
-    ISNULL
-    IF:<{
-      DROP
-      PUSHNULL
-    }>ELSE<{
-      $LiquidityOrder$_not_null INLINECALLDICT
-      $LiquidityOrder$_store_cell INLINECALLDICT
-    }>
-  }>
   $LiquidityOrder$_load PROCREF:<{
     1 LDI
     __tact_load_address INLINECALLDICT
@@ -1653,23 +1634,6 @@ PROGRAM{
     $PerpOrder$_store INLINECALLDICT
     ENDC
   }>
-  $PerpOrder$_not_null PROCINLINE:<{
-    DUP
-    ISNULL
-    128 THROWIF
-    11 UNTUPLE
-  }>
-  $PerpOrder$_store_opt PROCINLINE:<{
-    DUP
-    ISNULL
-    IF:<{
-      DROP
-      PUSHNULL
-    }>ELSE<{
-      $PerpOrder$_not_null INLINECALLDICT
-      $PerpOrder$_store_cell INLINECALLDICT
-    }>
-  }>
   $PerpOrder$_load PROCREF:<{
     8 LDU
     16 LDU
@@ -1718,23 +1682,6 @@ PROGRAM{
     5 -ROLL
     $PerpOrderEx$_store INLINECALLDICT
     ENDC
-  }>
-  $PerpOrderEx$_not_null PROCINLINE:<{
-    DUP
-    ISNULL
-    128 THROWIF
-    5 UNTUPLE
-  }>
-  $PerpOrderEx$_store_opt PROCINLINE:<{
-    DUP
-    ISNULL
-    IF:<{
-      DROP
-      PUSHNULL
-    }>ELSE<{
-      $PerpOrderEx$_not_null INLINECALLDICT
-      $PerpOrderEx$_store_cell INLINECALLDICT
-    }>
   }>
   $PerpOrderEx$_load PROCINLINE:<{
     LDGRAMS
@@ -2159,7 +2106,25 @@ PROGRAM{
     128 THROWIF
     3 UNTUPLE
   }>
+  $LiquidityOrder$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+    6 UNTUPLE
+  }>
   $LiquidityOrderData$_to_external PROCINLINE:<{
+  }>
+  $PerpOrder$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+    11 UNTUPLE
+  }>
+  $PerpOrderEx$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+    5 UNTUPLE
   }>
   $PerpOrderData$_to_external PROCINLINE:<{
   }>
@@ -4260,22 +4225,6 @@ PROGRAM{
       s2 PUSH
       s0 30 s() XCHG
     }>
-    35 s() PUSH
-    4 EQINT
-    IF:<{
-      54555 PUSHINT
-      33 s() PUSH
-      IF:<{
-        30 s() PUSH
-        s4 PUSH
-        GREATER
-      }>ELSE<{
-        30 s() PUSH
-        s4 PUSH
-        LESS
-      }>
-      THROWANYIFNOT
-    }>
     45 s() PUSH
     16 PUSHINT
     35 s() PUSH
@@ -5588,6 +5537,12 @@ PROGRAM{
   $CompensateCreatedEvent$_constructor_compensateId_orderType_orderId_trxId_refundReceiver_refundAmount_executionFeeReceiver_executionFee_unlockTime PROCINLINE:<{
   }>
   $CompensateCancelledEvent$_constructor_compensateId_trxId PROCINLINE:<{
+  }>
+  $SendParameters$_constructor_to_bounce_value_mode PROCINLINE:<{
+    s2 s3 XCHG
+    PUSHNULL
+    PUSHNULL
+    PUSHNULL
   }>
   $CompensateExecutedEvent$_constructor_compensateId_trxId PROCINLINE:<{
   }>
@@ -8065,31 +8020,28 @@ PROGRAM{
         1 PUSHINT
         __tact_int_eq_nullable_one INLINECALLDICT
         IF:<{
+          s0 24 s() XCHG
+          s1 s2 XCHG
           64 PUSHINT
-          PUSHNULL
-          $LiquidityOrder$_store_opt INLINECALLDICT
-          s3 26 s() XCHG
-          s1 s4 s0 XCHG3
-          __tact_dict_set_uint_cell INLINECALLDICT
+          DICTUDEL
+          DROP
         }>ELSE<{
+          s2 s(-1) PUXC
+          s0 23 s() XCHG
           64 PUSHINT
-          PUSHNULL
-          $PerpOrder$_store_opt INLINECALLDICT
-          s2 24 s() XCHG
-          s4 s(-1) PUXC
-          __tact_dict_set_uint_cell INLINECALLDICT
+          DICTUDEL
+          DROP
+          s0 21 s() XCHG
+          s1 s2 XCHG
           64 PUSHINT
-          PUSHNULL
-          $PerpOrderEx$_store_opt INLINECALLDICT
-          s3 23 s() XCHG
-          s1 s4 s0 XCHG3
-          __tact_dict_set_uint_cell INLINECALLDICT
-          20 s() 23 s() XCHG
-          s1 21 s() XCHG
+          DICTUDEL
+          DROP
+          21 s() 23 s() XCHG
           s0 20 s() XCHG
+          s0 21 s() XCHG
         }>
         s0 23 s() XCHG
-        s1 s2 XCHG
+        -ROT
       }>ELSE<{
         s3 POP
         s3 POP
@@ -8200,9 +8152,11 @@ PROGRAM{
       IF:<{
         s0 s5 XCHG
         __tact_not_null INLINECALLDICT
-        s0 s3 XCHG2
+        TRUE
+        ROT
+        s0 s4 XCHG
         2 PUSHINT
-        $SendParameters$_constructor_to_value_mode INLINECALLDICT
+        $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
         $global_send INLINECALLDICT
         s1 s3 XCHG
       }>ELSE<{
