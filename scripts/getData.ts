@@ -1,5 +1,5 @@
 import { NetworkProvider, sleep } from '@ton/blueprint';
-import { attachPool, getConfig } from '../utils/util';
+import { attachPool, attachTLPJetton } from '../utils/util';
 import { Address } from '@ton/core';
 
 export async function run(provider: NetworkProvider) {
@@ -9,6 +9,7 @@ export async function run(provider: NetworkProvider) {
     const orderId = BigInt(await provider.ui().input('orderId:'));
 
     const pool = attachPool(provider);
+    const tlp = attachTLPJetton(provider);
 
     console.log('=================== Config ===================');
     let tokenConfig = await pool.getTokenConfig(tokenId);
@@ -33,4 +34,7 @@ export async function run(provider: NetworkProvider) {
     let position = await pool.getPerpPosition(tokenId, account);
     console.log(`position:`, position);
 
+    console.log('=================== TLP ===================');
+    const tlpData = await tlp.getGetJettonData();
+    console.log(`tlpData{ mintable: ${tlpData.mintable}, total_supply: ${tlpData.total_supply}, admin_address: ${tlpData.admin_address}`);
 }
