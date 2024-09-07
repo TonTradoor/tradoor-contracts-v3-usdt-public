@@ -169,7 +169,7 @@ contract Pool with Deployable, Resumable {
                     response_destination: msg.feeReceiver,
                     custom_payload: null,
                     forward_ton_amount: 0,
-                    forward_payload: emptySlice()
+                    forward_payload: beginCell().storeUint(0, 1).endCell().asSlice()
                 }.toCell()
             });
         self.protocolTradingFee = 0;
@@ -269,7 +269,7 @@ contract Pool with Deployable, Resumable {
                     response_destination: response_destination,
                     custom_payload: null,
                     forward_ton_amount: 0,
-                    forward_payload: emptySlice()
+                    forward_payload: beginCell().storeUint(0, 1).endCell().asSlice()
                 }.toCell()
             });
         }
