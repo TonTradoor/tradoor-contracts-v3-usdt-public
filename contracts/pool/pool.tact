@@ -116,6 +116,14 @@ contract Pool with Deployable, Resumable {
     }
 
     /**
+     * @dev Update the content of the TLP jetton.
+     */
+    receive(msg: JettonUpdateContent) {
+        self.requireOwner();
+        self.forward(self.tlpJetton, msg.toCell(), true, null);
+    }
+
+    /**
      * @dev List/Update a token.
      * @param msg The ListToken message containing the token ID and config.
      */
@@ -823,12 +831,6 @@ contract Pool with Deployable, Resumable {
 
         let order: PerpOrder = self.perpOrders.get(orderId)!!;
 
-        if (sizeDelta > 0) {
-            let valueDelta: Int = sizeDelta * tradePrice / PRICE_DECIMAL_FACTOR;
-            require(valueDelta >= tokenConfig.minValue, "less than min value");
-            require(valueDelta <= tokenConfig.maxValue, "greater than max value");
-        }
-
         // get position
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
         let accountPerpPosition: AccountPerpPosition = accountPerpPositionOpt != null ? accountPerpPositionOpt!! : AccountPerpPosition{
@@ -989,6 +991,8 @@ contract Pool with Deployable, Resumable {
             globalShortMarginAfter: globalPosition.shortMargin,
             globalLongSizeAfter: globalPosition.longSize,
             globalShortSizeAfter: globalPosition.shortSize,
+            globalLongValueAfter: globalPosition.longValue,
+            globalShortValueAfter: globalPosition.shortValue,
 
             lpNetSizeAfter: globalLPPosition.netSize,
             lpIsLong: globalLPPosition.isLong,
@@ -1181,6 +1185,8 @@ contract Pool with Deployable, Resumable {
             globalShortMarginAfter: globalPosition.shortMargin,
             globalLongSizeAfter: globalPosition.longSize,
             globalShortSizeAfter: globalPosition.shortSize,
+            globalLongValueAfter: globalPosition.longValue,
+            globalShortValueAfter: globalPosition.shortValue,
 
             lpNetSizeAfter: globalLPPosition.netSize,
             lpIsLong: globalLPPosition.isLong,
@@ -1381,6 +1387,8 @@ contract Pool with Deployable, Resumable {
             globalShortMarginAfter: globalPosition.shortMargin,
             globalLongSizeAfter: globalPosition.longSize,
             globalShortSizeAfter: globalPosition.shortSize,
+            globalLongValueAfter: globalPosition.longValue,
+            globalShortValueAfter: globalPosition.shortValue,
 
             lpNetSizeAfter: globalLPPosition.netSize,
             lpIsLong: globalLPPosition.isLong,

@@ -99,6 +99,15 @@ builder $JettonMint$_store(builder build_0, (slice, slice, int, cell, int, slice
 ;; $JettonMint$_store_cell
 cell $JettonMint$_store_cell((slice, slice, int, cell, int, slice) v) inline;
 
+;; $JettonUpdateContent$_store
+builder $JettonUpdateContent$_store(builder build_0, (cell) v) inline;
+
+;; $JettonUpdateContent$_store_cell
+cell $JettonUpdateContent$_store_cell((cell) v) inline;
+
+;; $JettonUpdateContent$_load
+(slice, ((cell))) $JettonUpdateContent$_load(slice sc_0) inline;
+
 ;; $GasConfig$_load
 (slice, ((int, int, int, int, int, int, int, int))) $GasConfig$_load(slice sc_0) inline_ref;
 
@@ -121,22 +130,22 @@ tuple $ContractConfig$_as_optional((slice, slice, slice) v) inline;
 (slice, ((int, int, int, tuple, tuple, tuple))) $UpdateConfig$_load(slice sc_0) inline_ref;
 
 ;; $TokenConfig$_store
-builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int) v) inline_ref;
+builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int) v) inline_ref;
 
 ;; $TokenConfig$_store_cell
-cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int) v) inline;
+cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int) v) inline;
 
 ;; $TokenConfig$_load
-(slice, ((slice, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref;
+(slice, ((slice, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref;
 
 ;; $TokenConfig$_as_optional
-tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int) v) inline;
+tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int) v) inline;
 
 ;; $TokenConfig$_load_opt
 tuple $TokenConfig$_load_opt(cell cl) inline;
 
 ;; $ListToken$_load
-(slice, ((int, (slice, int, int, int, int, int, int, int, int)))) $ListToken$_load(slice sc_0) inline;
+(slice, ((int, (slice, int, int, int, int, int, int)))) $ListToken$_load(slice sc_0) inline;
 
 ;; $DelistToken$_load
 (slice, ((int))) $DelistToken$_load(slice sc_0) inline;
@@ -205,16 +214,16 @@ builder $PerpOrderCancelledEvent$_store(builder build_0, (int, int, int) v) inli
 cell $PerpOrderCancelledEvent$_store_cell((int, int, int) v) inline;
 
 ;; $PerpPositionIncreasedEvent$_store
-builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
+builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $PerpPositionIncreasedEvent$_store_cell
-cell $PerpPositionIncreasedEvent$_store_cell((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+cell $PerpPositionIncreasedEvent$_store_cell((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $PerpPositionDecreasedEvent$_store
-builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
+builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $PerpPositionDecreasedEvent$_store_cell
-cell $PerpPositionDecreasedEvent$_store_cell((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+cell $PerpPositionDecreasedEvent$_store_cell((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $CompensateCreatedEvent$_store
 builder $CompensateCreatedEvent$_store(builder build_0, (int, int, int, int, slice, int, slice, int, int) v) inline_ref;
@@ -379,10 +388,10 @@ _ $Context$_get_value((int, slice, int, slice) v) inline;
 (int, int, int, int, int, int, int, int, int, slice, slice, slice, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) v) inline;
 
 ;; $TokenConfig$_not_null
-((slice, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline;
+((slice, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline;
 
 ;; $TokenConfig$_to_tuple
-tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int)) v) inline;
+tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int)) v) inline;
 
 ;; $TokenConfig$_to_opt_tuple
 tuple $TokenConfig$_to_opt_tuple(tuple v) inline;
@@ -576,14 +585,14 @@ slice $global_emptySlice() impure inline;
 ;; $GlobalLPPosition$_constructor_netSize_isLong_entryPrice
 ((int, int, int)) $GlobalLPPosition$_constructor_netSize_isLong_entryPrice(int $netSize, int $isLong, int $entryPrice) inline;
 
-;; $PerpPositionIncreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_rolloverFee_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl
-((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionIncreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_rolloverFee_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $tradingFee, int $fundingFee, int $rolloverFee, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline;
+;; $PerpPositionIncreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_rolloverFee_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl
+((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionIncreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_rolloverFee_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $tradingFee, int $fundingFee, int $rolloverFee, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $globalLongValueAfter, int $globalShortValueAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline;
 
 ;; $Pool$_fun_increasePerpPosition
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_increasePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $orderId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth, slice $executionFeeReceiver) impure inline_ref;
 
-;; $PerpPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_realizedPnLDelta_tradingFee_fundingFee_rolloverFee_payout_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl
-((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_realizedPnLDelta_tradingFee_fundingFee_rolloverFee_payout_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $realizedPnLDelta, int $tradingFee, int $fundingFee, int $rolloverFee, int $payout, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline;
+;; $PerpPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_realizedPnLDelta_tradingFee_fundingFee_rolloverFee_payout_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl
+((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_realizedPnLDelta_tradingFee_fundingFee_rolloverFee_payout_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $realizedPnLDelta, int $tradingFee, int $fundingFee, int $rolloverFee, int $payout, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $globalLongValueAfter, int $globalShortValueAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline;
 
 ;; $Pool$_fun_decreasePerpPosition
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_decreasePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $orderId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth, slice $executionFeeReceiver) impure inline_ref;

@@ -76,6 +76,8 @@ message PerpPositionIncreasedEvent {
     globalShortMarginAfter: Int as coins;
     globalLongSizeAfter: Int as coins;
     globalShortSizeAfter: Int as coins;
+    globalLongValueAfter: Int as coins;
+    globalShortValueAfter: Int as coins;
 
     // lp position
     lpNetSizeAfter: Int as coins;
@@ -114,6 +116,8 @@ message PerpPositionDecreasedEvent {
     globalShortMarginAfter: Int as coins;
     globalLongSizeAfter: Int as coins;
     globalShortSizeAfter: Int as coins;
+    globalLongValueAfter: Int as coins;
+    globalShortValueAfter: Int as coins;
 
     // lp position
     lpNetSizeAfter: Int as coins;

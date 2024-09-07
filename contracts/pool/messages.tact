@@ -33,6 +33,10 @@ message JettonMint {
     forward_payload: Slice as remaining;
 }
 
+message JettonUpdateContent {
+    jetton_content: Cell;
+}
+
 // ============================ Config ================================ //
 message UpdateConfig {
     orderLockTime: Int? as uint32;

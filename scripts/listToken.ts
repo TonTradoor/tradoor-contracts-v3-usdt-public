@@ -23,8 +23,6 @@ export async function run(provider: NetworkProvider) {
                     $$type: 'TokenConfig',
                     name: token["name"],
                     enable: token["enable"],
-                    minValue: toUnits(token["minValue"], MOCK_DECIMAL),
-                    maxValue: toUnits(token["maxValue"], MOCK_DECIMAL),
                     maxLeverage: BigInt(token["maxLeverage"]),
                     liquidationFee: toUnits(token["liquidationFee"], MOCK_DECIMAL),
                     maintenanceRate: toUnits(token["maintenanceRate"], PERCENTAGE_DECIMAL),

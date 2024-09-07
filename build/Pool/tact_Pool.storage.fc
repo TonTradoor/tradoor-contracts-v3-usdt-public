@@ -170,6 +170,29 @@ cell $JettonMint$_store_cell((slice, slice, int, cell, int, slice) v) inline {
 }
 
 ;;
+;; Type: JettonUpdateContent
+;; Header: 0x5b8f271d
+;; TLB: jetton_update_content#5b8f271d jetton_content:^cell = JettonUpdateContent
+;;
+
+builder $JettonUpdateContent$_store(builder build_0, (cell) v) inline {
+    var (v'jetton_content) = v;
+    build_0 = store_uint(build_0, 1536108317, 32);
+    build_0 = build_0.store_ref(v'jetton_content);
+    return build_0;
+}
+
+cell $JettonUpdateContent$_store_cell((cell) v) inline {
+    return $JettonUpdateContent$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((cell))) $JettonUpdateContent$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1536108317);
+    var v'jetton_content = sc_0~load_ref();
+    return (sc_0, (v'jetton_content));
+}
+
+;;
 ;; Type: GasConfig
 ;; TLB: _ lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins gasForTransferJetton:coins gasForBurnTlp:coins gasForMintTlp:coins = GasConfig
 ;;
@@ -335,15 +358,13 @@ _ $ContractConfig$_get_jettonWallet((slice, slice, slice) v) inline {
 
 ;;
 ;; Type: TokenConfig
-;; TLB: _ name:^string enable:bool minValue:coins maxValue:coins maxLeverage:uint16 liquidationFee:coins maintenanceRate:uint32 tradingFeeRate:uint32 lpTradingFeeRate:uint32 = TokenConfig
+;; TLB: _ name:^string enable:bool maxLeverage:uint16 liquidationFee:coins maintenanceRate:uint32 tradingFeeRate:uint32 lpTradingFeeRate:uint32 = TokenConfig
 ;;
 
-builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int, int, int) v) inline_ref {
-    var (v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate) = v;
+builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int) v) inline_ref {
+    var (v'name, v'enable, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate) = v;
     build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
     build_0 = build_0.store_int(v'enable, 1);
-    build_0 = build_0.store_coins(v'minValue);
-    build_0 = build_0.store_coins(v'maxValue);
     build_0 = build_0.store_uint(v'maxLeverage, 16);
     build_0 = build_0.store_coins(v'liquidationFee);
     build_0 = build_0.store_uint(v'maintenanceRate, 32);
@@ -352,26 +373,24 @@ builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, in
     return build_0;
 }
 
-cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int, int, int) v) inline {
+cell $TokenConfig$_store_cell((slice, int, int, int, int, int, int) v) inline {
     return $TokenConfig$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((slice, int, int, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref {
+(slice, ((slice, int, int, int, int, int, int))) $TokenConfig$_load(slice sc_0) inline_ref {
     var v'name = sc_0~load_ref().begin_parse();
     var v'enable = sc_0~load_int(1);
-    var v'minValue = sc_0~load_coins();
-    var v'maxValue = sc_0~load_coins();
     var v'maxLeverage = sc_0~load_uint(16);
     var v'liquidationFee = sc_0~load_coins();
     var v'maintenanceRate = sc_0~load_uint(32);
     var v'tradingFeeRate = sc_0~load_uint(32);
     var v'lpTradingFeeRate = sc_0~load_uint(32);
-    return (sc_0, (v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate));
+    return (sc_0, (v'name, v'enable, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate));
 }
 
-tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int, int, int) v) inline {
-    var (v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate) = v;
-    return __tact_tuple_create_9(v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate);
+tuple $TokenConfig$_as_optional((slice, int, int, int, int, int, int) v) inline {
+    var (v'name, v'enable, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate) = v;
+    return __tact_tuple_create_7(v'name, v'enable, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate);
 }
 
 tuple $TokenConfig$_load_opt(cell cl) inline {
@@ -382,15 +401,15 @@ tuple $TokenConfig$_load_opt(cell cl) inline {
     return $TokenConfig$_as_optional(sc~$TokenConfig$_load());
 }
 
-((slice, int, int, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline {
+((slice, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (slice vvv'name, int vvv'enable, int vvv'minValue, int vvv'maxValue, int vvv'maxLeverage, int vvv'liquidationFee, int vvv'maintenanceRate, int vvv'tradingFeeRate, int vvv'lpTradingFeeRate) = __tact_tuple_destroy_9(v);
-    return (vvv'name, vvv'enable, vvv'minValue, vvv'maxValue, vvv'maxLeverage, vvv'liquidationFee, vvv'maintenanceRate, vvv'tradingFeeRate, vvv'lpTradingFeeRate);
+    var (slice vvv'name, int vvv'enable, int vvv'maxLeverage, int vvv'liquidationFee, int vvv'maintenanceRate, int vvv'tradingFeeRate, int vvv'lpTradingFeeRate) = __tact_tuple_destroy_7(v);
+    return (vvv'name, vvv'enable, vvv'maxLeverage, vvv'liquidationFee, vvv'maintenanceRate, vvv'tradingFeeRate, vvv'lpTradingFeeRate);
 }
 
-tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int, int, int)) v) inline {
-    var (v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate) = v;
-    return __tact_tuple_create_9(v'name, v'enable, v'minValue, v'maxValue, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate);
+tuple $TokenConfig$_to_tuple(((slice, int, int, int, int, int, int)) v) inline {
+    var (v'name, v'enable, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate) = v;
+    return __tact_tuple_create_7(v'name, v'enable, v'maxLeverage, v'liquidationFee, v'maintenanceRate, v'tradingFeeRate, v'lpTradingFeeRate);
 }
 
 tuple $TokenConfig$_to_opt_tuple(tuple v) inline {
@@ -409,12 +428,12 @@ tuple $TokenConfig$_to_opt_external(tuple v) inline {
 
 ;;
 ;; Type: ListToken
-;; Header: 0x21d50bb0
-;; TLB: list_token#21d50bb0 tokenId:uint16 config:TokenConfig{name:^string,enable:bool,minValue:coins,maxValue:coins,maxLeverage:uint16,liquidationFee:coins,maintenanceRate:uint32,tradingFeeRate:uint32,lpTradingFeeRate:uint32} = ListToken
+;; Header: 0xe49b3bf0
+;; TLB: list_token#e49b3bf0 tokenId:uint16 config:TokenConfig{name:^string,enable:bool,maxLeverage:uint16,liquidationFee:coins,maintenanceRate:uint32,tradingFeeRate:uint32,lpTradingFeeRate:uint32} = ListToken
 ;;
 
-(slice, ((int, (slice, int, int, int, int, int, int, int, int)))) $ListToken$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 567610288);
+(slice, ((int, (slice, int, int, int, int, int, int)))) $ListToken$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3835378672);
     var v'tokenId = sc_0~load_uint(16);
     var v'config = sc_0~$TokenConfig$_load();
     return (sc_0, (v'tokenId, v'config));
@@ -764,13 +783,13 @@ cell $PerpOrderCancelledEvent$_store_cell((int, int, int) v) inline {
 
 ;;
 ;; Type: PerpPositionIncreasedEvent
-;; Header: 0x2f2c10e5
-;; TLB: perp_position_increased_event#2f2c10e5 trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:int128 entryRolloverFeeGrowthAfter:int128 globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionIncreasedEvent
+;; Header: 0x47596abe
+;; TLB: perp_position_increased_event#47596abe trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:int128 entryRolloverFeeGrowthAfter:int128 globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins globalLongValueAfter:coins globalShortValueAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionIncreasedEvent
 ;;
 
-builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
-    var (v'trxId, v'orderId, v'opType, v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'entryPrice, v'fundingFee, v'rolloverFee, v'tradingFee, v'entryFundingFeeGrowthAfter, v'entryRolloverFeeGrowthAfter, v'globalLongMarginAfter, v'globalShortMarginAfter, v'globalLongSizeAfter, v'globalShortSizeAfter, v'lpNetSizeAfter, v'lpIsLong, v'lpEntryPriceAfter, v'lpFundAfter, v'lpTradingFee, v'lpRealizedPnl) = v;
-    build_0 = store_uint(build_0, 791417061, 32);
+builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'trxId, v'orderId, v'opType, v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'entryPrice, v'fundingFee, v'rolloverFee, v'tradingFee, v'entryFundingFeeGrowthAfter, v'entryRolloverFeeGrowthAfter, v'globalLongMarginAfter, v'globalShortMarginAfter, v'globalLongSizeAfter, v'globalShortSizeAfter, v'globalLongValueAfter, v'globalShortValueAfter, v'lpNetSizeAfter, v'lpIsLong, v'lpEntryPriceAfter, v'lpFundAfter, v'lpTradingFee, v'lpRealizedPnl) = v;
+    build_0 = store_uint(build_0, 1197042366, 32);
     build_0 = build_0.store_uint(v'trxId, 64);
     build_0 = build_0.store_uint(v'orderId, 64);
     build_0 = build_0.store_uint(v'opType, 8);
@@ -795,34 +814,38 @@ builder $PerpPositionIncreasedEvent$_store(builder build_0, (int, int, int, int,
     build_2 = build_2.store_coins(v'globalShortMarginAfter);
     build_2 = build_2.store_coins(v'globalLongSizeAfter);
     build_2 = build_2.store_coins(v'globalShortSizeAfter);
+    build_2 = build_2.store_coins(v'globalLongValueAfter);
+    build_2 = build_2.store_coins(v'globalShortValueAfter);
     build_2 = build_2.store_coins(v'lpNetSizeAfter);
     build_2 = build_2.store_int(v'lpIsLong, 1);
     build_2 = build_2.store_uint(v'lpEntryPriceAfter, 128);
     build_2 = build_2.store_int(v'lpFundAfter, 128);
-    build_2 = build_2.store_coins(v'lpTradingFee);
-    build_2 = build_2.store_int(v'lpRealizedPnl, 128);
+    var build_3 = begin_cell();
+    build_3 = build_3.store_coins(v'lpTradingFee);
+    build_3 = build_3.store_int(v'lpRealizedPnl, 128);
+    build_2 = store_ref(build_2, build_3.end_cell());
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-cell $PerpPositionIncreasedEvent$_store_cell((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+cell $PerpPositionIncreasedEvent$_store_cell((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
     return $PerpPositionIncreasedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionIncreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_rolloverFee_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $tradingFee, int $fundingFee, int $rolloverFee, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline {
-    return ($trxId, $orderId, $opType, $positionId, $account, $tokenId, $isLong, $marginDelta, $marginAfter, $sizeDelta, $sizeAfter, $tradePrice, $entryPrice, $fundingFee, $rolloverFee, $tradingFee, $entryFundingFeeGrowthAfter, $entryRolloverFeeGrowthAfter, $globalLongMarginAfter, $globalShortMarginAfter, $globalLongSizeAfter, $globalShortSizeAfter, $lpNetSizeAfter, $lpIsLong, $lpEntryPriceAfter, $lpFundAfter, $lpTradingFee, $lpRealizedPnl);
+((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionIncreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_rolloverFee_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $tradingFee, int $fundingFee, int $rolloverFee, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $globalLongValueAfter, int $globalShortValueAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline {
+    return ($trxId, $orderId, $opType, $positionId, $account, $tokenId, $isLong, $marginDelta, $marginAfter, $sizeDelta, $sizeAfter, $tradePrice, $entryPrice, $fundingFee, $rolloverFee, $tradingFee, $entryFundingFeeGrowthAfter, $entryRolloverFeeGrowthAfter, $globalLongMarginAfter, $globalShortMarginAfter, $globalLongSizeAfter, $globalShortSizeAfter, $globalLongValueAfter, $globalShortValueAfter, $lpNetSizeAfter, $lpIsLong, $lpEntryPriceAfter, $lpFundAfter, $lpTradingFee, $lpRealizedPnl);
 }
 
 ;;
 ;; Type: PerpPositionDecreasedEvent
-;; Header: 0xfd8c49cb
-;; TLB: perp_position_decreased_event#fd8c49cb trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 realizedPnLDelta:int128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:int128 entryRolloverFeeGrowthAfter:int128 payout:coins globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionDecreasedEvent
+;; Header: 0x2353464c
+;; TLB: perp_position_decreased_event#2353464c trxId:uint64 orderId:uint64 opType:uint8 positionId:uint64 account:address tokenId:uint16 isLong:bool marginDelta:int128 marginAfter:coins sizeDelta:int128 sizeAfter:coins tradePrice:uint128 entryPrice:uint128 realizedPnLDelta:int128 fundingFee:int128 rolloverFee:coins tradingFee:coins entryFundingFeeGrowthAfter:int128 entryRolloverFeeGrowthAfter:int128 payout:coins globalLongMarginAfter:coins globalShortMarginAfter:coins globalLongSizeAfter:coins globalShortSizeAfter:coins globalLongValueAfter:coins globalShortValueAfter:coins lpNetSizeAfter:coins lpIsLong:bool lpEntryPriceAfter:uint128 lpFundAfter:int128 lpTradingFee:coins lpRealizedPnl:int128 = PerpPositionDecreasedEvent
 ;;
 
-builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
-    var (v'trxId, v'orderId, v'opType, v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'entryPrice, v'realizedPnLDelta, v'fundingFee, v'rolloverFee, v'tradingFee, v'entryFundingFeeGrowthAfter, v'entryRolloverFeeGrowthAfter, v'payout, v'globalLongMarginAfter, v'globalShortMarginAfter, v'globalLongSizeAfter, v'globalShortSizeAfter, v'lpNetSizeAfter, v'lpIsLong, v'lpEntryPriceAfter, v'lpFundAfter, v'lpTradingFee, v'lpRealizedPnl) = v;
-    build_0 = store_uint(build_0, 4253829579, 32);
+builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'trxId, v'orderId, v'opType, v'positionId, v'account, v'tokenId, v'isLong, v'marginDelta, v'marginAfter, v'sizeDelta, v'sizeAfter, v'tradePrice, v'entryPrice, v'realizedPnLDelta, v'fundingFee, v'rolloverFee, v'tradingFee, v'entryFundingFeeGrowthAfter, v'entryRolloverFeeGrowthAfter, v'payout, v'globalLongMarginAfter, v'globalShortMarginAfter, v'globalLongSizeAfter, v'globalShortSizeAfter, v'globalLongValueAfter, v'globalShortValueAfter, v'lpNetSizeAfter, v'lpIsLong, v'lpEntryPriceAfter, v'lpFundAfter, v'lpTradingFee, v'lpRealizedPnl) = v;
+    build_0 = store_uint(build_0, 592660044, 32);
     build_0 = build_0.store_uint(v'trxId, 64);
     build_0 = build_0.store_uint(v'orderId, 64);
     build_0 = build_0.store_uint(v'opType, 8);
@@ -849,11 +872,13 @@ builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, int, int,
     build_2 = build_2.store_coins(v'globalShortMarginAfter);
     build_2 = build_2.store_coins(v'globalLongSizeAfter);
     build_2 = build_2.store_coins(v'globalShortSizeAfter);
+    build_2 = build_2.store_coins(v'globalLongValueAfter);
+    build_2 = build_2.store_coins(v'globalShortValueAfter);
     build_2 = build_2.store_coins(v'lpNetSizeAfter);
     build_2 = build_2.store_int(v'lpIsLong, 1);
-    build_2 = build_2.store_uint(v'lpEntryPriceAfter, 128);
-    build_2 = build_2.store_int(v'lpFundAfter, 128);
     var build_3 = begin_cell();
+    build_3 = build_3.store_uint(v'lpEntryPriceAfter, 128);
+    build_3 = build_3.store_int(v'lpFundAfter, 128);
     build_3 = build_3.store_coins(v'lpTradingFee);
     build_3 = build_3.store_int(v'lpRealizedPnl, 128);
     build_2 = store_ref(build_2, build_3.end_cell());
@@ -862,12 +887,12 @@ builder $PerpPositionDecreasedEvent$_store(builder build_0, (int, int, int, int,
     return build_0;
 }
 
-cell $PerpPositionDecreasedEvent$_store_cell((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+cell $PerpPositionDecreasedEvent$_store_cell((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
     return $PerpPositionDecreasedEvent$_store(begin_cell(), v).end_cell();
 }
 
-((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_realizedPnLDelta_tradingFee_fundingFee_rolloverFee_payout_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $realizedPnLDelta, int $tradingFee, int $fundingFee, int $rolloverFee, int $payout, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline {
-    return ($trxId, $orderId, $opType, $positionId, $account, $tokenId, $isLong, $marginDelta, $marginAfter, $sizeDelta, $sizeAfter, $tradePrice, $entryPrice, $realizedPnLDelta, $fundingFee, $rolloverFee, $tradingFee, $entryFundingFeeGrowthAfter, $entryRolloverFeeGrowthAfter, $payout, $globalLongMarginAfter, $globalShortMarginAfter, $globalLongSizeAfter, $globalShortSizeAfter, $lpNetSizeAfter, $lpIsLong, $lpEntryPriceAfter, $lpFundAfter, $lpTradingFee, $lpRealizedPnl);
+((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_realizedPnLDelta_tradingFee_fundingFee_rolloverFee_payout_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $realizedPnLDelta, int $tradingFee, int $fundingFee, int $rolloverFee, int $payout, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $globalLongValueAfter, int $globalShortValueAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline {
+    return ($trxId, $orderId, $opType, $positionId, $account, $tokenId, $isLong, $marginDelta, $marginAfter, $sizeDelta, $sizeAfter, $tradePrice, $entryPrice, $realizedPnLDelta, $fundingFee, $rolloverFee, $tradingFee, $entryFundingFeeGrowthAfter, $entryRolloverFeeGrowthAfter, $payout, $globalLongMarginAfter, $globalShortMarginAfter, $globalLongSizeAfter, $globalShortSizeAfter, $globalLongValueAfter, $globalShortValueAfter, $lpNetSizeAfter, $lpIsLong, $lpEntryPriceAfter, $lpFundAfter, $lpTradingFee, $lpRealizedPnl);
 }
 
 ;;

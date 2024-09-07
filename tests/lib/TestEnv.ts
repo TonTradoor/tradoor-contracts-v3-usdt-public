@@ -221,8 +221,6 @@ export class TestEnv {
                         $$type: 'TokenConfig',
                         name: name,
                         enable: true,
-                        minValue: toJettonUnits(100), // 100U
-                        maxValue: toJettonUnits(10_000_000), // 10M U
                         maxLeverage: 105n,
                         liquidationFee: toJettonUnits(0.2), // 0.2U
                         maintenanceRate: BigInt(0.005 * PERCENTAGE_BASIS_POINT), // 0.5%

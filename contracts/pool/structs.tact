@@ -25,8 +25,6 @@ struct TokenConfig {
     name: String;
     enable: Bool;
     // ==================== Trader Position Config ====================
-    minValue: Int as coins;
-    maxValue: Int as coins;
     maxLeverage: Int as uint16;
     liquidationFee: Int as coins;
     maintenanceRate: Int as uint32;
