@@ -1,5 +1,4 @@
-import { Address, SendMode, beginCell, toNano } from '@ton/core';
-
+import { toNano } from '@ton/core';
 import { NetworkProvider } from '@ton/blueprint';
 import { TLPJettonMaster as TLPJetton } from '../wrappers/JettonTLP';
 import { buildOnchainMetadata } from '../contracts/jetton/utils/jetton-helpers';
@@ -9,17 +8,17 @@ export async function run(provider: NetworkProvider) {
     let deployId = getConfig("nextDeployId");
 
     const jettonParams = {
-        name: 'Tradoor LP' + deployId,
-        description: 'Native Tether USD locked in liquidity in Tradoor Trade (tradoor.io)',
-        symbol: 'TLP',
-        image: 'https://avatars.githubusercontent.com/u/104382459?s=200&v=4',
-        decimals: '9'
+        name: 'Tradoor USDT TLP',
+        description: 'USDT locked in liquidity in Tradoor (tradoor.io)',
+        symbol: 'USDT-TLP',
+        image: 'https://tradoor.io/static-s3/20240907-162503.png',
+        decimals: '9',
     };
 
     // Create content Cell
     let content = buildOnchainMetadata(jettonParams);
 
-    let address =  attachPool(provider).address!!;
+    let address = attachPool(provider).address!!;
     // create jetton contract
     const tlp = provider.open(await TLPJetton.fromInit(address, content));
 
