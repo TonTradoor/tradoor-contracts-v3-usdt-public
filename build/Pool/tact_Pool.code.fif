@@ -2452,7 +2452,11 @@ PROGRAM{
       FALSE
       PUSHNULL
       0 PUSHINT
-      $global_emptySlice INLINECALLDICT
+      DUP
+      NEWC
+      1 STU
+      ENDC
+      $Cell$_fun_asSlice INLINECALLDICT
       s6 s8 XCHG
       5 4 REVERSE
       s3 s7 XCHG
@@ -6062,8 +6066,11 @@ PROGRAM{
     66 PUSHINT
     FALSE
     PUSHNULL
-    s3 PUSH
-    $global_emptySlice INLINECALLDICT
+    s3 s3 PUSH2
+    NEWC
+    1 STU
+    ENDC
+    $Cell$_fun_asSlice INLINECALLDICT
     s6 PUSH
     s6 s8 XCHG
     s5 s13 XCHG
