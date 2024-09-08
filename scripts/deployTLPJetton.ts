@@ -9,7 +9,7 @@ export async function run(provider: NetworkProvider) {
 
     const jettonParams = {
         name: 'Tradoor USDT TLP',
-        description: 'Real USDT locked in liquidity in Tradoor (tradoor.io)',
+        description: 'USDT locked in liquidity in Tradoor (tradoor.io)',
         symbol: 'USDT-TLP',
         image: 'https://tradoor.io/static-s3/20240907-263459.png',
         decimals: '9',
