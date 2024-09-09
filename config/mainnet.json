@@ -13,7 +13,7 @@
   "claimer": "UQAtHKMrPPufS4svtQAszP0A8GD7nGHp7gbTWUGndlRqnJro",
   "orderLockTime": 180,
   "lpMinExecutionFee": 0.03,
-  "perpMinExecutionFee": 0.04,
+  "perpMinExecutionFee": 0.03,
   "lpGasConsumption": 0.025,
   "perpGasConsumption": 0.034,
   "minTonsForStorage": 0.01,
@@ -48,7 +48,7 @@
       "name": "TON",
       "enable": true,
       "maxLeverage": 53,
-      "liquidationFee": 1,
+      "liquidationFee": 0.5,
       "maintenanceRate": 0.01,
       "tradingFeeRate": 0.002,
       "lpTradingFeeRate": 0.65
@@ -58,7 +58,7 @@
       "name": "NOT",
       "enable": true,
       "maxLeverage": 21,
-      "liquidationFee": 1,
+      "liquidationFee": 0.5,
       "maintenanceRate": 0.015,
       "tradingFeeRate": 0.002,
       "lpTradingFeeRate": 0.65
@@ -71,6 +71,16 @@
       "liquidationFee": 0.5,
       "maintenanceRate": 0.005,
       "tradingFeeRate": 0.001,
+      "lpTradingFeeRate": 0.65
+    },
+    {
+      "tokenId": 6,
+      "name": "DOGS",
+      "enable": true,
+      "maxLeverage": 21,
+      "liquidationFee": 0.5,
+      "maintenanceRate": 0.015,
+      "tradingFeeRate": 0.002,
       "lpTradingFeeRate": 0.65
     }
   ]
