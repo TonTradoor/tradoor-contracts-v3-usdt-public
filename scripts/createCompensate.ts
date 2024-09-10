@@ -12,7 +12,7 @@ export async function run(provider: NetworkProvider) {
 
     const orderType = BigInt(await provider.ui().input('orderType(1:LP, 2:PERP):'));
     const orderId = BigInt(await provider.ui().input('orderId:'));
-    const refundAmount = BigInt(await provider.ui().input('refundAmount:'));
+    const refundAmount = Number(await provider.ui().input('refundAmount:'));
     const executionFee = Number(await provider.ui().input('executionFee:'));
     console.log("orderType:", orderType, "orderId:", orderId, "refundAmount:", refundAmount, "executionFee:", executionFee);
     const sure = await provider.ui().input('confirm? (y/n)') === 'y';
