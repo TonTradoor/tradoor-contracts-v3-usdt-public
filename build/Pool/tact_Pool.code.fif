@@ -8165,7 +8165,7 @@ PROGRAM{
     NIP
     19305 PUSHINT
     s2 POP
-    43 s() PUSH
+    42 s() PUSH
     GEQ
     THROWANYIFNOT
     18 s() PUSH
@@ -8199,7 +8199,7 @@ PROGRAM{
     $CompensateCreatedEvent$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
     __tact_context_get_sender INLINECALLDICT
-    35 s() PUSH
+    34 s() PUSH
     s13 s14 XCHG
     SWAP
     0 PUSHINT

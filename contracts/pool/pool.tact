@@ -1449,7 +1449,7 @@ contract Pool with Deployable, Resumable {
         require(self.compensator == sender(), "invalid sender");
 
         let ctx: Context = context();
-        require(ctx.value >= self.gasForPerpTrader, "gas not enough");
+        require(ctx.value >= self.gasForPerpExecutor, "gas not enough");
 
         let compensateId: Int = self.compensateIndexNext;
         self.compensateIndexNext += 1;
@@ -1476,7 +1476,7 @@ contract Pool with Deployable, Resumable {
             unlockTime: now() + 1 * DAY
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpTrader, sender(), 0, 1, false);
+        self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), 0, 1, false);
     }
 
     /**
