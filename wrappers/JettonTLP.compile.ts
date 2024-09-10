@@ -4,6 +4,6 @@ export const compile: CompilerConfig = {
     lang: 'tact',
     target: 'contracts/jetton/jetton_tlp.tact',
     options: {
-        debug: true
+        // debug: true
     }
 };
