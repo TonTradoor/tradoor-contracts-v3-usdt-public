@@ -470,7 +470,7 @@ contract Pool with Deployable, Resumable {
                 to: self.tlpJetton, 
                 value: self.gasForMintTlp,
                 bounce: true,
-                body: JettonMint{ origin: order.account, receiver: order.account, amount: tlpDelta, custom_payload: null, forward_ton_amount: 0, forward_payload: emptySlice() }.toCell()
+                body: JettonMint{ origin: ctx.sender, receiver: order.account, amount: tlpDelta, custom_payload: null, forward_ton_amount: 0, forward_payload: emptySlice() }.toCell()
             });
             self.globalLPFund += jettonDelta;
             self.tlpSupply += tlpDelta;
