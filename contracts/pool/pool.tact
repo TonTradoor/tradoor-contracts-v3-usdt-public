@@ -293,7 +293,7 @@ contract Pool with Deployable, Resumable {
         let tonBalanceBeforeMsg: Int = myBalance() - self.totalExecutionFee + executionFeeDelta - ctx.value;
         tonBalanceBeforeMsg = max(0, tonBalanceBeforeMsg);
         let storageFee: Int = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
-        let extraValue: Int = max(0, tonBalanceBeforeMsg - self.minTonsForStorage);
+        let extraValue: Int = self.executors.get(ctx.sender) == null ? 0 : max(0, tonBalanceBeforeMsg - self.minTonsForStorage);
 
         let refundValue: Int = ctx.value - storageFee - gasConsumption * executionMultiple + extraValue - 
             (executionFeeDelta > 0 ? executionFeeDelta : 0) - (transferJetton ? self.gasForTransferJetton : 0);
