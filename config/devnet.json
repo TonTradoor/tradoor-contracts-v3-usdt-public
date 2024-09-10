@@ -2,7 +2,7 @@
   "nextDeployId": 31,
   "mockJetton": "EQAJGpLnnf_8hDcQX0AFxPAygd6sERrqgJyq77Z-iEgWVC3B",
   "tlpJetton": "EQAHhPOYY8ZO1SJIEJsa2lcKcDckjf-QcGBT6g3dSv_SP-hO",
-  "pool": "EQA_UsfZxYr-P1-3QfUyQkcdgeIHrilASUfOOuCDbeaAAEwi",
+  "pool": "EQBYjcfufjyUXrgClowCAb-Z8XdyRftJaPy6lMgZNUKCbLNJ",
   "executors": [
     "0QBWA3yJYPJ9LJCdy2WlzoGO2_0Cw6l7D3exFw25hxR_bDkS",
     "0QAjBLsS_axAf647M2sPtCVCsJ-kI4WP82N72gPLHjsNHY9i",
@@ -13,14 +13,16 @@
   "orderLockTime": 180,
   "lpMinExecutionFee": 0.05,
   "perpMinExecutionFee": 0.1,
-  "lpGasConsumption": 0.022,
-  "perpGasConsumption": 0.028,
   "minTonsForStorage": 0.01,
+  "gasForLpTrader": 0.025,
+  "gasForLpExecutor": 0.035,
+  "gasForPerpTrader": 0.025,
+  "gasForPerpExecutor": 0.35,
   "gasForTransferJetton": 0.038,
   "gasForMintTlp": 0.03,
   "gasForBurnTlp": 0.03,
   "lpRolloverFeeRate": 0.5,
-  "maxLpNetCap": 1000000000000,
+  "maxLpNetCap": 100000,
   "tokens": [
     {
       "tokenId": 1,
@@ -30,7 +32,7 @@
       "liquidationFee": 0.5,
       "maintenanceRate": 0.005,
       "tradingFeeRate": 0.001,
-      "lpTradingFeeRate": 0.7
+      "lpTradingFeeRate": 0.65
     },
     {
       "tokenId": 2,
@@ -40,27 +42,47 @@
       "liquidationFee": 0.5,
       "maintenanceRate": 0.005,
       "tradingFeeRate": 0.001,
-      "lpTradingFeeRate": 0.7
+      "lpTradingFeeRate": 0.65
     },
     {
       "tokenId": 3,
       "name": "TON",
       "enable": true,
       "maxLeverage": 53,
-      "liquidationFee": 1,
+      "liquidationFee": 0.5,
       "maintenanceRate": 0.01,
       "tradingFeeRate": 0.002,
-      "lpTradingFeeRate": 0.7
+      "lpTradingFeeRate": 0.65
     },
     {
       "tokenId": 4,
       "name": "NOT",
       "enable": true,
       "maxLeverage": 21,
-      "liquidationFee": 1,
-      "maintenanceRate": 0.025,
+      "liquidationFee": 0.5,
+      "maintenanceRate": 0.015,
       "tradingFeeRate": 0.002,
-      "lpTradingFeeRate": 0.7
+      "lpTradingFeeRate": 0.65
+    },
+    {
+      "tokenId": 5,
+      "name": "SOL",
+      "enable": true,
+      "maxLeverage": 105,
+      "liquidationFee": 0.5,
+      "maintenanceRate": 0.005,
+      "tradingFeeRate": 0.001,
+      "lpTradingFeeRate": 0.65
+    },
+    {
+      "tokenId": 6,
+      "name": "DOGS",
+      "enable": true,
+      "maxLeverage": 21,
+      "liquidationFee": 0.5,
+      "maintenanceRate": 0.015,
+      "tradingFeeRate": 0.002,
+      "lpTradingFeeRate": 0.65
     }
   ]
 }

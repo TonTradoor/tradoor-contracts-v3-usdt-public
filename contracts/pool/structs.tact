@@ -9,8 +9,10 @@ struct ConfigData {
     orderLockTime: Int as uint32;
     lpMinExecutionFee: Int as coins;
     perpMinExecutionFee: Int as coins;
-    lpGasConsumption: Int as coins;
-    perpGasConsumption: Int as coins;
+    gasForLpTrader: Int as coins;
+    gasForLpExecutor: Int as coins;
+    gasForPerpTrader: Int as coins;
+    gasForPerpExecutor: Int as coins;
     minTonsForStorage: Int as coins;
     gasForTransferJetton: Int as coins;
     gasForBurnTlp: Int as coins;
@@ -92,8 +94,10 @@ struct GlobalPosition {
 struct GasConfig {
     lpMinExecutionFee: Int as coins;
     perpMinExecutionFee: Int as coins;
-    lpGasConsumption: Int as coins;
-    perpGasConsumption: Int as coins;
+    gasForPerpTrader: Int as coins;
+    gasForPerpExecutor: Int as coins;
+    gasForLpTrader: Int as coins;
+    gasForLpExecutor: Int as coins;
     minTonsForStorage: Int as coins;
     gasForTransferJetton: Int as coins;
     gasForBurnTlp: Int as coins;

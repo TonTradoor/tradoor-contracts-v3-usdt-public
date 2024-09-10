@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 24976 bytes
+BOC Size: 25687 bytes
 
 # Types
 Total Types: 58
@@ -58,8 +58,8 @@ TLB: `jetton_update_content#5b8f271d jetton_content:^cell = JettonUpdateContent`
 Signature: `JettonUpdateContent{jetton_content:^cell}`
 
 ## UpdateConfig
-TLB: `update_config#c23e33b4 orderLockTime:Maybe uint32 maxLpNetCap:Maybe coins lpRolloverFeeRate:Maybe uint32 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateConfig`
-Signature: `UpdateConfig{orderLockTime:Maybe uint32,maxLpNetCap:Maybe coins,lpRolloverFeeRate:Maybe uint32,gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address},contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address}}`
+TLB: `update_config#9cb55244 orderLockTime:Maybe uint32 maxLpNetCap:Maybe coins lpRolloverFeeRate:Maybe uint32 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateConfig`
+Signature: `UpdateConfig{orderLockTime:Maybe uint32,maxLpNetCap:Maybe coins,lpRolloverFeeRate:Maybe uint32,gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address},contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address}}`
 
 ## ListToken
 TLB: `list_token#e49b3bf0 tokenId:uint16 config:TokenConfig{name:^string,enable:bool,maxLeverage:uint16,liquidationFee:coins,maintenanceRate:uint32,tradingFeeRate:uint32,lpTradingFeeRate:uint32} = ListToken`
@@ -158,8 +158,8 @@ TLB: `_ isExecutor:bool isCompensator:bool isClaimer:bool = AccountInfo`
 Signature: `AccountInfo{isExecutor:bool,isCompensator:bool,isClaimer:bool}`
 
 ## ConfigData
-TLB: `_ orderLockTime:uint32 lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins gasForTransferJetton:coins gasForBurnTlp:coins gasForMintTlp:coins tlpWallet:address jettonWallet:address tlpJetton:address maxLpNetCap:coins = ConfigData`
-Signature: `ConfigData{orderLockTime:uint32,lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins,tlpWallet:address,jettonWallet:address,tlpJetton:address,maxLpNetCap:coins}`
+TLB: `_ orderLockTime:uint32 lpMinExecutionFee:coins perpMinExecutionFee:coins gasForLpTrader:coins gasForLpExecutor:coins gasForPerpTrader:coins gasForPerpExecutor:coins minTonsForStorage:coins gasForTransferJetton:coins gasForBurnTlp:coins gasForMintTlp:coins tlpWallet:address jettonWallet:address tlpJetton:address maxLpNetCap:coins = ConfigData`
+Signature: `ConfigData{orderLockTime:uint32,lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForLpTrader:coins,gasForLpExecutor:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins,tlpWallet:address,jettonWallet:address,tlpJetton:address,maxLpNetCap:coins}`
 
 ## TokenConfig
 TLB: `_ name:^string enable:bool maxLeverage:uint16 liquidationFee:coins maintenanceRate:uint32 tradingFeeRate:uint32 lpTradingFeeRate:uint32 = TokenConfig`
@@ -194,8 +194,8 @@ TLB: `_ longMargin:coins shortMargin:coins longSize:coins shortSize:coins longVa
 Signature: `GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins}`
 
 ## GasConfig
-TLB: `_ lpMinExecutionFee:coins perpMinExecutionFee:coins lpGasConsumption:coins perpGasConsumption:coins minTonsForStorage:coins gasForTransferJetton:coins gasForBurnTlp:coins gasForMintTlp:coins = GasConfig`
-Signature: `GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,lpGasConsumption:coins,perpGasConsumption:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins}`
+TLB: `_ lpMinExecutionFee:coins perpMinExecutionFee:coins gasForPerpTrader:coins gasForPerpExecutor:coins gasForLpTrader:coins gasForLpExecutor:coins minTonsForStorage:coins gasForTransferJetton:coins gasForBurnTlp:coins gasForMintTlp:coins = GasConfig`
+Signature: `GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins}`
 
 ## ExecutorConfig
 TLB: `_ executors:dict<address, bool> compensator:address claimer:address = ExecutorConfig`
