@@ -31,7 +31,7 @@
     int $tonBalanceBeforeMsg = (((__tact_my_balance() - $self'totalExecutionFee) + $executionFeeDelta) - $ctx'value);
     $tonBalanceBeforeMsg = max(0, $tonBalanceBeforeMsg);
     int $storageFee = ($self'minTonsForStorage - min($tonBalanceBeforeMsg, $self'minTonsForStorage));
-    int $extraValue = max(0, ($tonBalanceBeforeMsg - $self'minTonsForStorage));
+    int $extraValue = (null?(__tact_dict_get_slice_int($self'executors, 267, $ctx'sender, 1)) ? 0 : max(0, ($tonBalanceBeforeMsg - $self'minTonsForStorage)));
     int $refundValue = ((((($ctx'value - $storageFee) - ($gasConsumption * $executionMultiple)) + $extraValue) - (($executionFeeDelta > 0) ? $executionFeeDelta : 0)) - ($transferJetton ? $self'gasForTransferJetton : 0));
     if (($refundValue > 0)) {
         $global_send($SendParameters$_constructor_to_value_mode($to, $refundValue, 2));

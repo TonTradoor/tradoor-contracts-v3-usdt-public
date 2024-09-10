@@ -2516,30 +2516,40 @@ PROGRAM{
   }>
   $Pool$_fun_transferEstimatedRemainValue PROCREF:<{
     __tact_context_get INLINECALLDICT
-    s1 s3 XCHG
-    3 BLKDROP
+    DROP
+    s2 POP
     __tact_my_balance INLINECALLDICT
-    s12 PUSH
+    s13 PUSH
     SUB
-    s4 PUSH
+    s5 PUSH
     ADD
-    OVER
+    s2 PUSH
     SUB
     0 PUSHINT
     SWAP
     MAX
     DUP
-    33 s() PUSH
+    34 s() PUSH
     MIN
-    33 s() PUSH
+    34 s() PUSH
     SWAP
     SUB
-    0 PUSHINT
-    s0 s2 XCHG
-    34 s() PUSH
-    SUB
-    s1 s2 XCHG
-    MAX
+    267 PUSHINT
+    29 s() PUSH
+    s0 s1 s4 XCHG3
+    1 PUSHINT
+    __tact_dict_get_slice_int INLINECALLDICT
+    ISNULL
+    IF:<{
+      DROP
+      0 PUSHINT
+    }>ELSE<{
+      0 PUSHINT
+      SWAP
+      34 s() PUSH
+      SUB
+      MAX
+    }>
     -ROT
     SUB
     s6 s3 XCHG2
