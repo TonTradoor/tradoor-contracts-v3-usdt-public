@@ -10,7 +10,7 @@
         "runlocal": "NODE_ENV=localnet blueprint run --mnemonic",
         "rundev": "NODE_ENV=devnet blueprint run --mnemonic",
         "runtest": "NODE_ENV=testnet blueprint run --mnemonic",
-        "runmain": "NODE_ENV=mainnet blueprint run --mnemonic",
+        "runmain": "NODE_ENV=mainnet blueprint run",
         "deploylocal": "sh scripts/deploy.sh localnet",
         "deploydev": "sh scripts/deploy.sh devnet",
         "deploytest": "sh scripts/deploy.sh testnet",
