@@ -8,9 +8,9 @@ export async function run(provider: NetworkProvider) {
     let deployId = getConfig("nextDeployId");
 
     const jettonParams = {
-        name: 'Tradoor USDT TLP',
-        description: 'USDT locked in liquidity in Tradoor (tradoor.io)',
-        symbol: 'USDT-TLP',
+        name: 'Tradoor NOT TLP',
+        description: 'NOT locked in liquidity in Tradoor (tradoor.io)',
+        symbol: 'NOT-TLP',
         image: 'https://tradoor.io/static-s3/20240907-263459.png',
         decimals: '9',
     };

@@ -18,9 +18,6 @@ builder __tact_store_address(builder b, slice address) inline;
 ;; __tact_store_address_opt
 builder __tact_store_address_opt(builder b, slice address) inline;
 
-;; __tact_my_balance
-int __tact_my_balance() inline;
-
 ;; __tact_not_null
 forall X -> X __tact_not_null(X x) impure inline;
 
@@ -48,9 +45,6 @@ cell __tact_dict_get_uint_cell(cell d, int kl, int k) inline;
 ;; __tact_dict_set_slice_int
 (cell, ()) __tact_dict_set_slice_int(cell d, int kl, slice k, int v, int vl) inline;
 
-;; __tact_dict_get_slice_int
-int __tact_dict_get_slice_int(cell d, int kl, slice k, int vl) inline;
-
 ;; __tact_dict_min_slice_int
 (slice, int, int) __tact_dict_min_slice_int(cell d, int kl, int vl) inline;
 
@@ -68,6 +62,9 @@ int __tact_slice_eq_bits(slice a, slice b) inline;
 
 ;; __tact_int_eq_nullable_one
 int __tact_int_eq_nullable_one(int a, int b) inline;
+
+;; __tact_dict_exists_slice
+int __tact_dict_exists_slice(cell d, int kl, slice k) inline;
 
 ;; $Deploy$_load
 (slice, ((int))) $Deploy$_load(slice sc_0) inline;
@@ -526,7 +523,7 @@ slice $Cell$_fun_asSlice(cell $self) impure inline;
 slice $global_emptySlice() impure inline;
 
 ;; $global_send
-() $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
+int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
 
 ;; $global_emit
 () $global_emit(cell $body) impure inline;
@@ -536,6 +533,9 @@ slice $global_emptySlice() impure inline;
 
 ;; $JettonTransfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount_forward_payload
 ((int, int, slice, slice, cell, int, slice)) $JettonTransfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount_forward_payload(int $query_id, int $amount, slice $destination, slice $response_destination, cell $custom_payload, int $forward_ton_amount, slice $forward_payload) inline;
+
+;; $Pool$_fun_refundJetton
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_refundJetton((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $query_id, int $amount, slice $destination, slice $response_destination) impure inline_ref;
 
 ;; $Pool$_fun_transferJetton
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_transferJetton((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, slice $to, int $query_id, int $amount, slice $destination, slice $response_destination) impure inline_ref;
@@ -552,14 +552,8 @@ slice $global_emptySlice() impure inline;
 ;; $LiquidityOrderCreatedEvent$_constructor_opType_account_jettonDelta_executionFee_orderId_trxId
 ((int, slice, int, int, int, int)) $LiquidityOrderCreatedEvent$_constructor_opType_account_jettonDelta_executionFee_orderId_trxId(int $opType, slice $account, int $jettonDelta, int $executionFee, int $orderId, int $trxId) inline;
 
-;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;
-
-;; $Pool$_fun_forward
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_forward((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
-
 ;; $Pool$_fun_createLiquidityOrder
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_createLiquidityOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $query_id, int $isIncrease, int $jettonFromAmount, slice $account, int $executionFee, int $jettonDelta) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_createLiquidityOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $query_id, int $isIncrease, slice $account, int $executionFee, int $jettonDelta) impure inline_ref;
 
 ;; $PerpOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee
 ((int, int, int, int, int)) $PerpOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee(int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee) inline;
@@ -571,10 +565,10 @@ slice $global_emptySlice() impure inline;
 ((int, int, slice, int, int, int, int, int, int, int, int, int)) $PerpOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_requestTime_trxId(int $opType, int $tokenId, slice $account, int $isLong, int $marginDelta, int $sizeDelta, int $executionFee, int $orderId, int $triggerPrice, int $triggerAbove, int $requestTime, int $trxId) inline;
 
 ;; $Pool$_fun_createPerpOrder
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_createPerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee, int $requestTime) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), int) $Pool$_fun_createPerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $executionFee, int $requestTime) impure inline_ref;
 
 ;; $Pool$_fun_createIncreasePerpOrder
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_createIncreasePerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $query_id, int $jettonFromAmount, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $requestTime) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_createIncreasePerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $query_id, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $requestTime) impure inline_ref;
 
 ;; $AccountPerpPosition$_constructor_positions
 ((cell)) $AccountPerpPosition$_constructor_positions(cell $positions) inline;
@@ -650,6 +644,12 @@ slice $global_emptySlice() impure inline;
 
 ;; $Pool$_fun_compensate
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, tuple)) $Pool$_fun_compensate((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $compensateId) impure inline_ref;
+
+;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;
+
+;; $Pool$_fun_forward
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_forward((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
 
 ;; $Pool$_fun_reply
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_reply((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline;

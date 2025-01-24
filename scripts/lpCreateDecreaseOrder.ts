@@ -47,7 +47,6 @@ export async function run(provider: NetworkProvider) {
                     .storeUint(1, 1)
                     .storeRef(
                         beginCell()
-                            .storeCoins(toUnits(tlp, TLP_DECIMAL))
                             .storeCoins(toNano(executionFee)) // execution fee
                             .endCell())
                     .endCell().asSlice()

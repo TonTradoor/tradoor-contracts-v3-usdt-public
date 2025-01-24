@@ -54,7 +54,6 @@ export async function run(provider: NetworkProvider) {
                     .storeInt(isMarket? -1n : 0n, 1)
                     .storeUint(tokenId, 16)
                     .storeInt(isLong? -1n : 0n, 1)
-                    .storeCoins(toUnits(margin, MOCK_DECIMAL))
                     .storeCoins(toUnits(size, MOCK_DECIMAL))
                     .storeUint(toUnits(triggerPrice, PRICE_DECIMAL), 128)
                     .storeUint(now(), 32)

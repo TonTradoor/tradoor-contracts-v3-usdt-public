@@ -1,13 +1,21 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 25714 bytes
+BOC Size: 22293 bytes
 
 # Types
-Total Types: 58
+Total Types: 61
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
 Signature: `StateInit{code:^cell,data:^cell}`
+
+## StdAddress
+TLB: `_ workchain:int8 address:uint256 = StdAddress`
+Signature: `StdAddress{workchain:int8,address:uint256}`
+
+## VarAddress
+TLB: `_ workchain:int32 address:^slice = VarAddress`
+Signature: `VarAddress{workchain:int32,address:^slice}`
 
 ## Context
 TLB: `_ bounced:bool sender:address value:int257 raw:^slice = Context`
@@ -36,6 +44,10 @@ Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
 ## ChangeOwnerOk
 TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
+
+## UpdateContract
+TLB: `update_contract#2eb108db code:^slice data:Maybe ^slice = UpdateContract`
+Signature: `UpdateContract{code:^slice,data:Maybe ^slice}`
 
 ## JettonTransfer
 TLB: `jetton_transfer#0f8a7ea5 query_id:uint64 amount:coins destination:address response_destination:Maybe address custom_payload:Maybe ^cell forward_ton_amount:coins forward_payload:remainder<slice> = JettonTransfer`
@@ -277,11 +289,23 @@ Argument: compensateId
 8: Cell overflow
 9: Cell underflow
 10: Dictionary error
+11: 'Unknown' error
+12: Fatal error
 13: Out of gas error
-32: Method ID not found
+14: Virtualization error
+32: Action list is invalid
+33: Action list is too long
 34: Action is invalid or not supported
+35: Invalid source address in outbound message
+36: Invalid destination address in outbound message
 37: Not enough TON
 38: Not enough extra-currencies
+39: Outbound message does not fit into a cell after rewriting
+40: Cannot process a message
+41: Library reference is null
+42: Library change action error
+43: Exceeded maximum number of cells in the library or the maximum depth of the Merkle tree
+50: Account state size exceeded limits
 128: Null reference exception
 129: Invalid serialization prefix
 130: Invalid incoming message

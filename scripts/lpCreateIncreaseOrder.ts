@@ -42,7 +42,6 @@ export async function run(provider: NetworkProvider) {
                 .storeRef(
                     beginCell()
                     .storeUint(OP_CREATE_INCREASE_LP_POSITION_ORDER, 8) // op
-                    .storeCoins(toUnits(liquidity, MOCK_DECIMAL)) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()
                 ).endCell().asSlice()
