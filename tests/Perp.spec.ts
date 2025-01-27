@@ -8,7 +8,7 @@ import {
 import { Dictionary, fromNano, toNano } from '@ton/core';
 import { MockJettonWallet } from '../wrappers/MockJettonWallet';
 import { MockJettonMaster as MockJetton } from '../wrappers/JettonMock';
-import { Pool } from '../wrappers/Pool';
+import { loadPerpOrderCreatedEvent, Pool } from '../wrappers/Pool';
 import { TestEnv } from './lib/TestEnv';
 import { fromJettonUnits, getJettonBalance, mint, toJettonUnits, toPriceUnits } from './lib/TokenHelper';
 import { createDecreaseLiquidityOrder, createIncreaseLiquidityOrder, executeLiquidityOrder } from './lib/LPHelper';
@@ -628,11 +628,16 @@ describe('PERP', () => {
             to: pool.address,
             success: true
         });
+
+        const body = createResult.trxResult.externals[0].body;
+        const perpOrderCreatedEvent = loadPerpOrderCreatedEvent(body.asSlice());
+        console.log(perpOrderCreatedEvent);
+
         console.log('pool ton balance after create order', fromNano(createResult.balanceAfter.poolTonBalance));
         console.log('total execution fee after create order with tp/sl', fromNano((await pool.getPoolStat()).totalExecutionFee));
 
         /// cancel order
-        const cancelResult = await cancelPerpOrder(executor, createResult.orderIdBefore);
+        const cancelResult = await cancelPerpOrder(executor, perpOrderCreatedEvent.orderId);
         prettyLogTransactions(cancelResult.trxResult.transactions);
 
         expect(cancelResult.trxResult.transactions).toHaveTransaction({

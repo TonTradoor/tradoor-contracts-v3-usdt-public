@@ -362,8 +362,16 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
     $global_nativeSendMessage($c, 0);
 }
 
+builder $Builder$_fun_storeSlice(builder $self, slice $cell) impure asm """
+    STSLICER
+""";
+
 (slice, cell) $Slice$_fun_loadRef(slice $self) impure asm( -> 1 0) """
     LDREF
+""";
+
+(slice, int) $Slice$_fun_loadBit(slice $self) impure asm( -> 1 0) """
+    1 LDI
 """;
 
 (slice, int) $Slice$_fun_loadCoins(slice $self) impure asm( -> 1 0) """

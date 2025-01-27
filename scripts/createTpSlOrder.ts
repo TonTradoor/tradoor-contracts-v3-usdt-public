@@ -28,8 +28,6 @@ export async function run(provider: NetworkProvider) {
     let user0JettonData = await user0JettonWallet.getGetWalletData();
     console.log(`user jetton wallet ${user0JettonWallet.address} balance ${user0JettonData.balance}`);
 
-    let orderId = (await pool.getPerpOrder(0n)).perpOrderIndexNext;
-
     let trxId = BigInt(await provider.ui().input('trxId:'));
     executionFee *= 3;
 
@@ -82,14 +80,5 @@ export async function run(provider: NetworkProvider) {
     let poolJettonData = await poolJettonWallet.getGetWalletData();
 
     console.log('pool jetton balance:', poolJettonData.balance);
-
-    // get index
-    let orderIdNext = (await pool.getPerpOrder(0n)).perpOrderIndexNext;
-    console.log(`orderId:`, orderId);
-    console.log(`orderIdNext:`, orderIdNext);
-
-    // get order
-    let order = await pool.getPerpOrder(orderId);
-    console.log(`order:`, order);
 
 }

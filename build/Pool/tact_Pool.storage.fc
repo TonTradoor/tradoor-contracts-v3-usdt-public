@@ -78,6 +78,19 @@ cell $DeployOk$_store_cell((int) v) inline {
 }
 
 ;;
+;; Type: UpdateContract
+;; Header: 0x2eb108db
+;; TLB: update_contract#2eb108db code:^slice data:Maybe ^slice = UpdateContract
+;;
+
+(slice, ((slice, slice))) $UpdateContract$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 783354075);
+    var v'code = sc_0~load_ref().begin_parse();
+    var v'data = sc_0~load_int(1) ? sc_0~load_ref().begin_parse() : null();
+    return (sc_0, (v'code, v'data));
+}
+
+;;
 ;; Type: JettonTransfer
 ;; Header: 0x0f8a7ea5
 ;; TLB: jetton_transfer#0f8a7ea5 query_id:uint64 amount:coins destination:address response_destination:Maybe address custom_payload:Maybe ^cell forward_ton_amount:coins forward_payload:remainder<slice> = JettonTransfer

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 22293 bytes
+BOC Size: 22284 bytes
 
 # Types
 Total Types: 61
@@ -355,6 +355,9 @@ Ownable --> BaseTrait
 Resumable --> Ownable
 Pool --> Stoppable
 Pool --> Ownable
+Pool --> Upgradable
+Upgradable --> BaseTrait
+Upgradable --> Ownable
 ```
 
 # Contract Dependency Diagram

@@ -7,7 +7,7 @@ import "./events";
 import "./structs";
 import "./constants";
 
-contract Pool with Deployable, Resumable {
+contract Pool with Deployable, Resumable, Upgradable {
 
     owner: Address;
     stopped: Bool = false;
@@ -220,9 +220,9 @@ contract Pool with Deployable, Resumable {
         } else if (opCode == OP_CREATE_INCREASE_PERP_POSITION_ORDER) {
             let marginDelta: Int = msg.amount;
             let executionFee: Int = operation.loadCoins();
-            let isMarket: Bool = operation.loadInt(1) == -1;
+            let isMarket: Bool = operation.loadBit();
             let tokenId: Int = operation.loadUint(16);
-            let isLong: Bool = operation.loadInt(1) == -1;
+            let isLong: Bool = operation.loadBit();
             
             let sizeDelta: Int = operation.loadCoins();
             let triggerPrice: Int = operation.loadUint(128);
@@ -298,15 +298,14 @@ contract Pool with Deployable, Resumable {
      * @param executionMultiple The execution multiple.
      * @param transferJetton A boolean value indicating whether to transfer jetton.
      */
-    fun transferEstimatedRemainValue(gasConsumption: Int, to: Address, executionFeeDelta: Int, executionMultiple: Int, transferJetton: Bool) {
+    fun transferEstimatedRemainValue(gasConsumption: Int, to: Address, executionFeeDelta: Int) {
         let ctx: Context = context();
         let tonBalanceBeforeMsg: Int = myBalance() - self.totalExecutionFee + executionFeeDelta - ctx.value;
         tonBalanceBeforeMsg = max(0, tonBalanceBeforeMsg);
         let storageFee: Int = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
         let extraValue: Int = self.executors.exists(ctx.sender)? 0 : max(0, tonBalanceBeforeMsg - self.minTonsForStorage);
 
-        let refundValue: Int = ctx.value - storageFee - gasConsumption * executionMultiple + extraValue - 
-            (executionFeeDelta > 0 ? executionFeeDelta : 0) - (transferJetton ? self.gasForTransferJetton : 0);
+        let refundValue: Int = ctx.value - storageFee - gasConsumption + extraValue -  (executionFeeDelta > 0 ? executionFeeDelta : 0);
 
         if (refundValue > 0) {
             send(SendParameters{ to: to, value: refundValue, mode: SendIgnoreErrors });
@@ -359,7 +358,7 @@ contract Pool with Deployable, Resumable {
             trxId: query_id
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForLpTrader, account, executionFee, 1, false);
+        self.transferEstimatedRemainValue(self.gasForLpTrader, account, executionFee);
     }
 
     /**
@@ -403,7 +402,7 @@ contract Pool with Deployable, Resumable {
             trxId: msg.trxId
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForLpTrader, ctx.sender, -order.executionFee, 1, true);
+        self.transferEstimatedRemainValue(self.gasForLpTrader + self.gasForTransferJetton, ctx.sender, -order.executionFee);
     }
 
     /**
@@ -425,11 +424,10 @@ contract Pool with Deployable, Resumable {
         let estimatedGas: Int = self.gasForLpExecutor;
         if(order.isIncrease){
             estimatedGas += self.gasForMintTlp;
-            require(ctx.value >= estimatedGas, "gas not enough");
         }else{
-            estimatedGas += self.gasForBurnTlp;
-            require(ctx.value >= estimatedGas + self.gasForTransferJetton, "gas not enough");
+            estimatedGas += self.gasForBurnTlp + self.gasForTransferJetton;
         }
+        require(ctx.value >= estimatedGas, "gas not enough");
 
         order.isPending = true;
         self.liquidityOrders.set(msg.orderId, order);
@@ -517,7 +515,7 @@ contract Pool with Deployable, Resumable {
             entryRolloverFeeGrowth: self.globalRolloverFeeGrowth
         }.toCell());
 
-        self.transferEstimatedRemainValue(estimatedGas, ctx.sender, -order.executionFee, 1, !order.isIncrease);
+        self.transferEstimatedRemainValue(estimatedGas, ctx.sender, -order.executionFee);
     }
 
     // ======================================================== Perp ======================================================== //
@@ -566,12 +564,12 @@ contract Pool with Deployable, Resumable {
             marginDelta, sizeDelta, triggerPrice, executionFee / executionFeeMultiple, requestTime);
 
         if ((tpSize > 0 && tpPrice > 0) || (slSize > 0 && slPrice > 0)) {
-            self.perpOrderExs.set(orderId, PerpOrderEx{ tpSize, tpPrice, slSize, slPrice, executionFee });
+            self.perpOrderExs.set(orderId, PerpOrderEx{ tpSize, tpPrice, slSize, slPrice, executionFee: executionFee / executionFeeMultiple });
         }
 
         self.totalExecutionFee += executionFee;
 
-        self.transferEstimatedRemainValue(self.gasForPerpTrader, account, executionFee, 1, false);
+        self.transferEstimatedRemainValue(self.gasForPerpTrader, account, executionFee);
     }
 
     /**
@@ -591,7 +589,7 @@ contract Pool with Deployable, Resumable {
 
         self.totalExecutionFee += msg.executionFee;
 
-        self.transferEstimatedRemainValue(self.gasForPerpTrader, ctx.sender, msg.executionFee, 1, false);
+        self.transferEstimatedRemainValue(self.gasForPerpTrader, ctx.sender, msg.executionFee);
     }
 
     /**
@@ -628,7 +626,7 @@ contract Pool with Deployable, Resumable {
 
         self.totalExecutionFee += msg.executionFee;
 
-        self.transferEstimatedRemainValue(self.gasForPerpTrader, ctx.sender, msg.executionFee, executionFeeMultiple, false);
+        self.transferEstimatedRemainValue(self.gasForPerpTrader * executionFeeMultiple, ctx.sender, msg.executionFee);
     }
 
     /**
@@ -718,12 +716,11 @@ contract Pool with Deployable, Resumable {
         require(!order.isPending, "order is pending");
 
         let increase: Bool = order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_INCREASE_LIMIT;
+        let gas: Int = self.gasForPerpExecutor;
         if (increase) {
-            // compute gas + transfer jetton gas(returns usdt to trader)
-            require(ctx.value >= self.gasForPerpTrader + self.gasForTransferJetton, "gas not enough");
-        } else {
-            require(ctx.value >= self.gasForPerpTrader, "gas not enough");
+            gas += self.gasForTransferJetton;
         }
+        require(ctx.value >= gas, "gas not enough");
 
         let isExecutor: Bool = self.executors.exists(ctx.sender);
         require(isExecutor || ctx.sender == order.account, "invalid sender");
@@ -772,7 +769,7 @@ contract Pool with Deployable, Resumable {
             trxId: msg.trxId
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpTrader, ctx.sender, -executionFee, 1, increase);
+        self.transferEstimatedRemainValue(gas, ctx.sender, -executionFee);
     }
 
 
@@ -1004,7 +1001,7 @@ contract Pool with Deployable, Resumable {
             lpRealizedPnl: lpRealizedPnl,
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), -order.executionFee, executionFeeMultiple, false);
+        self.transferEstimatedRemainValue(self.gasForPerpExecutor * executionFeeMultiple, sender(), -order.executionFee);
     }
 
     /**
@@ -1198,7 +1195,7 @@ contract Pool with Deployable, Resumable {
             lpRealizedPnl: lpRealizedPnl
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), -order.executionFee, 1, payout > 0);
+        self.transferEstimatedRemainValue(self.gasForPerpExecutor + (payout > 0 ? self.gasForTransferJetton : 0), sender(), -order.executionFee);
     }
 
     /**
@@ -1400,7 +1397,7 @@ contract Pool with Deployable, Resumable {
             lpRealizedPnl: lpRealizedPnl
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), -order.executionFee, 1, payout > 0);
+        self.transferEstimatedRemainValue(self.gasForPerpExecutor + (payout > 0 ? self.gasForTransferJetton : 0), sender(), -order.executionFee);
     }
     
     /**
@@ -1474,7 +1471,7 @@ contract Pool with Deployable, Resumable {
             unlockTime: now() + 1 * DAY
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), 0, 1, false);
+        self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), 0);
     }
 
     /**
@@ -1497,7 +1494,7 @@ contract Pool with Deployable, Resumable {
                 trxId: msg.trxId
             }.toCell());
 
-            self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), 0, 1, false);
+            self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), 0);
             return;
         }
 
@@ -1511,8 +1508,8 @@ contract Pool with Deployable, Resumable {
                 self.perpOrderExs.del(compensate.orderId);
             }
         }
-
-        if (compensate.refundReceiver != null && compensate.refundAmount > 0) {
+        let needRefund: Bool = compensate.refundReceiver != null && compensate.refundAmount > 0;
+        if (needRefund) {
             self.transferJetton(self.jettonWallet, compensate.trxId, compensate.refundAmount, compensate.refundReceiver!!, sender());
         }
 
@@ -1526,7 +1523,7 @@ contract Pool with Deployable, Resumable {
             trxId: compensate.trxId
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), 0, 1, compensate.refundReceiver != null && compensate.refundAmount > 0);
+        self.transferEstimatedRemainValue(self.gasForPerpExecutor + (needRefund ? self.gasForTransferJetton : 0), sender(), 0);
     }
 
     /**

@@ -28,7 +28,6 @@ export async function createIncreaseLiquidityOrder(user: SandboxContract<Treasur
                 .storeRef(
                     beginCell()
                     .storeUint(OP_CREATE_INCREASE_LP_POSITION_ORDER, 8) // op
-                    .storeCoins(toJettonUnits(liquidity)) // liquidity
                     .storeCoins(toNano(executionFee)) // execution fee
                     .endCell()
                 ).endCell().asSlice()
@@ -140,7 +139,6 @@ export async function createDecreaseLiquidityOrder(user: SandboxContract<Treasur
                     .storeUint(1, 1)
                     .storeRef(
                         beginCell()
-                            .storeCoins(toTlpUnits(tlp))
                             .storeCoins(toNano(executionFee)) // execution fee
                             .endCell()
                     ).endCell().asSlice()

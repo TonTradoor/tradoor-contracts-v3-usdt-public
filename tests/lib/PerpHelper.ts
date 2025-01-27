@@ -31,10 +31,9 @@ export async function createIncreasePerpOrder(user: SandboxContract<TreasuryCont
                     beginCell()
                     .storeUint(OP_CREATE_INCREASE_PERP_POSITION_ORDER, 8) // op
                     .storeCoins(toNano(executionFee)) // execution fee
-                    .storeInt(isMarket? -1n : 0n, 1)
+                    .storeBit(isMarket)
                     .storeUint(tokenId, 16)
-                    .storeInt(isLong? -1n : 0n, 1)
-                    .storeCoins(toJettonUnits(margin))
+                    .storeBit(isLong)
                     .storeCoins(toJettonUnits(size))
                     .storeUint(toPriceUnits(triggerPrice), 128)
                     .storeUint(now(), 32)

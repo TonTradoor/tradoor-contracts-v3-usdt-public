@@ -26,8 +26,6 @@ export async function run(provider: NetworkProvider) {
     let user0JettonData = await user0JettonWallet.getGetWalletData();
     console.log(`user jetton wallet ${user0JettonWallet.address} balance ${user0JettonData.balance}`);
 
-    let orderId = (await pool.getPerpOrder(0n)).perpOrderIndexNext;
-
     let trxId = BigInt(await provider.ui().input('trxId:'));
 
     const lastTrx = await getLastTransaction(provider, pool.address);
@@ -51,9 +49,9 @@ export async function run(provider: NetworkProvider) {
                     beginCell()
                     .storeUint(OP_CREATE_INCREASE_PERP_POSITION_ORDER, 8) // op
                     .storeCoins(toNano(executionFee)) // execution fee
-                    .storeInt(isMarket? -1n : 0n, 1)
+                    .storeBit(isMarket)
                     .storeUint(tokenId, 16)
-                    .storeInt(isLong? -1n : 0n, 1)
+                    .storeBit(isLong)
                     .storeCoins(toUnits(size, MOCK_DECIMAL))
                     .storeUint(toUnits(triggerPrice, PRICE_DECIMAL), 128)
                     .storeUint(now(), 32)
@@ -80,14 +78,5 @@ export async function run(provider: NetworkProvider) {
     let poolJettonData = await poolJettonWallet.getGetWalletData();
 
     console.log('pool jetton balance:', poolJettonData.balance);
-
-    // get index
-    let orderIdNext = (await pool.getPerpOrder(0n)).perpOrderIndexNext;
-    console.log(`orderId:`, orderId);
-    console.log(`orderIdNext:`, orderIdNext);
-
-    // get order
-    let order = await pool.getPerpOrder(orderId);
-    console.log(`order:`, order);
 
 }

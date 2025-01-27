@@ -26,8 +26,6 @@ export async function run(provider: NetworkProvider) {
     let user0TlpData = await user0TlpWallet.getGetWalletData();
     console.log('user TLP-Jetton balance:', user0TlpData.balance);
 
-    let orderId = (await pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
-
     const lastTrx = await getLastTransaction(provider, pool.address);
     await user0TlpWallet.send(
         provider.sender(),
@@ -64,14 +62,5 @@ export async function run(provider: NetworkProvider) {
     let poolTlpData = await poolTlpWallet.getGetWalletData();
 
     console.log('pool TLP-jetton balance:', poolTlpData.balance);
-
-    // get index
-    let orderIdNext = (await pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
-    console.log(`orderId:`, orderId);
-    console.log(`orderIdNext:`, orderIdNext);
-
-    // get order
-    let order = await pool.getLiquidityOrder(orderId);
-    console.log(`order:`, order);
 
 }

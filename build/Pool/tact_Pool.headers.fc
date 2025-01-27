@@ -75,6 +75,9 @@ builder $DeployOk$_store(builder build_0, (int) v) inline;
 ;; $DeployOk$_store_cell
 cell $DeployOk$_store_cell((int) v) inline;
 
+;; $UpdateContract$_load
+(slice, ((slice, slice))) $UpdateContract$_load(slice sc_0) inline;
+
 ;; $JettonTransfer$_store
 builder $JettonTransfer$_store(builder build_0, (int, int, slice, slice, cell, int, slice) v) inline_ref;
 
@@ -544,7 +547,7 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline;
 
 ;; $Pool$_fun_transferEstimatedRemainValue
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_transferEstimatedRemainValue((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $gasConsumption, slice $to, int $executionFeeDelta, int $executionMultiple, int $transferJetton) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_transferEstimatedRemainValue((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $gasConsumption, slice $to, int $executionFeeDelta) impure inline_ref;
 
 ;; $LiquidityOrder$_constructor_isIncrease_account_jettonDelta_executionFee_blockTime_isPending
 ((int, slice, int, int, int, int)) $LiquidityOrder$_constructor_isIncrease_account_jettonDelta_executionFee_blockTime_isPending(int $isIncrease, slice $account, int $jettonDelta, int $executionFee, int $blockTime, int $isPending) inline;

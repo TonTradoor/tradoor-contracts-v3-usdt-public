@@ -20,8 +20,6 @@ export async function run(provider: NetworkProvider) {
     let mockJettonWalletData = await mockJettonWallet.getGetWalletData();
     console.log('user mock-jetton wallet data:', mockJettonWalletData.balance);
 
-    let orderId = (await pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
-
     const lastTrx = await getLastTransaction(provider, pool.address);
     await mockJettonWallet.send(
         provider.sender(),
@@ -59,14 +57,4 @@ export async function run(provider: NetworkProvider) {
     let poolJettonData = await poolJettonWallet.getGetWalletData();
 
     console.log('pool MOCK-jetton balance:', poolJettonData.balance);
-
-    // get index
-    let orderIdNext = (await pool.getLiquidityOrder(0n)).liquidityOrderIndexNext;
-    console.log(`orderId:`, orderId);
-    console.log(`orderIdNext:`, orderIdNext);
-
-    // get order
-    let order = await pool.getLiquidityOrder(orderId);
-    console.log(`order:`, order);
-
 }
