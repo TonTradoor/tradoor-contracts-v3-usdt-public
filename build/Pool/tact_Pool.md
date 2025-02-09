@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 22284 bytes
+BOC Size: 22771 bytes
 
 # Types
 Total Types: 61
@@ -70,8 +70,8 @@ TLB: `jetton_update_content#5b8f271d jetton_content:^cell = JettonUpdateContent`
 Signature: `JettonUpdateContent{jetton_content:^cell}`
 
 ## UpdateConfig
-TLB: `update_config#9cb55244 orderLockTime:Maybe uint32 maxLpNetCap:Maybe coins lpRolloverFeeRate:Maybe uint32 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateConfig`
-Signature: `UpdateConfig{orderLockTime:Maybe uint32,maxLpNetCap:Maybe coins,lpRolloverFeeRate:Maybe uint32,gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address},contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address}}`
+TLB: `update_config#bd1bb351 orderLockTime:uint32 maxLpNetCap:coins lpRolloverFeeRate:uint32 liquidatedPositionShareRate:uint32 normalPositionShareRate:uint32 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateConfig`
+Signature: `UpdateConfig{orderLockTime:uint32,maxLpNetCap:coins,lpRolloverFeeRate:uint32,liquidatedPositionShareRate:uint32,normalPositionShareRate:uint32,gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address},contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address}}`
 
 ## ListToken
 TLB: `list_token#e49b3bf0 tokenId:uint16 config:TokenConfig{name:^string,enable:bool,maxLeverage:uint16,liquidationFee:coins,maintenanceRate:uint32,tradingFeeRate:uint32,lpTradingFeeRate:uint32} = ListToken`

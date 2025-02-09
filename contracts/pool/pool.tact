@@ -81,9 +81,11 @@ contract Pool with Deployable, Resumable, Upgradable {
      */
     receive(msg: UpdateConfig) {
         self.requireOwner();
-        self.orderLockTime = msg.orderLockTime!!;
-        self.maxLpNetCap = msg.maxLpNetCap!!;
-        self.lpRolloverFeeRate = msg.lpRolloverFeeRate!!;
+        self.orderLockTime = msg.orderLockTime;
+        self.maxLpNetCap = msg.maxLpNetCap;
+        self.lpRolloverFeeRate = msg.lpRolloverFeeRate;
+        self.liquidatedPositionShareRate = msg.liquidatedPositionShareRate;
+        self.normalPositionShareRate = msg.normalPositionShareRate;
 
         // contract
         let contractConfig: ContractConfig? = msg.contractConfig;
@@ -902,7 +904,7 @@ contract Pool with Deployable, Resumable, Upgradable {
                 tradoorProfit = lpRealizedPnl * self.normalPositionShareRate;
             }
             self.protocolTradingFee += tradingFee - lpTradingFee + tradoorProfit;
-            self.globalLPFund += lpRealizedPnl - tradoorProgit + lpTradingFee;
+            self.globalLPFund += lpRealizedPnl - tradoorProfit + lpTradingFee;
         }
 
         // funding fee

@@ -39,9 +39,11 @@ message JettonUpdateContent {
 
 // ============================ Config ================================ //
 message UpdateConfig {
-    orderLockTime: Int? as uint32;
-    maxLpNetCap: Int? as coins;
-    lpRolloverFeeRate: Int? as uint32;
+    orderLockTime: Int as uint32;
+    maxLpNetCap: Int as coins;
+    lpRolloverFeeRate: Int as uint32;
+    liquidatedPositionShareRate: Int as uint32;
+    normalPositionShareRate: Int as uint32;
     gasConfig: GasConfig?;
     executorConfig: ExecutorConfig?;
     contractConfig: ContractConfig?;

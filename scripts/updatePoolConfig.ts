@@ -37,6 +37,8 @@ export async function run(provider: NetworkProvider) {
             orderLockTime: BigInt(config["orderLockTime"]),
             maxLpNetCap: toUnits(config["maxLpNetCap"], MOCK_DECIMAL),
             lpRolloverFeeRate: toUnits(config["lpRolloverFeeRate"], PERCENTAGE_DECIMAL),
+            liquidatedPositionShareRate: toUnits(config["liquidatedPositionShareRate"], PERCENTAGE_DECIMAL),
+            normalPositionShareRate: toUnits(config["normalPositionShareRate"], PERCENTAGE_DECIMAL),
             gasConfig: {
                 $$type: 'GasConfig',
                 lpMinExecutionFee: toNano(config["lpMinExecutionFee"]),

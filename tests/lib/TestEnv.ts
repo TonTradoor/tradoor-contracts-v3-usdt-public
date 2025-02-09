@@ -37,6 +37,8 @@ export class TestEnv {
     static priceDecimal: number = 18;
 
     static lpRolloverFeeRate: number = 0.7;
+    static liquidatedPositionShareRate: number = 0.5;
+    static normalPositionShareRate: number = 0.5;
     static tokenConfig = [{
         tokenId: 1n,
         name: 'BTC',
@@ -174,6 +176,8 @@ export class TestEnv {
                 orderLockTime: 3n * 60n,
                 maxLpNetCap: toJettonUnits(100000n),
                 lpRolloverFeeRate: BigInt(this.lpRolloverFeeRate * PERCENTAGE_BASIS_POINT),
+                liquidatedPositionShareRate: BigInt(this.liquidatedPositionShareRate * PERCENTAGE_BASIS_POINT),
+                normalPositionShareRate: BigInt(this.normalPositionShareRate * PERCENTAGE_BASIS_POINT),
                 gasConfig: {
                     $$type: 'GasConfig',
                     lpMinExecutionFee: toNano(0.05),
