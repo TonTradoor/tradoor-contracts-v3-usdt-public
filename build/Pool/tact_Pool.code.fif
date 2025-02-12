@@ -3182,6 +3182,8 @@ PROGRAM{
         OVER
         87 s() PUSH
         MUL
+        1000000000 PUSHINT
+        DIV
       }>
       39 s() PUSH
       s2 PUSH
@@ -3935,6 +3937,8 @@ PROGRAM{
         OVER
         83 s() PUSH
         MUL
+        1000000000 PUSHINT
+        DIV
       }>
       35 s() PUSH
       s2 PUSH
@@ -4660,6 +4664,8 @@ PROGRAM{
     31 s() PUSH
     78 s() PUSH
     MUL
+    1000000000 PUSHINT
+    DIV
     TUCK
     ADD
     s1 46 s() XCHG

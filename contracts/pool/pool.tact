@@ -901,7 +901,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpTradingFee = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
             let tradoorProfit: Int = 0;
             if (lpRealizedPnl > 0) {
-                tradoorProfit = lpRealizedPnl * self.normalPositionShareRate;
+                tradoorProfit = lpRealizedPnl * self.normalPositionShareRate / PERCENTAGE_BASIS_POINT;
             }
             self.protocolTradingFee += tradingFee - lpTradingFee + tradoorProfit;
             self.globalLPFund += lpRealizedPnl - tradoorProfit + lpTradingFee;
@@ -1091,7 +1091,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpTradingFee = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
             let tradoorProfit: Int = 0;
             if (lpRealizedPnl > 0) {
-                tradoorProfit = lpRealizedPnl * self.normalPositionShareRate;
+                tradoorProfit = lpRealizedPnl * self.normalPositionShareRate / PERCENTAGE_BASIS_POINT;
             }
             self.protocolTradingFee += tradingFee - lpTradingFee + tradoorProfit;
             self.globalLPFund += lpRealizedPnl - tradoorProfit + lpTradingFee;
@@ -1333,7 +1333,7 @@ contract Pool with Deployable, Resumable, Upgradable {
         let tradingFee: Int = sizeDelta * bankruptcyPrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
         let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let protocolTradingFee: Int = tradingFee - lpTradingFee;
-        let tradoorProfit: Int = lpRealizedPnl * self.liquidatedPositionShareRate;
+        let tradoorProfit: Int = lpRealizedPnl * self.liquidatedPositionShareRate / PERCENTAGE_BASIS_POINT;
         self.protocolTradingFee += protocolTradingFee + tradoorProfit;
         self.globalLPFund += lpRealizedPnl - tradoorProfit + lpTradingFee;
 

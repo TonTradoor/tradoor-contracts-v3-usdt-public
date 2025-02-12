@@ -179,7 +179,7 @@
         $lpTradingFee = (($tradingFee * $tokenConfig'lpTradingFeeRate) / 1000000000);
         int $tradoorProfit = 0;
         if (($lpRealizedPnl > 0)) {
-            $tradoorProfit = ($lpRealizedPnl * $self'normalPositionShareRate);
+            $tradoorProfit = (($lpRealizedPnl * $self'normalPositionShareRate) / 1000000000);
         }
         $self'protocolTradingFee = $self'protocolTradingFee + (($tradingFee - $lpTradingFee) + $tradoorProfit);
         $self'globalLPFund = $self'globalLPFund + (($lpRealizedPnl - $tradoorProfit) + $lpTradingFee);
@@ -286,7 +286,7 @@
         $lpTradingFee = (($tradingFee * $tokenConfig'lpTradingFeeRate) / 1000000000);
         int $tradoorProfit = 0;
         if (($lpRealizedPnl > 0)) {
-            $tradoorProfit = ($lpRealizedPnl * $self'normalPositionShareRate);
+            $tradoorProfit = (($lpRealizedPnl * $self'normalPositionShareRate) / 1000000000);
         }
         $self'protocolTradingFee = $self'protocolTradingFee + (($tradingFee - $lpTradingFee) + $tradoorProfit);
         $self'globalLPFund = $self'globalLPFund + (($lpRealizedPnl - $tradoorProfit) + $lpTradingFee);
@@ -408,7 +408,7 @@
     int $tradingFee = ((($sizeDelta * $bankruptcyPrice) * $tokenConfig'tradingFeeRate) / 1000000000000000000000000000);
     int $lpTradingFee = (($tradingFee * $tokenConfig'lpTradingFeeRate) / 1000000000);
     int $protocolTradingFee = ($tradingFee - $lpTradingFee);
-    int $tradoorProfit = ($lpRealizedPnl * $self'liquidatedPositionShareRate);
+    int $tradoorProfit = (($lpRealizedPnl * $self'liquidatedPositionShareRate) / 1000000000);
     $self'protocolTradingFee = $self'protocolTradingFee + ($protocolTradingFee + $tradoorProfit);
     $self'globalLPFund = $self'globalLPFund + (($lpRealizedPnl - $tradoorProfit) + $lpTradingFee);
     int $positionId = $perpPosition'positionId;
