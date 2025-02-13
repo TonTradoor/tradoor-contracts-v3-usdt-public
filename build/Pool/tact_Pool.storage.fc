@@ -78,6 +78,47 @@ cell $DeployOk$_store_cell((int) v) inline {
 }
 
 ;;
+;; Type: Operation
+;; TLB: _ seqno:uint32 manager:address = Operation
+;;
+
+builder $Operation$_store(builder build_0, (int, slice) v) inline {
+    var (v'seqno, v'manager) = v;
+    build_0 = build_0.store_uint(v'seqno, 32);
+    build_0 = __tact_store_address(build_0, v'manager);
+    return build_0;
+}
+
+cell $Operation$_store_cell((int, slice) v) inline {
+    return $Operation$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((int, slice))) $Operation$_load(slice sc_0) inline {
+    var v'seqno = sc_0~load_uint(32);
+    var v'manager = sc_0~__tact_load_address();
+    return (sc_0, (v'seqno, v'manager));
+}
+
+((int, slice)) $Operation$_tensor_cast((int, slice) v) asm """
+    NOP
+""";
+
+;;
+;; Type: ExecuteOperation
+;; Header: 0xdfda3ab4
+;; TLB: execute_operation#dfda3ab4 operation:Operation{seqno:uint32,manager:address} signature1:^slice signature2:^slice signature3:^slice = ExecuteOperation
+;;
+
+(slice, (((int, slice), slice, slice, slice))) $ExecuteOperation$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3755621044);
+    var v'operation = sc_0~$Operation$_load();
+    var v'signature1 = sc_0~load_ref().begin_parse();
+    var v'signature2 = sc_0~load_ref().begin_parse();
+    var v'signature3 = sc_0~load_ref().begin_parse();
+    return (sc_0, (v'operation, v'signature1, v'signature2, v'signature3));
+}
+
+;;
 ;; Type: UpdateContract
 ;; Header: 0x2eb108db
 ;; TLB: update_contract#2eb108db code:^slice data:Maybe ^slice = UpdateContract
@@ -203,6 +244,22 @@ cell $JettonUpdateContent$_store_cell((cell) v) inline {
     throw_unless(129, sc_0~load_uint(32) == 1536108317);
     var v'jetton_content = sc_0~load_ref();
     return (sc_0, (v'jetton_content));
+}
+
+;;
+;; Type: UpdatePoolConfig
+;; Header: 0xa62f856c
+;; TLB: update_pool_config#a62f856c orderLockTime:uint32 maxLpNetCap:coins lpRolloverFeeRate:uint32 liquidatedPositionShareRate:uint32 normalPositionShareRate:uint32 = UpdatePoolConfig
+;;
+
+(slice, ((int, int, int, int, int))) $UpdatePoolConfig$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2788132204);
+    var v'orderLockTime = sc_0~load_uint(32);
+    var v'maxLpNetCap = sc_0~load_coins();
+    var v'lpRolloverFeeRate = sc_0~load_uint(32);
+    var v'liquidatedPositionShareRate = sc_0~load_uint(32);
+    var v'normalPositionShareRate = sc_0~load_uint(32);
+    return (sc_0, (v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate));
 }
 
 ;;
@@ -364,24 +421,19 @@ _ $ContractConfig$_get_jettonWallet((slice, slice, slice) v) inline {
 
 ;;
 ;; Type: UpdateConfig
-;; Header: 0xbd1bb351
-;; TLB: update_config#bd1bb351 orderLockTime:uint32 maxLpNetCap:coins lpRolloverFeeRate:uint32 liquidatedPositionShareRate:uint32 normalPositionShareRate:uint32 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateConfig
+;; Header: 0xb0a69508
+;; TLB: update_config#b0a69508 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateConfig
 ;;
 
-(slice, ((int, int, int, int, int, tuple, tuple, tuple))) $UpdateConfig$_load(slice sc_0) inline_ref {
-    throw_unless(129, sc_0~load_uint(32) == 3172709201);
-    var v'orderLockTime = sc_0~load_uint(32);
-    var v'maxLpNetCap = sc_0~load_coins();
-    var v'lpRolloverFeeRate = sc_0~load_uint(32);
-    var v'liquidatedPositionShareRate = sc_0~load_uint(32);
-    var v'normalPositionShareRate = sc_0~load_uint(32);
+(slice, ((tuple, tuple, tuple))) $UpdateConfig$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2963707144);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'gasConfig = sc_1~load_int(1) ? $GasConfig$_as_optional(sc_1~$GasConfig$_load()) : null();
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'executorConfig = sc_2~load_int(1) ? $ExecutorConfig$_as_optional(sc_2~$ExecutorConfig$_load()) : null();
     slice sc_3 = sc_2~load_ref().begin_parse();
     var v'contractConfig = sc_3~load_int(1) ? $ContractConfig$_as_optional(sc_3~$ContractConfig$_load()) : null();
-    return (sc_0, (v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'gasConfig, v'executorConfig, v'contractConfig));
+    return (sc_0, (v'gasConfig, v'executorConfig, v'contractConfig));
 }
 
 ;;
@@ -1560,8 +1612,8 @@ tuple $Compensate$_load_opt(cell cl) inline {
 ;; Type: Pool
 ;;
 
-builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) v) inline {
-    var (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minTonsForStorage, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth) = v;
+builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minTonsForStorage, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'seqno, v'required_sinatures, v'user1_key, v'user2_key, v'user3_key) = v;
     build_0 = __tact_store_address(build_0, v'owner);
     build_0 = build_0.store_int(v'stopped, 1);
     build_0 = build_0.store_uint(v'orderLockTime, 32);
@@ -1584,8 +1636,9 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     var build_2 = begin_cell();
     build_2 = __tact_store_address(build_2, v'tlpWallet);
     build_2 = __tact_store_address(build_2, v'jettonWallet);
-    build_2 = __tact_store_address(build_2, v'compensator);
+    build_2 = __tact_store_address(build_2, v'manager);
     var build_3 = begin_cell();
+    build_3 = __tact_store_address(build_3, v'compensator);
     build_3 = __tact_store_address(build_3, v'claimer);
     build_3 = build_3.store_dict(v'executors);
     build_3 = build_3.store_dict(v'tokenConfigs);
@@ -1609,6 +1662,13 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     build_5 = build_5.store_int(v'globalLPUnrealizedPnl, 128);
     build_5 = build_5.store_coins(v'globalLpFundingFeeGrowth);
     build_5 = build_5.store_coins(v'globalRolloverFeeGrowth);
+    build_5 = build_5.store_uint(v'seqno, 32);
+    build_5 = build_5.store_uint(v'required_sinatures, 4);
+    var build_6 = begin_cell();
+    build_6 = build_6.store_uint(v'user1_key, 256);
+    build_6 = build_6.store_uint(v'user2_key, 256);
+    build_6 = build_6.store_uint(v'user3_key, 256);
+    build_5 = store_ref(build_5, build_6.end_cell());
     build_4 = store_ref(build_4, build_5.end_cell());
     build_3 = store_ref(build_3, build_4.end_cell());
     build_2 = store_ref(build_2, build_3.end_cell());
@@ -1617,7 +1677,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     return build_0;
 }
 
-(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int))) $Pool$_load(slice sc_0) inline {
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, int, int, int, int, int))) $Pool$_load(slice sc_0) inline {
     var v'owner = sc_0~__tact_load_address();
     var v'stopped = sc_0~load_int(1);
     var v'orderLockTime = sc_0~load_uint(32);
@@ -1640,8 +1700,9 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'tlpWallet = sc_2~__tact_load_address();
     var v'jettonWallet = sc_2~__tact_load_address();
-    var v'compensator = sc_2~__tact_load_address();
+    var v'manager = sc_2~__tact_load_address();
     slice sc_3 = sc_2~load_ref().begin_parse();
+    var v'compensator = sc_3~__tact_load_address();
     var v'claimer = sc_3~__tact_load_address();
     var v'executors = sc_3~load_dict();
     var v'tokenConfigs = sc_3~load_dict();
@@ -1665,15 +1726,26 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     var v'globalLPUnrealizedPnl = sc_5~load_int(128);
     var v'globalLpFundingFeeGrowth = sc_5~load_coins();
     var v'globalRolloverFeeGrowth = sc_5~load_coins();
-    return (sc_0, (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minTonsForStorage, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth));
+    var v'seqno = sc_5~load_uint(32);
+    var v'required_sinatures = sc_5~load_uint(4);
+    slice sc_6 = sc_5~load_ref().begin_parse();
+    var v'user1_key = sc_6~load_uint(256);
+    var v'user2_key = sc_6~load_uint(256);
+    var v'user3_key = sc_6~load_uint(256);
+    return (sc_0, (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minTonsForStorage, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'seqno, v'required_sinatures, v'user1_key, v'user2_key, v'user3_key));
 }
 
-(slice, ((int))) $Pool$init$_load(slice sc_0) inline {
+(slice, ((int, int, int, int, int))) $Pool$init$_load(slice sc_0) inline {
     var v'deployId = sc_0~load_int(257);
-    return (sc_0, (v'deployId));
+    var v'user1_key = sc_0~load_int(257);
+    var v'user2_key = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'user3_key = sc_1~load_int(257);
+    var v'required_sinatures = sc_1~load_int(257);
+    return (sc_0, (v'deployId, v'user1_key, v'user2_key, v'user3_key, v'required_sinatures));
 }
 
-(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $Pool$_contract_load() impure inline_ref {
+(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, int, int, int, int, int) $Pool$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1682,13 +1754,13 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        (int $deployId) = $sc~$Pool$init$_load();
+        (int $deployId, int $user1_key, int $user2_key, int $user3_key, int $required_sinatures) = $sc~$Pool$init$_load();
         $sc.end_parse();
-        return $Pool$_contract_init($deployId);
+        return $Pool$_contract_init($deployId, $user1_key, $user2_key, $user3_key, $required_sinatures);
     }
 }
 
-() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) v) impure inline {
+() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, int, int, int, int, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

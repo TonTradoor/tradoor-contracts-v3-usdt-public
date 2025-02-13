@@ -12,8 +12,7 @@ trait Upgradable with Ownable {
     owner: Address;
 
     receive(msg: UpdateContract) {
-        // todo 上线前打开
-//        self.requireOwner();
+        self.requireOwner();
         nativeSetCode(beginCell().storeSlice(msg.code).endCell());
         if (msg.data != null) {
             nativeSetData(beginCell().storeSlice(msg.data!!).endCell())

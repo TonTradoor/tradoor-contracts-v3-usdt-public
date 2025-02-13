@@ -1,13 +1,14 @@
 import "@stdlib/deploy";
 import "@stdlib/ownable";
 import "@stdlib/stoppable";
+import "./multisig";
 import "./upgrade";
 import "./messages";
 import "./events";
 import "./structs";
 import "./constants";
 
-contract Pool with Deployable, Resumable, Upgradable {
+contract Pool with Deployable, Resumable, Upgradable, Multisig {
 
     owner: Address;
     stopped: Bool = false;
@@ -34,6 +35,7 @@ contract Pool with Deployable, Resumable, Upgradable {
     tlpWallet: Address = newAddress(0, 0); // TLP jetton wallet address
     jettonWallet: Address = newAddress(0, 0); //USDT jetton wallet address
 
+    manager: Address = newAddress(0, 0);
     compensator: Address = newAddress(0, 0);
     claimer: Address = newAddress(0, 0);
     executors: map<Address, Bool>; // only contains enabled executors, so values are always true
@@ -67,12 +69,22 @@ contract Pool with Deployable, Resumable, Upgradable {
     globalLpFundingFeeGrowth: Int as coins = 0;
     globalRolloverFeeGrowth: Int as coins = 0;
 
-    /**
-     * Initializes the contract.
-     * @param deployId The deployment ID.
-     */
-    init(deployId: Int) {
+    seqno: Int as uint32 = 0;
+    required_sinatures: Int as uint4 =  2;
+    user1_key: Int as uint256 = 0;
+    user2_key: Int as uint256 = 0;
+    user3_key: Int as uint256 = 0;
+
+    init(deployId: Int, user1_key: Int, user2_key: Int, user3_key: Int, required_sinatures: Int) {
         self.owner = sender();
+        self.user1_key = user1_key;
+        self.user2_key = user2_key; 
+        self.user3_key = user3_key;
+        self.required_sinatures = required_sinatures;
+    }
+
+    override fun setManager(op: Operation) {
+        self.manager = op.manager;
     }
 
     /**
@@ -81,12 +93,6 @@ contract Pool with Deployable, Resumable, Upgradable {
      */
     receive(msg: UpdateConfig) {
         self.requireOwner();
-        self.orderLockTime = msg.orderLockTime;
-        self.maxLpNetCap = msg.maxLpNetCap;
-        self.lpRolloverFeeRate = msg.lpRolloverFeeRate;
-        self.liquidatedPositionShareRate = msg.liquidatedPositionShareRate;
-        self.normalPositionShareRate = msg.normalPositionShareRate;
-
         // contract
         let contractConfig: ContractConfig? = msg.contractConfig;
         if (contractConfig != null) {
@@ -132,12 +138,22 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.forward(self.tlpJetton, msg.toCell(), true, null);
     }
 
+
+    receive (msg: UpdatePoolConfig) {
+        require(self.manager == sender(), "invalid sender");
+        self.orderLockTime = msg.orderLockTime;
+        self.maxLpNetCap = msg.maxLpNetCap;
+        self.lpRolloverFeeRate = msg.lpRolloverFeeRate;
+        self.liquidatedPositionShareRate = msg.liquidatedPositionShareRate;
+        self.normalPositionShareRate = msg.normalPositionShareRate;
+    }
+
     /**
      * @dev List/Update a token.
      * @param msg The ListToken message containing the token ID and config.
      */
     receive(msg: ListToken) {
-        self.requireOwner();
+        require(self.manager == sender(), "invalid sender");
         self.tokenConfigs.set(msg.tokenId, msg.config);
         self.reply("token listed".asComment());
     }
@@ -147,7 +163,7 @@ contract Pool with Deployable, Resumable, Upgradable {
      * @param msg The DelistToken message containing the token ID.
      */
     receive(msg: DelistToken) {
-        self.requireOwner();
+        require(self.manager == sender(), "invalid sender");
         let position: GlobalPosition? = self.globalPositions.get(msg.tokenId);
         if (position != null) {
             require(position!!.longSize + position!!.shortSize == 0, "token cannot be delisted");
