@@ -6,6 +6,8 @@ import { MockJettonMaster } from "../wrappers/JettonMock";
 import { TLPJettonMaster } from "../wrappers/JettonTLP";
 import { MockJettonWallet } from '../build/JettonMock/tact_MockJettonWallet';
 import { TLPJettonWallet } from '../build/JettonTLP/tact_TLPJettonWallet';
+import { Multisig } from "../wrappers/Multisig";
+import { MultisigSigner } from "../build/Multisig/tact_MultisigSigner";
 let fs = require('fs');
 
 function getPath(network: string) {
@@ -158,6 +160,16 @@ export function fromUnits(src: number | string | bigint, decimal: number) {
         value = '-' + value;
     }
     return value;
+}
+
+export function attachMultisig(provider: NetworkProvider) {
+    const multisigAddress = Address.parse(getConfig("multisig"));
+    return provider.open(Multisig.fromAddress(multisigAddress));
+}
+
+export function attachMultisigSigner(provider: NetworkProvider, addr: Address) {
+    const address = Address.parse(addr.toString());
+    return provider.open(MultisigSigner.fromAddress(address));
 }
 
 export function attachPool(provider: NetworkProvider) {

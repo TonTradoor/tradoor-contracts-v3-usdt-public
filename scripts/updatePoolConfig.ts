@@ -25,6 +25,11 @@ export async function run(provider: NetworkProvider) {
     for (const i in executorAddrs) {
         executors.set(Address.parse(executorAddrs[i]), true);
     }
+    let members = Dictionary.empty(Dictionary.Keys.Address(), Dictionary.Values.BigInt(257));
+    const membersAddrs = config["members"];
+    for (const i in membersAddrs) {
+        members.set(Address.parse(membersAddrs[i].address), membersAddrs[i].pubKey);
+    }
 
     const lastTrx = await getLastTransaction(provider, pool.address);
     await pool.send(
@@ -34,11 +39,6 @@ export async function run(provider: NetworkProvider) {
         },
         {
             $$type: 'UpdateConfig',
-            orderLockTime: BigInt(config["orderLockTime"]),
-            maxLpNetCap: toUnits(config["maxLpNetCap"], MOCK_DECIMAL),
-            lpRolloverFeeRate: toUnits(config["lpRolloverFeeRate"], PERCENTAGE_DECIMAL),
-            liquidatedPositionShareRate: toUnits(config["liquidatedPositionShareRate"], PERCENTAGE_DECIMAL),
-            normalPositionShareRate: toUnits(config["normalPositionShareRate"], PERCENTAGE_DECIMAL),
             gasConfig: {
                 $$type: 'GasConfig',
                 lpMinExecutionFee: toNano(config["lpMinExecutionFee"]),
@@ -60,6 +60,7 @@ export async function run(provider: NetworkProvider) {
             },
             contractConfig: {
                 $$type: 'ContractConfig',
+                multisig: Address.parse(config["multisig"]),
                 tlpJetton: tlpJetton.address,
                 tlpWallet: poolTLPJettonWallet,
                 jettonWallet: poolMockJettonWallet,

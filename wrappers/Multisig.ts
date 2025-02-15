@@ -1,0 +1,1 @@
+export * from '../build/Multisig/tact_Multisig';

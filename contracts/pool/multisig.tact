@@ -1,56 +1,136 @@
-struct Operation {
-    seqno: Int as uint32;
+import "@stdlib/deploy";
+
+message SetManager {
     manager: Address;
 }
 
-message ExecuteOperation {
-    operation: Operation;
-    signature1: Slice; 
-    signature2: Slice; 
-    signature3: Slice;
+message Request {
+    to: Address;
+    timeout: Int as uint32;
+    manager: Address;
 }
 
-message OperationExecuted {
-    seqno: Int as uint32;
+message Signed {
+    request: Request;
 }
 
-trait Multisig {
+message RequestCreated {
+    opAddress: Address;
+}
+
+contract MultisigSigner {
+
+    master: Address;
+
+    // Voting state
+    members: map<Address, Int>;
+    weight: Int = 0;
+    requiredWeight: Int;
+    completed: Bool;
+    
+    // Request
+    request: Request;
+
+    init(master: Address, members: map<Address, Int>, requiredWeight: Int, request: Request) {
+        self.master = master;
+        self.members = members;
+        self.requiredWeight = requiredWeight;
+        self.completed = false;
+        self.request = request;
+    }
+
+    receive() {
+        // Do nothing
+    }
+
+    receive("YES") {
+
+        // Checks
+        require(self.request.timeout > now(), "Timeout");
+        require(!self.completed, "Completed");
+
+        // Load weight
+        let sender: Address = sender();
+        let weight: Int = self.members.get(sender)!!;
+        self.members.set(sender, null);
+
+        // Update weight
+        self.weight = self.weight + weight;
+        if (self.weight >= self.requiredWeight) {
+            self.completed = true;
+            send(SendParameters{
+                value: 0, 
+                to: self.master, 
+                mode: SendRemainingBalance | SendIgnoreErrors,
+                bounce: false, 
+                body: Signed{ request: self.request }.toCell()
+            });
+        }
+    }
+
+    get fun request(): Request {
+        return self.request;
+    }
+}
+
+contract Multisig with Deployable {
     seqno: Int;
-    required_sinatures: Int;
-    user1_key: Int;
-    user2_key: Int;
-    user3_key: Int;
+    members: map<Address, Int>;
+    totalWeight: Int;
+    requiredWeight: Int;
 
-    receive(msg: ExecuteOperation) {
-        require(msg.operation.seqno == self.seqno, "Invalid seqno");
-
-        let op_hash: Int = msg.operation.toCell().hash();
-        let ok1: Bool = checkSignature(op_hash, msg.signature1, self.user1_key);
-        let ok2: Bool = checkSignature(op_hash, msg.signature2, self.user2_key);
-        let ok3: Bool = checkSignature(op_hash, msg.signature3, self.user3_key);
-
-        let sinatures: Int = (ok1 ? 1 : 0) + (ok2 ? 1 : 0) + (ok3 ? 1 : 0);
-        require(sinatures >= self.required_sinatures, "Not enough signatures");
-
-        self.setManager(msg.operation);
-        self.seqno += 1;
+    init(members: map<Address, Int>, totalWeight: Int, requiredWeight: Int) {
+        self.members = members;
+        self.requiredWeight = requiredWeight;
+        self.totalWeight = totalWeight;
+        self.totalWeight = 0;
+        self.seqno = 0;
     }
 
-    abstract fun setManager(op: Operation);
+    // Request new pending transaction
+    receive(msg: Request) {
 
-    get fun key1(): Int {
-        return self.user1_key;
+        // Check sender
+        let sender: Address = sender();
+        let weight: Int = self.members.get(sender)!!;
+        require(weight > 0, "Not a member");
+
+        // Create message
+        let opInit: StateInit = initOf MultisigSigner(myAddress(), self.members, self.requiredWeight, msg);
+        let opAddress: Address = contractAddress(opInit);
+        send(SendParameters{
+            value: 0, 
+            to: opAddress, 
+            mode: SendRemainingValue | SendIgnoreErrors,
+            bounce: true,
+            code: opInit.code,
+            data: opInit.data
+        });
     }
 
-    get fun key2(): Int {
-        return self.user2_key;
+    receive(msg: Signed) {
+
+        // Check parameters
+        let sender: Address = sender();
+        let opInit: StateInit = initOf MultisigSigner(myAddress(), self.members, self.requiredWeight, msg.request);
+        let opAddress: Address = contractAddress(opInit);
+        require(opAddress == sender, "Invalid sender");
+        require(msg.request.timeout > now(), "Timeout");
+
+        // Send operation
+        send(SendParameters{
+            to: msg.request.to, 
+            value: 0, 
+            mode: SendRemainingValue | SendIgnoreErrors, 
+            body: SetManager{ manager: msg.request.manager }.toCell()
+        });
     }
 
-    get fun key3(): Int {
-        return self.user3_key;
+    get fun member(address: Address): Int? {
+        return self.members.get(address);
     }
 
-    get fun seqno(): Int {
-        return self.seqno;
+    get fun members(): map<Address, Int> {
+        return self.members;
     }
 }

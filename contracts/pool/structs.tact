@@ -111,6 +111,7 @@ struct ExecutorConfig {
 }
 
 struct ContractConfig {
+    multisig: Address;
     tlpJetton: Address;
     tlpWallet: Address;
     jettonWallet: Address;

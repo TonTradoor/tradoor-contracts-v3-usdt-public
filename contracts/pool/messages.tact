@@ -52,6 +52,10 @@ message UpdateConfig {
     contractConfig: ContractConfig?;
 }
 
+message SetManager {
+    manager: Address;
+}
+
 message ListToken {
     tokenId: Int as uint16;
     config: TokenConfig;

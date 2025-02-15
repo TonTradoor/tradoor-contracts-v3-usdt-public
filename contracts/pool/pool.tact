@@ -1,14 +1,13 @@
 import "@stdlib/deploy";
 import "@stdlib/ownable";
 import "@stdlib/stoppable";
-import "./multisig";
 import "./upgrade";
 import "./messages";
 import "./events";
 import "./structs";
 import "./constants";
 
-contract Pool with Deployable, Resumable, Upgradable, Multisig {
+contract Pool with Deployable, Resumable, Upgradable {
 
     owner: Address;
     stopped: Bool = false;
@@ -69,22 +68,15 @@ contract Pool with Deployable, Resumable, Upgradable, Multisig {
     globalLpFundingFeeGrowth: Int as coins = 0;
     globalRolloverFeeGrowth: Int as coins = 0;
 
-    seqno: Int as uint32 = 0;
-    required_sinatures: Int as uint4 =  2;
-    user1_key: Int as uint256 = 0;
-    user2_key: Int as uint256 = 0;
-    user3_key: Int as uint256 = 0;
+    multisig: Address = newAddress(0,0);
 
-    init(deployId: Int, user1_key: Int, user2_key: Int, user3_key: Int, required_sinatures: Int) {
+    init(deployId: Int) {
         self.owner = sender();
-        self.user1_key = user1_key;
-        self.user2_key = user2_key; 
-        self.user3_key = user3_key;
-        self.required_sinatures = required_sinatures;
     }
 
-    override fun setManager(op: Operation) {
-        self.manager = op.manager;
+    receive(msg: SetManager){
+        require(sender() == self.multisig, "invalid sender");
+        self.manager = msg.manager;
     }
 
     /**
@@ -96,6 +88,7 @@ contract Pool with Deployable, Resumable, Upgradable, Multisig {
         // contract
         let contractConfig: ContractConfig? = msg.contractConfig;
         if (contractConfig != null) {
+            self.multisig = contractConfig!!.multisig;
             self.tlpJetton = contractConfig!!.tlpJetton; 
             self.tlpWallet = contractConfig!!.tlpWallet;
             self.jettonWallet = contractConfig!!.jettonWallet;
@@ -1683,4 +1676,7 @@ contract Pool with Deployable, Resumable, Upgradable, Multisig {
         };
     }
 
+    get fun manager(): Address {
+        return self.manager;
+    }
 }

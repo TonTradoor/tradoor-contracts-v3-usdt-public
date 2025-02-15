@@ -5,6 +5,7 @@
         "start": "blueprint run",
         "build": "blueprint build --all",
         "buildPool": "blueprint build Pool",
+        "buildMultisig": "blueprint build Multisig",
         "test": "jest --verbose --maxWorkers=1",
         "test-build": "yarn build && yarn test",
         "run": "blueprint run --mnemonic",
