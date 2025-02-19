@@ -10,46 +10,40 @@
 ;; Contract Multisig functions
 ;;
 
-(int, cell, int, int) $Multisig$_contract_init(cell $members, int $totalWeight, int $requiredWeight) impure inline_ref {
-    var (($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight)) = (null(), null(), null(), null());
+(cell, int) $Multisig$_contract_init(cell $members, int $requiredWeight) impure inline_ref {
+    var (($self'members, $self'requiredWeight)) = (null(), null());
     $self'members = $members;
     $self'requiredWeight = $requiredWeight;
-    $self'totalWeight = $totalWeight;
-    $self'totalWeight = 0;
-    $self'seqno = 0;
-    return ($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight);
+    return ($self'members, $self'requiredWeight);
 }
 
-((int, cell, int, int), int) $Multisig$_fun_member((int, cell, int, int) $self, slice $address) impure inline_ref {
-    var (($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight)) = $self;
+((cell, int), int) $Multisig$_fun_member((cell, int) $self, slice $address) impure inline_ref {
+    var (($self'members, $self'requiredWeight)) = $self;
     var $fresh$ret_4 = __tact_dict_get_slice_int($self'members, 267, $address, 257);
-    return (($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight), $fresh$ret_4);
+    return (($self'members, $self'requiredWeight), $fresh$ret_4);
 }
 
-((int, cell, int, int), cell) $Multisig$_fun_members((int, cell, int, int) $self) impure inline_ref {
-    var (($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight)) = $self;
+((cell, int), cell) $Multisig$_fun_members((cell, int) $self) impure inline_ref {
+    var (($self'members, $self'requiredWeight)) = $self;
     var $fresh$ret_5 = $self'members;
-    return (($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight), $fresh$ret_5);
+    return (($self'members, $self'requiredWeight), $fresh$ret_5);
 }
 
 ;;
 ;; Receivers of a Contract Multisig
 ;;
 
-(((int, cell, int, int)), ()) $Multisig$_internal_binary_Request((int, cell, int, int) $self, (slice, int, slice) $msg) impure inline {
-    var ($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight) = $self;
+(((cell, int)), ()) $Multisig$_internal_binary_Request((cell, int) $self, (slice, int, slice) $msg) impure inline {
+    var ($self'members, $self'requiredWeight) = $self;
     var ($msg'to, $msg'timeout, $msg'manager) = $msg;
-    slice $sender = __tact_context_get_sender();
-    int $weight = __tact_not_null(__tact_dict_get_slice_int($self'members, 267, $sender, 257));
-    throw_unless(46307, ($weight > 0));
+    throw_unless(46307, __tact_dict_exists_slice($self'members, 267, __tact_context_get_sender()));
     var ($opInit'code, $opInit'data) = $MultisigSigner$_init_child(__tact_context_sys, $global_myAddress(), $self'members, $self'requiredWeight, ($msg'to, $msg'timeout, $msg'manager));
-    slice $opAddress = $global_contractAddress(($opInit'code, $opInit'data));
-    $global_send($SendParameters$_constructor_value_to_mode_bounce_code_data(0, $opAddress, 66, true, $opInit'code, $opInit'data));
-    return (($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight), ());
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_code_data(0, $global_contractAddress(($opInit'code, $opInit'data)), 66, true, $opInit'code, $opInit'data));
+    return (($self'members, $self'requiredWeight), ());
 }
 
-(((int, cell, int, int)), ()) $Multisig$_internal_binary_Signed((int, cell, int, int) $self, ((slice, int, slice)) $msg) impure inline {
-    var ($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight) = $self;
+(((cell, int)), ()) $Multisig$_internal_binary_Signed((cell, int) $self, ((slice, int, slice)) $msg) impure inline {
+    var ($self'members, $self'requiredWeight) = $self;
     var (($msg'request'to, $msg'request'timeout, $msg'request'manager)) = $msg;
     slice $sender = __tact_context_get_sender();
     var ($opInit'code, $opInit'data) = $MultisigSigner$_init_child(__tact_context_sys, $global_myAddress(), $self'members, $self'requiredWeight, ($msg'request'to, $msg'request'timeout, $msg'request'manager));
@@ -57,14 +51,14 @@
     throw_unless(4429, ( __tact_slice_eq_bits($sender, $opAddress) ));
     throw_unless(4755, ($msg'request'timeout > $global_now()));
     $global_send($SendParameters$_constructor_to_value_mode_body($msg'request'to, 0, 66, $SetManager$_store_cell($SetManager$_constructor_manager($msg'request'manager))));
-    return (($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight), ());
+    return (($self'members, $self'requiredWeight), ());
 }
 
-(((int, cell, int, int)), ()) $Multisig$_internal_binary_Deploy((int, cell, int, int) $self, (int) $deploy) impure inline {
-    var ($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight) = $self;
+(((cell, int)), ()) $Multisig$_internal_binary_Deploy((cell, int) $self, (int) $deploy) impure inline {
+    var ($self'members, $self'requiredWeight) = $self;
     var ($deploy'queryId) = $deploy;
-    ($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight)~$Multisig$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
-    return (($self'seqno, $self'members, $self'totalWeight, $self'requiredWeight), ());
+    ($self'members, $self'requiredWeight)~$Multisig$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'members, $self'requiredWeight), ());
 }
 
 ;;
@@ -92,7 +86,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract Multisig
 ;;
 
-((int, cell, int, int), int) $Multisig$_contract_router_internal((int, cell, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+((cell, int), int) $Multisig$_contract_router_internal((cell, int) self, int msg_bounced, slice in_msg) impure inline_ref {
     ;; Handle bounced messages
     if (msg_bounced) {
         return (self, true);

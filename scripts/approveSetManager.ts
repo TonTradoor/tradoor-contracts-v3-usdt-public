@@ -1,11 +1,8 @@
 import { Address, toNano } from '@ton/core';
 import { NetworkProvider } from '@ton/blueprint';
 import {
-    attachPool,
-    getConfig,
     getLastTransaction,
     waitForTransaction,
-    attachMultisig,
     attachMultisigSigner
 } from '../utils/util';
 

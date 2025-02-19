@@ -74,6 +74,11 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.owner = sender();
     }
 
+    receive(msg: JettonUpdateContent) {
+        self.requireOwner();
+        self.forward(self.tlpJetton, msg.toCell(), true, null);
+    }
+
     receive(msg: SetManager){
         require(sender() == self.multisig, "invalid sender");
         self.manager = msg.manager;
@@ -83,7 +88,7 @@ contract Pool with Deployable, Resumable, Upgradable {
      * @dev Update the configuration of the contract.
      * @param msg The UpdateConfig message containing the new configuration values.
      */
-    receive(msg: UpdateConfig) {
+    receive(msg: UpdateBaseConfig) {
         self.requireOwner();
         // contract
         let contractConfig: ContractConfig? = msg.contractConfig;
@@ -120,17 +125,8 @@ contract Pool with Deployable, Resumable, Upgradable {
             self.gasForMintTlp = gasConfig!!.gasForMintTlp;
         }
 
-        self.reply("config updated".asComment());
+        self.reply("base config updated".asComment());
     }
-
-    /**
-     * @dev Update the content of the TLP jetton.
-     */
-    receive(msg: JettonUpdateContent) {
-        self.requireOwner();
-        self.forward(self.tlpJetton, msg.toCell(), true, null);
-    }
-
 
     receive (msg: UpdatePoolConfig) {
         require(self.manager == sender(), "invalid sender");
@@ -139,6 +135,7 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.lpRolloverFeeRate = msg.lpRolloverFeeRate;
         self.liquidatedPositionShareRate = msg.liquidatedPositionShareRate;
         self.normalPositionShareRate = msg.normalPositionShareRate;
+        self.reply("pool config updated".asComment());
     }
 
     /**
@@ -1556,7 +1553,8 @@ contract Pool with Deployable, Resumable, Upgradable {
         let isExecutor: Bool = self.executors.exists(account);
         let isCompensator: Bool = self.compensator == account;
         let isClaimer: Bool = self.claimer == account;
-        return AccountInfo{ isExecutor, isCompensator, isClaimer};
+        let isManager: Bool = self.manager == account;
+        return AccountInfo{ isExecutor, isCompensator, isClaimer, isManager };
     }
 
     /**
@@ -1676,7 +1674,4 @@ contract Pool with Deployable, Resumable, Upgradable {
         };
     }
 
-    get fun manager(): Address {
-        return self.manager;
-    }
 }

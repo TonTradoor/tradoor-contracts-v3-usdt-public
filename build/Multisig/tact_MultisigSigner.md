@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: MultisigSigner
-BOC Size: 1083 bytes
+BOC Size: 1068 bytes
 
 # Types
-Total Types: 14
+Total Types: 13
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -48,10 +48,6 @@ Signature: `Request{to:address,timeout:uint32,manager:address}`
 ## Signed
 TLB: `signed#7360cdfb request:Request{to:address,timeout:uint32,manager:address} = Signed`
 Signature: `Signed{request:Request{to:address,timeout:uint32,manager:address}}`
-
-## RequestCreated
-TLB: `request_created#b2d81b41 opAddress:address = RequestCreated`
-Signature: `RequestCreated{opAddress:address}`
 
 ## MultisigSigner$Data
 TLB: `null`

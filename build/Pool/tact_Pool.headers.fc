@@ -129,8 +129,8 @@ tuple $ExecutorConfig$_as_optional((cell, slice, slice) v) inline;
 ;; $ContractConfig$_as_optional
 tuple $ContractConfig$_as_optional((slice, slice, slice, slice) v) inline;
 
-;; $UpdateConfig$_load
-(slice, ((tuple, tuple, tuple))) $UpdateConfig$_load(slice sc_0) inline;
+;; $UpdateBaseConfig$_load
+(slice, ((tuple, tuple, tuple))) $UpdateBaseConfig$_load(slice sc_0) inline;
 
 ;; $SetManager$_load
 (slice, ((slice))) $SetManager$_load(slice sc_0) inline;
@@ -388,7 +388,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
 _ $Context$_get_value((int, slice, int, slice) v) inline;
 
 ;; $AccountInfo$_to_external
-(int, int, int) $AccountInfo$_to_external(((int, int, int)) v) inline;
+(int, int, int, int) $AccountInfo$_to_external(((int, int, int, int)) v) inline;
 
 ;; $ConfigData$_to_external
 (int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) v) inline;
@@ -612,11 +612,11 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 ;; $Pool$_fun_liquidatePerpPosition
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice), ()) $Pool$_fun_liquidatePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) $self, int $trxId, int $orderId, slice $account, int $tokenId, int $isLong, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth, slice $liquidationFeeReceiver) impure inline_ref;
 
-;; $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer
-((int, int, int)) $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer(int $isExecutor, int $isCompensator, int $isClaimer) inline;
+;; $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer_isManager
+((int, int, int, int)) $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer_isManager(int $isExecutor, int $isCompensator, int $isClaimer, int $isManager) inline;
 
 ;; $Pool$_fun_accountInfo
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice), (int, int, int)) $Pool$_fun_accountInfo((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) $self, slice $account) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice), (int, int, int, int)) $Pool$_fun_accountInfo((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) $self, slice $account) impure inline_ref;
 
 ;; $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition
 ((int, tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition(int $perpPositionIndexNext, tuple $perpPosition, tuple $globalLPPosition, tuple $globalPosition) inline;
@@ -656,9 +656,6 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 
 ;; $Pool$_fun_compensate
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice), (int, tuple)) $Pool$_fun_compensate((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) $self, int $compensateId) impure inline_ref;
-
-;; $Pool$_fun_manager
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice), slice) $Pool$_fun_manager((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) $self) impure inline_ref;
 
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;

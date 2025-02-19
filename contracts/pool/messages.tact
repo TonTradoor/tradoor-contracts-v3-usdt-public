@@ -46,7 +46,7 @@ message UpdatePoolConfig{
     normalPositionShareRate: Int as uint32;
 }
 
-message UpdateConfig {
+message UpdateBaseConfig {
     gasConfig: GasConfig?;
     executorConfig: ExecutorConfig?;
     contractConfig: ContractConfig?;

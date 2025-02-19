@@ -386,13 +386,13 @@ _ $ContractConfig$_get_jettonWallet((slice, slice, slice, slice) v) inline {
 }
 
 ;;
-;; Type: UpdateConfig
-;; Header: 0x11692626
-;; TLB: update_config#11692626 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateConfig
+;; Type: UpdateBaseConfig
+;; Header: 0x47a04deb
+;; TLB: update_base_config#47a04deb gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateBaseConfig
 ;;
 
-(slice, ((tuple, tuple, tuple))) $UpdateConfig$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 292103718);
+(slice, ((tuple, tuple, tuple))) $UpdateBaseConfig$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1201688043);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'gasConfig = sc_1~load_int(1) ? $GasConfig$_as_optional(sc_1~$GasConfig$_load()) : null();
     slice sc_2 = sc_1~load_ref().begin_parse();
@@ -1030,16 +1030,16 @@ cell $CompensateExecutedEvent$_store_cell((int, int) v) inline {
 
 ;;
 ;; Type: AccountInfo
-;; TLB: _ isExecutor:bool isCompensator:bool isClaimer:bool = AccountInfo
+;; TLB: _ isExecutor:bool isCompensator:bool isClaimer:bool isManager:bool = AccountInfo
 ;;
 
-(int, int, int) $AccountInfo$_to_external(((int, int, int)) v) inline {
-    var (v'isExecutor, v'isCompensator, v'isClaimer) = v; 
-    return (v'isExecutor, v'isCompensator, v'isClaimer);
+(int, int, int, int) $AccountInfo$_to_external(((int, int, int, int)) v) inline {
+    var (v'isExecutor, v'isCompensator, v'isClaimer, v'isManager) = v; 
+    return (v'isExecutor, v'isCompensator, v'isClaimer, v'isManager);
 }
 
-((int, int, int)) $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer(int $isExecutor, int $isCompensator, int $isClaimer) inline {
-    return ($isExecutor, $isCompensator, $isClaimer);
+((int, int, int, int)) $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer_isManager(int $isExecutor, int $isCompensator, int $isClaimer, int $isManager) inline {
+    return ($isExecutor, $isCompensator, $isClaimer, $isManager);
 }
 
 ;;

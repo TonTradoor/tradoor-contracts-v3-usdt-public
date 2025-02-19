@@ -41,8 +41,10 @@
     throw_unless(4755, ($self'request'timeout > $global_now()));
     throw_unless(40810, (~ $self'completed));
     slice $sender = __tact_context_get_sender();
-    int $weight = __tact_not_null(__tact_dict_get_slice_int($self'members, 267, $sender, 257));
-    $self'members~__tact_dict_set_slice_int(267, $sender, null(), 257);
+    int $_weight = __tact_dict_get_slice_int($self'members, 267, $sender, 257);
+    throw_unless(46307, (~ null?($_weight)));
+    int $weight = __tact_not_null($_weight);
+    $self'members~__tact_dict_delete(267, $sender);
     $self'weight = ($self'weight + $weight);
     if (($self'weight >= $self'requiredWeight)) {
         $self'completed = true;

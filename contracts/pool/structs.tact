@@ -3,6 +3,7 @@ struct AccountInfo {
     isExecutor: Bool;
     isCompensator: Bool;
     isClaimer: Bool;
+    isManager: Bool;
 }
 
 struct ConfigData {

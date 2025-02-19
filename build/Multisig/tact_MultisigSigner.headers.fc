@@ -21,9 +21,6 @@ slice __tact_context_get_sender() inline;
 ;; __tact_store_bool
 builder __tact_store_bool(builder b, int v) inline;
 
-;; __tact_dict_set_slice_int
-(cell, ()) __tact_dict_set_slice_int(cell d, int kl, slice k, int v, int vl) inline;
-
 ;; __tact_dict_get_slice_int
 int __tact_dict_get_slice_int(cell d, int kl, slice k, int vl) inline;
 

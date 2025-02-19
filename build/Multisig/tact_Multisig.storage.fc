@@ -151,31 +151,26 @@ builder $MultisigSigner$init$_store(builder build_0, (slice, cell, int, (slice, 
 ;; Type: Multisig
 ;;
 
-builder $Multisig$_store(builder build_0, (int, cell, int, int) v) inline {
-    var (v'seqno, v'members, v'totalWeight, v'requiredWeight) = v;
-    build_0 = build_0.store_int(v'seqno, 257);
+builder $Multisig$_store(builder build_0, (cell, int) v) inline {
+    var (v'members, v'requiredWeight) = v;
     build_0 = build_0.store_dict(v'members);
-    build_0 = build_0.store_int(v'totalWeight, 257);
     build_0 = build_0.store_int(v'requiredWeight, 257);
     return build_0;
 }
 
-(slice, ((int, cell, int, int))) $Multisig$_load(slice sc_0) inline {
-    var v'seqno = sc_0~load_int(257);
+(slice, ((cell, int))) $Multisig$_load(slice sc_0) inline {
     var v'members = sc_0~load_dict();
-    var v'totalWeight = sc_0~load_int(257);
     var v'requiredWeight = sc_0~load_int(257);
-    return (sc_0, (v'seqno, v'members, v'totalWeight, v'requiredWeight));
+    return (sc_0, (v'members, v'requiredWeight));
 }
 
-(slice, ((cell, int, int))) $Multisig$init$_load(slice sc_0) inline {
+(slice, ((cell, int))) $Multisig$init$_load(slice sc_0) inline {
     var v'members = sc_0~load_dict();
-    var v'totalWeight = sc_0~load_int(257);
     var v'requiredWeight = sc_0~load_int(257);
-    return (sc_0, (v'members, v'totalWeight, v'requiredWeight));
+    return (sc_0, (v'members, v'requiredWeight));
 }
 
-(int, cell, int, int) $Multisig$_contract_load() impure inline_ref {
+(cell, int) $Multisig$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -184,13 +179,13 @@ builder $Multisig$_store(builder build_0, (int, cell, int, int) v) inline {
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        (cell $members, int $totalWeight, int $requiredWeight) = $sc~$Multisig$init$_load();
+        (cell $members, int $requiredWeight) = $sc~$Multisig$init$_load();
         $sc.end_parse();
-        return $Multisig$_contract_init($members, $totalWeight, $requiredWeight);
+        return $Multisig$_contract_init($members, $requiredWeight);
     }
 }
 
-() $Multisig$_contract_store((int, cell, int, int) v) impure inline {
+() $Multisig$_contract_store((cell, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

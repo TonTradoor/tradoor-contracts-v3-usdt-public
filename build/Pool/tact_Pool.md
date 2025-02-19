@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 23302 bytes
+BOC Size: 23321 bytes
 
 # Types
 Total Types: 63
@@ -73,9 +73,9 @@ Signature: `JettonUpdateContent{jetton_content:^cell}`
 TLB: `update_pool_config#a62f856c orderLockTime:uint32 maxLpNetCap:coins lpRolloverFeeRate:uint32 liquidatedPositionShareRate:uint32 normalPositionShareRate:uint32 = UpdatePoolConfig`
 Signature: `UpdatePoolConfig{orderLockTime:uint32,maxLpNetCap:coins,lpRolloverFeeRate:uint32,liquidatedPositionShareRate:uint32,normalPositionShareRate:uint32}`
 
-## UpdateConfig
-TLB: `update_config#11692626 gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateConfig`
-Signature: `UpdateConfig{gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address},contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address}}`
+## UpdateBaseConfig
+TLB: `update_base_config#47a04deb gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateBaseConfig`
+Signature: `UpdateBaseConfig{gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address},contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address}}`
 
 ## SetManager
 TLB: `set_manager#92f200ce manager:address = SetManager`
@@ -174,8 +174,8 @@ TLB: `compensate_executed_event#db45e438 compensateId:uint64 trxId:uint64 = Comp
 Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 
 ## AccountInfo
-TLB: `_ isExecutor:bool isCompensator:bool isClaimer:bool = AccountInfo`
-Signature: `AccountInfo{isExecutor:bool,isCompensator:bool,isClaimer:bool}`
+TLB: `_ isExecutor:bool isCompensator:bool isClaimer:bool isManager:bool = AccountInfo`
+Signature: `AccountInfo{isExecutor:bool,isCompensator:bool,isClaimer:bool,isManager:bool}`
 
 ## ConfigData
 TLB: `_ orderLockTime:uint32 lpMinExecutionFee:coins perpMinExecutionFee:coins gasForLpTrader:coins gasForLpExecutor:coins gasForPerpTrader:coins gasForPerpExecutor:coins minTonsForStorage:coins gasForTransferJetton:coins gasForBurnTlp:coins gasForMintTlp:coins tlpWallet:address jettonWallet:address tlpJetton:address maxLpNetCap:coins = ConfigData`
@@ -258,7 +258,7 @@ TLB: `null`
 Signature: `null`
 
 # Get Methods
-Total Get Methods: 11
+Total Get Methods: 10
 
 ## accountInfo
 Argument: account
@@ -282,8 +282,6 @@ Argument: orderId
 
 ## compensate
 Argument: compensateId
-
-## manager
 
 ## stopped
 

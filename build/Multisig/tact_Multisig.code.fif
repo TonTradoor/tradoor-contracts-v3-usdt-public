@@ -12,6 +12,7 @@ PROGRAM{
   DECLPROC __tact_slice_eq_bits
   DECLPROC __tact_dict_set_code
   DECLPROC __tact_dict_get_code
+  DECLPROC __tact_dict_exists_slice
   DECLPROC $Deploy$_load
   DECLPROC $DeployOk$_store
   DECLPROC $DeployOk$_store_cell
@@ -153,6 +154,11 @@ PROGRAM{
     NULLSWAPIFNOT
     135 THROWIFNOT
   }>
+  __tact_dict_exists_slice PROCINLINE:<{
+    -ROT
+        DICTGET NULLSWAPIFNOT
+    NIP
+  }>
   $Deploy$_load PROCINLINE:<{
     32 LDU
     SWAP
@@ -218,24 +224,16 @@ PROGRAM{
     $Request$_load INLINECALLDICT
   }>
   $Multisig$_store PROCINLINE:<{
-    s3 s4 XCHG2
-    257 PUSHINT
-    STIX
+    s0 s2 XCHG
     STDICT
-    257 PUSHINT
-    STIX
     257 PUSHINT
     STIX
   }>
   $Multisig$_load PROCINLINE:<{
-    257 PUSHINT
-    LDIX
     LDDICT
     257 PUSHINT
     LDIX
-    257 PUSHINT
-    LDIX
-    4 -ROLL
+    -ROT
   }>
   $StateInit$_not_null PROCINLINE:<{
     DUP
@@ -261,14 +259,9 @@ PROGRAM{
     LDDICT
     257 PUSHINT
     LDIX
-    257 PUSHINT
-    LDIX
-    3 -ROLL
+    -ROT
   }>
   $Multisig$_contract_init PROCREF:<{
-    NIP
-    0 PUSHINT
-    s2 s0 s2 XCPUXC
   }>
   $Multisig$_contract_load PROCREF:<{
     c4 PUSH
@@ -280,7 +273,7 @@ PROGRAM{
     SWAP
     IFJMP:<{
       $Multisig$_load INLINECALLDICT
-      1 4 BLKDROP2
+      1 2 BLKDROP2
     }>
     MYADDR
     11 PLDU
@@ -288,9 +281,9 @@ PROGRAM{
     EQUAL
     137 THROWIFNOT
     $Multisig$init$_load INLINECALLDICT
-    s0 s3 XCHG
+    s0 s2 XCHG
     ENDS
-    ROT
+    SWAP
     $Multisig$_contract_init INLINECALLDICT
   }>
   $Multisig$_contract_store PROCINLINE:<{
@@ -301,7 +294,7 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
-    4 -ROLL
+    -ROT
     $Multisig$_store INLINECALLDICT
     ENDC
     c4 POP
@@ -445,13 +438,13 @@ PROGRAM{
   }>
   $Multisig$_fun_member PROCREF:<{
     267 PUSHINT
-    s4 PUSH
+    s3 PUSH
     s0 s2 XCHG
     257 PUSHINT
     __tact_dict_get_slice_int INLINECALLDICT
   }>
   $Multisig$_fun_members PROCREF:<{
-    s2 PUSH
+    OVER
   }>
   $Multisig$_fun_forward PROCREF:<{
     PUSHNULL
@@ -500,31 +493,27 @@ PROGRAM{
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
   $Multisig$_internal_binary_Request PROCINLINE:<{
-    __tact_context_get_sender INLINECALLDICT
-    267 PUSHINT
-    s7 PUSH
-    s0 s2 XCHG
-    257 PUSHINT
-    __tact_dict_get_slice_int INLINECALLDICT
-    __tact_not_null INLINECALLDICT
     46307 PUSHINT
-    SWAP
-    0 GTINT
+    267 PUSHINT
+    __tact_context_get_sender INLINECALLDICT
+    s7 PUSH
+    -ROT
+    __tact_dict_exists_slice INLINECALLDICT
     THROWANYIFNOT
     __tact_context_sys GETGLOB
         MYADDR
-    s4 s3 s7 XC2PU
+    s4 s3 s6 XC2PU
     s3 s6 XCPU
     3 -ROLL
     $MultisigSigner$_init_child INLINECALLDICT
-    2DUP
-    $global_contractAddress INLINECALLDICT
     0 PUSHINT
-    s0 s3 XCHG
+    s2 s1 PUSH2
+    $global_contractAddress INLINECALLDICT
+    s1 s3 XCHG
     66 PUSHINT
-    s0 s1 s3 XCHG3
+    2SWAP
     TRUE
-    -ROT
+    s0 s2 XCHG
     $SendParameters$_constructor_value_to_mode_bounce_code_data INLINECALLDICT
     $global_send INLINECALLDICT
     DROP
@@ -533,7 +522,7 @@ PROGRAM{
     __tact_context_get_sender INLINECALLDICT
     __tact_context_sys GETGLOB
         MYADDR
-    s8 s6 s5 PUSH3
+    s7 s6 s5 PUSH3
     s7 s6 PUSH2
     $MultisigSigner$_init_child INLINECALLDICT
     $global_contractAddress INLINECALLDICT
@@ -566,14 +555,14 @@ PROGRAM{
   %member PROC:<{
     __tact_verify_address INLINECALLDICT
     $Multisig$_contract_load INLINECALLDICT
-    4 ROLL
+    ROT
     $Multisig$_fun_member INLINECALLDICT
-    4 1 BLKDROP2
+    2 1 BLKDROP2
   }>
   %members PROC:<{
     $Multisig$_contract_load INLINECALLDICT
     $Multisig$_fun_members INLINECALLDICT
-    4 1 BLKDROP2
+    2 1 BLKDROP2
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -646,7 +635,7 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $Multisig$_contract_load INLINECALLDICT
-    2 4 BLKSWAP
+    2SWAP
     $Multisig$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
     $Multisig$_contract_store INLINECALLDICT
