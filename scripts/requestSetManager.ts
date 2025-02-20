@@ -18,7 +18,7 @@ export async function run(provider: NetworkProvider) {
     await multisig.send(
         provider.sender(),
         {
-            value: toNano('0.1'),
+            value: toNano('0.05'),
         },
         {
             $$type: 'Request',
