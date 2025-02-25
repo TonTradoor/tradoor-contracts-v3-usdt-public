@@ -464,39 +464,157 @@ function dictValueParserFactoryDeploy(): DictionaryValue<FactoryDeploy> {
     }
 }
 
+export type ChangeOwner = {
+    $$type: 'ChangeOwner';
+    queryId: bigint;
+    newOwner: Address;
+}
+
+export function storeChangeOwner(src: ChangeOwner) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(2174598809, 32);
+        b_0.storeUint(src.queryId, 64);
+        b_0.storeAddress(src.newOwner);
+    };
+}
+
+export function loadChangeOwner(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 2174598809) { throw Error('Invalid prefix'); }
+    let _queryId = sc_0.loadUintBig(64);
+    let _newOwner = sc_0.loadAddress();
+    return { $$type: 'ChangeOwner' as const, queryId: _queryId, newOwner: _newOwner };
+}
+
+function loadTupleChangeOwner(source: TupleReader) {
+    let _queryId = source.readBigNumber();
+    let _newOwner = source.readAddress();
+    return { $$type: 'ChangeOwner' as const, queryId: _queryId, newOwner: _newOwner };
+}
+
+function loadGetterTupleChangeOwner(source: TupleReader) {
+    let _queryId = source.readBigNumber();
+    let _newOwner = source.readAddress();
+    return { $$type: 'ChangeOwner' as const, queryId: _queryId, newOwner: _newOwner };
+}
+
+function storeTupleChangeOwner(source: ChangeOwner) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.queryId);
+    builder.writeAddress(source.newOwner);
+    return builder.build();
+}
+
+function dictValueParserChangeOwner(): DictionaryValue<ChangeOwner> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeChangeOwner(src)).endCell());
+        },
+        parse: (src) => {
+            return loadChangeOwner(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type ChangeOwnerOk = {
+    $$type: 'ChangeOwnerOk';
+    queryId: bigint;
+    newOwner: Address;
+}
+
+export function storeChangeOwnerOk(src: ChangeOwnerOk) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(846932810, 32);
+        b_0.storeUint(src.queryId, 64);
+        b_0.storeAddress(src.newOwner);
+    };
+}
+
+export function loadChangeOwnerOk(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 846932810) { throw Error('Invalid prefix'); }
+    let _queryId = sc_0.loadUintBig(64);
+    let _newOwner = sc_0.loadAddress();
+    return { $$type: 'ChangeOwnerOk' as const, queryId: _queryId, newOwner: _newOwner };
+}
+
+function loadTupleChangeOwnerOk(source: TupleReader) {
+    let _queryId = source.readBigNumber();
+    let _newOwner = source.readAddress();
+    return { $$type: 'ChangeOwnerOk' as const, queryId: _queryId, newOwner: _newOwner };
+}
+
+function loadGetterTupleChangeOwnerOk(source: TupleReader) {
+    let _queryId = source.readBigNumber();
+    let _newOwner = source.readAddress();
+    return { $$type: 'ChangeOwnerOk' as const, queryId: _queryId, newOwner: _newOwner };
+}
+
+function storeTupleChangeOwnerOk(source: ChangeOwnerOk) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.queryId);
+    builder.writeAddress(source.newOwner);
+    return builder.build();
+}
+
+function dictValueParserChangeOwnerOk(): DictionaryValue<ChangeOwnerOk> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeChangeOwnerOk(src)).endCell());
+        },
+        parse: (src) => {
+            return loadChangeOwnerOk(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type SetManager = {
     $$type: 'SetManager';
     manager: Address;
+    compensator: Address;
+    claimer: Address;
 }
 
 export function storeSetManager(src: SetManager) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(2465333454, 32);
+        b_0.storeUint(3368041608, 32);
         b_0.storeAddress(src.manager);
+        b_0.storeAddress(src.compensator);
+        b_0.storeAddress(src.claimer);
     };
 }
 
 export function loadSetManager(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 2465333454) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 3368041608) { throw Error('Invalid prefix'); }
     let _manager = sc_0.loadAddress();
-    return { $$type: 'SetManager' as const, manager: _manager };
+    let _compensator = sc_0.loadAddress();
+    let _claimer = sc_0.loadAddress();
+    return { $$type: 'SetManager' as const, manager: _manager, compensator: _compensator, claimer: _claimer };
 }
 
 function loadTupleSetManager(source: TupleReader) {
     let _manager = source.readAddress();
-    return { $$type: 'SetManager' as const, manager: _manager };
+    let _compensator = source.readAddress();
+    let _claimer = source.readAddress();
+    return { $$type: 'SetManager' as const, manager: _manager, compensator: _compensator, claimer: _claimer };
 }
 
 function loadGetterTupleSetManager(source: TupleReader) {
     let _manager = source.readAddress();
-    return { $$type: 'SetManager' as const, manager: _manager };
+    let _compensator = source.readAddress();
+    let _claimer = source.readAddress();
+    return { $$type: 'SetManager' as const, manager: _manager, compensator: _compensator, claimer: _claimer };
 }
 
 function storeTupleSetManager(source: SetManager) {
     let builder = new TupleBuilder();
     builder.writeAddress(source.manager);
+    builder.writeAddress(source.compensator);
+    builder.writeAddress(source.claimer);
     return builder.build();
 }
 
@@ -511,44 +629,110 @@ function dictValueParserSetManager(): DictionaryValue<SetManager> {
     }
 }
 
+export type LaunchConfig = {
+    $$type: 'LaunchConfig';
+    members: Dictionary<Address, number>;
+    requiredWeight: bigint;
+}
+
+export function storeLaunchConfig(src: LaunchConfig) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(34516962, 32);
+        b_0.storeDict(src.members, Dictionary.Keys.Address(), Dictionary.Values.Uint(8));
+        b_0.storeUint(src.requiredWeight, 8);
+    };
+}
+
+export function loadLaunchConfig(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 34516962) { throw Error('Invalid prefix'); }
+    let _members = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), sc_0);
+    let _requiredWeight = sc_0.loadUintBig(8);
+    return { $$type: 'LaunchConfig' as const, members: _members, requiredWeight: _requiredWeight };
+}
+
+function loadTupleLaunchConfig(source: TupleReader) {
+    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), source.readCellOpt());
+    let _requiredWeight = source.readBigNumber();
+    return { $$type: 'LaunchConfig' as const, members: _members, requiredWeight: _requiredWeight };
+}
+
+function loadGetterTupleLaunchConfig(source: TupleReader) {
+    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), source.readCellOpt());
+    let _requiredWeight = source.readBigNumber();
+    return { $$type: 'LaunchConfig' as const, members: _members, requiredWeight: _requiredWeight };
+}
+
+function storeTupleLaunchConfig(source: LaunchConfig) {
+    let builder = new TupleBuilder();
+    builder.writeCell(source.members.size > 0 ? beginCell().storeDictDirect(source.members, Dictionary.Keys.Address(), Dictionary.Values.Uint(8)).endCell() : null);
+    builder.writeNumber(source.requiredWeight);
+    return builder.build();
+}
+
+function dictValueParserLaunchConfig(): DictionaryValue<LaunchConfig> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeLaunchConfig(src)).endCell());
+        },
+        parse: (src) => {
+            return loadLaunchConfig(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type Request = {
     $$type: 'Request';
     to: Address;
     timeout: bigint;
     manager: Address;
+    compensator: Address;
+    claimer: Address;
 }
 
 export function storeRequest(src: Request) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(3570490360, 32);
+        b_0.storeUint(3281407310, 32);
         b_0.storeAddress(src.to);
         b_0.storeUint(src.timeout, 32);
         b_0.storeAddress(src.manager);
+        b_0.storeAddress(src.compensator);
+        let b_1 = new Builder();
+        b_1.storeAddress(src.claimer);
+        b_0.storeRef(b_1.endCell());
     };
 }
 
 export function loadRequest(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 3570490360) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 3281407310) { throw Error('Invalid prefix'); }
     let _to = sc_0.loadAddress();
     let _timeout = sc_0.loadUintBig(32);
     let _manager = sc_0.loadAddress();
-    return { $$type: 'Request' as const, to: _to, timeout: _timeout, manager: _manager };
+    let _compensator = sc_0.loadAddress();
+    let sc_1 = sc_0.loadRef().beginParse();
+    let _claimer = sc_1.loadAddress();
+    return { $$type: 'Request' as const, to: _to, timeout: _timeout, manager: _manager, compensator: _compensator, claimer: _claimer };
 }
 
 function loadTupleRequest(source: TupleReader) {
     let _to = source.readAddress();
     let _timeout = source.readBigNumber();
     let _manager = source.readAddress();
-    return { $$type: 'Request' as const, to: _to, timeout: _timeout, manager: _manager };
+    let _compensator = source.readAddress();
+    let _claimer = source.readAddress();
+    return { $$type: 'Request' as const, to: _to, timeout: _timeout, manager: _manager, compensator: _compensator, claimer: _claimer };
 }
 
 function loadGetterTupleRequest(source: TupleReader) {
     let _to = source.readAddress();
     let _timeout = source.readBigNumber();
     let _manager = source.readAddress();
-    return { $$type: 'Request' as const, to: _to, timeout: _timeout, manager: _manager };
+    let _compensator = source.readAddress();
+    let _claimer = source.readAddress();
+    return { $$type: 'Request' as const, to: _to, timeout: _timeout, manager: _manager, compensator: _compensator, claimer: _claimer };
 }
 
 function storeTupleRequest(source: Request) {
@@ -556,6 +740,8 @@ function storeTupleRequest(source: Request) {
     builder.writeAddress(source.to);
     builder.writeNumber(source.timeout);
     builder.writeAddress(source.manager);
+    builder.writeAddress(source.compensator);
+    builder.writeAddress(source.claimer);
     return builder.build();
 }
 
@@ -578,14 +764,14 @@ export type Signed = {
 export function storeSigned(src: Signed) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(1935724027, 32);
+        b_0.storeUint(586748514, 32);
         b_0.store(storeRequest(src.request));
     };
 }
 
 export function loadSigned(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 1935724027) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 586748514) { throw Error('Invalid prefix'); }
     let _request = loadRequest(sc_0);
     return { $$type: 'Signed' as const, request: _request };
 }
@@ -620,7 +806,7 @@ function dictValueParserSigned(): DictionaryValue<Signed> {
 export type MultisigSigner$Data = {
     $$type: 'MultisigSigner$Data';
     master: Address;
-    members: Dictionary<Address, bigint>;
+    members: Dictionary<Address, number>;
     weight: bigint;
     requiredWeight: bigint;
     completed: boolean;
@@ -631,9 +817,9 @@ export function storeMultisigSigner$Data(src: MultisigSigner$Data) {
     return (builder: Builder) => {
         let b_0 = builder;
         b_0.storeAddress(src.master);
-        b_0.storeDict(src.members, Dictionary.Keys.Address(), Dictionary.Values.BigInt(257));
-        b_0.storeInt(src.weight, 257);
-        b_0.storeInt(src.requiredWeight, 257);
+        b_0.storeDict(src.members, Dictionary.Keys.Address(), Dictionary.Values.Uint(8));
+        b_0.storeUint(src.weight, 8);
+        b_0.storeUint(src.requiredWeight, 8);
         b_0.storeBit(src.completed);
         let b_1 = new Builder();
         b_1.store(storeRequest(src.request));
@@ -644,9 +830,9 @@ export function storeMultisigSigner$Data(src: MultisigSigner$Data) {
 export function loadMultisigSigner$Data(slice: Slice) {
     let sc_0 = slice;
     let _master = sc_0.loadAddress();
-    let _members = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.BigInt(257), sc_0);
-    let _weight = sc_0.loadIntBig(257);
-    let _requiredWeight = sc_0.loadIntBig(257);
+    let _members = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), sc_0);
+    let _weight = sc_0.loadUintBig(8);
+    let _requiredWeight = sc_0.loadUintBig(8);
     let _completed = sc_0.loadBit();
     let sc_1 = sc_0.loadRef().beginParse();
     let _request = loadRequest(sc_1);
@@ -655,7 +841,7 @@ export function loadMultisigSigner$Data(slice: Slice) {
 
 function loadTupleMultisigSigner$Data(source: TupleReader) {
     let _master = source.readAddress();
-    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.BigInt(257), source.readCellOpt());
+    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), source.readCellOpt());
     let _weight = source.readBigNumber();
     let _requiredWeight = source.readBigNumber();
     let _completed = source.readBoolean();
@@ -665,7 +851,7 @@ function loadTupleMultisigSigner$Data(source: TupleReader) {
 
 function loadGetterTupleMultisigSigner$Data(source: TupleReader) {
     let _master = source.readAddress();
-    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.BigInt(257), source.readCellOpt());
+    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), source.readCellOpt());
     let _weight = source.readBigNumber();
     let _requiredWeight = source.readBigNumber();
     let _completed = source.readBoolean();
@@ -676,7 +862,7 @@ function loadGetterTupleMultisigSigner$Data(source: TupleReader) {
 function storeTupleMultisigSigner$Data(source: MultisigSigner$Data) {
     let builder = new TupleBuilder();
     builder.writeAddress(source.master);
-    builder.writeCell(source.members.size > 0 ? beginCell().storeDictDirect(source.members, Dictionary.Keys.Address(), Dictionary.Values.BigInt(257)).endCell() : null);
+    builder.writeCell(source.members.size > 0 ? beginCell().storeDictDirect(source.members, Dictionary.Keys.Address(), Dictionary.Values.Uint(8)).endCell() : null);
     builder.writeNumber(source.weight);
     builder.writeNumber(source.requiredWeight);
     builder.writeBoolean(source.completed);
@@ -697,40 +883,46 @@ function dictValueParserMultisigSigner$Data(): DictionaryValue<MultisigSigner$Da
 
 export type Multisig$Data = {
     $$type: 'Multisig$Data';
-    members: Dictionary<Address, bigint>;
+    owner: Address;
+    members: Dictionary<Address, number>;
     requiredWeight: bigint;
 }
 
 export function storeMultisig$Data(src: Multisig$Data) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeDict(src.members, Dictionary.Keys.Address(), Dictionary.Values.BigInt(257));
-        b_0.storeInt(src.requiredWeight, 257);
+        b_0.storeAddress(src.owner);
+        b_0.storeDict(src.members, Dictionary.Keys.Address(), Dictionary.Values.Uint(8));
+        b_0.storeUint(src.requiredWeight, 8);
     };
 }
 
 export function loadMultisig$Data(slice: Slice) {
     let sc_0 = slice;
-    let _members = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.BigInt(257), sc_0);
-    let _requiredWeight = sc_0.loadIntBig(257);
-    return { $$type: 'Multisig$Data' as const, members: _members, requiredWeight: _requiredWeight };
+    let _owner = sc_0.loadAddress();
+    let _members = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), sc_0);
+    let _requiredWeight = sc_0.loadUintBig(8);
+    return { $$type: 'Multisig$Data' as const, owner: _owner, members: _members, requiredWeight: _requiredWeight };
 }
 
 function loadTupleMultisig$Data(source: TupleReader) {
-    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.BigInt(257), source.readCellOpt());
+    let _owner = source.readAddress();
+    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), source.readCellOpt());
     let _requiredWeight = source.readBigNumber();
-    return { $$type: 'Multisig$Data' as const, members: _members, requiredWeight: _requiredWeight };
+    return { $$type: 'Multisig$Data' as const, owner: _owner, members: _members, requiredWeight: _requiredWeight };
 }
 
 function loadGetterTupleMultisig$Data(source: TupleReader) {
-    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.BigInt(257), source.readCellOpt());
+    let _owner = source.readAddress();
+    let _members = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Uint(8), source.readCellOpt());
     let _requiredWeight = source.readBigNumber();
-    return { $$type: 'Multisig$Data' as const, members: _members, requiredWeight: _requiredWeight };
+    return { $$type: 'Multisig$Data' as const, owner: _owner, members: _members, requiredWeight: _requiredWeight };
 }
 
 function storeTupleMultisig$Data(source: Multisig$Data) {
     let builder = new TupleBuilder();
-    builder.writeCell(source.members.size > 0 ? beginCell().storeDictDirect(source.members, Dictionary.Keys.Address(), Dictionary.Values.BigInt(257)).endCell() : null);
+    builder.writeAddress(source.owner);
+    builder.writeCell(source.members.size > 0 ? beginCell().storeDictDirect(source.members, Dictionary.Keys.Address(), Dictionary.Values.Uint(8)).endCell() : null);
     builder.writeNumber(source.requiredWeight);
     return builder.build();
 }
@@ -749,7 +941,7 @@ function dictValueParserMultisig$Data(): DictionaryValue<Multisig$Data> {
  type MultisigSigner_init_args = {
     $$type: 'MultisigSigner_init_args';
     master: Address;
-    members: Dictionary<Address, bigint>;
+    members: Dictionary<Address, number>;
     requiredWeight: bigint;
     request: Request;
 }
@@ -758,7 +950,7 @@ function initMultisigSigner_init_args(src: MultisigSigner_init_args) {
     return (builder: Builder) => {
         let b_0 = builder;
         b_0.storeAddress(src.master);
-        b_0.storeDict(src.members, Dictionary.Keys.Address(), Dictionary.Values.BigInt(257));
+        b_0.storeDict(src.members, Dictionary.Keys.Address(), Dictionary.Values.Uint(8));
         b_0.storeInt(src.requiredWeight, 257);
         let b_1 = new Builder();
         b_1.store(storeRequest(src.request));
@@ -766,9 +958,9 @@ function initMultisigSigner_init_args(src: MultisigSigner_init_args) {
     };
 }
 
-async function MultisigSigner_init(master: Address, members: Dictionary<Address, bigint>, requiredWeight: bigint, request: Request) {
-    const __code = Cell.fromBase64('te6ccgECFAEABCAAART/APSkE/S88sgLAQIBYgIDA5rQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxVF9s88uCCyPhDAcx/AcoAVXDbPMntVA0EBQIBWAsMAVTtou37AZIwf+BwIddJwh+VMCDXCx/eIMAAItdJwSGwklt/4MAAkTDjDXAGAWZQhyDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhX0ABOBAQHPAIEBAc8AygDIUEMKAej5AYLwIq7m0KbcFGV3J33VjQauMJCjzdPYqIVhGEIIrl9usDm6jsyBEpP4I1IwvPL0ggCfaiSz8vT4QieBAQsigQEBQTP0Cm+hlAHXADCSW23iggC04yFus/L0IG7y0IAIgQEL9FkwUGegUwS+4wAFf9sx4AcB3DN/cIEAgnBUdUjIVSCCEHNgzftQBMsfA4IQ1NFb+FAEyx9YINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wyx8BINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyStVIERAbW3bPDADCAHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgJAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAJqCENTRW/hQBMsfWCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFssfASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFskBzAIRui/ts82zxsg4DQ4AEbgr7tRNDSAAGANI7UTQ1AH4Y9IAAY6E2zxsGOD4KNcLCoMJuvLgids8BtFVBNs8DxARAAZUchABYvpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB9ASBAQHXAIEBAdcA0gDUAdASAfb6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfQEgQEB1wDUAdDTHwGCENTRW/i68uCB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHTH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhDMDMTAAxwBANwQTMAuNMfAYIQ1NFb+Lry4IH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdMf+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiEMwMxA4EDcQNhA1EDRYAA4QNhA1EDRY');
-    const __system = Cell.fromBase64('te6cckECFgEABCoAAQHAAQEFoSdzAgEU/wD0pBP0vPLICwMCAWIEDAOa0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8VRfbPPLggsj4QwHMfwHKAFVw2zzJ7VQOBQoBVO2i7fsBkjB/4HAh10nCH5UwINcLH94gwAAi10nBIbCSW3/gwACRMOMNcAYB6PkBgvAirubQptwUZXcnfdWNBq4wkKPN09iohWEYQgiuX26wObqOzIESk/gjUjC88vSCAJ9qJLPy9PhCJ4EBCyKBAQFBM/QKb6GUAdcAMJJbbeKCALTjIW6z8vQgbvLQgAiBAQv0WTBQZ6BTBL7jAAV/2zHgBwHcM39wgQCCcFR1SMhVIIIQc2DN+1AEyx8DghDU0Vv4UATLH1gg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbLHwEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbJK1UgREBtbds8MAMIAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7CAkAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwBZlCHINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WFfQAE4EBAc8AgQEBzwDKAMhQQwsAmoIQ1NFb+FAEyx9YINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wyx8BINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyQHMAgFYDRUCEbov7bPNs8bIOA4UA0jtRNDUAfhj0gABjoTbPGwY4Pgo1wsKgwm68uCJ2zwG0VUE2zwPERMBYvpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB9ASBAQHXAIEBAdcA0gDUAdAQALjTHwGCENTRW/i68uCB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHTH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhDMDMQOBA3EDYQNRA0WAH2+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH0BIEBAdcA1AHQ0x8BghDU0Vv4uvLggfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0x/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIQzAzEgAOEDYQNRA0WAAMcAQDcEEzAAZUchAAEbgr7tRNDSAAGPEw78Y=');
+async function MultisigSigner_init(master: Address, members: Dictionary<Address, number>, requiredWeight: bigint, request: Request) {
+    const __code = Cell.fromBase64('te6ccgECEwEABAwAART/APSkE/S88sgLAQIBYgIDA3rQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxVGds88uCCDQQFAgFYCwwBpO2i7fsBkjB/4HAh10nCH5UwINcLH94gwAAi10nBIbCSW3/gwACOp/kBgvAirubQptwUZXcnfdWNBq4wkKPN09iohWEYQgiuX26wObrjApEw4nAGAYLI+EMBzH8BygBVkFCpINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WF/QAFcsHE8sHygDIRGXbPMkBzMntVAkC5oESk/gjUlC88vSCAJ9qJrPy9PhCKYEBCyJ4QTP0Cm+hlAHXATCSW23iggC04yFus/L0IG7y0IAKgQEL9FkwUImgUwa+jyg1f3CBAIJwVHdlU33IVUCCECL5EmJQBssfBds8yS1VIERAbW3bPDAF3gd/2zEJBwHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgIAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAdqCEMOWTU5QBssfUAQg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYSyx8BINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFshYCgBCINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyQHMAhG6L+2zzbPGylgNDgARuCvu1E0NIAAYAqjtRNDUAfhj0gABjrz6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfQE0wfTB9IA1AHQ2zw1EFoQWRBYEFcQVlUDbBrg+CjXCwqDCbry4IkQDwAKVHQyU0MCdvpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB9ASBAQHXANQB0Ns8NRBYEFcQVlUDCNFVBts8EBEB5NMfAYIQw5ZNTrry4IH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdMf+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQB0BIADnAGBXAFVSEASPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgxFRRDMA==');
+    const __system = Cell.fromBase64('te6cckECFQEABBYAAQHAAQEFoSdzAgEU/wD0pBP0vPLICwMCAWIEDAN60AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8VRnbPPLggg4FCQGk7aLt+wGSMH/gcCHXScIflTAg1wsf3iDAACLXScEhsJJbf+DAAI6n+QGC8CKu5tCm3BRldyd91Y0GrjCQo83T2KiFYRhCCK5fbrA5uuMCkTDicAYC5oESk/gjUlC88vSCAJ9qJrPy9PhCKYEBCyJ4QTP0Cm+hlAHXATCSW23iggC04yFus/L0IG7y0IAKgQEL9FkwUImgUwa+jyg1f3CBAIJwVHdlU33IVUCCECL5EmJQBssfBds8yS1VIERAbW3bPDAF3gd/2zEKBwHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgIAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAYLI+EMBzH8BygBVkFCpINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WF/QAFcsHE8sHygDIRGXbPMkBzMntVAoB2oIQw5ZNTlAGyx9QBCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhLLHwEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyFgLAEIg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbJAcwCAVgNFAIRui/ts82zxspYDhMCqO1E0NQB+GPSAAGOvPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB9ATTB9MH0gDUAdDbPDUQWhBZEFgQVxBWVQNsGuD4KNcLCoMJuvLgiRAPAnb6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfQEgQEB1wDUAdDbPDUQWBBXEFZVAwjRVQbbPBASAeTTHwGCEMOWTU668uCB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHTH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHUAdARAEj6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIMRUUQzAADnAGBXAFVSEAClR0MlNDABG4K+7UTQ0gABihoTBQ');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
@@ -829,11 +1021,14 @@ const MultisigSigner_types: ABIType[] = [
     {"name":"Deploy","header":2490013878,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"DeployOk","header":2952335191,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"SetManager","header":2465333454,"fields":[{"name":"manager","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"Request","header":3570490360,"fields":[{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"timeout","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"manager","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"Signed","header":1935724027,"fields":[{"name":"request","type":{"kind":"simple","type":"Request","optional":false}}]},
-    {"name":"MultisigSigner$Data","header":null,"fields":[{"name":"master","type":{"kind":"simple","type":"address","optional":false}},{"name":"members","type":{"kind":"dict","key":"address","value":"int"}},{"name":"weight","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"requiredWeight","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"completed","type":{"kind":"simple","type":"bool","optional":false}},{"name":"request","type":{"kind":"simple","type":"Request","optional":false}}]},
-    {"name":"Multisig$Data","header":null,"fields":[{"name":"members","type":{"kind":"dict","key":"address","value":"int"}},{"name":"requiredWeight","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"ChangeOwner","header":2174598809,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"ChangeOwnerOk","header":846932810,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"SetManager","header":3368041608,"fields":[{"name":"manager","type":{"kind":"simple","type":"address","optional":false}},{"name":"compensator","type":{"kind":"simple","type":"address","optional":false}},{"name":"claimer","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"LaunchConfig","header":34516962,"fields":[{"name":"members","type":{"kind":"dict","key":"address","value":"uint","valueFormat":8}},{"name":"requiredWeight","type":{"kind":"simple","type":"uint","optional":false,"format":8}}]},
+    {"name":"Request","header":3281407310,"fields":[{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"timeout","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"manager","type":{"kind":"simple","type":"address","optional":false}},{"name":"compensator","type":{"kind":"simple","type":"address","optional":false}},{"name":"claimer","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"Signed","header":586748514,"fields":[{"name":"request","type":{"kind":"simple","type":"Request","optional":false}}]},
+    {"name":"MultisigSigner$Data","header":null,"fields":[{"name":"master","type":{"kind":"simple","type":"address","optional":false}},{"name":"members","type":{"kind":"dict","key":"address","value":"uint","valueFormat":8}},{"name":"weight","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"requiredWeight","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"completed","type":{"kind":"simple","type":"bool","optional":false}},{"name":"request","type":{"kind":"simple","type":"Request","optional":false}}]},
+    {"name":"Multisig$Data","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"members","type":{"kind":"dict","key":"address","value":"uint","valueFormat":8}},{"name":"requiredWeight","type":{"kind":"simple","type":"uint","optional":false,"format":8}}]},
 ]
 
 const MultisigSigner_getters: ABIGetter[] = [
@@ -851,11 +1046,11 @@ const MultisigSigner_receivers: ABIReceiver[] = [
 
 export class MultisigSigner implements Contract {
     
-    static async init(master: Address, members: Dictionary<Address, bigint>, requiredWeight: bigint, request: Request) {
+    static async init(master: Address, members: Dictionary<Address, number>, requiredWeight: bigint, request: Request) {
         return await MultisigSigner_init(master, members, requiredWeight, request);
     }
     
-    static async fromInit(master: Address, members: Dictionary<Address, bigint>, requiredWeight: bigint, request: Request) {
+    static async fromInit(master: Address, members: Dictionary<Address, number>, requiredWeight: bigint, request: Request) {
         const init = await MultisigSigner_init(master, members, requiredWeight, request);
         const address = contractAddress(0, init);
         return new MultisigSigner(address, init);

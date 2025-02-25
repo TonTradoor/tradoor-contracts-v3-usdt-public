@@ -54,6 +54,8 @@ message UpdateBaseConfig {
 
 message SetManager {
     manager: Address;
+    compensator: Address;
+    claimer: Address;
 }
 
 message ListToken {

@@ -223,121 +223,121 @@ cell $JettonUpdateContent$_store_cell((cell) v) inline {
 
 ;;
 ;; Type: GasConfig
-;; TLB: _ lpMinExecutionFee:coins perpMinExecutionFee:coins gasForPerpTrader:coins gasForPerpExecutor:coins gasForLpTrader:coins gasForLpExecutor:coins minTonsForStorage:coins gasForTransferJetton:coins gasForBurnTlp:coins gasForMintTlp:coins = GasConfig
+;; TLB: _ mintJettonGas:coins burnJettonGas:coins transferJettonGas:coins createPerpOrderGas:coins cancelPerpOrderGas:coins executePerpOrderGas:coins createLiquidityOrderGas:coins cancelLiquidityOrderGas:coins executeLiquidityOrderGas:coins minStorageReserve:coins lpMinExecutionFee:coins perpMinExecutionFee:coins = GasConfig
 ;;
 
-(slice, ((int, int, int, int, int, int, int, int, int, int))) $GasConfig$_load(slice sc_0) inline_ref {
-    var v'lpMinExecutionFee = sc_0~load_coins();
-    var v'perpMinExecutionFee = sc_0~load_coins();
-    var v'gasForPerpTrader = sc_0~load_coins();
-    var v'gasForPerpExecutor = sc_0~load_coins();
-    var v'gasForLpTrader = sc_0~load_coins();
-    var v'gasForLpExecutor = sc_0~load_coins();
-    var v'minTonsForStorage = sc_0~load_coins();
-    var v'gasForTransferJetton = sc_0~load_coins();
+(slice, ((int, int, int, int, int, int, int, int, int, int, int, int))) $GasConfig$_load(slice sc_0) inline_ref {
+    var v'mintJettonGas = sc_0~load_coins();
+    var v'burnJettonGas = sc_0~load_coins();
+    var v'transferJettonGas = sc_0~load_coins();
+    var v'createPerpOrderGas = sc_0~load_coins();
+    var v'cancelPerpOrderGas = sc_0~load_coins();
+    var v'executePerpOrderGas = sc_0~load_coins();
+    var v'createLiquidityOrderGas = sc_0~load_coins();
+    var v'cancelLiquidityOrderGas = sc_0~load_coins();
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'gasForBurnTlp = sc_1~load_coins();
-    var v'gasForMintTlp = sc_1~load_coins();
-    return (sc_0, (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp));
+    var v'executeLiquidityOrderGas = sc_1~load_coins();
+    var v'minStorageReserve = sc_1~load_coins();
+    var v'lpMinExecutionFee = sc_1~load_coins();
+    var v'perpMinExecutionFee = sc_1~load_coins();
+    return (sc_0, (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee));
 }
 
-tuple $GasConfig$_as_optional((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return __tact_tuple_create_10(v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp);
+tuple $GasConfig$_as_optional((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return __tact_tuple_create_12(v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee);
 }
 
-_ $GasConfig$_get_lpMinExecutionFee((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
+_ $GasConfig$_get_mintJettonGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'mintJettonGas;
+}
+
+_ $GasConfig$_get_burnJettonGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'burnJettonGas;
+}
+
+_ $GasConfig$_get_transferJettonGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'transferJettonGas;
+}
+
+_ $GasConfig$_get_createPerpOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'createPerpOrderGas;
+}
+
+_ $GasConfig$_get_cancelPerpOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'cancelPerpOrderGas;
+}
+
+_ $GasConfig$_get_executePerpOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'executePerpOrderGas;
+}
+
+_ $GasConfig$_get_createLiquidityOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'createLiquidityOrderGas;
+}
+
+_ $GasConfig$_get_cancelLiquidityOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'cancelLiquidityOrderGas;
+}
+
+_ $GasConfig$_get_executeLiquidityOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'executeLiquidityOrderGas;
+}
+
+_ $GasConfig$_get_minStorageReserve((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
+    return v'minStorageReserve;
+}
+
+_ $GasConfig$_get_lpMinExecutionFee((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
     return v'lpMinExecutionFee;
 }
 
-_ $GasConfig$_get_perpMinExecutionFee((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
+_ $GasConfig$_get_perpMinExecutionFee((int, int, int, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee) = v;
     return v'perpMinExecutionFee;
 }
 
-_ $GasConfig$_get_gasForPerpTrader((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return v'gasForPerpTrader;
-}
-
-_ $GasConfig$_get_gasForPerpExecutor((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return v'gasForPerpExecutor;
-}
-
-_ $GasConfig$_get_gasForLpTrader((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return v'gasForLpTrader;
-}
-
-_ $GasConfig$_get_gasForLpExecutor((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return v'gasForLpExecutor;
-}
-
-_ $GasConfig$_get_minTonsForStorage((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return v'minTonsForStorage;
-}
-
-_ $GasConfig$_get_gasForTransferJetton((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return v'gasForTransferJetton;
-}
-
-_ $GasConfig$_get_gasForBurnTlp((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return v'gasForBurnTlp;
-}
-
-_ $GasConfig$_get_gasForMintTlp((int, int, int, int, int, int, int, int, int, int) v) inline {
-    var (v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp) = v;
-    return v'gasForMintTlp;
-}
-
-((int, int, int, int, int, int, int, int, int, int)) $GasConfig$_not_null(tuple v) inline {
+((int, int, int, int, int, int, int, int, int, int, int, int)) $GasConfig$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'lpMinExecutionFee, int vvv'perpMinExecutionFee, int vvv'gasForPerpTrader, int vvv'gasForPerpExecutor, int vvv'gasForLpTrader, int vvv'gasForLpExecutor, int vvv'minTonsForStorage, int vvv'gasForTransferJetton, int vvv'gasForBurnTlp, int vvv'gasForMintTlp) = __tact_tuple_destroy_10(v);
-    return (vvv'lpMinExecutionFee, vvv'perpMinExecutionFee, vvv'gasForPerpTrader, vvv'gasForPerpExecutor, vvv'gasForLpTrader, vvv'gasForLpExecutor, vvv'minTonsForStorage, vvv'gasForTransferJetton, vvv'gasForBurnTlp, vvv'gasForMintTlp);
+    var (int vvv'mintJettonGas, int vvv'burnJettonGas, int vvv'transferJettonGas, int vvv'createPerpOrderGas, int vvv'cancelPerpOrderGas, int vvv'executePerpOrderGas, int vvv'createLiquidityOrderGas, int vvv'cancelLiquidityOrderGas, int vvv'executeLiquidityOrderGas, int vvv'minStorageReserve, int vvv'lpMinExecutionFee, int vvv'perpMinExecutionFee) = __tact_tuple_destroy_12(v);
+    return (vvv'mintJettonGas, vvv'burnJettonGas, vvv'transferJettonGas, vvv'createPerpOrderGas, vvv'cancelPerpOrderGas, vvv'executePerpOrderGas, vvv'createLiquidityOrderGas, vvv'cancelLiquidityOrderGas, vvv'executeLiquidityOrderGas, vvv'minStorageReserve, vvv'lpMinExecutionFee, vvv'perpMinExecutionFee);
 }
 
 ;;
 ;; Type: ExecutorConfig
-;; TLB: _ executors:dict<address, bool> compensator:address claimer:address = ExecutorConfig
+;; TLB: _ executors:dict<address, bool> = ExecutorConfig
 ;;
 
-(slice, ((cell, slice, slice))) $ExecutorConfig$_load(slice sc_0) inline {
+(slice, ((cell))) $ExecutorConfig$_load(slice sc_0) inline {
     var v'executors = sc_0~load_dict();
-    var v'compensator = sc_0~__tact_load_address();
-    var v'claimer = sc_0~__tact_load_address();
-    return (sc_0, (v'executors, v'compensator, v'claimer));
+    return (sc_0, (v'executors));
 }
 
-tuple $ExecutorConfig$_as_optional((cell, slice, slice) v) inline {
-    var (v'executors, v'compensator, v'claimer) = v;
-    return __tact_tuple_create_3(v'executors, v'compensator, v'claimer);
+tuple $ExecutorConfig$_as_optional((cell) v) inline {
+    var (v'executors) = v;
+    return __tact_tuple_create_1(v'executors);
 }
 
-_ $ExecutorConfig$_get_executors((cell, slice, slice) v) inline {
-    var (v'executors, v'compensator, v'claimer) = v;
+_ $ExecutorConfig$_get_executors((cell) v) inline {
+    var (v'executors) = v;
     return v'executors;
 }
 
-_ $ExecutorConfig$_get_compensator((cell, slice, slice) v) inline {
-    var (v'executors, v'compensator, v'claimer) = v;
-    return v'compensator;
-}
-
-_ $ExecutorConfig$_get_claimer((cell, slice, slice) v) inline {
-    var (v'executors, v'compensator, v'claimer) = v;
-    return v'claimer;
-}
-
-((cell, slice, slice)) $ExecutorConfig$_not_null(tuple v) inline {
+((cell)) $ExecutorConfig$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (cell vvv'executors, slice vvv'compensator, slice vvv'claimer) = __tact_tuple_destroy_3(v);
-    return (vvv'executors, vvv'compensator, vvv'claimer);
+    var (cell vvv'executors) = __tact_tuple_destroy_1(v);
+    return (vvv'executors);
 }
 
 ;;
@@ -387,31 +387,32 @@ _ $ContractConfig$_get_jettonWallet((slice, slice, slice, slice) v) inline {
 
 ;;
 ;; Type: UpdateBaseConfig
-;; Header: 0x47a04deb
-;; TLB: update_base_config#47a04deb gasConfig:Maybe GasConfig{lpMinExecutionFee:coins,perpMinExecutionFee:coins,gasForPerpTrader:coins,gasForPerpExecutor:coins,gasForLpTrader:coins,gasForLpExecutor:coins,minTonsForStorage:coins,gasForTransferJetton:coins,gasForBurnTlp:coins,gasForMintTlp:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>,compensator:address,claimer:address} contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateBaseConfig
+;; Header: 0xa8563ca9
+;; TLB: update_base_config#a8563ca9 gasConfig:Maybe GasConfig{mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>} contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateBaseConfig
 ;;
 
 (slice, ((tuple, tuple, tuple))) $UpdateBaseConfig$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 1201688043);
+    throw_unless(129, sc_0~load_uint(32) == 2824223913);
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'gasConfig = sc_1~load_int(1) ? $GasConfig$_as_optional(sc_1~$GasConfig$_load()) : null();
+    var v'executorConfig = sc_1~load_int(1) ? $ExecutorConfig$_as_optional(sc_1~$ExecutorConfig$_load()) : null();
     slice sc_2 = sc_1~load_ref().begin_parse();
-    var v'executorConfig = sc_2~load_int(1) ? $ExecutorConfig$_as_optional(sc_2~$ExecutorConfig$_load()) : null();
-    slice sc_3 = sc_2~load_ref().begin_parse();
-    var v'contractConfig = sc_3~load_int(1) ? $ContractConfig$_as_optional(sc_3~$ContractConfig$_load()) : null();
+    var v'contractConfig = sc_2~load_int(1) ? $ContractConfig$_as_optional(sc_2~$ContractConfig$_load()) : null();
     return (sc_0, (v'gasConfig, v'executorConfig, v'contractConfig));
 }
 
 ;;
 ;; Type: SetManager
-;; Header: 0x92f200ce
-;; TLB: set_manager#92f200ce manager:address = SetManager
+;; Header: 0xc8c03c88
+;; TLB: set_manager#c8c03c88 manager:address compensator:address claimer:address = SetManager
 ;;
 
-(slice, ((slice))) $SetManager$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2465333454);
+(slice, ((slice, slice, slice))) $SetManager$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3368041608);
     var v'manager = sc_0~__tact_load_address();
-    return (sc_0, (v'manager));
+    var v'compensator = sc_0~__tact_load_address();
+    var v'claimer = sc_0~__tact_load_address();
+    return (sc_0, (v'manager, v'compensator, v'claimer));
 }
 
 ;;
@@ -1044,16 +1045,16 @@ cell $CompensateExecutedEvent$_store_cell((int, int) v) inline {
 
 ;;
 ;; Type: ConfigData
-;; TLB: _ orderLockTime:uint32 lpMinExecutionFee:coins perpMinExecutionFee:coins gasForLpTrader:coins gasForLpExecutor:coins gasForPerpTrader:coins gasForPerpExecutor:coins minTonsForStorage:coins gasForTransferJetton:coins gasForBurnTlp:coins gasForMintTlp:coins tlpWallet:address jettonWallet:address tlpJetton:address maxLpNetCap:coins = ConfigData
+;; TLB: _ orderLockTime:uint32 mintJettonGas:coins burnJettonGas:coins transferJettonGas:coins createPerpOrderGas:coins cancelPerpOrderGas:coins executePerpOrderGas:coins createLiquidityOrderGas:coins cancelLiquidityOrderGas:coins executeLiquidityOrderGas:coins minStorageReserve:coins lpMinExecutionFee:coins perpMinExecutionFee:coins tlpWallet:address tlpJetton:address maxLpNetCap:coins = ConfigData
 ;;
 
-(int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) v) inline {
-    var (v'orderLockTime, v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForLpTrader, v'gasForLpExecutor, v'gasForPerpTrader, v'gasForPerpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp, v'tlpWallet, v'jettonWallet, v'tlpJetton, v'maxLpNetCap) = v; 
-    return (v'orderLockTime, v'lpMinExecutionFee, v'perpMinExecutionFee, v'gasForLpTrader, v'gasForLpExecutor, v'gasForPerpTrader, v'gasForPerpExecutor, v'minTonsForStorage, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp, v'tlpWallet, v'jettonWallet, v'tlpJetton, v'maxLpNetCap);
+(int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, int)) v) inline {
+    var (v'orderLockTime, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee, v'tlpWallet, v'tlpJetton, v'maxLpNetCap) = v; 
+    return (v'orderLockTime, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'minStorageReserve, v'lpMinExecutionFee, v'perpMinExecutionFee, v'tlpWallet, v'tlpJetton, v'maxLpNetCap);
 }
 
-((int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) $ConfigData$_constructor_orderLockTime_lpMinExecutionFee_perpMinExecutionFee_gasForLpTrader_gasForLpExecutor_gasForPerpTrader_gasForPerpExecutor_minTonsForStorage_gasForTransferJetton_gasForBurnTlp_gasForMintTlp_tlpWallet_jettonWallet_tlpJetton_maxLpNetCap(int $orderLockTime, int $lpMinExecutionFee, int $perpMinExecutionFee, int $gasForLpTrader, int $gasForLpExecutor, int $gasForPerpTrader, int $gasForPerpExecutor, int $minTonsForStorage, int $gasForTransferJetton, int $gasForBurnTlp, int $gasForMintTlp, slice $tlpWallet, slice $jettonWallet, slice $tlpJetton, int $maxLpNetCap) inline {
-    return ($orderLockTime, $lpMinExecutionFee, $perpMinExecutionFee, $gasForLpTrader, $gasForLpExecutor, $gasForPerpTrader, $gasForPerpExecutor, $minTonsForStorage, $gasForTransferJetton, $gasForBurnTlp, $gasForMintTlp, $tlpWallet, $jettonWallet, $tlpJetton, $maxLpNetCap);
+((int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, int)) $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_tlpWallet_tlpJetton_maxLpNetCap(int $orderLockTime, int $mintJettonGas, int $burnJettonGas, int $transferJettonGas, int $createPerpOrderGas, int $cancelPerpOrderGas, int $executePerpOrderGas, int $createLiquidityOrderGas, int $cancelLiquidityOrderGas, int $executeLiquidityOrderGas, int $minStorageReserve, int $lpMinExecutionFee, int $perpMinExecutionFee, slice $tlpWallet, slice $tlpJetton, int $maxLpNetCap) inline {
+    return ($orderLockTime, $mintJettonGas, $burnJettonGas, $transferJettonGas, $createPerpOrderGas, $cancelPerpOrderGas, $executePerpOrderGas, $createLiquidityOrderGas, $cancelLiquidityOrderGas, $executeLiquidityOrderGas, $minStorageReserve, $lpMinExecutionFee, $perpMinExecutionFee, $tlpWallet, $tlpJetton, $maxLpNetCap);
 }
 
 ;;
@@ -1590,8 +1591,8 @@ tuple $Compensate$_load_opt(cell cl) inline {
 ;; Type: Pool
 ;;
 
-builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) v) inline {
-    var (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minTonsForStorage, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig) = v;
+builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) v) inline {
+    var (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig) = v;
     build_0 = __tact_store_address(build_0, v'owner);
     build_0 = build_0.store_int(v'stopped, 1);
     build_0 = build_0.store_uint(v'orderLockTime, 32);
@@ -1599,23 +1600,25 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     build_0 = build_0.store_uint(v'lpRolloverFeeRate, 32);
     build_0 = build_0.store_uint(v'liquidatedPositionShareRate, 32);
     build_0 = build_0.store_uint(v'normalPositionShareRate, 32);
-    build_0 = build_0.store_coins(v'gasForPerpTrader);
-    build_0 = build_0.store_coins(v'gasForPerpExecutor);
-    build_0 = build_0.store_coins(v'gasForLpTrader);
-    build_0 = build_0.store_coins(v'gasForLpExecutor);
+    build_0 = build_0.store_coins(v'mintJettonGas);
+    build_0 = build_0.store_coins(v'burnJettonGas);
+    build_0 = build_0.store_coins(v'transferJettonGas);
+    build_0 = build_0.store_coins(v'createPerpOrderGas);
     var build_1 = begin_cell();
-    build_1 = build_1.store_coins(v'gasForTransferJetton);
-    build_1 = build_1.store_coins(v'gasForBurnTlp);
-    build_1 = build_1.store_coins(v'gasForMintTlp);
+    build_1 = build_1.store_coins(v'cancelPerpOrderGas);
+    build_1 = build_1.store_coins(v'executePerpOrderGas);
+    build_1 = build_1.store_coins(v'createLiquidityOrderGas);
+    build_1 = build_1.store_coins(v'cancelLiquidityOrderGas);
+    build_1 = build_1.store_coins(v'executeLiquidityOrderGas);
     build_1 = build_1.store_coins(v'lpMinExecutionFee);
     build_1 = build_1.store_coins(v'perpMinExecutionFee);
-    build_1 = build_1.store_coins(v'minTonsForStorage);
-    build_1 = __tact_store_address(build_1, v'tlpJetton);
+    build_1 = build_1.store_coins(v'minStorageReserve);
     var build_2 = begin_cell();
+    build_2 = __tact_store_address(build_2, v'tlpJetton);
     build_2 = __tact_store_address(build_2, v'tlpWallet);
     build_2 = __tact_store_address(build_2, v'jettonWallet);
-    build_2 = __tact_store_address(build_2, v'manager);
     var build_3 = begin_cell();
+    build_3 = __tact_store_address(build_3, v'manager);
     build_3 = __tact_store_address(build_3, v'compensator);
     build_3 = __tact_store_address(build_3, v'claimer);
     build_3 = build_3.store_dict(v'executors);
@@ -1651,7 +1654,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     return build_0;
 }
 
-(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice))) $Pool$_load(slice sc_0) inline {
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice))) $Pool$_load(slice sc_0) inline {
     var v'owner = sc_0~__tact_load_address();
     var v'stopped = sc_0~load_int(1);
     var v'orderLockTime = sc_0~load_uint(32);
@@ -1659,23 +1662,25 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     var v'lpRolloverFeeRate = sc_0~load_uint(32);
     var v'liquidatedPositionShareRate = sc_0~load_uint(32);
     var v'normalPositionShareRate = sc_0~load_uint(32);
-    var v'gasForPerpTrader = sc_0~load_coins();
-    var v'gasForPerpExecutor = sc_0~load_coins();
-    var v'gasForLpTrader = sc_0~load_coins();
-    var v'gasForLpExecutor = sc_0~load_coins();
+    var v'mintJettonGas = sc_0~load_coins();
+    var v'burnJettonGas = sc_0~load_coins();
+    var v'transferJettonGas = sc_0~load_coins();
+    var v'createPerpOrderGas = sc_0~load_coins();
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'gasForTransferJetton = sc_1~load_coins();
-    var v'gasForBurnTlp = sc_1~load_coins();
-    var v'gasForMintTlp = sc_1~load_coins();
+    var v'cancelPerpOrderGas = sc_1~load_coins();
+    var v'executePerpOrderGas = sc_1~load_coins();
+    var v'createLiquidityOrderGas = sc_1~load_coins();
+    var v'cancelLiquidityOrderGas = sc_1~load_coins();
+    var v'executeLiquidityOrderGas = sc_1~load_coins();
     var v'lpMinExecutionFee = sc_1~load_coins();
     var v'perpMinExecutionFee = sc_1~load_coins();
-    var v'minTonsForStorage = sc_1~load_coins();
-    var v'tlpJetton = sc_1~__tact_load_address();
+    var v'minStorageReserve = sc_1~load_coins();
     slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'tlpJetton = sc_2~__tact_load_address();
     var v'tlpWallet = sc_2~__tact_load_address();
     var v'jettonWallet = sc_2~__tact_load_address();
-    var v'manager = sc_2~__tact_load_address();
     slice sc_3 = sc_2~load_ref().begin_parse();
+    var v'manager = sc_3~__tact_load_address();
     var v'compensator = sc_3~__tact_load_address();
     var v'claimer = sc_3~__tact_load_address();
     var v'executors = sc_3~load_dict();
@@ -1702,7 +1707,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     var v'globalRolloverFeeGrowth = sc_5~load_coins();
     slice sc_6 = sc_5~load_ref().begin_parse();
     var v'multisig = sc_6~__tact_load_address();
-    return (sc_0, (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'gasForPerpTrader, v'gasForPerpExecutor, v'gasForLpTrader, v'gasForLpExecutor, v'gasForTransferJetton, v'gasForBurnTlp, v'gasForMintTlp, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minTonsForStorage, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig));
+    return (sc_0, (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig));
 }
 
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline {
@@ -1710,7 +1715,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     return (sc_0, (v'deployId));
 }
 
-(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) $Pool$_contract_load() impure inline_ref {
+(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) $Pool$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1725,7 +1730,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     }
 }
 
-() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) v) impure inline {
+() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

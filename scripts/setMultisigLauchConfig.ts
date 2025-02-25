@@ -1,4 +1,4 @@
-import { Address, toNano } from '@ton/core';
+import { Address, Dictionary, toNano } from '@ton/core';
 import { NetworkProvider } from '@ton/blueprint';
 import {
     attachPool,
@@ -12,7 +12,13 @@ export async function run(provider: NetworkProvider) {
     const multisig = attachMultisig(provider);
     const pool = attachPool(provider);
 
+    let members = Dictionary.empty(Dictionary.Keys.Address(), Dictionary.Values.Uint(8));
     const config = getConfig();
+    const memberAddrs = config["members"];
+    for (const i in memberAddrs) {
+        members.set(Address.parse(memberAddrs[i].address), memberAddrs[i].weight);
+    }
+    
 
     const lastTrx = await getLastTransaction(provider, multisig.address);
     await multisig.send(
@@ -21,12 +27,9 @@ export async function run(provider: NetworkProvider) {
             value: toNano('0.05'),
         },
         {
-            $$type: 'Request',
-            to: pool.address,
-            timeout: BigInt(Math.floor(Date.now() / 1000) + 60 * 60),
-            manager: Address.parse(config["manager"]),
-            compensator: Address.parse(config["compensator"]),
-            claimer: Address.parse(config["claimer"])
+            $$type: 'LaunchConfig',
+            members: members,
+            requiredWeight: config["requiredWeight"]
         }
     );
 

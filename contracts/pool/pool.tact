@@ -19,16 +19,19 @@ contract Pool with Deployable, Resumable, Upgradable {
     liquidatedPositionShareRate: Int as uint32 = 0;
     normalPositionShareRate: Int as uint32 = 0;
     
-    gasForPerpTrader: Int as coins = ton("0.08");
-    gasForPerpExecutor: Int as coins = ton("0.08");
-    gasForLpTrader: Int as coins = ton("0.08");
-    gasForLpExecutor: Int as coins = ton("0.08");
-    gasForTransferJetton: Int as coins = ton("0.08"); // estimated gas of transfer jetton
-    gasForBurnTlp: Int as coins = ton("0.08"); // estimated gas of burn TLP
-    gasForMintTlp: Int as coins = ton("0.01"); // estimated gas of mint TLP
+    mintJettonGas: Int as coins = 0;
+    burnJettonGas: Int as coins = 0;
+    transferJettonGas: Int as coins = 0;
+    createPerpOrderGas: Int as coins = 0;
+    cancelPerpOrderGas: Int as coins = 0;
+    executePerpOrderGas: Int as coins = 0;
+    createLiquidityOrderGas: Int as coins = 0;
+    cancelLiquidityOrderGas: Int as coins = 0;
+    executeLiquidityOrderGas: Int as coins = 0;
+
     lpMinExecutionFee: Int as coins = ton("0.05"); // fee for every operation
     perpMinExecutionFee: Int as coins = ton("0.1"); // fee for every operation
-    minTonsForStorage: Int as coins = ton("0.01"); // min storage gas
+    minStorageReserve: Int as coins = ton("0.01"); // min storage gas
 
     tlpJetton: Address = newAddress(0, 0);// TLP address
     tlpWallet: Address = newAddress(0, 0); // TLP jetton wallet address
@@ -82,6 +85,8 @@ contract Pool with Deployable, Resumable, Upgradable {
     receive(msg: SetManager){
         require(sender() == self.multisig, "invalid sender");
         self.manager = msg.manager;
+        self.compensator = msg.compensator;
+        self.claimer = msg.claimer;
     }
 
     /**
@@ -106,23 +111,24 @@ contract Pool with Deployable, Resumable, Upgradable {
             foreach (executor,enable in executors) {
                 self.executors.set(executor, enable? true : null);
             }
-            self.compensator = executorConfig!!.compensator;
-            self.claimer = executorConfig!!.claimer;
         }
 
         // gas
         let gasConfig: GasConfig? = msg.gasConfig;
         if (gasConfig != null) {
-            self.gasForPerpTrader = gasConfig!!.gasForPerpTrader;
-            self.gasForPerpExecutor = gasConfig!!.gasForPerpExecutor;
-            self.gasForLpTrader = gasConfig!!.gasForLpTrader;
-            self.gasForLpExecutor = gasConfig!!.gasForLpExecutor;
-            self.minTonsForStorage = gasConfig!!.minTonsForStorage;
-            self.gasForTransferJetton = gasConfig!!.gasForTransferJetton;
+            self.minStorageReserve = gasConfig!!.minStorageReserve;
             self.lpMinExecutionFee = gasConfig!!.lpMinExecutionFee;
             self.perpMinExecutionFee = gasConfig!!.perpMinExecutionFee;
-            self.gasForBurnTlp = gasConfig!!.gasForBurnTlp;
-            self.gasForMintTlp = gasConfig!!.gasForMintTlp;
+
+            self.mintJettonGas = gasConfig!!.mintJettonGas;
+            self.burnJettonGas = gasConfig!!.burnJettonGas;
+            self.transferJettonGas = gasConfig!!.transferJettonGas;
+            self.createPerpOrderGas = gasConfig!!.createPerpOrderGas;
+            self.cancelPerpOrderGas = gasConfig!!.cancelPerpOrderGas;
+            self.executePerpOrderGas = gasConfig!!.executePerpOrderGas;
+            self.createLiquidityOrderGas = gasConfig!!.createLiquidityOrderGas;
+            self.cancelLiquidityOrderGas = gasConfig!!.cancelLiquidityOrderGas;
+            self.executeLiquidityOrderGas = gasConfig!!.executeLiquidityOrderGas;
         }
 
         self.reply("base config updated".asComment());
@@ -283,7 +289,7 @@ contract Pool with Deployable, Resumable, Upgradable {
         if (amount > 0) {
             send(SendParameters{
                 to: to, 
-                value: self.gasForTransferJetton,
+                value: self.transferJettonGas,
                 mode: SendIgnoreErrors, 
                 bounce: false,
                 body: JettonTransfer{
@@ -312,8 +318,8 @@ contract Pool with Deployable, Resumable, Upgradable {
         let ctx: Context = context();
         let tonBalanceBeforeMsg: Int = myBalance() - self.totalExecutionFee + executionFeeDelta - ctx.value;
         tonBalanceBeforeMsg = max(0, tonBalanceBeforeMsg);
-        let storageFee: Int = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
-        let extraValue: Int = self.executors.exists(ctx.sender)? 0 : max(0, tonBalanceBeforeMsg - self.minTonsForStorage);
+        let storageFee: Int = self.minStorageReserve - min(tonBalanceBeforeMsg, self.minStorageReserve);
+        let extraValue: Int = self.executors.exists(ctx.sender)? 0 : max(0, tonBalanceBeforeMsg - self.minStorageReserve);
 
         let refundValue: Int = ctx.value - storageFee - gasConsumption + extraValue -  (executionFeeDelta > 0 ? executionFeeDelta : 0);
 
@@ -341,7 +347,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             self.refundJetton(query_id, jettonDelta, account, account);
             return;
         }
-        if( ctx.value < self.gasForLpTrader + executionFee) {
+        if( ctx.value < self.createLiquidityOrderGas + executionFee) {
             self.refundJetton(query_id, jettonDelta, account, account);
             return;
         }
@@ -368,7 +374,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             trxId: query_id
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForLpTrader, account, executionFee);
+        self.transferEstimatedRemainValue(self.createLiquidityOrderGas, account, executionFee);
     }
 
     /**
@@ -380,7 +386,7 @@ contract Pool with Deployable, Resumable, Upgradable {
     receive(msg: CancelLiquidityOrder) {
         let ctx: Context = context();
          // check gas, incr Liquidity and decr Liquidity all cost transfer gas.
-        require(ctx.value >= self.gasForLpTrader + self.gasForTransferJetton, "gas not enough");
+        require(ctx.value >= self.cancelLiquidityOrderGas + self.transferJettonGas, "gas not enough");
 
         let orderOpt: LiquidityOrder? = self.liquidityOrders.get(msg.orderId);
         require(orderOpt != null, "order not exist");
@@ -412,7 +418,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             trxId: msg.trxId
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForLpTrader + self.gasForTransferJetton, ctx.sender, -order.executionFee);
+        self.transferEstimatedRemainValue(self.cancelLiquidityOrderGas + self.transferJettonGas, ctx.sender, -order.executionFee);
     }
 
     /**
@@ -431,11 +437,11 @@ contract Pool with Deployable, Resumable, Upgradable {
         let order: LiquidityOrder = orderOpt!!;
         require(!order.isPending, "order is pending");
 
-        let estimatedGas: Int = self.gasForLpExecutor;
+        let estimatedGas: Int = self.executeLiquidityOrderGas;
         if(order.isIncrease){
-            estimatedGas += self.gasForMintTlp;
+            estimatedGas += self.mintJettonGas;
         }else{
-            estimatedGas += self.gasForBurnTlp + self.gasForTransferJetton;
+            estimatedGas += self.burnJettonGas + self.transferJettonGas;
         }
         require(ctx.value >= estimatedGas, "gas not enough");
 
@@ -479,7 +485,7 @@ contract Pool with Deployable, Resumable, Upgradable {
 
             send(SendParameters{
                 to: self.tlpJetton, 
-                value: self.gasForMintTlp,
+                value: self.mintJettonGas,
                 bounce: true,
                 body: JettonMint{ origin: ctx.sender, receiver: order.account, amount: tlpDelta, custom_payload: null, forward_ton_amount: 0, forward_payload: emptySlice() }.toCell()
             });
@@ -492,7 +498,7 @@ contract Pool with Deployable, Resumable, Upgradable {
 
             send(SendParameters{
                 to: self.tlpWallet,
-                value: self.gasForBurnTlp,
+                value: self.burnJettonGas,
                 bounce: true,
                 body: JettonBurn{ query_id: msg.trxId, amount: tlpDelta, response_destination: ctx.sender, custom_payload: null }.toCell()
             });
@@ -551,7 +557,7 @@ contract Pool with Deployable, Resumable, Upgradable {
         tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, triggerPrice: Int, tpSize: Int, tpPrice: Int, slSize: Int, slPrice: Int, requestTime: Int) {
         let ctx: Context = context();
 
-        if (ctx.value < executionFee + self.gasForPerpTrader) {
+        if (ctx.value < executionFee + self.createPerpOrderGas) {
             self.refundJetton(query_id, marginDelta, account, account);
             return;
         }
@@ -579,7 +585,7 @@ contract Pool with Deployable, Resumable, Upgradable {
 
         self.totalExecutionFee += executionFee;
 
-        self.transferEstimatedRemainValue(self.gasForPerpTrader, account, executionFee);
+        self.transferEstimatedRemainValue(self.createPerpOrderGas, account, executionFee);
     }
 
     /**
@@ -591,15 +597,15 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.requireNotStopped();
 
         let ctx: Context = context();
-        require(ctx.value - msg.executionFee >= self.gasForPerpTrader, "gas not enough");
         require(msg.executionFee >= self.perpMinExecutionFee, "execution fee not enough");
+        require(ctx.value >= self.createPerpOrderGas + msg.executionFee, "gas not enough");
 
         self.createPerpOrder(msg.trxId, OP_TYPE_PERP_DECREASE_MARKET, ctx.sender, msg.tokenId, msg.isLong,
          msg.marginDelta, msg.sizeDelta, msg.triggerPrice, msg.executionFee, msg.requestTime);
 
         self.totalExecutionFee += msg.executionFee;
 
-        self.transferEstimatedRemainValue(self.gasForPerpTrader, ctx.sender, msg.executionFee);
+        self.transferEstimatedRemainValue(self.createPerpOrderGas, ctx.sender, msg.executionFee);
     }
 
     /**
@@ -621,7 +627,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             executionFeeMultiple += 1;
         }
 
-        require(ctx.value - msg.executionFee >= self.gasForPerpTrader * executionFeeMultiple, "gas not enough");
+        require(ctx.value >= self.createPerpOrderGas * executionFeeMultiple + msg.executionFee, "gas not enough");
         require(msg.executionFee >= self.perpMinExecutionFee * executionFeeMultiple, "execution fee not enough");
 
         if (msg.tpSize > 0 && msg.tpPrice > 0) {
@@ -636,7 +642,7 @@ contract Pool with Deployable, Resumable, Upgradable {
 
         self.totalExecutionFee += msg.executionFee;
 
-        self.transferEstimatedRemainValue(self.gasForPerpTrader * executionFeeMultiple, ctx.sender, msg.executionFee);
+        self.transferEstimatedRemainValue(self.createPerpOrderGas * executionFeeMultiple, ctx.sender, msg.executionFee);
     }
 
     /**
@@ -726,9 +732,9 @@ contract Pool with Deployable, Resumable, Upgradable {
         require(!order.isPending, "order is pending");
 
         let increase: Bool = order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_INCREASE_LIMIT;
-        let gas: Int = self.gasForPerpExecutor;
+        let gas: Int = self.cancelPerpOrderGas;
         if (increase) {
-            gas += self.gasForTransferJetton;
+            gas += self.transferJettonGas;
         }
         require(ctx.value >= gas, "gas not enough");
 
@@ -796,12 +802,7 @@ contract Pool with Deployable, Resumable, Upgradable {
         require(orderOpt != null, "order not exist");
         let order: PerpOrder = orderOpt!!;
 
-        let increase: Bool = order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_INCREASE_LIMIT;
-        if (increase) {
-            require(ctx.value >= self.gasForPerpExecutor, "gas not enough");
-        } else {
-            require(ctx.value >= self.gasForPerpExecutor + self.gasForTransferJetton, "gas not enough");
-        }
+        require(ctx.value >= self.executePerpOrderGas + self.transferJettonGas, "gas not enough");
         require(!order.isPending, "order is pending");
 
         order.isPending = true;
@@ -811,6 +812,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             require(order.triggerAbove ? (msg.price >= order.triggerPrice) : (msg.price <= order.triggerPrice), "not reach trigger price");
         }
         let executionFeeReceiver = msg.executionFeeReceiver == null ? ctx.sender : msg.executionFeeReceiver!!;
+        let increase: Bool = order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_INCREASE_LIMIT;
         if (increase) {
             self.increasePerpPosition(msg.trxId, msg.orderId, order.opType, order.account, order.tokenId, order.isLong, order.marginDelta, order.sizeDelta, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth, executionFeeReceiver);
         } else {
@@ -902,10 +904,11 @@ contract Pool with Deployable, Resumable, Upgradable {
         // trading fee
         let tradingFee: Int = 0;
         let lpTradingFee: Int = 0;
+        let tradoorProfit: Int = 0;
         if (sizeDelta > 0) {
             tradingFee = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
             lpTradingFee = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
-            let tradoorProfit: Int = 0;
+            
             if (lpRealizedPnl > 0) {
                 tradoorProfit = lpRealizedPnl * self.normalPositionShareRate / PERCENTAGE_BASIS_POINT;
             }
@@ -1012,10 +1015,10 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpEntryPriceAfter: globalLPPosition.entryPrice,
             lpFundAfter: self.globalLPFund,
             lpTradingFee: lpTradingFee,
-            lpRealizedPnl: lpRealizedPnl,
+            lpRealizedPnl: lpRealizedPnl - tradoorProfit,
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor * executionFeeMultiple, sender(), -order.executionFee);
+        self.transferEstimatedRemainValue(self.executePerpOrderGas * executionFeeMultiple, sender(), -order.executionFee);
     }
 
     /**
@@ -1092,10 +1095,11 @@ contract Pool with Deployable, Resumable, Upgradable {
 
         let tradingFee: Int = 0;
         let lpTradingFee: Int = 0;
+        let tradoorProfit: Int = 0;
         if (sizeDelta > 0) {
             tradingFee = sizeDelta * tradePrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
             lpTradingFee = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
-            let tradoorProfit: Int = 0;
+            
             if (lpRealizedPnl > 0) {
                 tradoorProfit = lpRealizedPnl * self.normalPositionShareRate / PERCENTAGE_BASIS_POINT;
             }
@@ -1209,10 +1213,10 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpEntryPriceAfter: globalLPPosition.entryPrice,
             lpFundAfter: self.globalLPFund,
             lpTradingFee: lpTradingFee,
-            lpRealizedPnl: lpRealizedPnl
+            lpRealizedPnl: lpRealizedPnl - tradoorProfit,
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor + (payout > 0 ? self.gasForTransferJetton : 0), sender(), -order.executionFee);
+        self.transferEstimatedRemainValue(self.executePerpOrderGas + (payout > 0 ? self.transferJettonGas : 0), sender(), -order.executionFee);
     }
 
     /**
@@ -1223,7 +1227,7 @@ contract Pool with Deployable, Resumable, Upgradable {
      */
     receive(msg: LiquidatePerpPosition) {
         let ctx: Context = context();
-        require(ctx.value >= self.gasForPerpExecutor + self.gasForTransferJetton, "gas not enough");
+        require(ctx.value >= self.executePerpOrderGas + self.transferJettonGas, "gas not enough");
         require(self.executors.exists(ctx.sender), "invalid sender");
 
         let liquidationFeeReceiver: Address = msg.liquidationFeeReceiver != null ? msg.liquidationFeeReceiver!! : ctx.sender;
@@ -1339,7 +1343,10 @@ contract Pool with Deployable, Resumable, Upgradable {
         let tradingFee: Int = sizeDelta * bankruptcyPrice * tokenConfig.tradingFeeRate / (PERCENTAGE_BASIS_POINT * PRICE_DECIMAL_FACTOR);
         let lpTradingFee: Int = tradingFee * tokenConfig.lpTradingFeeRate / PERCENTAGE_BASIS_POINT;
         let protocolTradingFee: Int = tradingFee - lpTradingFee;
-        let tradoorProfit: Int = lpRealizedPnl * self.liquidatedPositionShareRate / PERCENTAGE_BASIS_POINT;
+        let tradoorProfit: Int = 0;
+        if (lpRealizedPnl > 0) {
+            tradoorProfit = lpRealizedPnl * self.liquidatedPositionShareRate / PERCENTAGE_BASIS_POINT;
+        }
         self.protocolTradingFee += protocolTradingFee + tradoorProfit;
         self.globalLPFund += lpRealizedPnl - tradoorProfit + lpTradingFee;
 
@@ -1411,10 +1418,10 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpEntryPriceAfter: globalLPPosition.entryPrice,
             lpFundAfter: self.globalLPFund,
             lpTradingFee: lpTradingFee,
-            lpRealizedPnl: lpRealizedPnl
+            lpRealizedPnl: lpRealizedPnl - tradoorProfit,
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor + (payout > 0 ? self.gasForTransferJetton : 0), sender(), -order.executionFee);
+        self.transferEstimatedRemainValue(self.executePerpOrderGas + (payout > 0 ? self.transferJettonGas : 0), sender(), -order.executionFee);
     }
     
     /**
@@ -1428,7 +1435,7 @@ contract Pool with Deployable, Resumable, Upgradable {
      */
     receive(msg: ADLPerpPosition) {
         let ctx: Context = context();
-        require(ctx.value >= self.gasForPerpExecutor + self.gasForTransferJetton, "gas not enough");
+        require(ctx.value >= self.executePerpOrderGas + self.transferJettonGas, "gas not enough");
         require(self.executors.exists(ctx.sender), "invalid sender");
 
         let orderId: Int = self.perpOrderIndexNext;
@@ -1461,7 +1468,7 @@ contract Pool with Deployable, Resumable, Upgradable {
         require(self.compensator == sender(), "invalid sender");
 
         let ctx: Context = context();
-        require(ctx.value >= self.gasForPerpExecutor, "gas not enough");
+        require(ctx.value >= self.createPerpOrderGas, "gas not enough");
 
         let compensateId: Int = self.compensateIndexNext;
         self.compensateIndexNext += 1;
@@ -1488,7 +1495,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             unlockTime: now() + 1 * DAY
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), 0);
+        self.transferEstimatedRemainValue(self.createPerpOrderGas, sender(), 0);
     }
 
     /**
@@ -1497,7 +1504,7 @@ contract Pool with Deployable, Resumable, Upgradable {
      */
     receive(msg: ExecuteOrCancelCompensate) {
         require(self.compensator == sender(), "invalid sender");
-        require(context().value >= self.gasForPerpExecutor + self.gasForTransferJetton, "gas not enough");
+        require(context().value >= self.executePerpOrderGas + self.transferJettonGas, "gas not enough");
 
         let compensateOpt: Compensate? = self.compensates.get(msg.compensateId);
         require(compensateOpt != null, "compensate not exist");
@@ -1511,7 +1518,7 @@ contract Pool with Deployable, Resumable, Upgradable {
                 trxId: msg.trxId
             }.toCell());
 
-            self.transferEstimatedRemainValue(self.gasForPerpExecutor, sender(), 0);
+            self.transferEstimatedRemainValue(self.cancelPerpOrderGas, sender(), 0);
             return;
         }
 
@@ -1540,7 +1547,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             trxId: compensate.trxId
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.gasForPerpExecutor + (needRefund ? self.gasForTransferJetton : 0), sender(), 0);
+        self.transferEstimatedRemainValue(self.executePerpOrderGas + (needRefund ? self.transferJettonGas : 0), sender(), 0);
     }
 
     /**
@@ -1589,21 +1596,24 @@ contract Pool with Deployable, Resumable, Upgradable {
     get fun configData(): ConfigData {
         return ConfigData {
             orderLockTime: self.orderLockTime,
+            mintJettonGas: self.mintJettonGas,
+            burnJettonGas: self.burnJettonGas,
+            transferJettonGas: self.transferJettonGas,
+            createPerpOrderGas: self.createPerpOrderGas,
+            cancelPerpOrderGas: self.cancelPerpOrderGas,
+            executePerpOrderGas: self.executePerpOrderGas,
+            createLiquidityOrderGas: self.createLiquidityOrderGas,
+            cancelLiquidityOrderGas: self.cancelLiquidityOrderGas,
+            executeLiquidityOrderGas: self.executeLiquidityOrderGas,
+
+            minStorageReserve: self.minStorageReserve,
             lpMinExecutionFee: self.lpMinExecutionFee,
             perpMinExecutionFee: self.perpMinExecutionFee,
-            gasForLpTrader: self.gasForLpTrader,
-            gasForLpExecutor: self.gasForLpExecutor,
-            gasForPerpTrader: self.gasForPerpTrader,
-            gasForPerpExecutor: self.gasForPerpExecutor,
-            minTonsForStorage: self.minTonsForStorage,
-            gasForTransferJetton: self.gasForTransferJetton,
-            gasForBurnTlp: self.gasForBurnTlp,
-            gasForMintTlp: self.gasForMintTlp,
+
             tlpWallet: self.tlpWallet,
-            jettonWallet: self.jettonWallet,
             tlpJetton: self.tlpJetton,
             maxLpNetCap: self.maxLpNetCap,
-        };
+        }
     }
 
     /**

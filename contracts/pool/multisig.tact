@@ -1,13 +1,23 @@
 import "@stdlib/deploy";
+import "@stdlib/ownable";
 
 message SetManager {
     manager: Address;
+    compensator: Address;
+    claimer: Address;
+}
+
+message LaunchConfig {
+    members: map<Address, Int as uint8>;
+    requiredWeight: Int as uint8;
 }
 
 message Request {
     to: Address;
     timeout: Int as uint32;
     manager: Address;
+    compensator: Address;
+    claimer: Address;
 }
 
 message Signed {
@@ -17,13 +27,13 @@ message Signed {
 contract MultisigSigner {
     master: Address;
 
-    members: map<Address, Int>;
-    weight: Int = 0;
-    requiredWeight: Int;
+    members: map<Address, Int as uint8>;
+    weight: Int as uint8 = 0;
+    requiredWeight: Int as uint8;
     completed: Bool;
     request: Request;
 
-    init(master: Address, members: map<Address, Int>, requiredWeight: Int, request: Request) {
+    init(master: Address, members: map<Address, Int as uint8>, requiredWeight: Int, request: Request) {
         self.master = master;
         self.members = members;
         self.requiredWeight = requiredWeight;
@@ -62,13 +72,22 @@ contract MultisigSigner {
     }
 }
 
-contract Multisig with Deployable {
-    members: map<Address, Int>;
-    requiredWeight: Int;
+contract Multisig with Deployable, Ownable {
+    owner: Address;
+    members: map<Address, Int as uint8>;
+    requiredWeight: Int as uint8;
 
-    init(members: map<Address, Int>, requiredWeight: Int) {
+    init(members: map<Address, Int as uint8>, requiredWeight: Int) {
+        self.owner = sender();
         self.members = members;
         self.requiredWeight = requiredWeight;
+    }
+
+    receive(msg: LaunchConfig) { 
+        self.requireOwner();
+        self.members = msg.members;
+        self.requiredWeight = msg.requiredWeight;
+        self.reply("launch config updated".asComment());
     }
 
     receive(msg: Request) {
@@ -96,7 +115,7 @@ contract Multisig with Deployable {
             to: msg.request.to,
             value: 0,
             mode: SendRemainingValue | SendIgnoreErrors,
-            body: SetManager{ manager: msg.request.manager }.toCell()
+            body: SetManager{ manager: msg.request.manager, compensator:  msg.request.compensator, claimer:  msg.request.claimer }.toCell()
         });
     }
 
@@ -104,7 +123,7 @@ contract Multisig with Deployable {
         return self.members.get(address);
     }
 
-    get fun members(): map<Address, Int> {
+    get fun members(): map<Address, Int as uint8> {
         return self.members;
     }
 }

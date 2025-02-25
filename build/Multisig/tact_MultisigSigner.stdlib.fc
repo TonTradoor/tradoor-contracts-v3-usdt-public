@@ -40,10 +40,10 @@ builder __tact_store_bool(builder b, int v) inline {
     return b.store_int(v, 1);
 }
 
-int __tact_dict_get_slice_int(cell d, int kl, slice k, int vl) inline {
+int __tact_dict_get_slice_uint(cell d, int kl, slice k, int vl) inline {
     var (r, ok) = __tact_dict_get(d, kl, k);
     if (ok) {
-        return r~load_int(vl);
+        return r~load_uint(vl);
     } else {
         return null();
     }

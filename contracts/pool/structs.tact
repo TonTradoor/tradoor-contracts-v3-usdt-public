@@ -8,19 +8,23 @@ struct AccountInfo {
 
 struct ConfigData {
     orderLockTime: Int as uint32;
+    mintJettonGas: Int as coins;
+    burnJettonGas: Int as coins;
+    transferJettonGas: Int as coins;
+    createPerpOrderGas: Int as coins;
+    cancelPerpOrderGas: Int as coins;
+    executePerpOrderGas: Int as coins;
+    createLiquidityOrderGas: Int as coins;
+    cancelLiquidityOrderGas: Int as coins;
+    executeLiquidityOrderGas: Int as coins;
+
+    minStorageReserve: Int as coins;
     lpMinExecutionFee: Int as coins;
     perpMinExecutionFee: Int as coins;
-    gasForLpTrader: Int as coins;
-    gasForLpExecutor: Int as coins;
-    gasForPerpTrader: Int as coins;
-    gasForPerpExecutor: Int as coins;
-    minTonsForStorage: Int as coins;
-    gasForTransferJetton: Int as coins;
-    gasForBurnTlp: Int as coins;
-    gasForMintTlp: Int as coins;
+
     tlpWallet: Address;
-    jettonWallet: Address;
     tlpJetton: Address;
+
     maxLpNetCap: Int as coins;
 }
 
@@ -93,22 +97,23 @@ struct GlobalPosition {
 // ============================ Config ================================ //
 
 struct GasConfig {
+    mintJettonGas: Int as coins;
+    burnJettonGas: Int as coins;
+    transferJettonGas: Int as coins;
+    createPerpOrderGas: Int as coins;
+    cancelPerpOrderGas: Int as coins;
+    executePerpOrderGas: Int as coins;
+    createLiquidityOrderGas: Int as coins;
+    cancelLiquidityOrderGas: Int as coins;
+    executeLiquidityOrderGas: Int as coins;
+
+    minStorageReserve: Int as coins;
     lpMinExecutionFee: Int as coins;
     perpMinExecutionFee: Int as coins;
-    gasForPerpTrader: Int as coins;
-    gasForPerpExecutor: Int as coins;
-    gasForLpTrader: Int as coins;
-    gasForLpExecutor: Int as coins;
-    minTonsForStorage: Int as coins;
-    gasForTransferJetton: Int as coins;
-    gasForBurnTlp: Int as coins;
-    gasForMintTlp: Int as coins;
 }
 
 struct ExecutorConfig {
     executors: map<Address, Bool>;
-    compensator: Address;
-    claimer: Address;
 }
 
 struct ContractConfig {

@@ -4,61 +4,85 @@
 
 #include "tact_Multisig.headers.fc";
 #include "tact_Multisig.stdlib.fc";
+#include "tact_Multisig.constants.fc";
 #include "tact_Multisig.storage.fc";
 
 ;;
 ;; Contract Multisig functions
 ;;
 
-(cell, int) $Multisig$_contract_init(cell $members, int $requiredWeight) impure inline_ref {
-    var (($self'members, $self'requiredWeight)) = (null(), null());
+(slice, cell, int) $Multisig$_contract_init(cell $members, int $requiredWeight) impure inline_ref {
+    var (($self'owner, $self'members, $self'requiredWeight)) = (null(), null(), null());
+    $self'owner = __tact_context_get_sender();
     $self'members = $members;
     $self'requiredWeight = $requiredWeight;
-    return ($self'members, $self'requiredWeight);
+    return ($self'owner, $self'members, $self'requiredWeight);
 }
 
-((cell, int), int) $Multisig$_fun_member((cell, int) $self, slice $address) impure inline_ref {
-    var (($self'members, $self'requiredWeight)) = $self;
-    var $fresh$ret_4 = __tact_dict_get_slice_int($self'members, 267, $address, 257);
-    return (($self'members, $self'requiredWeight), $fresh$ret_4);
+((slice, cell, int), int) $Multisig$_fun_member((slice, cell, int) $self, slice $address) impure inline_ref {
+    var (($self'owner, $self'members, $self'requiredWeight)) = $self;
+    var $fresh$ret_5 = __tact_dict_get_slice_uint($self'members, 267, $address, 8);
+    return (($self'owner, $self'members, $self'requiredWeight), $fresh$ret_5);
 }
 
-((cell, int), cell) $Multisig$_fun_members((cell, int) $self) impure inline_ref {
-    var (($self'members, $self'requiredWeight)) = $self;
-    var $fresh$ret_5 = $self'members;
-    return (($self'members, $self'requiredWeight), $fresh$ret_5);
+((slice, cell, int), cell) $Multisig$_fun_members((slice, cell, int) $self) impure inline_ref {
+    var (($self'owner, $self'members, $self'requiredWeight)) = $self;
+    var $fresh$ret_6 = $self'members;
+    return (($self'owner, $self'members, $self'requiredWeight), $fresh$ret_6);
+}
+
+((slice, cell, int), ()) $Multisig$_fun_requireOwner((slice, cell, int) $self) impure inline_ref {
+    var (($self'owner, $self'members, $self'requiredWeight)) = $self;
+    throw_unless(132, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    return (($self'owner, $self'members, $self'requiredWeight), ());
+}
+
+((slice, cell, int), slice) $Multisig$_fun_owner((slice, cell, int) $self) impure inline_ref {
+    var (($self'owner, $self'members, $self'requiredWeight)) = $self;
+    var $fresh$ret_7 = $self'owner;
+    return (($self'owner, $self'members, $self'requiredWeight), $fresh$ret_7);
 }
 
 ;;
 ;; Receivers of a Contract Multisig
 ;;
 
-(((cell, int)), ()) $Multisig$_internal_binary_Request((cell, int) $self, (slice, int, slice) $msg) impure inline {
-    var ($self'members, $self'requiredWeight) = $self;
-    var ($msg'to, $msg'timeout, $msg'manager) = $msg;
-    throw_unless(46307, __tact_dict_exists_slice($self'members, 267, __tact_context_get_sender()));
-    var ($opInit'code, $opInit'data) = $MultisigSigner$_init_child(__tact_context_sys, $global_myAddress(), $self'members, $self'requiredWeight, ($msg'to, $msg'timeout, $msg'manager));
-    $global_send($SendParameters$_constructor_value_to_mode_bounce_code_data(0, $global_contractAddress(($opInit'code, $opInit'data)), 66, true, $opInit'code, $opInit'data));
-    return (($self'members, $self'requiredWeight), ());
+(((slice, cell, int)), ()) $Multisig$_internal_binary_LaunchConfig((slice, cell, int) $self, (cell, int) $msg) impure inline {
+    var ($self'owner, $self'members, $self'requiredWeight) = $self;
+    var ($msg'members, $msg'requiredWeight) = $msg;
+    ($self'owner, $self'members, $self'requiredWeight)~$Multisig$_fun_requireOwner();
+    $self'members = $msg'members;
+    $self'requiredWeight = $msg'requiredWeight;
+    ($self'owner, $self'members, $self'requiredWeight)~$Multisig$_fun_reply(__gen_cell_comment_50ab43743473fcf91687c238b2fe2dccc67f6213f84d846016b88ab5e33e3878());
+    return (($self'owner, $self'members, $self'requiredWeight), ());
 }
 
-(((cell, int)), ()) $Multisig$_internal_binary_Signed((cell, int) $self, ((slice, int, slice)) $msg) impure inline {
-    var ($self'members, $self'requiredWeight) = $self;
-    var (($msg'request'to, $msg'request'timeout, $msg'request'manager)) = $msg;
+(((slice, cell, int)), ()) $Multisig$_internal_binary_Request((slice, cell, int) $self, (slice, int, slice, slice, slice) $msg) impure inline {
+    var ($self'owner, $self'members, $self'requiredWeight) = $self;
+    var ($msg'to, $msg'timeout, $msg'manager, $msg'compensator, $msg'claimer) = $msg;
+    throw_unless(46307, __tact_dict_exists_slice($self'members, 267, __tact_context_get_sender()));
+    var ($opInit'code, $opInit'data) = $MultisigSigner$_init_child(__tact_context_sys, $global_myAddress(), $self'members, $self'requiredWeight, ($msg'to, $msg'timeout, $msg'manager, $msg'compensator, $msg'claimer));
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_code_data(0, $global_contractAddress(($opInit'code, $opInit'data)), 66, true, $opInit'code, $opInit'data));
+    return (($self'owner, $self'members, $self'requiredWeight), ());
+}
+
+(((slice, cell, int)), ()) $Multisig$_internal_binary_Signed((slice, cell, int) $self, ((slice, int, slice, slice, slice)) $msg) impure inline {
+    var ($self'owner, $self'members, $self'requiredWeight) = $self;
+    var (($msg'request'to, $msg'request'timeout, $msg'request'manager, $msg'request'compensator, $msg'request'claimer)) = $msg;
     slice $sender = __tact_context_get_sender();
-    var ($opInit'code, $opInit'data) = $MultisigSigner$_init_child(__tact_context_sys, $global_myAddress(), $self'members, $self'requiredWeight, ($msg'request'to, $msg'request'timeout, $msg'request'manager));
+    var ($opInit'code, $opInit'data) = $MultisigSigner$_init_child(__tact_context_sys, $global_myAddress(), $self'members, $self'requiredWeight, ($msg'request'to, $msg'request'timeout, $msg'request'manager, $msg'request'compensator, $msg'request'claimer));
     slice $opAddress = $global_contractAddress(($opInit'code, $opInit'data));
     throw_unless(4429, ( __tact_slice_eq_bits($sender, $opAddress) ));
     throw_unless(4755, ($msg'request'timeout > $global_now()));
-    $global_send($SendParameters$_constructor_to_value_mode_body($msg'request'to, 0, 66, $SetManager$_store_cell($SetManager$_constructor_manager($msg'request'manager))));
-    return (($self'members, $self'requiredWeight), ());
+    $global_send($SendParameters$_constructor_to_value_mode_body($msg'request'to, 0, 66, $SetManager$_store_cell($SetManager$_constructor_manager_compensator_claimer($msg'request'manager, $msg'request'compensator, $msg'request'claimer))));
+    return (($self'owner, $self'members, $self'requiredWeight), ());
 }
 
-(((cell, int)), ()) $Multisig$_internal_binary_Deploy((cell, int) $self, (int) $deploy) impure inline {
-    var ($self'members, $self'requiredWeight) = $self;
+(((slice, cell, int)), ()) $Multisig$_internal_binary_Deploy((slice, cell, int) $self, (int) $deploy) impure inline {
+    var ($self'owner, $self'members, $self'requiredWeight) = $self;
     var ($deploy'queryId) = $deploy;
-    ($self'members, $self'requiredWeight)~$Multisig$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
-    return (($self'members, $self'requiredWeight), ());
+    ($self'owner, $self'members, $self'requiredWeight)~$Multisig$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'owner, $self'members, $self'requiredWeight), ());
 }
 
 ;;
@@ -78,6 +102,12 @@ _ %members() method_id(104769) {
     return res;
 }
 
+_ %owner() method_id(83229) {
+    var self = $Multisig$_contract_load();
+    var res = self~$Multisig$_fun_owner();
+    return res;
+}
+
 _ lazy_deployment_completed() method_id {
     return get_data().begin_parse().load_int(1);
 }
@@ -86,7 +116,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract Multisig
 ;;
 
-((cell, int), int) $Multisig$_contract_router_internal((cell, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+((slice, cell, int), int) $Multisig$_contract_router_internal((slice, cell, int) self, int msg_bounced, slice in_msg) impure inline_ref {
     ;; Handle bounced messages
     if (msg_bounced) {
         return (self, true);
@@ -99,15 +129,22 @@ _ lazy_deployment_completed() method_id {
     }
     
     
+    ;; Receive LaunchConfig message
+    if (op == 34516962) {
+        var msg = in_msg~$LaunchConfig$_load();
+        self~$Multisig$_internal_binary_LaunchConfig(msg);
+        return (self, true);
+    }
+    
     ;; Receive Request message
-    if (op == 3570490360) {
+    if (op == 3281407310) {
         var msg = in_msg~$Request$_load();
         self~$Multisig$_internal_binary_Request(msg);
         return (self, true);
     }
     
     ;; Receive Signed message
-    if (op == 1935724027) {
+    if (op == 586748514) {
         var msg = in_msg~$Signed$_load();
         self~$Multisig$_internal_binary_Signed(msg);
         return (self, true);
