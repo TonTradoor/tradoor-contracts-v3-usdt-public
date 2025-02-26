@@ -73,6 +73,8 @@ contract Pool with Deployable, Resumable, Upgradable {
 
     multisig: Address = newAddress(0,0);
 
+    publicKey: Int as uint256 = 0;
+
     init(deployId: Int) {
         self.owner = sender();
     }
@@ -811,13 +813,41 @@ contract Pool with Deployable, Resumable, Upgradable {
         if (!(order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_DECREASE_MARKET)){
             require(order.triggerAbove ? (msg.price >= order.triggerPrice) : (msg.price <= order.triggerPrice), "not reach trigger price");
         }
-        let executionFeeReceiver = msg.executionFeeReceiver == null ? ctx.sender : msg.executionFeeReceiver!!;
+        let extraGas: Int = 0;
         let increase: Bool = order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_INCREASE_LIMIT;
         if (increase) {
-            self.increasePerpPosition(msg.trxId, msg.orderId, order.opType, order.account, order.tokenId, order.isLong, order.marginDelta, order.sizeDelta, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth, executionFeeReceiver);
+            self.increasePerpPosition(msg.trxId, msg.orderId, order.opType, order.account, order.tokenId, order.isLong, order.marginDelta, order.sizeDelta, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth);
+            
+            // create tp sl
+            let orderExOpt: PerpOrderEx? = self.perpOrderExs.get(msg.orderId);
+            if (orderExOpt != null) {
+                let orderEx: PerpOrderEx = orderExOpt!!;
+                // create tp/sl
+                if (orderEx.tpSize > 0 && orderEx.tpPrice > 0) {
+                    extraGas += self.createPerpOrderGas;
+                    self.createPerpOrder(msg.trxId, OP_TYPE_PERP_DECREASE_TP, order.account, order.tokenId, order.isLong,
+                    0, orderEx.tpSize, orderEx.tpPrice, orderEx.executionFee, now());
+                }
+
+                if (orderEx.slSize > 0 && orderEx.slPrice > 0) {
+                    extraGas += self.createPerpOrderGas;
+                    self.createPerpOrder(msg.trxId, OP_TYPE_PERP_DECREASE_SL, order.account, order.tokenId, order.isLong, 
+                    0, orderEx.slSize, orderEx.slPrice, orderEx.executionFee, now());
+                }
+                self.perpOrderExs.del(msg.orderId);
+            }
         } else {
-            self.decreasePerpPosition(msg.trxId, msg.orderId, order.opType, order.account, order.tokenId, order.isLong, order.marginDelta, order.sizeDelta, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth, executionFeeReceiver);
-        }    
+            let payout: Int = self.decreasePerpPosition(msg.trxId, msg.orderId, order.opType, order.account, order.tokenId, order.isLong, order.marginDelta, order.sizeDelta, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth);
+            extraGas = payout > 0 ? self.transferJettonGas : 0;
+        }
+        self.perpOrders.del(msg.orderId);
+
+        if (order.executionFee > 0) {
+            let executionFeeReceiver = msg.executionFeeReceiver == null ? ctx.sender : msg.executionFeeReceiver!!;
+            send(SendParameters{ to: executionFeeReceiver, value: order.executionFee, mode: SendIgnoreErrors});
+            self.totalExecutionFee -= order.executionFee;
+        }
+        self.transferEstimatedRemainValue(self.executePerpOrderGas + extraGas, sender(), -order.executionFee);
     }
 
     /**
@@ -834,13 +864,11 @@ contract Pool with Deployable, Resumable, Upgradable {
      * @param avgPremiumRate The average premium rate.
      * @param tradePrice The trade price.
      */
-    fun increasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int, fundingFeeGrowth: Int, rolloverFeeGrowth: Int, executionFeeReceiver: Address) {
+    fun increasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int, fundingFeeGrowth: Int, rolloverFeeGrowth: Int) {
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
         require(tokenConfig.enable, "disabled token");
-
-        let order: PerpOrder = self.perpOrders.get(orderId)!!;
 
         // get position
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
@@ -956,33 +984,6 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
-        let executionFeeMultiple: Int = 1;
-        // create tp sl
-        let orderExOpt: PerpOrderEx? = self.perpOrderExs.get(orderId);
-        if (orderExOpt != null) {
-            let orderEx: PerpOrderEx = orderExOpt!!;
-            // create tp/sl
-            if (orderEx.tpSize > 0 && orderEx.tpPrice > 0) {
-                executionFeeMultiple += 1;
-                self.createPerpOrder(trxId, OP_TYPE_PERP_DECREASE_TP, order.account, order.tokenId, order.isLong,
-                 0, orderEx.tpSize, orderEx.tpPrice, orderEx.executionFee, now());
-            }
-
-            if (orderEx.slSize > 0 && orderEx.slPrice > 0) {
-                executionFeeMultiple += 1;
-                self.createPerpOrder(trxId, OP_TYPE_PERP_DECREASE_SL, order.account, order.tokenId, order.isLong, 
-                0, orderEx.slSize, orderEx.slPrice, orderEx.executionFee, now());
-            }
-            // delete
-            self.perpOrderExs.del(orderId);
-        }
-
-        self.perpOrders.del(orderId);
-        if (order.executionFee > 0) {
-            send(SendParameters{ to: executionFeeReceiver, value: order.executionFee, mode: SendIgnoreErrors});
-            self.totalExecutionFee -= order.executionFee;
-        }
-
         emit(PerpPositionIncreasedEvent{
             trxId: trxId,
             orderId: orderId,
@@ -1017,8 +1018,6 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpTradingFee: lpTradingFee,
             lpRealizedPnl: lpRealizedPnl - tradoorProfit,
         }.toCell());
-
-        self.transferEstimatedRemainValue(self.executePerpOrderGas * executionFeeMultiple, sender(), -order.executionFee);
     }
 
     /**
@@ -1035,14 +1034,11 @@ contract Pool with Deployable, Resumable, Upgradable {
      * @param avgPremiumRate The average premium rate.
      * @param tradePrice The trade price.
      */
-    fun decreasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int,
-        fundingFeeGrowth: Int, rolloverFeeGrowth: Int, executionFeeReceiver: Address) {
+    fun decreasePerpPosition(trxId: Int, orderId: Int, opType: Int, account: Address, tokenId: Int, isLong: Bool, marginDelta: Int, sizeDelta: Int, tradePrice: Int, fundingFeeGrowth: Int, rolloverFeeGrowth: Int): Int {
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
         require(tokenConfig.enable, "disabled token");
-
-        let order: PerpOrder = self.perpOrders.get(orderId)!!;
 
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
         let accountPerpPosition: AccountPerpPosition = accountPerpPositionOpt != null ? accountPerpPositionOpt!! : AccountPerpPosition{
@@ -1172,12 +1168,8 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.perpPositions.set(tokenId, accountPerpPosition);
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
-        self.perpOrders.del(orderId);
-        self.transferJetton(self.jettonWallet, trxId, payout, order.account, sender());
-        if (order.executionFee > 0) {
-            send(SendParameters{ to: executionFeeReceiver, value: order.executionFee, mode: SendIgnoreErrors});
-            self.totalExecutionFee -= order.executionFee;
-        }
+       
+        self.transferJetton(self.jettonWallet, trxId, payout, account, sender());
 
         emit(PerpPositionDecreasedEvent{
             trxId: trxId,
@@ -1216,7 +1208,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpRealizedPnl: lpRealizedPnl - tradoorProfit,
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.executePerpOrderGas + (payout > 0 ? self.transferJettonGas : 0), sender(), -order.executionFee);
+        return payout;
     }
 
     /**
@@ -1234,21 +1226,9 @@ contract Pool with Deployable, Resumable, Upgradable {
 
         let orderId: Int = self.perpOrderIndexNext;
         self.perpOrderIndexNext += 1;
-        self.perpOrders.set(orderId, PerpOrder{
-            opType: OP_TYPE_PERP_LIQUIDATION,
-            tokenId: msg.tokenId,
-            account: msg.account,
-            isLong: msg.isLong,
-            marginDelta: 0,
-            sizeDelta: 0,
-            triggerPrice: 0,
-            triggerAbove: false,
-            executionFee: 0,
-            blockTime: now(),
-            isPending: true
-        });
-
-        self.liquidatePerpPosition( msg.trxId, orderId, msg.account, msg.tokenId, msg.isLong, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth, liquidationFeeReceiver);
+       
+        let payout: Int = self.liquidatePerpPosition( msg.trxId, orderId, msg.account, msg.tokenId, msg.isLong, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth);
+        self.transferEstimatedRemainValue(self.executePerpOrderGas + (payout > 0 ? self.transferJettonGas : 0) , ctx.sender, 0);
     }
 
     /**
@@ -1262,14 +1242,12 @@ contract Pool with Deployable, Resumable, Upgradable {
      * @param avgPremiumRate The average premium rate.
      * @param tradePrice The trade price.
      */
-    fun liquidatePerpPosition(trxId: Int, orderId: Int, account: Address, tokenId: Int, isLong: Bool, tradePrice: Int, fundingFeeGrowth: Int, rolloverFeeGrowth: Int, liquidationFeeReceiver: Address) {
+    fun liquidatePerpPosition(trxId: Int, orderId: Int, account: Address, tokenId: Int, isLong: Bool, tradePrice: Int, fundingFeeGrowth: Int, rolloverFeeGrowth: Int): Int {
         // get token config
         let tokenConfigOpt: TokenConfig? = self.tokenConfigs.get(tokenId);
         require(tokenConfigOpt != null, "invalid token");
         let tokenConfig: TokenConfig = tokenConfigOpt!!;
         require(tokenConfig.enable, "disabled token");
-
-        let order: PerpOrder = self.perpOrders.get(orderId)!!;
 
         // get position
         let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
@@ -1377,13 +1355,8 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.globalPositions.set(tokenId, globalPosition);
         self.globalLPPositions.set(tokenId, globalLPPosition);
 
-        self.perpOrders.del(orderId);
-        self.transferJetton(self.jettonWallet, trxId, payout, liquidationFeeReceiver, sender());
+        self.transferJetton(self.jettonWallet, trxId, payout, sender(), sender());
 
-        if (order.executionFee > 0) {
-            send(SendParameters{ to: liquidationFeeReceiver, value: order.executionFee, mode: SendIgnoreErrors});
-            self.totalExecutionFee -= order.executionFee;
-        }
         emit(PerpPositionDecreasedEvent{
             trxId: trxId,
             orderId: orderId,
@@ -1421,7 +1394,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpRealizedPnl: lpRealizedPnl - tradoorProfit,
         }.toCell());
 
-        self.transferEstimatedRemainValue(self.executePerpOrderGas + (payout > 0 ? self.transferJettonGas : 0), sender(), -order.executionFee);
+        return payout;
     }
     
     /**
@@ -1440,21 +1413,9 @@ contract Pool with Deployable, Resumable, Upgradable {
 
         let orderId: Int = self.perpOrderIndexNext;
         self.perpOrderIndexNext += 1;
-        self.perpOrders.set(orderId, PerpOrder{
-            opType: OP_TYPE_PERP_ADL,
-            tokenId: msg.tokenId,
-            account: msg.account,
-            isLong: msg.isLong,
-            marginDelta: msg.marginDelta,
-            sizeDelta: msg.sizeDelta,
-            triggerPrice: 0,
-            triggerAbove: false,
-            executionFee: 0,
-            blockTime: now(),
-            isPending: true
-        });
 
-        self.decreasePerpPosition( msg.trxId, orderId, OP_TYPE_PERP_ADL, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth, ctx.sender);
+        let payout: Int = self.decreasePerpPosition( msg.trxId, orderId, OP_TYPE_PERP_ADL, msg.account, msg.tokenId, msg.isLong, msg.marginDelta, msg.sizeDelta, msg.price, msg.fundingFeeGrowth, msg.rolloverFeeGrowth);
+        self.transferEstimatedRemainValue(self.executePerpOrderGas + (payout > 0 ? self.transferJettonGas : 0), ctx.sender, 0);
     }
 
     // ======================================================== Compensate ================================================================ //

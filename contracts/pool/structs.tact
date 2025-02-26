@@ -148,6 +148,7 @@ struct PerpOrder {
     sizeDelta: Int as coins;
     triggerPrice: Int as uint128;
     triggerAbove: Bool;
+    callbackRate: Int as uint16 = 0;
     executionFee: Int as coins;
     blockTime: Int as uint32;
     isPending: Bool;

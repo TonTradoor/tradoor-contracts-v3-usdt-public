@@ -1390,11 +1390,11 @@ tuple $LiquidityOrder$_load_opt(cell cl) inline {
 
 ;;
 ;; Type: PerpOrder
-;; TLB: _ opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool executionFee:coins blockTime:uint32 isPending:bool = PerpOrder
+;; TLB: _ opType:uint8 tokenId:uint16 account:address isLong:bool marginDelta:coins sizeDelta:coins triggerPrice:uint128 triggerAbove:bool callbackRate:uint16 executionFee:coins blockTime:uint32 isPending:bool = PerpOrder
 ;;
 
-builder $PerpOrder$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int) v) inline_ref {
-    var (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'executionFee, v'blockTime, v'isPending) = v;
+builder $PerpOrder$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int, int) v) inline_ref {
+    var (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'callbackRate, v'executionFee, v'blockTime, v'isPending) = v;
     build_0 = build_0.store_uint(v'opType, 8);
     build_0 = build_0.store_uint(v'tokenId, 16);
     build_0 = __tact_store_address(build_0, v'account);
@@ -1403,17 +1403,18 @@ builder $PerpOrder$_store(builder build_0, (int, int, slice, int, int, int, int,
     build_0 = build_0.store_coins(v'sizeDelta);
     build_0 = build_0.store_uint(v'triggerPrice, 128);
     build_0 = build_0.store_int(v'triggerAbove, 1);
+    build_0 = build_0.store_uint(v'callbackRate, 16);
     build_0 = build_0.store_coins(v'executionFee);
     build_0 = build_0.store_uint(v'blockTime, 32);
     build_0 = build_0.store_int(v'isPending, 1);
     return build_0;
 }
 
-cell $PerpOrder$_store_cell((int, int, slice, int, int, int, int, int, int, int, int) v) inline {
+cell $PerpOrder$_store_cell((int, int, slice, int, int, int, int, int, int, int, int, int) v) inline {
     return $PerpOrder$_store(begin_cell(), v).end_cell();
 }
 
-(slice, ((int, int, slice, int, int, int, int, int, int, int, int))) $PerpOrder$_load(slice sc_0) inline_ref {
+(slice, ((int, int, slice, int, int, int, int, int, int, int, int, int))) $PerpOrder$_load(slice sc_0) inline_ref {
     var v'opType = sc_0~load_uint(8);
     var v'tokenId = sc_0~load_uint(16);
     var v'account = sc_0~__tact_load_address();
@@ -1422,15 +1423,16 @@ cell $PerpOrder$_store_cell((int, int, slice, int, int, int, int, int, int, int,
     var v'sizeDelta = sc_0~load_coins();
     var v'triggerPrice = sc_0~load_uint(128);
     var v'triggerAbove = sc_0~load_int(1);
+    var v'callbackRate = sc_0~load_uint(16);
     var v'executionFee = sc_0~load_coins();
     var v'blockTime = sc_0~load_uint(32);
     var v'isPending = sc_0~load_int(1);
-    return (sc_0, (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'executionFee, v'blockTime, v'isPending));
+    return (sc_0, (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'callbackRate, v'executionFee, v'blockTime, v'isPending));
 }
 
-tuple $PerpOrder$_as_optional((int, int, slice, int, int, int, int, int, int, int, int) v) inline {
-    var (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'executionFee, v'blockTime, v'isPending) = v;
-    return __tact_tuple_create_11(v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'executionFee, v'blockTime, v'isPending);
+tuple $PerpOrder$_as_optional((int, int, slice, int, int, int, int, int, int, int, int, int) v) inline {
+    var (v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'callbackRate, v'executionFee, v'blockTime, v'isPending) = v;
+    return __tact_tuple_create_12(v'opType, v'tokenId, v'account, v'isLong, v'marginDelta, v'sizeDelta, v'triggerPrice, v'triggerAbove, v'callbackRate, v'executionFee, v'blockTime, v'isPending);
 }
 
 tuple $PerpOrder$_load_opt(cell cl) inline {
@@ -1441,14 +1443,14 @@ tuple $PerpOrder$_load_opt(cell cl) inline {
     return $PerpOrder$_as_optional(sc~$PerpOrder$_load());
 }
 
-((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_not_null(tuple v) inline {
+((int, int, slice, int, int, int, int, int, int, int, int, int)) $PerpOrder$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'opType, int vvv'tokenId, slice vvv'account, int vvv'isLong, int vvv'marginDelta, int vvv'sizeDelta, int vvv'triggerPrice, int vvv'triggerAbove, int vvv'executionFee, int vvv'blockTime, int vvv'isPending) = __tact_tuple_destroy_11(v);
-    return (vvv'opType, vvv'tokenId, vvv'account, vvv'isLong, vvv'marginDelta, vvv'sizeDelta, vvv'triggerPrice, vvv'triggerAbove, vvv'executionFee, vvv'blockTime, vvv'isPending);
+    var (int vvv'opType, int vvv'tokenId, slice vvv'account, int vvv'isLong, int vvv'marginDelta, int vvv'sizeDelta, int vvv'triggerPrice, int vvv'triggerAbove, int vvv'callbackRate, int vvv'executionFee, int vvv'blockTime, int vvv'isPending) = __tact_tuple_destroy_12(v);
+    return (vvv'opType, vvv'tokenId, vvv'account, vvv'isLong, vvv'marginDelta, vvv'sizeDelta, vvv'triggerPrice, vvv'triggerAbove, vvv'callbackRate, vvv'executionFee, vvv'blockTime, vvv'isPending);
 }
 
-((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending(int $opType, int $tokenId, slice $account, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $triggerAbove, int $executionFee, int $blockTime, int $isPending) inline {
-    return ($opType, $tokenId, $account, $isLong, $marginDelta, $sizeDelta, $triggerPrice, $triggerAbove, $executionFee, $blockTime, $isPending);
+((int, int, slice, int, int, int, int, int, int, int, int, int)) $PerpOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending(int $opType, int $tokenId, slice $account, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $triggerAbove, int $executionFee, int $blockTime, int $isPending) inline {
+    return ($opType, $tokenId, $account, $isLong, $marginDelta, $sizeDelta, $triggerPrice, $triggerAbove, 0, $executionFee, $blockTime, $isPending);
 }
 
 ;;
@@ -1504,7 +1506,7 @@ tuple $PerpOrderEx$_load_opt(cell cl) inline {
 
 ;;
 ;; Type: PerpOrderData
-;; TLB: _ perpOrderIndexNext:uint64 perpOrder:Maybe PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,executionFee:coins,blockTime:uint32,isPending:bool} perpOrderEx:Maybe PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins} = PerpOrderData
+;; TLB: _ perpOrderIndexNext:uint64 perpOrder:Maybe PerpOrder{opType:uint8,tokenId:uint16,account:address,isLong:bool,marginDelta:coins,sizeDelta:coins,triggerPrice:uint128,triggerAbove:bool,callbackRate:uint16,executionFee:coins,blockTime:uint32,isPending:bool} perpOrderEx:Maybe PerpOrderEx{tpSize:coins,tpPrice:uint128,slSize:coins,slPrice:uint128,executionFee:coins} = PerpOrderData
 ;;
 
 (int, tuple, tuple) $PerpOrderData$_to_external(((int, tuple, tuple)) v) inline {
@@ -1591,8 +1593,8 @@ tuple $Compensate$_load_opt(cell cl) inline {
 ;; Type: Pool
 ;;
 
-builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) v) inline {
-    var (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig) = v;
+builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) v) inline {
+    var (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig, v'publicKey) = v;
     build_0 = __tact_store_address(build_0, v'owner);
     build_0 = build_0.store_int(v'stopped, 1);
     build_0 = build_0.store_uint(v'orderLockTime, 32);
@@ -1645,6 +1647,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     build_5 = build_5.store_coins(v'globalRolloverFeeGrowth);
     var build_6 = begin_cell();
     build_6 = __tact_store_address(build_6, v'multisig);
+    build_6 = build_6.store_uint(v'publicKey, 256);
     build_5 = store_ref(build_5, build_6.end_cell());
     build_4 = store_ref(build_4, build_5.end_cell());
     build_3 = store_ref(build_3, build_4.end_cell());
@@ -1654,7 +1657,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     return build_0;
 }
 
-(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice))) $Pool$_load(slice sc_0) inline {
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int))) $Pool$_load(slice sc_0) inline {
     var v'owner = sc_0~__tact_load_address();
     var v'stopped = sc_0~load_int(1);
     var v'orderLockTime = sc_0~load_uint(32);
@@ -1707,7 +1710,8 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     var v'globalRolloverFeeGrowth = sc_5~load_coins();
     slice sc_6 = sc_5~load_ref().begin_parse();
     var v'multisig = sc_6~__tact_load_address();
-    return (sc_0, (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig));
+    var v'publicKey = sc_6~load_uint(256);
+    return (sc_0, (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig, v'publicKey));
 }
 
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline {
@@ -1715,7 +1719,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     return (sc_0, (v'deployId));
 }
 
-(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) $Pool$_contract_load() impure inline_ref {
+(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $Pool$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1730,7 +1734,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     }
 }
 
-() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice) v) impure inline {
+() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);
