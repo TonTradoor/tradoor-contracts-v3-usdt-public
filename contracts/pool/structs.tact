@@ -22,6 +22,7 @@ struct ConfigData {
     lpMinExecutionFee: Int as coins;
     perpMinExecutionFee: Int as coins;
 
+    jettonWallet: Address;
     tlpWallet: Address;
     tlpJetton: Address;
 

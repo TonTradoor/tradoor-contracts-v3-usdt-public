@@ -206,7 +206,7 @@ PROGRAM{
   DECLPROC $Pool$_fun_accountInfo
   DECLPROC $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition
   DECLPROC $Pool$_fun_perpPosition
-  DECLPROC $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_tlpWallet_tlpJetton_maxLpNetCap
+  DECLPROC $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_jettonWallet_tlpWallet_tlpJetton_maxLpNetCap
   DECLPROC $Pool$_fun_configData
   DECLPROC $Pool$_fun_tokenConfig
   DECLPROC $PoolStat$_constructor_tlpSupply_totalExecutionFee_protocolTradingFee_globalLPFund_globalLPUnrealizedPnl_globalLpFundingFeeGrowth_globalRolloverFeeGrowth
@@ -4741,7 +4741,7 @@ PROGRAM{
     s3 s3 XCHG2
     $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition INLINECALLDICT
   }>
-  $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_tlpWallet_tlpJetton_maxLpNetCap PROCINLINE:<{
+  $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_jettonWallet_tlpWallet_tlpJetton_maxLpNetCap PROCINLINE:<{
   }>
   $Pool$_fun_configData PROCREF:<{
     44 s() PUSH
@@ -4757,10 +4757,11 @@ PROGRAM{
     38 s() PUSH
     41 s() PUSH
     41 s() PUSH
-    39 s() PUSH
-    41 s() PUSH
-    58 s() PUSH
-    $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_tlpWallet_tlpJetton_maxLpNetCap INLINECALLDICT
+    38 s() PUSH
+    40 s() PUSH
+    42 s() PUSH
+    59 s() PUSH
+    $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_jettonWallet_tlpWallet_tlpJetton_maxLpNetCap INLINECALLDICT
   }>
   $Pool$_fun_tokenConfig PROCREF:<{
     16 PUSHINT
@@ -8177,54 +8178,56 @@ PROGRAM{
   %configData PROC:<{
     $Pool$_contract_load INLINECALLDICT
     $Pool$_fun_configData INLINECALLDICT
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    16 s() POP
-    15 -ROLL
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    17 s() POP
+    s3 16 s() XCHG
+    s15 s14 s13 XCHG3
+    9 4 BLKSWAP
     $ConfigData$_to_external INLINECALLDICT
   }>
   %tokenConfig PROC:<{

@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 25328 bytes
+BOC Size: 25336 bytes
 
 # Types
 Total Types: 63
@@ -178,8 +178,8 @@ TLB: `_ isExecutor:bool isCompensator:bool isClaimer:bool isManager:bool = Accou
 Signature: `AccountInfo{isExecutor:bool,isCompensator:bool,isClaimer:bool,isManager:bool}`
 
 ## ConfigData
-TLB: `_ orderLockTime:uint32 mintJettonGas:coins burnJettonGas:coins transferJettonGas:coins createPerpOrderGas:coins cancelPerpOrderGas:coins executePerpOrderGas:coins createLiquidityOrderGas:coins cancelLiquidityOrderGas:coins executeLiquidityOrderGas:coins minStorageReserve:coins lpMinExecutionFee:coins perpMinExecutionFee:coins tlpWallet:address tlpJetton:address maxLpNetCap:coins = ConfigData`
-Signature: `ConfigData{orderLockTime:uint32,mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins,tlpWallet:address,tlpJetton:address,maxLpNetCap:coins}`
+TLB: `_ orderLockTime:uint32 mintJettonGas:coins burnJettonGas:coins transferJettonGas:coins createPerpOrderGas:coins cancelPerpOrderGas:coins executePerpOrderGas:coins createLiquidityOrderGas:coins cancelLiquidityOrderGas:coins executeLiquidityOrderGas:coins minStorageReserve:coins lpMinExecutionFee:coins perpMinExecutionFee:coins jettonWallet:address tlpWallet:address tlpJetton:address maxLpNetCap:coins = ConfigData`
+Signature: `ConfigData{orderLockTime:uint32,mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins,jettonWallet:address,tlpWallet:address,tlpJetton:address,maxLpNetCap:coins}`
 
 ## TokenConfig
 TLB: `_ name:^string enable:bool maxLeverage:uint16 liquidationFee:coins maintenanceRate:uint32 tradingFeeRate:uint32 lpTradingFeeRate:uint32 = TokenConfig`

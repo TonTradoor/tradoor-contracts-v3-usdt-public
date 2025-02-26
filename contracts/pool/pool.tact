@@ -1571,8 +1571,10 @@ contract Pool with Deployable, Resumable, Upgradable {
             lpMinExecutionFee: self.lpMinExecutionFee,
             perpMinExecutionFee: self.perpMinExecutionFee,
 
+            jettonWallet: self.jettonWallet,
             tlpWallet: self.tlpWallet,
             tlpJetton: self.tlpJetton,
+            
             maxLpNetCap: self.maxLpNetCap,
         }
     }
