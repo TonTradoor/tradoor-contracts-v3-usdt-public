@@ -1,0 +1,218 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline {
+    return ($bounce, $to, $value, $mode, $body, $code, $data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_value_to_mode_bounce_code_data(int $value, slice $to, int $mode, int $bounce, cell $code, cell $data) inline {
+    return ($bounce, $to, $value, $mode, null(), $code, $data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_body(slice $to, int $value, int $mode, cell $body) inline {
+    return (true, $to, $value, $mode, $body, null(), null());
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline {
+    return ($queryId);
+}
+
+;;
+;; Type: SetManager
+;; Header: 0xc8c03c88
+;; TLB: set_manager#c8c03c88 manager:address compensator:address claimer:address = SetManager
+;;
+
+builder $SetManager$_store(builder build_0, (slice, slice, slice) v) inline {
+    var (v'manager, v'compensator, v'claimer) = v;
+    build_0 = store_uint(build_0, 3368041608, 32);
+    build_0 = __tact_store_address(build_0, v'manager);
+    build_0 = __tact_store_address(build_0, v'compensator);
+    build_0 = __tact_store_address(build_0, v'claimer);
+    return build_0;
+}
+
+cell $SetManager$_store_cell((slice, slice, slice) v) inline {
+    return $SetManager$_store(begin_cell(), v).end_cell();
+}
+
+((slice, slice, slice)) $SetManager$_constructor_manager_compensator_claimer(slice $manager, slice $compensator, slice $claimer) inline {
+    return ($manager, $compensator, $claimer);
+}
+
+;;
+;; Type: LaunchConfig
+;; Header: 0x020eafe2
+;; TLB: launch_config#020eafe2 members:dict<address, uint8> requiredWeight:uint8 = LaunchConfig
+;;
+
+(slice, ((cell, int))) $LaunchConfig$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 34516962);
+    var v'members = sc_0~load_dict();
+    var v'requiredWeight = sc_0~load_uint(8);
+    return (sc_0, (v'members, v'requiredWeight));
+}
+
+;;
+;; Type: Request
+;; Header: 0xc3964d4e
+;; TLB: request#c3964d4e to:address timeout:uint32 manager:address compensator:address claimer:address = Request
+;;
+
+builder $Request$_store(builder build_0, (slice, int, slice, slice, slice) v) inline {
+    var (v'to, v'timeout, v'manager, v'compensator, v'claimer) = v;
+    build_0 = store_uint(build_0, 3281407310, 32);
+    build_0 = __tact_store_address(build_0, v'to);
+    build_0 = build_0.store_uint(v'timeout, 32);
+    build_0 = __tact_store_address(build_0, v'manager);
+    build_0 = __tact_store_address(build_0, v'compensator);
+    var build_1 = begin_cell();
+    build_1 = __tact_store_address(build_1, v'claimer);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((slice, int, slice, slice, slice))) $Request$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3281407310);
+    var v'to = sc_0~__tact_load_address();
+    var v'timeout = sc_0~load_uint(32);
+    var v'manager = sc_0~__tact_load_address();
+    var v'compensator = sc_0~__tact_load_address();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'claimer = sc_1~__tact_load_address();
+    return (sc_0, (v'to, v'timeout, v'manager, v'compensator, v'claimer));
+}
+
+;;
+;; Type: Signed
+;; Header: 0x22f91262
+;; TLB: signed#22f91262 request:Request{to:address,timeout:uint32,manager:address,compensator:address,claimer:address} = Signed
+;;
+
+(slice, (((slice, int, slice, slice, slice)))) $Signed$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 586748514);
+    var v'request = sc_0~$Request$_load();
+    return (sc_0, (v'request));
+}
+
+;;
+;; Type: MultisigSigner
+;;
+
+builder $MultisigSigner$init$_store(builder build_0, (slice, cell, int, (slice, int, slice, slice, slice)) v) inline {
+    var (v'master, v'members, v'requiredWeight, (v'request'to, v'request'timeout, v'request'manager, v'request'compensator, v'request'claimer)) = v;
+    build_0 = __tact_store_address(build_0, v'master);
+    build_0 = build_0.store_dict(v'members);
+    build_0 = build_0.store_int(v'requiredWeight, 257);
+    var build_1 = begin_cell();
+    build_1 = $Request$_store(build_1, (v'request'to, v'request'timeout, v'request'manager, v'request'compensator, v'request'claimer));
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(cell, cell) $MultisigSigner$_init_child(cell sys', slice $master, cell $members, int $requiredWeight, (slice, int, slice, slice, slice) $request) inline_ref {
+    slice sc' = sys'.begin_parse();
+    cell source = sc'~load_dict();
+    cell contracts = new_dict();
+    
+    ;; Contract Code: MultisigSigner
+    cell mine = __tact_dict_get_code(source, 37817);
+    contracts = __tact_dict_set_code(contracts, 37817, mine);
+    
+    ;; Build cell
+    builder b = begin_cell();
+    b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
+    b = b.store_int(false, 1);
+    b = $MultisigSigner$init$_store(b, ($master, $members, $requiredWeight, $request));
+    return (mine, b.end_cell());
+}
+
+;;
+;; Type: Multisig
+;;
+
+builder $Multisig$_store(builder build_0, (slice, cell, int) v) inline {
+    var (v'owner, v'members, v'requiredWeight) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_dict(v'members);
+    build_0 = build_0.store_uint(v'requiredWeight, 8);
+    return build_0;
+}
+
+(slice, ((slice, cell, int))) $Multisig$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'members = sc_0~load_dict();
+    var v'requiredWeight = sc_0~load_uint(8);
+    return (sc_0, (v'owner, v'members, v'requiredWeight));
+}
+
+(slice, ((cell, int))) $Multisig$init$_load(slice sc_0) inline {
+    var v'members = sc_0~load_dict();
+    var v'requiredWeight = sc_0~load_int(257);
+    return (sc_0, (v'members, v'requiredWeight));
+}
+
+(slice, cell, int) $Multisig$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$Multisig$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (cell $members, int $requiredWeight) = $sc~$Multisig$init$_load();
+        $sc.end_parse();
+        return $Multisig$_contract_init($members, $requiredWeight);
+    }
+}
+
+() $Multisig$_contract_store((slice, cell, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $Multisig$_store(b, v);
+    set_data(b.end_cell());
+}

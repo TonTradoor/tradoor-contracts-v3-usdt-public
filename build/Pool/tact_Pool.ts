@@ -960,93 +960,131 @@ function dictValueParserJettonUpdateContent(): DictionaryValue<JettonUpdateConte
     }
 }
 
-export type UpdateConfig = {
-    $$type: 'UpdateConfig';
+export type UpdatePoolConfig = {
+    $$type: 'UpdatePoolConfig';
     orderLockTime: bigint;
     maxLpNetCap: bigint;
     lpRolloverFeeRate: bigint;
     liquidatedPositionShareRate: bigint;
     normalPositionShareRate: bigint;
-    gasConfig: GasConfig | null;
-    executorConfig: ExecutorConfig | null;
-    contractConfig: ContractConfig | null;
 }
 
-export function storeUpdateConfig(src: UpdateConfig) {
+export function storeUpdatePoolConfig(src: UpdatePoolConfig) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(3172709201, 32);
+        b_0.storeUint(2788132204, 32);
         b_0.storeUint(src.orderLockTime, 32);
         b_0.storeCoins(src.maxLpNetCap);
         b_0.storeUint(src.lpRolloverFeeRate, 32);
         b_0.storeUint(src.liquidatedPositionShareRate, 32);
         b_0.storeUint(src.normalPositionShareRate, 32);
-        let b_1 = new Builder();
-        if (src.gasConfig !== null && src.gasConfig !== undefined) { b_1.storeBit(true); b_1.store(storeGasConfig(src.gasConfig)); } else { b_1.storeBit(false); }
-        let b_2 = new Builder();
-        if (src.executorConfig !== null && src.executorConfig !== undefined) { b_2.storeBit(true); b_2.store(storeExecutorConfig(src.executorConfig)); } else { b_2.storeBit(false); }
-        let b_3 = new Builder();
-        if (src.contractConfig !== null && src.contractConfig !== undefined) { b_3.storeBit(true); b_3.store(storeContractConfig(src.contractConfig)); } else { b_3.storeBit(false); }
-        b_2.storeRef(b_3.endCell());
-        b_1.storeRef(b_2.endCell());
-        b_0.storeRef(b_1.endCell());
     };
 }
 
-export function loadUpdateConfig(slice: Slice) {
+export function loadUpdatePoolConfig(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 3172709201) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 2788132204) { throw Error('Invalid prefix'); }
     let _orderLockTime = sc_0.loadUintBig(32);
     let _maxLpNetCap = sc_0.loadCoins();
     let _lpRolloverFeeRate = sc_0.loadUintBig(32);
     let _liquidatedPositionShareRate = sc_0.loadUintBig(32);
     let _normalPositionShareRate = sc_0.loadUintBig(32);
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _gasConfig = sc_1.loadBit() ? loadGasConfig(sc_1) : null;
-    let sc_2 = sc_1.loadRef().beginParse();
-    let _executorConfig = sc_2.loadBit() ? loadExecutorConfig(sc_2) : null;
-    let sc_3 = sc_2.loadRef().beginParse();
-    let _contractConfig = sc_3.loadBit() ? loadContractConfig(sc_3) : null;
-    return { $$type: 'UpdateConfig' as const, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, gasConfig: _gasConfig, executorConfig: _executorConfig, contractConfig: _contractConfig };
+    return { $$type: 'UpdatePoolConfig' as const, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate };
 }
 
-function loadTupleUpdateConfig(source: TupleReader) {
+function loadTupleUpdatePoolConfig(source: TupleReader) {
     let _orderLockTime = source.readBigNumber();
     let _maxLpNetCap = source.readBigNumber();
     let _lpRolloverFeeRate = source.readBigNumber();
     let _liquidatedPositionShareRate = source.readBigNumber();
     let _normalPositionShareRate = source.readBigNumber();
-    const _gasConfig_p = source.readTupleOpt();
-    const _gasConfig = _gasConfig_p ? loadTupleGasConfig(_gasConfig_p) : null;
-    const _executorConfig_p = source.readTupleOpt();
-    const _executorConfig = _executorConfig_p ? loadTupleExecutorConfig(_executorConfig_p) : null;
-    const _contractConfig_p = source.readTupleOpt();
-    const _contractConfig = _contractConfig_p ? loadTupleContractConfig(_contractConfig_p) : null;
-    return { $$type: 'UpdateConfig' as const, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, gasConfig: _gasConfig, executorConfig: _executorConfig, contractConfig: _contractConfig };
+    return { $$type: 'UpdatePoolConfig' as const, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate };
 }
 
-function loadGetterTupleUpdateConfig(source: TupleReader) {
+function loadGetterTupleUpdatePoolConfig(source: TupleReader) {
     let _orderLockTime = source.readBigNumber();
     let _maxLpNetCap = source.readBigNumber();
     let _lpRolloverFeeRate = source.readBigNumber();
     let _liquidatedPositionShareRate = source.readBigNumber();
     let _normalPositionShareRate = source.readBigNumber();
-    const _gasConfig_p = source.readTupleOpt();
-    const _gasConfig = _gasConfig_p ? loadTupleGasConfig(_gasConfig_p) : null;
-    const _executorConfig_p = source.readTupleOpt();
-    const _executorConfig = _executorConfig_p ? loadTupleExecutorConfig(_executorConfig_p) : null;
-    const _contractConfig_p = source.readTupleOpt();
-    const _contractConfig = _contractConfig_p ? loadTupleContractConfig(_contractConfig_p) : null;
-    return { $$type: 'UpdateConfig' as const, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, gasConfig: _gasConfig, executorConfig: _executorConfig, contractConfig: _contractConfig };
+    return { $$type: 'UpdatePoolConfig' as const, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate };
 }
 
-function storeTupleUpdateConfig(source: UpdateConfig) {
+function storeTupleUpdatePoolConfig(source: UpdatePoolConfig) {
     let builder = new TupleBuilder();
     builder.writeNumber(source.orderLockTime);
     builder.writeNumber(source.maxLpNetCap);
     builder.writeNumber(source.lpRolloverFeeRate);
     builder.writeNumber(source.liquidatedPositionShareRate);
     builder.writeNumber(source.normalPositionShareRate);
+    return builder.build();
+}
+
+function dictValueParserUpdatePoolConfig(): DictionaryValue<UpdatePoolConfig> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeUpdatePoolConfig(src)).endCell());
+        },
+        parse: (src) => {
+            return loadUpdatePoolConfig(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type UpdateBaseConfig = {
+    $$type: 'UpdateBaseConfig';
+    gasConfig: GasConfig | null;
+    executorConfig: ExecutorConfig | null;
+    contractConfig: ContractConfig | null;
+}
+
+export function storeUpdateBaseConfig(src: UpdateBaseConfig) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(2824223913, 32);
+        let b_1 = new Builder();
+        if (src.gasConfig !== null && src.gasConfig !== undefined) { b_1.storeBit(true); b_1.store(storeGasConfig(src.gasConfig)); } else { b_1.storeBit(false); }
+        if (src.executorConfig !== null && src.executorConfig !== undefined) { b_1.storeBit(true); b_1.store(storeExecutorConfig(src.executorConfig)); } else { b_1.storeBit(false); }
+        let b_2 = new Builder();
+        if (src.contractConfig !== null && src.contractConfig !== undefined) { b_2.storeBit(true); b_2.store(storeContractConfig(src.contractConfig)); } else { b_2.storeBit(false); }
+        b_1.storeRef(b_2.endCell());
+        b_0.storeRef(b_1.endCell());
+    };
+}
+
+export function loadUpdateBaseConfig(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 2824223913) { throw Error('Invalid prefix'); }
+    let sc_1 = sc_0.loadRef().beginParse();
+    let _gasConfig = sc_1.loadBit() ? loadGasConfig(sc_1) : null;
+    let _executorConfig = sc_1.loadBit() ? loadExecutorConfig(sc_1) : null;
+    let sc_2 = sc_1.loadRef().beginParse();
+    let _contractConfig = sc_2.loadBit() ? loadContractConfig(sc_2) : null;
+    return { $$type: 'UpdateBaseConfig' as const, gasConfig: _gasConfig, executorConfig: _executorConfig, contractConfig: _contractConfig };
+}
+
+function loadTupleUpdateBaseConfig(source: TupleReader) {
+    const _gasConfig_p = source.readTupleOpt();
+    const _gasConfig = _gasConfig_p ? loadTupleGasConfig(_gasConfig_p) : null;
+    const _executorConfig_p = source.readTupleOpt();
+    const _executorConfig = _executorConfig_p ? loadTupleExecutorConfig(_executorConfig_p) : null;
+    const _contractConfig_p = source.readTupleOpt();
+    const _contractConfig = _contractConfig_p ? loadTupleContractConfig(_contractConfig_p) : null;
+    return { $$type: 'UpdateBaseConfig' as const, gasConfig: _gasConfig, executorConfig: _executorConfig, contractConfig: _contractConfig };
+}
+
+function loadGetterTupleUpdateBaseConfig(source: TupleReader) {
+    const _gasConfig_p = source.readTupleOpt();
+    const _gasConfig = _gasConfig_p ? loadTupleGasConfig(_gasConfig_p) : null;
+    const _executorConfig_p = source.readTupleOpt();
+    const _executorConfig = _executorConfig_p ? loadTupleExecutorConfig(_executorConfig_p) : null;
+    const _contractConfig_p = source.readTupleOpt();
+    const _contractConfig = _contractConfig_p ? loadTupleContractConfig(_contractConfig_p) : null;
+    return { $$type: 'UpdateBaseConfig' as const, gasConfig: _gasConfig, executorConfig: _executorConfig, contractConfig: _contractConfig };
+}
+
+function storeTupleUpdateBaseConfig(source: UpdateBaseConfig) {
+    let builder = new TupleBuilder();
     if (source.gasConfig !== null && source.gasConfig !== undefined) {
         builder.writeTuple(storeTupleGasConfig(source.gasConfig));
     } else {
@@ -1065,13 +1103,72 @@ function storeTupleUpdateConfig(source: UpdateConfig) {
     return builder.build();
 }
 
-function dictValueParserUpdateConfig(): DictionaryValue<UpdateConfig> {
+function dictValueParserUpdateBaseConfig(): DictionaryValue<UpdateBaseConfig> {
     return {
         serialize: (src, builder) => {
-            builder.storeRef(beginCell().store(storeUpdateConfig(src)).endCell());
+            builder.storeRef(beginCell().store(storeUpdateBaseConfig(src)).endCell());
         },
         parse: (src) => {
-            return loadUpdateConfig(src.loadRef().beginParse());
+            return loadUpdateBaseConfig(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SetManager = {
+    $$type: 'SetManager';
+    manager: Address;
+    compensator: Address;
+    claimer: Address;
+}
+
+export function storeSetManager(src: SetManager) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(3368041608, 32);
+        b_0.storeAddress(src.manager);
+        b_0.storeAddress(src.compensator);
+        b_0.storeAddress(src.claimer);
+    };
+}
+
+export function loadSetManager(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 3368041608) { throw Error('Invalid prefix'); }
+    let _manager = sc_0.loadAddress();
+    let _compensator = sc_0.loadAddress();
+    let _claimer = sc_0.loadAddress();
+    return { $$type: 'SetManager' as const, manager: _manager, compensator: _compensator, claimer: _claimer };
+}
+
+function loadTupleSetManager(source: TupleReader) {
+    let _manager = source.readAddress();
+    let _compensator = source.readAddress();
+    let _claimer = source.readAddress();
+    return { $$type: 'SetManager' as const, manager: _manager, compensator: _compensator, claimer: _claimer };
+}
+
+function loadGetterTupleSetManager(source: TupleReader) {
+    let _manager = source.readAddress();
+    let _compensator = source.readAddress();
+    let _claimer = source.readAddress();
+    return { $$type: 'SetManager' as const, manager: _manager, compensator: _compensator, claimer: _claimer };
+}
+
+function storeTupleSetManager(source: SetManager) {
+    let builder = new TupleBuilder();
+    builder.writeAddress(source.manager);
+    builder.writeAddress(source.compensator);
+    builder.writeAddress(source.claimer);
+    return builder.build();
+}
+
+function dictValueParserSetManager(): DictionaryValue<SetManager> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSetManager(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSetManager(src.loadRef().beginParse());
         }
     }
 }
@@ -3156,6 +3253,7 @@ export type AccountInfo = {
     isExecutor: boolean;
     isCompensator: boolean;
     isClaimer: boolean;
+    isManager: boolean;
 }
 
 export function storeAccountInfo(src: AccountInfo) {
@@ -3164,6 +3262,7 @@ export function storeAccountInfo(src: AccountInfo) {
         b_0.storeBit(src.isExecutor);
         b_0.storeBit(src.isCompensator);
         b_0.storeBit(src.isClaimer);
+        b_0.storeBit(src.isManager);
     };
 }
 
@@ -3172,21 +3271,24 @@ export function loadAccountInfo(slice: Slice) {
     let _isExecutor = sc_0.loadBit();
     let _isCompensator = sc_0.loadBit();
     let _isClaimer = sc_0.loadBit();
-    return { $$type: 'AccountInfo' as const, isExecutor: _isExecutor, isCompensator: _isCompensator, isClaimer: _isClaimer };
+    let _isManager = sc_0.loadBit();
+    return { $$type: 'AccountInfo' as const, isExecutor: _isExecutor, isCompensator: _isCompensator, isClaimer: _isClaimer, isManager: _isManager };
 }
 
 function loadTupleAccountInfo(source: TupleReader) {
     let _isExecutor = source.readBoolean();
     let _isCompensator = source.readBoolean();
     let _isClaimer = source.readBoolean();
-    return { $$type: 'AccountInfo' as const, isExecutor: _isExecutor, isCompensator: _isCompensator, isClaimer: _isClaimer };
+    let _isManager = source.readBoolean();
+    return { $$type: 'AccountInfo' as const, isExecutor: _isExecutor, isCompensator: _isCompensator, isClaimer: _isClaimer, isManager: _isManager };
 }
 
 function loadGetterTupleAccountInfo(source: TupleReader) {
     let _isExecutor = source.readBoolean();
     let _isCompensator = source.readBoolean();
     let _isClaimer = source.readBoolean();
-    return { $$type: 'AccountInfo' as const, isExecutor: _isExecutor, isCompensator: _isCompensator, isClaimer: _isClaimer };
+    let _isManager = source.readBoolean();
+    return { $$type: 'AccountInfo' as const, isExecutor: _isExecutor, isCompensator: _isCompensator, isClaimer: _isClaimer, isManager: _isManager };
 }
 
 function storeTupleAccountInfo(source: AccountInfo) {
@@ -3194,6 +3296,7 @@ function storeTupleAccountInfo(source: AccountInfo) {
     builder.writeBoolean(source.isExecutor);
     builder.writeBoolean(source.isCompensator);
     builder.writeBoolean(source.isClaimer);
+    builder.writeBoolean(source.isManager);
     return builder.build();
 }
 
@@ -3211,18 +3314,20 @@ function dictValueParserAccountInfo(): DictionaryValue<AccountInfo> {
 export type ConfigData = {
     $$type: 'ConfigData';
     orderLockTime: bigint;
+    mintJettonGas: bigint;
+    burnJettonGas: bigint;
+    transferJettonGas: bigint;
+    createPerpOrderGas: bigint;
+    cancelPerpOrderGas: bigint;
+    executePerpOrderGas: bigint;
+    createLiquidityOrderGas: bigint;
+    cancelLiquidityOrderGas: bigint;
+    executeLiquidityOrderGas: bigint;
+    minStorageReserve: bigint;
     lpMinExecutionFee: bigint;
     perpMinExecutionFee: bigint;
-    gasForLpTrader: bigint;
-    gasForLpExecutor: bigint;
-    gasForPerpTrader: bigint;
-    gasForPerpExecutor: bigint;
-    minTonsForStorage: bigint;
-    gasForTransferJetton: bigint;
-    gasForBurnTlp: bigint;
-    gasForMintTlp: bigint;
-    tlpWallet: Address;
     jettonWallet: Address;
+    tlpWallet: Address;
     tlpJetton: Address;
     maxLpNetCap: bigint;
 }
@@ -3231,20 +3336,22 @@ export function storeConfigData(src: ConfigData) {
     return (builder: Builder) => {
         let b_0 = builder;
         b_0.storeUint(src.orderLockTime, 32);
-        b_0.storeCoins(src.lpMinExecutionFee);
-        b_0.storeCoins(src.perpMinExecutionFee);
-        b_0.storeCoins(src.gasForLpTrader);
-        b_0.storeCoins(src.gasForLpExecutor);
-        b_0.storeCoins(src.gasForPerpTrader);
-        b_0.storeCoins(src.gasForPerpExecutor);
-        b_0.storeCoins(src.minTonsForStorage);
+        b_0.storeCoins(src.mintJettonGas);
+        b_0.storeCoins(src.burnJettonGas);
+        b_0.storeCoins(src.transferJettonGas);
+        b_0.storeCoins(src.createPerpOrderGas);
+        b_0.storeCoins(src.cancelPerpOrderGas);
+        b_0.storeCoins(src.executePerpOrderGas);
+        b_0.storeCoins(src.createLiquidityOrderGas);
         let b_1 = new Builder();
-        b_1.storeCoins(src.gasForTransferJetton);
-        b_1.storeCoins(src.gasForBurnTlp);
-        b_1.storeCoins(src.gasForMintTlp);
-        b_1.storeAddress(src.tlpWallet);
+        b_1.storeCoins(src.cancelLiquidityOrderGas);
+        b_1.storeCoins(src.executeLiquidityOrderGas);
+        b_1.storeCoins(src.minStorageReserve);
+        b_1.storeCoins(src.lpMinExecutionFee);
+        b_1.storeCoins(src.perpMinExecutionFee);
         b_1.storeAddress(src.jettonWallet);
         let b_2 = new Builder();
+        b_2.storeAddress(src.tlpWallet);
         b_2.storeAddress(src.tlpJetton);
         b_2.storeCoins(src.maxLpNetCap);
         b_1.storeRef(b_2.endCell());
@@ -3255,78 +3362,87 @@ export function storeConfigData(src: ConfigData) {
 export function loadConfigData(slice: Slice) {
     let sc_0 = slice;
     let _orderLockTime = sc_0.loadUintBig(32);
-    let _lpMinExecutionFee = sc_0.loadCoins();
-    let _perpMinExecutionFee = sc_0.loadCoins();
-    let _gasForLpTrader = sc_0.loadCoins();
-    let _gasForLpExecutor = sc_0.loadCoins();
-    let _gasForPerpTrader = sc_0.loadCoins();
-    let _gasForPerpExecutor = sc_0.loadCoins();
-    let _minTonsForStorage = sc_0.loadCoins();
+    let _mintJettonGas = sc_0.loadCoins();
+    let _burnJettonGas = sc_0.loadCoins();
+    let _transferJettonGas = sc_0.loadCoins();
+    let _createPerpOrderGas = sc_0.loadCoins();
+    let _cancelPerpOrderGas = sc_0.loadCoins();
+    let _executePerpOrderGas = sc_0.loadCoins();
+    let _createLiquidityOrderGas = sc_0.loadCoins();
     let sc_1 = sc_0.loadRef().beginParse();
-    let _gasForTransferJetton = sc_1.loadCoins();
-    let _gasForBurnTlp = sc_1.loadCoins();
-    let _gasForMintTlp = sc_1.loadCoins();
-    let _tlpWallet = sc_1.loadAddress();
+    let _cancelLiquidityOrderGas = sc_1.loadCoins();
+    let _executeLiquidityOrderGas = sc_1.loadCoins();
+    let _minStorageReserve = sc_1.loadCoins();
+    let _lpMinExecutionFee = sc_1.loadCoins();
+    let _perpMinExecutionFee = sc_1.loadCoins();
     let _jettonWallet = sc_1.loadAddress();
     let sc_2 = sc_1.loadRef().beginParse();
+    let _tlpWallet = sc_2.loadAddress();
     let _tlpJetton = sc_2.loadAddress();
     let _maxLpNetCap = sc_2.loadCoins();
-    return { $$type: 'ConfigData' as const, orderLockTime: _orderLockTime, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, tlpJetton: _tlpJetton, maxLpNetCap: _maxLpNetCap };
+    return { $$type: 'ConfigData' as const, orderLockTime: _orderLockTime, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, minStorageReserve: _minStorageReserve, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, jettonWallet: _jettonWallet, tlpWallet: _tlpWallet, tlpJetton: _tlpJetton, maxLpNetCap: _maxLpNetCap };
 }
 
 function loadTupleConfigData(source: TupleReader) {
     let _orderLockTime = source.readBigNumber();
+    let _mintJettonGas = source.readBigNumber();
+    let _burnJettonGas = source.readBigNumber();
+    let _transferJettonGas = source.readBigNumber();
+    let _createPerpOrderGas = source.readBigNumber();
+    let _cancelPerpOrderGas = source.readBigNumber();
+    let _executePerpOrderGas = source.readBigNumber();
+    let _createLiquidityOrderGas = source.readBigNumber();
+    let _cancelLiquidityOrderGas = source.readBigNumber();
+    let _executeLiquidityOrderGas = source.readBigNumber();
+    let _minStorageReserve = source.readBigNumber();
     let _lpMinExecutionFee = source.readBigNumber();
     let _perpMinExecutionFee = source.readBigNumber();
-    let _gasForLpTrader = source.readBigNumber();
-    let _gasForLpExecutor = source.readBigNumber();
-    let _gasForPerpTrader = source.readBigNumber();
-    let _gasForPerpExecutor = source.readBigNumber();
-    let _minTonsForStorage = source.readBigNumber();
-    let _gasForTransferJetton = source.readBigNumber();
-    let _gasForBurnTlp = source.readBigNumber();
-    let _gasForMintTlp = source.readBigNumber();
-    let _tlpWallet = source.readAddress();
     let _jettonWallet = source.readAddress();
+    source = source.readTuple();
+    let _tlpWallet = source.readAddress();
     let _tlpJetton = source.readAddress();
     let _maxLpNetCap = source.readBigNumber();
-    return { $$type: 'ConfigData' as const, orderLockTime: _orderLockTime, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, tlpJetton: _tlpJetton, maxLpNetCap: _maxLpNetCap };
+    return { $$type: 'ConfigData' as const, orderLockTime: _orderLockTime, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, minStorageReserve: _minStorageReserve, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, jettonWallet: _jettonWallet, tlpWallet: _tlpWallet, tlpJetton: _tlpJetton, maxLpNetCap: _maxLpNetCap };
 }
 
 function loadGetterTupleConfigData(source: TupleReader) {
     let _orderLockTime = source.readBigNumber();
+    let _mintJettonGas = source.readBigNumber();
+    let _burnJettonGas = source.readBigNumber();
+    let _transferJettonGas = source.readBigNumber();
+    let _createPerpOrderGas = source.readBigNumber();
+    let _cancelPerpOrderGas = source.readBigNumber();
+    let _executePerpOrderGas = source.readBigNumber();
+    let _createLiquidityOrderGas = source.readBigNumber();
+    let _cancelLiquidityOrderGas = source.readBigNumber();
+    let _executeLiquidityOrderGas = source.readBigNumber();
+    let _minStorageReserve = source.readBigNumber();
     let _lpMinExecutionFee = source.readBigNumber();
     let _perpMinExecutionFee = source.readBigNumber();
-    let _gasForLpTrader = source.readBigNumber();
-    let _gasForLpExecutor = source.readBigNumber();
-    let _gasForPerpTrader = source.readBigNumber();
-    let _gasForPerpExecutor = source.readBigNumber();
-    let _minTonsForStorage = source.readBigNumber();
-    let _gasForTransferJetton = source.readBigNumber();
-    let _gasForBurnTlp = source.readBigNumber();
-    let _gasForMintTlp = source.readBigNumber();
-    let _tlpWallet = source.readAddress();
     let _jettonWallet = source.readAddress();
+    let _tlpWallet = source.readAddress();
     let _tlpJetton = source.readAddress();
     let _maxLpNetCap = source.readBigNumber();
-    return { $$type: 'ConfigData' as const, orderLockTime: _orderLockTime, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, tlpJetton: _tlpJetton, maxLpNetCap: _maxLpNetCap };
+    return { $$type: 'ConfigData' as const, orderLockTime: _orderLockTime, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, minStorageReserve: _minStorageReserve, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, jettonWallet: _jettonWallet, tlpWallet: _tlpWallet, tlpJetton: _tlpJetton, maxLpNetCap: _maxLpNetCap };
 }
 
 function storeTupleConfigData(source: ConfigData) {
     let builder = new TupleBuilder();
     builder.writeNumber(source.orderLockTime);
+    builder.writeNumber(source.mintJettonGas);
+    builder.writeNumber(source.burnJettonGas);
+    builder.writeNumber(source.transferJettonGas);
+    builder.writeNumber(source.createPerpOrderGas);
+    builder.writeNumber(source.cancelPerpOrderGas);
+    builder.writeNumber(source.executePerpOrderGas);
+    builder.writeNumber(source.createLiquidityOrderGas);
+    builder.writeNumber(source.cancelLiquidityOrderGas);
+    builder.writeNumber(source.executeLiquidityOrderGas);
+    builder.writeNumber(source.minStorageReserve);
     builder.writeNumber(source.lpMinExecutionFee);
     builder.writeNumber(source.perpMinExecutionFee);
-    builder.writeNumber(source.gasForLpTrader);
-    builder.writeNumber(source.gasForLpExecutor);
-    builder.writeNumber(source.gasForPerpTrader);
-    builder.writeNumber(source.gasForPerpExecutor);
-    builder.writeNumber(source.minTonsForStorage);
-    builder.writeNumber(source.gasForTransferJetton);
-    builder.writeNumber(source.gasForBurnTlp);
-    builder.writeNumber(source.gasForMintTlp);
-    builder.writeAddress(source.tlpWallet);
     builder.writeAddress(source.jettonWallet);
+    builder.writeAddress(source.tlpWallet);
     builder.writeAddress(source.tlpJetton);
     builder.writeNumber(source.maxLpNetCap);
     return builder.build();
@@ -3897,92 +4013,104 @@ function dictValueParserGlobalPosition(): DictionaryValue<GlobalPosition> {
 
 export type GasConfig = {
     $$type: 'GasConfig';
+    mintJettonGas: bigint;
+    burnJettonGas: bigint;
+    transferJettonGas: bigint;
+    createPerpOrderGas: bigint;
+    cancelPerpOrderGas: bigint;
+    executePerpOrderGas: bigint;
+    createLiquidityOrderGas: bigint;
+    cancelLiquidityOrderGas: bigint;
+    executeLiquidityOrderGas: bigint;
+    minStorageReserve: bigint;
     lpMinExecutionFee: bigint;
     perpMinExecutionFee: bigint;
-    gasForPerpTrader: bigint;
-    gasForPerpExecutor: bigint;
-    gasForLpTrader: bigint;
-    gasForLpExecutor: bigint;
-    minTonsForStorage: bigint;
-    gasForTransferJetton: bigint;
-    gasForBurnTlp: bigint;
-    gasForMintTlp: bigint;
 }
 
 export function storeGasConfig(src: GasConfig) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeCoins(src.lpMinExecutionFee);
-        b_0.storeCoins(src.perpMinExecutionFee);
-        b_0.storeCoins(src.gasForPerpTrader);
-        b_0.storeCoins(src.gasForPerpExecutor);
-        b_0.storeCoins(src.gasForLpTrader);
-        b_0.storeCoins(src.gasForLpExecutor);
-        b_0.storeCoins(src.minTonsForStorage);
-        b_0.storeCoins(src.gasForTransferJetton);
+        b_0.storeCoins(src.mintJettonGas);
+        b_0.storeCoins(src.burnJettonGas);
+        b_0.storeCoins(src.transferJettonGas);
+        b_0.storeCoins(src.createPerpOrderGas);
+        b_0.storeCoins(src.cancelPerpOrderGas);
+        b_0.storeCoins(src.executePerpOrderGas);
+        b_0.storeCoins(src.createLiquidityOrderGas);
+        b_0.storeCoins(src.cancelLiquidityOrderGas);
         let b_1 = new Builder();
-        b_1.storeCoins(src.gasForBurnTlp);
-        b_1.storeCoins(src.gasForMintTlp);
+        b_1.storeCoins(src.executeLiquidityOrderGas);
+        b_1.storeCoins(src.minStorageReserve);
+        b_1.storeCoins(src.lpMinExecutionFee);
+        b_1.storeCoins(src.perpMinExecutionFee);
         b_0.storeRef(b_1.endCell());
     };
 }
 
 export function loadGasConfig(slice: Slice) {
     let sc_0 = slice;
-    let _lpMinExecutionFee = sc_0.loadCoins();
-    let _perpMinExecutionFee = sc_0.loadCoins();
-    let _gasForPerpTrader = sc_0.loadCoins();
-    let _gasForPerpExecutor = sc_0.loadCoins();
-    let _gasForLpTrader = sc_0.loadCoins();
-    let _gasForLpExecutor = sc_0.loadCoins();
-    let _minTonsForStorage = sc_0.loadCoins();
-    let _gasForTransferJetton = sc_0.loadCoins();
+    let _mintJettonGas = sc_0.loadCoins();
+    let _burnJettonGas = sc_0.loadCoins();
+    let _transferJettonGas = sc_0.loadCoins();
+    let _createPerpOrderGas = sc_0.loadCoins();
+    let _cancelPerpOrderGas = sc_0.loadCoins();
+    let _executePerpOrderGas = sc_0.loadCoins();
+    let _createLiquidityOrderGas = sc_0.loadCoins();
+    let _cancelLiquidityOrderGas = sc_0.loadCoins();
     let sc_1 = sc_0.loadRef().beginParse();
-    let _gasForBurnTlp = sc_1.loadCoins();
-    let _gasForMintTlp = sc_1.loadCoins();
-    return { $$type: 'GasConfig' as const, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp };
+    let _executeLiquidityOrderGas = sc_1.loadCoins();
+    let _minStorageReserve = sc_1.loadCoins();
+    let _lpMinExecutionFee = sc_1.loadCoins();
+    let _perpMinExecutionFee = sc_1.loadCoins();
+    return { $$type: 'GasConfig' as const, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, minStorageReserve: _minStorageReserve, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee };
 }
 
 function loadTupleGasConfig(source: TupleReader) {
+    let _mintJettonGas = source.readBigNumber();
+    let _burnJettonGas = source.readBigNumber();
+    let _transferJettonGas = source.readBigNumber();
+    let _createPerpOrderGas = source.readBigNumber();
+    let _cancelPerpOrderGas = source.readBigNumber();
+    let _executePerpOrderGas = source.readBigNumber();
+    let _createLiquidityOrderGas = source.readBigNumber();
+    let _cancelLiquidityOrderGas = source.readBigNumber();
+    let _executeLiquidityOrderGas = source.readBigNumber();
+    let _minStorageReserve = source.readBigNumber();
     let _lpMinExecutionFee = source.readBigNumber();
     let _perpMinExecutionFee = source.readBigNumber();
-    let _gasForPerpTrader = source.readBigNumber();
-    let _gasForPerpExecutor = source.readBigNumber();
-    let _gasForLpTrader = source.readBigNumber();
-    let _gasForLpExecutor = source.readBigNumber();
-    let _minTonsForStorage = source.readBigNumber();
-    let _gasForTransferJetton = source.readBigNumber();
-    let _gasForBurnTlp = source.readBigNumber();
-    let _gasForMintTlp = source.readBigNumber();
-    return { $$type: 'GasConfig' as const, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp };
+    return { $$type: 'GasConfig' as const, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, minStorageReserve: _minStorageReserve, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee };
 }
 
 function loadGetterTupleGasConfig(source: TupleReader) {
+    let _mintJettonGas = source.readBigNumber();
+    let _burnJettonGas = source.readBigNumber();
+    let _transferJettonGas = source.readBigNumber();
+    let _createPerpOrderGas = source.readBigNumber();
+    let _cancelPerpOrderGas = source.readBigNumber();
+    let _executePerpOrderGas = source.readBigNumber();
+    let _createLiquidityOrderGas = source.readBigNumber();
+    let _cancelLiquidityOrderGas = source.readBigNumber();
+    let _executeLiquidityOrderGas = source.readBigNumber();
+    let _minStorageReserve = source.readBigNumber();
     let _lpMinExecutionFee = source.readBigNumber();
     let _perpMinExecutionFee = source.readBigNumber();
-    let _gasForPerpTrader = source.readBigNumber();
-    let _gasForPerpExecutor = source.readBigNumber();
-    let _gasForLpTrader = source.readBigNumber();
-    let _gasForLpExecutor = source.readBigNumber();
-    let _minTonsForStorage = source.readBigNumber();
-    let _gasForTransferJetton = source.readBigNumber();
-    let _gasForBurnTlp = source.readBigNumber();
-    let _gasForMintTlp = source.readBigNumber();
-    return { $$type: 'GasConfig' as const, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, minTonsForStorage: _minTonsForStorage, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp };
+    return { $$type: 'GasConfig' as const, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, minStorageReserve: _minStorageReserve, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee };
 }
 
 function storeTupleGasConfig(source: GasConfig) {
     let builder = new TupleBuilder();
+    builder.writeNumber(source.mintJettonGas);
+    builder.writeNumber(source.burnJettonGas);
+    builder.writeNumber(source.transferJettonGas);
+    builder.writeNumber(source.createPerpOrderGas);
+    builder.writeNumber(source.cancelPerpOrderGas);
+    builder.writeNumber(source.executePerpOrderGas);
+    builder.writeNumber(source.createLiquidityOrderGas);
+    builder.writeNumber(source.cancelLiquidityOrderGas);
+    builder.writeNumber(source.executeLiquidityOrderGas);
+    builder.writeNumber(source.minStorageReserve);
     builder.writeNumber(source.lpMinExecutionFee);
     builder.writeNumber(source.perpMinExecutionFee);
-    builder.writeNumber(source.gasForPerpTrader);
-    builder.writeNumber(source.gasForPerpExecutor);
-    builder.writeNumber(source.gasForLpTrader);
-    builder.writeNumber(source.gasForLpExecutor);
-    builder.writeNumber(source.minTonsForStorage);
-    builder.writeNumber(source.gasForTransferJetton);
-    builder.writeNumber(source.gasForBurnTlp);
-    builder.writeNumber(source.gasForMintTlp);
     return builder.build();
 }
 
@@ -4000,46 +4128,34 @@ function dictValueParserGasConfig(): DictionaryValue<GasConfig> {
 export type ExecutorConfig = {
     $$type: 'ExecutorConfig';
     executors: Dictionary<Address, boolean>;
-    compensator: Address;
-    claimer: Address;
 }
 
 export function storeExecutorConfig(src: ExecutorConfig) {
     return (builder: Builder) => {
         let b_0 = builder;
         b_0.storeDict(src.executors, Dictionary.Keys.Address(), Dictionary.Values.Bool());
-        b_0.storeAddress(src.compensator);
-        b_0.storeAddress(src.claimer);
     };
 }
 
 export function loadExecutorConfig(slice: Slice) {
     let sc_0 = slice;
     let _executors = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.Bool(), sc_0);
-    let _compensator = sc_0.loadAddress();
-    let _claimer = sc_0.loadAddress();
-    return { $$type: 'ExecutorConfig' as const, executors: _executors, compensator: _compensator, claimer: _claimer };
+    return { $$type: 'ExecutorConfig' as const, executors: _executors };
 }
 
 function loadTupleExecutorConfig(source: TupleReader) {
     let _executors = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Bool(), source.readCellOpt());
-    let _compensator = source.readAddress();
-    let _claimer = source.readAddress();
-    return { $$type: 'ExecutorConfig' as const, executors: _executors, compensator: _compensator, claimer: _claimer };
+    return { $$type: 'ExecutorConfig' as const, executors: _executors };
 }
 
 function loadGetterTupleExecutorConfig(source: TupleReader) {
     let _executors = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Bool(), source.readCellOpt());
-    let _compensator = source.readAddress();
-    let _claimer = source.readAddress();
-    return { $$type: 'ExecutorConfig' as const, executors: _executors, compensator: _compensator, claimer: _claimer };
+    return { $$type: 'ExecutorConfig' as const, executors: _executors };
 }
 
 function storeTupleExecutorConfig(source: ExecutorConfig) {
     let builder = new TupleBuilder();
     builder.writeCell(source.executors.size > 0 ? beginCell().storeDictDirect(source.executors, Dictionary.Keys.Address(), Dictionary.Values.Bool()).endCell() : null);
-    builder.writeAddress(source.compensator);
-    builder.writeAddress(source.claimer);
     return builder.build();
 }
 
@@ -4056,6 +4172,7 @@ function dictValueParserExecutorConfig(): DictionaryValue<ExecutorConfig> {
 
 export type ContractConfig = {
     $$type: 'ContractConfig';
+    multisig: Address;
     tlpJetton: Address;
     tlpWallet: Address;
     jettonWallet: Address;
@@ -4064,36 +4181,44 @@ export type ContractConfig = {
 export function storeContractConfig(src: ContractConfig) {
     return (builder: Builder) => {
         let b_0 = builder;
+        b_0.storeAddress(src.multisig);
         b_0.storeAddress(src.tlpJetton);
         b_0.storeAddress(src.tlpWallet);
-        b_0.storeAddress(src.jettonWallet);
+        let b_1 = new Builder();
+        b_1.storeAddress(src.jettonWallet);
+        b_0.storeRef(b_1.endCell());
     };
 }
 
 export function loadContractConfig(slice: Slice) {
     let sc_0 = slice;
+    let _multisig = sc_0.loadAddress();
     let _tlpJetton = sc_0.loadAddress();
     let _tlpWallet = sc_0.loadAddress();
-    let _jettonWallet = sc_0.loadAddress();
-    return { $$type: 'ContractConfig' as const, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet };
+    let sc_1 = sc_0.loadRef().beginParse();
+    let _jettonWallet = sc_1.loadAddress();
+    return { $$type: 'ContractConfig' as const, multisig: _multisig, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet };
 }
 
 function loadTupleContractConfig(source: TupleReader) {
+    let _multisig = source.readAddress();
     let _tlpJetton = source.readAddress();
     let _tlpWallet = source.readAddress();
     let _jettonWallet = source.readAddress();
-    return { $$type: 'ContractConfig' as const, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet };
+    return { $$type: 'ContractConfig' as const, multisig: _multisig, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet };
 }
 
 function loadGetterTupleContractConfig(source: TupleReader) {
+    let _multisig = source.readAddress();
     let _tlpJetton = source.readAddress();
     let _tlpWallet = source.readAddress();
     let _jettonWallet = source.readAddress();
-    return { $$type: 'ContractConfig' as const, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet };
+    return { $$type: 'ContractConfig' as const, multisig: _multisig, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet };
 }
 
 function storeTupleContractConfig(source: ContractConfig) {
     let builder = new TupleBuilder();
+    builder.writeAddress(source.multisig);
     builder.writeAddress(source.tlpJetton);
     builder.writeAddress(source.tlpWallet);
     builder.writeAddress(source.jettonWallet);
@@ -4253,6 +4378,7 @@ export type PerpOrder = {
     sizeDelta: bigint;
     triggerPrice: bigint;
     triggerAbove: boolean;
+    callbackRate: bigint;
     executionFee: bigint;
     blockTime: bigint;
     isPending: boolean;
@@ -4269,6 +4395,7 @@ export function storePerpOrder(src: PerpOrder) {
         b_0.storeCoins(src.sizeDelta);
         b_0.storeUint(src.triggerPrice, 128);
         b_0.storeBit(src.triggerAbove);
+        b_0.storeUint(src.callbackRate, 16);
         b_0.storeCoins(src.executionFee);
         b_0.storeUint(src.blockTime, 32);
         b_0.storeBit(src.isPending);
@@ -4285,10 +4412,11 @@ export function loadPerpOrder(slice: Slice) {
     let _sizeDelta = sc_0.loadCoins();
     let _triggerPrice = sc_0.loadUintBig(128);
     let _triggerAbove = sc_0.loadBit();
+    let _callbackRate = sc_0.loadUintBig(16);
     let _executionFee = sc_0.loadCoins();
     let _blockTime = sc_0.loadUintBig(32);
     let _isPending = sc_0.loadBit();
-    return { $$type: 'PerpOrder' as const, opType: _opType, tokenId: _tokenId, account: _account, isLong: _isLong, marginDelta: _marginDelta, sizeDelta: _sizeDelta, triggerPrice: _triggerPrice, triggerAbove: _triggerAbove, executionFee: _executionFee, blockTime: _blockTime, isPending: _isPending };
+    return { $$type: 'PerpOrder' as const, opType: _opType, tokenId: _tokenId, account: _account, isLong: _isLong, marginDelta: _marginDelta, sizeDelta: _sizeDelta, triggerPrice: _triggerPrice, triggerAbove: _triggerAbove, callbackRate: _callbackRate, executionFee: _executionFee, blockTime: _blockTime, isPending: _isPending };
 }
 
 function loadTuplePerpOrder(source: TupleReader) {
@@ -4300,10 +4428,11 @@ function loadTuplePerpOrder(source: TupleReader) {
     let _sizeDelta = source.readBigNumber();
     let _triggerPrice = source.readBigNumber();
     let _triggerAbove = source.readBoolean();
+    let _callbackRate = source.readBigNumber();
     let _executionFee = source.readBigNumber();
     let _blockTime = source.readBigNumber();
     let _isPending = source.readBoolean();
-    return { $$type: 'PerpOrder' as const, opType: _opType, tokenId: _tokenId, account: _account, isLong: _isLong, marginDelta: _marginDelta, sizeDelta: _sizeDelta, triggerPrice: _triggerPrice, triggerAbove: _triggerAbove, executionFee: _executionFee, blockTime: _blockTime, isPending: _isPending };
+    return { $$type: 'PerpOrder' as const, opType: _opType, tokenId: _tokenId, account: _account, isLong: _isLong, marginDelta: _marginDelta, sizeDelta: _sizeDelta, triggerPrice: _triggerPrice, triggerAbove: _triggerAbove, callbackRate: _callbackRate, executionFee: _executionFee, blockTime: _blockTime, isPending: _isPending };
 }
 
 function loadGetterTuplePerpOrder(source: TupleReader) {
@@ -4315,10 +4444,11 @@ function loadGetterTuplePerpOrder(source: TupleReader) {
     let _sizeDelta = source.readBigNumber();
     let _triggerPrice = source.readBigNumber();
     let _triggerAbove = source.readBoolean();
+    let _callbackRate = source.readBigNumber();
     let _executionFee = source.readBigNumber();
     let _blockTime = source.readBigNumber();
     let _isPending = source.readBoolean();
-    return { $$type: 'PerpOrder' as const, opType: _opType, tokenId: _tokenId, account: _account, isLong: _isLong, marginDelta: _marginDelta, sizeDelta: _sizeDelta, triggerPrice: _triggerPrice, triggerAbove: _triggerAbove, executionFee: _executionFee, blockTime: _blockTime, isPending: _isPending };
+    return { $$type: 'PerpOrder' as const, opType: _opType, tokenId: _tokenId, account: _account, isLong: _isLong, marginDelta: _marginDelta, sizeDelta: _sizeDelta, triggerPrice: _triggerPrice, triggerAbove: _triggerAbove, callbackRate: _callbackRate, executionFee: _executionFee, blockTime: _blockTime, isPending: _isPending };
 }
 
 function storeTuplePerpOrder(source: PerpOrder) {
@@ -4331,6 +4461,7 @@ function storeTuplePerpOrder(source: PerpOrder) {
     builder.writeNumber(source.sizeDelta);
     builder.writeNumber(source.triggerPrice);
     builder.writeBoolean(source.triggerAbove);
+    builder.writeNumber(source.callbackRate);
     builder.writeNumber(source.executionFee);
     builder.writeNumber(source.blockTime);
     builder.writeBoolean(source.isPending);
@@ -4642,19 +4773,22 @@ export type Pool$Data = {
     lpRolloverFeeRate: bigint;
     liquidatedPositionShareRate: bigint;
     normalPositionShareRate: bigint;
-    gasForPerpTrader: bigint;
-    gasForPerpExecutor: bigint;
-    gasForLpTrader: bigint;
-    gasForLpExecutor: bigint;
-    gasForTransferJetton: bigint;
-    gasForBurnTlp: bigint;
-    gasForMintTlp: bigint;
+    mintJettonGas: bigint;
+    burnJettonGas: bigint;
+    transferJettonGas: bigint;
+    createPerpOrderGas: bigint;
+    cancelPerpOrderGas: bigint;
+    executePerpOrderGas: bigint;
+    createLiquidityOrderGas: bigint;
+    cancelLiquidityOrderGas: bigint;
+    executeLiquidityOrderGas: bigint;
     lpMinExecutionFee: bigint;
     perpMinExecutionFee: bigint;
-    minTonsForStorage: bigint;
+    minStorageReserve: bigint;
     tlpJetton: Address;
     tlpWallet: Address;
     jettonWallet: Address;
+    manager: Address;
     compensator: Address;
     claimer: Address;
     executors: Dictionary<Address, boolean>;
@@ -4677,6 +4811,8 @@ export type Pool$Data = {
     globalLPUnrealizedPnl: bigint;
     globalLpFundingFeeGrowth: bigint;
     globalRolloverFeeGrowth: bigint;
+    multisig: Address;
+    publicKey: bigint;
 }
 
 export function storePool$Data(src: Pool$Data) {
@@ -4689,23 +4825,26 @@ export function storePool$Data(src: Pool$Data) {
         b_0.storeUint(src.lpRolloverFeeRate, 32);
         b_0.storeUint(src.liquidatedPositionShareRate, 32);
         b_0.storeUint(src.normalPositionShareRate, 32);
-        b_0.storeCoins(src.gasForPerpTrader);
-        b_0.storeCoins(src.gasForPerpExecutor);
-        b_0.storeCoins(src.gasForLpTrader);
-        b_0.storeCoins(src.gasForLpExecutor);
+        b_0.storeCoins(src.mintJettonGas);
+        b_0.storeCoins(src.burnJettonGas);
+        b_0.storeCoins(src.transferJettonGas);
+        b_0.storeCoins(src.createPerpOrderGas);
         let b_1 = new Builder();
-        b_1.storeCoins(src.gasForTransferJetton);
-        b_1.storeCoins(src.gasForBurnTlp);
-        b_1.storeCoins(src.gasForMintTlp);
+        b_1.storeCoins(src.cancelPerpOrderGas);
+        b_1.storeCoins(src.executePerpOrderGas);
+        b_1.storeCoins(src.createLiquidityOrderGas);
+        b_1.storeCoins(src.cancelLiquidityOrderGas);
+        b_1.storeCoins(src.executeLiquidityOrderGas);
         b_1.storeCoins(src.lpMinExecutionFee);
         b_1.storeCoins(src.perpMinExecutionFee);
-        b_1.storeCoins(src.minTonsForStorage);
-        b_1.storeAddress(src.tlpJetton);
+        b_1.storeCoins(src.minStorageReserve);
         let b_2 = new Builder();
+        b_2.storeAddress(src.tlpJetton);
         b_2.storeAddress(src.tlpWallet);
         b_2.storeAddress(src.jettonWallet);
-        b_2.storeAddress(src.compensator);
         let b_3 = new Builder();
+        b_3.storeAddress(src.manager);
+        b_3.storeAddress(src.compensator);
         b_3.storeAddress(src.claimer);
         b_3.storeDict(src.executors, Dictionary.Keys.Address(), Dictionary.Values.Bool());
         b_3.storeDict(src.tokenConfigs, Dictionary.Keys.Uint(16), dictValueParserTokenConfig());
@@ -4729,6 +4868,10 @@ export function storePool$Data(src: Pool$Data) {
         b_5.storeInt(src.globalLPUnrealizedPnl, 128);
         b_5.storeCoins(src.globalLpFundingFeeGrowth);
         b_5.storeCoins(src.globalRolloverFeeGrowth);
+        let b_6 = new Builder();
+        b_6.storeAddress(src.multisig);
+        b_6.storeUint(src.publicKey, 256);
+        b_5.storeRef(b_6.endCell());
         b_4.storeRef(b_5.endCell());
         b_3.storeRef(b_4.endCell());
         b_2.storeRef(b_3.endCell());
@@ -4746,23 +4889,26 @@ export function loadPool$Data(slice: Slice) {
     let _lpRolloverFeeRate = sc_0.loadUintBig(32);
     let _liquidatedPositionShareRate = sc_0.loadUintBig(32);
     let _normalPositionShareRate = sc_0.loadUintBig(32);
-    let _gasForPerpTrader = sc_0.loadCoins();
-    let _gasForPerpExecutor = sc_0.loadCoins();
-    let _gasForLpTrader = sc_0.loadCoins();
-    let _gasForLpExecutor = sc_0.loadCoins();
+    let _mintJettonGas = sc_0.loadCoins();
+    let _burnJettonGas = sc_0.loadCoins();
+    let _transferJettonGas = sc_0.loadCoins();
+    let _createPerpOrderGas = sc_0.loadCoins();
     let sc_1 = sc_0.loadRef().beginParse();
-    let _gasForTransferJetton = sc_1.loadCoins();
-    let _gasForBurnTlp = sc_1.loadCoins();
-    let _gasForMintTlp = sc_1.loadCoins();
+    let _cancelPerpOrderGas = sc_1.loadCoins();
+    let _executePerpOrderGas = sc_1.loadCoins();
+    let _createLiquidityOrderGas = sc_1.loadCoins();
+    let _cancelLiquidityOrderGas = sc_1.loadCoins();
+    let _executeLiquidityOrderGas = sc_1.loadCoins();
     let _lpMinExecutionFee = sc_1.loadCoins();
     let _perpMinExecutionFee = sc_1.loadCoins();
-    let _minTonsForStorage = sc_1.loadCoins();
-    let _tlpJetton = sc_1.loadAddress();
+    let _minStorageReserve = sc_1.loadCoins();
     let sc_2 = sc_1.loadRef().beginParse();
+    let _tlpJetton = sc_2.loadAddress();
     let _tlpWallet = sc_2.loadAddress();
     let _jettonWallet = sc_2.loadAddress();
-    let _compensator = sc_2.loadAddress();
     let sc_3 = sc_2.loadRef().beginParse();
+    let _manager = sc_3.loadAddress();
+    let _compensator = sc_3.loadAddress();
     let _claimer = sc_3.loadAddress();
     let _executors = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.Bool(), sc_3);
     let _tokenConfigs = Dictionary.load(Dictionary.Keys.Uint(16), dictValueParserTokenConfig(), sc_3);
@@ -4786,7 +4932,10 @@ export function loadPool$Data(slice: Slice) {
     let _globalLPUnrealizedPnl = sc_5.loadIntBig(128);
     let _globalLpFundingFeeGrowth = sc_5.loadCoins();
     let _globalRolloverFeeGrowth = sc_5.loadCoins();
-    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, minTonsForStorage: _minTonsForStorage, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth };
+    let sc_6 = sc_5.loadRef().beginParse();
+    let _multisig = sc_6.loadAddress();
+    let _publicKey = sc_6.loadUintBig(256);
+    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, minStorageReserve: _minStorageReserve, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, manager: _manager, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth, multisig: _multisig, publicKey: _publicKey };
 }
 
 function loadTuplePool$Data(source: TupleReader) {
@@ -4797,29 +4946,32 @@ function loadTuplePool$Data(source: TupleReader) {
     let _lpRolloverFeeRate = source.readBigNumber();
     let _liquidatedPositionShareRate = source.readBigNumber();
     let _normalPositionShareRate = source.readBigNumber();
-    let _gasForPerpTrader = source.readBigNumber();
-    let _gasForPerpExecutor = source.readBigNumber();
-    let _gasForLpTrader = source.readBigNumber();
-    let _gasForLpExecutor = source.readBigNumber();
-    let _gasForTransferJetton = source.readBigNumber();
-    let _gasForBurnTlp = source.readBigNumber();
-    let _gasForMintTlp = source.readBigNumber();
+    let _mintJettonGas = source.readBigNumber();
+    let _burnJettonGas = source.readBigNumber();
+    let _transferJettonGas = source.readBigNumber();
+    let _createPerpOrderGas = source.readBigNumber();
+    let _cancelPerpOrderGas = source.readBigNumber();
+    let _executePerpOrderGas = source.readBigNumber();
+    let _createLiquidityOrderGas = source.readBigNumber();
     source = source.readTuple();
+    let _cancelLiquidityOrderGas = source.readBigNumber();
+    let _executeLiquidityOrderGas = source.readBigNumber();
     let _lpMinExecutionFee = source.readBigNumber();
     let _perpMinExecutionFee = source.readBigNumber();
-    let _minTonsForStorage = source.readBigNumber();
+    let _minStorageReserve = source.readBigNumber();
     let _tlpJetton = source.readAddress();
     let _tlpWallet = source.readAddress();
     let _jettonWallet = source.readAddress();
+    let _manager = source.readAddress();
     let _compensator = source.readAddress();
     let _claimer = source.readAddress();
     let _executors = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Bool(), source.readCellOpt());
     let _tokenConfigs = Dictionary.loadDirect(Dictionary.Keys.Uint(16), dictValueParserTokenConfig(), source.readCellOpt());
     let _liquidityOrders = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserLiquidityOrder(), source.readCellOpt());
+    source = source.readTuple();
     let _liquidityOrderIndexNext = source.readBigNumber();
     let _perpOrders = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserPerpOrder(), source.readCellOpt());
     let _perpOrderExs = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserPerpOrderEx(), source.readCellOpt());
-    source = source.readTuple();
     let _perpOrderIndexNext = source.readBigNumber();
     let _compensates = Dictionary.loadDirect(Dictionary.Keys.BigUint(64), dictValueParserCompensate(), source.readCellOpt());
     let _compensateIndexNext = source.readBigNumber();
@@ -4831,10 +4983,13 @@ function loadTuplePool$Data(source: TupleReader) {
     let _totalExecutionFee = source.readBigNumber();
     let _protocolTradingFee = source.readBigNumber();
     let _globalLPFund = source.readBigNumber();
+    source = source.readTuple();
     let _globalLPUnrealizedPnl = source.readBigNumber();
     let _globalLpFundingFeeGrowth = source.readBigNumber();
     let _globalRolloverFeeGrowth = source.readBigNumber();
-    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, minTonsForStorage: _minTonsForStorage, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth };
+    let _multisig = source.readAddress();
+    let _publicKey = source.readBigNumber();
+    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, minStorageReserve: _minStorageReserve, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, manager: _manager, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth, multisig: _multisig, publicKey: _publicKey };
 }
 
 function loadGetterTuplePool$Data(source: TupleReader) {
@@ -4845,19 +5000,22 @@ function loadGetterTuplePool$Data(source: TupleReader) {
     let _lpRolloverFeeRate = source.readBigNumber();
     let _liquidatedPositionShareRate = source.readBigNumber();
     let _normalPositionShareRate = source.readBigNumber();
-    let _gasForPerpTrader = source.readBigNumber();
-    let _gasForPerpExecutor = source.readBigNumber();
-    let _gasForLpTrader = source.readBigNumber();
-    let _gasForLpExecutor = source.readBigNumber();
-    let _gasForTransferJetton = source.readBigNumber();
-    let _gasForBurnTlp = source.readBigNumber();
-    let _gasForMintTlp = source.readBigNumber();
+    let _mintJettonGas = source.readBigNumber();
+    let _burnJettonGas = source.readBigNumber();
+    let _transferJettonGas = source.readBigNumber();
+    let _createPerpOrderGas = source.readBigNumber();
+    let _cancelPerpOrderGas = source.readBigNumber();
+    let _executePerpOrderGas = source.readBigNumber();
+    let _createLiquidityOrderGas = source.readBigNumber();
+    let _cancelLiquidityOrderGas = source.readBigNumber();
+    let _executeLiquidityOrderGas = source.readBigNumber();
     let _lpMinExecutionFee = source.readBigNumber();
     let _perpMinExecutionFee = source.readBigNumber();
-    let _minTonsForStorage = source.readBigNumber();
+    let _minStorageReserve = source.readBigNumber();
     let _tlpJetton = source.readAddress();
     let _tlpWallet = source.readAddress();
     let _jettonWallet = source.readAddress();
+    let _manager = source.readAddress();
     let _compensator = source.readAddress();
     let _claimer = source.readAddress();
     let _executors = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Bool(), source.readCellOpt());
@@ -4880,7 +5038,9 @@ function loadGetterTuplePool$Data(source: TupleReader) {
     let _globalLPUnrealizedPnl = source.readBigNumber();
     let _globalLpFundingFeeGrowth = source.readBigNumber();
     let _globalRolloverFeeGrowth = source.readBigNumber();
-    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, gasForPerpTrader: _gasForPerpTrader, gasForPerpExecutor: _gasForPerpExecutor, gasForLpTrader: _gasForLpTrader, gasForLpExecutor: _gasForLpExecutor, gasForTransferJetton: _gasForTransferJetton, gasForBurnTlp: _gasForBurnTlp, gasForMintTlp: _gasForMintTlp, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, minTonsForStorage: _minTonsForStorage, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth };
+    let _multisig = source.readAddress();
+    let _publicKey = source.readBigNumber();
+    return { $$type: 'Pool$Data' as const, owner: _owner, stopped: _stopped, orderLockTime: _orderLockTime, maxLpNetCap: _maxLpNetCap, lpRolloverFeeRate: _lpRolloverFeeRate, liquidatedPositionShareRate: _liquidatedPositionShareRate, normalPositionShareRate: _normalPositionShareRate, mintJettonGas: _mintJettonGas, burnJettonGas: _burnJettonGas, transferJettonGas: _transferJettonGas, createPerpOrderGas: _createPerpOrderGas, cancelPerpOrderGas: _cancelPerpOrderGas, executePerpOrderGas: _executePerpOrderGas, createLiquidityOrderGas: _createLiquidityOrderGas, cancelLiquidityOrderGas: _cancelLiquidityOrderGas, executeLiquidityOrderGas: _executeLiquidityOrderGas, lpMinExecutionFee: _lpMinExecutionFee, perpMinExecutionFee: _perpMinExecutionFee, minStorageReserve: _minStorageReserve, tlpJetton: _tlpJetton, tlpWallet: _tlpWallet, jettonWallet: _jettonWallet, manager: _manager, compensator: _compensator, claimer: _claimer, executors: _executors, tokenConfigs: _tokenConfigs, liquidityOrders: _liquidityOrders, liquidityOrderIndexNext: _liquidityOrderIndexNext, perpOrders: _perpOrders, perpOrderExs: _perpOrderExs, perpOrderIndexNext: _perpOrderIndexNext, compensates: _compensates, compensateIndexNext: _compensateIndexNext, perpPositionIndexNext: _perpPositionIndexNext, perpPositions: _perpPositions, globalLPPositions: _globalLPPositions, globalPositions: _globalPositions, tlpSupply: _tlpSupply, totalExecutionFee: _totalExecutionFee, protocolTradingFee: _protocolTradingFee, globalLPFund: _globalLPFund, globalLPUnrealizedPnl: _globalLPUnrealizedPnl, globalLpFundingFeeGrowth: _globalLpFundingFeeGrowth, globalRolloverFeeGrowth: _globalRolloverFeeGrowth, multisig: _multisig, publicKey: _publicKey };
 }
 
 function storeTuplePool$Data(source: Pool$Data) {
@@ -4892,19 +5052,22 @@ function storeTuplePool$Data(source: Pool$Data) {
     builder.writeNumber(source.lpRolloverFeeRate);
     builder.writeNumber(source.liquidatedPositionShareRate);
     builder.writeNumber(source.normalPositionShareRate);
-    builder.writeNumber(source.gasForPerpTrader);
-    builder.writeNumber(source.gasForPerpExecutor);
-    builder.writeNumber(source.gasForLpTrader);
-    builder.writeNumber(source.gasForLpExecutor);
-    builder.writeNumber(source.gasForTransferJetton);
-    builder.writeNumber(source.gasForBurnTlp);
-    builder.writeNumber(source.gasForMintTlp);
+    builder.writeNumber(source.mintJettonGas);
+    builder.writeNumber(source.burnJettonGas);
+    builder.writeNumber(source.transferJettonGas);
+    builder.writeNumber(source.createPerpOrderGas);
+    builder.writeNumber(source.cancelPerpOrderGas);
+    builder.writeNumber(source.executePerpOrderGas);
+    builder.writeNumber(source.createLiquidityOrderGas);
+    builder.writeNumber(source.cancelLiquidityOrderGas);
+    builder.writeNumber(source.executeLiquidityOrderGas);
     builder.writeNumber(source.lpMinExecutionFee);
     builder.writeNumber(source.perpMinExecutionFee);
-    builder.writeNumber(source.minTonsForStorage);
+    builder.writeNumber(source.minStorageReserve);
     builder.writeAddress(source.tlpJetton);
     builder.writeAddress(source.tlpWallet);
     builder.writeAddress(source.jettonWallet);
+    builder.writeAddress(source.manager);
     builder.writeAddress(source.compensator);
     builder.writeAddress(source.claimer);
     builder.writeCell(source.executors.size > 0 ? beginCell().storeDictDirect(source.executors, Dictionary.Keys.Address(), Dictionary.Values.Bool()).endCell() : null);
@@ -4927,6 +5090,8 @@ function storeTuplePool$Data(source: Pool$Data) {
     builder.writeNumber(source.globalLPUnrealizedPnl);
     builder.writeNumber(source.globalLpFundingFeeGrowth);
     builder.writeNumber(source.globalRolloverFeeGrowth);
+    builder.writeAddress(source.multisig);
+    builder.writeNumber(source.publicKey);
     return builder.build();
 }
 
@@ -4954,8 +5119,8 @@ function initPool_init_args(src: Pool_init_args) {
 }
 
 async function Pool_init(deployId: bigint) {
-    const __code = Cell.fromBase64('te6ccgICAQoAAQAAWPwAAAEU/wD0pBP0vPLICwABAgFiAAIAAwLw0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8ESkRKxEpESgRKhEoEScRKREnESYRKBEmESURJxElESQRJhEkESMRJREjESIRJBEiESERIxEhESARIhEgER8RIREfAP0ABAIBIAAFAAYC0hEeESARHhEdER8RHREcER4RHBEbER0RGxEaERwRGhEZERsRGREYERoRGBEXERkRFxEWERgRFhEVERcRFREUERYRFBETERURExESERQREhERERMREREQERIREA8REQ8OERAOVR3bPPLgggAJAAoCASAA2QDaAgEgAAcACAIBSADjAOQCASAA8gDzBKDtou37AZIwf+BwIddJwh+VMCDXCx/eIIIQvRuzUbqPCDDbPGwY2zx/4CCCEFuPJx26jpQw0x8BghBbjycduvLggdQBMds8f+AgghDkmzvwugALAAwADQAOAYzI+EMBzH8BygARKhEpESgRJxEmESURJBEjESIRIREgER8RHhEdERwRGxEaERkRGBEXERYRFREUERMREhERERBV4Ns8ye1UACoC9tMfAYIQvRuzUbry4IHTH/oA0x/TH9Mf1AHQ0gABjoTbPG8KkW3iAdQw0NIAAY5F9AT6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhDMG8DkW3iAdQw0AAPABAB8BEpETERKREoETARKBEnES8RJxEmES4RJhElES0RJREkESwRJBEjESsRIxEiESoRIhEhETERIREgETARIBEfES8RHxEeES4RHhEdES0RHREcESwRHBEbESsRGxEaESoRGhEZETERGREYETARGBEXES8RFxEWES4RFgARAfARKREqESkRKBEqESgRJxEqEScRJhEqESYRJREqESURJBEqESQRIxEqESMRIhEqESIRIREqESERIBEqESARHxEqER8RHhEqER4RHREqER0RHBEqERwRGxEqERsRGhEqERoRGREqERkRGBEqERgRFxEqERcRFhEqERYAGgSIjxkw0x8BghDkmzvwuvLggdMP2zwQeGwY2zx/4CCCEJtC5O+6jpUw0x8BghCbQuTvuvLggdMPATHbPH/gIIIQ/rKnZroA/AAdAB4AHwBQ+gD6APoA+gD6APoA+gD6ANQB0PoA+gAwECoQKRAoECcQJhAlECQQIwDw0gABjmX6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiEMwbBNvA5IwbeIQOBA3EDYQNRA0A/YRFREtERURFBEsERQRExErERMREhEqERIRERExEREREBEwERAPES8PDhEuDg0RLQ0MESwMCxErCwoRKgoJETEJCBEwCAcRLwcGES4GBREtBQQRLAQDESsDAhEqAgERMQERMNs8VyNXI1cjVyNXI1YrbrOSVyvjDVYrbrMA0gASABMAaFcRVxFXEVYoIG7y0IBvI1tWKSBu8tCAbyMwMREqIG7y0IBvI2whERARKhEQARESAREQEREE/pJXK+MNViNus5JXI+MNiBEiESoRIhEhESkRIREbESMRGxEaESIRGhEZESERGREYESARGBEXER8RFxEWER4RFhEVER0RFREUERwRFBETERsRExESERoREhERERkREREQERgREA8RFw8OERYODREVDQwRFAwLERMLChESCgkREQkAFAAVABYAFwH+Pj5WKSBu8tCAbyNbIIEBC3FZ9IJvpSCWUCPXADBYlmwhbTJtAeKQjj2BAQsBkX+RbeIQL1LwcSFulVtZ9FkwmMgBzwBBM/RB4oEBC1RCH3FBM/R0b6UgllAj1wAwWJZsIW0ybQHi6F8DVikgbvLQgG8jMDERKiBu8tCAbyNsIQAYAfhXElcSVxJXElcSVxJXElcSVxJXElYZIG7y0IBvKhB5XwlWGiBu8tCAbyoQaV8JVhsgbvLQgG8qEFlfCVYcIG7y0IBvKhBJXwlWHSBu8tCAbyoQOV8JVh4gbvLQgG8qEClfCVYfIG7y0IBvKl8JViAgbvLQgG8qEIlfCVYhABkAJAAAAABjb25maWcgdXBkYXRlZAFACBEQCBB/EG4QXRBMEDtKkBA4R2AQNUQwEvhCAX9t2zwA1gAIDREqDgCMIG7y0IBvKhlfCREiIG7y0IBvKmyRERERIhERCBEaCAcRGQcGERgGBREXBQMRFgMREREVERERFAIREwIBERIBBBERBBA0WQL4ERURKhEVERQRKhEUERMRKhETERIRKhESERERKhERERARKhEQDxEqDw4RKg4NESoNDBEqDAsRKgsKESoKCREqCREqCAcGVUDbPBEqyAGCEFuPJx1Yyx/MyREpESoRKREoESkRKBEnESgRJxEmEScRJhElESYRJREkESURJADSABsB/BEjESQRIxEiESMRIhEhESIRIREgESERIBEfESARHxEeER8RHhEdER4RHREcER0RHBEbERwRGxEaERsRGhEZERoRGX9tVhoRHBEaERsRGhEZERoRGREYERkRGBEXERgRFxEWERcRFhEVERYRFREUERURFBETERQRExESERMREgAcAVQRERESEREREBERERAPERAPEO8Q3hDNELwQqxCaEIkQeBBnEFYEBVUg2zwA1gHwESkRMREpESgRMBEoEScRLxEnESYRLhEmESURLRElESQRLBEkESMRKxEjESIRKhEiESERMREhESARMBEgER8RLxEfER4RLhEeER0RLREdERwRLBEcERsRKxEbERoRKhEaERkRMREZERgRMBEYERcRLxEXERYRLhEWACAB8BEpESoRKREoESoRKBEnESoRJxEmESoRJhElESoRJREkESoRJBEjESoRIxEiESoRIhEhESoRIREgESoRIBEfESoRHxEeESoRHhEdESoRHREcESoRHBEbESoRGxEaESoRGhEZESoRGREYESoRGBEXESoRFxEWESoRFgAlA/6PczDTHwGCEP6yp2a68uCB0z/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIEmwSggCg9/hCVhgBxwXy9IFK2yfCAPL0cIBCcG0jyFIQywDJ0CYQaBBdBAdVIMhVYNs8yVYZBEiIFEMwbW3bPDBwBH/gIMAAItdJwSGwAMoA1wAtAvwRFREtERURFBEsERQRExErERMREhEqERIRERExEREREBEwERAPES8PDhEuDg0RLQ0MESwMCxErCwoRKgoJETEJCBEwCAcRLwcGES4GBREtBQQRLAQDESsDAhEqAgERMQERMNs8BREuBQQRLQQDESwDAhErAgERKgERMYAQETEA0gAhA/7IVWDbPMkQPQIRKwIBESoBIG6VMFn0WzCUQTP0F+KIESIRKhEiESERKREhESARKBEgER8RJxEfER4RJhEeER0RJREdERwRJBEcERsRIxEbERoRIhEaERkRIREZERgRIBEYERcRHxEXERYRHhEWERURHREVERQRHBEUERMRGxETACIAIwAkADLIUAfPFslQB8wUygASyw8B+gLLHxLLH8sfACAAAAAAdG9rZW4gbGlzdGVkAaQREhEaERIREREZEREREBEYERAPERcPDhEWDg0RFQ0MERQMARETAQoREgoJEREJCBEQCBB/EG4QXRBMEDsQKhA5EDgQNxA2EDUQNBL4QgF/bds8ANYE/hEVESoRFREUESoRFBETESoRExESESoREhERESoREREQESoREA8RKg8OESoODREqDQwRKgwLESoLChEqCgkRKgkRKggHBlVA2zwngBBWLFn0D2+hkjBt3yBukjBtjofQ2zxsFm8G4iBus5Ew4w1WKgERE4AQ9FswVipQCIAQ9FsA0gDxACYAJwBCgV8FISBu8tCAbyYQNV8FAiBu8tCAbyYQJV8FEqDAAPL0AvYwVipQCYAQ9FswAREqAQmAEPRbMIgRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERsRGhEbERoRGREaERkAKAApACQAAAAAdG9rZW4gZGVsaXN0ZWQBphEYERkRGBEXERgRFxEWERcRFhEVERYRFREUERURFBETERQREwcREwcRERESEREREBERERAPERAPEO8Q3hDNELwaGxBnEFYQRRA0ECP4QgF/bds8ANYB8gERKgERKSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFgERJwHKAAERJQHLHwERI/oCAREhAcsfAREfAcsfAREdAcsfAREb+gIBERn6AgERF/oCAREV+gLIAREU+gIBERL6AgEREPoCUA76AlAM+gJQCvoCUAgAKwH+INdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyFAHINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQAyDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFgAsAObIWCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhL0ABL0ABP0ABPLPwPI9AAU9AAUyz8U9AAVyz8Vyz8FyPQAFvQAFvQAUAb6AlAG+gJQBvoCFsp/Fsp/UAf6AlAF+gLJAczJAczJUAPMyQHMyQHMBOySW3/gIIIQc2LQnLqPVTDTHwGCEHNi0Jy68uCB0z/6APpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUEwMQI2wU+EJWGwHHBbOY+EJWHAHHBbORcOKOhDAg2zzjDn/gIIIQSB51YbrjAiCCEKvPWHu6AEgALgAvADADXFYskX+V0wABwwHijoQwINs84PhCVhwBxwWOitQw0PoAMHAD2zzg1DDQ0wchwAEASABEAEMBjDDTHwGCEEgedWG68uCB0z/TPyDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4kMwbBPbPH8AMQQ6jwgw2zxsFts8f+AgghDu9ZJNuuMCIIIQ+U+Au7oAOAA5ADoAOwL2+EFvJDAygUtpViZWJaATvhLy9FYVgEAlWfQPb6GSMG3fIG6SMG2Oh9DbPGwWbwbigX99IW6z8vQgbvLQgG8mgV5tAbPy9FYcgQELJ1n0Cm+hMYIAoPchkX+UU1fHBeLy9LOcgRfmAVYxoPgju/L0kTDiUnARGoBA9FswAOwAMgH0I5JWHpJWH+IRLBEyESwRKxExESsRKhEwESoRKREvESkRKBEuESgRJxEtEScRJhEyESYRJRExESURJBEwESQRIxEvESMRIhEuESIRIREtESERIBEyESARHxExER8RHhEwER4RHREvER0RHBEuERwRGxEtERsRGhEyERoAMwP+ERkRMREZERgRMBEYERcRLxEXERYRLhEWERURLREVAREUARETETERExESETAREhERES8REREQES4REA8RLQ8eDRExDQwRMAwLES8LChEuCgkRLQkYBxExBwYRMAYFES8FBBEuBAMRLQMCVjECES5WMNs8Vi1us5RXLVYr4w1WLwDIADQANQAOES0gbvLQgAL+wgCOkVYvcn9VIG1tbds8MARWLqEEkTDiESqRcZFy4gIBESkBES3IVSCCELmwPLxQBMsfEssHyz/LP8nIgljAAAAAAAAAAAAAAAABActnzMlw+wBWHFYboBEsoxEmESwRJhElESsRJREkESoRJBEjESkRIxEiESgRIhEhEScRIQDXADYB/BEgESYRIBEfESURHxEeESQRHhEdESMRHREcESIRHBEbESERGxEaESARGhEZER8RGREYER4RGBEXER0RFxEWERwRFhEVERsRFREUERoRFBETERkRExESERgREhERERcREREQERYREA8RFQ8OERQODRETDQwREgwLERELChEQCgA3ASoQnxCOEH0QbBBbEEoQOUhwFhMV2zwAzACO0x8BghCrz1h7uvLggdM/0z8g1wsBwwCOH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IiUctchbeIB9AT6APoAVVAD9Dj4QW8kMDKCAKD3VhuBAQsjWfQKb6Ex8vRWGIBAKFn0D2+hkjBt3yBukjBtjofQ2zxsFm8G4oF/fSFus/L0IG7y0IBvJoFebQGz8vRWKyWTVimgllYqViygoOKBS2lRgb4Y8vR/gEAmVEYwJlRGNgHIVVDbPMkCER4CAOwATwBQAhAw2zxsGNs8fwA8AD0Eyo8IMNs8bBnbPH/gIIIQCZ/0o7qOxzDTHwGCEAmf9KO68uCBINcLAcMAjh/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIlHLXIW3iAdM/0z9VIGwT2zx/4CCCEO12km66AFsAXABdAF4APtMfAYIQ7vWSTbry4IH6ANMP0gD6APoA03/TP9MfVXAB8BEpETERKREoETARKBEnES8RJxEmES4RJhElES0RJREkESwRJBEjESsRIxEiESoRIhEhETERIREgETARIBEfES8RHxEeES4RHhEdES0RHREcESwRHBEbESsRGxEaESoRGhEZETERGREYETARGBEXES8RFxEWES4RFgA+AvwRFREtERURFBEsERQRExErERMREhEqERIRERExEREREBEwERAPES8PDhEuDg0RLQ0MESwMCxErCwoRKgoJETEJCBEwCAcRLwcGES4GBREtBQQRLAQDESsDAhEqAgERMQERMNs8+EFvJDCBS2kzVjKhViW+EvL0gV/yVjFWHb4A0wA/AfTy9BEqETARKhEpES8RKREoES4RKBEnES0RJxEmESwRJhElESsRJREkESoRJBEjESkRIxEiESgRIhEhEScRIREgESYRIBEfESURHxEeESQRHhEdESMRHREcESIRHBEbESERGxEaESARGhEZER8RGREYER4RGBEXER0RFwBAAvYRFhEcERYRFREbERURFBEaERQRExEZERMREhEYERIREREXEREREBEWERAPERUPDhEUDg0REw0MERIMCxERCwoREAoQnxCOEH0QbBBbEEoQOUhwBhEyBoAMVEF2VTFWNAERNNs8MAVWK6ARKRErESkRKBEqESgRJxEpEScAiwBBAfgRJhEoESYRJREnESURJBEmESQRIxElESNWIhElESIRJBEiESERIxEhESARIhEgER8RIREfER4RIBEeER0RHxEdERwRHhEcERsRHREbERoRHBEaERkRGxEZERgRGhEYERcRGREXERYRGBEWERURFxEVERQRFhEUERMRFRETAEIBahESERQREhERERMREREQERIREA8REQ8OERAOEN8QzhC9EKwQmxCKEHkYEFcQRhA1ECRDANs8AMwDgo6IMfoAMH8D2zyPNAHAAo6o+gDSANMP0gD6ANN/0x/UMND6ANN/+gDTfzAQvBCrEJoQiRB4VQPbPI6EMCDbPOLiAEQARQBIBML4QW8kE18DJDAiViK5joYwMTIg2zzgViYjoLmOhTEyINs84FYVpIBA+CNwJ1RHMCZUSDDIVVDbPMkCERkCVhgBIG6VMFn0WzCUQTP0F+JRsqAEkXGRcuJRMFQjFAERGAEHAEgASABPAEYD9PhBbyQTXwMsVjKguY6IEHtfC1EQ2zzgcSXCAJMkwgCRcOKSMHLeI8IAkyLCAJFw4pGk3lYpIahS0LmOiBCMXwxRENs84AuRepKAC+JTy6kEETIROREyETEROBExETARNxEwES8RNhEvES4RNREuES0RNBEtESwRMxEsAEgASABJAljIVVDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBWIggRFAgIERMIQAjbPABHAMwAboIQxNAg5FAHyx8VywdQAyDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFgH6AgH6Ass/yz8CXCLCAI8l+EJwgEJwbSPIUhDLAMnQEGoQWRBIEDfIVWDbPMkUQzBtbds8MJJfBOIAygDXAfwRKxE5ESsRKhE4ESoRKRE3ESkRKBE2ESgRJxE1EScRJhE0ESYRJREzESURJBE5ESQRIxE4ESMRIhE3ESIRIRE2ESERIBE1ESARHxE0ER8RHhEzER4RHRE5ER0RHBE4ERwRGxE3ERsRGhE2ERoRGRE1ERkRGBE0ERgRFxEzERcASgT+ERYROREWERUROBEVERQRNxEUERMRNhETERIRNRESERERNBERERARMxEQDxE5Dw4ROA4NETcNDBE2DAsRNQsKETQKCREzCQgROQgXVjgHBhE2BgURNQUEETQEEToD2zxWMcIAlFYtwgCRcOKRf5xWLMIAlFYrwgCRcOLi4w9WKQCLAEsATABNALpWL4BAETCpBAQRMgQDES4DAhEtAgERLAHIVUBQVPoCEst/AfoCEst/AfoCyRA8AhErAgERKAEgbpUwWfRbMJRBM/QX4hEoESsRKBElESgRJRElEScRJRElESYRJQkAJjAEETAEAxEtAwIRLAJXKlcqXwMB+qARJBErESQRIxEqESMRIhEpESIRIREoESERIBEnESARHxEmER8RHhElER5WHRElER0RJBEdERwRIxEcERsRIhEbERoRIREaERkRIBEZERgRHxEYERcRHhEXERYRHREWERURHBEVERQRGxEUERMRGhETERIRGRESERERGBERAE4BVBEQERcREA8RFg8OERUODREUDQwREwwLERILChERCgkREAkQjxB+VWbbPADMAFxQVsoAUAMg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYB+gIB+gLLH8oABMZSwCBulTBZ9FswlEEz9BficCiAEIMGWfSGb6UgllAj1wEwWJZsIW0ybQHikIroWzhSbaFS3KEgVjGoghA7msoAqQRTwKABERABoFEfoQEREAGgU/egJOMPUs+AQPRbMFYewgAAUQBSAFMAVADMVhaAECNZ9A9voZIwbd8gbpIwbZ3Q+gDSANN/VSBsE28D4iBus44gIG7y0IBvIxOhqAGRcZF/4qiCMA3gtrOnZAAAqQQSoAGRW+KAECoCgwZBM/R8b6UgllAj1wEwWJZsIW0ybQHiAtJwVjMiobYJI4EpYgK78vRWEsAAmzCCMA3gtrOnZAAAn4IwDeC2s6dkAACoVhKpBOIigjAN4Lazp2QAAKghqQR/bXDIydAqUTlRNgPIVVDbPMlWJwJWLAJDMHABbW3bPDARESOgERNWEaAAVQDXAvqCMA3gtrOnZAAAqFYSqQRTAqiCMA3gtrOnZAAAqQR/VHxHbchVMIIQWV8HvFAFyx8Tyz8B+gIBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WIW6zlX8BygDMlHAyygDiyVYmAlYtAkMwcAFtbds8MBERVhGhERMjoQDXAFYD4o6hKm6zlgogbvLQgJI6JeJWHnJ/VSBtbW3bPDAREVYdoRERkTriBJFxkXLiXjcGEDUQJBAjAhEQAi0CVhMCERFUHg1WERBnyFXA2zzJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAERSjEEleM14xE9s8ANcAWgDMAMiCEIm3HQlQB8sfUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQAyDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFoEBAc8AIW6zlX8BygDMlHAyygDiAfoCAc8WAfgRKRE2ESkRKBE1ESgRJxE0EScRJhEzESYRJREyESURJBExESQRIxEwESMRIhEvESIRIREuESERIBEtESARHxEsER8RHhErER4RHREqER0RHBE2ERwRGxE1ERsRGhE0ERoRGREzERkRGBEyERgRFxExERdWMBEXERYRMBEWAFcC+hEVES8RFREUES4RFBETES0REw8REg8RERErEREREBE3ERAPETYPDhE1Dg0RNA0METMMCxEyCwoJETAJCBEvCBcGES0GEDUEES4EAwIRMAIBETcBETFWM1Y3VjNWOts8ESkRNhEpESgRNREoEScRNBEnESYRMxEmESURMhElAMgAWAH4ESQRMREkESMRMBEjESIRLxEiESERLhEhESARLREgER8RLBEfER4RKxEeER0RKhEdERwRKREcERsRKBEbERoRJxEaERkRJhEZERgRJREYERcRJBEXERYRIxEWERURIhEVERQRIREUERMRIBETERIRHxESERARHREQDxEcDwBZAGYOERsODREaDQwRGQwLERgLChEXCgkRFgkIERUIBxEUBwMREwMFERIFAxERAw8QPkmGECQApIIQSEJvNlAOyx8cyz8ayz8YywdQBiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAE+gJY+gLLfwH6AgHIyn9Y+gJY+gJY+gJY+gLJAcwAQtMfAYIQ+U+Au7ry4IH6ANMP0gD6ANN/+gDTf9M/0x9VgAHwESkRMhEpESgRMREoEScRMBEnESYRLxEmESURLhElESQRLREkESMRLBEjESIRKxEiESERKhEhESARMhEgER8RMREfER4RMBEeER0RLxEdERwRLhEcERsRLREbERoRLBEaERkRKxEZERgRKhEYERcRMhEXERYRMREWAHAD8vhBbyQwMlYUgEAlWfQPb6GSMG3fIG6SMG2Oh9DbPGwbbwvigX99IW6z8vQgbvLQgG8rbDM0NYFebQOzE/L0JMAKkX+TJMAL4lYsIZNWKqDegUtpUZG+GfL0Vh6BAQsoWfQKb6ExggCg9yGRf5RTWMcF4vL0s5Fw4w0BCQBfAGAEOo8IMNs8bBjbPH/gIIIQRt7TUrrjAiCCENXev9y6AGcAaABpAGoAFCXACpF/kyXADOID/J2BF+YFVjOg+CO7FfL0kTTicASSMDHjDVJgERiAQPRbMFYXwgCOnydukjcilgcgbvLQgOJWF3J/VSBtbW3bPDABERagERWTN1cW4gtWFaFLQ8hVIIIQ8sWurFAEyx8SywfLP8s/yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AABhANcAYgL6VhiAQCpZ9A9voZIwbd8gbpIwbY4R0PoA03/6ANN/+gBVQGwVbwXiIG6zjsggbvLQgG8lKAXCAJMDwgCSM3DilDNUQRPeAcIAksIAkjBw4pGgkTDiIMIAjo00UyNyf1UgbW1t2zwwkTDiUoARGYBA9FswERiRMOIRKxEzESsA1wBjARYREqMCERICECjbPADMAfgRKhEyESoRKRExESkRKBEwESgRJxEvEScRJhEuESYRJREtESURJBEsESQRIxEzESMRIhEyESIRIRExESERIBEwESARHxEvER8RHhEuER4RHREtER0RHBEsERwRGxEzERsRGhEyERoRGRExERlWMBEZERgRMBEYERcRLxEXAGQC+BEWES4RFhEVES0RFREUETQRFBETETMRExESETIREhERERARMBEQDxEvDw4RLg4NES0NDBE0DAsRMwsKETIKCQgRMAgHES8HBhEuBgURLQUEETQEAxEzAwIRMQJWMFkRNFYv2zwRKRExESkRKBEwESgRJxEvEScRJhEuESYAyABlAfwRJREtESURJBEsESQRIxErESMRIhEqESIRIREpESERIBEoESARHxEnER8RHhEmER4RHRElER0RHBEkERwRGxEjERsRGhEiERoRGREhERkRGBEgERgRFxEfERcRFhEeERYRFREdERURFBEcERQRExEbERMREhEaERIREREZEREAZgBoERARGBEQDxEXDw4RFg4NERUNDBEUDAsREwsKERIKCRERCQgREAgQfxBuEF0QTBA7ShhQlgCW0x8BghDtdpJuuvLggSDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gHTP9M/0w/Tf9If0n/Sf1VwAvQyM/hBbyQwMoIAoPdWHIEBCyNZ9ApvoTHy9FYXgEAoWfQPb6GSMG3fIG6SMG2Oh9DbPGwbbwvigX99IW6z8vQgbvLQgG8rKsAKkX+TKsAL4iCagUtpDlY2vh7y9J2BS2lWNlY0oB++HvL04oFebQGz8vR/gEArUTtROwEJAGsD8jDbPGwZMvhBbyQwMoFLaVYsViqgE74S8vSCAKD3Vh2BAQsjWfQKb6Ex8vQobrOXMAcgbvLQgJI4B+JWFaSAQHNwUwBwIfgjL1FvUW9FFlBDf8hVoNs8yQIRGgJWGAEgbpUwWfRbMJRBM/QX4hEYERYQSAcFRETbPH8AkgCTAJQE/o/1MNs8bBoy+EFvJDAygUtpVi1WK6ATvhLy9IIAoPdWHoEBCyNZ9ApvoTHy9FYXpIBAdHBwIfgjf1YRBVYRBVYRBVYRBVYRBchVoNs8yQIRHAJWGgEgbpUwWfRbMJRBM/QX4hEaERgQWgl0CQYHUEQIBUMT2zx/4CCCEPwzh30AbQCTAG4AbwPeUTtRO1E7UTtRO0sTyFWg2zzJAhEhAlYQASBulTBZ9FswlEEz9BfiJ8AKkX+TJ8AM4rOeER+TUqC+k1Kgu+Ly5myTVx8w4i1ukT2ZNgwgbvLQgAUM4gaOihCbEDlHhlUD2zyOihCbEDlHhlUD2zziAJMAbABuA9xWHoAQKVn0D2+hkjBt3yBukjBtjofQ2zxsF28H4oFsliFus/L0IG7y0IBvJzaCAI9uUAXy9FYggEBWEVn0D2+hkjBt3yBukjBtjofQ2zxsG28L4iBu8tCAbysQJl8GNFYegBBWEln0D2+hkjBt3wD8AQkAeACY0x8BghDV3r/cuvLggdMP+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHSAPoA+gDTP9N/0h/Sf9QB0NJ/MBoZGBcWFRRDMAPeVh6AEClZ9A9voZIwbd8gbpIwbY6H0Ns8bBdvB+KBbJYhbrPy9CBu8tCAbyc2ggCPblAF8vRWIIBAVhFZ9A9voZIwbd8gbpIwbY6H0Ns8bBtvC+IgbvLQgG8rECdfB2wiVhyAEFYQWfQPb6GSMG3fAPwBCQCkBDy6jwgw2zxsF9s8f+AgghCI5/knuuMCIIIQlGqYtroAugC7ALwAvQL+ERURMBEVERQRLxEUERMRLhETERIRLRESERERLBERERARKxEQDxEqDw4RMg4NETENDBEwDAsRLwsKES4KCREtCQgRLAgHESsHBhEqBgURMgUEETEEAxEwAwIRLwIBES4BES3bPPhBbyQwMnBWNcIAlFY0wgCRcOKSMHHeVjPCAADTAHEE+JRWMsIAkXDikaTegUtpA1YwoVYmIqi+E/L0gV/yVh0jqFYwAb7y9FY0wgCUVjPCAJFw4o6ogA1wVjAkqQRWM1FUEEVWMgRWMlA0AhE7AgEROgFWNts8MBExETIRMZRXM1cz4lYwwgCUVi/CAJFw4uMPESpWJqBWHAERLagAiwByAHMAdAH2gA5wVi5WNakEESwRMhEsESsRMRErESoRMBEqESkRLxEpESgRLhEoEScRLREnESYRLBEmESURKxElESQRKhEkESMRKREjESIRKBEiESERJxEhESARJhEgER8RJREfER4RJBEeER0RIxEdERwRIhEcERsRIREbERoRIBEaAHUALAURMAUEES8EAxEuAwIRLQJXKlcqXwQB+BEjESwRIxEiESsRIhEhESoRIREgESkRIBEfESgRHxEeEScRHhEdESYRHREcESURHBEbESQRGxEaESMRGhEZESIRGREYESERGBEXESARFxEWER8RFhEVER4RFREUER0RFBETERwRExESERsREhERERoREREQERkREA8RGA8AdwL8ERkRHxEZERgRHhEYERcRHREXERYRHBEWERURGxEVERQRGhEUERMRGRETERIRGBESERERFxERERARFhEQDxEVDw4RFA4NERMNDBESDAsREQsKERAKEJ8QjhB9EGwQWxBKEDkQeBAnVjQHEFYQRRAkAxE0AwIRNALbPDAFESoFAIsAdgDsBBEpBAMRKAMCEScCBREmBQERJQERJAQRIwQDESIDAhEhAgURIAUBER8BER4EER0EAxEcAwIRGwIFERoFAREZAREYBBEXBAMRFgMCERUCBREUBQEREwEREgQREQQDERADEC8QXlDcEEsQOhApEFhQdhBFEDQQIwFuDhEXDg0RFg0MERUMCxEUCwoREwoJERIJCBERCAcREAcQbxBeEE0QPEugEGkQVxBGEDVQQhPbPADMA/4gbpIwbZfQ9AQBMW8B4iBus5cgbvLQgG8hkjBt4iCBAQtWFFn0C2+hkjBt3yBukjBtjxLQ2zwG1AHQ2zw2EGxVBGwcbwziIG6zlyBu8tCAbyydMHBUcABTAHBUcABTAOJWHJZUe6lUe6mWVHVDVHVD4iPAAJc1VjGkETIF3lYvAO8A7wB5AtyAEFYlWfQPb6GSMG3fIG6SMG2Oh9DbPGwWbwbiIG6zmCBu8tCAbyZbmDBwVHAAUwBb4lYmlAFWJKCUViSgAeIgViSogjAN4Lazp2QAAKkEIlYlqIIwDeC2s6dkAACpBFY2gBBWK1n0D2+hkjBt3wDxAHoC/iBukjBtndD6ANIA039VIGwTbwPiIG6zlyBu8tCAbyOUMHBwIeJwViokwgCUVi0kupFw4o5BMSNWK7YIVi2OE1YqI6FSEKiCMA3gtrOnZAAAqQSOEyJWK6FSEKiCMA3gtrOnZAAAqQTiUSGhUFWhIMAAknAz3gTeIMIAkTDjDXAAewB8ACgzUjKoIlYqqKBdoKkEWqBWK7NAAwHsIFYswgCOUVtWKlYqqFYlqIIwZ2XHk/oQB52qGqkEIBEnqIIQO5rKAKkEcCLCAJ0wIVZXqIIQO5rKAKkE3lYnIqEhoAEROQGgUiAROaEhoAERNwGgETYRJpJXJ+JWKVANoS6ogjAN4Lazp2QAAKkEVihQDKEuqAB9AfyCMA3gtrOnZAAAqQQvES0soC2hIaEBERABoCARLaFS7qhWK1YrqKAuViygqQQOViugVilWKVYvjhRWLFYRoVIwqIIwDeC2s6dkAACpBI4UVhBWLaFSMKiCMA3gtrOnZAAAqQTiI1YuqAERKQERJqABESUBqIIwZ2XHk/oQB50AfgLiqhqpBAERJaBWLYFvuxEooLkBESYB8vRWK4FDoBElqFYlL6iCMA3gtrOnZAAAqQS+AREkAfL0ViuOFVcVVxVXFVcVVxVXFShWJVYfKVFpoOMOEDpJgBBnBhEfBgURHgUEERIEAxERAwIREAJQ/oEBCw4AfwCAAJA/Pz8/Pz8oViVWHylRWaARFBEfERQRExEeERMREhEYERIREREXEREREBEWERAPERUPDhEUDg0REw0DERIDAhERAgEREAEFDwYE/shVsBBsEFsQShA5SHzbPMhVUAfbPMkBzMlPMFYhASBulTBZ9FkwlEEz9BPigBAByAEB9ADJAhEtAlYfASBulTBZ9FswlEEz9BfigBAiVhNUfo0vyFVQ2zzJAhErAlYfASBulTBZ9FswlEEz9BfigBBUeYfIVSBa+gISygDLf8kArwCvALEAgQP8AhEsAlYfASBulTBZ9FswlEEz9BficVYxgEBWI1n0D2+hkjBt3yBukjBtjhHQ+gDTf/oA03/6AFVAbBVvBeIgbrOYMAIREAI+PjDjDVYeAREwgED0WzAuwgCOkxEULnJ/VSBtbW3bPDARJC2hESSSVxTiERwRHhEcERsRHREbAIIA1wCDAnAgbvLQgG8lJMIAkyPCAJFw4pIzM+MNIMIAkyLCAJFw4plfAwIREAI+PjDjDVYeAREvgED0WzARLgCEAIUBxhEaER4RGgkRGQkRGBEdERgRFxEeERcJERYJERURFBEdERQRExEeERMRERESEREJEREJAREQAQ8RLg8OES4ODREoDQwLER0LCgkRLgkQJxAmECUQJBAjViICAREvAQ8REA8Q7wCPAf41coANcPgjES4RVBEuES0RUxEtESwRUhEsESsRURErESoRUBEqESkRTxEpESgRThEoEScRTREnESYRTBEmESURSxElESQRShEkESMRSREjESIRSBEiESERRxEhESARRhEgER8RRREfER4RRBEeER0RQxEdERwRQhEcERsRQREbAIYB/gOkgA5w+CMRMhFSETIRMRFRETERMBFQETARLxFPES8RLhFOES4RLRFNES0RLBFMESwRKxFLESsRKhFKESoRKRFJESkRKBFIESgRJxFHEScRJhFGESYRJRFFESURJBFEESQRIxFDESMRIhFCESIRIRFBESERIBFAESARHxE/ER8AiQH+ERoRQBEaERkRPxEZERgRPhEYERcRPREXERYRPBEWERUROxEVERQROhEUERMRORETERIROBESERERNxERERARNhEQDxE1Dw4RMg4QnQwRMwwLETELChEwCgkRLwkIEVQIBxFTBwYRUgYFEVEFVlAFEDRWPgRWQARWP1A0AhFXAgCHAvgBEVYBVlgB2zwwESkRTxEpESgRThEoEScRTREnESYRTBEmESURSxElESQRShEkESMRSREjESIRSBEiESERRxEhESARRhEgER8RRREfER4RRBEeER0RQxEdERwRQhEcERsRQREbERoRQBEaERkRPxEZERgRPhEYERcRPREXAIsAiADQERYRPBEWERUROxEVERQROhEUERMRORETERIROBESERERNxERERARNhEQDxE1Dw4RNA4NETMNDBEyDAsRMQsKETAKBxEuBwkRLQkGESwGBRErBQQRKgQDESkDAhEoAgERJwERJhBIQTAB+hEeET4RHhEdET0RHREcETwRHBEbETsRGxEaEToRGhEZETkRGREYETgRGBEXETcRFxEWETYRFhEVETURFREUETQRFBETETMRExESEVAREgcREQcREBFRERAPEU8PDhFODg0RTQ0MEUwMCxFLCwoRSgoJEUkJVkgJEDgHETYHAIoC/AYRNwYFETUFECQDETYDAhE3AhE1Ads8MBEpEUkRKREoEUgRKBEnEUcRJxEmEUYRJhElEUURJREkEUQRJBEjEUMRIxEiEUIRIhEhEUERIREgEUARIBEfET8RHxEeET4RHhEdET0RHREcETwRHBEbETsRGxEaEToRGhEZETkRGQCLAIwD3FYXpCnACpF/kynAC+KSJrOOECnADJEmmSnADZEmkiaz4uLi+COAQHAtVEwwLlRNMC1UTTAtVEowVE67yFWg2zzJAhEdAlYbASBulTBZ9FswlEEz9BfiEIkQNFYZBAMCERwCUAwQNUQAyFWw2zzJAJMAjQCOAOgRGBE4ERgRFxE3ERcRFhE2ERYRFRE1ERURFBE0ERQRExEzERMREhEyERIRERExEREREBEwERAPES8PDhEuDg0RLQ0MESwMCxErCwoRKgoHESgHCREnCQYRJgYFESUFBBEkBAMRIwMCESICAREhAREgEL0QjACOghCtjjHvUA3LHxvLBxnLD1AHINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WFcoAUAP6AgH6Ast/ygAB+gLLP8s/yx8ANsiCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABEQDgKiyBEeER0RHBEbERoRGREYERcRFhEVERQRExESEREREFXg2zzJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAViMBERKo+EIMowIREgIQrEGwGts8AJAAzAH0ghBHWWq+AREfyx8BER0Byz8BERsByz8BERkBywcBERcByz8BERUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYBERMByw8BEREBygAfyn9QDfoCG8p/UAn6AgfIy38Wy38Uyn9Y+gIB+gLKf8p/WPoCyFAD+gIAkQBcUAP6AlAD+gJQA/oCUAP6AlAD+gITygATy38Tyn/IUAT6AhTKf8lYzMkBzMkBzADq0x8BghBG3tNSuvLggSDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gHTD/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gDTP9N/0h/Sf9QB0NJ/MBkYFxYVFEMwAHZQq8sHGMsPUAYg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYUygBY+gIB+gLLf8oAAfoCyx/KAAP2VhuAECdZ9A9voZIwbd8gbpIwbY6H0Ns8bBdvB+KBbJYhbrPy9CBu8tCAbyc0NYIAj25QBPL0VhyAQC1Z9A9voZIwbd8gbpIwbY6H0Ns8bBtvC+IgbvLQgG8rECpfClYXgBAsWfQPb6GSMG3fIG6SMG2X0PQEATFvAeIgAPwBCQCVA/Rus5cgbvLQgG8hkjBt4iCBAQsuWfQLb6GSMG3fIG6SMG2PEtDbPAbUAdDbPDYQbFUEbBxvDOIgbrOXIG7y0IBvLJ0wcFRwAFMAcFRwAFMA4lYWllR7qVR7qZZUdUNUdUPigRR2JMIA8vRTQ1YqgBBWIVn0D2+hkjBt3wDvAO8AlgL+IG6SMG2Oh9DbPGwWbwbiIG6zmCBu8tCAbyZbmDBwVHAAUwBb4lYgUAihKaiCMA3gtrOnZAAAqQRWH1AHoSmogjAN4Lazp2QAAKkEViKOE1YhKaFSoKiCMA3gtrOnZAAAqQSOEyhWIqFSoKiCMA3gtrOnZAAAqQTiKlYjqFYfAQDxAJcB7hEfoAERHgGogjBnZceT+hAHnaoaqQRWG6CCAJ/sU8igI6EBER+gvgERHQHy9FGVoFYboVYZoYIwDeC2s6dkAACoViGUB6MoqJNReKjiF6BWIJaCF8RlNgCWghA7msoA4lYcAaAYqIIQO5rKAKkEF6kEViyAEFYiAJgB/Fn0D2+hkjBt3yBukjBtndD6ANIA039VIGwTbwPiIG6zlyBu8tCAbyOUMHBwIeJwU1PCAJRWJCS9kXDijj8xUzW2CFYks44SU1KhUhCogjAN4Lazp2QAAKkEjhJTJaFSEKiCMA3gtrOnZAAAqQTiUSGhUFWhIMAAknAz3gTeIACZA+7CAI4SM1IyqFMkqKBdoKkEWqBWIkADkTDiU1SoAREfqIIwZ2XHk/oQB52qGqkEIBEdqIIQO5rKAKkEVhwhoVYfVk6oghA7msoAqQRmoAERLgGgVh8BES6hIaABESwBoCZWHaEooFYeoaNwVHAAUwBWKuMPIFYnqACaAJsAnAAwVxpXGlcaVxpXGlcaVhhWGFYYUeqhUfmhAHhXFFcUVxRXFFcUVxRWElYSVhJR2qFRyaERFREbERURFBEaERQRExEZERMCERUCAREUAQ0REw0Q7xDeDA0D/IIwDeC2s6dkAACpBFLQESiogjAN4Lazp2QAAKkEChEdChA5ECgQfwYRGQYFERgFBBEXBAMRFgMCERUCAREUARETgQELERPIVbAQbBBbEEoQOUh82zzIVVAH2zzJAczJAhEUAhhWIAEgbpUwWfRZMJRBM/QT4oAQAcgBAfQAyQCvAK8AnQL8AhErAlYeASBulTBZ9FswlEEz9BfigBBUdChWLVYfLMhVUNs8yQIRKQJWHgEgbpUwWfRbMJRBM/QX4oAQVHk9yFUgWvoCEsoAy3/JAhEqAlYeASBulTBZ9FswlEEz9BfiVh4BETCAQPRbMPhCESoRShEqESkRSREpESgRSBEoALEAngH4EScRRxEnESYRRhEmESURRRElESQRRBEkESMRQxEjESIRQhEiESERQREhESARQBEgER8RPxEfER4RPhEeER0RPREdERwRPBEcERsROxEbERoROhEaERkROREZERgROBEYVjcRGBEXETcRFxEWETYRFhEVETURFREUETQRFACfA/gRExEzERMREhEyERICERECERARMBEQDxEvDw4RLg4NES0NDBEsDAsRSQsKETEKCRFKCQgRSAgHEUcHBhFGBgURLQUEEUQEAxFDAwIRQgIBETgBVkEBVjYBVjsBETvbPFYywgCOkxE3VjJyf1UgbW1t2zwwBFYxoQSSVzfiAMgA1wCgAfgRHBE+ERwRGxE9ERtzERsRGhFEERoRGRE9ERkRGBE8ERgRFxE7ERcRFhFFERYRFRFAERURFBEwERQRExEuERMREhFHERIREREtEREREBEqERAPETQPDhExDg0RNQ1WMw0METoMCxE5CwoRLAoJEUIJCBFJCAcRSgcGETsGAKEC+gURRwUEETAEAxFDAwIRLQJWMAIBEUUBETgREBERERAPERAPEN4QzcgRIBEfER4RHREcERsRGhEZERgRFxEWERURFBETERIREREQVeDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wARFcIAklYUkXDiUjCg+EIRFaMMESwMALYAogH8CxErCwoRKgoJESkJCBEoCAcRJwcGESYGBRElBQQRJAQDESMDAhEiAhEWESERFgIRIAIRFhEfERYRGREeERkHER0HAhEcAhEWERsRFhEZERoRGQgRGQgDERgDERMRFxETERERFhERChEVChEQERQREA0REw0NERINERAREREQAKMBPAMREAMQbxAuED0QLBBLEEoQKRB4ECcQNhA0QTDbPADMBP4gbpIwbZfQ9AQBMW8B4iBus5cgbvLQgG8hkjBt4iCBAQtWEln0C2+hkjBt3yBukjBtjxLQ2zwG1AHQ2zw2EGxVBGwcbwziIG6zlyBu8tCAbyydMHBUcABTAHBUcABTAOJWGpZUe6lUe6mWVHVDVHVD4oEUdiTCAPL0Vh4kvOMAAO8A7wClAKYAClceIhEeAv5WLYAQViNZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuIgbrOYIG7y0IBvJluYMHBUcABTAFviViBQBqEnqIIwDeC2s6dkAACpBFYfUAWhJ6iCMA3gtrOnZAAAqQRWMoAQVidZ9A9voZIwbd8gbpIwbZ3Q+gDSANN/VSBsE28D4iBuAPEApwH+s5cgbvLQgG8jlDBwcCHicFYmJMIAlFYpJL2RcOKOQjEjVie2CFYps44TViYjoVIQqIIwDeC2s6dkAACpBI4TIlYnoVIQqIIwDeC2s6dkAACpBOJRIaFQVaEgwACScDPeBN4gwgCOEzNSMqgiViaooF2gqQRaoFYnQAORMOJwIACoAvxWKMIAjlFbViZWJqhWIaiCMGdlx5P6EAedqhqpBCARI6iCEDuaygCpBHAiwgCdMCFWU6iCEDuaygCpBN5WIyKhIaABETUBoFIgETWhIaABETMBoBEyESKSVyPiLlYqjhQsViihVikBqIIwDeC2s6dkAACpBOMNVH8LoCShKaEAqQCqAChWJy2hVikBqIIwDeC2s6dkAACpBAT+ARERAaCCAPPJIcL/8vRWKsIAlVYqVhC5kXDilFYrwACRcOKcVytWKlYqqC+pBBEr3lYrIbyUVytWKt5WK6EPViqhVihWKBESVhGhIsIA4w9WKo4YVxZXFlcWVxZXFlcWJ1YdKAZWHKEEViWh4w4gViWogjAN4Lazp2QAAKkEKQCrAKwArQCuAPxWLo4UVitWEaFSMKiCMA3gtrOnZAAAqQSOFFYQViyhUjCogjAN4Lazp2QAAKkE4iNWLagBESgBESWgAREkAaiCMGdlx5P6EAedqhqpBAERJKBWEIFvuxEnoLkBESUB8vQugUOgESSoViQvqIIwDeC2s6dkAACpBL4BESMB8vQAdlcQWz8/Vx5XHlceVx5ReKABESQBCKBwVHAAUwAGESkGAxEiAw4RIQ4BESABDREfDRBfDhBNECxFE0FEAKBXEFcQVxBXEFcQVxAnVh0oBVYcoQhWJaERFBEdERQREhEYERIREREXEREREBEWERAPERUPDhEUDg0REw0MERIMAhERAgEREAEQXxC9CAUGBAPmViaogjAN4Lazp2QAAKkEEK4QSRA4EDcGER8GEF0EERQEAxETAwIREgIBEREBERCBAQsREMhVsBBsEFsQShA5SHzbPMhVUAfbPMkBzMkCERECFVYhASBulTBZ9FkwlEEz9BPigBAByAEB9ADJAhEtAlYfAQCvAK8AsAAiUFbLP1AD+gIB+gLLf8p/yn8C+CBulTBZ9FswlEEz9BfigBBWE1R4c1OYyFVQ2zzJAhErAlYfASBulTBZ9FswlEEz9BfigBBUftzIVSBa+gISygDLf8kCESwCVh8BIG6VMFn0WzCUQTP0F+JWIAERMoBA9Fsw+EIRKxFMESsRKhFLESoRKRFKESkRKBFJESgAsQCyAChQZfoCUAP6AgH6AgH6Alj6AgH6AgH4EScRSBEnESYRRxEmESURRhElESQRRREkESMRRBEjESIRQxEiESERQhEhESARQREgER8RQBEfER4RPxEeER0RPhEdERwRPREcERsRPBEbERoROxEaERkROhEZVjkRGREYETkRGBEXETgRFxEWETcRFhEVETYRFREUETURFACzA/gRExE0ERMCERICERERMhERERARMREQDxEwDw4RLw4NES4NDBFMDAsRMwsKEU0KCRFLCQgRSggHEUkHBhFIBgURRwUEEUYEAxFFAwIROgJWRAJWPwIR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AAAAAAABActnzMlw+wANklYekXDiViIBoPhCcNs8AMwC9BEZETIRGREYETERGBEXETARFxEWES8RFhEVERQRMhEUERMRMRETERIRMBESERERLxERERAPETIPDhExDg0RMA0MES8MCwoRMgoJETEJCBEwCAcRLwcGBREyBQQRMQQDES4DVi4DAhEyAgERMts8ESkRLhEpESgRLREoAMgAyQJYIsIAjyNycG1wyFIQywDJ0BBoXjQQN8hVYNs8yVYiVSAUQzBtbds8MJJfBeIAygDXAfwRJxEsEScRJhErESYRJREqESURJBEpESQRIxEoESMRIhEnESIRIREmESERIBElESARHxEkER8RHhEjER4RHREiER0RHBEhERwRGxEgERsRGhEfERoRGREeERkRGBEdERgRFxEcERcRFhEbERYRFREaERURFBEZERQRExEYERMAywDeghAPin6lUAjLHxbLP1AE+gJYINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WASBulTBwAcsBjh4g10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbiIW6zlX8BygDMlHAyygDiAfoCAc8WAHQREhEXERIREREWEREREBEVERAPERQPDhETDg0REg0MEREMCxEQCxCvEJ4QjRB8EGsQWhBJEDhHFUAGAbL4QW8kMDL4J28QK6EjoCKhcAG2CSBWILYIViABoYEBC1YbQBRZ9ApvoTGSMHCXcAFWIKG2CeJZoVAEoVADoCLCAJJwM99YoSDCAI6Kcn9VIG1tbds8MJFb4gDXArT5ASCC8GyPRPRf7bTN/tTejbFKpbE61V1DD3WdBmkhC3TEj+Pfuo6GMNs8f9sx4ILwvPr3dpB8cZzI03nY8ZSqqifoyihxzVkXgXIfIVpFRQG6joXbPH/bMeAAzgDPBBjbPNs8VyhwiAERKQEA0gDQANEA1QQY2zzbPFcof4gBESkBANIA0wDUANUAEIIA0DBWKfL0ABYAAAAAUmVzdW1lZAAU+EJWKgHHBfLghAASggCdsFYps/L0ABYAAAAAU3RvcHBlZAEO+EIBf23bPADWATxtbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPDAA1wHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgA2ACYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAIhuhe9s82zxXEF8PVxBfD2yhgA/QDbAgEgANwA3QAEVigCAWIA3gDfAhm1pptnm2eNnO2c7ZzwAP0A4gIwquHbPNs8bP9s/z8/Pz8/Pz8/Pz8/P1WyAP0A4AIgqR3bPNs8VxBfD1cQXw9soQD9AOEAPFYnVhxWHFYjViNWJ1YnViBWJlYmViZWIlYiViVWNAAEVikADlR2VFR2VCYCASAA5QDmAvmyoggbpIwbY4cINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiOLbPBEpESsRKREoESoRKBEnESkRJxEmESgRJhElEScRJREkESYRJBEjESURIxEiESQRIhEhESMRIREgESIRIBEfESERHxEeESARHhEdER8RHREcER4RHIAD9AO0C+a0K7Z4IlIiVCJSIlAiUiJQIk4iUCJOIkwiTiJMIkoiTCJKIkgiSiJIIkYiSCJGIkQiRiJEIkIiRCJCIkAiQiJAIj4iQCI+IjwiPiI8IjoiPCI6IjgiOiI4IjYiOCI2IjQiNiI0IjIiNCIyIjAiMiIwIi4iMCIuIiwiLiItAAP0A5wL5rnhtngiUiJUIlIiUCJSIlAiTiJQIk4iTCJOIkwiSiJMIkoiSCJKIkgiRiJIIkYiRCJGIkQiQiJEIkIiQCJCIkAiPiJAIj4iPCI+IjwiOiI8IjoiOCI6IjgiNiI4IjYiNCI2IjQiMiI0IjIiMCIyIjAiLiIwIi4iLCIuIi0AA/QDqAXQRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPFcSVxBfD1cSVxBfD2yCAOgBPIBALgJZ9A9voZIwbd8gbpIwbY6H0Ns8bBhvCOJSwADpAOTSAAGS0weSbQHi0z/TPyDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gH6ACDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gH6ANMfVXABdBEVERYRFREUERURFBETERQRExESERMREhERERIREREQEREREA8REA9VDts8VxJXEF8PVxJXEF8PbIIA6wFAgEBWEwJZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuJWEQEA7ABY0gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfoA+gDTH9IAVVABuBEbER0RGxEaERwRGhEZERsRGREYERoRGBEXERkRFxEWERgRFhEVERcRFREUERYRFBETERURExESERQREhERERMREREQERIREA8REQ8OERAOVR3bPGzEbMRsxGxkAO4D3m0hbrOPWSyAECRZ9A9voZIwbd8gbpIwbZfQ9AQBMW8B4iBus481MSBu8tCAbyGBAQsCIG7y0IASWfQLb6GSMG3fIG6SMG2PEtDbPAbUAdDbPDYQbFUEbBxvDOKSMDHikTHiKoAQI1n0D2+hkjBt3wDvAO8A8AAc0z/6APoA03/Sf9J/VVABaCBukjBtndD6ANIA039VIGwTbwPigBBUSxRZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuItUDMA8QAc+gD6APoA+gD6APoAVVACASAA9AD1AgEgAPgA+QARsK+7UTQ0gABgAvWypwg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCI2zwRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERuAA/QD2AaARGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERYRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPGzzbPNswwD3AC5WFIEBCyJZ9ApvoTEhVhjHBQJWF8cFEgL5sgc2zwRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERsRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERaAA/QD6Avmye7bPBEpESoRKREoESkRKBEnESgRJxEmEScRJhElESYRJREkESURJBEjESQRIxEiESMRIhEhESIRIREgESERIBEfESARHxEeER8RHhEdER4RHREcER0RHBEbERwRGxEaERsRGhEZERoRGREYERkRGBEXERgRFxEWERcRFoAD9AP4BmBEVERYRFREUERURFBETERQRExESERMREhERERIREREQEREREA8REA9VDts8VxBfD1cQXw9soSBukjBtmSBu8tCAbydvB+IgbpIwbd4A+wE6gBBWFAJZ9A9voZIwbd8gbpIwbY6H0Ns8bBdvB+IA/AAk1AHQAdIA0w/6ANMf0x/TH1VgAkLtRNDUAfhj0gAB4wL4KNcLCoMJuvLgiYEBAdcAAQHR2zwA/wEAAWQRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPGzzbPNswwEIAvjbPFcqESgRKREoEScRKBEnESYRJxEmESURJhElESQRJREkESMRJBEjESIRIxEiESERIhEhESARIREgER8RIBEfER4RHxEeER0RHhEdERwRHREcERsRHBEbERoRGxEaERkRGhEZERgRGREYERcRGBEXERYRFxEWERURFhEVAQEBAgT2MHCBALRwVHAAghAExLQAVHAAUwCCCJiWgIIK+vCAghAF9eEAIo0IYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABI0IYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABImJiW1tbXFtbSJtUxFtAQYBBgEGAQcBzPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gDTH/oA0x/TH9Mf+gD6APoA+gDUAdD6APoA+gD6APoA+gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQw0AEDAEgRFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ4BxvpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQw0AEEAf76QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfQE9AT0BNM/1DDQ9AT0BNM/9ATTP9M/1DDQ9AT0BPQE+gD6APoA0n/Sf/oA+gAwER8RKhEfER8RKREfER8RKBEfER8RJxEfER8RJhEfER8RJREfER8RJBEfER8RIxEfAQUAJBEfESIRHxEfESERHxEfESARHwBDgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEACEbW1WHFRwAFRwAPhCESkRKBEnESYRJREkESMRIhEhESARHxEeER0RHBEbERoRGREYERcRFhEVERQRExESEREREFXgAY5WEIBAIln0D2+hkjBt3yBukjBtjofQ2zxsG28L4oBAVhFAE1n0D2+hkjBt3yBukjBtjhHQ+gDTf/oA03/6AFVAbBVvBeIvWQEJAGzTB9MP+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHSAPoA+gDTf9IA+gDTH9IAVaA=');
-    const __system = Cell.fromBase64('te6cckICAQwAAQAAWQgAAAEBwAABAQWg6L8AAgEU/wD0pBP0vPLICwADAgFiAAQA1gLw0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8ESkRKxEpESgRKhEoEScRKREnESYRKBEmESURJxElESQRJhEkESMRJREjESIRJBEiESERIxEhESARIhEgER8RIREfAP8ABQLSER4RIBEeER0RHxEdERwRHhEcERsRHREbERoRHBEaERkRGxEZERgRGhEYERcRGREXERYRGBEWERURFxEVERQRFhEUERMRFRETERIRFBESERERExERERAREhEQDxERDw4REA5VHds88uCCAAYA0gSg7aLt+wGSMH/gcCHXScIflTAg1wsf3iCCEL0bs1G6jwgw2zxsGNs8f+AgghBbjycduo6UMNMfAYIQW48nHbry4IHUATHbPH/gIIIQ5Js78LoABwAKABQAGAL20x8BghC9G7NRuvLggdMf+gDTH9Mf0x/UAdDSAAGOhNs8bwqRbeIB1DDQ0gABjkX0BPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiEMwbwORbeIB1DDQAAgACQBQ+gD6APoA+gD6APoA+gD6ANQB0PoA+gAwECoQKRAoECcQJhAlECQQIwDw0gABjmX6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiEMwbBNvA5IwbeIQOBA3EDYQNRA0AfARKRExESkRKBEwESgRJxEvEScRJhEuESYRJREtESURJBEsESQRIxErESMRIhEqESIRIRExESERIBEwESARHxEvER8RHhEuER4RHREtER0RHBEsERwRGxErERsRGhEqERoRGRExERkRGBEwERgRFxEvERcRFhEuERYACwP2ERURLREVERQRLBEUERMRKxETERIRKhESERERMRERERARMBEQDxEvDw4RLg4NES0NDBEsDAsRKwsKESoKCRExCQgRMAgHES8HBhEuBgURLQUEESwEAxErAwIRKgIBETEBETDbPFcjVyNXI1cjVyNWK26zklcr4w1WK26zAMsADAANAGhXEVcRVxFWKCBu8tCAbyNbVikgbvLQgG8jMDERKiBu8tCAbyNsIREQESoREAEREgEREBERBP6SVyvjDVYjbrOSVyPjDYgRIhEqESIRIREpESERGxEjERsRGhEiERoRGREhERkRGBEgERgRFxEfERcRFhEeERYRFREdERURFBEcERQRExEbERMREhEaERIREREZEREREBEYERAPERcPDhEWDg0RFQ0MERQMCxETCwoREgoJEREJAA4AEAASABMB/j4+VikgbvLQgG8jWyCBAQtxWfSCb6UgllAj1wAwWJZsIW0ybQHikI49gQELAZF/kW3iEC9S8HEhbpVbWfRZMJjIAc8AQTP0QeKBAQtUQh9xQTP0dG+lIJZQI9cAMFiWbCFtMm0B4uhfA1YpIG7y0IBvIzAxESogbvLQgG8jbCEADwAIDREqDgH4VxJXElcSVxJXElcSVxJXElcSVxJWGSBu8tCAbyoQeV8JVhogbvLQgG8qEGlfCVYbIG7y0IBvKhBZXwlWHCBu8tCAbyoQSV8JVh0gbvLQgG8qEDlfCVYeIG7y0IBvKhApXwlWHyBu8tCAbypfCVYgIG7y0IBvKhCJXwlWIQARAIwgbvLQgG8qGV8JESIgbvLQgG8qbJEREREiEREIERoIBxEZBwYRGAYFERcFAxEWAxERERUREREUAhETAgEREgEEEREEEDRZACQAAAAAY29uZmlnIHVwZGF0ZWQBQAgREAgQfxBuEF0QTBA7SpAQOEdgEDVEMBL4QgF/bds8AM8B8BEpESoRKREoESoRKBEnESoRJxEmESoRJhElESoRJREkESoRJBEjESoRIxEiESoRIhEhESoRIREgESoRIBEfESoRHxEeESoRHhEdESoRHREcESoRHBEbESoRGxEaESoRGhEZESoRGREYESoRGBEXESoRFxEWESoRFgAVAvgRFREqERURFBEqERQRExEqERMREhEqERIREREqEREREBEqERAPESoPDhEqDg0RKg0MESoMCxEqCwoRKgoJESoJESoIBwZVQNs8ESrIAYIQW48nHVjLH8zJESkRKhEpESgRKREoEScRKBEnESYRJxEmESURJhElESQRJREkAMsAFgH8ESMRJBEjESIRIxEiESERIhEhESARIREgER8RIBEfER4RHxEeER0RHhEdERwRHREcERsRHBEbERoRGxEaERkRGhEZf21WGhEcERoRGxEaERkRGhEZERgRGREYERcRGBEXERYRFxEWERURFhEVERQRFREUERMRFBETERIRExESABcBVBERERIREREQEREREA8REA8Q7xDeEM0QvBCrEJoQiRB4EGcQVgQFVSDbPADPBIiPGTDTHwGCEOSbO/C68uCB0w/bPBB4bBjbPH/gIIIQm0Lk77qOlTDTHwGCEJtC5O+68uCB0w8BMds8f+AgghD+sqdmugD9ABkAHwAlAfARKRExESkRKBEwESgRJxEvEScRJhEuESYRJREtESURJBEsESQRIxErESMRIhEqESIRIRExESERIBEwESARHxEvER8RHhEuER4RHREtER0RHBEsERwRGxErERsRGhEqERoRGRExERkRGBEwERgRFxEvERcRFhEuERYAGgL8ERURLREVERQRLBEUERMRKxETERIRKhESERERMRERERARMBEQDxEvDw4RLg4NES0NDBEsDAsRKwsKESoKCRExCQgRMAgHES8HBhEuBgURLQUEESwEAxErAwIRKgIBETEBETDbPAURLgUEES0EAxEsAwIRKwIBESoBETGAEBExAMsAGwP+yFVg2zzJED0CESsCAREqASBulTBZ9FswlEEz9BfiiBEiESoRIhEhESkRIREgESgRIBEfEScRHxEeESYRHhEdESURHREcESQRHBEbESMRGxEaESIRGhEZESERGREYESARGBEXER8RFxEWER4RFhEVER0RFREUERwRFBETERsREwAcAB0AHgAyyFAHzxbJUAfMFMoAEssPAfoCyx8Syx/LHwAgAAAAAHRva2VuIGxpc3RlZAGkERIRGhESERERGRERERARGBEQDxEXDw4RFg4NERUNDBEUDAEREwEKERIKCRERCQgREAgQfxBuEF0QTBA7ECoQORA4EDcQNhA1EDQS+EIBf23bPADPAfARKREqESkRKBEqESgRJxEqEScRJhEqESYRJREqESURJBEqESQRIxEqESMRIhEqESIRIREqESERIBEqESARHxEqER8RHhEqER4RHREqER0RHBEqERwRGxEqERsRGhEqERoRGREqERkRGBEqERgRFxEqERcRFhEqERYAIAT+ERURKhEVERQRKhEUERMRKhETERIRKhESERERKhERERARKhEQDxEqDw4RKg4NESoNDBEqDAsRKgsKESoKCREqCREqCAcGVUDbPCeAEFYsWfQPb6GSMG3fIG6SMG2Oh9DbPGwWbwbiIG6zkTDjDVYqARETgBD0WzBWKlAIgBD0WwDLAPIAIQAiAEKBXwUhIG7y0IBvJhA1XwUCIG7y0IBvJhAlXwUSoMAA8vQC9jBWKlAJgBD0WzABESoBCYAQ9FswiBEpESoRKREoESkRKBEnESgRJxEmEScRJhElESYRJREkESURJBEjESQRIxEiESMRIhEhESIRIREgESERIBEfESARHxEeER8RHhEdER4RHREcER0RHBEbERwRGxEaERsRGhEZERoRGQAjACQAJAAAAAB0b2tlbiBkZWxpc3RlZAGmERgRGREYERcRGBEXERYRFxEWERURFhEVERQRFREUERMRFBETBxETBxERERIREREQEREREA8REA8Q7xDeEM0QvBobEGcQVhBFEDQQI/hCAX9t2zwAzwP+j3Mw0x8BghD+sqdmuvLggdM/+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiBJsEoIAoPf4QlYYAccF8vSBStsnwgDy9HCAQnBtI8hSEMsAydAmEGgQXQQHVSDIVWDbPMlWGQRIiBRDMG1t2zwwcAR/4CDAACLXScEhsADAANAAJgTsklt/4CCCEHNi0Jy6j1Uw0x8BghBzYtCcuvLggdM/+gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIVBMDECNsFPhCVhsBxwWzmPhCVhwBxwWzkXDijoQwINs84w5/4CCCEEgedWG64wIgghCrz1h7ugAzACcANAA8A1xWLJF/ldMAAcMB4o6EMCDbPOD4QlYcAccFjorUMND6ADBwA9s84NQw0NMHIcABADMAKQAoA4KOiDH6ADB/A9s8jzQBwAKOqPoA0gDTD9IA+gDTf9Mf1DDQ+gDTf/oA038wELwQqxCaEIkQeFUD2zyOhDAg2zzi4gApACwAMwTC+EFvJBNfAyQwIlYiuY6GMDEyINs84FYmI6C5joUxMiDbPOBWFaSAQPgjcCdURzAmVEgwyFVQ2zzJAhEZAlYYASBulTBZ9FswlEEz9BfiUbKgBJFxkXLiUTBUIxQBERgBBwAzADMAPwAqAljIVVDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wBWIggRFAgIERMIQAjbPAArAMQAboIQxNAg5FAHyx8VywdQAyDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFgH6AgH6Ass/yz8D9PhBbyQTXwMsVjKguY6IEHtfC1EQ2zzgcSXCAJMkwgCRcOKSMHLeI8IAkyLCAJFw4pGk3lYpIahS0LmOiBCMXwxRENs84AuRepKAC+JTy6kEETIROREyETEROBExETARNxEwES8RNhEvES4RNREuES0RNBEtESwRMxEsADMAMwAtAfwRKxE5ESsRKhE4ESoRKRE3ESkRKBE2ESgRJxE1EScRJhE0ESYRJREzESURJBE5ESQRIxE4ESMRIhE3ESIRIRE2ESERIBE1ESARHxE0ER8RHhEzER4RHRE5ER0RHBE4ERwRGxE3ERsRGhE2ERoRGRE1ERkRGBE0ERgRFxEzERcALgT+ERYROREWERUROBEVERQRNxEUERMRNhETERIRNRESERERNBERERARMxEQDxE5Dw4ROA4NETcNDBE2DAsRNQsKETQKCREzCQgROQgXVjgHBhE2BgURNQUEETQEEToD2zxWMcIAlFYtwgCRcOKRf5xWLMIAlFYrwgCRcOLi4w9WKQB+AC8AMAAxALpWL4BAETCpBAQRMgQDES4DAhEtAgERLAHIVUBQVPoCEst/AfoCEst/AfoCyRA8AhErAgERKAEgbpUwWfRbMJRBM/QX4hEoESsRKBElESgRJRElEScRJRElESYRJQkAJjAEETAEAxEtAwIRLAJXKlcqXwMB+qARJBErESQRIxEqESMRIhEpESIRIREoESERIBEnESARHxEmER8RHhElER5WHRElER0RJBEdERwRIxEcERsRIhEbERoRIREaERkRIBEZERgRHxEYERcRHhEXERYRHREWERURHBEVERQRGxEUERMRGhETERIRGRESERERGBERADIBVBEQERcREA8RFg8OERUODREUDQwREwwLERILChERCgkREAkQjxB+VWbbPADEAlwiwgCPJfhCcIBCcG0jyFIQywDJ0BBqEFkQSBA3yFVg2zzJFEMwbW3bPDCSXwTiAMAA0AGMMNMfAYIQSB51Ybry4IHTP9M/INcLAcMAjh/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIlHLXIW3iQzBsE9s8fwA1Avb4QW8kMDKBS2lWJlYloBO+EvL0VhWAQCVZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuKBf30hbrPy9CBu8tCAbyaBXm0Bs/L0VhyBAQsnWfQKb6ExggCg9yGRf5RTV8cF4vL0s5yBF+YBVjGg+CO78vSRMOJScBEagED0WzAA7AA2AfQjklYeklYf4hEsETIRLBErETERKxEqETARKhEpES8RKREoES4RKBEnES0RJxEmETIRJhElETERJREkETARJBEjES8RIxEiES4RIhEhES0RIREgETIRIBEfETERHxEeETARHhEdES8RHREcES4RHBEbES0RGxEaETIRGgA3A/4RGRExERkRGBEwERgRFxEvERcRFhEuERYRFREtERUBERQBERMRMRETERIRMBESERERLxERERARLhEQDxEtDx4NETENDBEwDAsRLwsKES4KCREtCRgHETEHBhEwBgURLwUEES4EAxEtAwJWMQIRLlYw2zxWLW6zlFctVivjDVYvAL8AOAA5AA4RLSBu8tCAAv7CAI6RVi9yf1UgbW1t2zwwBFYuoQSRMOIRKpFxkXLiAgERKQERLchVIIIQubA8vFAEyx8SywfLP8s/yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AFYcVhugESyjESYRLBEmESURKxElESQRKhEkESMRKREjESIRKBEiESERJxEhANAAOgH8ESARJhEgER8RJREfER4RJBEeER0RIxEdERwRIhEcERsRIREbERoRIBEaERkRHxEZERgRHhEYERcRHREXERYRHBEWERURGxEVERQRGhEUERMRGRETERIRGBESERERFxERERARFhEQDxEVDw4RFA4NERMNDBESDAsREQsKERAKADsBKhCfEI4QfRBsEFsQShA5SHAWExXbPADEBDqPCDDbPGwW2zx/4CCCEO71kk264wIgghD5T4C7ugA9AD4ASwBTAI7THwGCEKvPWHu68uCB0z/TPyDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gH0BPoA+gBVUAP0OPhBbyQwMoIAoPdWG4EBCyNZ9ApvoTHy9FYYgEAoWfQPb6GSMG3fIG6SMG2Oh9DbPGwWbwbigX99IW6z8vQgbvLQgG8mgV5tAbPy9FYrJZNWKaCWVipWLKCg4oFLaVGBvhjy9H+AQCZURjAmVEY2AchVUNs8yQIRHgIA7AA/AEAAXFBWygBQAyDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFgH6AgH6AssfygAExlLAIG6VMFn0WzCUQTP0F+JwKIAQgwZZ9IZvpSCWUCPXATBYlmwhbTJtAeKQiuhbOFJtoVLcoSBWMaiCEDuaygCpBFPAoAEREAGgUR+hAREQAaBT96Ak4w9Sz4BA9FswVh7CAABBAEIARABJAMxWFoAQI1n0D2+hkjBt3yBukjBtndD6ANIA039VIGwTbwPiIG6zjiAgbvLQgG8jE6GoAZFxkX/iqIIwDeC2s6dkAACpBBKgAZFb4oAQKgKDBkEz9HxvpSCWUCPXATBYlmwhbTJtAeIC0nBWMyKhtgkjgSliArvy9FYSwACbMIIwDeC2s6dkAACfgjAN4Lazp2QAAKhWEqkE4iKCMA3gtrOnZAAAqCGpBH9tcMjJ0CpROVE2A8hVUNs8yVYnAlYsAkMwcAFtbds8MBERI6ARE1YRoABDANAAyIIQibcdCVAHyx9QBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlADINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WgQEBzwAhbrOVfwHKAMyUcDLKAOIB+gIBzxYC+oIwDeC2s6dkAACoVhKpBFMCqIIwDeC2s6dkAACpBH9UfEdtyFUwghBZXwe8UAXLHxPLPwH6AgEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYhbrOVfwHKAMyUcDLKAOLJViYCVi0CQzBwAW1t2zwwERFWEaEREyOhANAARQH4ESkRNhEpESgRNREoEScRNBEnESYRMxEmESURMhElESQRMREkESMRMBEjESIRLxEiESERLhEhESARLREgER8RLBEfER4RKxEeER0RKhEdERwRNhEcERsRNREbERoRNBEaERkRMxEZERgRMhEYERcRMREXVjARFxEWETARFgBGAvoRFREvERURFBEuERQRExEtERMPERIPERERKxERERARNxEQDxE2Dw4RNQ4NETQNDBEzDAsRMgsKCREwCQgRLwgXBhEtBhA1BBEuBAMCETACARE3ARExVjNWN1YzVjrbPBEpETYRKREoETURKBEnETQRJxEmETMRJhElETIRJQC/AEcB+BEkETERJBEjETARIxEiES8RIhEhES4RIREgES0RIBEfESwRHxEeESsRHhEdESoRHREcESkRHBEbESgRGxEaEScRGhEZESYRGREYESURGBEXESQRFxEWESMRFhEVESIRFREUESERFBETESARExESER8REhEQER0REA8RHA8ASABmDhEbDg0RGg0MERkMCxEYCwoRFwoJERYJCBEVCAcRFAcDERMDBRESBQMREQMPED5JhhAkA+KOoSpus5YKIG7y0ICSOiXiVh5yf1UgbW1t2zwwERFWHaEREZE64gSRcZFy4l43BhA1ECQQIwIREAItAlYTAhERVB4NVhEQZ8hVwNs8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABEUoxBJXjNeMRPbPADQAEoAxACkghBIQm82UA7LHxzLPxrLPxjLB1AGINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAT6Alj6Ast/AfoCAcjKf1j6Alj6Alj6Alj6AskBzAIQMNs8bBjbPH8ATABNAD7THwGCEO71kk268uCB+gDTD9IA+gD6ANN/0z/TH1VwAfARKRExESkRKBEwESgRJxEvEScRJhEuESYRJREtESURJBEsESQRIxErESMRIhEqESIRIRExESERIBEwESARHxEvER8RHhEuER4RHREtER0RHBEsERwRGxErERsRGhEqERoRGRExERkRGBEwERgRFxEvERcRFhEuERYATgL8ERURLREVERQRLBEUERMRKxETERIRKhESERERMRERERARMBEQDxEvDw4RLg4NES0NDBEsDAsRKwsKESoKCRExCQgRMAgHES8HBhEuBgURLQUEESwEAxErAwIRKgIBETEBETDbPPhBbyQwgUtpM1YyoVYlvhLy9IFf8lYxVh2+AMwATwH08vQRKhEwESoRKREvESkRKBEuESgRJxEtEScRJhEsESYRJRErESURJBEqESQRIxEpESMRIhEoESIRIREnESERIBEmESARHxElER8RHhEkER4RHREjER0RHBEiERwRGxEhERsRGhEgERoRGREfERkRGBEeERgRFxEdERcAUAL2ERYRHBEWERURGxEVERQRGhEUERMRGRETERIRGBESERERFxERERARFhEQDxEVDw4RFA4NERMNDBESDAsREQsKERAKEJ8QjhB9EGwQWxBKEDlIcAYRMgaADFRBdlUxVjQBETTbPDAFViugESkRKxEpESgRKhEoEScRKREnAH4AUQH4ESYRKBEmESURJxElESQRJhEkESMRJREjViIRJREiESQRIhEhESMRIREgESIRIBEfESERHxEeESARHhEdER8RHREcER4RHBEbER0RGxEaERwRGhEZERsRGREYERoRGBEXERkRFxEWERgRFhEVERcRFREUERYRFBETERUREwBSAWoREhEUERIRERETEREREBESERAPEREPDhEQDhDfEM4QvRCsEJsQihB5GBBXEEYQNRAkQwDbPADEBMqPCDDbPGwZ2zx/4CCCEAmf9KO6jscw0x8BghAJn/SjuvLggSDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gHTP9M/VSBsE9s8f+AgghDtdpJuugBUAFUAXgBnAELTHwGCEPlPgLu68uCB+gDTD9IA+gDTf/oA03/TP9MfVYAB8BEpETIRKREoETERKBEnETARJxEmES8RJhElES4RJREkES0RJBEjESwRIxEiESsRIhEhESoRIREgETIRIBEfETERHxEeETARHhEdES8RHREcES4RHBEbES0RGxEaESwRGhEZESsRGREYESoRGBEXETIRFxEWETERFgBWAv4RFREwERURFBEvERQRExEuERMREhEtERIREREsEREREBErERAPESoPDhEyDg0RMQ0METAMCxEvCwoRLgoJES0JCBEsCAcRKwcGESoGBREyBQQRMQQDETADAhEvAgERLgERLds8+EFvJDAycFY1wgCUVjTCAJFw4pIwcd5WM8IAAMwAVwT4lFYywgCRcOKRpN6BS2kDVjChViYiqL4T8vSBX/JWHSOoVjABvvL0VjTCAJRWM8IAkXDijqiADXBWMCSpBFYzUVQQRVYyBFYyUDQCETsCARE6AVY22zwwETERMhExlFczVzPiVjDCAJRWL8IAkXDi4w8RKlYmoFYcAREtqAB+AFgAWwBcAfaADnBWLlY1qQQRLBEyESwRKxExESsRKhEwESoRKREvESkRKBEuESgRJxEtEScRJhEsESYRJRErESURJBEqESQRIxEpESMRIhEoESIRIREnESERIBEmESARHxElER8RHhEkER4RHREjER0RHBEiERwRGxEhERsRGhEgERoAWQL8ERkRHxEZERgRHhEYERcRHREXERYRHBEWERURGxEVERQRGhEUERMRGRETERIRGBESERERFxERERARFhEQDxEVDw4RFA4NERMNDBESDAsREQsKERAKEJ8QjhB9EGwQWxBKEDkQeBAnVjQHEFYQRRAkAxE0AwIRNALbPDAFESoFAH4AWgDsBBEpBAMRKAMCEScCBREmBQERJQERJAQRIwQDESIDAhEhAgURIAUBER8BER4EER0EAxEcAwIRGwIFERoFAREZAREYBBEXBAMRFgMCERUCBREUBQEREwEREgQREQQDERADEC8QXlDcEEsQOhApEFhQdhBFEDQQIwAsBREwBQQRLwQDES4DAhEtAlcqVypfBAH4ESMRLBEjESIRKxEiESERKhEhESARKREgER8RKBEfER4RJxEeER0RJhEdERwRJREcERsRJBEbERoRIxEaERkRIhEZERgRIREYERcRIBEXERYRHxEWERURHhEVERQRHREUERMRHBETERIRGxESERERGhERERARGREQDxEYDwBdAW4OERcODREWDQwRFQwLERQLChETCgkREgkIEREIBxEQBxBvEF4QTRA8S6AQaRBXEEYQNVBCE9s8AMQD8vhBbyQwMlYUgEAlWfQPb6GSMG3fIG6SMG2Oh9DbPGwbbwvigX99IW6z8vQgbvLQgG8rbDM0NYFebQOzE/L0JMAKkX+TJMAL4lYsIZNWKqDegUtpUZG+GfL0Vh6BAQsoWfQKb6ExggCg9yGRf5RTWMcF4vL0s5Fw4w0BCwBfAGAAFCXACpF/kyXADOID/J2BF+YFVjOg+CO7FfL0kTTicASSMDHjDVJgERiAQPRbMFYXwgCOnydukjcilgcgbvLQgOJWF3J/VSBtbW3bPDABERagERWTN1cW4gtWFaFLQ8hVIIIQ8sWurFAEyx8SywfLP8s/yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AABhANAAZgL6VhiAQCpZ9A9voZIwbd8gbpIwbY4R0PoA03/6ANN/+gBVQGwVbwXiIG6zjsggbvLQgG8lKAXCAJMDwgCSM3DilDNUQRPeAcIAksIAkjBw4pGgkTDiIMIAjo00UyNyf1UgbW1t2zwwkTDiUoARGYBA9FswERiRMOIRKxEzESsA0ABiAfgRKhEyESoRKRExESkRKBEwESgRJxEvEScRJhEuESYRJREtESURJBEsESQRIxEzESMRIhEyESIR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AKcAqAAiUFbLP1AD+gIB+gLLf8p/yn8C+CBulTBZ9FswlEEz9BfigBBWE1R4c1OYyFVQ2zzJAhErAlYfASBulTBZ9FswlEEz9BfigBBUftzIVSBa+gISygDLf8kCESwCVh8BIG6VMFn0WzCUQTP0F+JWIAERMoBA9Fsw+EIRKxFMESsRKhFLESoRKRFKESkRKBFJESgAqQCqAChQZfoCUAP6AgH6AgH6Alj6AgH6AgH4EScRSBEnESYRRxEmESURRhElESQRRREkESMRRBEjESIRQxEiESERQhEhESARQREgER8RQBEfER4RPxEeER0RPhEdERwRPREcERsRPBEbERoROxEaERkROhEZVjkRGREYETkRGBEXETgRFxEWETcRFhEVETYRFREUETURFACrA/gRExE0ERMCERICERERMhERERARMREQDxEwDw4RLw4NES4NDBFMDAsRMwsKEU0KCRFLCQgRSggHEUkHBhFIBgURRwUEEUYEAxFFAwIROgJWRAJWPwIRPAHbPFYvwgCOkxE2Vi9yf1UgbW1t2zwwBFYuoQSSVzbiER0RQBEdAL8A0ACsAfoRHBE/ERwRGxE+ERsRGhFJERoRGRE9ERkRGBE8ERgRFxE7ERcRFhEwERYRFREtERURFBE5ERQRExEzERMREhE4ERIRERFCEREREBEyERAPES8PDhFHDg0RKQ1WOg0METgMCxE3CwoRMgoJEUcJCBFGCAcRQgcGEUUGBRFEBQCtAvoEES0EAxEsAwIRKwJWLAIBETYBEUoREBERERAPERAPEN4QzcgRIBEfER4RHREcERsRGhEZERgRFxEWERURFBETERIREREQVeDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wARHMIAklYhkXDiUiCg+EIREaMLESwLChErCgCuALAB9IIQI1NGTAERIcsfAREfAcs/AREdAcs/AREbAcsHAREZAcs/AREXINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WAREVAcsPARETAcoAARERAcp/UA/6Ah3Kf1AL+gIJyMt/GMt/Fsp/FMp/WPoCAfoCyn/Kf8hYAK8AcvoCUAP6AlAD+gJQA/oCUAP6AlAD+gJQA/oCUAP6AhPKAAPIy38Uyn9QBPoCFMp/yVADzMlYzMkBzAH8CREqCQgRKQgHESgHBhEnBgURJgUEESUEAxEkAwIRIwIRHREiER0CESECER0RIBEdAhEfAgsRHgsCERwCCxEbCxETERoRExEQERkREAIRGAIRFhEXERYLERYLBBEVBAQRFAQREhETERIJERIJDBERDAsREAsQnxC+EE0QjBB7ALEBHBA6EGleJRBFEDRBMNs8AMQEPLqPCDDbPGwX2zx/4CCCEIjn+Se64wIgghCUapi2ugCzALUAugDFAfbTHwGCEPwzh3268uCB0gABktMHkm0B4tM/0z8g1wsBwwCOH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IiUctchbeIB+gAg1wsBwwCOH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IiUctchbeIB+gAAtAAEVWAD9IIAoPf4QlYexwXy9PhBbyQwMYFLaTJWKr7y9FYSpIBA+COCAVGAoFRpkFRpkFRpkFKQyFVw2zzJAhEWAlYVASBulTBZ9FswlEEz9Bfi+COCAVGAoAgRFAgHERQHBhEUBgURFAUEERQEAxEUAwIRFAIBERQByFWA2zzJALYAtwC5APAnbrOYf1AJygAXyweYN3BQCMoAEGfiFcs/E8s/ASBulTBwAcsBjh4g10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbiAfoCASBulTBwAcsBjh4g10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbiAfoCyx8BqIIQlii6llAKyx8Yyz8mbrOXfwHKABbLB5Y2cFAGygDiFMs/Ess/ASBulTBwAcsBjh4g10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbiAfoCAQC4AGYgbpUwcAHLAY4eINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8W4gH6AgHIyx/JAcwBRMiCWMAAAAAAAAAAAAAAAAEBy2fMyXD7APhCViIQ3gFw2zwAxAPKMNMfAYIQiOf5J7ry4IHSANM/0z9VIGwTggCg9/hCVhrHBfL0gUtp+EFvJBNfA1YmViSgvvL0L4BAI1n0D2+hkjBt3yBukjBtjofQ2zxsGG8I4oErcCFus/L0IG7y0IBvKArjD38A6AC7ALwBel8HMlIPgED0WzBQ7shZghBLw0HVUAPLH8s/yz/JyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsA+EJWIgFw2zwAxAP8N4F6wfgjUAq+GfL0JG6zjjQEcSFukltwkbrimBEYEoBA9FswjhtSIBEXgED0WzARFRKAQPRbMBEVERcRFREUERXiERdZkjMz4iJus5MhwgCRcOIgkmwi4w0kbrOTIsIAkXDijpMEIG7y0IB/WANyECNtbW3bPDACkjIz4lIQAL0A0ADDAfwDIG7y0ID4QhEsETERLBErETARKxEqES8RKhEpES4RKREoES0RKBEnETERJxEmETARJhElES8RJREkES4RJBEjES0RIxEiETERIhEhETARIREgES8RIBEfES4RHxEeES0RHhEdETERHREcETARHBEbES8RGxEaES4RGlYtERoAvgL0ERkRMhEZERgRMREYERcRMBEXERYRLxEWERURFBEyERQRExExERMREhEwERIREREvEREREA8RMg8OETEODREwDQwRLwwLChEyCgkRMQkIETAIBxEvBwYFETIFBBExBAMRLgNWLgMCETICAREy2zwRKREuESkRKBEtESgAvwDBAlgiwgCPI3JwbXDIUhDLAMnQEGheNBA3yFVg2zzJViJVIBRDMG1t2zwwkl8F4gDAANAA3oIQD4p+pVAIyx8Wyz9QBPoCWCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFgEgbpUwcAHLAY4eINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8W4iFus5V/AcoAzJRwMsoA4gH6AgHPFgH8EScRLBEnESYRKxEmESURKhElESQRKREkESMRKBEjESIRJxEiESERJhEhESARJREgER8RJBEfER4RIxEeER0RIhEdERwRIREcERsRIBEbERoRHxEaERkRHhEZERgRHREYERcRHBEXERYRGxEWERURGhEVERQRGREUERMRGBETAMIAdBESERcREhERERYREREQERUREA8RFA8OERMODRESDQwREQwLERALEK8QnhCNEHwQaxBaEEkQOEcVQAYBghEQgED0WzACyFmCENtF5DhQA8sfyz/LP8nIgljAAAAAAAAAAAAAAAABActnzMlw+wANklYekXDiViIBoPhCcNs8AMQBsvhBbyQwMvgnbxAroSOgIqFwAbYJIFYgtghWIAGhgQELVhtAFFn0Cm+hMZIwcJdwAVYgobYJ4lmhUAShUAOgIsIAknAz31ihIMIAjopyf1UgbW1t2zwwkVviANAC7o6oMNMfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+AgghAusQjbuo46MNMfAYIQLrEI27ry4IHUAdAB0gABk9QB0JFt4hJsEshYzxbJ+wQgbrOcyAEgbvLQgM8Wye1UkTDif+DAAJEw4w1wAM8AxgK0+QEggvBsj0T0X+20zf7U3o2xSqWxOtVdQw91nQZpIQt0xI/j37qOhjDbPH/bMeCC8Lz693aQfHGcyNN52PGUqqon6Moocc1ZF4FyHyFaRUUBuo6F2zx/2zHgAMcAygQY2zzbPFcocIgBESkBAMsAyADJAM4AEIIA0DBWKfL0ABYAAAAAUmVzdW1lZAQY2zzbPFcof4gBESkBAMsAzADNAM4AFPhCVioBxwXy4IQAEoIAnbBWKbPy9AAWAAAAAFN0b3BwZWQBDvhCAX9t2zwAzwE8bW0ibrOZWyBu8tCAbyIBkTLiECRwAwSAQlAj2zwwANAByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsIANEAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwBjMj4QwHMfwHKABEqESkRKBEnESYRJREkESMRIhEhESARHxEeER0RHBEbERoRGREYERcRFhEVERQRExESEREREFXg2zzJ7VQA0wHyAREqAREpINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WAREnAcoAARElAcsfAREj+gIBESEByx8BER8Byx8BER0Byx8BERv6AgERGfoCAREX+gIBERX6AsgBERT6AgEREvoCAREQ+gJQDvoCUAz6AlAK+gJQCADUAf4g10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbIUAcg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlADINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WANUA5shYINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WEvQAEvQAE/QAE8s/A8j0ABT0ABTLPxT0ABXLPxXLPwXI9AAW9AAW9ABQBvoCUAb6AlAG+gIWyn8Wyn9QB/oCUAX6AskBzMkBzMlQA8zJAczJAcwCASAA1wDiAgEgANgA2gIhuhe9s82zxXEF8PVxBfD2yhgA/wDZAARWKAIBIADbAOACAWIA3ADeAjCq4ds82zxs/2z/Pz8/Pz8/Pz8/Pz8/VbIA/wDdADxWJ1YcVhxWI1YjVidWJ1YgViZWJlYmViJWIlYlVjQCIKkd2zzbPFcQXw9XEF8PbKEA/wDfAARWKQIZtaabZ5tnjZztnO2c8AD/AOEADlR2VFR2VCYCASAA4wDzAgFIAOQA7QIBIADlAOkC+a0K7Z4IlIiVCJSIlAiUiJQIk4iUCJOIkwiTiJMIkoiTCJKIkgiSiJIIkYiSCJGIkQiRiJEIkIiRCJCIkAiQiJAIj4iQCI+IjwiPiI8IjoiPCI6IjgiOiI4IjYiOCI2IjQiNiI0IjIiNCIyIjAiMiIwIi4iMCIuIiwiLiItAAP8A5gF0ERURFhEVERQRFREUERMRFBETERIRExESEREREhERERAREREQDxEQD1UO2zxXElcQXw9XElcQXw9sggDnATyAQC4CWfQPb6GSMG3fIG6SMG2Oh9DbPGwYbwjiUsAA6ADk0gABktMHkm0B4tM/0z8g1wsBwwCOH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IiUctchbeIB+gAg1wsBwwCOH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IiUctchbeIB+gDTH1VwAvmueG2eCJSIlQiUiJQIlIiUCJOIlAiTiJMIk4iTCJKIkwiSiJIIkoiSCJGIkgiRiJEIkYiRCJCIkQiQiJAIkIiQCI+IkAiPiI8Ij4iPCI6IjwiOiI4IjoiOCI2IjgiNiI0IjYiNCIyIjQiMiIwIjIiMCIuIjAiLiIsIi4iLQAD/AOoBdBEVERYRFREUERURFBETERQRExESERMREhERERIREREQEREREA8REA9VDts8VxJXEF8PVxJXEF8PbIIA6wFAgEBWEwJZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuJWEQEA7ABY0gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfoA+gDTH9IAVVAC+bKiCBukjBtjhwg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCI4ts8ESkRKxEpESgRKhEoEScRKREnESYRKBEmESURJxElESQRJhEkESMRJREjESIRJBEiESERIxEhESARIhEgER8RIREfER4RIBEeER0RHxEdERwRHhEcgAP8A7gG4ERsRHREbERoRHBEaERkRGxEZERgRGhEYERcRGREXERYRGBEWERURFxEVERQRFhEUERMRFRETERIRFBESERERExERERAREhEQDxERDw4REA5VHds8bMRsxGzEbGQA7wPebSFus49ZLIAQJFn0D2+hkjBt3yBukjBtl9D0BAExbwHiIG6zjzUxIG7y0IBvIYEBCwIgbvLQgBJZ9AtvoZIwbd8gbpIwbY8S0Ns8BtQB0Ns8NhBsVQRsHG8M4pIwMeKRMeIqgBAjWfQPb6GSMG3fAPAA8ADxABzTP/oA+gDTf9J/0n9VUAFoIG6SMG2d0PoA0gDTf1UgbBNvA+KAEFRLFFn0D2+hkjBt3yBukjBtjofQ2zxsFm8G4i1QMwDyABz6APoA+gD6APoA+gBVUAIBIAD0APkCASAA9QD2ABGwr7tRNDSAAGAC9bKnCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjbPBEpESoRKREoESkRKBEnESgRJxEmEScRJhElESYRJREkESURJBEjESQRIxEiESMRIhEhESIRIREgESERIBEfESARHxEeER8RHhEdER4RHREcER0RHBEbERwRG4AD/APcBoBEaERsRGhEZERoRGREYERkRGBEXERgRFxEWERcRFhEVERYRFREUERURFBETERQRExESERMREhERERIREREQEREREA8REA9VDts8bPNs82zDAPgALlYUgQELIln0Cm+hMSFWGMcFAlYXxwUSAgEgAPoA/gL5sgc2zwRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERsRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERaAA/wD7AZgRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPFcQXw9XEF8PbKEgbpIwbZkgbvLQgG8nbwfiIG6SMG3eAPwBOoAQVhQCWfQPb6GSMG3fIG6SMG2Oh9DbPGwXbwfiAP0AJNQB0AHSANMP+gDTH9Mf0x9VYAL5snu2zwRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERsRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERaAA/wEJAkLtRNDUAfhj0gAB4wL4KNcLCoMJuvLgiYEBAdcAAQHR2zwBAAEGAvjbPFcqESgRKREoEScRKBEnESYRJxEmESURJhElESQRJREkESMRJBEjESIRIxEiESERIhEhESARIREgER8RIBEfER4RHxEeER0RHhEdERwRHREcERsRHBEbERoRGxEaERkRGhEZERgRGREYERcRGBEXERYRFxEWERURFhEVAQEBBQHM+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHSANMf+gDTH9Mf0x/6APoA+gD6ANQB0PoA+gD6APoA+gD6APpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB1DDQAQIBxvpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQw0AEDAf76QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfQE9AT0BNM/1DDQ9AT0BNM/9ATTP9M/1DDQ9AT0BPQE+gD6APoA0n/Sf/oA+gAwER8RKhEfER8RKREfER8RKBEfER8RJxEfER8RJhEfER8RJREfER8RJBEfER8RIxEfAQQAJBEfESIRHxEfESERHxEfESARHwBIERQRFREUERMRFBETERIRExESEREREhERERAREREQDxEQD1UOBPYwcIEAtHBUcACCEATEtABUcABTAIIImJaAggr68ICCEAX14QAijQhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEjQhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEiYmJbW1tcW1tIm1TEW0BBwEHAQcBCABDgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEACEbW1WHFRwAFRwAPhCESkRKBEnESYRJREkESMRIhEhESARHxEeER0RHBEbERoRGREYERcRFhEVERQRExESEREREFXgAWQRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPGzzbPNswwEKAY5WEIBAIln0D2+hkjBt3yBukjBtjofQ2zxsG28L4oBAVhFAE1n0D2+hkjBt3yBukjBtjhHQ+gDTf/oA03/6AFVAbBVvBeIvWQELAGzTB9MP+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHSAPoA+gDTf9IA+gDTH9IAVaBBUdbH');
+    const __code = Cell.fromBase64('te6ccgICARsAAQAAYugAAAEU/wD0pBP0vPLICwABAgFiAAIAAwLw0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8ES4RMBEuES0RLxEtESwRLhEsESsRLRErESoRLBEqESkRKxEpESgRKhEoEScRKREnESYRKBEmESURJxElESQRJhEkAQ4ACAIBIAAEAAUCASAA6gDrAgEgAAYABwIBSAD0APUCASABAwEEAfgRIxElESMRIhEkESIRIREjESERIBEiESARHxEhER8RHhEgER4RHREfER0RHBEeERwRGxEdERsRGhEcERoRGREbERkRGBEaERgRFxEZERcRFhEYERYRFREXERURFBEWERQRExEVERMREhEUERIRERETEREREBESERAPEREPAAkCug4REA4Q31Uc2zzy4ILI+EMBzH8BygARLxEuES0RLBErESoRKREoEScRJhElESQRIxEiESERIBEfER4RHREcERsRGhEZERgRFxEWERURFBETERIREREQVeDbPMntVAAKAAsEou2i7fsBkjB/4HAh10nCH5UwINcLH94gghBbjycduo6UMNMfAYIQW48nHbry4IHUATHbPH/gIIIQyMA8iLrjAiCCEKhWPKm64wIgghCmL4VsugAMAA0ADgAPAfYBES8BES4g10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYBESwBygABESoByx8BESj6AgERJgHLHwERJAHLHwERIgHLHwERIPoCAREe+gIBERz6AgERGvoCyAERGfoCAREX+gIBERX6AgERE/oCARER+gJQD/oCUA0AIAHwES4RLxEuES0RLxEtESwRLxEsESsRLxErESoRLxEqESkRLxEpESgRLxEoEScRLxEnESYRLxEmESURLxElESQRLxEkESMRLxEjESIRLxEiESERLxEhESARLxEgER8RLxEfER4RLxEeER0RLxEdERwRLxEcERsRLxEbABAB4jDTHwGCEMjAPIi68uCB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhDMGwTABMDhDDTHwGCEKhWPKm68uCB1AHQ0gABjoTbPG8MkW3iAdIAAZX0BAFvAZFt4gHUMNDSAAGOhts8bBRvBJIwbeJsE9s8fwAUABUAFgSgjzsw0x8BghCmL4VsuvLggdMf+gDTH9Mf0x9VQGwVVy1XLVctVy1XLYIAoPf4QlYaxwXy9Ij4QgF/bds8f+AgghDkmzvwuuMCIIIQm0Lk77oAIwDnACQAJQL4ERoRLxEaERkRLxEZERgRLxEYERcRLxEXERYRLxEWERURLxEVERQRLxEUERMRLxETERIRLxESERERLxERERARLxEQDxEvDw4RLw4NES8NDBEvDAsRLwsKES8KCREvCREvCAcGVUDbPBEvyAGCEFuPJx1Yyx/MyREuES8RLgDjABEB/BEtES4RLREsES0RLBErESwRKxEqESsRKhEpESoRKREoESkRKBEnESgRJxEmEScRJhElESYRJREkESURJBEjESQRIxEiESMRIhEhESIRIREgESERIBEfESARHxEeER8RHhEdER4RHREcER0RHH9tVh0RHxEdER4RHREcER0RHAASAcwRGxEcERsRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERYRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPEO8Q3hDNELwQqxCaEIkQeBBnEFYEBVUg2zwA5wAmVxlXGVcZggCg9/hCUjDHBfL0fwBY+gD6APoA+gD6APoA+gD6ANQB0PoA+gD6APoAMBBMEEsQShBJEEgQRxBGEEUBxvpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQB0AAXAfARLhExES4RLREwES0RLBEvESwRKxExESsRKhEwESoRKREvESkRKBExESgRJxEwEScRJhEvESYRJRExESURJBEwESQRIxEvESMRIhExESIRIREwESERIBEvESARHxExER8RHhEwER4RHREvER0RHBExERwRGxEwERsAGABG+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiDEUQzAB/BEaES8RGhEZETERGREYETARGBEXES8RFxEWETERFhEVETARFREUES8RFBETETERExESETAREhERES8REREQETEREA8RMA8OES8ODRExDQwRMAwLES8LChExCgkRMAkIES8IBxExBwYRMAYFES8FBBExBAMRMAMCES8CARExAQAZBMoRMNs8VjBus45FMVcYVxhXGFYsIG7y0IBvJF8DVi0gbvLQgG8kECNfA1YuIG7y0IBvJBNfAxEvIG7y0IBvJGwxERgRLxEYAREaAREYERlYklcw4lYwbrOSVzDjDVYtbrOSVy3jDQDjABoAGwAcANQRMCBu8tCAbyEggQELcVn0gm+lIJZQI9cAMFiWbCFtMm0B4pCOQYEBCwGRf5Ft4gIRFwJWFwFxIW6VW1n0WTCYyAHPAEEz9EHigQELIgIRF3FBM/R0b6UgllAj1wAwWJZsIW0ybQHi6F8DAfpXGlcaVxpXGlcaVxpXGlcaVxpXGlcaVxpWISBu8tCAbywQK18LViIgbvLQgG8sG18LViMgbvLQgG8sbLFWJCBu8tCAbyxfC1YlIG7y0IBvLBCrXwtWJiBu8tCAbywQm18LVicgbvLQgG8sEItfC1YoIG7y0IBvLBB7XwtWKQAdAv6IESwRLxEsESsRLhErESoRLREqESkRLBEpESgRKxEoEScRKhEnESYRKREmESURKBElESQRJxEkESMRJhEjESIRJREiESERJBEhESARIxEgER8RIhEfER4RIREeER0RIBEdERwRHxEcERsRHhEbERoRHREaERkRHBEZERgRGxEYAB4AHwDqIG7y0IBvLBBrXwtWKiBu8tCAbywQW18LVisgbvLQgG8sEEtfCxEsIG7y0IBvLBA7XwsRGREsERkHESQHBhEjBgURIgUEESEEAxEgAwIRHwIBER4BERkRHREZERwJERsJCBEaCAoRGQoQehBpEFgQRxA2QEUTAC4AAAAAYmFzZSBjb25maWcgdXBkYXRlZAGyERcRGhEXERYRGREWERURGBEVERQRFxEUERMRFhETERIRFRESERERFBERERARExEQDxESDw4REQ4NERANEM8QvhCtEJwQixB6EGkQWBBHEDZFQPhCAX9t2zwA5wHU+gJQC/oCyFAKINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAgg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQBiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFshQ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kjol4lYgcn9VIG1tbds8MBETVh+hEROROuIEkXGRcuJeNwYQNRAkECMCERICLwJWFQIBERABERMtVhMQZ8hVwNs8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABEWoxBrXjVGcBXbPADoAFAA2QDIghCJtx0JUAfLH1AFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAMg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxaBAQHPACFus5V/AcoAzJRwMsoA4gH6AgHPFgH8ES4ROxEuES0ROhEtESwROREsESsROBErESoRNxEqESkRNhEpESgRNREoEScRNBEnESYRMxEmESURMhElESQRMREkESMRMBEjESIRLxEiESEROxEhESAROhEgER8ROREfER4ROBEeER0RNxEdERwRNhEcERsRNREbERoRNBEaAE0C+lYzERoRGREzERkRGBEyERgRFxExERcRFhEwERYRFRE8ERUREREUERERExE6ERMREhE5ERIRERE4EREREBE3ERAPETYPDhE1Dg0METMMCxEyCwoRMQoZCBE8CBA3BhEwBgURMQUUAxE5AwIRNgIBETUBETRWM1Y5VjNWPNs8ANYATgH8ES4ROxEuES0ROhEtESwROREsESsROBErESoRNxEqESkRNhEpESgRNREoEScRNBEnESYRMxEmESURMhElESQRMREkESMRMBEjESIRLxEiESERLhEhESARLREgER8RLBEfER4RKxEeER0RKhEdERwRKREcERsRKBEbERoRJxEaAE8A2BEZESYRGREYESURGBEXESQRFxEWESMRFhEVESIRFREUESERFBESER8REhERER4REREQER0REA8RHA8OERsODREaDQwRGQwLERgLChEXCgkRFgkFERUFBxEUBw0REw0CERECDREQHhBJEDhGEwCkghBIQm82UA7LHxzLPxrLPxjLB1AGINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAT6Alj6Ast/AfoCAcjKf1j6Alj6Alj6Alj6AskBzAA+0x8BghDu9ZJNuvLggfoA0w/SAPoA+gDTf9M/0x9VcAHwES4RNhEuES0RNREtESwRNBEsESsRMxErESoRMhEqESkRMREpESgRMBEoEScRLxEnESYRNhEmESURNRElESQRNBEkESMRMxEjESIRMhEiESERMREhESARMBEgER8RLxEfER4RNhEeER0RNREdERwRNBEcERsRMxEbAFUCEDDbPGwZ2zx/AGgAaQTKjscw0x8BghAJn/SjuvLggSDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gHTP9M/VSBsE9s8f+AgghDtdpJuuo8IMNs8bBjbPH/gIIIQRt7TUroAWwBcAF0AXgH8ERoRMhEaERkRMREZERgRMBEYERcRLxEXERYRNhEWERURNREVERQRNBEUERMRMxETERIRMhESERERMRERERARMBEQDxEvDw4RNg4NETUNDBE0DAsRMwsKETIKCRExCQgRMAgHES8HBhE2BgURNQUEETQEAxEzAwIRMgIBETEBAFYC9hEw2zz4QW8kMDKBX/JWMlYhvvL0gUtpVidWM6ATvhLy9BEvETURLxEuETQRLhEtETMRLREsETIRLBErETERKxEqETARKhEpES8RKREoES4RKBEnES0RJxEmESwRJhElESsRJREkESoRJBEjESkRIxEiESgRIhEhEScRIQDkAFcB/BEgESYRIBEfESURHxEeESQRHhEdESMRHREcESIRHBEbESERGxEaESARGhEZER8RGREYER4RGBEXER0RFxEWERwRFhEVERsRFREUERoRFBETERkRExESERgREhERERcREREQERYREA8RFQ8OERQODRETDQwREgwLERELChEQCgBYAvgQnxCOEH0QbBBbEEoQOUhwECaADFRBdgUROQUEETgEWgEROQFWOAEROts8MAdWL6ARLhEwES4RLREvES0RLBEuESwRKxEtESsRKhEsESoRKRErESkRKBEqESgRJxEpEScRJhEoESYRJREnESVWJBEnESQRJhEkESMRJREjAJQAWQH8ESIRJBEiESERIxEhESARIhEgER8RIREfER4RIBEeER0RHxEdERwRHhEcERsRHREbERoRHBEaERkRGxEZERgRGhEYERcRGREXERYRGBEWERURFxEVERQRFhEUERMRFRETERIRFBESERERExERERAREhEQDxERDw4REA4Q3xDOAFoBLhC9EKwQmxoQeRBoEFcQRhA1ECRDANs8ANkD8vhBbyQwMlYWgEAlWfQPb6GSMG3fIG6SMG2Oh9DbPGwcbwzigX99IW6z8vQgbvLQgG8sbDMzNDWBXm0Bs/L0JMAKkX+TJMAL4lYuIZNWMaDegUtpUZG+GfL0ViCBAQsoWfQKb6ExggCg9yGRf5RTWMcF4vL0s5Fw4w0BGgBzAHQAltMfAYIQ7XaSbrry4IEg1wsBwwCOH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IiUctchbeIB0z/TP9MP03/SH9J/0n9VcAPyMjP4QW8kMDKCAKD3Vh6BAQsjWfQKb6Ex8vRWGYBAKFn0D2+hkjBt3yBukjBtjofQ2zxsHG8M4oF/fSFus/L0IG7y0IBvLIFLaVY3VjugH74e8vSBXm0Nsx3y9H+AQCtRO1E7UTtRO1E7UTtRO0sTIREWAchVsNs8yQEaAJYAXwQ6jwgw2zxsGds8f+AgghDV3r/cuuMCIIIQ/DOHfboAZABlAGYAZwT+AhEjAlYQASBulTBZ9FswlEEz9BfiJ8AKkX+TJ8AM4rOeESGTUqC+k1Kgu+Ly5myTVyEw4nAmwAqRf5MmwAvi4w8BETABDYBA9FswVirCAI6mVjBuklcwnVcyES8gbvLQgBExES/iETFWKXJ/VSBtbW3bPDBWKKGUVzBXMeJWGwBgAGEA6ABiAfwRNBE9ETQRMxE8ETMRMhE7ETIRMRE6ETERMBE5ETARLxE4ES8RLhE3ES4RLRE2ES0RLBE1ESwRKxE9ESsRKhE8ESoRKRE7ESkRKBE6ESgRJxE5EScRJhE4ESYRJRE3ESURJBE2ESQRIxE1ESMRIhE9ESIRIRE8ESERIBE7ESAAewH+MBE4ETwROBE3ETsRNxE2EToRNhE1ETkRNRE0ETwRNBEzETsRMxEyEToRMhExETkRMREwETwRMBEvETsRLxEuEToRLhEtETkRLREsETwRLBErETsRKxEqEToRKhEpETkRKREoETwRKBEnETsRJxEmEToRJhElETkRJREkETwRJACZAfYBESqg+EIRKaMRKBExESgRJxEwEScRJhEvESYRJREuESURJBEtESQRIxEsESMRIhErESIRIREqESERIBEpESARHxEoER8RHhEnER4RHREmER0RHBElERwRGxEkERsRGhEjERoRGREiERkRGBEhERgRFxEgERcRFhEfERYAYwG4ERURHhEVERQRHREUERMRHBETERIRGxESERERGhERERARGREQDxEYDw4RFw4NERYNDBEVDAoREwoJERIJCBERCAcREAcQbxBeEE0QPBArEGoQSRBoXkIQNEEw2zwA2QDq0x8BghBG3tNSuvLggSDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gHTD/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gDTP9N/0h/Sf9QB0NJ/MBkYFxYVFEMwAfIy+EFvJDAygUtpVi1WMaATvhLy9IIAoPdWH4EBCyNZ9ApvoTHy9Chus5cIIG7y0IAwkTjiVhekETYRNxE2ETURNxE1ETQRNxE0ETMRNxEzETIRNxEyETERNxExETARNxEwES8RNxEvES4RNxEuES0RNxEtESwRNxEsAJwCEDDbPGwa2zx/AK4ArwQ6jwgw2zxsF9s8f+AgghCI5/knuuMCIIIQlGqYtroAxwDIAMkAygBC0x8BghD5T4C7uvLggfoA0w/SAPoA03/6ANN/0z/TH1WAAfARLhE3ES4RLRE2ES0RLBE1ESwRKxE0ESsRKhEzESoRKREyESkRKBExESgRJxEwEScRJhEvESYRJRE3ESURJBE2ESQRIxE1ESMRIhE0ESIRIREzESERIBEyESARHxExER8RHhEwER4RHREvER0RHBE3ERwRGxE2ERsAagH8ERoRNREaERkRNBEZERgRMxEYERcRMhEXERYRMREWERURMBEVERQRLxEUERMRNxETERIRNhESERERNRERERARNBEQDxEzDw4RMg4NETENDBEwDAsRLwsKETcKCRE2CQgRNQgHETQHBhEzBgURMgUEETEEAxEwAwIRLwIBETcBAGsE/hE22zz4QW8kMDJwVjXCAJRWNMIAkXDikjBx3lYzwgCUVjLCAJFw4pGk3oFLaVYoIqhWOqAUvhPy9IFf8lYgI6hWOQG+8vRWNMIAlFYzwgCRcOKUVzNXM+MNVjDCAJRWL8IAkXDijhYFETcFBBE2BAMRNAMCETMCVy9XL18E4w0A5ABsAG0AbgFQgA1wVjkkqQRWPFFUEEVWOwRWO1A0AhE7AgEROgFWP9s8MBExETIRMQCUAfaADnBWN1Y1qQQRMRE3ETERMBE2ETARLxE1ES8RLhE0ES4RLREzES0RLBEyESwRKxExESsRKhEwESoRKREvESkRKBEuESgRJxEtEScRJhEsESYRJRErESURJBEqESQRIxEpESMRIhEoESIRIREnESERIBEmESARHxElER8AbwH4AVYvoFYeAREtqBEoETERKBEnETARJxEmES8RJhElES4RJREkES0RJBEjESwRIxEiESsRIhEhESoRIREgESkRIBEfESgRHxEeEScRHhEdESYRHREcESURHBEbESQRGxEaESMRGhEZESIRGREYESERGBEXESARFxEWER8RFgByAfwRHhEkER4RHREjER0RHBEiERwRGxEhERsRGhEgERoRGREfERkRGBEeERgRFxEdERcRFhEcERYRFREbERURFBEaERQRExEZERMREhEYERIREREXEREREBEWERAPERUPDhEUDg0REw0MERIMCxERCwoREAoQnxCOEH0QbBBbEEoAcAL6EDkIEToIJBA4BxA2RBUQIwIROwIROts8MAURMQUEETAEAxEuAwIRLQIFESwFBBErBAERKgERKQMRKAMCEScCBREmBQQRJQQBESQBESMDESIDAhEhAgURIAUEER8EAREeAREdAxEcAwIRGwIFERoFBBEZBAERGAERFwMRFgMAlABxAFgCERUCBREUBQQREwQBERIBEREDERADEC8QXhBNUMsQOhApEFgQR1BlEDRAMwG8ERURHhEVERQRHREUERMRHBETERIRGxESERERGhERERARGREQDxEYDw4RFw4NERYNDBEVDAsRFAsKERMKCRESCQgREQgHERAHEG8QXhBNEDwQKxCKGRBIXjNQUhPbPADZABQlwAqRf5MlwAziA/6dgRfmA1Y4oPgjuxPy9JEy4nACkjAx4w1SYBEagED0WzAhwgCOnydukjcilgcgbvLQgOIhcn9VIG1tbds8MAERGAGgEReSNzDiDVYXoU1DyFUgghDyxa6sUATLHxLLB8s/yz/JyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAERSjAHUA6AB2AvpWGoBAKln0D2+hkjBt3yBukjBtjhHQ+gDTf/oA03/6AFVAbBVvBeIgbrOOyCBu8tCAbyUmBcIAkwPCAJIzcOKUM1RBE94BwgCSwgCSMHDikaCRMOIgwgCOjTJTIXJ/VSBtbW3bPDCRMOJSgBEbgED0WzARGpEw4hEwETgRMADoAHcBEAIRFAIQKts8ANkB+BEvETcRLxEuETYRLhEtETURLREsETQRLBErETMRKxEqETIRKhEpETERKREoETgRKBEnETcRJxEmETYRJhElETURJREkETQRJBEjETMRIxEiETIRIhEhETERIREgETgRIBEfETcRHxEeETYRHhEdETURHREcETQRHFYzERwAeAL+ERsRMxEbERoRMhEaERkROREZERgROBEYERcRNxEXERYRNhEWERURNREVERQRExEzERMREhEyERIRERE5EREREBE4ERAPETcPDhE2Dg0RNQ0MCxEzCwoRMgoJETkJCBE4CAcRNwcGETYGBRE1BQQDETMDAhE0AlY4WRE0VjfbPADWAHkB/BEuETYRLhEtETURLREsETQRLBErETMRKxEqETIRKhEpETERKREoETARKBEnES8RJxEmES4RJhElES0RJREkESwRJBEjESsRIxEiESoRIhEhESkRIREgESgRIBEfEScRHxEeESYRHhEdESURHREcESQRHBEbESMRGxEaESIRGgB6ANIRGREhERkRGBEgERgRFxEfERcRFhEeERYRFREdERURFBEcERQRExEbERMREhEaERIREREZEREREBEYERAPERcPDhEWDg0RFQ0MERQMCxETCwoREgoJEREJCBEQCBB/EG4QXRBMEDtKiAkB+BEfEToRHxEeETkRHhEdETgRHREcETcRHBEbETYRGxEaETURGhEZET0RGREYETwRGBEXETsRFxEWEToRFhEVETkRFREUETgRFBETETcRExESETYREhERETUREREQET0REA8RPA8OETsODRE6DQwROQwLETgLChE3CgkRNgkAfALMCBE1CAcRPQcGETwGVjkGVjsGBRE+BVRQUgVWQEQ1AhE8AgERPQERO9s8VhCAQFY2WfQPb6GSMG3fIG6SMG2OEdD6ANN/+gDTf/oAVUBsFW8F4iBus54wAxE2AwIRMwJXMVcxW+MNAH0AfgLcVh+AEChZ9A9voZIwbd8gbpIwbY6H0Ns8bBdvB+KBbJYhbrPy9CBu8tCAbyc2ggCPblAF8vRWG4AQLVn0D2+hkjBt3yBukjBtl9D0BAExbwHiIG6zlyBu8tCAbyGSMG3iIIEBCy9Z9AtvoZIwbd8BDQB/AnggbvLQgG8lJMIAkyPCAJFw4pIzM+MNIMIAkyLCAJFw4p9fAwMRNgMCETMCVzFXMVvjDVYwUA2AQPRbMAwAjACNBOQgbpIwbY8S0Ns8BtQB0Ns8NhBsVQRsHG8M4iBus5cgbvLQgG8snTBwVHAAUwBwVHAAUwDiVheWVHupVHupllR1Q1R1Q+IjwACXNVYupBEvBd5WLIAQViBZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuIgbrMBAAEAAQIAgAL8mCBu8tCAbyZbmDBwVHAAUwBb4lYhlAFWH6CUVh+gAeIgVh+ogjAN4Lazp2QAAKkEIlYgqIIwDeC2s6dkAACpBFYzgBBWJln0D2+hkjBt3yBukjBtndD6ANIA039VIGwTbwPiIG6zlyBu8tCAbyOUMHBwIeJwViUkwgCRcOMNAIEAggAIVigkugL+jkExI1YmtghWKI4TViUjoVIQqIIwDeC2s6dkAACpBI4TIlYmoVIQqIIwDeC2s6dkAACpBOJRIaFQVaEgwACScDPeBN4gwgCOFDNSMqgiViWooF2gqQRaoFYms0ADkTDicFMAVijCAJJXJOMNViVQDqEvqIIwDeC2s6dkAACpBACDAIQAqmwhViZWJqhWIqiCMGdlx5P6EAedqhqpBCARJKiCEDuaygCpBCLCAJ4xIVZXqIIQO5rKAKkEAd5WIyGhIqABETYBoFMhoVY2oAERNQGgETQRNQERIwEB+FYkUA2hL6iCMA3gtrOnZAAAqQRWEBEpLaAioSGhARERAaAgESmhUv+oVidWJ6igL1YooKkED1YnoFYlViVWK44UVihWEqFSMKiCMA3gtrOnZAAAqQSOFFYRVimhUjCogjAN4Lazp2QAAKkE4iNWKqgBESYBESOgAREiAagAhQL6gjBnZceT+hAHnaoaqQQBESKgVimBb7sRJaC5AREjAfL0VieBQ6ARIqhWIlYQqIIwDeC2s6dkAACpBL4BESEB8vRWJ44VVxZXFlcWVxZXFlcWKVYhVhwqUXqg4w4QOkmABhEcBgURGwUEERMEAxESAwIREQIBERABD4EBCw8AhgCHAKJXEFcQVxBXEFcQVxApViFWHCpRaqARFREcERURFBEbERQRExEZERMREhEYERIREREXEREREBEWERAPERUPDhEUDgMREwMCERICARERAQYREAcE8shVsBBsEFsQShA5SHzbPMhVUAfbPMkBzMkCERACFFYdASBulTBZ9FkwlEEz9BPigBAByAEB9ADJAhErAlYbASBulTBZ9FswlEEz9BfigBAjVhEpVhJWEVYRyFVQ2zzJAhEpAlYbASBulTBZ9FswlEEz9BfigBBUe6kAvQC9AL8AiAHqyFUgWvoCEsoAy3/JAhEqAlYbASBulTBZ9FswlEEz9BfiERIXoREZESgRGREYESgRGBEXESgRFxEWESgRFgQRFQQRFBEoERQEERMEERAREhEQERERKBERBhEQBhAuEM0QTBBrSaAQWBBHXjETViJZDxEQDxDvAIkBgMgRHhEdERwRGxEaERkRGBEXERYRFREUERMREhERERBV4Ns8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABCbEJoAigH0ghBHWWq+AREfyx8BER0Byz8BERsByz8BERkBywcBERcByz8BERUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYBERMByw8BEREBygAfyn9QDfoCG8p/UAn6AgfIy38Wy38Uyn9Y+gIB+gLKf8p/WPoCyFAD+gIAiwBcUAP6AlAD+gJQA/oCUAP6AlAD+gITygATy38Tyn/IUAT6AhTKf8lYzMkBzMkBzAH2VzVWKIANcPgjETMRNhEzETIRNREyETERNBExETARNhEwES8RNREvES4RNBEuES0RNhEtESwRNREsESsRNBErESoRNhEqESkRNREpESgRNBEoEScRNhEnESYRNREmESURNBElESQRNhEkESMRNREjESIRNBEiESERNhEhAI4B+BEzVieggA5w+CMRNBE4ETQRMxE3ETMRMhE2ETIRMRE1ETERMBE0ETARLxEzES8RLhEyES4RLRExES0RLBEwESwRKxEvESsRKhEuESoRKREtESkRKBEsESgRJxErEScRJhEqESYRJREpESURJBEoESQRIxEnESMRIhEmESIAkgH8ESARNREgER8RNBEfER4RNhEeER0RNREdERwRNBEcERsRNhEbERoRNREaERkRNBEZERgRNhEYERcRNREXERYRNBEWERURNhEVERQRNREUERMRNBETERIRNhESERERNRERERARNBEQDxE2Dw4RNQ4NETQNDBE2DAsRNQsKETQKAI8C/gkRNgkIETUIBxE0BwYRNgYFETUFVjsFEDRWOwRWOwRWQVA0AhE4AgEROgFWPAHbPDARLxEzES8RLhExES4RLREwES0RLBEvESwRKxEuESsRKhEtESoRKREsESkRKBErESgRJxEqEScRJhEpESYRJREoESURJBEnESQRIxEmESMAlACQAfwRIhElESIRIREkESERIBEjESARHxEiER8RHhEhER4RHREgER0RHBEfERwRGxEeERsRGhEdERoRGREcERkRGBEbERgRFxEaERcRFhEZERYRFREYERURFBEXERQRExEWERMREhEVERIREREUEREREBETERAPERIPDhERDg0REA0AkQAKEM9VKxIB/BEhESURIREgESQRIBEfESMRHxEeESIRHhEdESERHREcESARHBEbER8RGxEaER4RGhEZER0RGREYERwRGBEXERsRFxEWERoRFhEVERkRFREUERgRFBETERcRExESERYREhERERUREREQERQREA8REw8OERIODRERDQwREAwQvwCTAvoQrhCdEIwQexBqCRE5CRAoECcQJgURPAVeIQIRPALbPDADETIDAhEvAgERLgERLQMRLAMCESsCAREqAREpAxEoAwIRJwIBESYBESUDESQDAhEjAgERIgERIQMRIAMCER8CAREeAREdAxEcAwIRGwIBERoBERkDERgDAhEXAgCUAJUD4lYZpCnACpF/kynAC+KSJrOOECnADJEmmSnADZEmkiaz4uLi+COAQHAtVEwwLlRNMC1UTTAtVEowVE67cFUgyFWw2zzJAhEfAlYdASBulTBZ9FswlEEz9BfiEIkQNFYbBAMCER4CUAwQNUQAyFWw2zzJAJYAlwCYADgBERYBERUDERQDAhETAgEREgEREQMREANP7VWDAHxQvMsHGcsPUAcg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYVygBQA/oCAfoCy3/KAMsPAfoCyx/KAACOghCtjjHvUA3LHxvLBxnLD1AHINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WFcoAUAP6AgH6Ast/ygAB+gLLP8s/yx8AOMiCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABESERAB+BEjETsRIxEiEToRIhEhETkRIREgETwRIBEfETsRHxEeEToRHhEdETkRHREcETwRHBEbETsRGxEaEToRGhEZETkRGREYETwRGBEXETsRFxEWEToRFhEVETkRFREUETwRFBETETsRExESEToREhERETkREREQETwREA8ROw8AmgL+DhE6Dg0ROQ0METwMCxE7CwoROgoJETsJVjwJEGheJBA1RDACETwCARE7Ads8wgCSViWRcOIRMhEzETIEETIEETARMREwBBEwBAMRLwMCES4CAREtAREsBBErBAMRKgMCESkCAREoAREnBBEmBAMRJQMCESQCAREjAREiBBEhBACyAJsAhAMRIAMCER8CAREeAREdBBEcBAMRGwMCERoCAREZAREYBBEXBAMRFgMCERUCAREUARETBBESBAMREQMCERACUP5VhAH8ESsRNxErESoRNxEqESkRNxEpESgRNxEoEScRNxEnESYRNxEmESURNxElESQRNxEkESMRNxEjESIRNxEiESERNxEhESARNxEgER8RNxEfER4RNxEeER0RNxEdERwRNxEcERsRNxEbERoRNxEaERkRNxEZERgRNxEYERcRFhEVAJ0C+BEUERMREhERERAPDg0MCwoJCBBHETcGBUMT2zzCAJJWJZFw4lYjAaARLxEwES8RLhEvES4RLREuES0RLBEtESwRKxEsESsRKhErESoRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIAngCzAt5WHIAQJln0D2+hkjBt3yBukjBtjofQ2zxsF28H4oFsliFus/L0IG7y0IBvJzQ1ggCPblAE8vRWF4AQKln0D2+hkjBt3yBukjBtl9D0BAExbwHiIG6zlyBu8tCAbyGSMG3iIIEBCyxZ9AtvoZIwbd8BDQCfBOAgbpIwbY8S0Ns8BtQB0Ns8NhBsVQRsHG8M4iBus5cgbvLQgG8snTBwVHAAUwBwVHAAUwDiVhSWVHupVHupllR1Q1R1Q+KBFHYkwgDy9FNDViqAEFYfWfQPb6GSMG3fIG6SMG2Oh9DbPGwWbwbiIG6zAQABAAECAKAB/pggbvLQgG8mW5gwcFRwAFMAW+JWHlAIoSmogjAN4Lazp2QAAKkEVh1QB6EpqIIwDeC2s6dkAACpBFYgjhNWHymhUqCogjAN4Lazp2QAAKkEjhMoViChUqCogjAN4Lazp2QAAKkE4ipWIahWHgERHqABER0BqIIwZ2XHk/oQB50AoQHcqhqpBFYaoIIAn+xTyKAjoQERHqC+AREcAfL0UZWgVhqhVhihgjAN4Lazp2QAAKhWH5QHoyiok1F4qOIXoFYeloIXxGU2AJaCEDuaygDiVhsBoBioghA7msoAqQQXqQRWLIAQViBZ9A9voZIwbd8AogL+IG6SMG2d0PoA0gDTf1UgbBNvA+IgbrOXIG7y0IBvI5QwcHAh4nBTU8IAlFYiJL2RcOKOPzFTNbYIViKzjhJTUqFSEKiCMA3gtrOnZAAAqQSOElMloVIQqIIwDeC2s6dkAACpBOJRIaFQVaEgwACScDPeBN4gwgCRMOMNU1SoAQCjAKQAJDNSMqhTJKigXaCpBFqgViBAAwL4ER6ogjBnZceT+hAHnaoaqQQgERyoghA7msoAqQRWGyGhcFYfwgCeMFYeVlGoghA7msoAqQTeZqABES4BoFYeVi6hIqABES0BoCdWHaEpoFYeoaNwVHAAUwBWKY4ZVxtXG1cbVxtXG1cbVhlWGVYZUfuhERAqoeMOIFYmqAClAKYAfFcVVxVXFVcVVxVXFVYTVhNWE1HroVHaoREWERwRFhEVERsRFREUERoRFAIRFgIBERUBDhEUDg8REA8Q7w0OA/SCMA3gtrOnZAAAqQRS4BEnqIIwDeC2s6dkAACpBAoRHgoQORAoBxEQBwYRGgYFERkFBBEYBAMRFwMCERYCAREVAREUgQELERTIVbAQbBBbEEoQOUh82zzIVVAH2zzJAczJAhEVAhlWHwEgbpUwWfRZMJRBM/QT4oAQAQC9AL0ApwL2yAEB9ADJAhEsAlYdASBulTBZ9FswlEEz9BfigBBUdTklVh4tyFVQ2zzJAhEqAlYdASBulTBZ9FswlEEz9BfigBBUe6TIVSBa+gISygDLf8kCESsCVh0BIG6VMFn0WzCUQTP0F+L4QvhCETARTxEwES8RThEvES4RTREuAL8AqAH4ES0RTBEtESwRSxEsESsRShErESoRSREqESkRSBEpESgRRxEoEScRRhEnESYRRREmESURRBElESQRQxEkESMRQhEjESIRQREiESERQBEhESARPxEgER8RPhEfER4RPREeER0RPBEdERwROxEcVjoRHBEbEToRGxEaETkRGgCpAv4RGRE4ERkRGBE3ERgRFxE2ERcRFhE1ERYRFRE0ERURFBEzERQRExEyERMREhFQERIRERFPEREREBFOERAPEU0PDhFKDhA9DBFLDAsRSQsKEUgKCRFGCQgRTQgHEUUHBhFEBgURQwUEEUIEAxFBAwIROwJWQAJWNgIRPQHbPBE1ANYAqgH+cxFFoREdET0RHREcETwRHBEbEUQRGxEaEUoRGhEZETsRGREYEToRGBEXETkRFxEWETERFhEVES8RFREUEUMRFBETEU0RExESETAREhEREUwREREQEUcREA8RMw8OEUkODRE0DVYyDQwROAwLETcLChFDCgkRQQkIEUcIBxFABwCrAv4GETkGBRFGBQQRPwQDEUkDAhFCAlY5AgERTQEREBERERAPERAPEN4QzcgRIBEfER4RHREcERsRGhEZERgRFxEWERURFBETERIREREQVeDbPMnIgljAAAAAAAAAAAAAAAABActnzMlw+wAREBEvERAPES4PDhEtDg0RLA0MESsMAMQArAH8CxEqCwoRKQoJESgJCBEnCAcRJgcGESUGBREkBQQRIwQDESIDAhEhAgERIAERHxEeER0HERwHDREbDREaBxEZBw0RGA0RExEXERMREREWEREGERUGERARFBEQERIRExESDxESDwoREQoGERAGEM8QrhCtEHwQqxBaEDkQOEcWAK0ACBA1REAAmNMfAYIQ1d6/3Lry4IHTD/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gD6APoA0z/Tf9If0n/UAdDSfzAaGRgXFhUUQzAB7jL4QW8kMDKBS2lWLlYyoBO+EvL0ggCg91YggQELI1n0Cm+hMfL0VhmkETgRORE4ETcRORE3ETYRORE2ETURORE1ETQRORE0ETMROREzETIROREyETERORExETAROREwES8ROREvES4ROREuES0ROREtESwROREsALAB/BErETkRKxEqETkRKhEpETkRKREoETkRKBEnETkRJxEmETkRJhElETkRJREkETkRJBEjETkRIxEiETkRIhEhETkRIREgETkRIBEfETkRHxEeETkRHhEdETkRHREcETkRHBEbETkRGxEaETkRGhEZERgRFxEWERURFBETERIREQCxAvwREA8ODQwLChBZCBE5CHRQaBcFEToFUDQCEToC2zzCAJJWJZFw4lYjAaARLxEwES8RLhEvES4RLREuES0RLBEtESwRKxEsESsRKhErESoRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIAsgCzAtxWH4AQKFn0D2+hkjBt3yBukjBtjofQ2zxsF28H4oFsliFus/L0IG7y0IBvJzaCAI9uUAXy9FYbgBAtWfQPb6GSMG3fIG6SMG2X0PQEATFvAeIgbrOXIG7y0IBvIZIwbeIggQELL1n0C2+hkjBt3wENALQB6hEhESIRIREgESERIBEfESARHxEeER8RHhEdER4RHREcER0RHBEbERwRGxEaERsRGhEZERoRGREYERkRGBEXERgRFxEWERcRFhEVERYRFREUERURFBETERQRExESERMREhERERIREREQEREREA8REA9VDnDbPADZBPIgbpIwbY8S0Ns8BtQB0Ns8NhBsVQRsHG8M4iBus5cgbvLQgG8snTBwVHAAUwBwVHAAUwDiVheWVHupVHupllR1Q1R1Q+KBFHYkwgDy9FYbJLyVVxsiERveViyAEFYgWfQPb6GSMG3fIG6SMG2Oh9DbPGwWbwbiIG6zAQABAAECALUC/JggbvLQgG8mW5gwcFRwAFMAW+JWHVAGoSeogjAN4Lazp2QAAKkEVhxQBaEnqIIwDeC2s6dkAACpBFYxgBBWJFn0D2+hkjBt3yBukjBtndD6ANIA039VIGwTbwPiIG6zlyBu8tCAbyOUMHBwIeJwViMkwgCUViYkvZFw4uMAIAC2ALcAhDEjViS2CFYms44TViMjoVIQqIIwDeC2s6dkAACpBI4TIlYkoVIQqIIwDeC2s6dkAACpBOJRIaFQVaEgwACScDPeBAH+wgCOEzNSMqgiViOooF2gqQRaoFYkQAORMOJwUwBWJsIAjlVsIVYkViSoViCogjBnZceT+hAHnaoaqQQgESKoghA7msoAqQQiwgCeMSFWVaiCEDuaygCpBAHeViEhoSKgARE0AaBTIaFWNKABETMBoBEyETMBESEBklci4i9WKAC4AfyOFFYlLqFWJwGogjAN4Lazp2QAAKkEjhQtViahVicBqIIwDeC2s6dkAACpBOJWEFMdoCWhKqEBERIBoIIA88khwv/y9FYowgCVVihWEbmRcOKUVinAAJFw4p1XKVYoViioVhCpBBEp3lYpIbyUVylWKN5WKaEREFYooVYmViYAuQP6ERNWEqEiwgCOP1cRW1cQVxBXHVcdVx1XHVGJoAERIgEJoHBUcABTAAYRJwYDESEDDxEgDwERHwEOER4OBREQBQ8QThAtRRNBROMNViiOGFcXVxdXF1cXVxdXFyhWHCkHVhuhBVYjoeMOIFYjqIIwDeC2s6dkAACpBCpWJKgAugC7ALwA/lYsjhRWKVYSoVIwqIIwDeC2s6dkAACpBI4UVhFWKqFSMKiCMA3gtrOnZAAAqQTiI1YrqAERJwERJKABESMBqIIwZ2XHk/oQB52qGqkEAREjoFYRgW+7ESaguQERJAHy9C+BQ6ARI6hWI1YQqIIwDeC2s6dkAACpBL4BESIB8vQAqFcRVxFXEVcRVxFXEShWHCkGVhuhCVYjoREVERwRFRETERkRExESERgREhERERcREREQERYREA8RFQ8OERQODRETDQIREgIBEREBBhEQBhDOCQYHBQP8gjAN4Lazp2QAAKkEEK8QSRA4EEcGER4GEF4EERUEAxEUAwIREwIBERIBERGBAQsREchVsBBsEFsQShA5SHzbPMhVUAfbPMkBzMkCERICFlYfASBulTBZ9FkwlEEz9BPigBAByAEB9ADJAhEtAlYdASBulTBZ9FswlEEz9BfiAL0AvQC+ACJQVss/UAP6AgH6Ast/yn/KfwL2gBBUeYdUd5jIVVDbPMkCESsCVh0BIG6VMFn0WzCUQTP0F+KAEFRy/shVIFr6AhLKAMt/yQIRLAJWHQEgbpUwWfRbMJRBM/QX4vhCES8RTxEvES4RThEuES0RTREtESwRTBEsESsRSxErESoRShEqESkRSREpESgRSBEoAL8AwAAoUGX6AlAD+gIB+gIB+gJY+gIB+gIB+BEnEUcRJxEmEUYRJhElEUURJREkEUQRJBEjEUMRIxEiEUIRIhEhEUERIREgEUARIBEfET8RHxEeET4RHhEdET0RHREcETwRHBEbETsRG1Y6ERsRGhE6ERoRGRE5ERkRGBE4ERgRFxE3ERcRFhE2ERYRFRE1ERURFBE0ERQAwQL4ERMRMxETERIRMhESERERMRERERARUBEQDxFPDw4RTg4NEUsNECwLEUwLChFKCgkRSQkIEUgIBxFHBwYRRgYFEUUFBBFEBAMRQwMCEUICARE7AVZBURBWQAERPts8ARFMARE0oREdET4RHREcET0RHBEbETwRGxEaEUkRGgDWAMIB/BEZETsRGREYEToRGBEXETkRFxEWES8RFhEVEUoRFREUETcRFBETETIRExESETYREhERES4REREQETEREA8RSA8OEUEODREwDVY4DQwRNgwLETULChFICgkRRwkIEUYIBxFDBwYRRQYFEUQFBBFBBAMRTgMCEU0CVkQC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JBEjESgRIxEiEScRIhEhESYRIREgESURIBEfESQRHxEeESMRHhEdESIRHREcESERHADWANcCWCLCAI8jcnBtcMhSEMsAydAQaF40EDfIVWDbPMlWKVUgFEMwbW3bPDCSXwXiANgA6ADeERsRIBEbERoRHxEaERkRHhEZERgRHREYERcRHBEXERYRGxEWERURGhEVERQRGREUERMRGBETERIRFxESERERFhERERARFREQDxEUDw4REw4NERINDBERDAsREAsQrxCeEI0QfBBrEFoQSRA4R1UGAN6CEA+KfqVQCMsfFss/UAT6Algg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYBIG6VMHABywGOHiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFuIhbrOVfwHKAMyUcDLKAOIB+gIBzxYBsvhBbyQwMvgnbxAtoSOgIqFwAbYJIFYjtghWIwGhgQELVh1AFFn0Cm+hMZIwcJdwAVYjobYJ4lmhUAShUAOgIsIAknAz31ihIMIAjopyf1UgbW1t2zwwkVviAOgB8BEuETARLhEtES8RLREsETARLBErES8RKxEqETARKhEpES8RKREoETARKBEnES8RJxEmETARJhElES8RJREkETARJBEjES8RIxEiETARIhEhES8RIREgETARIBEfES8RHxEeETARHhEdES8RHREcETARHBEbES8RGwDcArT5ASCC8GyPRPRf7bTN/tTejbFKpbE61V1DD3WdBmkhC3TEj+Pfuo6GMNs8f9sx4ILwvPr3dpB8cZzI03nY8ZSqqifoyihxzVkXgXIfIVpFRQG6joXbPH/bMeAA3wDgAfwRGhEwERoRGREvERkRGBEwERgRFxEvERcRFhEwERYRFREvERURFBEwERQRExEvERMREhEwERIREREvEREREBEwERAPES8PDhEwDg0RLw0METAMCxEvCwoRMAoJES8JCBEwCAcRLwcGETAGBREvBQQRMAQDES8DAhEwAgERLwEA3QL4ETDbPMgBETDPFsn7BFYvbrOOEcgRMCBu8tCAAREwAc8Wye1Uklcv4hEsES4RLBErES0RKxEqESwRKhEpESsRKREoESoRKBEnESkRJxEmESgRJhElEScRJREkESYRJBEjESURIxEiESQRIhEhESMRIREgESIRIBEfESERHwDj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IG6SMG2Oh9DbPGwWbwbiL1AzAQIAHPoA+gD6APoA+gD6AFVQAgEgAQUBBgIBIAEJAQoAEbCvu1E0NIAAYAL1sqcINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiNs8ES4RLxEuES0RLhEtESwRLREsESsRLBErESoRKxEqESkRKhEpESgRKREoEScRKBEnESYRJxEmESURJhElESQRJREkESMRJBEjESIRIxEiESERIhEhESARIREggAQ4BBwHgER8RIBEfER4RHxEeER0RHhEdERwRHREcERsRHBEbERoRGxEaERkRGhEZERgRGREYERcRGBEXERYRFxEWERURFhEVERQRFREUERMRFBETERIRExESEREREhERERAREREQDxEQD1UO2zxsxGzEbMRstAEIADpWFoEBCyJZ9ApvoTEhVhrHBSJWGscFA1YcxwVBMAL5sgc2zwRLhEvES4RLREuES0RLBEtESwRKxEsESsRKhErESoRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERuABDgELAvmye7bPBEuES8RLhEtES4RLREsES0RLBErESwRKxEqESsRKhEpESoRKREoESkRKBEnESgRJxEmEScRJhElESYRJREkESURJBEjESQRIxEiESMRIhEhESIRIREgESERIBEfESARHxEeER8RHhEdER4RHREcER0RHBEbERwRG4AEOAQ8B1BEaERsRGhEZERoRGREYERkRGBEXERgRFxEWERcRFhEVERYRFREUERURFBETERQRExESERMREhERERIREREQEREREA8REA9VDts8VxBfD1cQXw9s8SBukjBtmSBu8tCAbydvB+IgbpIwbd4BDAE6gBBWFgJZ9A9voZIwbd8gbpIwbY6H0Ns8bBdvB+IBDQAk1AHQAdIA0w/6ANMf0x/TH1VgAkLtRNDUAfhj0gAB4wL4KNcLCoMJuvLgiYEBAdcAAQHR2zwBEAERAaQRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERYRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPGzzbPNs82wjARkC+Ns8Vy8RLREuES0RLBEtESwRKxEsESsRKhErESoRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERsRGhEbERoBEgETBNowcIEAtHBUcABUcABUcABUcACCCvrwgIIQBfXhAIIImJaAjQhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEjQhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEiYmJARgBGAEYARcB1PpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gDTH/oA0x/TH9Mf+gD6APoA+gDUAdD6APoA+gD6APoA+gD6APoA1DDQ+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAEBFACEERkRGhEZERgRGREYERcRGBEXERYRFxEWERURFhEVERQRFREUERMRFBETERIRExESEREREhERERAREREQDxEQD1UOAcb6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB1DDQ+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAEBFQHi+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfQE9AT0BNM/1DDQ9AT0BNM/9ATTP9M/1DDQ9AT0BPQE+gD6APoA0n/Sf/oA+gDUMNABFgDK+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHT/zARJBEvESQRJBEuESQRJBEtESQRJBEsESQRJBErESQRJBEqESQRJBEpESQRJBEoESQRJBEnESQRJBEmESQRJBElESQB+oltbW1xbW0ibVMRbW1tVhZUcABUcACNCGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQh+EIRLhEtESwRKxEqESkRKBEnESYRJREkESMRIhEhESARHxEeER0RHBEbERoRGREYERcRFhEVERQRExESEREREFXgARgAQ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABABkFYSgEAiWfQPb6GSMG3fIG6SMG2Oh9DbPGwcbwzigEBWE0ATWfQPb6GSMG3fIG6SMG2OEdD6ANN/+gDTf/oAVUBsFW8F4lYRWQEaAHDTB9MP+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHSAPoA+gDTf9IA0w/6ANMf0gBVsA==');
+    const __system = Cell.fromBase64('te6cckICAR0AAQAAYvQAAAEBwAABAQWg6L8AAgEU/wD0pBP0vPLICwADAgFiAAQA5wLw0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8ES4RMBEuES0RLxEtESwRLhEsESsRLRErESoRLBEqESkRKxEpESgRKhEoEScRKREnESYRKBEmESURJxElESQRJhEkARAABQH4ESMRJREjESIRJBEiESERIxEhESARIhEgER8RIREfER4RIBEeER0RHxEdERwRHhEcERsRHREbERoRHBEaERkRGxEZERgRGhEYERcRGREXERYRGBEWERURFxEVERQRFhEUERMRFRETERIRFBESERERExERERAREhEQDxERDwAGAroOERAOEN9VHNs88uCCyPhDAcx/AcoAES8RLhEtESwRKxEqESkRKBEnESYRJREkESMRIhEhESARHxEeER0RHBEbERoRGREYERcRFhEVERQRExESEREREFXg2zzJ7VQABwDjBKLtou37AZIwf+BwIddJwh+VMCDXCx/eIIIQW48nHbqOlDDTHwGCEFuPJx268uCB1AEx2zx/4CCCEMjAPIi64wIgghCoVjypuuMCIIIQpi+FbLoACAAMAA4AGwHwES4RLxEuES0RLxEtESwRLxEsESsRLxErESoRLxEqESkRLxEpESgRLxEoEScRLxEnESYRLxEmESURLxElESQRLxEkESMRLxEjESIRLxEiESERLxEhESARLxEgER8RLxEfER4RLxEeER0RLxEdERwRLxEcERsRLxEbAAkC+BEaES8RGhEZES8RGREYES8RGBEXES8RFxEWES8RFhEVES8RFREUES8RFBETES8RExESES8REhERES8REREQES8REA8RLw8OES8ODREvDQwRLwwLES8LChEvCgkRLwkRLwgHBlVA2zwRL8gBghBbjycdWMsfzMkRLhEvES4A3AAKAfwRLREuES0RLBEtESwRKxEsESsRKhErESoRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERx/bVYdER8RHREeER0RHBEdERwACwHMERsRHBEbERoRGxEaERkRGhEZERgRGREYERcRGBEXERYRFxEWERURFhEVERQRFREUERMRFBETERIRExESEREREhERERAREREQDxEQDxDvEN4QzRC8EKsQmhCJEHgQZxBWBAVVINs8AOAB4jDTHwGCEMjAPIi68uCB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhDMGwTAA0AJlcZVxlXGYIAoPf4QlIwxwXy9H8DhDDTHwGCEKhWPKm68uCB1AHQ0gABjoTbPG8MkW3iAdIAAZX0BAFvAZFt4gHUMNDSAAGOhts8bBRvBJIwbeJsE9s8fwAPABAAEgBY+gD6APoA+gD6APoA+gD6ANQB0PoA+gD6APoAMBBMEEsQShBJEEgQRxBGEEUBxvpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQB0AARAEb6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIMRRDMAHwES4RMREuES0RMBEtESwRLxEsESsRMRErESoRMBEqESkRLxEpESgRMREoEScRMBEnESYRLxEmESURMRElESQRMBEkESMRLxEjESIRMREiESERMBEhESARLxEgER8RMREfER4RMBEeER0RLxEdERwRMREcERsRMBEbABMB/BEaES8RGhEZETERGREYETARGBEXES8RFxEWETERFhEVETARFREUES8RFBETETERExESETAREhERES8REREQETEREA8RMA8OES8ODRExDQwRMAwLES8LChExCgkRMAkIES8IBxExBwYRMAYFES8FBBExBAMRMAMCES8CARExAQAUBMoRMNs8VjBus45FMVcYVxhXGFYsIG7y0IBvJF8DVi0gbvLQgG8kECNfA1YuIG7y0IBvJBNfAxEvIG7y0IBvJGwxERgRLxEYAREaAREYERlYklcw4lYwbrOSVzDjDVYtbrOSVy3jDQDcABUAFgAYANQRMCBu8tCAbyEggQELcVn0gm+lIJZQI9cAMFiWbCFtMm0B4pCOQYEBCwGRf5Ft4gIRFwJW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ESQROREkESMROBEjESIRPhEiESERPREhESARPBEgER8ROxEfER4ROhEeER0ROREdERwROBEcAC4C/hEbET4RGxEaET0RGhEZETwRGREYETsRGBEXEToRFxEWETkRFhEVETgRFREUET4RFBETET0RExESETwREhERETsREREQEToREA8ROQ8OETgODRE+DQwRPQwLETwLChE7CgkROgkIETkIF1Y4BwYRPQYFETwFBBE7BBE6A9s8VjEAhQAvAvbCAJRWNMIAkXDikX+cVjPCAJRWMsIAkXDi4o4TMAQRNAQDETMDAhEyAlcwVzBfA+MNAlYwoBEpETARKREoES8RKBEnES4RJxEmES0RJhElESwRJREkESsRJBEjESoRIxEiESkRIhEhESgRIREgEScRIFYfEScRHxEmER8AMAAxAKJWNoBAETepBAQRMgQDETUDAhE0AgERMwHIVUBQVPoCEst/AfoCEst/AfoCyRA+AhEyAgERLwEgbpUwWfRbMJRBM/QX4hEsES4RLBErES0RKwsB/BEeESURHhEdESQRHREcESMRHBEbESIRGxEaESERGhEZESARGREYER8RGBEXER4RFxEWER0RFhEVERwRFREUERsRFBETERoRExESERkREhERERgREREQERcREA8RFg8OERUODREUDQwREwwLERILChERCgkREAkQjxB+EG0QXAAyARwQS0mgEDgQZwVERhPbPADRAlwiwgCPJfhCcIBCcG0jyFIQywDJ0BBqEFkQSBA3yFVg2zzJFEMwbW3bPDCSXwTiAM4A4QTIjsYw0x8BghBIHnVhuvLggdM/0z8g1wsBwwCOH/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IiUctchbeJDMGwT2zx/4CCCEKvPWHu6jwgw2zxsFts8f+AgghDu9ZJNugA1ADsAPABJAvb4QW8kMDKBS2lWJlYsoBO+EvL0VheAQCVZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuKBf30hbrPy9CBu8tCAbyaBXm0Bs/L0Vh6BAQsnWfQKb6ExggCg9yGRf5RTV8cF4vL0s5yBF+YBVjag+CO78vSRMOJScBEcgED0WzAA/QA2AfQjklYhklYi4hExETcRMREwETYRMBEvETURLxEuETQRLhEtETMRLREsETIRLBErETcRKxEqETYRKhEpETURKREoETQRKBEnETMRJxEmETIRJhElETcRJREkETYRJBEjETURIxEiETQRIhEhETMRIREgETIRIBEfETcRHwA3Af4RHhE2ER4RHRE1ER0RHBE0ERwRGxEzERsRGhEyERoRGRE3ERkRGBE2ERgRFxE1ERcBERYBERURMxEVERQRMhEUERMRNxETERIRNhESERERNRERAREQAQ8RMw8OETIODRE3DQwRNgwLETULGgkRMwkIETIIBxE3BwYRNgYFETUFADgD/BQDETMDAlY3AhE0VjbbPFYzbrOXETMgbvLQgJRXM1Yx4lYxwgCOkVYxcn9VIG1tbds8MAZWMKEGkTDiES+RcZFy4gIBES4BETPIVSCCELmwPLxQBMsfEssHyz/LP8nIgljAAAAAAAAAAAAAAAABActnzMlw+wBWHFYioBEuowDNAOEAOQH8ESsRMRErESoRMBEqESkRLxEpESgRLhEoEScRLREnESYRLBEmESURKxElESQRKhEkESMRKREjESIRKBEiESERJxEhESARJhEgER8RJREfER4RJBEeER0RIxEdERwRIhEcERsRIREbERoRIBEaERkRHxEZERgRHhEYERcRHREXADoBshEWERwRFhEVERsRFREUERoRFBETERkRExESERgREhERERcREREQERYREA8RFQ8OERQODRETDQwREgwLERELChEQChCfEI4QfRBsEFsQShA5SHBFYBNEQNs8ANEAjtMfAYIQq89Ye7ry4IHTP9M/INcLAcMAjh/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIlHLXIW3iAfQE+gD6AFVQA/Q6+EFvJDAyggCg91YdgQELI1n0Cm+hMfL0VhqAQChZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuKBf30hbrPy9CBu8tCAbyaBXm0Bs/L0Vislk1Y0oJZWM1YzoKDigUtpUYG+GPL0f4BAJlRGMCZURjYByFVQ2zzJAhEgAgD9AD0APgBcUFbKAFADINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WAfoCAfoCyx/KAATOUsAgbpUwWfRbMJRBM/QX4nAogBCDBln0hm+lIJZQI9cBMFiWbCFtMm0B4pCK6Fs4Um+hUv6hIFY2qIIQO5rKAKkEU+CgARESAaABVhGhARESAaBWESigJOMPUsAREYBA9FswViDCAAA/AEAAQgBHAMxWGIAQI1n0D2+hkjBt3yBukjBtndD6ANIA039VIGwTbwPiIG6zjiAgbvLQgG8jE6GoAZFxkX/iqIIwDeC2s6dkAACpBBKgAZFb4oAQKgKDBkEz9HxvpSCWUCPXATBYlmwhbTJtAeIC0nBWOCKhtgkjgSliArvy9FYUwACbMIIwDeC2s6dkAACfgjAN4Lazp2QAAKhWFKkE4iKCMA3gtrOnZAAAqCGpBH9tcMjJ0CpROVE2A8hVUNs8yVYqAlY3AkMwcAFtbds8MBETI6ARFVYToABBAOEAyIIQibcdCVAHyx9QBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlADINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WgQEBzwAhbrOVfwHKAMyUcDLKAOIB+gIBzxYC+oIwDeC2s6dkAACoVhSpBFMCqIIwDeC2s6dkAACpBH9UfEdtyFUwghBZXwe8UAXLHxPLPwH6AgEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYhbrOVfwHKAMyUcDLKAOLJVikCVjYCQzBwAW1t2zwwERNWE6ERFSOhAOEAQwH8ES4ROxEuES0ROhEtESwROREsESsROBErESoRNxEqESkRNhEpESgRNREoEScRNBEnESYRMxEmESURMhElESQRMREkESMRMBEjESIRLxEiESEROxEhESAROhEgER8ROREfER4ROBEeER0RNxEdERwRNhEcERsRNREbERoRNBEaAEQC+lYzERoRGREzERkRGBEyERgRFxExERcRFhEwERYRFRE8ERUREREUERERExE6ERMREhE5ERIRERE4EREREBE3ERAPETYPDhE1Dg0METMMCxEyCwoRMQoZCBE8CBA3BhEwBgURMQUUAxE5AwIRNgIBETUBETRWM1Y5VjNWPNs8AM0ARQH8ES4ROxEuES0ROhEtESwROREsESsROBErESoRNxEqESkRNhEpESgRNREoEScRNBEnESYRMxEmESURMhElESQRMREkESMRMBEjESIRLxEiESERLhEhESARLREgER8RLBEfER4RKxEeER0RKhEdERwRKREcERsRKBEbERoRJxEaAEYA2BEZESYRGREYESURGBEXESQRFxEWESMRFhEVESIRFREUESERFBESER8REhERER4REREQER0REA8RHA8OERsODREaDQwRGQwLERgLChEXCgkRFgkFERUFBxEUBw0REw0CERECDREQHhBJEDhGEwPmjqEqbrOWCiBu8tCAkjol4lYgcn9VIG1tbds8MBETVh+hEROROuIEkXGRcuJeNwYQNRAkECMCERICLwJWFQIBERABERMtVhMQZ8hVwNs8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABEWoxBrXjVGcBXbPADhAEgA0QCkghBIQm82UA7LHxzLPxrLPxjLB1AGINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAT6Alj6Ast/AfoCAcjKf1j6Alj6Alj6Alj6AskBzAQ6jwgw2zxsGNs8f+AgghD5T4C7uuMCIIIQCZ/0o7oASgBLAFIAXgA+0x8BghDu9ZJNuvLggfoA0w/SAPoA+gDTf9M/0x9VcAHwES4RNhEuES0RNREtESwRNBEsESsRMxErESoRMhEqESkRMREpESgRMBEoEScRLxEnESYRNhEmESURNRElESQRNBEkESMRMxEjESIRMhEiESERMREhESARMBEgER8RLxEfER4RNhEeER0RNREdERwRNBEcERsRMxEbAEwB/BEaETIRGhEZETERGREYETARGBEXES8RFxEWETYRFhEVETURFREUETQRFBETETMRExESETIREhERETEREREQETAREA8RLw8OETYODRE1DQwRNAwLETMLChEyCgkRMQkIETAIBxEvBwYRNgYFETUFBBE0BAMRMwMCETICARExAQBNAvYRMNs8+EFvJDAygV/yVjJWIb7y9IFLaVYnVjOgE74S8vQRLxE1ES8RLhE0ES4RLREzES0RLBEyESwRKxExESsRKhEwESoRKREvESkRKBEuESgRJxEtEScRJhEsESYRJRErESURJBEqESQRIxEpESMRIhEoESIRIREnESEA3QBOAfwRIBEmESARHxElER8RHhEkER4RHREjER0RHBEiERwRGxEhERsRGhEgERoRGREfERkRGBEeERgRFxEdERcRFhEcERYRFREbERURFBEaERQRExEZERMREhEYERIREREXEREREBEWERAPERUPDhEUDg0REw0MERIMCxERCwoREAoATwL4EJ8QjhB9EGwQWxBKEDlIcBAmgAxUQXYFETkFBBE4BFoBETkBVjgBETrbPDAHVi+gES4RMBEuES0RLxEtESwRLhEsESsRLRErESoRLBEqESkRKxEpESgRKhEoEScRKREnESYRKBEmESURJxElViQRJxEkESYRJBEjESURIwCFAFAB/BEiESQRIhEhESMRIREgESIRIBEfESERHxEeESARHhEdER8RHREcER4RHBEbER0RGxEaERwRGhEZERsRGREYERoRGBEXERkRFxEWERgRFhEVERcRFREUERYRFBETERURExESERQREhERERMREREQERIREA8REQ8OERAOEN8QzgBRAS4QvRCsEJsaEHkQaBBXEEYQNRAkQwDbPADRAhAw2zxsGds8fwBTAFQAQtMfAYIQ+U+Au7ry4IH6ANMP0gD6ANN/+gDTf9M/0x9VgAHwES4RNxEuES0RNhEtESwRNREsESsRNBErESoRMxEqESkRMhEpESgRMREoEScRMBEnESYRLxEmESURNxElESQRNhEkESMRNREjESIRNBEiESERMxEhESARMhEgER8RMREfER4RMBEeER0RLxEdERwRNxEcERsRNhEbAFUB/BEaETURGhEZETQRGREYETMRGBEXETIRFxEWETERFhEVETARFREUES8RFBETETcRExESETYREhERETUREREQETQREA8RMw8OETIODRExDQwRMAwLES8LChE3CgkRNgkIETUIBxE0BwYRMwYFETIFBBExBAMRMAMCES8CARE3AQBWBP4RNts8+EFvJDAycFY1wgCUVjTCAJFw4pIwcd5WM8IAlFYywgCRcOKRpN6BS2lWKCKoVjqgFL4T8vSBX/JWICOoVjkBvvL0VjTCAJRWM8IAkXDilFczVzPjDVYwwgCUVi/CAJFw4o4WBRE3BQQRNgQDETQDAhEzAlcvVy9fBOMNAN0AVwBYAFwBUIANcFY5JKkEVjxRVBBFVjsEVjtQNAIROwIBEToBVj/bPDARMREyETEAhQH2gA5wVjdWNakEETERNxExETARNhEwES8RNREvES4RNBEuES0RMxEtESwRMhEsESsRMRErESoRMBEqESkRLxEpESgRLhEoEScRLREnESYRLBEmESURKxElESQRKhEkESMRKREjESIRKBEiESERJxEhESARJhEgER8RJREfAFkB/BEeESQRHhEdESMRHREcESIRHBEbESERGxEaESARGhEZER8RGREYER4RGBEXER0RFxEWERwRFhEVERsRFREUERoRFBETERkRExESERgREhERERcREREQERYREA8RFQ8OERQODRETDQwREgwLERELChEQChCfEI4QfRBsEFsQSgBaAvoQOQgROggkEDgHEDZEFRAjAhE7AhE62zwwBRExBQQRMAQDES4DAhEtAgURLAUEESsEAREqAREpAxEoAwIRJwIFESYFBBElBAERJAERIwMRIgMCESECBREgBQQRHwQBER4BER0DERwDAhEbAgURGgUEERkEAREYAREXAxEWAwCFAFsAWAIRFQIFERQFBBETBAEREgEREQMREAMQLxBeEE1QyxA6ECkQWBBHUGUQNEAzAfgBVi+gVh4BES2oESgRMREoEScRMBEnESYRLxEmESURLhElESQRLREkESMRLBEjESIRKxEiESERKhEhESARKREgER8RKBEfER4RJxEeER0RJhEdERwRJREcERsRJBEbERoRIxEaERkRIhEZERgRIREYERcRIBEXERYRHxEWAF0BvBEVER4RFREUER0RFBETERwRExESERsREhERERoREREQERkREA8RGA8OERcODREWDQwRFQwLERQLChETCgkREgkIEREIBxEQBxBvEF4QTRA8ECsQihkQSF4zUFIT2zwA0QTKjscw0x8BghAJn/SjuvLggSDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gHTP9M/VSBsE9s8f+AgghDtdpJuuo8IMNs8bBjbPH/gIIIQRt7TUroAXwBoAGkAkAPy+EFvJDAyVhaAQCVZ9A9voZIwbd8gbpIwbY6H0Ns8bBxvDOKBf30hbrPy9CBu8tCAbyxsMzM0NYFebQGz8vQkwAqRf5MkwAviVi4hk1YxoN6BS2lRkb4Z8vRWIIEBCyhZ9ApvoTGCAKD3IZF/lFNYxwXi8vSzkXDjDQEcAGAAYQAUJcAKkX+TJcAM4gP+nYEX5gNWOKD4I7sT8vSRMuJwApIwMeMNUmARGoBA9FswIcIAjp8nbpI3IpYHIG7y0IDiIXJ/VSBtbW3bPDABERgBoBEXkjcw4g1WF6FNQ8hVIIIQ8sWurFAEyx8SywfLP8s/yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABEUowBiAOEAZwL6VhqAQCpZ9A9voZIwbd8gbpIwbY4R0PoA03/6ANN/+gBVQGwVbwXiIG6zjsggbvLQgG8lJgXCAJMDwgCSM3DilDNUQRPeAcIAksIAkjBw4pGgkTDiIMIAjo0yUyFyf1UgbW1t2zwwkTDiUoARG4BA9FswERqRMOIRMBE4ETAA4QBjAfgRLxE3ES8RLhE2ES4RLRE1ES0RLBE0ESwRKxEzESsRKhEyESoRKRExESkRKBE4ESgRJxE3EScRJhE2ESYRJRE1ESURJBE0ESQRIxEzESMRIhEyESIRIRExESERIBE4ESARHxE3ER8RHhE2ER4RHRE1ER0RHBE0ERxWMxEcAGQC/hEbETMRGxEaETIRGhEZETkRGREYETgRGBEXETcRFxEWETYRFhEVETURFREUERMRMxETERIRMhESERERORERERAROBEQDxE3Dw4RNg4NETUNDAsRMwsKETIKCRE5CQgROAgHETcHBhE2BgURNQUEAxEzAwIRNAJWOFkRNFY32zwAzQBlAfwRLhE2ES4RLRE1ES0RLBE0ESwRKxEzESsRKhEyESoRKRExESkRKBEwESgRJxEvEScRJhEuESYRJREtESURJBEsESQRIxErESMRIhEqESIRIREpESERIBEoESARHxEnER8RHhEmER4RHRElER0RHBEkERwRGxEjERsRGhEiERoAZgDSERkRIREZERgRIBEYERcRHxEXERYRHhEWERURHREVERQRHBEUERMRGxETERIRGhESERERGRERERARGBEQDxEXDw4RFg4NERUNDBEUDAsREwsKERIKCRERCQgREAgQfxBuEF0QTBA7SogJARACERQCECrbPADRAJbTHwGCEO12km668uCBINcLAcMAjh/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIlHLXIW3iAdM/0z/TD9N/0h/Sf9J/VXAD8jIz+EFvJDAyggCg91YegQELI1n0Cm+hMfL0VhmAQChZ9A9voZIwbd8gbpIwbY6H0Ns8bBxvDOKBf30hbrPy9CBu8tCAbyyBS2lWN1Y7oB++HvL0gV5tDbMd8vR/gEArUTtRO1E7UTtRO1E7UTtLEyERFgHIVbDbPMkBHACGAGoE/gIRIwJWEAEgbpUwWfRbMJRBM/QX4ifACpF/kyfADOKznhEhk1KgvpNSoLvi8uZsk1chMOJwJsAKkX+TJsAL4uMPAREwAQ2AQPRbMFYqwgCOplYwbpJXMJ1XMhEvIG7y0IARMREv4hExVilyf1UgbW1t2zwwViihlFcwVzHiVhsAawCKAOEAjgH8ETQRPRE0ETMRPBEzETIROxEyETEROhExETAROREwES8ROBEvES4RNxEuES0RNhEtESwRNREsESsRPRErESoRPBEqESkROxEpESgROhEoEScROREnESYROBEmESURNxElESQRNhEkESMRNREjESIRPREiESERPBEhESAROxEgAGwB+BEfEToRHxEeETkRHhEdETgRHREcETcRHBEbETYRGxEaETURGhEZET0RGREYETwRGBEXETsRFxEWEToRFhEVETkRFREUETgRFBETETcRExESETYREhERETUREREQET0REA8RPA8OETsODRE6DQwROQwLETgLChE3CgkRNgkAbQLMCBE1CAcRPQcGETwGVjkGVjsGBRE+BVRQUgVWQEQ1AhE8AgERPQERO9s8VhCAQFY2WfQPb6GSMG3fIG6SMG2OEdD6ANN/+gDTf/oAVUBsFW8F4iBus54wAxE2AwIRMwJXMVcxW+MNAG4AfALcVh+AEChZ9A9voZIwbd8gbpIwbY6H0Ns8bBdvB+KBbJYhbrPy9CBu8tCAbyc2ggCPblAF8vRWG4AQLVn0D2+hkjBt3yBukjBtl9D0BAExbwHiIG6zlyBu8tCAbyGSMG3iIIEBCy9Z9AtvoZIwbd8BDgBvBOQgbpIwbY8S0Ns8BtQB0Ns8NhBsVQRsHG8M4iBus5cgbvLQgG8snTBwVHAAUwBwVHAAUwDiVheWVHupVHupllR1Q1R1Q+IjwACXNVYupBEvBd5WLIAQViBZ9A9voZIwbd8gbpIwbY6H0Ns8bBZvBuIgbrMBAQEBAQMAcAL8mCBu8tCAbyZbmDBwVHAAUwBb4lYhlAFWH6CUVh+gAeIgVh+ogjAN4Lazp2QAAKkEIlYgqIIwDeC2s6dkAACpBFYzgBBWJln0D2+hkjBt3yBukjBtndD6ANIA039VIGwTbwPiIG6zlyBu8tCAbyOUMHBwIeJwViUkwgCRcOMNAHEAcgAIVigkugL+jkExI1YmtghWKI4TViUjoVIQqIIwDeC2s6dkAACpBI4TIlYmoVIQqIIwDeC2s6dkAACpBOJRIaFQVaEgwACScDPeBN4gwgCOFDNSMqgiViWooF2gqQRaoFYms0ADkTDicFMAVijCAJJXJOMNViVQDqEvqIIwDeC2s6dkAACpBABzAHQAqmwhViZWJqhWIqiCMGdlx5P6EAedqhqpBCARJKiCEDuaygCpBCLCAJ4xIVZXqIIQO5rKAKkEAd5WIyGhIqABETYBoFMhoVY2oAERNQGgETQRNQERIwEB+FYkUA2hL6iCMA3gtrOnZAAAqQRWEBEpLaAioSGhARERAaAgESmhUv+oVidWJ6igL1YooKkED1YnoFYlViVWK44UVihWEqFSMKiCMA3gtrOnZAAAqQSOFFYRVimhUjCogjAN4Lazp2QAAKkE4iNWKqgBESYBESOgAREiAagAdQL6gjBnZceT+hAHnaoaqQQBESKgVimBb7sRJaC5AREjAfL0VieBQ6ARIqhWIlYQqIIwDeC2s6dkAACpBL4BESEB8vRWJ44VVxZXFlcWVxZXFlcWKVYhVhwqUXqg4w4QOkmABhEcBgURGwUEERMEAxESAwIREQIBERABD4EBCw8AdgB3AKJXEFcQVxBXEFcQVxApViFWHCpRaqARFREcERURFBEbERQRExEZERMREhEYERIREREXEREREBEWERAPERUPDhEUDgMREwMCERICARERAQYREAcE8shVsBBsEFsQShA5SHzbPMhVUAfbPMkBzMkCERACFFYdASBulTBZ9FkwlEEz9BPigBAByAEB9ADJAhErAlYbASBulTBZ9FswlEEz9BfigBAjVhEpVhJWEVYRyFVQ2zzJAhEpAlYbASBulTBZ9FswlEEz9BfigBBUe6kAtAC0ALYAeAHqyFUgWvoCEsoAy3/JAhEqAlYbASBulTBZ9FswlEEz9BfiERIXoREZESgRGREYESgRGBEXESgRFxEWESgRFgQRFQQRFBEoERQEERMEERAREhEQERERKBERBhEQBhAuEM0QTBBrSaAQWBBHXjETViJZDxEQDxDvAHkBgMgRHhEdERwRGxEaERkRGBEXERYRFREUERMREhERERBV4Ns8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABCbEJoAegH0ghBHWWq+AREfyx8BER0Byz8BERsByz8BERkBywcBERcByz8BERUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYBERMByw8BEREBygAfyn9QDfoCG8p/UAn6AgfIy38Wy38Uyn9Y+gIB+gLKf8p/WPoCyFAD+gIAewBcUAP6AlAD+gJQA/oCUAP6AlAD+gITygATy38Tyn/IUAT6AhTKf8lYzMkBzMkBzAJ4IG7y0IBvJSTCAJMjwgCRcOKSMzPjDSDCAJMiwgCRcOKfXwMDETYDAhEzAlcxVzFb4w1WMFANgED0WzAMAH0AggH2VzVWKIANcPgjETMRNhEzETIRNREyETERNBExETARNhEwES8RNREvES4RNBEuES0RNhEtESwRNREsESsRNBErESoRNhEqESkRNREpESgRNBEoEScRNhEnESYRNREmESURNBElESQRNhEkESMRNREjESIRNBEiESERNhEhAH4B/BEgETURIBEfETQRHxEeETYRHhEdETURHREcETQRHBEbETYRGxEaETURGhEZETQRGREYETYRGBEXETURFxEWETQRFhEVETYRFREUETURFBETETQRExESETYREhERETUREREQETQREA8RNg8OETUODRE0DQwRNgwLETULChE0CgB/Av4JETYJCBE1CAcRNAcGETYGBRE1BVY7BRA0VjsEVjsEVkFQNAIROAIBEToBVjwB2zwwES8RMxEvES4RMREuES0RMBEtESwRLxEsESsRLhErESoRLREqESkRLBEpESgRKxEoEScRKhEnESYRKREmESURKBElESQRJxEkESMRJhEjAIUAgAH8ESIRJREiESERJBEhESARIxEgER8RIhEfER4RIREeER0RIBEdERwRHxEcERsRHhEbERoRHREaERkRHBEZERgRGxEYERcRGhEXERYRGREWERURGBEVERQRFxEUERMRFhETERIRFRESERERFBERERARExEQDxESDw4REQ4NERANAIEAChDPVSsSAfgRM1YnoIAOcPgjETQROBE0ETMRNxEzETIRNhEyETERNRExETARNBEwES8RMxEvES4RMhEuES0RMREtESwRMBEsESsRLxErESoRLhEqESkRLREpESgRLBEoEScRKxEnESYRKhEmESURKRElESQRKBEkESMRJxEjESIRJhEiAIMB/BEhESURIREgESQRIBEfESMRHxEeESIRHhEdESERHREcESARHBEbER8RGxEaER4RGhEZER0RGREYERwRGBEXERsRFxEWERoRFhEVERkRFREUERgRFBETERcRExESERYREhERERUREREQERQREA8REw8OERIODRERDQwREAwQvwCEAvoQrhCdEIwQexBqCRE5CRAoECcQJgURPAVeIQIRPALbPDADETIDAhEvAgERLgERLQMRLAMCESsCAREqAREpAxEoAwIRJwIBESYBESUDESQDAhEjAgERIgERIQMRIAMCER8CAREeAREdAxEcAwIRGwIBERoBERkDERgDAhEXAgCFAIkD4lYZpCnACpF/kynAC+KSJrOOECnADJEmmSnADZEmkiaz4uLi+COAQHAtVEwwLlRNMC1UTTAtVEowVE67cFUgyFWw2zzJAhEfAlYdASBulTBZ9FswlEEz9BfiEIkQNFYbBAMCER4CUAwQNUQAyFWw2zzJAIYAhwCIAHxQvMsHGcsPUAcg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYVygBQA/oCAfoCy3/KAMsPAfoCyx/KAACOghCtjjHvUA3LHxvLBxnLD1AHINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WFcoAUAP6AgH6Ast/ygAB+gLLP8s/yx8AOMiCWMAAAAAAAAAAAAAAAAEBy2fMyXD7ABESERAAOAERFgERFQMRFAMCERMCARESARERAxEQA0/tVYMB/jAROBE8ETgRNxE7ETcRNhE6ETYRNRE5ETURNBE8ETQRMxE7ETMRMhE6ETIRMRE5ETERMBE8ETARLxE7ES8RLhE6ES4RLRE5ES0RLBE8ESwRKxE7ESsRKhE6ESoRKRE5ESkRKBE8ESgRJxE7EScRJhE6ESYRJRE5ESURJBE8ESQAiwH4ESMROxEjESIROhEiESEROREhESARPBEgER8ROxEfER4ROhEeER0ROREdERwRPBEcERsROxEbERoROhEaERkROREZERgRPBEYERcROxEXERYROhEWERUROREVERQRPBEUERMROxETERIROhESERERORERERARPBEQDxE7DwCMAv4OEToODRE5DQwRPAwLETsLChE6CgkROwlWPAkQaF4kEDVEMAIRPAIBETsB2zzCAJJWJZFw4hEyETMRMgQRMgQRMBExETAEETAEAxEvAwIRLgIBES0BESwEESsEAxEqAwIRKQIBESgBEScEESYEAxElAwIRJAIBESMBESIEESEEAKoAjQCEAxEgAwIRHwIBER4BER0EERwEAxEbAwIRGgIBERkBERgEERcEAxEWAwIRFQIBERQBERMEERIEAxERAwIREAJQ/lWEAfYBESqg+EIRKaMRKBExESgRJxEwEScRJhEvESYRJREuESURJBEtESQRIxEsESMRIhErESIRIREqESERIBEpESARHxEoER8RHhEnER4RHREmER0RHBElERwRGxEkERsRGhEjERoRGREiERkRGBEhERgRFxEgERcRFhEfERYAjwG4ERURHhEVERQRHREUERMRHBETERIRGxESERERGhERERARGREQDxEYDw4RFw4NERYNDBEVDAoREwoJERIJCBERCAcREAcQbxBeEE0QPBArEGoQSRBoXkIQNEEw2zwA0QQ6jwgw2zxsGds8f+AgghDV3r/cuuMCIIIQ/DOHfboAkQCSAKUAvwDq0x8BghBG3tNSuvLggSDXCwHDAI4f+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiJRy1yFt4gHTD/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gDTP9N/0h/Sf9QB0NJ/MBkYFxYVFEMwAfIy+EFvJDAygUtpVi1WMaATvhLy9IIAoPdWH4EBCyNZ9ApvoTHy9Chus5cIIG7y0IAwkTjiVhekETYRNxE2ETURNxE1ETQRNxE0ETMRNxEzETIRNxEyETERNxExETARNxEwES8RNxEvES4RNxEuES0RNxEtESwRNxEsAJMB/BErETcRKxEqETcRKhEpETcRKREoETcRKBEnETcRJxEmETcRJhElETcRJREkETcRJBEjETcRIxEiETcRIhEhETcRIREgETcRIBEfETcRHxEeETcRHhEdETcRHREcETcRHBEbETcRGxEaETcRGhEZETcRGREYETcRGBEXERYRFQCUAvgRFBETERIREREQDw4NDAsKCQgQRxE3BgVDE9s8wgCSViWRcOJWIwGgES8RMBEvES4RLxEuES0RLhEtESwRLREsESsRLBErESoRKxEqESkRKhEpESgRKREoEScRKBEnESYRJxEmESURJhElESQRJREkESMRJBEjESIRIxEiAJUAvgLeVhyAECZZ9A9voZIwbd8gbpIwbY6H0Ns8bBdvB+KBbJYhbrPy9CBu8tCAbyc0NYIAj25QBPL0VheAECpZ9A9voZIwbd8gbpIwbZfQ9AQBMW8B4iBus5cgbvLQgG8hkjBt4iCBAQssWfQLb6GSMG3fAQ4AlgTgIG6SMG2PEtDbPAbUAdDbPDYQbFUEbBxvDOIgbrOXIG7y0IBvLJ0wcFRwAFMAcFRwAFMA4lYUllR7qVR7qZZUdUNUdUPigRR2JMIA8vRTQ1YqgBBWH1n0D2+hkjBt3yBukjBtjofQ2zxsFm8G4iBuswEBAQEBAwCXAf6YIG7y0IBvJluYMHBUcABTAFviVh5QCKEpqIIwDeC2s6dkAACpBFYdUAehKaiCMA3gtrOnZAAAqQRWII4TVh8poVKgqIIwDeC2s6dkAACpBI4TKFYgoVKgqIIwDeC2s6dkAACpBOIqViGoVh4BER6gAREdAaiCMGdlx5P6EAedAJgB3KoaqQRWGqCCAJ/sU8igI6EBER6gvgERHAHy9FGVoFYaoVYYoYIwDeC2s6dkAACoVh+UB6MoqJNReKjiF6BWHpaCF8RlNgCWghA7msoA4lYbAaAYqIIQO5rKAKkEF6kEViyAEFYgWfQPb6GSMG3fAJkC/iBukjBtndD6ANIA039VIGwTbwPiIG6zlyBu8tCAbyOUMHBwIeJwU1PCAJRWIiS9kXDijj8xUzW2CFYis44SU1KhUhCogjAN4Lazp2QAAKkEjhJTJaFSEKiCMA3gtrOnZAAAqQTiUSGhUFWhIMAAknAz3gTeIMIAkTDjDVNUqAEAmgCbACQzUjKoUySooF2gqQRaoFYgQAMC+BEeqIIwZ2XHk/oQB52qGqkEIBEcqIIQO5rKAKkEVhshoXBWH8IAnjBWHlZRqIIQO5rKAKkE3magAREuAaBWHlYuoSKgAREtAaAnVh2hKaBWHqGjcFRwAFMAVimOGVcbVxtXG1cbVxtXG1YZVhlWGVH7oREQKqHjDiBWJqgAnACdAHxXFVcVVxVXFVcVVxVWE1YTVhNR66FR2qERFhEcERYRFREbERURFBEaERQCERYCAREVAQ4RFA4PERAPEO8NDgP0gjAN4Lazp2QAAKkEUuARJ6iCMA3gtrOnZAAAqQQKER4KEDkQKAcREAcGERoGBREZBQQRGAQDERcDAhEWAgERFQERFIEBCxEUyFWwEGwQWxBKEDlIfNs8yFVQB9s8yQHMyQIRFQIZVh8BIG6VMFn0WTCUQTP0E+KAEAEAtAC0AJ4C9sgBAfQAyQIRLAJWHQEgbpUwWfRbMJRBM/QX4oAQVHU5JVYeLchVUNs8yQIRKgJWHQEgbpUwWfRbMJRBM/QX4oAQVHukyFUgWvoCEsoAy3/JAhErAlYdASBulTBZ9FswlEEz9Bfi+EL4QhEwEU8RMBEvEU4RLxEuEU0RLgC2AJ8B+BEtEUwRLREsEUsRLBErEUoRKxEqEUkRKhEpEUgRKREoEUcRKBEnEUYRJxEmEUURJhElEUQRJREkEUMRJBEjEUIRIxEiEUERIhEhEUARIREgET8RIBEfET4RHxEeET0RHhEdETwRHREcETsRHFY6ERwRGxE6ERsRGhE5ERoAoAL+ERkROBEZERgRNxEYERcRNhEXERYRNREWERURNBEVERQRMxEUERMRMhETERIRUBESERERTxERERARThEQDxFNDw4RSg4QPQwRSwwLEUkLChFICgkRRgkIEU0IBxFFBwYRRAYFEUMFBBFCBAMRQQMCETsCVkACVjYCET0B2zwRNQDNAKEB/nMRRaERHRE9ER0RHBE8ERwRGxFEERsRGhFKERoRGRE7ERkRGBE6ERgRFxE5ERcRFhExERYRFREvERURFBFDERQRExFNERMREhEwERIRERFMEREREBFHERAPETMPDhFJDg0RNA1WMg0METgMCxE3CwoRQwoJEUEJCBFHCAcRQAcAogL+BhE5BgURRgUEET8EAxFJAwIRQgJWOQIBEU0BERAREREQDxEQDxDeEM3IESARHxEeER0RHBEbERoRGREYERcRFhEVERQRExESEREREFXg2zzJyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsAERARLxEQDxEuDw4RLQ4NESwNDBErDAC7AKMB/AsRKgsKESkKCREoCQgRJwgHESYHBhElBgURJAUEESMEAxEiAwIRIQIBESABER8RHhEdBxEcBw0RGw0RGgcRGQcNERgNERMRFxETERERFhERBhEVBhEQERQREBESERMREg8REg8KEREKBhEQBhDPEK4QrRB8EKsQWhA5EDhHFgCkAAgQNURAAhAw2zxsGts8fwCmAKcAmNMfAYIQ1d6/3Lry4IHTD/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gD6APoA0z/Tf9If0n/UAdDSfzAaGRgXFhUUQzAB7jL4QW8kMDKBS2lWLlYyoBO+EvL0ggCg91YggQELI1n0Cm+hMfL0VhmkETgRORE4ETcRORE3ETYRORE2ETURORE1ETQR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FAC4AvgRExEzERMREhEyERIRERExEREREBFQERAPEU8PDhFODg0RSw0QLAsRTAsKEUoKCRFJCQgRSAgHEUcHBhFGBgURRQUEEUQEAxFDAwIRQgIBETsBVkFREFZAARE+2zwBEUwBETShER0RPhEdERwRPREcERsRPBEbERoRSREaAM0AuQH8ERkROxEZERgROhEYERcROREXERYRLxEWERURShEVERQRNxEUERMRMhETERIRNhESERERLhERERARMREQDxFIDw4RQQ4NETANVjgNDBE2DAsRNQsKEUgKCRFHCQgRRggHEUMHBhFFBgURRAUEEUEEAxFOAwIRTQJWRAIBEUEBALoC/BEQEREREA8REA8Q3hDNyBEgER8RHhEdERwRGxEaERkRGBEXERYRFREUERMREhERERBV4Ns8yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AA8RLw8OES4ODREtDQwRLAwLESsLChEqCgkRKQkIESgIBxEnBwYRJgYFESUFBBEkBAC7AL0B9IIQI1NGTAERIcsfAREfAcs/AREdAcs/AREbAcsHAREZAcs/AREXINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WAREVAcsPARETAcoAARERAcp/UA/6Ah3Kf1AL+gIJyMt/GMt/Fsp/FMp/WPoCAfoCyn/Kf8hYALwAcvoCUAP6AlAD+gJQA/oCUAP6AlAD+gJQA/oCUAP6AhPKAAPIy38Uyn9QBPoCFMp/yVADzMlYzMkBzADAAxEjAwIRIgIBESEBESARHxEeER0LERwLERsLERoLERkREREYEREMERcMERYRFBEVERQREREUEREREBETERAREBESERAKEREKAxEQAxA/DFDtEJsQihB5EEgQZxBWQDUUAeoRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERsRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERYRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ5w2zwA0QQ6jwgw2zxsF9s8f+AgghCI5/knuuMCIIIQlGqYtroAwADCAMcA0gH20x8BghD8M4d9uvLggdIAAZLTB5JtAeLTP9M/INcLAcMAjh/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIlHLXIW3iAfoAINcLAcMAjh/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIlHLXIW3iAfoAAMEABFVgA/SCAKD3+EJWIMcF8vT4QW8kMDGBS2kyVi2+8vRWFKSAQPgjggFRgKBUaZBUaZBUaZBSkMhVcNs8yQIRGAJWFwEgbpUwWfRbMJRBM/QX4vgjggFRgKAIERYIBxEWBwYRFgYFERYFBBEWBAMRFgMCERYCAREWAchVgNs8yQDDAMQAxgDwJ26zmH9QCcoAF8sHmDdwUAjKABBn4hXLPxPLPwEgbpUwcAHLAY4eINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8W4gH6AgEgbpUwcAHLAY4eINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8W4gH6AssfAaiCEJYoupZQCssfGMs/Jm6zl38BygAWyweWNnBQBsoA4hTLPxLLPwEgbpUwcAHLAY4eINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8W4gH6AgEAxQBmIG6VMHABywGOHiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFuIB+gIByMsfyQHMAUjIgljAAAAAAAAAAAAAAAABActnzMlw+wD4QlYlDxEQDwFw2zwA0QPMMNMfAYIQiOf5J7ry4IHSANM/0z9VIGwTggCg9/hCVhzHBfL0gUtp+EFvJBNfA1YnViugvvL0VhGAQCNZ9A9voZIwbd8gbpIwbY6H0Ns8bBhvCOKBK3AhbrPy9CBu8tCAbygK4w9/APkAyADJAX5fBzIgERGAQPRbMBEQAchZghBLw0HVUAPLH8s/yz/JyIJYwAAAAAAAAAAAAAAAAQHLZ8zJcPsA+EJWJAFw2zwA0QP8N4F6wfgjUAq+GfL0JG6zjjQEcSFukltwkbrimBEaEoBA9FswjhtSIBEZgED0WzARFxKAQPRbMBEXERkRFxEWERfiERlZkjMz4iJus5MhwgCRcOIgkmwi4w0kbrOTIsIAkXDijpMEIG7y0IB/WANyECNtbW3bPDACkjIz4lIQAMoA4QDQAfQDIG7y0ID4QhExETYRMREwETURMBEvETQRLxEuETMRLhEtETIRLREsETYRLBErETURKxEqETQRKhEpETMRKREoETIRKBEnETYRJxEmETURJhElETQRJREkETMRJBEjETIRIxEiETYRIhEhETURIREgETQRIBEfETMRHwDLAfoRHhEyER4RHRE2ER1WNREdERwRNREcERsRNBEbERoRMxEaERkRNxEZERgRFxE1ERcRFhE0ERYRFREzERURFBE3ERQRExESETUREhERETQREREQETMREA8RNw8ODRE1DQwRNAwLETMLChE3CgkIETUIBxE0BwYRMwYFETcFBADMAvgDETYDVjZBM9s8ES4RMxEuES0RMhEtESwRMREsESsRMBErESoRLxEqESkRLhEpESgRLREoEScRLBEnESYRKxEmESURKhElESQRKREkESMRKBEjESIRJxEiESERJhEhESARJREgER8RJBEfER4RIxEeER0RIhEdERwRIREcAM0AzwJYIsIAjyNycG1wyFIQywDJ0BBoXjQQN8hVYNs8yVYpVSAUQzBtbds8MJJfBeIAzgDhAN6CEA+KfqVQCMsfFss/UAT6Algg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYBIG6VMHABywGOHiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFuIhbrOVfwHKAMyUcDLKAOIB+gIBzxYA3hEbESARGxEaER8RGhEZER4RGREYER0RGBEXERwRFxEWERsRFhEVERoRFREUERkRFBETERgRExESERcREhERERYREREQERUREA8RFA8OERMODRESDQwREQwLERALEK8QnhCNEHwQaxBaEEkQOEdVBgGCERKAQPRbMALIWYIQ20XkOFADyx/LP8s/yciCWMAAAAAAAAAAAAAAAAEBy2fMyXD7AA+SViWRcOJWIwGg+EJw2zwA0QGy+EFvJDAy+CdvEC2hI6AioXABtgkgViO2CFYjAaGBAQtWHUAUWfQKb6ExkjBwl3ABViOhtgniWaFQBKFQA6AiwgCScDPfWKEgwgCOinJ/VSBtbW3bPDCRW+IA4QO+jqgw0x8BghCUapi2uvLggdM/ATHIAYIQr/kPV1jLH8s/yfhCAXBt2zx/4CCCEC6xCNu6jqIw0x8BghAusQjbuvLggdQB0AHSAAGT1AHQkW3iEmwS2zx/4MAAkTDjDXAA4ADTANcB8BEuETARLhEtES8RLREsETARLBErES8RKxEqETARKhEpES8RKREoETARKBEnES8RJxEmETARJhElES8RJREkETARJBEjES8RIxEiETARIhEhES8RIREgETARIBEfES8RHxEeETARHhEdES8RHREcETARHBEbES8RGwDUAfwRGhEwERoRGREvERkRGBEwERgRFxEvERcRFhEwERYRFREvERURFBEwERQRExEvERMREhEwERIREREvEREREBEwERAPES8PDhEwDg0RLw0METAMCxEvCwoRMAoJES8JCBEwCAcRLwcGETAGBREvBQQRMAQDES8DAhEwAgERLwEA1QL4ETDbPMgBETDPFsn7BFYvbrOOEcgRMCBu8tCAAREwAc8Wye1Uklcv4hEsES4RLBErES0RKxEqESwRKhEpESsRKREoESoRKBEnESkRJxEmESgRJhElEScRJREkESYRJBEjESURIxEiESQRIhEhESMRIREgESIRIBEfESERHwDcANYAzBEeESARHhEdER8RHREcER4RHBEbER0RGxEaERwRGhEZERsRGREYERoRGBEXERkRFxEWERgRFhEVERcRFREUERYRFBETERURExESERQREhERERMREREQERIREA8REQ8OERAOEN9VHAK0+QEggvBsj0T0X+20zf7U3o2xSqWxOtVdQw91nQZpIQt0xI/j37qOhjDbPH/bMeCC8Lz693aQfHGcyNN52PGUqqon6Moocc1ZF4FyHyFaRUUBuo6F2zx/2zHgANgA2wQY2zzbPFctcIgBES4BANwA2QDaAN8AEIIA0DBWLvL0ABYAAAAAUmVzdW1lZAQY2zzbPFctf4gBES4BANwA3QDeAN8AFPhCVi8BxwXy4IQAEoIAnbBWLrPy9AAWAAAAAFN0b3BwZWQBDvhCAX9t2zwA4AE8bW0ibrOZWyBu8tCAbyIBkTLiECRwAwSAQlAj2zwwAOEByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsIAOIAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwB9gERLwERLiDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFgERLAHKAAER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oZIwbd8gbpIwbY6H0Ns8bBZvBuIvUDMBAwAc+gD6APoA+gD6APoAVVACASABBQEKAgEgAQYBBwARsK+7UTQ0gABgAvWypwg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCI2zwRLhEvES4RLREuES0RLBEtESwRKxEsESsRKhErESoRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESCABEAEIAeARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERsRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERYRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPGzEbMRsxGy0AQkAOlYWgQELIln0Cm+hMSFWGscFIlYaxwUDVhzHBUEwAgEgAQsBDwL5sgc2zwRLhEvES4RLREuES0RLBEtESwRKxEsESsRKhErESoRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERuABEAEMAdQRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERYRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPFcQXw9XEF8PbPEgbpIwbZkgbvLQgG8nbwfiIG6SMG3eAQ0BOoAQVhYCWfQPb6GSMG3fIG6SMG2Oh9DbPGwXbwfiAQ4AJNQB0AHSANMP+gDTH9Mf0x9VYAL5snu2zwRLhEvES4RLREuES0RLBEtESwRKxEsESsRKhErESoRKREqESkRKBEpESgRJxEoEScRJhEnESYRJREmESURJBElESQRIxEkESMRIhEjESIRIREiESERIBEhESARHxEgER8RHhEfER4RHREeER0RHBEdERwRGxEcERuABEAEaAkLtRNDUAfhj0gAB4wL4KNcLCoMJuvLgiYEBAdcAAQHR2zwBEQEXAvjbPFcvES0RLhEtESwRLREsESsRLBErESoRKxEqESkRKhEpESgRKREoEScRKBEnESYRJxEmESURJhElESQRJREkESMRJBEjESIRIxEiESERIhEhESARIREgER8RIBEfER4RHxEeER0RHhEdERwRHREcERsRHBEbERoRGxEaARIBFgHU+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHSANMf+gDTH9Mf0x/6APoA+gD6ANQB0PoA+gD6APoA+gD6APoA+gDUMND6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAQETAcb6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB1DDQ+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAEBFAHi+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfQE9AT0BNM/1DDQ9AT0BNM/9ATTP9M/1DDQ9AT0BPQE+gD6APoA0n/Sf/oA+gDUMNABFQDK+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHT/zARJBEvESQRJBEuESQRJBEtESQRJBEsESQRJBErESQRJBEqESQRJBEpESQRJBEoESQRJBEnESQRJBEmESQRJBElESQAhBEZERoRGREYERkRGBEXERgRFxEWERcRFhEVERYRFREUERURFBETERQRExESERMREhERERIREREQEREREA8REA9VDgTaMHCBALRwVHAAVHAAVHAAVHAAggr68ICCEAX14QCCCJiWgI0IYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABI0IYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABImJiQEZARkBGQEYAfqJbW1tcW1tIm1TEW1tbVYWVHAAVHAAjQhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEIfhCES4RLREsESsRKhEpESgRJxEmESURJBEjESIRIREgER8RHhEdERwRGxEaERkRGBEXERYRFREUERMREhERERBV4AEZAEOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAaQRGhEbERoRGREaERkRGBEZERgRFxEYERcRFhEXERYRFREWERURFBEVERQRExEUERMREhETERIRERESEREREBERERAPERAPVQ7bPGzzbPNs82wjARsBkFYSgEAiWfQPb6GSMG3fIG6SMG2Oh9DbPGwcbwzigEBWE0ATWfQPb6GSMG3fIG6SMG2OEdD6ANN/+gDTf/oAVUBsFW8F4lYRWQEcAHDTB9MP+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHSAPoA+gDTf9IA0w/6ANMf0gBVsGAWshE=');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
@@ -5041,7 +5206,9 @@ const Pool_types: ABIType[] = [
     {"name":"JettonBurn","header":1499400124,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"response_destination","type":{"kind":"simple","type":"address","optional":false}},{"name":"custom_payload","type":{"kind":"simple","type":"cell","optional":true}}]},
     {"name":"JettonMint","header":2310479113,"fields":[{"name":"origin","type":{"kind":"simple","type":"address","optional":false}},{"name":"receiver","type":{"kind":"simple","type":"address","optional":false}},{"name":"amount","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"custom_payload","type":{"kind":"simple","type":"cell","optional":true}},{"name":"forward_ton_amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
     {"name":"JettonUpdateContent","header":1536108317,"fields":[{"name":"jetton_content","type":{"kind":"simple","type":"cell","optional":false}}]},
-    {"name":"UpdateConfig","header":3172709201,"fields":[{"name":"orderLockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"maxLpNetCap","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpRolloverFeeRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"liquidatedPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"normalPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"gasConfig","type":{"kind":"simple","type":"GasConfig","optional":true}},{"name":"executorConfig","type":{"kind":"simple","type":"ExecutorConfig","optional":true}},{"name":"contractConfig","type":{"kind":"simple","type":"ContractConfig","optional":true}}]},
+    {"name":"UpdatePoolConfig","header":2788132204,"fields":[{"name":"orderLockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"maxLpNetCap","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpRolloverFeeRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"liquidatedPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"normalPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
+    {"name":"UpdateBaseConfig","header":2824223913,"fields":[{"name":"gasConfig","type":{"kind":"simple","type":"GasConfig","optional":true}},{"name":"executorConfig","type":{"kind":"simple","type":"ExecutorConfig","optional":true}},{"name":"contractConfig","type":{"kind":"simple","type":"ContractConfig","optional":true}}]},
+    {"name":"SetManager","header":3368041608,"fields":[{"name":"manager","type":{"kind":"simple","type":"address","optional":false}},{"name":"compensator","type":{"kind":"simple","type":"address","optional":false}},{"name":"claimer","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ListToken","header":3835378672,"fields":[{"name":"tokenId","type":{"kind":"simple","type":"uint","optional":false,"format":16}},{"name":"config","type":{"kind":"simple","type":"TokenConfig","optional":false}}]},
     {"name":"DelistToken","header":2604852463,"fields":[{"name":"tokenId","type":{"kind":"simple","type":"uint","optional":false,"format":16}}]},
     {"name":"ClaimProtocolFee","header":4273121126,"fields":[{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"feeReceiver","type":{"kind":"simple","type":"address","optional":false}}]},
@@ -5065,8 +5232,8 @@ const Pool_types: ABIType[] = [
     {"name":"CompensateCreatedEvent","header":2519251606,"fields":[{"name":"compensateId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"orderType","type":{"kind":"simple","type":"uint","optional":true,"format":8}},{"name":"orderId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"refundReceiver","type":{"kind":"simple","type":"address","optional":true}},{"name":"refundAmount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executionFeeReceiver","type":{"kind":"simple","type":"address","optional":true}},{"name":"executionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"unlockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
     {"name":"CompensateCancelledEvent","header":1271087573,"fields":[{"name":"compensateId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"CompensateExecutedEvent","header":3678790712,"fields":[{"name":"compensateId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
-    {"name":"AccountInfo","header":null,"fields":[{"name":"isExecutor","type":{"kind":"simple","type":"bool","optional":false}},{"name":"isCompensator","type":{"kind":"simple","type":"bool","optional":false}},{"name":"isClaimer","type":{"kind":"simple","type":"bool","optional":false}}]},
-    {"name":"ConfigData","header":null,"fields":[{"name":"orderLockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"lpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"perpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForLpTrader","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForLpExecutor","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForPerpTrader","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForPerpExecutor","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"minTonsForStorage","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForTransferJetton","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForBurnTlp","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForMintTlp","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"tlpWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"jettonWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpJetton","type":{"kind":"simple","type":"address","optional":false}},{"name":"maxLpNetCap","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
+    {"name":"AccountInfo","header":null,"fields":[{"name":"isExecutor","type":{"kind":"simple","type":"bool","optional":false}},{"name":"isCompensator","type":{"kind":"simple","type":"bool","optional":false}},{"name":"isClaimer","type":{"kind":"simple","type":"bool","optional":false}},{"name":"isManager","type":{"kind":"simple","type":"bool","optional":false}}]},
+    {"name":"ConfigData","header":null,"fields":[{"name":"orderLockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"mintJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"burnJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"transferJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"createPerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"cancelPerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executePerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"createLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"cancelLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executeLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"minStorageReserve","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"perpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"jettonWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpJetton","type":{"kind":"simple","type":"address","optional":false}},{"name":"maxLpNetCap","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"TokenConfig","header":null,"fields":[{"name":"name","type":{"kind":"simple","type":"string","optional":false}},{"name":"enable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"maxLeverage","type":{"kind":"simple","type":"uint","optional":false,"format":16}},{"name":"liquidationFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"maintenanceRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"tradingFeeRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"lpTradingFeeRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
     {"name":"PoolStat","header":null,"fields":[{"name":"tlpSupply","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"totalExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"protocolTradingFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalLPFund","type":{"kind":"simple","type":"int","optional":false,"format":128}},{"name":"globalLPUnrealizedPnl","type":{"kind":"simple","type":"int","optional":false,"format":128}},{"name":"globalLpFundingFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalRolloverFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"AccountPerpPosition","header":null,"fields":[{"name":"positions","type":{"kind":"dict","key":"address","value":"DirectionPerpPosition","valueFormat":"ref"}}]},
@@ -5075,17 +5242,17 @@ const Pool_types: ABIType[] = [
     {"name":"GlobalLPPosition","header":null,"fields":[{"name":"netSize","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"isLong","type":{"kind":"simple","type":"bool","optional":false}},{"name":"entryPrice","type":{"kind":"simple","type":"uint","optional":false,"format":128}}]},
     {"name":"PerpPositionData","header":null,"fields":[{"name":"perpPositionIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpPosition","type":{"kind":"simple","type":"DirectionPerpPosition","optional":true}},{"name":"globalLPPosition","type":{"kind":"simple","type":"GlobalLPPosition","optional":true}},{"name":"globalPosition","type":{"kind":"simple","type":"GlobalPosition","optional":true}}]},
     {"name":"GlobalPosition","header":null,"fields":[{"name":"longMargin","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"shortMargin","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"longSize","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"shortSize","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"longValue","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"shortValue","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
-    {"name":"GasConfig","header":null,"fields":[{"name":"lpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"perpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForPerpTrader","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForPerpExecutor","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForLpTrader","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForLpExecutor","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"minTonsForStorage","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForTransferJetton","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForBurnTlp","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForMintTlp","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
-    {"name":"ExecutorConfig","header":null,"fields":[{"name":"executors","type":{"kind":"dict","key":"address","value":"bool"}},{"name":"compensator","type":{"kind":"simple","type":"address","optional":false}},{"name":"claimer","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"ContractConfig","header":null,"fields":[{"name":"tlpJetton","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"jettonWallet","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"GasConfig","header":null,"fields":[{"name":"mintJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"burnJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"transferJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"createPerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"cancelPerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executePerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"createLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"cancelLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executeLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"minStorageReserve","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"perpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
+    {"name":"ExecutorConfig","header":null,"fields":[{"name":"executors","type":{"kind":"dict","key":"address","value":"bool"}}]},
+    {"name":"ContractConfig","header":null,"fields":[{"name":"multisig","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpJetton","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"jettonWallet","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"LiquidityOrder","header":null,"fields":[{"name":"isIncrease","type":{"kind":"simple","type":"bool","optional":false}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"jettonDelta","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"blockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"isPending","type":{"kind":"simple","type":"bool","optional":false}}]},
     {"name":"LiquidityOrderData","header":null,"fields":[{"name":"liquidityOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"liquidityOrder","type":{"kind":"simple","type":"LiquidityOrder","optional":true}}]},
-    {"name":"PerpOrder","header":null,"fields":[{"name":"opType","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"tokenId","type":{"kind":"simple","type":"uint","optional":false,"format":16}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"isLong","type":{"kind":"simple","type":"bool","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"sizeDelta","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"triggerPrice","type":{"kind":"simple","type":"uint","optional":false,"format":128}},{"name":"triggerAbove","type":{"kind":"simple","type":"bool","optional":false}},{"name":"executionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"blockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"isPending","type":{"kind":"simple","type":"bool","optional":false}}]},
+    {"name":"PerpOrder","header":null,"fields":[{"name":"opType","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"tokenId","type":{"kind":"simple","type":"uint","optional":false,"format":16}},{"name":"account","type":{"kind":"simple","type":"address","optional":false}},{"name":"isLong","type":{"kind":"simple","type":"bool","optional":false}},{"name":"marginDelta","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"sizeDelta","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"triggerPrice","type":{"kind":"simple","type":"uint","optional":false,"format":128}},{"name":"triggerAbove","type":{"kind":"simple","type":"bool","optional":false}},{"name":"callbackRate","type":{"kind":"simple","type":"uint","optional":false,"format":16}},{"name":"executionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"blockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"isPending","type":{"kind":"simple","type":"bool","optional":false}}]},
     {"name":"PerpOrderEx","header":null,"fields":[{"name":"tpSize","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"tpPrice","type":{"kind":"simple","type":"uint","optional":false,"format":128}},{"name":"slSize","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"slPrice","type":{"kind":"simple","type":"uint","optional":false,"format":128}},{"name":"executionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"PerpOrderData","header":null,"fields":[{"name":"perpOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpOrder","type":{"kind":"simple","type":"PerpOrder","optional":true}},{"name":"perpOrderEx","type":{"kind":"simple","type":"PerpOrderEx","optional":true}}]},
     {"name":"Compensate","header":null,"fields":[{"name":"orderType","type":{"kind":"simple","type":"uint","optional":true,"format":8}},{"name":"orderId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"refundReceiver","type":{"kind":"simple","type":"address","optional":true}},{"name":"refundAmount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executionFeeReceiver","type":{"kind":"simple","type":"address","optional":true}},{"name":"executionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"unlockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
     {"name":"CompensateData","header":null,"fields":[{"name":"compensateIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"compensate","type":{"kind":"simple","type":"Compensate","optional":true}}]},
-    {"name":"Pool$Data","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"stopped","type":{"kind":"simple","type":"bool","optional":false}},{"name":"orderLockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"maxLpNetCap","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpRolloverFeeRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"liquidatedPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"normalPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"gasForPerpTrader","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForPerpExecutor","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForLpTrader","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForLpExecutor","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForTransferJetton","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForBurnTlp","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"gasForMintTlp","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"perpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"minTonsForStorage","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"tlpJetton","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"jettonWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"compensator","type":{"kind":"simple","type":"address","optional":false}},{"name":"claimer","type":{"kind":"simple","type":"address","optional":false}},{"name":"executors","type":{"kind":"dict","key":"address","value":"bool"}},{"name":"tokenConfigs","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"TokenConfig","valueFormat":"ref"}},{"name":"liquidityOrders","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"LiquidityOrder","valueFormat":"ref"}},{"name":"liquidityOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpOrders","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"PerpOrder","valueFormat":"ref"}},{"name":"perpOrderExs","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"PerpOrderEx","valueFormat":"ref"}},{"name":"perpOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"compensates","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"Compensate","valueFormat":"ref"}},{"name":"compensateIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpPositionIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"AccountPerpPosition","valueFormat":"ref"}},{"name":"globalLPPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"GlobalLPPosition","valueFormat":"ref"}},{"name":"globalPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"GlobalPosition","valueFormat":"ref"}},{"name":"tlpSupply","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"totalExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"protocolTradingFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalLPFund","type":{"kind":"simple","type":"int","optional":false,"format":128}},{"name":"globalLPUnrealizedPnl","type":{"kind":"simple","type":"int","optional":false,"format":128}},{"name":"globalLpFundingFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalRolloverFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
+    {"name":"Pool$Data","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"stopped","type":{"kind":"simple","type":"bool","optional":false}},{"name":"orderLockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"maxLpNetCap","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpRolloverFeeRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"liquidatedPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"normalPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"mintJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"burnJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"transferJettonGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"createPerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"cancelPerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executePerpOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"createLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"cancelLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"executeLiquidityOrderGas","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"perpMinExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"minStorageReserve","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"tlpJetton","type":{"kind":"simple","type":"address","optional":false}},{"name":"tlpWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"jettonWallet","type":{"kind":"simple","type":"address","optional":false}},{"name":"manager","type":{"kind":"simple","type":"address","optional":false}},{"name":"compensator","type":{"kind":"simple","type":"address","optional":false}},{"name":"claimer","type":{"kind":"simple","type":"address","optional":false}},{"name":"executors","type":{"kind":"dict","key":"address","value":"bool"}},{"name":"tokenConfigs","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"TokenConfig","valueFormat":"ref"}},{"name":"liquidityOrders","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"LiquidityOrder","valueFormat":"ref"}},{"name":"liquidityOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpOrders","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"PerpOrder","valueFormat":"ref"}},{"name":"perpOrderExs","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"PerpOrderEx","valueFormat":"ref"}},{"name":"perpOrderIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"compensates","type":{"kind":"dict","key":"uint","keyFormat":64,"value":"Compensate","valueFormat":"ref"}},{"name":"compensateIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpPositionIndexNext","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"perpPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"AccountPerpPosition","valueFormat":"ref"}},{"name":"globalLPPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"GlobalLPPosition","valueFormat":"ref"}},{"name":"globalPositions","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"GlobalPosition","valueFormat":"ref"}},{"name":"tlpSupply","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"totalExecutionFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"protocolTradingFee","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalLPFund","type":{"kind":"simple","type":"int","optional":false,"format":128}},{"name":"globalLPUnrealizedPnl","type":{"kind":"simple","type":"int","optional":false,"format":128}},{"name":"globalLpFundingFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"globalRolloverFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"multisig","type":{"kind":"simple","type":"address","optional":false}},{"name":"publicKey","type":{"kind":"simple","type":"uint","optional":false,"format":256}}]},
 ]
 
 const Pool_getters: ABIGetter[] = [
@@ -5115,8 +5282,10 @@ export const Pool_getterMapping: { [key: string]: string } = {
 }
 
 const Pool_receivers: ABIReceiver[] = [
-    {"receiver":"internal","message":{"kind":"typed","type":"UpdateConfig"}},
     {"receiver":"internal","message":{"kind":"typed","type":"JettonUpdateContent"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SetManager"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"UpdateBaseConfig"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"UpdatePoolConfig"}},
     {"receiver":"internal","message":{"kind":"typed","type":"ListToken"}},
     {"receiver":"internal","message":{"kind":"typed","type":"DelistToken"}},
     {"receiver":"internal","message":{"kind":"typed","type":"ClaimProtocolFee"}},
@@ -5168,14 +5337,20 @@ export class Pool implements Contract {
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: UpdateConfig | JettonUpdateContent | ListToken | DelistToken | ClaimProtocolFee | null | JettonTransferNotification | CancelLiquidityOrder | ExecuteLiquidityOrder | CreateDecreasePerpOrder | CreateTpSlPerpOrder | CancelPerpOrder | ExecutePerpOrder | LiquidatePerpPosition | ADLPerpPosition | CreateCompensate | ExecuteOrCancelCompensate | Deploy | 'Resume' | 'Stop' | UpdateContract) {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: JettonUpdateContent | SetManager | UpdateBaseConfig | UpdatePoolConfig | ListToken | DelistToken | ClaimProtocolFee | null | JettonTransferNotification | CancelLiquidityOrder | ExecuteLiquidityOrder | CreateDecreasePerpOrder | CreateTpSlPerpOrder | CancelPerpOrder | ExecutePerpOrder | LiquidatePerpPosition | ADLPerpPosition | CreateCompensate | ExecuteOrCancelCompensate | Deploy | 'Resume' | 'Stop' | UpdateContract) {
         
         let body: Cell | null = null;
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'UpdateConfig') {
-            body = beginCell().store(storeUpdateConfig(message)).endCell();
-        }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'JettonUpdateContent') {
             body = beginCell().store(storeJettonUpdateContent(message)).endCell();
+        }
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetManager') {
+            body = beginCell().store(storeSetManager(message)).endCell();
+        }
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'UpdateBaseConfig') {
+            body = beginCell().store(storeUpdateBaseConfig(message)).endCell();
+        }
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'UpdatePoolConfig') {
+            body = beginCell().store(storeUpdatePoolConfig(message)).endCell();
         }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'ListToken') {
             body = beginCell().store(storeListToken(message)).endCell();

@@ -11,6 +11,9 @@ export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
     const tlp = attachTLPJetton(provider);
 
+    console.log('=================== Account ===================');
+    console.log('isManager: ',(await pool.getAccountInfo(account!!)).isManager);
+
     console.log('=================== Config ===================');
     let tokenConfig = await pool.getTokenConfig(tokenId);
     console.log('token config:', tokenConfig);

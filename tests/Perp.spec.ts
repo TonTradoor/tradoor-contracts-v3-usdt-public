@@ -76,10 +76,10 @@ describe('PERP', () => {
         expect(configData.jettonWallet).toEqualAddress(poolJettonWallet.address);
     });
 
-    // it('should deploy', async () => {
-    //     // the check is done inside beforeEach
-    //     // blockchain and pool are ready to use
-    // });
+    it('should deploy', async () => {
+        // the check is done inside beforeEach
+        // blockchain and pool are ready to use
+    });
 
     it('should executor cancel market increase perp order', async () => {
         let executionFee = 0.1;

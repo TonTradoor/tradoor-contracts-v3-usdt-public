@@ -11,7 +11,7 @@ export async function run(provider: NetworkProvider) {
         name: 'Tradoor NOT TLP',
         description: 'NOT locked in liquidity in Tradoor (tradoor.io)',
         symbol: 'NOT-TLP',
-        image: 'https://tradoor.io/static-s3/20240907-263459.png',
+        image: 'https://static.tradoor.io/20250224-101027.jpeg',
         decimals: '9',
     };
 

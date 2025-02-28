@@ -1,30 +1,45 @@
 {
-  "nextDeployId": 2,
+  "nextDeployId": 4,
   "mockJetton": "EQAsN1AhQcTN5uCQ3aUZQQOsm_wqvYTB8-4zcC63_Un0BK98",
-  "tlpJetton": "EQBGgLddnyXbWMYdOIH7ckLwBQmik4JUiu_nN2NEI2i2dKej",
-  "pool": "EQDvun1QSLIPsq-l26ZMzG8kZ3DGJfbd97ivhf1tdmeWvjS5",
+  "tlpJetton": "EQCCfkAgGS1J7TTKhg3KrCAIVwb0KX_5a-UTp_Vwx0G7N0u9",
+  "pool": "EQDczUKPug1xkRqs0xgE5QmBJ_QPhedsrrHQOPjtZgEY4GFn",
   "executors": [
     "0QBWA3yJYPJ9LJCdy2WlzoGO2_0Cw6l7D3exFw25hxR_bDkS",
     "0QAjBLsS_axAf647M2sPtCVCsJ-kI4WP82N72gPLHjsNHY9i",
     "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk"
   ],
+  "members": [
+    {
+      "address": "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk",
+      "weight": 1
+    },
+    {
+      "address": "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk",
+      "weight": 1
+    }
+  ],
+  "multisig": "EQCoXWGuzNXkEyZracLpzHrv1nZtiRGhBqgQTiQ4A8lDs3dg",
+  "manager": "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk",
   "compensator": "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk",
   "claimer": "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk",
-  "orderLockTime": 180,
+  "mintJettonGas": 0.05,
+  "burnJettonGas": 0.03,
+  "transferJettonGas": 0.05,
+  "createPerpOrderGas": 0.03,
+  "cancelPerpOrderGas": 0.02,
+  "executePerpOrderGas": 0.05,
+  "createLiquidityOrderGas": 0.03,
+  "cancelLiquidityOrderGas": 0.02,
+  "executeLiquidityOrderGas": 0.05,
+  "minStorageReserve": 0.01,
   "lpMinExecutionFee": 0.05,
   "perpMinExecutionFee": 0.05,
-  "minTonsForStorage": 0.01,
-  "gasForLpTrader": 0.02,
-  "gasForLpExecutor": 0.03,
-  "gasForPerpTrader": 0.025,
-  "gasForPerpExecutor": 0.039,
-  "gasForTransferJetton": 0.038,
-  "gasForMintTlp": 0.03,
-  "gasForBurnTlp": 0.03,
+  "orderLockTime": 180,
   "lpRolloverFeeRate": 0.5,
-  "liquidatedPositionShareRate": 0.5,
-  "normalPositionShareRate": 0.5,
-  "maxLpNetCap": 10000000000,
+  "liquidatedPositionShareRate": 0.35,
+  "normalPositionShareRate": 0.35,
+  "maxLpNetCap": 1000000,
+  "requiredWeight": 1,
   "tokens": [
     {
       "tokenId": 1,

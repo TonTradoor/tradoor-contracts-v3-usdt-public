@@ -108,26 +108,32 @@ cell $JettonUpdateContent$_store_cell((cell) v) inline;
 ;; $JettonUpdateContent$_load
 (slice, ((cell))) $JettonUpdateContent$_load(slice sc_0) inline;
 
+;; $UpdatePoolConfig$_load
+(slice, ((int, int, int, int, int))) $UpdatePoolConfig$_load(slice sc_0) inline;
+
 ;; $GasConfig$_load
-(slice, ((int, int, int, int, int, int, int, int, int, int))) $GasConfig$_load(slice sc_0) inline_ref;
+(slice, ((int, int, int, int, int, int, int, int, int, int, int, int))) $GasConfig$_load(slice sc_0) inline_ref;
 
 ;; $ExecutorConfig$_load
-(slice, ((cell, slice, slice))) $ExecutorConfig$_load(slice sc_0) inline;
+(slice, ((cell))) $ExecutorConfig$_load(slice sc_0) inline;
 
 ;; $ContractConfig$_load
-(slice, ((slice, slice, slice))) $ContractConfig$_load(slice sc_0) inline;
+(slice, ((slice, slice, slice, slice))) $ContractConfig$_load(slice sc_0) inline;
 
 ;; $GasConfig$_as_optional
-tuple $GasConfig$_as_optional((int, int, int, int, int, int, int, int, int, int) v) inline;
+tuple $GasConfig$_as_optional((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $ExecutorConfig$_as_optional
-tuple $ExecutorConfig$_as_optional((cell, slice, slice) v) inline;
+tuple $ExecutorConfig$_as_optional((cell) v) inline;
 
 ;; $ContractConfig$_as_optional
-tuple $ContractConfig$_as_optional((slice, slice, slice) v) inline;
+tuple $ContractConfig$_as_optional((slice, slice, slice, slice) v) inline;
 
-;; $UpdateConfig$_load
-(slice, ((int, int, int, int, int, tuple, tuple, tuple))) $UpdateConfig$_load(slice sc_0) inline_ref;
+;; $UpdateBaseConfig$_load
+(slice, ((tuple, tuple, tuple))) $UpdateBaseConfig$_load(slice sc_0) inline;
+
+;; $SetManager$_load
+(slice, ((slice, slice, slice))) $SetManager$_load(slice sc_0) inline;
 
 ;; $TokenConfig$_store
 builder $TokenConfig$_store(builder build_0, (slice, int, int, int, int, int, int) v) inline_ref;
@@ -325,16 +331,16 @@ tuple $LiquidityOrder$_as_optional((int, slice, int, int, int, int) v) inline;
 tuple $LiquidityOrder$_load_opt(cell cl) inline;
 
 ;; $PerpOrder$_store
-builder $PerpOrder$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int) v) inline_ref;
+builder $PerpOrder$_store(builder build_0, (int, int, slice, int, int, int, int, int, int, int, int, int) v) inline_ref;
 
 ;; $PerpOrder$_store_cell
-cell $PerpOrder$_store_cell((int, int, slice, int, int, int, int, int, int, int, int) v) inline;
+cell $PerpOrder$_store_cell((int, int, slice, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $PerpOrder$_load
-(slice, ((int, int, slice, int, int, int, int, int, int, int, int))) $PerpOrder$_load(slice sc_0) inline_ref;
+(slice, ((int, int, slice, int, int, int, int, int, int, int, int, int))) $PerpOrder$_load(slice sc_0) inline_ref;
 
 ;; $PerpOrder$_as_optional
-tuple $PerpOrder$_as_optional((int, int, slice, int, int, int, int, int, int, int, int) v) inline;
+tuple $PerpOrder$_as_optional((int, int, slice, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $PerpOrder$_load_opt
 tuple $PerpOrder$_load_opt(cell cl) inline;
@@ -370,10 +376,10 @@ tuple $Compensate$_as_optional((int, int, int, slice, int, slice, int, int) v) i
 tuple $Compensate$_load_opt(cell cl) inline;
 
 ;; $Pool$_store
-builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) v) inline;
+builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) v) inline;
 
 ;; $Pool$_load
-(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int))) $Pool$_load(slice sc_0) inline;
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int))) $Pool$_load(slice sc_0) inline;
 
 ;; $StateInit$_not_null
 ((cell, cell)) $StateInit$_not_null(tuple v) inline;
@@ -382,10 +388,10 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
 _ $Context$_get_value((int, slice, int, slice) v) inline;
 
 ;; $AccountInfo$_to_external
-(int, int, int) $AccountInfo$_to_external(((int, int, int)) v) inline;
+(int, int, int, int) $AccountInfo$_to_external(((int, int, int, int)) v) inline;
 
 ;; $ConfigData$_to_external
-(int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) v) inline;
+(int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int) $ConfigData$_to_external(((int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) v) inline;
 
 ;; $TokenConfig$_not_null
 ((slice, int, int, int, int, int, int)) $TokenConfig$_not_null(tuple v) inline;
@@ -426,62 +432,65 @@ _ $GlobalPosition$_get_shortSize((int, int, int, int, int, int) v) inline;
 ;; $GlobalPosition$_not_null
 ((int, int, int, int, int, int)) $GlobalPosition$_not_null(tuple v) inline;
 
+;; $GasConfig$_get_mintJettonGas
+_ $GasConfig$_get_mintJettonGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_burnJettonGas
+_ $GasConfig$_get_burnJettonGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_transferJettonGas
+_ $GasConfig$_get_transferJettonGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_createPerpOrderGas
+_ $GasConfig$_get_createPerpOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_cancelPerpOrderGas
+_ $GasConfig$_get_cancelPerpOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_executePerpOrderGas
+_ $GasConfig$_get_executePerpOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_createLiquidityOrderGas
+_ $GasConfig$_get_createLiquidityOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_cancelLiquidityOrderGas
+_ $GasConfig$_get_cancelLiquidityOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_executeLiquidityOrderGas
+_ $GasConfig$_get_executeLiquidityOrderGas((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
+;; $GasConfig$_get_minStorageReserve
+_ $GasConfig$_get_minStorageReserve((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
+
 ;; $GasConfig$_get_lpMinExecutionFee
-_ $GasConfig$_get_lpMinExecutionFee((int, int, int, int, int, int, int, int, int, int) v) inline;
+_ $GasConfig$_get_lpMinExecutionFee((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $GasConfig$_get_perpMinExecutionFee
-_ $GasConfig$_get_perpMinExecutionFee((int, int, int, int, int, int, int, int, int, int) v) inline;
-
-;; $GasConfig$_get_gasForPerpTrader
-_ $GasConfig$_get_gasForPerpTrader((int, int, int, int, int, int, int, int, int, int) v) inline;
-
-;; $GasConfig$_get_gasForPerpExecutor
-_ $GasConfig$_get_gasForPerpExecutor((int, int, int, int, int, int, int, int, int, int) v) inline;
-
-;; $GasConfig$_get_gasForLpTrader
-_ $GasConfig$_get_gasForLpTrader((int, int, int, int, int, int, int, int, int, int) v) inline;
-
-;; $GasConfig$_get_gasForLpExecutor
-_ $GasConfig$_get_gasForLpExecutor((int, int, int, int, int, int, int, int, int, int) v) inline;
-
-;; $GasConfig$_get_minTonsForStorage
-_ $GasConfig$_get_minTonsForStorage((int, int, int, int, int, int, int, int, int, int) v) inline;
-
-;; $GasConfig$_get_gasForTransferJetton
-_ $GasConfig$_get_gasForTransferJetton((int, int, int, int, int, int, int, int, int, int) v) inline;
-
-;; $GasConfig$_get_gasForBurnTlp
-_ $GasConfig$_get_gasForBurnTlp((int, int, int, int, int, int, int, int, int, int) v) inline;
-
-;; $GasConfig$_get_gasForMintTlp
-_ $GasConfig$_get_gasForMintTlp((int, int, int, int, int, int, int, int, int, int) v) inline;
+_ $GasConfig$_get_perpMinExecutionFee((int, int, int, int, int, int, int, int, int, int, int, int) v) inline;
 
 ;; $GasConfig$_not_null
-((int, int, int, int, int, int, int, int, int, int)) $GasConfig$_not_null(tuple v) inline;
+((int, int, int, int, int, int, int, int, int, int, int, int)) $GasConfig$_not_null(tuple v) inline;
 
 ;; $ExecutorConfig$_get_executors
-_ $ExecutorConfig$_get_executors((cell, slice, slice) v) inline;
-
-;; $ExecutorConfig$_get_compensator
-_ $ExecutorConfig$_get_compensator((cell, slice, slice) v) inline;
-
-;; $ExecutorConfig$_get_claimer
-_ $ExecutorConfig$_get_claimer((cell, slice, slice) v) inline;
+_ $ExecutorConfig$_get_executors((cell) v) inline;
 
 ;; $ExecutorConfig$_not_null
-((cell, slice, slice)) $ExecutorConfig$_not_null(tuple v) inline;
+((cell)) $ExecutorConfig$_not_null(tuple v) inline;
+
+;; $ContractConfig$_get_multisig
+_ $ContractConfig$_get_multisig((slice, slice, slice, slice) v) inline;
 
 ;; $ContractConfig$_get_tlpJetton
-_ $ContractConfig$_get_tlpJetton((slice, slice, slice) v) inline;
+_ $ContractConfig$_get_tlpJetton((slice, slice, slice, slice) v) inline;
 
 ;; $ContractConfig$_get_tlpWallet
-_ $ContractConfig$_get_tlpWallet((slice, slice, slice) v) inline;
+_ $ContractConfig$_get_tlpWallet((slice, slice, slice, slice) v) inline;
 
 ;; $ContractConfig$_get_jettonWallet
-_ $ContractConfig$_get_jettonWallet((slice, slice, slice) v) inline;
+_ $ContractConfig$_get_jettonWallet((slice, slice, slice, slice) v) inline;
 
 ;; $ContractConfig$_not_null
-((slice, slice, slice)) $ContractConfig$_not_null(tuple v) inline;
+((slice, slice, slice, slice)) $ContractConfig$_not_null(tuple v) inline;
 
 ;; $LiquidityOrder$_not_null
 ((int, slice, int, int, int, int)) $LiquidityOrder$_not_null(tuple v) inline;
@@ -490,7 +499,7 @@ _ $ContractConfig$_get_jettonWallet((slice, slice, slice) v) inline;
 (int, tuple) $LiquidityOrderData$_to_external(((int, tuple)) v) inline;
 
 ;; $PerpOrder$_not_null
-((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_not_null(tuple v) inline;
+((int, int, slice, int, int, int, int, int, int, int, int, int)) $PerpOrder$_not_null(tuple v) inline;
 
 ;; $PerpOrderEx$_not_null
 ((int, int, int, int, int)) $PerpOrderEx$_not_null(tuple v) inline;
@@ -508,13 +517,13 @@ _ $ContractConfig$_get_jettonWallet((slice, slice, slice) v) inline;
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline;
 
 ;; $Pool$_contract_init
-(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $Pool$_contract_init(int $deployId) impure inline_ref;
+(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $Pool$_contract_init(int $deployId) impure inline_ref;
 
 ;; $Pool$_contract_load
-(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $Pool$_contract_load() impure inline_ref;
+(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $Pool$_contract_load() impure inline_ref;
 
 ;; $Pool$_contract_store
-() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) v) impure inline;
+() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) v) impure inline;
 
 ;; $global_emptyCell
 cell $global_emptyCell() impure inline;
@@ -538,16 +547,16 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 ((int, int, slice, slice, cell, int, slice)) $JettonTransfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount_forward_payload(int $query_id, int $amount, slice $destination, slice $response_destination, cell $custom_payload, int $forward_ton_amount, slice $forward_payload) inline;
 
 ;; $Pool$_fun_refundJetton
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_refundJetton((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $query_id, int $amount, slice $destination, slice $response_destination) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_refundJetton((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $query_id, int $amount, slice $destination, slice $response_destination) impure inline_ref;
 
 ;; $Pool$_fun_transferJetton
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_transferJetton((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, slice $to, int $query_id, int $amount, slice $destination, slice $response_destination) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_transferJetton((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, slice $to, int $query_id, int $amount, slice $destination, slice $response_destination) impure inline_ref;
 
 ;; $SendParameters$_constructor_to_value_mode
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline;
 
 ;; $Pool$_fun_transferEstimatedRemainValue
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_transferEstimatedRemainValue((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $gasConsumption, slice $to, int $executionFeeDelta) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_transferEstimatedRemainValue((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $gasConsumption, slice $to, int $executionFeeDelta) impure inline_ref;
 
 ;; $LiquidityOrder$_constructor_isIncrease_account_jettonDelta_executionFee_blockTime_isPending
 ((int, slice, int, int, int, int)) $LiquidityOrder$_constructor_isIncrease_account_jettonDelta_executionFee_blockTime_isPending(int $isIncrease, slice $account, int $jettonDelta, int $executionFee, int $blockTime, int $isPending) inline;
@@ -556,22 +565,22 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 ((int, slice, int, int, int, int)) $LiquidityOrderCreatedEvent$_constructor_opType_account_jettonDelta_executionFee_orderId_trxId(int $opType, slice $account, int $jettonDelta, int $executionFee, int $orderId, int $trxId) inline;
 
 ;; $Pool$_fun_createLiquidityOrder
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_createLiquidityOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $query_id, int $isIncrease, slice $account, int $executionFee, int $jettonDelta) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_createLiquidityOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $query_id, int $isIncrease, slice $account, int $executionFee, int $jettonDelta) impure inline_ref;
 
 ;; $PerpOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee
 ((int, int, int, int, int)) $PerpOrderEx$_constructor_tpSize_tpPrice_slSize_slPrice_executionFee(int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $executionFee) inline;
 
 ;; $PerpOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending
-((int, int, slice, int, int, int, int, int, int, int, int)) $PerpOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending(int $opType, int $tokenId, slice $account, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $triggerAbove, int $executionFee, int $blockTime, int $isPending) inline;
+((int, int, slice, int, int, int, int, int, int, int, int, int)) $PerpOrder$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_triggerPrice_triggerAbove_executionFee_blockTime_isPending(int $opType, int $tokenId, slice $account, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $triggerAbove, int $executionFee, int $blockTime, int $isPending) inline;
 
 ;; $PerpOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_requestTime_trxId
 ((int, int, slice, int, int, int, int, int, int, int, int, int)) $PerpOrderCreatedEvent$_constructor_opType_tokenId_account_isLong_marginDelta_sizeDelta_executionFee_orderId_triggerPrice_triggerAbove_requestTime_trxId(int $opType, int $tokenId, slice $account, int $isLong, int $marginDelta, int $sizeDelta, int $executionFee, int $orderId, int $triggerPrice, int $triggerAbove, int $requestTime, int $trxId) inline;
 
 ;; $Pool$_fun_createPerpOrder
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), int) $Pool$_fun_createPerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $executionFee, int $requestTime) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), int) $Pool$_fun_createPerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $trxId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $executionFee, int $requestTime) impure inline_ref;
 
 ;; $Pool$_fun_createIncreasePerpOrder
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_createIncreasePerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $query_id, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $requestTime) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_createIncreasePerpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $query_id, slice $account, int $executionFee, int $isMarket, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $triggerPrice, int $tpSize, int $tpPrice, int $slSize, int $slPrice, int $requestTime) impure inline_ref;
 
 ;; $AccountPerpPosition$_constructor_positions
 ((cell)) $AccountPerpPosition$_constructor_positions(cell $positions) inline;
@@ -592,88 +601,88 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 ((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionIncreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_tradingFee_fundingFee_rolloverFee_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $tradingFee, int $fundingFee, int $rolloverFee, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $globalLongValueAfter, int $globalShortValueAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline;
 
 ;; $Pool$_fun_increasePerpPosition
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_increasePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $orderId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth, slice $executionFeeReceiver) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_increasePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $trxId, int $orderId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth) impure inline_ref;
 
 ;; $PerpPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_realizedPnLDelta_tradingFee_fundingFee_rolloverFee_payout_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl
 ((int, int, int, int, slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)) $PerpPositionDecreasedEvent$_constructor_trxId_orderId_opType_positionId_account_tokenId_isLong_marginDelta_marginAfter_sizeDelta_sizeAfter_tradePrice_entryPrice_realizedPnLDelta_tradingFee_fundingFee_rolloverFee_payout_entryFundingFeeGrowthAfter_entryRolloverFeeGrowthAfter_globalLongMarginAfter_globalShortMarginAfter_globalLongSizeAfter_globalShortSizeAfter_globalLongValueAfter_globalShortValueAfter_lpNetSizeAfter_lpIsLong_lpEntryPriceAfter_lpFundAfter_lpTradingFee_lpRealizedPnl(int $trxId, int $orderId, int $opType, int $positionId, slice $account, int $tokenId, int $isLong, int $marginDelta, int $marginAfter, int $sizeDelta, int $sizeAfter, int $tradePrice, int $entryPrice, int $realizedPnLDelta, int $tradingFee, int $fundingFee, int $rolloverFee, int $payout, int $entryFundingFeeGrowthAfter, int $entryRolloverFeeGrowthAfter, int $globalLongMarginAfter, int $globalShortMarginAfter, int $globalLongSizeAfter, int $globalShortSizeAfter, int $globalLongValueAfter, int $globalShortValueAfter, int $lpNetSizeAfter, int $lpIsLong, int $lpEntryPriceAfter, int $lpFundAfter, int $lpTradingFee, int $lpRealizedPnl) inline;
 
 ;; $Pool$_fun_decreasePerpPosition
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_decreasePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $orderId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth, slice $executionFeeReceiver) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), int) $Pool$_fun_decreasePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $trxId, int $orderId, int $opType, slice $account, int $tokenId, int $isLong, int $marginDelta, int $sizeDelta, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth) impure inline_ref;
 
 ;; $Pool$_fun_liquidatePerpPosition
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_liquidatePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $trxId, int $orderId, slice $account, int $tokenId, int $isLong, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth, slice $liquidationFeeReceiver) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), int) $Pool$_fun_liquidatePerpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $trxId, int $orderId, slice $account, int $tokenId, int $isLong, int $tradePrice, int $fundingFeeGrowth, int $rolloverFeeGrowth) impure inline_ref;
 
-;; $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer
-((int, int, int)) $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer(int $isExecutor, int $isCompensator, int $isClaimer) inline;
+;; $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer_isManager
+((int, int, int, int)) $AccountInfo$_constructor_isExecutor_isCompensator_isClaimer_isManager(int $isExecutor, int $isCompensator, int $isClaimer, int $isManager) inline;
 
 ;; $Pool$_fun_accountInfo
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, int, int)) $Pool$_fun_accountInfo((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, slice $account) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), (int, int, int, int)) $Pool$_fun_accountInfo((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, slice $account) impure inline_ref;
 
 ;; $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition
 ((int, tuple, tuple, tuple)) $PerpPositionData$_constructor_perpPositionIndexNext_perpPosition_globalLPPosition_globalPosition(int $perpPositionIndexNext, tuple $perpPosition, tuple $globalLPPosition, tuple $globalPosition) inline;
 
 ;; $Pool$_fun_perpPosition
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, tuple, tuple, tuple)) $Pool$_fun_perpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $tokenId, slice $account) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), (int, tuple, tuple, tuple)) $Pool$_fun_perpPosition((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $tokenId, slice $account) impure inline_ref;
 
-;; $ConfigData$_constructor_orderLockTime_lpMinExecutionFee_perpMinExecutionFee_gasForLpTrader_gasForLpExecutor_gasForPerpTrader_gasForPerpExecutor_minTonsForStorage_gasForTransferJetton_gasForBurnTlp_gasForMintTlp_tlpWallet_jettonWallet_tlpJetton_maxLpNetCap
-((int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) $ConfigData$_constructor_orderLockTime_lpMinExecutionFee_perpMinExecutionFee_gasForLpTrader_gasForLpExecutor_gasForPerpTrader_gasForPerpExecutor_minTonsForStorage_gasForTransferJetton_gasForBurnTlp_gasForMintTlp_tlpWallet_jettonWallet_tlpJetton_maxLpNetCap(int $orderLockTime, int $lpMinExecutionFee, int $perpMinExecutionFee, int $gasForLpTrader, int $gasForLpExecutor, int $gasForPerpTrader, int $gasForPerpExecutor, int $minTonsForStorage, int $gasForTransferJetton, int $gasForBurnTlp, int $gasForMintTlp, slice $tlpWallet, slice $jettonWallet, slice $tlpJetton, int $maxLpNetCap) inline;
+;; $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_jettonWallet_tlpWallet_tlpJetton_maxLpNetCap
+((int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) $ConfigData$_constructor_orderLockTime_mintJettonGas_burnJettonGas_transferJettonGas_createPerpOrderGas_cancelPerpOrderGas_executePerpOrderGas_createLiquidityOrderGas_cancelLiquidityOrderGas_executeLiquidityOrderGas_minStorageReserve_lpMinExecutionFee_perpMinExecutionFee_jettonWallet_tlpWallet_tlpJetton_maxLpNetCap(int $orderLockTime, int $mintJettonGas, int $burnJettonGas, int $transferJettonGas, int $createPerpOrderGas, int $cancelPerpOrderGas, int $executePerpOrderGas, int $createLiquidityOrderGas, int $cancelLiquidityOrderGas, int $executeLiquidityOrderGas, int $minStorageReserve, int $lpMinExecutionFee, int $perpMinExecutionFee, slice $jettonWallet, slice $tlpWallet, slice $tlpJetton, int $maxLpNetCap) inline;
 
 ;; $Pool$_fun_configData
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) $Pool$_fun_configData((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), (int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, int)) $Pool$_fun_configData((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self) impure inline_ref;
 
 ;; $Pool$_fun_tokenConfig
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), tuple) $Pool$_fun_tokenConfig((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $tokenId) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), tuple) $Pool$_fun_tokenConfig((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $tokenId) impure inline_ref;
 
 ;; $PoolStat$_constructor_tlpSupply_totalExecutionFee_protocolTradingFee_globalLPFund_globalLPUnrealizedPnl_globalLpFundingFeeGrowth_globalRolloverFeeGrowth
 ((int, int, int, int, int, int, int)) $PoolStat$_constructor_tlpSupply_totalExecutionFee_protocolTradingFee_globalLPFund_globalLPUnrealizedPnl_globalLpFundingFeeGrowth_globalRolloverFeeGrowth(int $tlpSupply, int $totalExecutionFee, int $protocolTradingFee, int $globalLPFund, int $globalLPUnrealizedPnl, int $globalLpFundingFeeGrowth, int $globalRolloverFeeGrowth) inline;
 
 ;; $Pool$_fun_poolStat
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, int, int, int, int, int, int)) $Pool$_fun_poolStat((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), (int, int, int, int, int, int, int)) $Pool$_fun_poolStat((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self) impure inline_ref;
 
 ;; $LiquidityOrderData$_constructor_liquidityOrderIndexNext_liquidityOrder
 ((int, tuple)) $LiquidityOrderData$_constructor_liquidityOrderIndexNext_liquidityOrder(int $liquidityOrderIndexNext, tuple $liquidityOrder) inline;
 
 ;; $Pool$_fun_liquidityOrder
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, tuple)) $Pool$_fun_liquidityOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $orderId) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), (int, tuple)) $Pool$_fun_liquidityOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $orderId) impure inline_ref;
 
 ;; $PerpOrderData$_constructor_perpOrderIndexNext_perpOrder_perpOrderEx
 ((int, tuple, tuple)) $PerpOrderData$_constructor_perpOrderIndexNext_perpOrder_perpOrderEx(int $perpOrderIndexNext, tuple $perpOrder, tuple $perpOrderEx) inline;
 
 ;; $Pool$_fun_perpOrder
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, tuple, tuple)) $Pool$_fun_perpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $orderId) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), (int, tuple, tuple)) $Pool$_fun_perpOrder((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $orderId) impure inline_ref;
 
 ;; $CompensateData$_constructor_compensateIndexNext_compensate
 ((int, tuple)) $CompensateData$_constructor_compensateIndexNext_compensate(int $compensateIndexNext, tuple $compensate) inline;
 
 ;; $Pool$_fun_compensate
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), (int, tuple)) $Pool$_fun_compensate((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, int $compensateId) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), (int, tuple)) $Pool$_fun_compensate((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, int $compensateId) impure inline_ref;
 
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;
 
 ;; $Pool$_fun_forward
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_forward((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_forward((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
 
 ;; $Pool$_fun_reply
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_reply((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_reply((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, cell $body) impure inline;
 
 ;; $Pool$_fun_notify
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_notify((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_notify((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self, cell $body) impure inline;
 
 ;; $Pool$_fun_requireNotStopped
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_requireNotStopped((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_requireNotStopped((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self) impure inline_ref;
 
 ;; $Pool$_fun_requireStopped
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_requireStopped((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_requireStopped((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self) impure inline_ref;
 
 ;; $Pool$_fun_stopped
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), int) $Pool$_fun_stopped((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), int) $Pool$_fun_stopped((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self) impure inline_ref;
 
 ;; $Pool$_fun_requireOwner
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), ()) $Pool$_fun_requireOwner((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), ()) $Pool$_fun_requireOwner((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self) impure inline_ref;
 
 ;; $Pool$_fun_owner
-((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int), slice) $Pool$_fun_owner((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int), slice) $Pool$_fun_owner((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $self) impure inline_ref;
 
 ;; $LiquidityOrderCancelledEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $LiquidityOrderCancelledEvent$_constructor_opType_orderId_trxId(int $opType, int $orderId, int $trxId) inline;
