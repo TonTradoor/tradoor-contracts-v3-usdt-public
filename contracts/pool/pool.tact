@@ -75,6 +75,9 @@ contract Pool with Deployable, Resumable, Upgradable {
 
     publicKey: Int as uint256 = 0;
 
+    upgradeSeqno: Int as uint32 = 1;
+    upgradeRequests: map<Int as uint32, UpgradeRequest>;
+
     init(deployId: Int) {
         self.owner = sender();
     }
@@ -1431,6 +1434,7 @@ contract Pool with Deployable, Resumable, Upgradable {
         let ctx: Context = context();
         require(ctx.value >= self.createPerpOrderGas, "gas not enough");
 
+        let unlockTime: Int = now() + 3 * DAY;
         let compensateId: Int = self.compensateIndexNext;
         self.compensateIndexNext += 1;
         self.compensates.set(compensateId, Compensate{
@@ -1441,7 +1445,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             refundAmount: msg.refundAmount,
             executionFeeReceiver: msg.executionFeeReceiver,
             executionFee: msg.executionFee,
-            unlockTime: now() + 1 * DAY
+            unlockTime
         });
 
         emit(CompensateCreatedEvent{
@@ -1453,7 +1457,7 @@ contract Pool with Deployable, Resumable, Upgradable {
             refundAmount: msg.refundAmount,
             executionFeeReceiver: msg.executionFeeReceiver,
             executionFee: msg.executionFee,
-            unlockTime: now() + 1 * DAY
+            unlockTime
         }.toCell());
 
         self.transferEstimatedRemainValue(self.createPerpOrderGas, sender(), 0);

@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 25336 bytes
+BOC Size: 27576 bytes
 
 # Types
-Total Types: 63
+Total Types: 66
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -45,9 +45,21 @@ Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
 TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
 Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
-## UpdateContract
-TLB: `update_contract#2eb108db code:^slice data:Maybe ^slice = UpdateContract`
-Signature: `UpdateContract{code:^slice,data:Maybe ^slice}`
+## RequestUpgrade
+TLB: `request_upgrade#82470fd8 code:^slice data:Maybe ^slice = RequestUpgrade`
+Signature: `RequestUpgrade{code:^slice,data:Maybe ^slice}`
+
+## ExecuteUpgrade
+TLB: `execute_upgrade#3f8f70d6 seqno:uint32 = ExecuteUpgrade`
+Signature: `ExecuteUpgrade{seqno:uint32}`
+
+## CancelUpgrade
+TLB: `cancel_upgrade#dfbc237e seqno:uint32 = CancelUpgrade`
+Signature: `CancelUpgrade{seqno:uint32}`
+
+## UpgradeRequest
+TLB: `_ code:^slice data:Maybe ^slice unlockTime:uint32 = UpgradeRequest`
+Signature: `UpgradeRequest{code:^slice,data:Maybe ^slice,unlockTime:uint32}`
 
 ## JettonTransfer
 TLB: `jetton_transfer#0f8a7ea5 query_id:uint64 amount:coins destination:address response_destination:Maybe address custom_payload:Maybe ^cell forward_ton_amount:coins forward_payload:remainder<slice> = JettonTransfer`
@@ -258,7 +270,7 @@ TLB: `null`
 Signature: `null`
 
 # Get Methods
-Total Get Methods: 10
+Total Get Methods: 12
 
 ## accountInfo
 Argument: account
@@ -286,6 +298,11 @@ Argument: compensateId
 ## stopped
 
 ## owner
+
+## upgradeUnlockTime
+Argument: seqno
+
+## upgradeSeqno
 
 # Error Codes
 2: Stack underflow
@@ -329,6 +346,7 @@ Argument: compensateId
 6118: too early to cancel
 10594: insufficient quota to supply
 11120: compensate not exist
+15161: time lock not expired
 17312: leverage too high
 19163: no enough jettons to claim
 19305: gas not enough
@@ -339,6 +357,7 @@ Argument: compensateId
 28603: margin rate too high
 31425: not reach unlock time
 32637: order not exist
+32964: invalid seqno
 36718: disabled token
 40368: Contract stopped
 40940: margin is too high to liquidate

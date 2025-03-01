@@ -78,16 +78,92 @@ cell $DeployOk$_store_cell((int) v) inline {
 }
 
 ;;
-;; Type: UpdateContract
-;; Header: 0x2eb108db
-;; TLB: update_contract#2eb108db code:^slice data:Maybe ^slice = UpdateContract
+;; Type: RequestUpgrade
+;; Header: 0x82470fd8
+;; TLB: request_upgrade#82470fd8 code:^slice data:Maybe ^slice = RequestUpgrade
 ;;
 
-(slice, ((slice, slice))) $UpdateContract$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 783354075);
+(slice, ((slice, slice))) $RequestUpgrade$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2185695192);
     var v'code = sc_0~load_ref().begin_parse();
     var v'data = sc_0~load_int(1) ? sc_0~load_ref().begin_parse() : null();
     return (sc_0, (v'code, v'data));
+}
+
+;;
+;; Type: ExecuteUpgrade
+;; Header: 0x3f8f70d6
+;; TLB: execute_upgrade#3f8f70d6 seqno:uint32 = ExecuteUpgrade
+;;
+
+(slice, ((int))) $ExecuteUpgrade$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1066365142);
+    var v'seqno = sc_0~load_uint(32);
+    return (sc_0, (v'seqno));
+}
+
+;;
+;; Type: CancelUpgrade
+;; Header: 0xdfbc237e
+;; TLB: cancel_upgrade#dfbc237e seqno:uint32 = CancelUpgrade
+;;
+
+(slice, ((int))) $CancelUpgrade$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3753649022);
+    var v'seqno = sc_0~load_uint(32);
+    return (sc_0, (v'seqno));
+}
+
+;;
+;; Type: UpgradeRequest
+;; TLB: _ code:^slice data:Maybe ^slice unlockTime:uint32 = UpgradeRequest
+;;
+
+builder $UpgradeRequest$_store(builder build_0, (slice, slice, int) v) inline {
+    var (v'code, v'data, v'unlockTime) = v;
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'code).end_cell());
+    build_0 = ~ null?(v'data) ? build_0.store_int(true, 1).store_ref(begin_cell().store_slice(v'data).end_cell()) : build_0.store_int(false, 1);
+    build_0 = build_0.store_uint(v'unlockTime, 32);
+    return build_0;
+}
+
+cell $UpgradeRequest$_store_cell((slice, slice, int) v) inline {
+    return $UpgradeRequest$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((slice, slice, int))) $UpgradeRequest$_load(slice sc_0) inline {
+    var v'code = sc_0~load_ref().begin_parse();
+    var v'data = sc_0~load_int(1) ? sc_0~load_ref().begin_parse() : null();
+    var v'unlockTime = sc_0~load_uint(32);
+    return (sc_0, (v'code, v'data, v'unlockTime));
+}
+
+tuple $UpgradeRequest$_as_optional((slice, slice, int) v) inline {
+    var (v'code, v'data, v'unlockTime) = v;
+    return __tact_tuple_create_3(v'code, v'data, v'unlockTime);
+}
+
+tuple $UpgradeRequest$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $UpgradeRequest$_as_optional(sc~$UpgradeRequest$_load());
+}
+
+_ $UpgradeRequest$_get_unlockTime((slice, slice, int) v) inline {
+    var (v'code, v'data, v'unlockTime) = v;
+    return v'unlockTime;
+}
+
+((slice, slice, int)) $UpgradeRequest$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'code, slice vvv'data, int vvv'unlockTime) = __tact_tuple_destroy_3(v);
+    return (vvv'code, vvv'data, vvv'unlockTime);
+}
+
+((slice, slice, int)) $UpgradeRequest$_constructor_code_data_unlockTime(slice $code, slice $data, int $unlockTime) inline {
+    return ($code, $data, $unlockTime);
 }
 
 ;;
@@ -1593,8 +1669,8 @@ tuple $Compensate$_load_opt(cell cl) inline {
 ;; Type: Pool
 ;;
 
-builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) v) inline {
-    var (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig, v'publicKey) = v;
+builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int, int, cell) v) inline {
+    var (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig, v'publicKey, v'upgradeSeqno, v'upgradeRequests) = v;
     build_0 = __tact_store_address(build_0, v'owner);
     build_0 = build_0.store_int(v'stopped, 1);
     build_0 = build_0.store_uint(v'orderLockTime, 32);
@@ -1648,6 +1724,8 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     var build_6 = begin_cell();
     build_6 = __tact_store_address(build_6, v'multisig);
     build_6 = build_6.store_uint(v'publicKey, 256);
+    build_6 = build_6.store_uint(v'upgradeSeqno, 32);
+    build_6 = build_6.store_dict(v'upgradeRequests);
     build_5 = store_ref(build_5, build_6.end_cell());
     build_4 = store_ref(build_4, build_5.end_cell());
     build_3 = store_ref(build_3, build_4.end_cell());
@@ -1657,7 +1735,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     return build_0;
 }
 
-(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int))) $Pool$_load(slice sc_0) inline {
+(slice, ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int, int, cell))) $Pool$_load(slice sc_0) inline {
     var v'owner = sc_0~__tact_load_address();
     var v'stopped = sc_0~load_int(1);
     var v'orderLockTime = sc_0~load_uint(32);
@@ -1711,7 +1789,9 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     slice sc_6 = sc_5~load_ref().begin_parse();
     var v'multisig = sc_6~__tact_load_address();
     var v'publicKey = sc_6~load_uint(256);
-    return (sc_0, (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig, v'publicKey));
+    var v'upgradeSeqno = sc_6~load_uint(32);
+    var v'upgradeRequests = sc_6~load_dict();
+    return (sc_0, (v'owner, v'stopped, v'orderLockTime, v'maxLpNetCap, v'lpRolloverFeeRate, v'liquidatedPositionShareRate, v'normalPositionShareRate, v'mintJettonGas, v'burnJettonGas, v'transferJettonGas, v'createPerpOrderGas, v'cancelPerpOrderGas, v'executePerpOrderGas, v'createLiquidityOrderGas, v'cancelLiquidityOrderGas, v'executeLiquidityOrderGas, v'lpMinExecutionFee, v'perpMinExecutionFee, v'minStorageReserve, v'tlpJetton, v'tlpWallet, v'jettonWallet, v'manager, v'compensator, v'claimer, v'executors, v'tokenConfigs, v'liquidityOrders, v'liquidityOrderIndexNext, v'perpOrders, v'perpOrderExs, v'perpOrderIndexNext, v'compensates, v'compensateIndexNext, v'perpPositionIndexNext, v'perpPositions, v'globalLPPositions, v'globalPositions, v'tlpSupply, v'totalExecutionFee, v'protocolTradingFee, v'globalLPFund, v'globalLPUnrealizedPnl, v'globalLpFundingFeeGrowth, v'globalRolloverFeeGrowth, v'multisig, v'publicKey, v'upgradeSeqno, v'upgradeRequests));
 }
 
 (slice, ((int))) $Pool$init$_load(slice sc_0) inline {
@@ -1719,7 +1799,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     return (sc_0, (v'deployId));
 }
 
-(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) $Pool$_contract_load() impure inline_ref {
+(slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int, int, cell) $Pool$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -1734,7 +1814,7 @@ builder $Pool$_store(builder build_0, (slice, int, int, int, int, int, int, int,
     }
 }
 
-() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int) v) impure inline {
+() $Pool$_contract_store((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, int, slice, int, int, cell) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

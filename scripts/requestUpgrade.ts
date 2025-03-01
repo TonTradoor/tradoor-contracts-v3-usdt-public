@@ -17,7 +17,7 @@ export async function run(provider: NetworkProvider) {
             value: toNano('0.1'),
         },
         {
-            $$type: 'UpdateContract',
+            $$type: 'RequestUpgrade',
             code: (await Pool.init(0n)).code.asSlice(),
             data: null
         }
@@ -25,9 +25,9 @@ export async function run(provider: NetworkProvider) {
 
     const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
     if (transDone) {
-        console.log(`pool upgrade success`);
+        console.log(`request pool upgrade success`);
     } else {
-        console.error(`pool upgrade failed`);
+        console.error(`request pool upgrade failed`);
     }
 
 }
