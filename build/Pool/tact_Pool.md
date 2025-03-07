@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 27576 bytes
+BOC Size: 28104 bytes
 
 # Types
-Total Types: 66
+Total Types: 70
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -80,6 +80,14 @@ Signature: `JettonMint{origin:address,receiver:address,amount:int257,custom_payl
 ## JettonUpdateContent
 TLB: `jetton_update_content#5b8f271d jetton_content:^cell = JettonUpdateContent`
 Signature: `JettonUpdateContent{jetton_content:^cell}`
+
+## FeedPrices
+TLB: `feed_prices#90cb4c4b trxId:uint64 lpFundingFeeGrowth:coins rolloverFeeGrowth:coins prices:dict<uint16, uint128> = FeedPrices`
+Signature: `FeedPrices{trxId:uint64,lpFundingFeeGrowth:coins,rolloverFeeGrowth:coins,prices:dict<uint16, uint128>}`
+
+## IncreaseAum
+TLB: `increase_aum#0ea2a5cf trxId:uint64 amount:coins = IncreaseAum`
+Signature: `IncreaseAum{trxId:uint64,amount:coins}`
 
 ## UpdatePoolConfig
 TLB: `update_pool_config#a62f856c orderLockTime:uint32 maxLpNetCap:coins lpRolloverFeeRate:uint32 liquidatedPositionShareRate:uint32 normalPositionShareRate:uint32 = UpdatePoolConfig`
@@ -185,6 +193,14 @@ Signature: `CompensateCancelledEvent{compensateId:uint64,trxId:uint64}`
 TLB: `compensate_executed_event#db45e438 compensateId:uint64 trxId:uint64 = CompensateExecutedEvent`
 Signature: `CompensateExecutedEvent{compensateId:uint64,trxId:uint64}`
 
+## FeeChargedEvent
+TLB: `fee_charged_event#7a53bc1b trxId:uint64 lpFundAfter:int128 realizedLpFundingFeeDelta:coins realizedLpRolloverFeeDelta:coins entryLpFundingFeeGrowth:coins entryRolloverFeeGrowth:coins = FeeChargedEvent`
+Signature: `FeeChargedEvent{trxId:uint64,lpFundAfter:int128,realizedLpFundingFeeDelta:coins,realizedLpRolloverFeeDelta:coins,entryLpFundingFeeGrowth:coins,entryRolloverFeeGrowth:coins}`
+
+## AumIncreasedEvent
+TLB: `aum_increased_event#0a5f0ef8 trxId:uint64 amount:coins lpFundAfter:int128 = AumIncreasedEvent`
+Signature: `AumIncreasedEvent{trxId:uint64,amount:coins,lpFundAfter:int128}`
+
 ## AccountInfo
 TLB: `_ isExecutor:bool isCompensator:bool isClaimer:bool isManager:bool = AccountInfo`
 Signature: `AccountInfo{isExecutor:bool,isCompensator:bool,isClaimer:bool,isManager:bool}`
@@ -198,8 +214,8 @@ TLB: `_ name:^string enable:bool maxLeverage:uint16 liquidationFee:coins mainten
 Signature: `TokenConfig{name:^string,enable:bool,maxLeverage:uint16,liquidationFee:coins,maintenanceRate:uint32,tradingFeeRate:uint32,lpTradingFeeRate:uint32}`
 
 ## PoolStat
-TLB: `_ tlpSupply:coins totalExecutionFee:coins protocolTradingFee:coins globalLPFund:int128 globalLPUnrealizedPnl:int128 globalLpFundingFeeGrowth:coins globalRolloverFeeGrowth:coins = PoolStat`
-Signature: `PoolStat{tlpSupply:coins,totalExecutionFee:coins,protocolTradingFee:coins,globalLPFund:int128,globalLPUnrealizedPnl:int128,globalLpFundingFeeGrowth:coins,globalRolloverFeeGrowth:coins}`
+TLB: `_ tlpSupply:coins totalExecutionFee:coins protocolTradingFee:coins globalLPFund:int128 globalLpFundingFeeGrowth:coins globalRolloverFeeGrowth:coins = PoolStat`
+Signature: `PoolStat{tlpSupply:coins,totalExecutionFee:coins,protocolTradingFee:coins,globalLPFund:int128,globalLpFundingFeeGrowth:coins,globalRolloverFeeGrowth:coins}`
 
 ## AccountPerpPosition
 TLB: `_ positions:dict<address, ^DirectionPerpPosition{longPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128},shortPosition:PerpPosition{positionId:uint64,margin:coins,size:coins,entryPrice:uint128,entryFundingFeeGrowth:int128,entryRolloverFeeGrowth:int128}}> = AccountPerpPosition`
@@ -270,7 +286,7 @@ TLB: `null`
 Signature: `null`
 
 # Get Methods
-Total Get Methods: 12
+Total Get Methods: 13
 
 ## accountInfo
 Argument: account
@@ -294,6 +310,8 @@ Argument: orderId
 
 ## compensate
 Argument: compensateId
+
+## tlpPrice
 
 ## stopped
 

@@ -151,3 +151,18 @@ message CompensateExecutedEvent {
     compensateId: Int as uint64;
     trxId: Int as uint64;
 }
+
+message FeeChargedEvent {
+    trxId: Int as uint64;
+    lpFundAfter: Int as int128;
+    realizedLpFundingFeeDelta: Int as coins;
+    realizedLpRolloverFeeDelta: Int as coins;
+    entryLpFundingFeeGrowth: Int as coins;
+    entryRolloverFeeGrowth: Int as coins;
+}
+
+message AumIncreasedEvent {
+    trxId: Int as uint64;
+    amount: Int as coins;
+    lpFundAfter: Int as int128;
+}

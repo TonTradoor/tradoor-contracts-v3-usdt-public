@@ -38,6 +38,19 @@ message JettonUpdateContent {
 }
 
 // ============================ Config ================================ //
+
+message FeedPrices {
+    trxId: Int as uint64;
+    lpFundingFeeGrowth: Int as coins;
+    rolloverFeeGrowth: Int as coins;
+    prices: map<Int as uint16, Int as uint128>;
+}
+
+message IncreaseAum {
+    trxId: Int as uint64;
+    amount: Int as coins;
+}
+
 message UpdatePoolConfig{
     orderLockTime: Int as uint32;
     maxLpNetCap: Int as coins;
