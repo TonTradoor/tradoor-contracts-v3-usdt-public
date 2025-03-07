@@ -33,7 +33,7 @@ trait Upgradable with Ownable {
         let request = UpgradeRequest{
             code: msg.code, 
             data: msg.data,
-            unlockTime: now() + 3 * 24 * 60 * 60
+            unlockTime: now() + 3 * 60 //todo
         };
         let seqno = self.upgradeSeqno;
         self.upgradeSeqno += 1;
