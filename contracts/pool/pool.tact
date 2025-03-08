@@ -233,18 +233,12 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.reply("prices updated".asComment());
     }
 
-    receive (msg: IncreaseAum) {
-        let ctx: Context = context();
-        require(self.manager == ctx.sender, "invalid sender");
-        self.globalLPFund += msg.amount;
+    fun increaseAum (trxId : Int, sender: Address, amount: Int) {
+        require(self.manager == sender, "invalid sender");
+        self.globalLPFund += amount;
 
-        emit(AumIncreasedEvent{
-            trxId: msg.trxId,
-            amount: msg.amount,
-            lpFundAfter: self.globalLPFund,
-        }.toCell());
-
-        self.reply("aum increased".asComment());
+        emit(AumIncreasedEvent{ trxId, amount, lpFundAfter: self.globalLPFund }.toCell());
+        send(SendParameters{ to: sender, value: 0, mode: SendIgnoreErrors|SendRemainingValue});
     }
 
     /**
@@ -297,6 +291,8 @@ contract Pool with Deployable, Resumable, Upgradable {
 
             self.createIncreasePerpOrder(msg.query_id, msg.sender, executionFee, isMarket, tokenId, isLong, marginDelta, 
                 sizeDelta, triggerPrice, tpSize, tpPrice, slSize, slPrice, requestTime);
+        } else if (opCode == OP_INCREASE_AUM) {
+            self.increaseAum(msg.query_id, msg.sender, msg.amount);
         } else {
             self.refundJetton(msg.query_id, msg.amount, msg.sender, msg.sender);
         }

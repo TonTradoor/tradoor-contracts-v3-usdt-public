@@ -24,12 +24,12 @@ _ $Context$_get_value((int, slice, int, slice) v) inline {
 ;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
 ;;
 
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice $to, int $value, int $mode, int $bounce, cell $body) inline {
-    return ($bounce, $to, $value, $mode, $body, null(), null());
-}
-
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline {
     return (true, $to, $value, $mode, null(), null(), null());
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice $to, int $value, int $mode, int $bounce, cell $body) inline {
+    return ($bounce, $to, $value, $mode, $body, null(), null());
 }
 
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline {
@@ -294,19 +294,6 @@ cell $JettonUpdateContent$_store_cell((cell) v) inline {
     var v'rolloverFeeGrowth = sc_0~load_coins();
     var v'prices = sc_0~load_dict();
     return (sc_0, (v'trxId, v'lpFundingFeeGrowth, v'rolloverFeeGrowth, v'prices));
-}
-
-;;
-;; Type: IncreaseAum
-;; Header: 0x0ea2a5cf
-;; TLB: increase_aum#0ea2a5cf trxId:uint64 amount:coins = IncreaseAum
-;;
-
-(slice, ((int, int))) $IncreaseAum$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 245540303);
-    var v'trxId = sc_0~load_uint(64);
-    var v'amount = sc_0~load_coins();
-    return (sc_0, (v'trxId, v'amount));
 }
 
 ;;

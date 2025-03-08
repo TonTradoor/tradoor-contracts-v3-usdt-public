@@ -43,7 +43,6 @@ PROGRAM{
   DECLPROC $JettonUpdateContent$_store_cell
   DECLPROC $JettonUpdateContent$_load
   DECLPROC $FeedPrices$_load
-  DECLPROC $IncreaseAum$_load
   DECLPROC $UpdatePoolConfig$_load
   DECLPROC $GasConfig$_load
   DECLPROC $ExecutorConfig$_load
@@ -194,11 +193,13 @@ PROGRAM{
   DECLPROC $global_emptySlice
   DECLPROC $global_send
   DECLPROC $global_emit
+  DECLPROC $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter
+  DECLPROC $SendParameters$_constructor_to_value_mode
+  DECLPROC $Pool$_fun_increaseAum
   DECLPROC $SendParameters$_constructor_to_value_mode_bounce_body
   DECLPROC $JettonTransfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount_forward_payload
   DECLPROC $Pool$_fun_refundJetton
   DECLPROC $Pool$_fun_transferJetton
-  DECLPROC $SendParameters$_constructor_to_value_mode
   DECLPROC $Pool$_fun_transferEstimatedRemainValue
   DECLPROC $LiquidityOrder$_constructor_isIncrease_account_jettonDelta_executionFee_blockTime_isPending
   DECLPROC $LiquidityOrderCreatedEvent$_constructor_opType_account_jettonDelta_executionFee_orderId_trxId
@@ -246,7 +247,6 @@ PROGRAM{
   DECLPROC $Pool$_fun_upgradeUnlockTime
   DECLPROC $Pool$_fun_upgradeSeqno
   DECLPROC $FeeChargedEvent$_constructor_trxId_lpFundAfter_realizedLpFundingFeeDelta_realizedLpRolloverFeeDelta_entryLpFundingFeeGrowth_entryRolloverFeeGrowth
-  DECLPROC $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter
   DECLPROC $LiquidityOrderCancelledEvent$_constructor_opType_orderId_trxId
   DECLPROC $SendParameters$_constructor_to_value_bounce_body
   DECLPROC $JettonMint$_constructor_origin_receiver_amount_custom_payload_forward_ton_amount_forward_payload
@@ -269,7 +269,6 @@ PROGRAM{
   DECLPROC $Pool$_internal_binary_ClaimProtocolFee
   DECLPROC %$Pool$_internal_empty
   DECLPROC $Pool$_internal_binary_FeedPrices
-  DECLPROC $Pool$_internal_binary_IncreaseAum
   DECLPROC $Pool$_internal_binary_JettonTransferNotification
   DECLPROC $Pool$_internal_binary_CancelLiquidityOrder
   DECLPROC $Pool$_internal_binary_ExecuteLiquidityOrder
@@ -801,16 +800,6 @@ PROGRAM{
     LDVARUINT16
     LDDICT
     4 -ROLL
-  }>
-  $IncreaseAum$_load PROCINLINE:<{
-    32 LDU
-    SWAP
-    245540303 PUSHINT
-    EQUAL
-    129 THROWIFNOT
-    64 LDU
-    LDVARUINT16
-    -ROT
   }>
   $UpdatePoolConfig$_load PROCINLINE:<{
     32 LDU
@@ -2754,6 +2743,33 @@ PROGRAM{
     0 PUSHINT
         SENDRAWMSG
   }>
+  $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter PROCINLINE:<{
+  }>
+  $SendParameters$_constructor_to_value_mode PROCINLINE:<{
+    TRUE
+    3 -ROLL
+    PUSHNULL
+    PUSHNULL
+    PUSHNULL
+  }>
+  $Pool$_fun_increaseAum PROCREF:<{
+    41207 PUSHINT
+    s2 PUSH
+    31 s() PUSH
+    __tact_slice_eq_bits INLINECALLDICT
+    THROWANYIFNOT
+    s10 s10 XCPU
+    ADD
+    s2 s10 s10 XC2PU
+    $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter INLINECALLDICT
+    $AumIncreasedEvent$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    0 PUSHINT
+    66 PUSHINT
+    $SendParameters$_constructor_to_value_mode INLINECALLDICT
+    $global_send INLINECALLDICT
+    DROP
+  }>
   $SendParameters$_constructor_to_value_mode_bounce_body PROCINLINE:<{
     s1 s4 XCHG
     s3 s3 s0 XCHG3
@@ -2816,13 +2832,6 @@ PROGRAM{
     }>ELSE<{
       5 BLKDROP
     }>
-  }>
-  $SendParameters$_constructor_to_value_mode PROCINLINE:<{
-    TRUE
-    3 -ROLL
-    PUSHNULL
-    PUSHNULL
-    PUSHNULL
   }>
   $Pool$_fun_transferEstimatedRemainValue PROCREF:<{
     __tact_context_get INLINECALLDICT
@@ -5179,8 +5188,6 @@ PROGRAM{
   }>
   $FeeChargedEvent$_constructor_trxId_lpFundAfter_realizedLpFundingFeeDelta_realizedLpRolloverFeeDelta_entryLpFundingFeeGrowth_entryRolloverFeeGrowth PROCINLINE:<{
   }>
-  $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter PROCINLINE:<{
-  }>
   $LiquidityOrderCancelledEvent$_constructor_opType_orderId_trxId PROCINLINE:<{
   }>
   $SendParameters$_constructor_to_value_bounce_body PROCINLINE:<{
@@ -5732,23 +5739,6 @@ PROGRAM{
     s6 s7 XCHG
     $Pool$_fun_reply INLINECALLDICT
   }>
-  $Pool$_internal_binary_IncreaseAum PROCINLINE:<{
-    __tact_context_get INLINECALLDICT
-    2DROP
-    41207 PUSHINT
-    s2 POP
-    30 s() PUSH
-    __tact_slice_eq_bits INLINECALLDICT
-    THROWANYIFNOT
-    s9 s9 XCPU
-    ADD
-    s9 s9 XCPU
-    $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter INLINECALLDICT
-    $AumIncreasedEvent$_store_cell INLINECALLDICT
-    $global_emit INLINECALLDICT
-        B{b5ee9c724101010100130000220000000061756d20696e63726561736564145655ea} B>boc PUSHREF
-    $Pool$_fun_reply INLINECALLDICT
-  }>
   $Pool$_internal_binary_JettonTransferNotification PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
     32 s() PUSH
@@ -5810,9 +5800,10 @@ PROGRAM{
         s0 s3 XCHG
         $Pool$_fun_createLiquidityOrder INLINECALLDICT
       }>ELSE<{
-        SWAP
+        OVER
         2 EQINT
         IF:<{
+          NIP
               LDVARUINT16
               1 LDI
           16 LDU
@@ -5837,8 +5828,14 @@ PROGRAM{
           $Pool$_fun_createIncreasePerpOrder INLINECALLDICT
         }>ELSE<{
           DROP
-          DUP
-          $Pool$_fun_refundJetton INLINECALLDICT
+          3 EQINT
+          IF:<{
+            SWAP
+            $Pool$_fun_increaseAum INLINECALLDICT
+          }>ELSE<{
+            DUP
+            $Pool$_fun_refundJetton INLINECALLDICT
+          }>
         }>
       }>
     }>
@@ -9295,16 +9292,6 @@ PROGRAM{
       $FeedPrices$_load INLINECALLDICT
       1 4 BLKDROP2
       $Pool$_internal_binary_FeedPrices INLINECALLDICT
-      TRUE
-    }>
-    DUP
-    245540303 PUSHINT
-    EQUAL
-    IFJMP:<{
-      DROP
-      $IncreaseAum$_load INLINECALLDICT
-      1 2 BLKDROP2
-      $Pool$_internal_binary_IncreaseAum INLINECALLDICT
       TRUE
     }>
     DUP

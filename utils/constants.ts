@@ -12,6 +12,7 @@ export const PERCENTAGE_BASIS_POINT = 1_000_000_000;
 
 export const OP_CREATE_INCREASE_LP_POSITION_ORDER = 1;
 export const OP_CREATE_INCREASE_PERP_POSITION_ORDER = 2;
+export const OP_INCREASE_AUM = 3;
 
 export const ORDER_TYPE_LP = 1;
 export const ORDER_TYPE_PERP = 2;

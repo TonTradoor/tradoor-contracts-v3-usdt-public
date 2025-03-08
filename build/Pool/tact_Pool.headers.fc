@@ -135,9 +135,6 @@ cell $JettonUpdateContent$_store_cell((cell) v) inline;
 ;; $FeedPrices$_load
 (slice, ((int, int, int, cell))) $FeedPrices$_load(slice sc_0) inline;
 
-;; $IncreaseAum$_load
-(slice, ((int, int))) $IncreaseAum$_load(slice sc_0) inline;
-
 ;; $UpdatePoolConfig$_load
 (slice, ((int, int, int, int, int))) $UpdatePoolConfig$_load(slice sc_0) inline;
 
@@ -588,6 +585,15 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 ;; $global_emit
 () $global_emit(cell $body) impure inline;
 
+;; $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter
+((int, int, int)) $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter(int $trxId, int $amount, int $lpFundAfter) inline;
+
+;; $SendParameters$_constructor_to_value_mode
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline;
+
+;; $Pool$_fun_increaseAum
+((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, slice, int, int, cell, cell), ()) $Pool$_fun_increaseAum((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, slice, int, int, cell, cell) $self, int $trxId, slice $sender, int $amount) impure inline_ref;
+
 ;; $SendParameters$_constructor_to_value_mode_bounce_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice $to, int $value, int $mode, int $bounce, cell $body) inline;
 
@@ -599,9 +605,6 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 
 ;; $Pool$_fun_transferJetton
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, slice, int, int, cell, cell), ()) $Pool$_fun_transferJetton((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, slice, int, int, cell, cell) $self, slice $to, int $query_id, int $amount, slice $destination, slice $response_destination) impure inline_ref;
-
-;; $SendParameters$_constructor_to_value_mode
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline;
 
 ;; $Pool$_fun_transferEstimatedRemainValue
 ((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, slice, int, int, cell, cell), ()) $Pool$_fun_transferEstimatedRemainValue((slice, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, slice, slice, slice, slice, slice, slice, cell, cell, cell, int, cell, cell, int, cell, int, int, cell, cell, cell, int, int, int, int, int, int, slice, int, int, cell, cell) $self, int $gasConsumption, slice $to, int $executionFeeDelta) impure inline_ref;
@@ -743,9 +746,6 @@ int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline
 
 ;; $FeeChargedEvent$_constructor_trxId_lpFundAfter_realizedLpFundingFeeDelta_realizedLpRolloverFeeDelta_entryLpFundingFeeGrowth_entryRolloverFeeGrowth
 ((int, int, int, int, int, int)) $FeeChargedEvent$_constructor_trxId_lpFundAfter_realizedLpFundingFeeDelta_realizedLpRolloverFeeDelta_entryLpFundingFeeGrowth_entryRolloverFeeGrowth(int $trxId, int $lpFundAfter, int $realizedLpFundingFeeDelta, int $realizedLpRolloverFeeDelta, int $entryLpFundingFeeGrowth, int $entryRolloverFeeGrowth) inline;
-
-;; $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter
-((int, int, int)) $AumIncreasedEvent$_constructor_trxId_amount_lpFundAfter(int $trxId, int $amount, int $lpFundAfter) inline;
 
 ;; $LiquidityOrderCancelledEvent$_constructor_opType_orderId_trxId
 ((int, int, int)) $LiquidityOrderCancelledEvent$_constructor_opType_orderId_trxId(int $opType, int $orderId, int $trxId) inline;
