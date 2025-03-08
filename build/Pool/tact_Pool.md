@@ -3,7 +3,7 @@ Contract: Pool
 BOC Size: 28067 bytes
 
 # Types
-Total Types: 70
+Total Types: 69
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -84,10 +84,6 @@ Signature: `JettonUpdateContent{jetton_content:^cell}`
 ## FeedPrices
 TLB: `feed_prices#90cb4c4b trxId:uint64 lpFundingFeeGrowth:coins rolloverFeeGrowth:coins prices:dict<uint16, uint128> = FeedPrices`
 Signature: `FeedPrices{trxId:uint64,lpFundingFeeGrowth:coins,rolloverFeeGrowth:coins,prices:dict<uint16, uint128>}`
-
-## IncreaseAum
-TLB: `increase_aum#0ea2a5cf trxId:uint64 amount:coins = IncreaseAum`
-Signature: `IncreaseAum{trxId:uint64,amount:coins}`
 
 ## UpdatePoolConfig
 TLB: `update_pool_config#a62f856c orderLockTime:uint32 maxLpNetCap:coins lpRolloverFeeRate:uint32 liquidatedPositionShareRate:uint32 normalPositionShareRate:uint32 = UpdatePoolConfig`

@@ -1176,59 +1176,6 @@ function dictValueParserFeedPrices(): DictionaryValue<FeedPrices> {
     }
 }
 
-export type IncreaseAum = {
-    $$type: 'IncreaseAum';
-    trxId: bigint;
-    amount: bigint;
-}
-
-export function storeIncreaseAum(src: IncreaseAum) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(245540303, 32);
-        b_0.storeUint(src.trxId, 64);
-        b_0.storeCoins(src.amount);
-    };
-}
-
-export function loadIncreaseAum(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 245540303) { throw Error('Invalid prefix'); }
-    let _trxId = sc_0.loadUintBig(64);
-    let _amount = sc_0.loadCoins();
-    return { $$type: 'IncreaseAum' as const, trxId: _trxId, amount: _amount };
-}
-
-function loadTupleIncreaseAum(source: TupleReader) {
-    let _trxId = source.readBigNumber();
-    let _amount = source.readBigNumber();
-    return { $$type: 'IncreaseAum' as const, trxId: _trxId, amount: _amount };
-}
-
-function loadGetterTupleIncreaseAum(source: TupleReader) {
-    let _trxId = source.readBigNumber();
-    let _amount = source.readBigNumber();
-    return { $$type: 'IncreaseAum' as const, trxId: _trxId, amount: _amount };
-}
-
-function storeTupleIncreaseAum(source: IncreaseAum) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.trxId);
-    builder.writeNumber(source.amount);
-    return builder.build();
-}
-
-function dictValueParserIncreaseAum(): DictionaryValue<IncreaseAum> {
-    return {
-        serialize: (src, builder) => {
-            builder.storeRef(beginCell().store(storeIncreaseAum(src)).endCell());
-        },
-        parse: (src) => {
-            return loadIncreaseAum(src.loadRef().beginParse());
-        }
-    }
-}
-
 export type UpdatePoolConfig = {
     $$type: 'UpdatePoolConfig';
     orderLockTime: bigint;
@@ -5623,7 +5570,6 @@ const Pool_types: ABIType[] = [
     {"name":"JettonMint","header":2310479113,"fields":[{"name":"origin","type":{"kind":"simple","type":"address","optional":false}},{"name":"receiver","type":{"kind":"simple","type":"address","optional":false}},{"name":"amount","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"custom_payload","type":{"kind":"simple","type":"cell","optional":true}},{"name":"forward_ton_amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"forward_payload","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
     {"name":"JettonUpdateContent","header":1536108317,"fields":[{"name":"jetton_content","type":{"kind":"simple","type":"cell","optional":false}}]},
     {"name":"FeedPrices","header":2429242443,"fields":[{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"lpFundingFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"rolloverFeeGrowth","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"prices","type":{"kind":"dict","key":"uint","keyFormat":16,"value":"uint","valueFormat":128}}]},
-    {"name":"IncreaseAum","header":245540303,"fields":[{"name":"trxId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"UpdatePoolConfig","header":2788132204,"fields":[{"name":"orderLockTime","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"maxLpNetCap","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"lpRolloverFeeRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"liquidatedPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"normalPositionShareRate","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
     {"name":"UpdateBaseConfig","header":2824223913,"fields":[{"name":"gasConfig","type":{"kind":"simple","type":"GasConfig","optional":true}},{"name":"executorConfig","type":{"kind":"simple","type":"ExecutorConfig","optional":true}},{"name":"contractConfig","type":{"kind":"simple","type":"ContractConfig","optional":true}}]},
     {"name":"SetManager","header":3368041608,"fields":[{"name":"manager","type":{"kind":"simple","type":"address","optional":false}},{"name":"compensator","type":{"kind":"simple","type":"address","optional":false}},{"name":"claimer","type":{"kind":"simple","type":"address","optional":false}}]},
