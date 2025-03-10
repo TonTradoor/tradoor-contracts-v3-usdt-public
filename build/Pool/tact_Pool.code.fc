@@ -493,7 +493,7 @@
         ($tokenId, $price, $fresh$flag_11) = __tact_dict_next_uint_uint($prices, 16, $tokenId, 128);
     }
     int $globalNetLP = ($self'globalLPFund + $globalLPUnrealizedPnl);
-    var $fresh$ret_12 = (($self'tlpSupply == 0) ? 1000000000000000000 : (($globalNetLP * 1000000000000000000) / $self'tlpSupply));
+    var $fresh$ret_12 = (($self'tlpSupply == 0) ? 1000000000000000000 : (($globalNetLP * 1000000000000000000000) / $self'tlpSupply));
     return (($self'owner, $self'stopped, $self'orderLockTime, $self'maxLpNetCap, $self'lpRolloverFeeRate, $self'liquidatedPositionShareRate, $self'normalPositionShareRate, $self'mintJettonGas, $self'burnJettonGas, $self'transferJettonGas, $self'createPerpOrderGas, $self'cancelPerpOrderGas, $self'executePerpOrderGas, $self'createLiquidityOrderGas, $self'cancelLiquidityOrderGas, $self'executeLiquidityOrderGas, $self'lpMinExecutionFee, $self'perpMinExecutionFee, $self'minStorageReserve, $self'tlpJetton, $self'tlpWallet, $self'jettonWallet, $self'manager, $self'compensator, $self'claimer, $self'executors, $self'tokenConfigs, $self'liquidityOrders, $self'liquidityOrderIndexNext, $self'perpOrders, $self'perpOrderExs, $self'perpOrderIndexNext, $self'compensates, $self'compensateIndexNext, $self'perpPositionIndexNext, $self'perpPositions, $self'globalLPPositions, $self'globalPositions, $self'tlpSupply, $self'totalExecutionFee, $self'protocolTradingFee, $self'globalLPFund, $self'globalLpFundingFeeGrowth, $self'globalRolloverFeeGrowth, $self'multisig, $self'publicKey, $self'upgradeSeqno, $self'upgradeRequests, $self'prices), $fresh$ret_12);
 }
 
@@ -785,15 +785,15 @@
         $jettonDelta = $order'jettonDelta;
         int $availableQuota = $global_max(0, ($self'maxLpNetCap - $globalNetLP));
         throw_unless(10594, ($jettonDelta <= $availableQuota));
-        $tlpPrice = (($self'tlpSupply == 0) ? 1000000000000000000 : (($globalNetLP * 1000000000000000000) / $self'tlpSupply));
-        $tlpDelta = (($jettonDelta * 1000000000000000000) / $tlpPrice);
+        $tlpPrice = (($self'tlpSupply == 0) ? 1000000000000000000 : (($globalNetLP * 1000000000000000000000) / $self'tlpSupply));
+        $tlpDelta = (($jettonDelta * 1000000000000000000000) / $tlpPrice);
         $global_send($SendParameters$_constructor_to_value_bounce_body($self'tlpJetton, $self'mintJettonGas, true, $JettonMint$_store_cell($JettonMint$_constructor_origin_receiver_amount_custom_payload_forward_ton_amount_forward_payload($ctx'sender, $order'account, $tlpDelta, null(), 0, $global_emptySlice()))));
         $self'globalLPFund = $self'globalLPFund + $jettonDelta;
         $self'tlpSupply = $self'tlpSupply + $tlpDelta;
     } else {
         $tlpDelta = $order'jettonDelta;
-        $tlpPrice = (($globalNetLP * 1000000000000000000) / $self'tlpSupply);
-        $jettonDelta = (($tlpPrice * $tlpDelta) / 1000000000000000000);
+        $tlpPrice = (($globalNetLP * 1000000000000000000000) / $self'tlpSupply);
+        $jettonDelta = (($tlpPrice * $tlpDelta) / 1000000000000000000000);
         $global_send($SendParameters$_constructor_to_value_bounce_body($self'tlpWallet, $self'burnJettonGas, true, $JettonBurn$_store_cell($JettonBurn$_constructor_query_id_amount_response_destination_custom_payload($msg'trxId, $tlpDelta, $ctx'sender, null()))));
         $self'globalLPFund = $self'globalLPFund - $jettonDelta;
         $self'tlpSupply = $self'tlpSupply - $tlpDelta;

@@ -20,8 +20,8 @@ const DAY: Int = 24 * 60 * 60;
 
 const PERCENTAGE_BASIS_POINT: Int = pow(10, 9);
 const PRICE_DECIMAL_FACTOR: Int = pow(10, 18);
-const JETTON_DECIMAL: Int = pow(10, 9);
+const JETTON_DECIMAL: Int = pow(10, 6);
 const TLP_DECIMAL: Int = pow(10, 9);
 
 //(TLP_DECIMAL / JETTON_DECIMAL) * PRICE_DECIMAL_FACTOR;
-const JETTON_PRICE_DECIMAL_FACTOR: Int = pow(10, 18);
+const JETTON_PRICE_DECIMAL_FACTOR: Int = (pow(10, 9) / pow(10, 6)) * pow(10, 18);

@@ -17,7 +17,7 @@ export const OP_INCREASE_AUM = 3;
 export const ORDER_TYPE_LP = 1;
 export const ORDER_TYPE_PERP = 2;
 
-export const MOCK_DECIMAL = 9;
+export const MOCK_DECIMAL = 6;
 export const TLP_DECIMAL = 9;
 export const PRICE_DECIMAL = 18;
 export const PERCENTAGE_DECIMAL = 9;
