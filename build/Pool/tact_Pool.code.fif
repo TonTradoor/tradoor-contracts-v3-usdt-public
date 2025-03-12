@@ -235,6 +235,7 @@ PROGRAM{
   DECLPROC $CompensateData$_constructor_compensateIndexNext_compensate
   DECLPROC $Pool$_fun_compensate
   DECLPROC $Pool$_fun_tlpPrice
+  DECLPROC $Pool$_fun_prices
   DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
   DECLPROC $Pool$_fun_forward
   DECLPROC $Pool$_fun_reply
@@ -295,6 +296,7 @@ PROGRAM{
   129518 DECLMETHOD %perpOrder
   98837 DECLMETHOD %compensate
   116259 DECLMETHOD %tlpPrice
+  118316 DECLMETHOD %prices
   74107 DECLMETHOD %stopped
   83229 DECLMETHOD %owner
   120598 DECLMETHOD %upgradeUnlockTime
@@ -5102,6 +5104,9 @@ PROGRAM{
       DIV
     }>
   }>
+  $Pool$_fun_prices PROCREF:<{
+    DUP
+  }>
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
   }>
   $Pool$_fun_forward PROCREF:<{
@@ -8438,7 +8443,7 @@ PROGRAM{
     s0 50 s() XCHG
     $Pool$_fun_requireOwner INLINECALLDICT
         NOW
-    180 PUSHINT
+    259200 PUSHINT
     ADD
     s2 50 s() XCHG
     s1 51 s() XCHG
@@ -9093,6 +9098,17 @@ PROGRAM{
   %tlpPrice PROC:<{
     $Pool$_contract_load INLINECALLDICT
     $Pool$_fun_tlpPrice INLINECALLDICT
+    16 s() POP
+    15 BLKDROP
+    16 s() POP
+    15 BLKDROP
+    16 s() POP
+    15 BLKDROP
+    NIP
+  }>
+  %prices PROC:<{
+    $Pool$_contract_load INLINECALLDICT
+    $Pool$_fun_prices INLINECALLDICT
     16 s() POP
     15 BLKDROP
     16 s() POP

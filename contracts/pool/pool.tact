@@ -1698,4 +1698,8 @@ contract Pool with Deployable, Resumable, Upgradable {
         return self.tlpSupply == 0 ? PRICE_DECIMAL_FACTOR : (globalNetLP * JETTON_PRICE_DECIMAL_FACTOR / self.tlpSupply);
     }
 
+    get fun prices(): map<Int as uint16, Int as uint128> {
+        return self.prices;
+    }
+
 }

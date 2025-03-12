@@ -1,29 +1,45 @@
 {
-  "nextDeployId": 4,
+  "nextDeployId": 1,
   "mockJetton": "EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs",
-  "tlpJetton": "EQAzLJFviFomBRyzoSHwDCvaRZM56xA982_khN8Lh7OThD9z",
-  "pool": "EQD_EzjJ9u0fpMJkoZBSv_ZNEMitAoYo9SsuD0s1ehIifnnn",
+  "tlpJetton": "",
+  "pool": "",
   "executors": [
-    "UQA3BjVWvuJCidHk0oJ2FnCLMMtJQR7W5LisCkhuGvwcjs3W",
-    "UQAGu6511uhKGnTVhopH0id_SDkCOqW5db4Zauko-q40h751",
-    "UQA4UZR-VroYQ2qufXlov0koaTj2cbI8kMaIre9xzKzWjOZd",
-    "UQDRzpbtdHE6R-v9MRGhnDgWyws7alKrcGr4lkmQxTqulOZN"
+    "0QBWA3yJYPJ9LJCdy2WlzoGO2_0Cw6l7D3exFw25hxR_bDkS",
+    "0QAjBLsS_axAf647M2sPtCVCsJ-kI4WP82N72gPLHjsNHY9i",
+    "0QDuflXsakZbnfeFGJXSmNRoBhdtzhmeyNAgsTZLZDcd8SWk"
   ],
+  "members": [
+    {
+      "address": "EQAtHKMrPPufS4svtQAszP0A8GD7nGHp7gbTWUGndlRqnMct",
+      "weight": 1
+    },
+    {
+      "address": "UQDc4usEhndbyr6ENpdjRaN92nL9qgk7eghSMEzElfRffqm9",
+      "weight": 1
+    }
+  ],
+  "multisig": "EQAtB_BdcExUs2yrjJG5DCgW_oMffxNa3L2fU_nueHu9-m53",
+  "manager": "UQAtHKMrPPufS4svtQAszP0A8GD7nGHp7gbTWUGndlRqnJro",
   "compensator": "UQAtHKMrPPufS4svtQAszP0A8GD7nGHp7gbTWUGndlRqnJro",
   "claimer": "UQAtHKMrPPufS4svtQAszP0A8GD7nGHp7gbTWUGndlRqnJro",
-  "orderLockTime": 180,
+  "mintJettonGas": 0.03,
+  "burnJettonGas": 0.03,
+  "transferJettonGas": 0.038,
+  "createPerpOrderGas": 0.027,
+  "cancelPerpOrderGas": 0.023,
+  "executePerpOrderGas": 0.037,
+  "createLiquidityOrderGas": 0.025,
+  "cancelLiquidityOrderGas": 0.023,
+  "executeLiquidityOrderGas": 0.03,
+  "minStorageReserve": 0.01,
   "lpMinExecutionFee": 0.05,
   "perpMinExecutionFee": 0.05,
-  "gasForLpTrader": 0.022,
-  "gasForLpExecutor": 0.032,
-  "gasForPerpTrader": 0.025,
-  "gasForPerpExecutor": 0.045,
-  "minTonsForStorage": 0.01,
-  "gasForTransferJetton": 0.038,
-  "gasForMintTlp": 0.04,
-  "gasForBurnTlp": 0.025,
+  "orderLockTime": 180,
   "lpRolloverFeeRate": 0.5,
+  "liquidatedPositionShareRate": 0.35,
+  "normalPositionShareRate": 0.35,
   "maxLpNetCap": 1000000,
+  "requiredWeight": 1,
   "tokens": [
     {
       "tokenId": 1,
@@ -33,216 +49,6 @@
       "liquidationFee": 0.5,
       "maintenanceRate": 0.005,
       "tradingFeeRate": 0.0009,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 2,
-      "name": "ETH",
-      "enable": true,
-      "maxLeverage": 105,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.005,
-      "tradingFeeRate": 0.0009,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 3,
-      "name": "TON",
-      "enable": true,
-      "maxLeverage": 53,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.01,
-      "tradingFeeRate": 0.0009,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 4,
-      "name": "NOT",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 5,
-      "name": "SOL",
-      "enable": true,
-      "maxLeverage": 105,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.005,
-      "tradingFeeRate": 0.0009,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 6,
-      "name": "DOGS",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 7,
-      "name": "CATI",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 8,
-      "name": "HMSTR",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 9,
-      "name": "GOAT",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 10,
-      "name": "ACT",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 11,
-      "name": "PNUT",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 12,
-      "name": "DOGE",
-      "enable": true,
-      "maxLeverage": 53,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.01,
-      "tradingFeeRate": 0.0009,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 13,
-      "name": "BAN",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 14,
-      "name": "AKT",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 15,
-      "name": "XRP",
-      "enable": true,
-      "maxLeverage": 53,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.01,
-      "tradingFeeRate": 0.0009,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 16,
-      "name": "SUI",
-      "enable": true,
-      "maxLeverage": 53,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.01,
-      "tradingFeeRate": 0.0009,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 17,
-      "name": "SWARMS",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 18,
-      "name": "SONIC",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 19,
-      "name": "BGB",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 20,
-      "name": "VIRTUAL",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.0015,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 21,
-      "name": "TRUMP",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.002,
-      "lpTradingFeeRate": 0.65
-    },
-    {
-      "tokenId": 22,
-      "name": "MELANIA",
-      "enable": true,
-      "maxLeverage": 21,
-      "liquidationFee": 0.5,
-      "maintenanceRate": 0.015,
-      "tradingFeeRate": 0.002,
       "lpTradingFeeRate": 0.65
     }
   ]
