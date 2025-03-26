@@ -45,7 +45,7 @@ export async function run(provider: NetworkProvider) {
     // wait for trx
     const transDone = await waitForTransaction(provider, pool.address, lastTrx, 20);
     if (transDone) {
-        console.log(`execute LP success`);
+        console.log(`execute liquidity order success`);
     }
 
 }

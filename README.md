@@ -1,4 +1,4 @@
-# tradoor-contracts-v3
+# tradoor-contracts-v3-usdt
 
 ## Project structure
 
@@ -66,24 +66,24 @@ yarn rundev mintMockJetton
 
 add 'executor' in config/testnet.json
 
-yarn rundev updatePoolConfig
+yarn rundev updateBaseConfig
 
-- create LP increase order:
+- create add liquidity order:
 
-yarn rundev lpCreateIncreaseOrder
+yarn rundev addLiquidity
 
-- create LP decrease order:
+- create remove liquidity order:
 
-yarn rundev lpCreateDecreaseOrder
+yarn rundev removeLiquidity
 
-- execute LP order：
+- execute liqidity order：
 
-yarn rundev lpExecuteDecreaseOrder
+yarn rundev executeLiquidityOrder
 
 - create Perp increase order:
 
-yarn rundev perpCreateIncreaseOrder
+yarn rundev createIncreaseOrder
 
 - create Perp decrease order:
 
-yarn rundev perpCreateDecreaseOrder
+yarn rundev createDecreaseOrder
