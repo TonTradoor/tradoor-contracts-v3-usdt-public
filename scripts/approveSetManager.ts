@@ -11,6 +11,9 @@ export async function run(provider: NetworkProvider) {
     let addr = Address.parse(await provider.ui().input('addr:'));
     const multisigSigner = attachMultisigSigner(provider, addr);
 
+    const request = await multisigSigner.getRequest();
+    console.log(`request:`, request);
+
     const lastTrx = await getLastTransaction(provider, multisigSigner.address);
     await multisigSigner.send(
         provider.sender(),
