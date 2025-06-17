@@ -61,40 +61,40 @@ builder $SetManager$_store(builder build_0, (slice, slice, slice) v) inline;
 cell $SetManager$_store_cell((slice, slice, slice) v) inline;
 
 ;; $LaunchConfig$_load
-(slice, ((cell, int))) $LaunchConfig$_load(slice sc_0) inline;
+(slice, ((cell, int, int))) $LaunchConfig$_load(slice sc_0) inline;
 
 ;; $Request$_store
-builder $Request$_store(builder build_0, (slice, int, slice, slice, slice) v) inline;
+builder $Request$_store(builder build_0, (slice, slice, slice, slice) v) inline;
 
 ;; $Request$_load
-(slice, ((slice, int, slice, slice, slice))) $Request$_load(slice sc_0) inline;
+(slice, ((slice, slice, slice, slice))) $Request$_load(slice sc_0) inline;
 
 ;; $Signed$_load
-(slice, (((slice, int, slice, slice, slice)))) $Signed$_load(slice sc_0) inline;
+(slice, (((slice, slice, slice, slice)))) $Signed$_load(slice sc_0) inline;
 
 ;; $Multisig$_store
-builder $Multisig$_store(builder build_0, (slice, cell, int) v) inline;
+builder $Multisig$_store(builder build_0, (slice, cell, int, int) v) inline;
 
 ;; $Multisig$_load
-(slice, ((slice, cell, int))) $Multisig$_load(slice sc_0) inline;
+(slice, ((slice, cell, int, int))) $Multisig$_load(slice sc_0) inline;
 
 ;; $StateInit$_not_null
 ((cell, cell)) $StateInit$_not_null(tuple v) inline;
 
 ;; $MultisigSigner$init$_store
-builder $MultisigSigner$init$_store(builder build_0, (slice, cell, int, (slice, int, slice, slice, slice)) v) inline;
+builder $MultisigSigner$init$_store(builder build_0, (slice, cell, int, int, (slice, slice, slice, slice)) v) inline;
 
 ;; $Multisig$init$_load
-(slice, ((cell, int))) $Multisig$init$_load(slice sc_0) inline;
+(slice, ((cell, int, int))) $Multisig$init$_load(slice sc_0) inline;
 
 ;; $Multisig$_contract_init
-(slice, cell, int) $Multisig$_contract_init(cell $members, int $requiredWeight) impure inline_ref;
+(slice, cell, int, int) $Multisig$_contract_init(cell $members, int $requiredWeight, int $timeout) impure inline_ref;
 
 ;; $Multisig$_contract_load
-(slice, cell, int) $Multisig$_contract_load() impure inline_ref;
+(slice, cell, int, int) $Multisig$_contract_load() impure inline_ref;
 
 ;; $Multisig$_contract_store
-() $Multisig$_contract_store((slice, cell, int) v) impure inline;
+() $Multisig$_contract_store((slice, cell, int, int) v) impure inline;
 
 ;; $global_contractAddress
 slice $global_contractAddress((cell, cell) $s) impure inline;
@@ -103,31 +103,31 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
 
 ;; $MultisigSigner$_init_child
-(cell, cell) $MultisigSigner$_init_child(cell sys', slice $master, cell $members, int $requiredWeight, (slice, int, slice, slice, slice) $request) inline_ref;
+(cell, cell) $MultisigSigner$_init_child(cell sys', slice $master, cell $members, int $requiredWeight, int $timeout, (slice, slice, slice, slice) $request) inline_ref;
 
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;
 
 ;; $Multisig$_fun_member
-((slice, cell, int), int) $Multisig$_fun_member((slice, cell, int) $self, slice $address) impure inline_ref;
+((slice, cell, int, int), int) $Multisig$_fun_member((slice, cell, int, int) $self, slice $address) impure inline_ref;
 
 ;; $Multisig$_fun_members
-((slice, cell, int), cell) $Multisig$_fun_members((slice, cell, int) $self) impure inline_ref;
+((slice, cell, int, int), cell) $Multisig$_fun_members((slice, cell, int, int) $self) impure inline_ref;
 
 ;; $Multisig$_fun_forward
-((slice, cell, int), ()) $Multisig$_fun_forward((slice, cell, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
+((slice, cell, int, int), ()) $Multisig$_fun_forward((slice, cell, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
 
 ;; $Multisig$_fun_reply
-((slice, cell, int), ()) $Multisig$_fun_reply((slice, cell, int) $self, cell $body) impure inline;
+((slice, cell, int, int), ()) $Multisig$_fun_reply((slice, cell, int, int) $self, cell $body) impure inline;
 
 ;; $Multisig$_fun_notify
-((slice, cell, int), ()) $Multisig$_fun_notify((slice, cell, int) $self, cell $body) impure inline;
+((slice, cell, int, int), ()) $Multisig$_fun_notify((slice, cell, int, int) $self, cell $body) impure inline;
 
 ;; $Multisig$_fun_requireOwner
-((slice, cell, int), ()) $Multisig$_fun_requireOwner((slice, cell, int) $self) impure inline_ref;
+((slice, cell, int, int), ()) $Multisig$_fun_requireOwner((slice, cell, int, int) $self) impure inline_ref;
 
 ;; $Multisig$_fun_owner
-((slice, cell, int), slice) $Multisig$_fun_owner((slice, cell, int) $self) impure inline_ref;
+((slice, cell, int, int), slice) $Multisig$_fun_owner((slice, cell, int, int) $self) impure inline_ref;
 
 ;; $SendParameters$_constructor_value_to_mode_bounce_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_value_to_mode_bounce_code_data(int $value, slice $to, int $mode, int $bounce, cell $code, cell $data) inline;

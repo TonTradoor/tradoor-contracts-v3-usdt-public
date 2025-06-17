@@ -10,35 +10,36 @@
 ;; Contract MultisigSigner functions
 ;;
 
-(slice, cell, int, int, int, (slice, int, slice, slice, slice)) $MultisigSigner$_contract_init(slice $master, cell $members, int $requiredWeight, (slice, int, slice, slice, slice) $request) impure inline_ref {
-    var (($request'to, $request'timeout, $request'manager, $request'compensator, $request'claimer)) = $request;
-    var (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer))) = (null(), null(), 0, null(), null(), null());
+(slice, cell, int, int, int, (slice, slice, slice, slice), int) $MultisigSigner$_contract_init(slice $master, cell $members, int $requiredWeight, int $timeout, (slice, slice, slice, slice) $request) impure inline_ref {
+    var (($request'to, $request'manager, $request'compensator, $request'claimer)) = $request;
+    var (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer), $self'expired)) = (null(), null(), 0, null(), null(), null(), null());
     $self'master = $master;
     $self'members = $members;
     $self'requiredWeight = $requiredWeight;
     $self'completed = false;
-    ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer) = ($request'to, $request'timeout, $request'manager, $request'compensator, $request'claimer);
-    return ($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer));
+    $self'expired = ($global_now() + $timeout);
+    ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer) = ($request'to, $request'manager, $request'compensator, $request'claimer);
+    return ($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer), $self'expired);
 }
 
-((slice, cell, int, int, int, (slice, int, slice, slice, slice)), (slice, int, slice, slice, slice)) $MultisigSigner$_fun_request((slice, cell, int, int, int, (slice, int, slice, slice, slice)) $self) impure inline_ref {
-    var (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer))) = $self;
-    var $fresh$ret_0 = ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer);
-    return (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer)), $fresh$ret_0);
+((slice, cell, int, int, int, (slice, slice, slice, slice), int), (slice, slice, slice, slice)) $MultisigSigner$_fun_request((slice, cell, int, int, int, (slice, slice, slice, slice), int) $self) impure inline_ref {
+    var (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer), $self'expired)) = $self;
+    var $fresh$ret_0 = ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer);
+    return (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer), $self'expired), $fresh$ret_0);
 }
 
 ;;
 ;; Receivers of a Contract MultisigSigner
 ;;
 
-(((slice, cell, int, int, int, (slice, int, slice, slice, slice))), ()) %$MultisigSigner$_internal_empty((slice, cell, int, int, int, (slice, int, slice, slice, slice)) $self) impure inline {
-    var ($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer)) = $self;
-    return (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer)), ());
+(((slice, cell, int, int, int, (slice, slice, slice, slice), int)), ()) %$MultisigSigner$_internal_empty((slice, cell, int, int, int, (slice, slice, slice, slice), int) $self) impure inline {
+    var ($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer), $self'expired) = $self;
+    return (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer), $self'expired), ());
 }
 
-((slice, cell, int, int, int, (slice, int, slice, slice, slice)), ()) $MultisigSigner$_internal_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039((slice, cell, int, int, int, (slice, int, slice, slice, slice)) $self) impure inline {
-    var ($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer)) = $self;
-    throw_unless(4755, ($self'request'timeout > $global_now()));
+((slice, cell, int, int, int, (slice, slice, slice, slice), int), ()) $MultisigSigner$_internal_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039((slice, cell, int, int, int, (slice, slice, slice, slice), int) $self) impure inline {
+    var ($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer), $self'expired) = $self;
+    throw_unless(4755, ($self'expired > $global_now()));
     throw_unless(40810, (~ $self'completed));
     slice $sender = __tact_context_get_sender();
     int $_weight = __tact_dict_get_slice_uint($self'members, 267, $sender, 8);
@@ -48,9 +49,9 @@
     $self'weight = ($self'weight + $weight);
     if (($self'weight >= $self'requiredWeight)) {
         $self'completed = true;
-        $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'master, 130, false, $Signed$_store_cell($Signed$_constructor_request(($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer)))));
+        $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'master, 130, false, $Signed$_store_cell($Signed$_constructor_request(($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer)))));
     }
-    return (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'timeout, $self'request'manager, $self'request'compensator, $self'request'claimer)), ());
+    return (($self'master, $self'members, $self'weight, $self'requiredWeight, $self'completed, ($self'request'to, $self'request'manager, $self'request'compensator, $self'request'claimer), $self'expired), ());
 }
 
 ;;
@@ -71,7 +72,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract MultisigSigner
 ;;
 
-((slice, cell, int, int, int, (slice, int, slice, slice, slice)), int) $MultisigSigner$_contract_router_internal((slice, cell, int, int, int, (slice, int, slice, slice, slice)) self, int msg_bounced, slice in_msg) impure inline_ref {
+((slice, cell, int, int, int, (slice, slice, slice, slice), int), int) $MultisigSigner$_contract_router_internal((slice, cell, int, int, int, (slice, slice, slice, slice), int) self, int msg_bounced, slice in_msg) impure inline_ref {
     ;; Handle bounced messages
     if (msg_bounced) {
         return (self, true);

@@ -1,5 +1,5 @@
 import { NetworkProvider } from "@ton/blueprint";
-import { ContractProvider, SendMode, beginCell, Sender, Contract, Address } from "@ton/core";
+import { Address } from "@ton/core";
 import assert from "assert";
 
 export function getSenderAddress(provider: NetworkProvider): Address {

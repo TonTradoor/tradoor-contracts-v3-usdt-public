@@ -25,46 +25,46 @@ builder __tact_store_bool(builder b, int v) inline;
 int __tact_dict_get_slice_uint(cell d, int kl, slice k, int vl) inline;
 
 ;; $Request$_store
-builder $Request$_store(builder build_0, (slice, int, slice, slice, slice) v) inline;
+builder $Request$_store(builder build_0, (slice, slice, slice, slice) v) inline;
 
 ;; $Request$_load
-(slice, ((slice, int, slice, slice, slice))) $Request$_load(slice sc_0) inline;
+(slice, ((slice, slice, slice, slice))) $Request$_load(slice sc_0) inline;
 
 ;; $Signed$_store
-builder $Signed$_store(builder build_0, ((slice, int, slice, slice, slice)) v) inline;
+builder $Signed$_store(builder build_0, ((slice, slice, slice, slice)) v) inline;
 
 ;; $Signed$_store_cell
-cell $Signed$_store_cell(((slice, int, slice, slice, slice)) v) inline;
+cell $Signed$_store_cell(((slice, slice, slice, slice)) v) inline;
 
 ;; $MultisigSigner$_store
-builder $MultisigSigner$_store(builder build_0, (slice, cell, int, int, int, (slice, int, slice, slice, slice)) v) inline;
+builder $MultisigSigner$_store(builder build_0, (slice, cell, int, int, int, (slice, slice, slice, slice), int) v) inline;
 
 ;; $MultisigSigner$_load
-(slice, ((slice, cell, int, int, int, (slice, int, slice, slice, slice)))) $MultisigSigner$_load(slice sc_0) inline;
+(slice, ((slice, cell, int, int, int, (slice, slice, slice, slice), int))) $MultisigSigner$_load(slice sc_0) inline;
 
 ;; $Request$_to_external
-(slice, int, slice, slice, slice) $Request$_to_external(((slice, int, slice, slice, slice)) v) inline;
+(slice, slice, slice, slice) $Request$_to_external(((slice, slice, slice, slice)) v) inline;
 
 ;; $MultisigSigner$init$_load
-(slice, ((slice, cell, int, (slice, int, slice, slice, slice)))) $MultisigSigner$init$_load(slice sc_0) inline;
+(slice, ((slice, cell, int, int, (slice, slice, slice, slice)))) $MultisigSigner$init$_load(slice sc_0) inline;
 
 ;; $MultisigSigner$_contract_init
-(slice, cell, int, int, int, (slice, int, slice, slice, slice)) $MultisigSigner$_contract_init(slice $master, cell $members, int $requiredWeight, (slice, int, slice, slice, slice) $request) impure inline_ref;
+(slice, cell, int, int, int, (slice, slice, slice, slice), int) $MultisigSigner$_contract_init(slice $master, cell $members, int $requiredWeight, int $timeout, (slice, slice, slice, slice) $request) impure inline_ref;
 
 ;; $MultisigSigner$_contract_load
-(slice, cell, int, int, int, (slice, int, slice, slice, slice)) $MultisigSigner$_contract_load() impure inline_ref;
+(slice, cell, int, int, int, (slice, slice, slice, slice), int) $MultisigSigner$_contract_load() impure inline_ref;
 
 ;; $MultisigSigner$_contract_store
-() $MultisigSigner$_contract_store((slice, cell, int, int, int, (slice, int, slice, slice, slice)) v) impure inline;
+() $MultisigSigner$_contract_store((slice, cell, int, int, int, (slice, slice, slice, slice), int) v) impure inline;
 
 ;; $global_send
 int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
 
 ;; $MultisigSigner$_fun_request
-((slice, cell, int, int, int, (slice, int, slice, slice, slice)), (slice, int, slice, slice, slice)) $MultisigSigner$_fun_request((slice, cell, int, int, int, (slice, int, slice, slice, slice)) $self) impure inline_ref;
+((slice, cell, int, int, int, (slice, slice, slice, slice), int), (slice, slice, slice, slice)) $MultisigSigner$_fun_request((slice, cell, int, int, int, (slice, slice, slice, slice), int) $self) impure inline_ref;
 
 ;; $SendParameters$_constructor_value_to_mode_bounce_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_value_to_mode_bounce_body(int $value, slice $to, int $mode, int $bounce, cell $body) inline;
 
 ;; $Signed$_constructor_request
-(((slice, int, slice, slice, slice))) $Signed$_constructor_request((slice, int, slice, slice, slice) $request) inline;
+(((slice, slice, slice, slice))) $Signed$_constructor_request((slice, slice, slice, slice) $request) inline;

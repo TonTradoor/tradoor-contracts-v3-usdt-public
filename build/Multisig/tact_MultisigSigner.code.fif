@@ -81,13 +81,11 @@ PROGRAM{
     }>
   }>
   $Request$_store PROCINLINE:<{
-    3281407310 PUSHINT
-    s0 s6 XCHG2
+    2765516566 PUSHINT
+    s0 s5 XCHG2
     32 STU
-    s0 s4 XCHG2
+    s0 s3 XCHG2
     __tact_store_address INLINECALLDICT
-    s1 s2 XCHG
-    32 STU
     SWAP
     __tact_store_address INLINECALLDICT
     SWAP
@@ -102,12 +100,11 @@ PROGRAM{
   $Request$_load PROCINLINE:<{
     32 LDU
     SWAP
-    3281407310 PUSHINT
+    2765516566 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address INLINECALLDICT
     SWAP
-    32 LDU
     __tact_load_address INLINECALLDICT
     SWAP
     __tact_load_address INLINECALLDICT
@@ -117,20 +114,19 @@ PROGRAM{
     CTOS
     __tact_load_address INLINECALLDICT
     NIP
-    s1 s5 XCHG
     s1 s4 XCHG
     s3 s3 s0 XCHG3
   }>
   $Signed$_store PROCINLINE:<{
-    586748514 PUSHINT
-    s0 s6 XCHG2
+    1614315750 PUSHINT
+    s0 s5 XCHG2
     32 STU
-    s0 s5 XCHG
+    s0 s4 XCHG
     $Request$_store INLINECALLDICT
   }>
   $Signed$_store_cell PROCINLINE:<{
     NEWC
-    5 -ROLL
+    4 -ROLL
     $Signed$_store INLINECALLDICT
     ENDC
   }>
@@ -145,8 +141,10 @@ PROGRAM{
     8 STU
     1 STI
     NEWC
-    s4 s6 s5 XCHG3
+    s3 s4 s4 XCHG3
+    s0 s6 XCHG
     $Request$_store INLINECALLDICT
+    32 STU
     ENDC
     SWAP
     STREF
@@ -162,13 +160,16 @@ PROGRAM{
     SWAP
     CTOS
     $Request$_load INLINECALLDICT
-    s5 POP
+    s0 s4 XCHG
+    32 LDU
+    DROP
     s5 s10 XCHG
     s5 s9 XCHG
     s5 s8 XCHG
     s5 s7 XCHG
     s5 s6 XCHG
-    4 ROLL
+    s3 s4 XCHG
+    s1 s3 s0 XCHG3
   }>
   $Request$_to_external PROCINLINE:<{
   }>
@@ -178,23 +179,30 @@ PROGRAM{
     LDDICT
     257 PUSHINT
     LDIX
+    257 PUSHINT
+    LDIX
     LDREF
     SWAP
     CTOS
     $Request$_load INLINECALLDICT
-    s5 POP
-    s5 s8 XCHG
-    s5 s7 XCHG
-    s5 s6 XCHG
-    4 ROLL
+    s4 POP
+    s4 s8 XCHG
+    s4 s7 XCHG
+    s4 s6 XCHG
+    s4 s5 XCHG
+    3 ROLL
   }>
   $MultisigSigner$_contract_init PROCREF:<{
     0 PUSHINT
-    s0 s6 XCHG
-    s0 s5 XCHG
     FALSE
-    s0 s5 XCHG
-    3 2 BLKSWAP
+        NOW
+    s0 s7 XCHG2
+    ADD
+    s1 s7 XCHG
+    s1 s6 XCHG
+    s1 s5 XCHG
+    s1 s4 XCHG
+    s3 s3 s0 XCHG3
   }>
   $MultisigSigner$_contract_load PROCREF:<{
     c4 PUSH
@@ -336,7 +344,7 @@ PROGRAM{
   }>
   $MultisigSigner$_fun_request PROCREF:<{
     s4 s3 s2 PUSH3
-    s4 s3 PUSH2
+    s4 PUSH
   }>
   $SendParameters$_constructor_value_to_mode_bounce_body PROCINLINE:<{
     s4 s4 s0 XCHG3
@@ -350,7 +358,7 @@ PROGRAM{
   $MultisigSigner$_internal_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039 PROCINLINE:<{
     4755 PUSHINT
         NOW
-    s5 s(-1) PUXC
+    s2 s(-1) PUXC
     GREATER
     THROWANYIFNOT
     40810 PUSHINT
@@ -384,7 +392,7 @@ PROGRAM{
       130 PUSHINT
       FALSE
       s7 s6 s5 PUSH3
-      s7 s13 PUSH2
+      s7 PUSH
       $Signed$_constructor_request INLINECALLDICT
       $Signed$_store_cell INLINECALLDICT
       s13 PUSH
@@ -399,7 +407,7 @@ PROGRAM{
   %request PROC:<{
     $MultisigSigner$_contract_load INLINECALLDICT
     $MultisigSigner$_fun_request INLINECALLDICT
-    10 5 BLKDROP2
+    10 4 BLKDROP2
     $Request$_to_external INLINECALLDICT
   }>
   lazy_deployment_completed PROC:<{

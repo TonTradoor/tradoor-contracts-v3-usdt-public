@@ -1371,7 +1371,7 @@ export class MockJettonWallet implements Contract {
         errors: MockJettonWallet_errors,
     };
     
-    private constructor(address: Address, init?: { code: Cell, data: Cell }) {
+    constructor(address: Address, init?: { code: Cell, data: Cell }) {
         this.address = address;
         this.init = init;
     }

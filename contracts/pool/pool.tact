@@ -28,6 +28,9 @@ contract Pool with Deployable, Resumable, Upgradable {
     createLiquidityOrderGas: Int as coins = 0;
     cancelLiquidityOrderGas: Int as coins = 0;
     executeLiquidityOrderGas: Int as coins = 0;
+    updateConfigGas: Int as coins = 0;
+    claimProtocolFeeGas: Int as coins = 0;
+    feedPricesGas: Int as coins = 0;
 
     lpMinExecutionFee: Int as coins = ton("0.05"); // fee for every operation
     perpMinExecutionFee: Int as coins = ton("0.1"); // fee for every operation
@@ -101,6 +104,8 @@ contract Pool with Deployable, Resumable, Upgradable {
      */
     receive(msg: UpdateBaseConfig) {
         self.requireOwner();
+        let ctx: Context = context();
+        require(ctx.value >= self.updateConfigGas, "gas not enough");
         // contract
         let contractConfig: ContractConfig? = msg.contractConfig;
         if (contractConfig != null) {
@@ -135,6 +140,9 @@ contract Pool with Deployable, Resumable, Upgradable {
             self.createLiquidityOrderGas = gasConfig!!.createLiquidityOrderGas;
             self.cancelLiquidityOrderGas = gasConfig!!.cancelLiquidityOrderGas;
             self.executeLiquidityOrderGas = gasConfig!!.executeLiquidityOrderGas;
+            self.updateConfigGas = gasConfig!!.updateConfigGas;
+            self.claimProtocolFeeGas = gasConfig!!.claimProtocolFeeGas;
+            self.feedPricesGas = gasConfig!!.feedPricesGas;
         }
 
         self.reply("base config updated".asComment());
@@ -182,7 +190,9 @@ contract Pool with Deployable, Resumable, Upgradable {
      * @param msg The ClaimProtocolFee message containing the transaction ID and fee receiver.
      */
     receive(msg: ClaimProtocolFee) {
-        require(sender() == self.claimer, "invalid sender");
+        let ctx: Context = context();
+        require(ctx.sender == self.claimer, "invalid sender");
+        require(ctx.value >= self.claimProtocolFeeGas, "gas not enough");
         require(self.protocolTradingFee > 0, "no enough jettons to claim");
         send(SendParameters{
                 to: self.jettonWallet, 
@@ -193,7 +203,7 @@ contract Pool with Deployable, Resumable, Upgradable {
                     query_id: msg.trxId,
                     amount: self.protocolTradingFee,
                     destination: msg.feeReceiver,
-                    response_destination: msg.feeReceiver,
+                    response_destination: ctx.sender,
                     custom_payload: null,
                     forward_ton_amount: 0,
                     forward_payload: beginCell().storeUint(0, 1).endCell().asSlice()
@@ -205,7 +215,12 @@ contract Pool with Deployable, Resumable, Upgradable {
     receive() {}
 
     receive (msg: FeedPrices) {
-        require(self.executors.exists(sender()), "invalid sender");
+        let ctx: Context = context();
+        require(self.executors.exists(ctx.sender), "invalid sender");
+        require(ctx.value >= self.feedPricesGas, "gas not enough");
+        foreach ( tokenId, _ in self.tokenConfigs) {
+            require(msg.prices.exists(tokenId), "price not exist");
+        }
         self.prices = msg.prices;
 
         // charge funding fee
@@ -234,7 +249,10 @@ contract Pool with Deployable, Resumable, Upgradable {
     }
 
     fun increaseAum (trxId : Int, sender: Address, amount: Int) {
-        require(self.manager == sender, "invalid sender");
+        if (self.manager != sender) {
+            self.refundJetton(trxId, amount, sender, sender);
+            return;
+        }
         self.globalLPFund += amount;
 
         emit(AumIncreasedEvent{ trxId, amount, lpFundAfter: self.globalLPFund }.toCell());
@@ -601,6 +619,22 @@ contract Pool with Deployable, Resumable, Upgradable {
             return;
         }
 
+        if (isLong) {
+            if (tpSize > 0 && tpPrice > 0) {
+                require(tpPrice >= triggerPrice, "tp price must be greater than trigger price");
+            }
+            if (slSize > 0 && slPrice > 0) {
+                require(slPrice <= triggerPrice, "sl price must be less than trigger price");
+            }
+        } else {
+            if (tpSize > 0 && tpPrice > 0) {
+                require(tpPrice <= triggerPrice, "tp price must be less than trigger price");
+            }
+            if (slSize > 0 && slPrice > 0) {
+                require(slPrice >= triggerPrice, "sl price must be greater than trigger price");
+            }
+        }
+
         let executionFeeMultiple: Int = 1;
         if (tpSize > 0 && tpPrice > 0) {
             executionFeeMultiple += 1;
@@ -657,6 +691,26 @@ contract Pool with Deployable, Resumable, Upgradable {
         self.requireNotStopped();
         
         let ctx: Context = context();
+
+        let position: PerpPosition = self.getPosition(msg.tokenId, ctx.sender, msg.isLong);
+        require(position.size > 0, "position not exist");
+
+        let entryPrice: Int = position.entryPrice;
+        if (msg.isLong) {
+            if (msg.tpSize > 0 && msg.tpPrice > 0) {
+                require(msg.tpPrice >= entryPrice, "tp price must be greater than trigger price");
+            }
+            if (msg.slSize > 0 && msg.slPrice > 0) {
+                require(msg.slPrice <= entryPrice, "sl price must be less than trigger price");
+            }
+        } else {
+            if (msg.tpSize > 0 && msg.tpPrice > 0) {
+                require(msg.tpPrice <= entryPrice, "tp price must be less than trigger price");
+            }
+            if (msg.slSize > 0 && msg.slPrice > 0) {
+                require(msg.slPrice >= entryPrice, "sl price must be greater than trigger price");
+            }
+        }
 
         let executionFeeMultiple: Int = 0;
         if (msg.tpSize > 0 && msg.tpPrice > 0) {
@@ -842,10 +896,6 @@ contract Pool with Deployable, Resumable, Upgradable {
         let order: PerpOrder = orderOpt!!;
 
         require(ctx.value >= self.executePerpOrderGas + self.transferJettonGas, "gas not enough");
-        require(!order.isPending, "order is pending");
-
-        order.isPending = true;
-        self.perpOrders.set(msg.orderId, order);
 
         if (!(order.opType == OP_TYPE_PERP_INCREASE_MARKET || order.opType == OP_TYPE_PERP_DECREASE_MARKET)){
             require(order.triggerAbove ? (msg.price >= order.triggerPrice) : (msg.price <= order.triggerPrice), "not reach trigger price");
@@ -885,6 +935,22 @@ contract Pool with Deployable, Resumable, Upgradable {
             self.totalExecutionFee -= order.executionFee;
         }
         self.transferEstimatedRemainValue(self.executePerpOrderGas + extraGas, sender(), -order.executionFee);
+    }
+
+    fun getPosition(tokenId: Int, account: Address, isLong: Bool): PerpPosition {
+        let accountPerpPositionOpt: AccountPerpPosition? = self.perpPositions.get(tokenId);
+        let accountPerpPosition: AccountPerpPosition = accountPerpPositionOpt != null ? accountPerpPositionOpt!! : AccountPerpPosition{
+            positions: emptyMap()
+        };
+
+        let directionPerpPositionOpt: DirectionPerpPosition? = accountPerpPosition.positions.get(account);
+        let directionPerpPosition: DirectionPerpPosition = directionPerpPositionOpt != null ? directionPerpPositionOpt!! : DirectionPerpPosition{
+            longPosition: PerpPosition {},
+            shortPosition: PerpPosition {}
+        };
+
+        let perpPosition: PerpPosition = isLong ? directionPerpPosition.longPosition : directionPerpPosition.shortPosition;
+        return perpPosition;
     }
 
     /**
@@ -1525,10 +1591,10 @@ contract Pool with Deployable, Resumable, Upgradable {
 
         if(compensate.orderType != null) {
             if (compensate.orderType == ORDER_TYPE_LP) {
-                self.liquidityOrders.del(compensate.orderId);
+                require(self.liquidityOrders.del(compensate.orderId), "order not found")
             } else {
-                self.perpOrders.del(compensate.orderId);
-                self.perpOrderExs.del(compensate.orderId);
+                require(self.perpOrders.del(compensate.orderId), "order not found");
+                require(self.perpOrderExs.del(compensate.orderId), "order not found");
             }
         }
         let needRefund: Bool = compensate.refundReceiver != null && compensate.refundAmount > 0;

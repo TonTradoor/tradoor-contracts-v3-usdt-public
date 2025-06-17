@@ -49,12 +49,12 @@ int __tact_dict_get_slice_uint(cell d, int kl, slice k, int vl) inline {
     }
 }
 
-builder $global_beginCell() impure asm """
-    NEWC
-""";
-
 int $global_now() impure asm """
     NOW
+""";
+
+builder $global_beginCell() impure asm """
+    NEWC
 """;
 
 int $global_nativeSendMessageReturnForwardFee(cell $msg, int $mode) impure asm """

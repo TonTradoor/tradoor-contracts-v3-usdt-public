@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: MultisigSigner
-BOC Size: 1048 bytes
+BOC Size: 1061 bytes
 
 # Types
 Total Types: 16
@@ -50,16 +50,16 @@ TLB: `set_manager#c8c03c88 manager:address compensator:address claimer:address =
 Signature: `SetManager{manager:address,compensator:address,claimer:address}`
 
 ## LaunchConfig
-TLB: `launch_config#020eafe2 members:dict<address, uint8> requiredWeight:uint8 = LaunchConfig`
-Signature: `LaunchConfig{members:dict<address, uint8>,requiredWeight:uint8}`
+TLB: `launch_config#482ab273 members:dict<address, uint8> requiredWeight:uint8 timeout:uint32 = LaunchConfig`
+Signature: `LaunchConfig{members:dict<address, uint8>,requiredWeight:uint8,timeout:uint32}`
 
 ## Request
-TLB: `request#c3964d4e to:address timeout:uint32 manager:address compensator:address claimer:address = Request`
-Signature: `Request{to:address,timeout:uint32,manager:address,compensator:address,claimer:address}`
+TLB: `request#a4d66f16 to:address manager:address compensator:address claimer:address = Request`
+Signature: `Request{to:address,manager:address,compensator:address,claimer:address}`
 
 ## Signed
-TLB: `signed#22f91262 request:Request{to:address,timeout:uint32,manager:address,compensator:address,claimer:address} = Signed`
-Signature: `Signed{request:Request{to:address,timeout:uint32,manager:address,compensator:address,claimer:address}}`
+TLB: `signed#603880e6 request:Request{to:address,manager:address,compensator:address,claimer:address} = Signed`
+Signature: `Signed{request:Request{to:address,manager:address,compensator:address,claimer:address}}`
 
 ## MultisigSigner$Data
 TLB: `null`

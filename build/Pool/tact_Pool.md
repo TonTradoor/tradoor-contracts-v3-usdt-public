@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Pool
-BOC Size: 28110 bytes
+BOC Size: 30302 bytes
 
 # Types
 Total Types: 69
@@ -90,8 +90,8 @@ TLB: `update_pool_config#a62f856c orderLockTime:uint32 maxLpNetCap:coins lpRollo
 Signature: `UpdatePoolConfig{orderLockTime:uint32,maxLpNetCap:coins,lpRolloverFeeRate:uint32,liquidatedPositionShareRate:uint32,normalPositionShareRate:uint32}`
 
 ## UpdateBaseConfig
-TLB: `update_base_config#a8563ca9 gasConfig:Maybe GasConfig{mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>} contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateBaseConfig`
-Signature: `UpdateBaseConfig{gasConfig:Maybe GasConfig{mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>},contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address}}`
+TLB: `update_base_config#2d453757 gasConfig:Maybe GasConfig{mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,updateConfigGas:coins,claimProtocolFeeGas:coins,feedPricesGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins} executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>} contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address} = UpdateBaseConfig`
+Signature: `UpdateBaseConfig{gasConfig:Maybe GasConfig{mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,updateConfigGas:coins,claimProtocolFeeGas:coins,feedPricesGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins},executorConfig:Maybe ExecutorConfig{executors:dict<address, bool>},contractConfig:Maybe ContractConfig{multisig:address,tlpJetton:address,tlpWallet:address,jettonWallet:address}}`
 
 ## SetManager
 TLB: `set_manager#c8c03c88 manager:address compensator:address claimer:address = SetManager`
@@ -130,8 +130,8 @@ TLB: `cancel_perp_order#099ff4a3 executionFeeReceiver:Maybe address orderId:uint
 Signature: `CancelPerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64}`
 
 ## ExecutePerpOrder
-TLB: `execute_perp_order#ed76926e executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 tokenId:uint16 price:uint128 premiumRate:int32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ExecutePerpOrder`
-Signature: `ExecutePerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,tokenId:uint16,price:uint128,premiumRate:int32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
+TLB: `execute_perp_order#a3f61932 executionFeeReceiver:Maybe address orderId:uint64 trxId:uint64 price:uint128 premiumRate:int32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = ExecutePerpOrder`
+Signature: `ExecutePerpOrder{executionFeeReceiver:Maybe address,orderId:uint64,trxId:uint64,price:uint128,premiumRate:int32,fundingFeeGrowth:int128,rolloverFeeGrowth:int128}`
 
 ## LiquidatePerpPosition
 TLB: `liquidate_perp_position#46ded352 liquidationFeeReceiver:Maybe address tokenId:uint16 account:address isLong:bool trxId:uint64 price:uint128 premiumRate:int32 fundingFeeGrowth:int128 rolloverFeeGrowth:int128 = LiquidatePerpPosition`
@@ -238,8 +238,8 @@ TLB: `_ longMargin:coins shortMargin:coins longSize:coins shortSize:coins longVa
 Signature: `GlobalPosition{longMargin:coins,shortMargin:coins,longSize:coins,shortSize:coins,longValue:coins,shortValue:coins}`
 
 ## GasConfig
-TLB: `_ mintJettonGas:coins burnJettonGas:coins transferJettonGas:coins createPerpOrderGas:coins cancelPerpOrderGas:coins executePerpOrderGas:coins createLiquidityOrderGas:coins cancelLiquidityOrderGas:coins executeLiquidityOrderGas:coins minStorageReserve:coins lpMinExecutionFee:coins perpMinExecutionFee:coins = GasConfig`
-Signature: `GasConfig{mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins}`
+TLB: `_ mintJettonGas:coins burnJettonGas:coins transferJettonGas:coins createPerpOrderGas:coins cancelPerpOrderGas:coins executePerpOrderGas:coins createLiquidityOrderGas:coins cancelLiquidityOrderGas:coins executeLiquidityOrderGas:coins updateConfigGas:coins claimProtocolFeeGas:coins feedPricesGas:coins minStorageReserve:coins lpMinExecutionFee:coins perpMinExecutionFee:coins = GasConfig`
+Signature: `GasConfig{mintJettonGas:coins,burnJettonGas:coins,transferJettonGas:coins,createPerpOrderGas:coins,cancelPerpOrderGas:coins,executePerpOrderGas:coins,createLiquidityOrderGas:coins,cancelLiquidityOrderGas:coins,executeLiquidityOrderGas:coins,updateConfigGas:coins,claimProtocolFeeGas:coins,feedPricesGas:coins,minStorageReserve:coins,lpMinExecutionFee:coins,perpMinExecutionFee:coins}`
 
 ## ExecutorConfig
 TLB: `_ executors:dict<address, bool> = ExecutorConfig`
@@ -362,6 +362,8 @@ Argument: seqno
 6118: too early to cancel
 10594: insufficient quota to supply
 11120: compensate not exist
+11214: order not found
+13438: tp price must be less than trigger price
 15161: time lock not expired
 17312: leverage too high
 19163: no enough jettons to claim
@@ -369,15 +371,19 @@ Argument: seqno
 24173: order is pending
 24325: token cannot be delisted
 24562: execution fee not enough
+26124: sl price must be less than trigger price
 27798: invalid token
 28603: margin rate too high
 31425: not reach unlock time
 32637: order not exist
 32964: invalid seqno
 36718: disabled token
+38018: price not exist
+38618: tp price must be greater than trigger price
 40368: Contract stopped
 40940: margin is too high to liquidate
 41207: invalid sender
+51682: sl price must be greater than trigger price
 53296: Contract not stopped
 62409: insufficient margin
 

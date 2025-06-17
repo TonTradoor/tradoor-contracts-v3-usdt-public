@@ -23,7 +23,6 @@ export async function run(provider: NetworkProvider) {
         {
             $$type: 'Request',
             to: pool.address,
-            timeout: BigInt(Math.floor(Date.now() / 1000) + 60 * 60),
             manager: Address.parse(config["manager"]),
             compensator: Address.parse(config["compensator"]),
             claimer: Address.parse(config["claimer"])

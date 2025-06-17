@@ -206,21 +206,20 @@ PROGRAM{
   $LaunchConfig$_load PROCINLINE:<{
     32 LDU
     SWAP
-    34516962 PUSHINT
+    1210757747 PUSHINT
     EQUAL
     129 THROWIFNOT
     LDDICT
     8 LDU
-    -ROT
+    32 LDU
+    3 -ROLL
   }>
   $Request$_store PROCINLINE:<{
-    3281407310 PUSHINT
-    s0 s6 XCHG2
+    2765516566 PUSHINT
+    s0 s5 XCHG2
     32 STU
-    s0 s4 XCHG2
+    s0 s3 XCHG2
     __tact_store_address INLINECALLDICT
-    s1 s2 XCHG
-    32 STU
     SWAP
     __tact_store_address INLINECALLDICT
     SWAP
@@ -235,12 +234,11 @@ PROGRAM{
   $Request$_load PROCINLINE:<{
     32 LDU
     SWAP
-    3281407310 PUSHINT
+    2765516566 PUSHINT
     EQUAL
     129 THROWIFNOT
     __tact_load_address INLINECALLDICT
     SWAP
-    32 LDU
     __tact_load_address INLINECALLDICT
     SWAP
     __tact_load_address INLINECALLDICT
@@ -250,31 +248,32 @@ PROGRAM{
     CTOS
     __tact_load_address INLINECALLDICT
     NIP
-    s1 s5 XCHG
     s1 s4 XCHG
     s3 s3 s0 XCHG3
   }>
   $Signed$_load PROCINLINE:<{
     32 LDU
     SWAP
-    586748514 PUSHINT
+    1614315750 PUSHINT
     EQUAL
     129 THROWIFNOT
     $Request$_load INLINECALLDICT
   }>
   $Multisig$_store PROCINLINE:<{
-    2SWAP
+    s4 s3 XCHG2
     __tact_store_address INLINECALLDICT
-    s1 s2 XCHG
     STDICT
+    s1 s2 XCHG
     8 STU
+    32 STU
   }>
   $Multisig$_load PROCINLINE:<{
     __tact_load_address INLINECALLDICT
     SWAP
     LDDICT
     8 LDU
-    3 -ROLL
+    32 LDU
+    4 -ROLL
   }>
   $StateInit$_not_null PROCINLINE:<{
     DUP
@@ -290,8 +289,10 @@ PROGRAM{
     s1 s3 XCHG
     257 PUSHINT
     STIX
+    257 PUSHINT
+    STIX
     NEWC
-    s4 s6 s5 XCHG3
+    s3 s5 s4 XCHG3
     $Request$_store INLINECALLDICT
     ENDC
     SWAP
@@ -301,11 +302,13 @@ PROGRAM{
     LDDICT
     257 PUSHINT
     LDIX
-    -ROT
+    257 PUSHINT
+    LDIX
+    3 -ROLL
   }>
   $Multisig$_contract_init PROCREF:<{
     __tact_context_get_sender INLINECALLDICT
-    -ROT
+    3 -ROLL
   }>
   $Multisig$_contract_load PROCREF:<{
     c4 PUSH
@@ -317,7 +320,7 @@ PROGRAM{
     SWAP
     IFJMP:<{
       $Multisig$_load INLINECALLDICT
-      1 3 BLKDROP2
+      1 4 BLKDROP2
     }>
     MYADDR
     11 PLDU
@@ -325,9 +328,9 @@ PROGRAM{
     EQUAL
     137 THROWIFNOT
     $Multisig$init$_load INLINECALLDICT
-    s0 s2 XCHG
+    s0 s3 XCHG
     ENDS
-    SWAP
+    ROT
     $Multisig$_contract_init INLINECALLDICT
   }>
   $Multisig$_contract_store PROCINLINE:<{
@@ -338,7 +341,7 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
-    3 -ROLL
+    4 -ROLL
     $Multisig$_store INLINECALLDICT
     ENDC
     c4 POP
@@ -482,13 +485,13 @@ PROGRAM{
   }>
   $Multisig$_fun_member PROCREF:<{
     267 PUSHINT
-    s3 PUSH
+    s4 PUSH
     s0 s2 XCHG
     8 PUSHINT
     __tact_dict_get_slice_uint INLINECALLDICT
   }>
   $Multisig$_fun_members PROCREF:<{
-    OVER
+    s2 PUSH
   }>
   $Multisig$_fun_forward PROCREF:<{
     PUSHNULL
@@ -529,12 +532,12 @@ PROGRAM{
   }>
   $Multisig$_fun_requireOwner PROCREF:<{
     __tact_context_get_sender INLINECALLDICT
-    s3 s(-1) PUXC
+    s4 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     132 THROWIFNOT
   }>
   $Multisig$_fun_owner PROCREF:<{
-    s2 PUSH
+    s3 PUSH
   }>
   $SendParameters$_constructor_value_to_mode_bounce_code_data PROCINLINE:<{
     s2 s5 XCHG
@@ -553,11 +556,12 @@ PROGRAM{
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
   $Multisig$_internal_binary_LaunchConfig PROCINLINE:<{
-    s4 s3 s4 XCHG3
+    s3 s6 XCHG
+    s5 s4 s6 XCHG3
     $Multisig$_fun_requireOwner INLINECALLDICT
-    2DROP
+    3 BLKDROP
         B{b5ee9c7241010101001b000032000000006c61756e636820636f6e6669672075706461746564abe8487a} B>boc PUSHREF
-    s1 s3 XCHG
+    s1 s4 XCHG
     $Multisig$_fun_reply INLINECALLDICT
   }>
   $Multisig$_internal_binary_Request PROCINLINE:<{
@@ -570,10 +574,10 @@ PROGRAM{
     THROWANYIFNOT
     __tact_context_sys GETGLOB
         MYADDR
-    s6 s5 s8 XC2PU
-    s5 s8 XCPU
-    s0 s5 XCHG
-    4 ROLL
+    s5 s4 s8 XC2PU
+    s4 s8 XCPU
+    s4 s8 XCPU
+    4 -ROLL
     $MultisigSigner$_init_child INLINECALLDICT
     0 PUSHINT
     s2 s1 PUSH2
@@ -601,14 +605,8 @@ PROGRAM{
     s0 s2 XCHG
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
-    4755 PUSHINT
-        NOW
-    s1 s5 XCHG
-    GREATER
-    s1 s4 XCHG
-    THROWANYIFNOT
     0 PUSHINT
-    -ROT
+    2SWAP
     66 PUSHINT
     s0 s4 XCHG
     $SetManager$_constructor_manager_compensator_claimer INLINECALLDICT
@@ -626,19 +624,19 @@ PROGRAM{
   %member PROC:<{
     __tact_verify_address INLINECALLDICT
     $Multisig$_contract_load INLINECALLDICT
-    3 ROLL
+    4 ROLL
     $Multisig$_fun_member INLINECALLDICT
-    3 1 BLKDROP2
+    4 1 BLKDROP2
   }>
   %members PROC:<{
     $Multisig$_contract_load INLINECALLDICT
     $Multisig$_fun_members INLINECALLDICT
-    3 1 BLKDROP2
+    4 1 BLKDROP2
   }>
   %owner PROC:<{
     $Multisig$_contract_load INLINECALLDICT
     $Multisig$_fun_owner INLINECALLDICT
-    3 1 BLKDROP2
+    4 1 BLKDROP2
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -662,32 +660,32 @@ PROGRAM{
       32 PLDU
     }>
     DUP
-    34516962 PUSHINT
+    1210757747 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
       $LaunchConfig$_load INLINECALLDICT
-      1 2 BLKDROP2
+      1 3 BLKDROP2
       $Multisig$_internal_binary_LaunchConfig INLINECALLDICT
       TRUE
     }>
     DUP
-    3281407310 PUSHINT
+    2765516566 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
       $Request$_load INLINECALLDICT
-      1 5 BLKDROP2
+      1 4 BLKDROP2
       $Multisig$_internal_binary_Request INLINECALLDICT
       TRUE
     }>
     DUP
-    586748514 PUSHINT
+    1614315750 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
       $Signed$_load INLINECALLDICT
-      1 5 BLKDROP2
+      1 4 BLKDROP2
       $Multisig$_internal_binary_Signed INLINECALLDICT
       TRUE
     }>
@@ -721,7 +719,7 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $Multisig$_contract_load INLINECALLDICT
-    2 3 BLKSWAP
+    2 4 BLKSWAP
     $Multisig$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
     $Multisig$_contract_store INLINECALLDICT

@@ -106,6 +106,9 @@ struct GasConfig {
     createLiquidityOrderGas: Int as coins;
     cancelLiquidityOrderGas: Int as coins;
     executeLiquidityOrderGas: Int as coins;
+    updateConfigGas: Int as coins = 0;
+    claimProtocolFeeGas: Int as coins = 0;
+    feedPricesGas: Int as coins = 0;
 
     minStorageReserve: Int as coins;
     lpMinExecutionFee: Int as coins;

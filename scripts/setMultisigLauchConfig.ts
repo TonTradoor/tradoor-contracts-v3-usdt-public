@@ -29,7 +29,8 @@ export async function run(provider: NetworkProvider) {
         {
             $$type: 'LaunchConfig',
             members: members,
-            requiredWeight: config["requiredWeight"]
+            requiredWeight: config["requiredWeight"],
+            timeout: config["timeout"],
         }
     );
 

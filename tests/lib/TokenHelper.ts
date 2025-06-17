@@ -1,28 +1,60 @@
-import { Address, beginCell, fromNano, toNano } from "@ton/core";
+import { Address, beginCell, ContractProvider, fromNano, Sender, toNano } from "@ton/core";
 import { fromUnits, toUnits } from '../../utils/util';
 import { TestEnv } from "./TestEnv";
 import { MockJettonWallet } from "../../wrappers/MockJettonWallet";
+import { MockJettonMaster as MockJetton } from '../../wrappers/JettonMock';
 import { TLPJettonWallet } from "../../wrappers/TLPJettonWallet";
+import { buildOnchainMetadata } from "../../contracts/jetton/utils/jetton-helpers";
 
-export async function delistToken(tokenId: bigint) {
-    let tokenConfigBefore = (await TestEnv.pool.getTokenConfig(tokenId));
+
+export async function updateJettonContent(sender: Sender) {
+
+    const jettonParams = {
+        name: 'USDT Tradoor LP',
+        description: '12345',
+        symbol: 'USDT-TLP',
+        image: 'https://cache.tonapi.io/imgproxy/j-LhzbGesMjo5C17FRTdMQrGT1xCNJCjO4GmNDdY0Dk/rs:fill:200:200:1/g:no/aHR0cHM6Ly90b24uYXBwL21lZGlhL2pldHRvbi0xYmY5NTgxNC03ODdhLTRlMmQtODZlYS1lMGRhZTNhOTQ4NGMuanBnP3c9NjQwJnE9NTA.webp',
+        decimals: '9'
+    };
+
     const trxResult = await TestEnv.pool.send(
-        TestEnv.deployer.getSender(),
+        sender,
         {
             value: toNano('0.1'),
         },
         {
-            $$type: 'DelistToken',
-            tokenId: tokenId
+            $$type: 'JettonUpdateContent',
+            jetton_content: buildOnchainMetadata(jettonParams),
         }
     );
-    let tokenConfigAfter = (await TestEnv.pool.getTokenConfig(tokenId));
 
-    return {
-        trxResult,
-        tokenConfigBefore,
-        tokenConfigAfter
-    };
+    return { trxResult };
+}
+
+export async function deployJetton(jettonParams: any) {
+
+    // Create content Cell
+    let content = buildOnchainMetadata(jettonParams);
+    const jetton = TestEnv.blockchain.openContract(await MockJetton.fromInit(TestEnv.deployer.address, content));
+    const jettonDeployResult = await jetton.send(
+        TestEnv.deployer.getSender(),
+        {
+            value: toNano('0.1'),
+            bounce: true
+        },
+        {
+            $$type: 'Deploy',
+            queryId: 0n
+        }
+    );
+
+    expect(jettonDeployResult.transactions).toHaveTransaction({
+        from: TestEnv.deployer.address,
+        to: jetton.address,
+        deploy: true,
+        success: true,
+    });
+    return jetton;
 }
 
 export async function mint(to: Address, amount: string) {
@@ -51,8 +83,38 @@ export async function mint(to: Address, amount: string) {
     return mintResult;
 }
 
+export async function mintXXX(to: Address, amount: string) {
+    const mintResult = await TestEnv.xxx_jetton.send(
+        TestEnv.deployer.getSender(),
+        {
+            value: toNano('0.1'),
+        },
+        {
+            $$type: 'JettonMint',
+            origin: TestEnv.deployer.address,
+            amount: toJettonUnits(amount),
+            receiver: to,
+            custom_payload: null,
+            forward_ton_amount: 0n,
+            forward_payload: beginCell().endCell().asSlice(),
+        }
+    );
+
+    expect(mintResult.transactions).toHaveTransaction({
+        from: TestEnv.deployer.address,
+        to: TestEnv.xxx_jetton.address,
+        success: true,
+    });
+
+    return mintResult;
+}
+
 export async function getJettonWallet(senderAddress: Address) {
     return TestEnv.blockchain.openContract(await MockJettonWallet.fromInit(senderAddress, TestEnv.jetton.address));
+}
+
+export async function getXXXJetttonWallet(senderAddress: Address) {
+    return TestEnv.blockchain.openContract(await MockJettonWallet.fromInit(senderAddress, TestEnv.xxx_jetton.address));
 }
 
 export async function getTlpWallet(senderAddress: Address) {

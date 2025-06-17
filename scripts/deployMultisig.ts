@@ -13,7 +13,7 @@ export async function run(provider: NetworkProvider) {
         members.set(Address.parse(memberAddrs[i].address), memberAddrs[i].weight);
     }
 
-    const pool = provider.open(await Multisig.fromInit(members, config["requiredWeight"]));
+    const pool = provider.open(await Multisig.fromInit(members, config["requiredWeight"], config("timeout")));
 
     console.log('deployId:', deployId, 'deploying multisig to address:', pool.address);
 

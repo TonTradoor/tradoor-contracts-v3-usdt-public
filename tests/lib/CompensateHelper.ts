@@ -3,13 +3,13 @@ import { Address, beginCell, toNano } from "@ton/core";
 import { TestEnv } from "./TestEnv";
 import { getAllBalance, getJettonWallet, toJettonUnits } from "./TokenHelper";
 
-export async function createCompensate(executor: SandboxContract<TreasuryContract>, orderType: number, orderId: bigint,
+export async function createCompensate(sender: SandboxContract<TreasuryContract>, orderType: number, orderId: bigint,
     refundReceiver: Address, refundAmount: number, executionFeeReceiver: Address, executionFee: number) {
     let balanceBefore = await getAllBalance();
     let compensateIdBefore = (await TestEnv.pool.getCompensate(0n)).compensateIndexNext;
     // create order
     const trxResult = await TestEnv.pool.send(
-        executor.getSender(),
+        sender.getSender(),
         {
             value: toNano('0.2'),
         },
@@ -67,13 +67,13 @@ export async function cancelCompensate(executor: SandboxContract<TreasuryContrac
     };
 }
 
-export async function executeCompensate(executor: SandboxContract<TreasuryContract>, compensateId: bigint) {
+export async function executeCompensate(executor: SandboxContract<TreasuryContract>, gas: number, compensateId: bigint) {
     let balanceBefore = await getAllBalance();
 
     const trxResult = await TestEnv.pool.send(
         executor.getSender(),
         {
-            value: toNano('0.2'),
+            value: toNano(gas),
         },
         {
             $$type: 'ExecuteOrCancelCompensate',

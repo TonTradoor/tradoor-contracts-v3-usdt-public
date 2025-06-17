@@ -7,9 +7,7 @@ import {
     getConfig,
     getLastTransaction,
     waitForTransaction,
-    toUnits
 } from '../utils/util';
-import { MOCK_DECIMAL, PERCENTAGE_DECIMAL } from '../utils/constants';
 
 export async function run(provider: NetworkProvider) {
     const pool = attachPool(provider);
@@ -50,6 +48,9 @@ export async function run(provider: NetworkProvider) {
                 createLiquidityOrderGas: toNano(config["createLiquidityOrderGas"]),
                 cancelLiquidityOrderGas: toNano(config["cancelLiquidityOrderGas"]),
                 executeLiquidityOrderGas: toNano(config["executeLiquidityOrderGas"]),
+                updateConfigGas: toNano(config["updateConfigGas"]),
+                claimProtocolFeeGas: toNano(config["claimProtocolFeeGas"]),
+                feedPricesGas: toNano(config["feedPricesGas"]),
                 minStorageReserve: toNano(config["minStorageReserve"]),
                 lpMinExecutionFee: toNano(config["lpMinExecutionFee"]),
                 perpMinExecutionFee: toNano(config["perpMinExecutionFee"]),
