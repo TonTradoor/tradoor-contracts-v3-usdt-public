@@ -1,89 +1,91 @@
-# tradoor-contracts-v3-usdt
+# Tradoor Contracts v3 (USDT)
 
-## Project structure
+## Overview
 
--   `contracts` - source code of all the smart contracts of the project and their dependencies.
--   `wrappers` - wrapper classes (implementing `Contract` from ton-core) for the contracts, including any [de]serialization primitives and compilation functions.
--   `tests` - tests for the contracts.
--   `scripts` - scripts used by the project, mainly the deployment scripts.
+Tradoor Contracts v3 is a suite of smart contracts and supporting scripts for a decentralized perpetual trading protocol on the TON blockchain. This project implements core DeFi primitives such as liquidity pools, perpetual orders, and multi-signature management, with a focus on USDT and other major assets.
 
-## How to use
+## Directory Structure
 
-### Build
+- `contracts/` — All smart contract source code (Tact language), including:
+  - `jetton/` — Jetton (token) standard contracts and helpers
+  - `pool/` — Liquidity pool, perpetual trading, multisig, and upgrade logic
+  - `imports/` — Shared libraries
+- `wrappers/` — TypeScript wrappers for contracts, providing serialization, deployment, and interaction utilities
+- `scripts/` — Automation scripts for deployment, configuration, and contract operations
+- `tests/` — Automated tests for contract logic (Jest + Blueprint)
+- `config/` — Network and protocol configuration files (JSON)
+- `utils/` — Shared TypeScript utilities and constants
 
-`npx blueprint build` or `yarn blueprint build`
+## Main Components
 
-### Test
+- **Liquidity Pool**: Manages pooled assets, liquidity orders, and protocol parameters
+- **Perpetual Trading**: Handles perpetual order creation, execution, and position management
+- **Multisig**: Multi-signature contract for protocol governance and upgrades
+- **Upgradeability**: Secure upgrade mechanism with time-lock and owner checks
 
-`npx blueprint test` or `yarn blueprint test`
+## Getting Started
 
-### Deploy or run another script
+### Prerequisites
+- Node.js (v16+ recommended)
+- Yarn or npm
+- [TON Blueprint](https://github.com/ton-community/blueprint) (installed as a dev dependency)
 
-`npx blueprint run` or `yarn blueprint run`
-
-### Add a new contract
-
-`npx blueprint create ContractName` or `yarn blueprint create ContractName`
-
-## build
-- yarn build
-
-## test
-- yarn test
-
-## deploy
-- create .env.devnet / .env.localnet / .env.testnet / .env.mainnet
+### Installation
+```bash
+yarn install
+# or
+npm install
 ```
-WALLET_MNEMONIC=""
-WALLET_VERSION=v4
+
+### Build Contracts
+```bash
+yarn build
+# or
+npx blueprint build
 ```
 
-- deploy
+### Run Tests
+```bash
+yarn test
+# or
+npx blueprint test
+```
 
-yarn deploylocal
+### Deploy Contracts
+1. Create environment files: `.env.devnet`, `.env.localnet`, `.env.testnet`, `.env.mainnet`
+   ```env
+   WALLET_MNEMONIC=""
+   WALLET_VERSION=v4
+   ```
+2. Deploy to desired network:
+   ```bash
+   yarn deploylocal   # Localnet
+   yarn deploydev     # Devnet
+   yarn deploytest    # Testnet
+   yarn deploymain    # Mainnet
+   ```
 
-yarn deploydev
-
-yarn deploytest
-
-yarn deploymain
-
-## run script
-
-yarn runlocal
-
-yarn rundev
-
-yarn runtest
-
-yarn runmain
-
-- mint token:
+### Run Scripts
+Scripts automate common contract operations. Example usage:
+```bash
+yarn rundev addLiquidity
+# Add liquidity order on devnet
 
 yarn rundev mintMockJetton
+# Mint mock tokens for testing
+```
+See `scripts/` for all available scripts and their purposes.
 
-- add executor:
+## Configuration
+- Network and protocol parameters are defined in `config/*.json` (e.g., tokens, fees, addresses)
+- Update these files to customize deployment and protocol behavior
 
-add 'executor' in config/testnet.json
+## Testing
+- All contract logic is covered by Jest-based tests in the `tests/` directory
+- Run `yarn test` to execute the full test suite
 
-yarn rundev updateBaseConfig
+## Contribution
+Contributions are welcome! Please fork the repository, create a feature branch, and submit a pull request. For major changes, open an issue first to discuss your proposal.
 
-- create add liquidity order:
-
-yarn rundev addLiquidity
-
-- create remove liquidity order:
-
-yarn rundev removeLiquidity
-
-- execute liqidity order：
-
-yarn rundev executeLiquidityOrder
-
-- create Perp increase order:
-
-yarn rundev createIncreaseOrder
-
-- create Perp decrease order:
-
-yarn rundev createDecreaseOrder
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
